@@ -1,0 +1,373 @@
+{
+    "dataItem": [
+        {
+            "name": "销售与计划",
+            "index": 0,
+            "id": "1",
+            "child": [
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "1",
+                    "sort": 1,
+                    "type": "list",
+                    "value": "销售订单",
+                    "endNode": [
+                        {
+                            "groupId": "1",
+                            "id": "2",
+                            "groupIndex": 0
+                        },
+                        {
+                            "groupId": "1",
+                            "id": "6",
+                            "groupIndex": 0
+                        },
+                        {
+                            "groupId": "2",
+                            "id": "11",
+                            "groupIndex": 1
+                        }
+                    ]
+                },
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "2",
+                    "sort": 2,
+                    "type": "subject",
+                    "value": "待计划的订单",
+                    "endNode": [
+                        {
+                            "groupId": "1",
+                            "id": "3",
+                            "groupIndex": 0
+                        },
+                        {
+                            "groupId": "1",
+                            "id": "5",
+                            "groupIndex": 0
+                        }
+                    ]
+                },
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "3",
+                    "sort": 3,
+                    "type": "list",
+                    "value": "需求分析",
+                    "endNode": []
+                },
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "4",
+                    "sort": 4,
+                    "type": "subject",
+                    "value": "待领料需求",
+                    "endNode": [
+                        {
+                            "groupId": "1",
+                            "id": "5",
+                            "groupIndex": 0
+                        }
+                    ]
+                },
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "5",
+                    "sort": 5,
+                    "type": "list",
+                    "value": "需求调整",
+                    "endNode": []
+                },
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "6",
+                    "sort": 6,
+                    "type": "subject",
+                    "value": "待销售出库订单",
+                    "endNode": [
+                        {
+                            "groupId": "1",
+                            "id": "7",
+                            "groupIndex": 0
+                        },
+                        {
+                            "groupId": "1",
+                            "id": "5",
+                            "groupIndex": 0
+                        }
+                    ]
+                },
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "7",
+                    "sort": 7,
+                    "type": "list",
+                    "value": "销售出库",
+                    "endNode": [
+                        {
+                            "groupId": "4",
+                            "id": "16",
+                            "groupIndex": 3
+                        },
+                        {
+                            "groupId": "4",
+                            "id": "20",
+                            "groupIndex": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "采购与生产",
+            "index": 1,
+            "id": "2",
+            "child": [
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "8",
+                    "sort": 1,
+                    "type": "list",
+                    "value": "开放式采购入库",
+                    "endNode": [
+                        {
+                            "groupId": "3",
+                            "id": "15",
+                            "groupIndex": 2
+                        },
+                        {
+                            "groupId": "4",
+                            "id": "21",
+                            "groupIndex": 3
+                        }
+                    ]
+                },
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "9",
+                    "sort": 2,
+                    "type": "list",
+                    "value": "加工订单",
+                    "endNode": [
+                        {
+                            "groupId": "1",
+                            "id": "4",
+                            "groupIndex": 0
+                        }
+                    ]
+                },
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "10",
+                    "sort": 3,
+                    "type": "list",
+                    "value": "采购订单",
+                    "endNode": []
+                },
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "11",
+                    "sort": 4,
+                    "type": "subject",
+                    "value": "待入库销售订单",
+                    "endNode": [
+                        {
+                            "groupId": "1",
+                            "id": "5",
+                            "groupIndex": 0
+                        }
+                    ]
+                },
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "12",
+                    "sort": 5,
+                    "type": "list",
+                    "value": "采购入库",
+                    "endNode": [
+                        {
+                            "groupId": "3",
+                            "id": "15",
+                            "groupIndex": 2
+                        },
+                        {
+                            "groupId": "4",
+                            "id": "21",
+                            "groupIndex": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "库存",
+            "index": 2,
+            "id": "3",
+            "child": [
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "13",
+                    "sort": 1,
+                    "type": "list",
+                    "value": "调拨",
+                    "endNode": [
+                        {
+                            "groupId": "3",
+                            "id": "15",
+                            "groupIndex": 2
+                        },
+                        {
+                            "groupId": "4",
+                            "id": "21",
+                            "groupIndex": 3
+                        }
+                    ]
+                },
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "14",
+                    "sort": 2,
+                    "type": "list",
+                    "value": "加工退料",
+                    "endNode": [
+                        {
+                            "groupId": "3",
+                            "id": "15",
+                            "groupIndex": 2
+                        },
+                        {
+                            "groupId": "4",
+                            "id": "21",
+                            "groupIndex": 3
+                        }
+                    ]
+                },
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "15",
+                    "sort": 3,
+                    "type": "subject",
+                    "value": "可用存货",
+                    "endNode": [
+                        {
+                            "groupId": "1",
+                            "id": "7",
+                            "groupIndex": 0
+                        },
+                        {
+                            "groupId": "3",
+                            "id": "13",
+                            "groupIndex": 2
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "财务与结算",
+            "index": 3,
+            "id": "4",
+            "child": [
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "16",
+                    "sort": 1,
+                    "type": "subject",
+                    "value": "货品销售成本",
+                    "endNode": []
+                },
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "17",
+                    "sort": 2,
+                    "type": "subject",
+                    "value": "货币资金",
+                    "endNode": [
+                        {
+                            "groupId": "4",
+                            "id": "19",
+                            "groupIndex": 3
+                        }
+                    ]
+                },
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "18",
+                    "sort": 3,
+                    "type": "list",
+                    "value": "收款",
+                    "endNode": [
+                        {
+                            "groupId": "4",
+                            "id": "17",
+                            "groupIndex": 3
+                        }
+                    ]
+                },
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "19",
+                    "sort": 4,
+                    "type": "list",
+                    "value": "付款",
+                    "endNode": []
+                },
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "20",
+                    "sort": 5,
+                    "type": "subject",
+                    "value": "客户",
+                    "endNode": [
+                        {
+                            "groupId": "4",
+                            "id": "18",
+                            "groupIndex": 3
+                        }
+                    ]
+                },
+                {
+                    "allToDo": 20,
+                    "notToDo": 6,
+                    "id": "21",
+                    "sort": 6,
+                    "type": "subject",
+                    "value": "可用存货",
+                    "endNode": [
+                        {
+                            "groupId": "1",
+                            "id": "7",
+                            "groupIndex": 0
+                        },
+                        {
+                            "groupId": "3",
+                            "id": "13",
+                            "groupIndex": 2
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "title": "脉动图 - 直销业务"
+}

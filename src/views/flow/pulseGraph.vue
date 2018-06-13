@@ -12,13 +12,15 @@
           <i class="iconfont">&#xe636;</i>
           <span>我的任务</span>
         </Radio>
+      </RadioGroup>
+      <RadioGroup class="taskbtn_1" v-model="rodioGroupDoOrNot" size="large" @on-change="radioGroupChangeDoneOrTodo">
         <i class="vertical-divide"></i>
-        <Radio label="finishtask" disabled>
+        <Radio label="done">
           <i class="iconfont">&#xe670;</i>
           <span>已完成</span>
         </Radio>
         <i class="vertical-divide"></i>
-        <Radio label="unfinishtask" disabled>
+        <Radio label="todo">
           <i class="iconfont">&#xe6a9;</i>
           <span>未完成</span>
         </Radio>
@@ -62,14 +64,14 @@
               <image :x="40+(baseLength+graphSpace)*j" :y="22+170*i" :width="baseLength" :height="baseLength" :xlink:href="item.icon" @click="doAction(item)" rx='10' class="svg-image-style"></image>
               <!-- 科目与业务节点title -->
 
-              <a @click="xyRedirectTo(item)" :class="item.type==='list'?'svg-title-style':'svg-title-style-default'">
+              <a @click="redirectTo(item)" :class="item.type==='list'?'svg-title-style':'svg-title-style-default'">
                 <text :x="40+baseLength/2+(baseLength+graphSpace)*j" :y="37+baseLength+170*i">
                   {{item.value}}
                 </text>
               </a>
               <!-- 所以待办 -->
               <circle :cx="40+(baseLength+graphSpace)*j" :cy="item.type==='list'?25+170*i:45+170*i" r="13" stroke-width="1" fill="red" v-if="item.type==='list' && item.listId in task" />
-              <text :x="40+(baseLength+graphSpace)*j" :y="item.type==='list'?20+170*i:45+170*i" fill="#fff" v-if="item.type==='list'" class="svg-text-common-style" style="font-size:14px">
+              <text :x="40+(baseLength+graphSpace)*j" :y="item.type==='list'?20+170*i:45+170*i" fill="#fff" v-if="item.type==='list'" class="svg-text-common-style" style="font-size:14px" :listId="item.listId" @click="opentask">
                 {{task[item.listId]}}
               </text>
 
@@ -92,6 +94,16 @@
         </svg>
       </div>
     </div>
+    <Modal v-model="modal" title="任务列表"  closable>
+      <Table :loading="loading" :data="columnData" :columns="columns" size="small" stripe></Table>
+      <div style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page :total="pageTotal" :current="currentPage" size="small" :page-size="pageSize" @on-change="changeCurrentPage" show-total></Page>
+        </div>
+      </div>
+      <div slot="footer">
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -101,8 +113,11 @@ import cCircle from "@/components/circle";
 import Square from "@/components/square";
 import CircularGraph from "./circularGraph";
 import HomePage from "@/views/home/HomePage";
-import Loading from "@/components/loading";
-import { getPulseGraph, getCurrentUserInfo } from "@/services/flowService";
+import {
+  getPulseGraph,
+  getCurrentUserInfo,
+  getAppTaskCount
+} from "@/services/flowService";
 import { getToken } from "@/utils/utils";
 export default {
   data() {
@@ -127,18 +142,74 @@ export default {
       books$$: null,
 
       radioGroupLabel: "teamtask",
-      task:{},
-      teamTask:{},  //团队任务数量
-      myTask:{},    //我的任务数量
-      finishTask:{}, //已完成任务
-      unFinishTask:{} //未完成任务
+      rodioGroupDoOrNot: "done",
+      doneortodo: "done",
+      taskType: "teamtask",
+      teamDone: {}, //团队已完成任务
+      teamTodo: {}, //团队待办任务
+      myDone: {}, //我的已完成任务
+      myToDo: {}, //我的未完成任务
+
+      columns: [
+        {
+          title: "交易号",
+          key: "transCode",
+          sortable: true,
+          render: (h, params) => {
+            return h("a", {
+              attrs: {
+                href: "/Form/index.html?data="+params.row.transCode,
+                target: "_blank"
+              },
+            }, params.row.transCode);
+          }
+        },
+        {
+          title: "创建者",
+          key: "creatorName",
+          sortable: true
+        },
+        {
+          title: "任务创建时间",
+          key: "crtTime",
+          sortable: true,
+          render: (h, params) => {
+            //时间戳转换为日期格式
+            function formatDateTime(inputTime) {
+              let date = new Date(inputTime);
+              let y = date.getFullYear();
+              let m = date.getMonth() + 1;
+              m = m < 10 ? "0" + m : m;
+              let d = date.getDate();
+              d = d < 10 ? "0" + d : d;
+              let h = date.getHours();
+              h = h < 10 ? "0" + h : h;
+              let minute = date.getMinutes();
+              let second = date.getSeconds();
+              minute = minute < 10 ? "0" + minute : minute;
+              second = second < 10 ? "0" + second : second;
+              return (
+                y + "-" + m + "-" + d + " " + h + ":" + minute + ":" + second
+              );
+            }
+            return h("span", formatDateTime(params.row.crtTime));
+          }
+        }
+      ],
+      columnData: [],
+      loading: true, //table是否加载
+      modal: false, //弹出框是否显示
+      pageTotal: 0, //table总数
+      pageSize: 5,
+      currentPage: 1, //table当前页
+      pageListId: "",
+      type: "teamDone"
     };
   },
 
   components: {
     cCircle,
     Square,
-    Loading,
     HomePage,
     CircularGraph
   },
@@ -156,7 +227,7 @@ export default {
         nextRelevantId,
         preRelevantId,
         endNode = [],
-        targetTransType, //当前节点坐标
+        targetTransType = "", //当前节点坐标
         smpley = 0, //同一业务类型下不相邻节点线y轴每次+5px
         tempPoint;
       for (let i = 0; i < data.length; i++) {
@@ -169,11 +240,17 @@ export default {
             this.dataItem[i].child[i2].pointY = 22 + baseLength / 2 + 170 * i;
 
             let childNode = data[i].child[i2];
-            if(childNode.allToDo>0){
-              this.teamTask[childNode.listId] = childNode.allToDo;
+            if (childNode.teamDone > 0) {
+              this.teamDone[childNode.listId] = childNode.teamDone;
             }
-            if(childNode.notToDo>0){
-              this.myTask[childNode.listId] = childNode.notToDo;
+            if (childNode.teamTodo > 0) {
+              this.teamTodo[childNode.listId] = childNode.teamTodo;
+            }
+            if (childNode.myDone > 0) {
+              this.myDone[childNode.listId] = childNode.myDone;
+            }
+            if (childNode.myToDo > 0) {
+              this.myToDo[childNode.listId] = childNode.myToDo;
             }
           }
         }
@@ -874,23 +951,10 @@ export default {
       }
     },
 
-    redirectTo: function(item, event) {
-      if (item.type === "subject") return;
-
-      let url = "appReport/" + item.url;
-      window.top.postMessage(
-        {
-          type: "redirect",
-          url: url
-        },
-        "*"
-      );
-    },
-
     /**
-     * 新怡环境下应用链接跳转
+     * 应用链接跳转
      */
-    xyRedirectTo: function(item, event) {
+    redirectTo: function(item, event) {
       let url = item.url;
       if (item.type === "subject") return;
 
@@ -914,25 +978,85 @@ export default {
       }
     },
 
-    changeGraph: function(value, value1, value2) {
-      this.flowType = !this.flowType;
-      // this.businessItemWidth =
-      //   this.businessItemWidth === "50px" ? "0px" : "50px";
-    },
-
     //订阅消息
     subscribeMessage: function() {
       let token = getToken();
-      this.ds.event.subscribe("taskChange/" + token, msg => {
-      });
+      this.ds.event.subscribe("taskChange/" + token, msg => {});
     },
 
     radioGroupChange: function(e) {
-      if(e === 'teamtask'){
-        this.task = this.teamTask;
-      }else if(e==='mytask'){
-        this.task =this.myTask;
+      this.taskType = e;
+      if (this.taskType === "teamtask" && this.doneortodo === "done") {
+        this.type = "teamDone";
+        this.task = this.teamDone;
+      } else if (this.taskType === "teamtask" && this.doneortodo === "todo") {
+        this.type = "teamTodo";
+        this.task = this.teamTodo;
+      } else if (this.taskType === "mytask" && this.doneortodo === "done") {
+        this.type = "myDone";
+        this.task = this.myDone;
+      } else if (this.taskType === "mytask" && this.doneortodo === "todo") {
+        this.type = "myToDo";
+        this.task = this.myToDo;
       }
+    },
+
+    radioGroupChangeDoneOrTodo: function(e) {
+      this.doneortodo = e;
+      if (this.taskType === "teamtask" && this.doneortodo === "done") {
+        this.type = "teamDone";
+        this.task = this.teamDone;
+      } else if (this.taskType === "teamtask" && this.doneortodo === "todo") {
+        this.type = "teamTodo";
+        this.task = this.teamTodo;
+      } else if (this.taskType === "mytask" && this.doneortodo === "done") {
+        this.type = "myDone";
+        this.task = this.myDone;
+      } else if (this.taskType === "mytask" && this.doneortodo === "todo") {
+        this.type = "myToDo";
+        this.task = this.myToDo;
+      }
+    },
+
+    /**
+     * 查看待办任务
+     */
+    opentask(e) {
+      this.modal = true;
+      this.pageListId = e.target.getAttribute("listId");
+      let params = {
+        type: this.type,
+        page: this.currentPage,
+        listId: this.pageListId,
+        limit: this.pageSize
+      };
+
+      getAppTaskCount(params).then(res => {
+        this.pageTotal = res.total;
+        if (res.tableContent.length > 0) {
+          this.columnData = res.tableContent;
+          this.loading = false;
+        }
+      });
+    },
+
+    /**
+     * 分页加载
+     */
+    changeCurrentPage(currentPage) {
+      let params = {
+        type: this.type,
+        page: currentPage,
+        listId: this.pageListId,
+        limit: this.pageSize
+      };
+      this.loading = true;
+      getAppTaskCount(params).then(res => {
+        if (res.tableContent.length > 0) {
+          this.columnData = res.tableContent;
+          this.loading = false;
+        }
+      });
     }
   },
 
@@ -1009,7 +1133,7 @@ export default {
         window.document.getElementById("flow-box").style.height =
           calcSvgHeight + "px";
         that.draw();
-        this.task = this.teamTask;
+        this.task = this.teamDone;
         that.spinShow = false;
       })
       .catch(error => {
@@ -1084,10 +1208,17 @@ export default {
   height: 1px;
   background-color: @borderColor;
 }
-.taskbtn{
+.taskbtn {
   position: fixed;
-    top: 10px;
-    z-index: 999;
+  top: 10px;
+  z-index: 999;
+}
+
+.taskbtn_1 {
+  position: fixed;
+  top: 10px;
+  left: 260px;
+  z-index: 999;
 }
 
 .main-flow {
@@ -1176,6 +1307,10 @@ export default {
   baseline-shift: sub;
   font-size: 5px;
   font-family: sans-serif;
+}
+
+.svg-text-common-style:hover {
+  cursor: pointer;
 }
 
 .path {

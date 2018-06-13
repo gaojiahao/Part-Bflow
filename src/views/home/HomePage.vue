@@ -1,7 +1,6 @@
 <template>
 
   <div class="wrap">
-
     <Spin size="large" fix v-if="spinShow"></Spin>
     <div class="main-header">
       <div class="main-header-nav">
@@ -221,11 +220,11 @@ export default {
   position: relative;
   height: 100%;
   width: 100%;
-  background-color: #fff;
+  background-color: #ddd;
 }
 
 .bg-gray-lighter {
-  background-color: #b6a8a8;
+  background-color: #f0f0f0;
   padding: 0 10%;
 }
 

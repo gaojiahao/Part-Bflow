@@ -37,3 +37,6 @@ export const getCurrentUserAllTasks = () => request('/H_roleplay-si/ds/getMyTask
  * @description 获取常用应用
  */
 export const getMyFavorite = () => request('/H_roleplay-si/ds/getMyFavorite')
+
+
+export const getAppTaskCount = (params) => request('/H_roleplay-si/trans/getAppTaskCount',params)

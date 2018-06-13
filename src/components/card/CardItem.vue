@@ -1,23 +1,95 @@
 <template>
 
   <div class="card ivu-card ivu-card-bordered">
-
-    <Badge :count="taskCount" class="badge-custom">
-    </Badge>
+    <Poptip class="badge-custom" width="560" placement="right-end" @on-popper-show="popperShow">
+      <Badge :count="taskCount"></Badge>
+      <div slot="title">
+        <h3>{{appinfo.text+' - 待办任务'}}</h3>
+      </div>
+      <div slot="content" class="api">
+        <Table :columns="columns" :data="columnData"></Table>
+        <div style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page :total="pageTotal" :current="currentPage" size="small" :page-size="pageSize" @on-change="changeCurrentPage" show-total></Page>
+        </div>
+      </div>
+      </div>
+    </Poptip>
     <img :src="appinfo.icon" />
-
-    <div @click="xyRedirectTo(appinfo)">{{appinfo.text}}</div>
+    <div @click="redirectTo(appinfo)" class="content">
+      <h5>{{appinfo.text}}</h5>
+      <span>{{appinfo.transName}}</span>
+    </div>
 
   </div>
 
 </template>
 
 <script>
+import {
+  getAppTaskCount
+} from "@/services/flowService";
 export default {
   props: ["appinfo", "allTaskCount"],
   data() {
     return {
-      taskCount: 0
+      taskCount: 0,
+      columns: [
+        {
+          title: "交易号",
+          key: "transCode",
+          sortable: true,
+          render: (h, params) => {
+            return h(
+              "a",
+              {
+                attrs: {
+                  href: "/Form/index.html?data=" + params.row.transCode,
+                  target: "_blank"
+                }
+              },
+              params.row.transCode
+            );
+          }
+        },
+        {
+          title: "创建者",
+          key: "creatorName",
+          sortable: true
+        },
+        {
+          title: "任务创建时间",
+          key: "crtTime",
+          sortable: true,
+          render: (h, params) => {
+            //时间戳转换为日期格式
+            function formatDateTime(inputTime) {
+              let date = new Date(inputTime);
+              let y = date.getFullYear();
+              let m = date.getMonth() + 1;
+              m = m < 10 ? "0" + m : m;
+              let d = date.getDate();
+              d = d < 10 ? "0" + d : d;
+              let h = date.getHours();
+              h = h < 10 ? "0" + h : h;
+              let minute = date.getMinutes();
+              let second = date.getSeconds();
+              minute = minute < 10 ? "0" + minute : minute;
+              second = second < 10 ? "0" + second : second;
+              return (
+                y + "-" + m + "-" + d + " " + h + ":" + minute + ":" + second
+              );
+            }
+            return h("span", formatDateTime(params.row.crtTime));
+          }
+        }
+      ],
+      columnData: [],
+      loading:true,
+       pageTotal: 0, //table总数
+      pageSize: 5,
+      currentPage: 1, //table当前页
+      pageListId:''
     };
   },
   created() {
@@ -48,37 +120,19 @@ export default {
     }
   },
   methods: {
-    redirectTo: function(appInfo) {
-      let url = appInfo.url;
-      if (~appInfo.url.indexOf("app")) {
-        url = "appReport/" + url;
-      } else if (~appInfo.url.indexOf("subject")) {
-        url = "report/" + url;
-      }
-      window.top.postMessage(
-        {
-          type: "redirect",
-
-          url: url
-        },
-
-        "*"
-      );
-    },
-
     /**
      * 新怡环境下应用链接跳转
      */
-    xyRedirectTo: function(appInfo) {
+    redirectTo: function(appInfo) {
       let url = appInfo.url;
       if (appInfo.target === "_blank") {
         window.open(url, "_blank");
       } else {
-        if(~appInfo.url.indexOf("outlink")){
+        if (~appInfo.url.indexOf("outlink")) {
           ulr = appInfo.url;
-        }else if(~appInfo.url.indexOf("app")){
+        } else if (~appInfo.url.indexOf("app")) {
           url = "appReport/" + url;
-        }else {
+        } else {
           url = "report/" + url;
         }
         window.top.postMessage(
@@ -89,6 +143,43 @@ export default {
           "*"
         );
       }
+    },
+
+    popperShow(e){
+      this.pageListId = this.appinfo.url.split('/')[1]
+      let params = {
+        type: 'myToDo',
+        page: this.currentPage,
+        listId: this.pageListId,
+        limit: this.pageSize
+      };
+
+      getAppTaskCount(params).then(res => {
+        this.pageTotal = res.total;
+        if (res.tableContent.length > 0) {
+          this.columnData = res.tableContent;
+          this.loading = false;
+        }
+      });
+    },
+
+     /**
+     * 分页加载
+     */
+    changeCurrentPage(currentPage) {
+      let params = {
+        type: 'myToDo',
+        page: currentPage,
+        listId: this.pageListId,
+        limit: this.pageSize
+      };
+      this.loading = true;
+      getAppTaskCount(params).then(res => {
+        if (res.tableContent.length > 0) {
+          this.columnData = res.tableContent;
+          this.loading = false;
+        }
+      });
     }
   }
 };
@@ -102,9 +193,11 @@ export default {
   border-radius: 3px;
   padding: 10px 12px;
   margin: 10px 0;
+
   img {
     height: 50px;
     width: 50px;
+    z-index: 1;
     cursor: pointer;
     // position: relative;
   }
@@ -112,30 +205,45 @@ export default {
   img:hover {
     cursor: auto;
   }
-  div {
+  .content {
     cursor: pointer;
     font-size: @card-text-font-size;
     width: 60%;
     text-overflow: ellipsis;
     overflow: hidden;
+    z-index: 1;
     white-space: nowrap;
     color: #000;
     position: absolute;
     top: 50%;
     left: 80px;
     transform: translateY(-50%);
-  }
 
-  div:hover {
-    color: #0074e4;
+    h5 {
+      position: relative;
+      z-index: -99;
+      font-size: 16px;
+    }
+
+    span {
+      font-size: 12px;
+      color: #918e8e;
+    }
   }
 
   .badge-custom {
-    top: -10px;
+    top: -13px;
+    cursor: pointer;
     left: -10px;
+    z-index: 10;
     position: absolute;
     transform: translateX(0);
   }
+}
+
+.api {
+  position: relative;
+  z-index: 100;
 }
 
 .card:hover {
@@ -155,6 +263,6 @@ export default {
 .ivu-card-bordered {
   border: 1px solid #dddee1;
   border-color: #e9eaec;
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.17);
+  box-shadow: 4px 4px 10px #bbb8b8;
 }
 </style>

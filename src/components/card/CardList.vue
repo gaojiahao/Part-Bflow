@@ -2,7 +2,7 @@
   <row class="menu-field-set" :gutter="16">
     <label>{{menuItem.text}}</label>
 
-    <Col span="4" v-for="(item,j) in menuItem.children" :key="j">
+    <Col span="4" v-for="(item,j) in menuItem.children" :key="j" >
     <card-item :appinfo="item" :allTaskCount="allTaskCount">
     </card-item>
     </Col>
@@ -55,7 +55,7 @@ export default {
   label {
     display: block;
     margin-left: 1%;
-    color: #ffffff;
+    color: #333;
     font-size: 16px;
   }
 

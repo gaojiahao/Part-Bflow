@@ -94,7 +94,7 @@
         </svg>
       </div>
     </div>
-    <task-modal :modal='modal' :listId="pageListId" @emitModal="emitModal" :taskValue="taskValue"></task-modal>
+    <task-modal :modal='modal' :listId="pageListId" @emitModal="emitModal" :taskValue="taskValue" :type="type"></task-modal>
   </div>
 </template>
 

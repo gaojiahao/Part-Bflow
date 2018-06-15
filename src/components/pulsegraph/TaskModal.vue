@@ -98,7 +98,6 @@ export default {
       pageTotal: 0, //table总数
       pageSize: 6,
       currentPage: 1, //table当前页
-      type: "myToDo",
       modelState: false,
       transCode: "",
       creatorName: "",
@@ -108,7 +107,7 @@ export default {
       expandIcon: "&#xe617;"
     };
   },
-  props: ["listId", "modal", "taskValue"],
+  props: ["listId", "modal", "taskValue","type"],
 
   watch: {
     listId: {

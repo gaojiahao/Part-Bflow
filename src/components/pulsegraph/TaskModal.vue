@@ -98,7 +98,7 @@ export default {
       pageTotal: 0, //table总数
       pageSize: 6,
       currentPage: 1, //table当前页
-      type: "mytask",
+      type: "myToDo",
       modelState: false,
       transCode: "",
       creatorName: "",

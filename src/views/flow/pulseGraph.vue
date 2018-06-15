@@ -3,26 +3,26 @@
     <Spin size="large" fix v-if="spinShow"></Spin>
     <div id="flow-box">
       <RadioGroup class="taskbtn" v-model="radioGroupLabel" size="large" @on-change="radioGroupChange">
-        <Radio label="teamtask">
-          <i class="iconfont">&#xe685;</i>
-          <span>团队任务</span>
-        </Radio>
-        <i class="vertical-divide"></i>
         <Radio label="mytask">
           <i class="iconfont">&#xe636;</i>
           <span>我的任务</span>
         </Radio>
+        <i class="vertical-divide"></i>
+        <Radio label="teamtask">
+          <i class="iconfont">&#xe685;</i>
+          <span>团队任务</span>
+        </Radio>
       </RadioGroup>
       <RadioGroup class="taskbtn_1" v-model="rodioGroupDoOrNot" size="large" @on-change="radioGroupChangeDoneOrTodo">
-        <i class="vertical-divide"></i>
-        <Radio label="done">
-          <i class="iconfont">&#xe670;</i>
-          <span>已完成</span>
-        </Radio>
         <i class="vertical-divide"></i>
         <Radio label="todo">
           <i class="iconfont">&#xe6a9;</i>
           <span>未完成</span>
+        </Radio>
+        <i class="vertical-divide"></i>
+        <Radio label="done">
+          <i class="iconfont">&#xe670;</i>
+          <span>已完成</span>
         </Radio>
       </RadioGroup>
       <div class="divide"></div>
@@ -69,10 +69,10 @@
                   {{item.value}}
                 </text>
               </a>
-              <!-- 所以待办 -->
-              <circle :cx="40+(baseLength+graphSpace)*j" :cy="item.type==='list'?25+170*i:45+170*i" r="13" stroke-width="1" fill="red" v-if="item.type==='list' && item.listId in task" />
+              <!-- 所有待办 -->
+              <circle :cx="40+(baseLength+graphSpace)*j" :cy="item.type==='list'?25+170*i:45+170*i" r="13" stroke-width="1" fill="red" v-if="item.type==='list' && item.listId in defaultDisplayTask" />
               <text :x="40+(baseLength+graphSpace)*j" :y="item.type==='list'?20+170*i:45+170*i" fill="#fff" class="svg-text-common-style" style="font-size:14px" :listId="item.listId" :taskValue="item.value" @click="opentask"  v-if="item.type==='list'">
-                {{task[item.listId]}}
+                {{defaultDisplayTask[item.listId]}}
               </text>
 
               <!--  <circle :cx="40+baseLength+(baseLength+graphSpace)*j" :cy="item.type==='list'?25+170*i:45+170*i" r="13" stroke-width="1" fill="red" v-if="item.type==='list' && item.notToDo" />
@@ -130,10 +130,12 @@ export default {
       ds: ds("wss://192.168.3.160:6021/deepstream"),
       books$$: null,
 
-      radioGroupLabel: "teamtask",
-      rodioGroupDoOrNot: "done",
-      doneortodo: "done",
-      taskType: "teamtask",
+      radioGroupLabel: "mytask",
+      rodioGroupDoOrNot: "todo",
+      doneortodo: "todo",
+      taskType: "mytask",
+
+      defaultDisplayTask:{},  //默认显示我的未完成任务
       teamDone: {}, //团队已完成任务
       teamTodo: {}, //团队待办任务
       myDone: {}, //我的已完成任务
@@ -142,7 +144,7 @@ export default {
       modal: false, //弹出框是否显示
       taskValue:'',
       pageListId: '',
-      type: "teamDone"
+      type: "myToDo"
     };
   },
 
@@ -925,16 +927,16 @@ export default {
       this.taskType = e;
       if (this.taskType === "teamtask" && this.doneortodo === "done") {
         this.type = "teamDone";
-        this.task = this.teamDone;
+        this.defaultDisplayTask = this.teamDone;
       } else if (this.taskType === "teamtask" && this.doneortodo === "todo") {
         this.type = "teamTodo";
-        this.task = this.teamTodo;
+        this.defaultDisplayTask = this.teamTodo;
       } else if (this.taskType === "mytask" && this.doneortodo === "done") {
         this.type = "myDone";
-        this.task = this.myDone;
+        this.defaultDisplayTask = this.myDone;
       } else if (this.taskType === "mytask" && this.doneortodo === "todo") {
         this.type = "myToDo";
-        this.task = this.myToDo;
+        this.defaultDisplayTask = this.myToDo;
       }
     },
 
@@ -942,16 +944,16 @@ export default {
       this.doneortodo = e;
       if (this.taskType === "teamtask" && this.doneortodo === "done") {
         this.type = "teamDone";
-        this.task = this.teamDone;
+        this.defaultDisplayTask = this.teamDone;
       } else if (this.taskType === "teamtask" && this.doneortodo === "todo") {
         this.type = "teamTodo";
-        this.task = this.teamTodo;
+        this.defaultDisplayTask = this.teamTodo;
       } else if (this.taskType === "mytask" && this.doneortodo === "done") {
         this.type = "myDone";
-        this.task = this.myDone;
+        this.defaultDisplayTask = this.myDone;
       } else if (this.taskType === "mytask" && this.doneortodo === "todo") {
         this.type = "myToDo";
-        this.task = this.myToDo;
+        this.defaultDisplayTask = this.myToDo;
       }
     },
 
@@ -1063,7 +1065,7 @@ export default {
         window.document.getElementById("flow-box").style.height =
           calcSvgHeight + "px";
         that.draw();
-        this.task = this.teamDone;
+        this.defaultDisplayTask = this.myToDo;
         that.spinShow = false;
       })
       .catch(error => {

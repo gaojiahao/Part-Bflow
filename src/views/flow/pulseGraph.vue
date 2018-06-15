@@ -60,8 +60,8 @@
           </defs>
           <g v-for="(business,i) in dataItem" :key="i">
             <g v-for="(item,j) in business.child" :key="j">
-              /
-              <image :x="40+(baseLength+graphSpace)*j" :y="22+170*i" :width="baseLength" :height="baseLength" :xlink:href="item.icon" @click="doAction(item)" rx='10' class="svg-image-style"></image>
+              
+              <image :x="40+(baseLength+graphSpace)*j" :y="22+170*i" :width="baseLength" :height="baseLength" :xlink:href="item.icon" @click="doAction(item)" rx='10' v-bind:class="{ 'svg-image-style-opacity': !item.isPermitted, 'svg-image-style': true }"></image>
               <!-- 科目与业务节点title -->
 
               <a @click="redirectTo(item)" :class="item.type==='list'?'svg-title-style':'svg-title-style-default'">
@@ -71,7 +71,7 @@
               </a>
               <!-- 所以待办 -->
               <circle :cx="40+(baseLength+graphSpace)*j" :cy="item.type==='list'?25+170*i:45+170*i" r="13" stroke-width="1" fill="red" v-if="item.type==='list' && item.listId in task" />
-              <text :x="40+(baseLength+graphSpace)*j" :y="item.type==='list'?20+170*i:45+170*i" fill="#fff" v-if="item.type==='list'" class="svg-text-common-style" style="font-size:14px" :listId="item.listId" @click="opentask">
+              <text :x="40+(baseLength+graphSpace)*j" :y="item.type==='list'?20+170*i:45+170*i" fill="#fff" class="svg-text-common-style" style="font-size:14px" :listId="item.listId" :taskValue="item.value" @click="opentask"  v-if="item.type==='list'">
                 {{task[item.listId]}}
               </text>
 
@@ -94,25 +94,14 @@
         </svg>
       </div>
     </div>
-    <Modal v-model="modal" title="任务列表"  closable>
-      <Table :loading="loading" :data="columnData" :columns="columns" size="small" stripe></Table>
-      <div style="margin: 10px;overflow: hidden">
-        <div style="float: right;">
-          <Page :total="pageTotal" :current="currentPage" size="small" :page-size="pageSize" @on-change="changeCurrentPage" show-total></Page>
-        </div>
-      </div>
-      <div slot="footer">
-      </div>
-    </Modal>
+    <task-modal :modal='modal' :listId="pageListId" @emitModal="emitModal" :taskValue="taskValue"></task-modal>
   </div>
 </template>
 
 <script>
 import * as ds from "deepstream.io-client-js";
-import cCircle from "@/components/circle";
-import Square from "@/components/square";
+import TaskModal from "@/components/pulsegraph/TaskModal";
 import CircularGraph from "./circularGraph";
-import HomePage from "@/views/home/HomePage";
 import {
   getPulseGraph,
   getCurrentUserInfo,
@@ -150,67 +139,15 @@ export default {
       myDone: {}, //我的已完成任务
       myToDo: {}, //我的未完成任务
 
-      columns: [
-        {
-          title: "交易号",
-          key: "transCode",
-          sortable: true,
-          render: (h, params) => {
-            return h("a", {
-              attrs: {
-                href: "/Form/index.html?data="+params.row.transCode,
-                target: "_blank"
-              },
-            }, params.row.transCode);
-          }
-        },
-        {
-          title: "创建者",
-          key: "creatorName",
-          sortable: true
-        },
-        {
-          title: "任务创建时间",
-          key: "crtTime",
-          sortable: true,
-          render: (h, params) => {
-            //时间戳转换为日期格式
-            function formatDateTime(inputTime) {
-              let date = new Date(inputTime);
-              let y = date.getFullYear();
-              let m = date.getMonth() + 1;
-              m = m < 10 ? "0" + m : m;
-              let d = date.getDate();
-              d = d < 10 ? "0" + d : d;
-              let h = date.getHours();
-              h = h < 10 ? "0" + h : h;
-              let minute = date.getMinutes();
-              let second = date.getSeconds();
-              minute = minute < 10 ? "0" + minute : minute;
-              second = second < 10 ? "0" + second : second;
-              return (
-                y + "-" + m + "-" + d + " " + h + ":" + minute + ":" + second
-              );
-            }
-            return h("span", formatDateTime(params.row.crtTime));
-          }
-        }
-      ],
-      columnData: [],
-      loading: true, //table是否加载
       modal: false, //弹出框是否显示
-      pageTotal: 0, //table总数
-      pageSize: 5,
-      currentPage: 1, //table当前页
-      pageListId: "",
+      taskValue:'',
+      pageListId: '',
       type: "teamDone"
     };
   },
 
   components: {
-    cCircle,
-    Square,
-    HomePage,
+    TaskModal,
     CircularGraph
   },
 
@@ -1024,20 +961,13 @@ export default {
     opentask(e) {
       this.modal = true;
       this.pageListId = e.target.getAttribute("listId");
-      let params = {
-        type: this.type,
-        page: this.currentPage,
-        listId: this.pageListId,
-        limit: this.pageSize
-      };
+      this.taskValue = e.target.getAttribute('taskValue');
+    },
 
-      getAppTaskCount(params).then(res => {
-        this.pageTotal = res.total;
-        if (res.tableContent.length > 0) {
-          this.columnData = res.tableContent;
-          this.loading = false;
-        }
-      });
+    //监听弹出框返回得状态值
+    emitModal(val,e){
+      this.pageListId = val.listId;
+      this.modal = false
     },
 
     /**
@@ -1270,6 +1200,10 @@ export default {
     overflow: hidden;
     left: 0;
   }
+}
+
+.svg-image-style-opacity {
+  opacity: 0.2;
 }
 
 .svg-image-style:hover {

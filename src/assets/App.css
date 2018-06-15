@@ -8,9 +8,36 @@
 
   @font-face {
     font-family: 'iconfont';  /* project id 677305 */
-    src: url('//at.alicdn.com/t/font_677305_hw8829vrzneidx6r.eot');
-    src: url('//at.alicdn.com/t/font_677305_hw8829vrzneidx6r.eot?#iefix') format('embedded-opentype'),
-    url('//at.alicdn.com/t/font_677305_hw8829vrzneidx6r.woff') format('woff'),
-    url('//at.alicdn.com/t/font_677305_hw8829vrzneidx6r.ttf') format('truetype'),
-    url('//at.alicdn.com/t/font_677305_hw8829vrzneidx6r.svg#iconfont') format('svg');
+    src: url('//at.alicdn.com/t/font_677305_rfvmguxkwms.eot');
+    src: url('//at.alicdn.com/t/font_677305_rfvmguxkwms.eot?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_677305_rfvmguxkwms.woff') format('woff'),
+    url('//at.alicdn.com/t/font_677305_rfvmguxkwms.ttf') format('truetype'),
+    url('//at.alicdn.com/t/font_677305_rfvmguxkwms.svg#iconfont') format('svg');
   }
+
+  .ivu-modal-header{
+    border-bottom: 0px  !important;
+    padding: 15px 15px 5px 15px;
+    line-height: 1;
+  }
+
+  .ivu-modal-footer{
+    border-top: 0px  !important;
+    padding: 0 15px;
+    line-height: 1;
+  }
+
+  .ivu-input {
+    border-top-style: none;
+    border-left-style: none;
+    border-right-style: none;
+    border-radius: 0px;
+  }
+
+  .ivu-input:focus {
+    border-bottom-color: #57a3f3;
+    box-shadow: 0 0 0 2px #fff;
+
+}
+
+ 

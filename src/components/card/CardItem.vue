@@ -1,6 +1,7 @@
 <template>
 
   <div class="card ivu-card ivu-card-bordered">
+     
     <Poptip class="badge-custom" width="560" placement="right-end" @on-popper-show="popperShow">
       <Badge :count="taskCount"></Badge>
       <div slot="title">
@@ -89,7 +90,8 @@ export default {
        pageTotal: 0, //table总数
       pageSize: 5,
       currentPage: 1, //table当前页
-      pageListId:''
+      pageListId:'',
+        modal: false, //弹出框是否显示
     };
   },
   created() {
@@ -153,7 +155,7 @@ export default {
         listId: this.pageListId,
         limit: this.pageSize
       };
-
+      this.modal = true;
       getAppTaskCount(params).then(res => {
         this.pageTotal = res.total;
         if (res.tableContent.length > 0) {

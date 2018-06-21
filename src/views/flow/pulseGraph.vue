@@ -28,10 +28,10 @@
       <div class="divide"></div>
       <div class="business_item" style="width:50px">
         <div class="left-name" v-for="(item,index) in dataItem" :key="index">
-          <span>{{item.name}}</span>
+          <span></span>
         </div>
       </div>
-      <div class="svg_box">
+      <div class="svg_box" @click="outBlur">
         <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
           <defs>
             <filter id="f1" x="0" y="0" width="200%" height="200%">
@@ -41,10 +41,14 @@
               <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
             </filter>
           </defs>
-
-          <defs>
+           <defs>
             <marker id="arrow" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" viewBox="0 0 15 15" refX="6" refY="6" orient="auto">
-              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: #4c4c4c;" />
+              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: #00ae9d;" />
+            </marker>
+          </defs>
+          <defs>
+            <marker id="arrow1" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" viewBox="0 0 15 15" refX="6" refY="6" orient="auto">
+              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: #f38113;" />
             </marker>
           </defs>
           <defs>
@@ -60,18 +64,26 @@
           </defs>
           <g v-for="(business,i) in dataItem" :key="i">
             <g v-for="(item,j) in business.child" :key="j">
-              
-              <image :x="40+(baseLength+graphSpace)*j" :y="22+170*i" :width="baseLength" :height="baseLength" :xlink:href="item.icon" @click="doAction(item)" rx='10' v-bind:class="{ 'svg-image-style-opacity': !item.isPermitted, 'svg-image-style': true }"></image>
+
+              <image :x="40+(baseLength+graphSpace)*item.sort" 
+                :y="50+170*i" :width="baseLength" 
+                :height="baseLength" 
+                :xlink:href="item.icon" 
+                rx='10'
+                v-on:click.stop="doAction(item)"  
+                v-bind:class="{ 'svg-image-style-opacity': !item.isPermitted, 'svg-image-style': true }"
+                >
+              </image>
               <!-- 科目与业务节点title -->
 
               <a @click="redirectTo(item)" :class="item.type==='list'?'svg-title-style':'svg-title-style-default'">
-                <text :x="40+baseLength/2+(baseLength+graphSpace)*j" :y="37+baseLength+170*i">
+                <text :x="40+baseLength/2+(baseLength+graphSpace)*item.sort" :y="65+baseLength+170*i">
                   {{item.value}}
                 </text>
               </a>
               <!-- 所有待办 -->
-              <circle :cx="40+(baseLength+graphSpace)*j" :cy="item.type==='list'?25+170*i:45+170*i" r="13" stroke-width="1" fill="red" v-if="item.type==='list' && item.listId in defaultDisplayTask" />
-              <text :x="40+(baseLength+graphSpace)*j" :y="item.type==='list'?20+170*i:45+170*i" fill="#fff" class="svg-text-common-style" style="font-size:14px" :listId="item.listId" :taskValue="item.value" @click="opentask"  v-if="item.type==='list'">
+              <circle :cx="40+(baseLength+graphSpace)*item.sort" :cy="item.type==='list'?50+170*i:45+170*i" r="12" stroke-width="1" fill="red" v-if="item.type==='list' && item.listId in defaultDisplayTask" />
+              <text :x="40+(baseLength+graphSpace)*item.sort" :y="item.type==='list'?45+170*i:45+170*i" fill="#fff" class="svg-text-common-style" style="font-size:12px" :listId="item.listId" :taskValue="item.value" @click="opentask" v-if="item.type==='list'">
                 {{defaultDisplayTask[item.listId]}}
               </text>
 
@@ -80,11 +92,11 @@
                       {{item.notToDo}}
                     </text> -->
             </g>
-            <polyline :points="business.point" style="fill: none;stroke: #cecece;stroke-width: 0.5px;" />
+            
           </g>
 
           <g v-for="(point) in pointList" :key="point.id">
-            <polyline :points="point.value" :marker-end="waterFlow[point.id]!==undefined?'url(#arrow_hight_color)':'url(#arrow)'" v-bind:class="waterFlow[point.id]!==undefined?'path':''" style="fill:none;stroke:#9d9d9d;stroke-width:1" />
+            <polyline :points="point.value" :marker-end="waterFlow[point.id]!==undefined?'url(#arrow_hight_color)':'url(#arrow1)'" v-bind:class="waterFlow[point.id]!==undefined?'path':''" style="fill:none;stroke:#f38113;stroke-width:1.5" />
           </g>
           <!-- 应用与应用之间的关系 -->
           <g v-for="(point) in transTypePointList" :key="point.id">
@@ -105,15 +117,16 @@ import CircularGraph from "./circularGraph";
 import {
   getPulseGraph,
   getCurrentUserInfo,
-  getAppTaskCount
+  getAppTaskCount,
+  getMockData
 } from "@/services/flowService";
 import { getToken } from "@/utils/utils";
 export default {
   data() {
     return {
       spinShow: true,
-      baseLength: 65, //图形大小
-      graphSpace: 100, //图形间距
+      baseLength: 45, //图形大小
+      graphSpace: 65, //图形间距
       circleFillColor: "#646b86",
       circleBorderColor: "#e0a527",
       squareFillColor: "#00ae9d",
@@ -123,7 +136,7 @@ export default {
       title: "",
       dataItem: [],
       pointList: [],
-      transTypePointList: [],
+      transTypePointList: [], //应用与应用之间得连线
       waterFlow: {},
       flowType: true,
       businessItemWidth: "50px",
@@ -135,15 +148,15 @@ export default {
       doneortodo: "todo",
       taskType: "mytask",
 
-      defaultDisplayTask:{},  //默认显示我的未完成任务
+      defaultDisplayTask: {}, //默认显示我的未完成任务
       teamDone: {}, //团队已完成任务
       teamTodo: {}, //团队待办任务
       myDone: {}, //我的已完成任务
       myToDo: {}, //我的未完成任务
 
       modal: false, //弹出框是否显示
-      taskValue:'',
-      pageListId: '',
+      taskValue: "",
+      pageListId: "",
       type: "myToDo"
     };
   },
@@ -160,6 +173,7 @@ export default {
       let baseLength = this.baseLength;
       let graphSpace = this.graphSpace;
       let data = this.dataItem,
+        nodePointXY = {},
         child = [],
         nextChildId,
         preChildId,
@@ -168,15 +182,23 @@ export default {
         endNode = [],
         targetTransType = "", //当前节点坐标
         smpley = 0, //同一业务类型下不相邻节点线y轴每次+5px
-        tempPoint;
+        tempPoint,
+        tempX,
+        tempY;
+
       for (let i = 0; i < data.length; i++) {
         let y = 170 + 170 * i;
         data[i].point = "0," + y + " 2100," + y;
         if (data[i].child.length > 0) {
           for (let i2 = 0; i2 < data[i].child.length; i2++) {
             this.dataItem[i].child[i2].pointX =
-              40 + (baseLength + graphSpace) * i2;
-            this.dataItem[i].child[i2].pointY = 22 + baseLength / 2 + 170 * i;
+              40 + (baseLength + graphSpace) * data[i].child[i2].sort;
+            this.dataItem[i].child[i2].pointY = 50 + baseLength / 2 + 170 * i;
+           
+           nodePointXY[this.dataItem[i].child[i2].id] =
+              this.dataItem[i].child[i2].pointX +
+              "," +
+              this.dataItem[i].child[i2].pointY;
 
             let childNode = data[i].child[i2];
             if (childNode.teamDone > 0) {
@@ -194,650 +216,52 @@ export default {
           }
         }
       }
-      for (let j = 0; j < data.length; j++) {
-        child = data[j].child; //子节点
-        if (child.length > 0) {
-          for (let k = 0; k < child.length; k++) {
-            if (child[k].lastNode.length > 0) {
-              this.dataItem[j].child[k].preNodes = [];
-            }
-
-            if (child[k].endNode && child[k].endNode.length > 0) {
-              this.dataItem[j].child[k].endPoints = [];
-              endNode = child[k].endNode;
-              //记录同一组下节点的下一个节点
-              if (k < child.length - 1) {
-                nextChildId = child[k + 1].id;
-              } else {
-                nextChildId = "0";
-              }
-              //记录同一组下节点的前一个节点
-
-              if (k > 0) {
-                preChildId = child[k - 1].id;
-              } else {
-                preChildId = "0";
-              }
-
-              for (let i1 = 0; i1 < endNode.length; i1++) {
-                if (endNode[i1].id === nextChildId) {
-                  //判断是否为节点下节点
-
-                  tempPoint =
-                    child[k].pointX +
-                    baseLength +
-                    "," +
-                    child[k].pointY +
-                    " " +
-                    (child[k].pointX + baseLength + graphSpace - 4.3) +
-                    "," +
-                    child[k].pointY;
-
-                  this.pointList.push({
-                    id: child[k].id + "_" + endNode[i1].id,
-
-                    value: tempPoint
-                  });
-                } else if (endNode[i1].id === preChildId) {
-                  //判断是否为节点前一节点
-
-                  tempPoint =
-                    child[k].pointX +
-                    "," +
-                    child[k].pointY +
-                    " " +
-                    (child[k].pointX - graphSpace + 4.3) +
-                    "," +
-                    child[k].pointY;
-
-                  this.pointList.push({
-                    id: child[k].id + "_" + endNode[i1].id,
-
-                    value: tempPoint
-                  });
-                } else {
-                  if (endNode[i1].groupId === data[j].id) {
-                    for (let k1 = 0; k1 < child.length; k1++) {
-                      //判断为同一类型不相邻节点
-
-                      if (endNode[i1].id === child[k1].id) {
-                        tempPoint =
-                          child[k].pointX +
-                          baseLength / 2 +
-                          "," +
-                          (child[k].pointY + baseLength / 2 + 20) +
-                          " " +
-                          (child[k].pointX + baseLength / 2) +
-                          "," +
-                          (child[k].pointY +
-                            baseLength / 2 +
-                            20 +
-                            15 +
-                            smpley) +
-                          " " +
-                          (child[k1].pointX + baseLength / 2) +
-                          "," +
-                          (child[k1].pointY +
-                            baseLength / 2 +
-                            20 +
-                            15 +
-                            smpley) +
-                          " " +
-                          (child[k1].pointX + baseLength / 2) +
-                          "," +
-                          (child[k1].pointY + baseLength / 2 + 4.3 + 20);
-
-                        this.pointList.push({
-                          id: child[k].id + "_" + endNode[i1].id,
-
-                          value: tempPoint
-                        });
-
-                        smpley += 10;
-                      }
-                    }
-                  } else {
-                    //相邻的不同业务类型,
-
-                    if (data[j].index - endNode[i1].groupIndex === 1) {
-                      //判断线条向上走
-
-                      targetTransType = data[endNode[i1].groupIndex];
-
-                      for (let t = 0; t < targetTransType.child.length; t++) {
-                        if (endNode[i1].id === targetTransType.child[t].id) {
-                          if (k === t) {
-                            //判断节点y坐标是否相同
-
-                            tempPoint =
-                              child[k].pointX +
-                              baseLength / 2 +
-                              "," +
-                              (child[k].pointY - baseLength / 2) +
-                              " " +
-                              (targetTransType.child[t].pointX +
-                                baseLength / 2) +
-                              "," +
-                              (targetTransType.child[t].pointY +
-                                baseLength / 2 +
-                                20 +
-                                4.3);
-
-                            this.pointList.push({
-                              id: child[k].id + "_" + endNode[i1].id,
-
-                              value: tempPoint
-                            });
-                          } else {
-                            tempPoint =
-                              child[k].pointX +
-                              baseLength / 2 +
-                              "," +
-                              (child[k].pointY - baseLength / 2) +
-                              " " +
-                              (child[k].pointX + baseLength / 2) +
-                              "," +
-                              (child[k].pointY -
-                                baseLength / 2 -
-                                20 -
-                                (100 - baseLength)) +
-                              " " +
-                              (targetTransType.child[t].pointX +
-                                baseLength / 2) +
-                              "," +
-                              (targetTransType.child[t].pointY +
-                                baseLength / 2 +
-                                20 +
-                                30) +
-                              " " +
-                              (targetTransType.child[t].pointX +
-                                baseLength / 2) +
-                              "," +
-                              (targetTransType.child[t].pointY +
-                                baseLength / 2 +
-                                20 +
-                                4.3);
-
-                            this.pointList.push({
-                              id: child[k].id + "_" + endNode[i1].id,
-
-                              value: tempPoint
-                            });
-                          }
-                        }
-                      }
-                    }
-
-                    if (data[j].index - endNode[i1].groupIndex === -1) {
-                      //判断线条向下走
-
-                      targetTransType = data[endNode[i1].groupIndex];
-
-                      for (let t = 0; t < targetTransType.child.length; t++) {
-                        if (endNode[i1].id === targetTransType.child[t].id) {
-                          if (k === t) {
-                            //判断节点y坐标是否相同
-
-                            tempPoint =
-                              child[k].pointX +
-                              baseLength / 2 +
-                              "," +
-                              (child[k].pointY + baseLength / 2 + 20) +
-                              " " +
-                              (targetTransType.child[t].pointX +
-                                baseLength / 2) +
-                              "," +
-                              (targetTransType.child[t].pointY -
-                                baseLength / 2 -
-                                4.3);
-
-                            this.pointList.push({
-                              id: child[k].id + "_" + endNode[i1].id,
-
-                              value: tempPoint
-                            });
-                          } else {
-                            tempPoint =
-                              child[k].pointX +
-                              baseLength / 2 +
-                              "," +
-                              (child[k].pointY + baseLength / 2 + 20) +
-                              " " +
-                              (child[k].pointX + baseLength / 2) +
-                              "," +
-                              (child[k].pointY + baseLength / 2 + 55) +
-                              " " +
-                              (targetTransType.child[t].pointX +
-                                baseLength / 2) +
-                              "," +
-                              (targetTransType.child[t].pointY -
-                                baseLength / 2 -
-                                (100 - baseLength) -
-                                15) +
-                              " " +
-                              (targetTransType.child[t].pointX +
-                                baseLength / 2) +
-                              "," +
-                              (targetTransType.child[t].pointY -
-                                baseLength / 2 -
-                                4.3);
-
-                            this.pointList.push({
-                              id: child[k].id + "_" + endNode[i1].id,
-
-                              value: tempPoint
-                            });
-                          }
-                        }
-                      }
-                    }
-
-                    //不相邻的业务类型
-
-                    if (Math.abs(data[j].index - endNode[i1].groupIndex) > 1) {
-                      //判断线条向下走
-
-                      targetTransType = data[endNode[i1].groupIndex];
-
-                      for (let t = 0; t < targetTransType.child.length; t++) {
-                        if (endNode[i1].id === targetTransType.child[t].id) {
-                          if (k === t && k === 0) {
-                            //判断节点y坐标是否相同
-
-                            tempPoint =
-                              child[k].pointX +
-                              "," +
-                              child[k].pointY +
-                              " " +
-                              (child[k].pointX - 20) +
-                              "," +
-                              child[k].pointY +
-                              " " +
-                              (targetTransType.child[t].pointX - 20) +
-                              "," +
-                              targetTransType.child[t].pointY +
-                              " " +
-                              (targetTransType.child[t].pointX - 4.3) +
-                              "," +
-                              targetTransType.child[t].pointY;
-
-                            this.pointList.push({
-                              id: child[k].id + "_" + endNode[i1].id,
-
-                              value: tempPoint
-                            });
-                          } else {
-                            tempPoint =
-                              child[k].pointX +
-                              baseLength +
-                              "," +
-                              child[k].pointY +
-                              " " +
-                              (child[k].pointX + baseLength + 20) +
-                              "," +
-                              child[k].pointY +
-                              " " +
-                              (child[k].pointX + baseLength + 20) +
-                              "," +
-                              (targetTransType.child[t].pointY -
-                                baseLength / 2 -
-                                (100 - baseLength) -
-                                15) +
-                              " " +
-                              (targetTransType.child[t].pointX +
-                                baseLength / 2) +
-                              "," +
-                              (targetTransType.child[t].pointY -
-                                baseLength / 2 -
-                                (100 - baseLength) -
-                                15) +
-                              " " +
-                              (targetTransType.child[t].pointX +
-                                baseLength / 2) +
-                              "," +
-                              (targetTransType.child[t].pointY -
-                                baseLength / 2 -
-                                4.3);
-
-                            this.pointList.push({
-                              id: child[k].id + "_" + endNode[i1].id,
-
-                              value: tempPoint
-                            });
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-
-            /*
-            *  应用与应用的关系
-            */
-            if (child[k].relevantNode && child[k].relevantNode.length > 0) {
-              let relevantNode = child[k].relevantNode;
-              //记录同一组下节点的下一个节点
-              if (k < child.length - 1) {
-                nextRelevantId = child[k + 1].id;
-              } else {
-                nextRelevantId = "0";
-              }
-              //记录同一组下节点的前一个节点
-
-              if (k > 0) {
-                preRelevantId = child[k - 1].id;
-              } else {
-                preRelevantId = "0";
-              }
-
-              for (let i3 = 0; i3 < relevantNode.length; i3++) {
-                if (relevantNode[i3].type === "list") {
-                  if (String(relevantNode[i3].id) === nextRelevantId) {
-                    //判断是否为节点下节点
-
-                    tempPoint =
-                      child[k].pointX +
-                      baseLength +
-                      "," +
-                      child[k].pointY +
-                      " " +
-                      (child[k].pointX + baseLength + graphSpace - 4.3) +
-                      "," +
-                      child[k].pointY;
-
-                    this.transTypePointList.push({
-                      id: child[k].id + "_" + relevantNode[i3].id,
-                      value: tempPoint
-                    });
-                  } else if (String(relevantNode[i3].id) === preRelevantId) {
-                    //判断是否为节点前一节点
-
-                    tempPoint =
-                      child[k].pointX +
-                      "," +
-                      child[k].pointY +
-                      " " +
-                      (child[k].pointX - graphSpace + 4.3) +
-                      "," +
-                      child[k].pointY;
-
-                    this.transTypePointList.push({
-                      id: child[k].id + "_" + relevantNode[i3].id,
-                      value: tempPoint
-                    });
-                  } else {
-                    if (String(relevantNode[i3].groupId) === data[j].id) {
-                      for (let k1 = 0; k1 < child.length; k1++) {
-                        //判断为同一类型不相邻节点
-
-                        if (String(relevantNode[i3].id) === child[k1].id) {
-                          tempPoint =
-                            child[k].pointX +
-                            baseLength / 2 +
-                            "," +
-                            (child[k].pointY + baseLength / 2 + 20) +
-                            " " +
-                            (child[k].pointX + baseLength / 2) +
-                            "," +
-                            (child[k].pointY + baseLength / 2 + 20 + 15) +
-                            " " +
-                            (child[k1].pointX + baseLength / 2) +
-                            "," +
-                            (child[k1].pointY + baseLength / 2 + 20 + 15) +
-                            " " +
-                            (child[k1].pointX + baseLength / 2) +
-                            "," +
-                            (child[k1].pointY + baseLength / 2 + 20 + 4.3);
-
-                          this.transTypePointList.push({
-                            id: child[k].id + "_" + relevantNode[i3].id,
-                            value: tempPoint
-                          });
-                        }
-                      }
-                    } else {
-                      //相邻的不同业务类型,
-
-                      if (data[j].index - relevantNode[i3].groupIndex === 1) {
-                        //判断线条向上走
-                        targetTransType = data[relevantNode[i3].groupIndex];
-                        for (
-                          let t1 = 0;
-                          t1 < targetTransType.child.length;
-                          t1++
-                        ) {
-                          if (
-                            String(relevantNode[i3].id) ===
-                            targetTransType.child[t1].id
-                          ) {
-                            if (k === t1) {
-                              //判断节点y坐标是否相同
-
-                              tempPoint =
-                                child[k].pointX +
-                                baseLength / 2 +
-                                "," +
-                                (child[k].pointY - baseLength / 2) +
-                                " " +
-                                (targetTransType.child[t1].pointX +
-                                  baseLength / 2) +
-                                "," +
-                                (targetTransType.child[t1].pointY +
-                                  baseLength / 2 +
-                                  +20 +
-                                  4.3);
-
-                              this.transTypePointList.push({
-                                id: child[k].id + "_" + relevantNode[i3].id,
-                                value: tempPoint
-                              });
-                            } else {
-                              tempPoint =
-                                child[k].pointX +
-                                baseLength / 2 +
-                                "," +
-                                (child[k].pointY - baseLength / 2) +
-                                " " +
-                                (child[k].pointX + baseLength / 2) +
-                                "," +
-                                (child[k].pointY -
-                                  baseLength / 2 -
-                                  25 -
-                                  (100 - baseLength)) +
-                                " " +
-                                (targetTransType.child[t1].pointX +
-                                  baseLength / 2) +
-                                "," +
-                                (targetTransType.child[t1].pointY +
-                                  baseLength / 2 +
-                                  20 +
-                                  35) +
-                                " " +
-                                (targetTransType.child[t1].pointX +
-                                  baseLength / 2) +
-                                "," +
-                                (targetTransType.child[t1].pointY +
-                                  baseLength / 2 +
-                                  20 +
-                                  4.3);
-
-                              this.transTypePointList.push({
-                                id: child[k].id + "_" + relevantNode[i3].id,
-
-                                value: tempPoint
-                              });
-                            }
-                          }
-                        }
-                      }
-
-                      if (data[j].index - relevantNode[i3].groupIndex === -1) {
-                        //判断线条向下走
-
-                        targetTransType = data[relevantNode[i3].groupIndex];
-
-                        for (
-                          let t2 = 0;
-                          t2 < targetTransType.child.length;
-                          t2++
-                        ) {
-                          if (
-                            String(relevantNode[i3].id) ===
-                            targetTransType.child[t2].id
-                          ) {
-                            if (k === t2) {
-                              //判断节点y坐标是否相同
-
-                              tempPoint =
-                                child[k].pointX +
-                                baseLength / 2 +
-                                "," +
-                                (child[k].pointY + baseLength / 2 + 20) +
-                                " " +
-                                (targetTransType.child[t2].pointX +
-                                  baseLength / 2) +
-                                "," +
-                                (targetTransType.child[t2].pointY -
-                                  baseLength / 2 -
-                                  4.3);
-
-                              this.transTypePointList.push({
-                                id: child[k].id + "_" + relevantNode[i3].id,
-
-                                value: tempPoint
-                              });
-                            } else {
-                              tempPoint =
-                                child[k].pointX +
-                                baseLength / 2 +
-                                "," +
-                                (child[k].pointY + baseLength / 2 + 20) +
-                                " " +
-                                (child[k].pointX + baseLength / 2) +
-                                "," +
-                                (child[k].pointY + baseLength / 2 + 50) +
-                                " " +
-                                (targetTransType.child[t2].pointX +
-                                  baseLength / 2) +
-                                "," +
-                                (targetTransType.child[t2].pointY -
-                                  baseLength / 2 -
-                                  (100 - baseLength) -
-                                  20) +
-                                " " +
-                                (targetTransType.child[t2].pointX +
-                                  baseLength / 2) +
-                                "," +
-                                (targetTransType.child[t2].pointY -
-                                  baseLength / 2 -
-                                  4.3);
-
-                              this.transTypePointList.push({
-                                id: child[k].id + "_" + relevantNode[i3].id,
-
-                                value: tempPoint
-                              });
-                            }
-                          }
-                        }
-                      }
-
-                      //不相邻的业务类型
-                      if (
-                        Math.abs(data[j].index - relevantNode[i3].groupIndex) >
-                        1
-                      ) {
-                        //判断线条向下走
-
-                        targetTransType = data[relevantNode[i3].groupIndex];
-
-                        for (
-                          let t3 = 0;
-                          t3 < targetTransType.child.length;
-                          t3++
-                        ) {
-                          if (
-                            String(relevantNode[i3].id) ===
-                            targetTransType.child[t3].id
-                          ) {
-                            if (k === t3 && k === 0) {
-                              //判断节点y坐标是否相同
-
-                              tempPoint =
-                                child[k].pointX +
-                                "," +
-                                child[k].pointY +
-                                " " +
-                                (child[k].pointX - 20) +
-                                "," +
-                                child[k].pointY +
-                                " " +
-                                (targetTransType.child[t3].pointX - 20) +
-                                "," +
-                                targetTransType.child[t3].pointY +
-                                " " +
-                                (targetTransType.child[t3].pointX - 4.3) +
-                                "," +
-                                targetTransType.child[t3].pointY;
-
-                              this.transTypePointList.push({
-                                id: child[k].id + "_" + relevantNode[i3].id,
-
-                                value: tempPoint
-                              });
-                            } else {
-                              tempPoint =
-                                child[k].pointX +
-                                baseLength +
-                                "," +
-                                child[k].pointY +
-                                " " +
-                                (child[k].pointX + baseLength + 20) +
-                                "," +
-                                child[k].pointY +
-                                " " +
-                                (child[k].pointX + baseLength + 20) +
-                                "," +
-                                (targetTransType.child[t3].pointY -
-                                  baseLength / 2 -
-                                  (100 - baseLength) -
-                                  25) +
-                                " " +
-                                (targetTransType.child[t3].pointX +
-                                  baseLength / 2) +
-                                "," +
-                                (targetTransType.child[t3].pointY -
-                                  baseLength / 2 -
-                                  (100 - baseLength) -
-                                  25) +
-                                " " +
-                                (targetTransType.child[t3].pointX +
-                                  baseLength / 2) +
-                                "," +
-                                (targetTransType.child[t3].pointY -
-                                  baseLength / 2 -
-                                  4.3);
-
-                              this.transTypePointList.push({
-                                id: child[k].id + "_" + relevantNode[i3].id,
-
-                                value: tempPoint
-                              });
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+    
+      let that = this;
+      data.forEach(function(item, itemIndex) {
+        item.child.forEach(function(child,childIndex){
+          if(child.relevantNode && child.relevantNode.length>0){
+             // 构造应用与应用之间关系
+             child.relevantNode.forEach(function(relevantNode,relIndex){
+               if(relevantNode.id in nodePointXY){
+                  tempPoint = nodePointXY[relevantNode.id].split(',');
+                  tempX = Number(tempPoint[0]);
+                  tempY = Number(tempPoint[1]);
+                  that.transTypePointList.push({
+                    id:child.id+"_"+relevantNode.id,
+                    value:(child.pointX+baseLength)+','+child.pointY+' '+(tempX-4.3)+','+tempY
+                  })
+               }
+             });
           }
-          smpley = 0; //清除
-        }
-      }
+
+          if(child.endNode && child.endNode.length>0){
+            child.endNode.forEach(function(endNode,endIndex){
+              if(endNode.id in nodePointXY){
+                 tempPoint = nodePointXY[endNode.id].split(',');
+                  tempX = Number(tempPoint[0]);
+                  tempY = Number(tempPoint[1]);
+                //线条朝上
+                if(endNode.groupIndex<item.index){
+                  let baseNum  = (tempX-child.pointX)/(baseLength+graphSpace) *8.5;
+                    that.pointList.push({
+                      id:child.id+"_"+endNode.id,
+                      value:(child.pointX+baseLength/2)+','+(child.pointY-baseLength/2)+' '+(tempX+baseLength/2 - baseNum)+','+(tempY+baseLength/2+20)
+                    });
+                }
+                //线条朝下
+                else if(endNode.groupIndex>item.index){
+                  let baseNum  = (tempX-child.pointX)/(baseLength+graphSpace) *8.5;
+                  that.pointList.push({
+                    id:child.id+"_"+endNode.id,
+                    value:(child.pointX+baseLength/2)+','+(child.pointY+baseLength/2+20)+' '+(tempX+baseLength/2 - baseNum)+','+(tempY-baseLength/2-4.3)
+                  })
+                }
+              }
+            })
+          }
+        })
+      });
     },
 
     //计算svg宽度
@@ -888,6 +312,10 @@ export default {
             item.lastNode[j];
         }
       }
+    },
+
+    outBlur:function(e){
+       this.waterFlow = {}
     },
 
     /**
@@ -963,13 +391,13 @@ export default {
     opentask(e) {
       this.modal = true;
       this.pageListId = e.target.getAttribute("listId");
-      this.taskValue = e.target.getAttribute('taskValue');
+      this.taskValue = e.target.getAttribute("taskValue");
     },
 
     //监听弹出框返回得状态值
-    emitModal(val,e){
+    emitModal(val, e) {
       this.pageListId = val.listId;
-      this.modal = false
+      this.modal = false;
     },
 
     /**
@@ -1011,7 +439,7 @@ export default {
   },
   mounted() {
     var that = this;
-    getPulseGraph(this.caseId)
+     getPulseGraph(this.caseId)
       .then(res => {
         var getSubjectIicon = function(subjectName) {
           var icon = "";
@@ -1064,8 +492,11 @@ export default {
           calcSvgWidth + "px";
         window.document.getElementById("flow-box").style.height =
           calcSvgHeight + "px";
+
         that.draw();
+
         this.defaultDisplayTask = this.myToDo;
+
         that.spinShow = false;
       })
       .catch(error => {
@@ -1100,7 +531,7 @@ export default {
   position: relative;
   margin: auto 0px;
   overflow: auto;
-  min-height: 765px;
+  min-height: 509px;
   margin-left: 1px;
   border-left: 1px solid #9e9e9e57;
 }
@@ -1174,11 +605,10 @@ export default {
 .left-name {
   padding: 15px;
   height: 170px;
-  border-right: 1px solid @borderColor;
-  border-bottom: 1px solid @borderColor;
+  // border-right: 1px solid @borderColor;
+  // border-bottom: 1px solid @borderColor;
   // background-color: @bg;
-  text-align: center;
-
+  // text-align: center;
   span {
     font-size: 18px;
     height: 100%;
@@ -1188,7 +618,7 @@ export default {
 }
 
 .svg_box {
-  border-bottom: 1px solid @borderColor;
+  // border-bottom: 1px solid @borderColor;
   display: table-cell;
   position: relative;
   height: 100%;
@@ -1265,8 +695,8 @@ export default {
 .transTypeRel_style {
   fill: none;
   stroke: #00ae9d;
-  stroke-width: 2;
-  stroke-dasharray: 2;
+  stroke-width: 1.5;
+  // stroke-dasharray: 2;
 }
 
 .vertical-center-modal {

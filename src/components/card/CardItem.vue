@@ -1,7 +1,5 @@
 <template>
-
   <div class="card ivu-card ivu-card-bordered">
-     
     <Poptip class="badge-custom" width="560" placement="right-end" @on-popper-show="popperShow">
       <Badge :count="taskCount"></Badge>
       <div slot="title">
@@ -10,10 +8,10 @@
       <div slot="content" class="api">
         <Table :columns="columns" :data="columnData"></Table>
         <div style="margin: 10px;overflow: hidden">
-        <div style="float: right;">
-          <Page :total="pageTotal" :current="currentPage" size="small" :page-size="pageSize" @on-change="changeCurrentPage" show-total></Page>
+          <div style="float: right;">
+            <Page :total="pageTotal" :current="currentPage" size="small" :page-size="pageSize" @on-change="changeCurrentPage" show-total></Page>
+          </div>
         </div>
-      </div>
       </div>
     </Poptip>
     <img :src="appinfo.icon" />
@@ -21,15 +19,11 @@
       <h5>{{appinfo.text}}</h5>
       <span>{{appinfo.transName}}</span>
     </div>
-
   </div>
-
 </template>
 
 <script>
-import {
-  getAppTaskCount
-} from "@/services/flowService";
+import { getAppTaskCount } from "@/services/flowService";
 export default {
   props: ["appinfo", "allTaskCount"],
   data() {
@@ -86,12 +80,12 @@ export default {
         }
       ],
       columnData: [],
-      loading:true,
-       pageTotal: 0, //table总数
+      loading: true,
+      pageTotal: 0, //table总数
       pageSize: 5,
       currentPage: 1, //table当前页
-      pageListId:'',
-        modal: false, //弹出框是否显示
+      pageListId: "",
+      modal: false //弹出框是否显示
     };
   },
   created() {
@@ -131,7 +125,7 @@ export default {
         window.open(url, "_blank");
       } else {
         if (~appInfo.url.indexOf("outlink")) {
-          ulr = appInfo.url;
+          url = appInfo.url;
         } else if (~appInfo.url.indexOf("app")) {
           url = "appReport/" + url;
         } else {
@@ -147,10 +141,10 @@ export default {
       }
     },
 
-    popperShow(e){
-      this.pageListId = this.appinfo.url.split('/')[1]
+    popperShow(e) {
+      this.pageListId = this.appinfo.url.split("/")[1];
       let params = {
-        type: 'myToDo',
+        type: "myToDo",
         page: this.currentPage,
         listId: this.pageListId,
         limit: this.pageSize
@@ -165,12 +159,12 @@ export default {
       });
     },
 
-     /**
+    /**
      * 分页加载
      */
     changeCurrentPage(currentPage) {
       let params = {
-        type: 'myToDo',
+        type: "myToDo",
         page: currentPage,
         listId: this.pageListId,
         limit: this.pageSize
@@ -225,6 +219,8 @@ export default {
       position: relative;
       z-index: -99;
       font-size: 16px;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
     span {

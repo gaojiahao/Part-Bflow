@@ -473,7 +473,7 @@ export default {
           if (d.child) {
             d.child.map(c => {
               var subjectList = ["", "", ""];
-              if (c.type === "subject") {
+              if (c.type === "subject" && c.value) {
                 c.icon = "resources/images/icon/" + getSubjectIicon(c.value);
               }
             });
@@ -488,16 +488,18 @@ export default {
             ? that.calcSvgWidth(res.dataItem)
             : 1400;
         let calcSvgHeight = that.calcSvgHeight(res.dataItem);
-        window.document.getElementById("flow-box").style.width =
-          calcSvgWidth + "px";
-        window.document.getElementById("flow-box").style.height =
-          calcSvgHeight + "px";
-
-        that.draw();
-
-        this.defaultDisplayTask = this.myToDo;
-
-        that.spinShow = false;
+        if(window.document.getElementById("flow-box")){
+          window.document.getElementById("flow-box").style.width =
+            calcSvgWidth + "px";
+          window.document.getElementById("flow-box").style.height =
+            calcSvgHeight + "px";
+  
+          that.draw();
+  
+          this.defaultDisplayTask = this.myToDo;
+  
+          that.spinShow = false;
+        }
       })
       .catch(error => {
         let me = this;

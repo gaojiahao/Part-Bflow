@@ -7,10 +7,10 @@
         <Row>
           <Col span="24">
           <ButtonGroup class="fr">
-            <Button size="small" @click="goAppManage" type="ghost" caseId='apps' v-if="isAdmin">
+            <!-- <Button size="small" @click="goAppManage" type="ghost" caseId='apps' v-if="isAdmin">
               <i class="iconfont">&#xe6cf;</i>
               应用管理
-            </Button>
+            </Button> -->
             <Button size="small" @click="changeView" type="ghost" caseId='apps'>
               <i class="iconfont">&#xe608;</i>
               全部应用

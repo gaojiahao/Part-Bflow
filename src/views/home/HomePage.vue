@@ -11,12 +11,12 @@
               <i class="iconfont">&#xe6cf;</i>
               应用管理
             </Button> -->
-            <Button size="small" @click="changeView" type="ghost" caseId='apps'>
+            <Button size="small" @click="changeView" type="ghost" caseId='apps' v-bind:class="caseId==='apps'?'ivu-btn-active':''">
               <i class="iconfont">&#xe608;</i>
               全部应用
             </Button>
-            <Button size="small" v-for="(pulse,i) in  pulseGraphLlistr" :key="i" type="ghost" @click="changeView" :caseId="pulse.id">
-               <i class="iconfont">&#xe64c;</i>
+            <Button size="small" v-for="(pulse,i) in  pulseGraphLlistr" :key="i" type="ghost" @click="changeView" :caseId="pulse.id" v-bind:class="caseId===pulse.id?'ivu-btn-active':''">
+              <i class="iconfont">&#xe64c;</i>
               {{pulse.name}}
             </Button>
           </ButtonGroup>
@@ -72,45 +72,46 @@ export default {
       spinShow: true,
       cutView: true,
       menuList: [],
-      favoriteMenu:{
-        leaf:false,
-        text:"常用应用",
-        children:[]
+      favoriteMenu: {
+        leaf: false,
+        text: "常用应用",
+        children: []
       },
-      abc: 0,
       caseId: "",
       pulseGraphLlistr: [],
       allTaskCount: [],
       ds: ds("wss://sunwingfood.roletask.com:6021/deepstream"),
       books$$: null,
-      isAdmin:(this.$currentUser.isSysRoleList && Array.isArray(this.$currentUser.isSysRoleList))
-        ? this.$currentUser.isSysRoleList.filter(function(o) {
-            return o.id == 1;
-          }).length
-        : false
+      isAdmin:
+        this.$currentUser.isSysRoleList &&
+        Array.isArray(this.$currentUser.isSysRoleList)
+          ? this.$currentUser.isSysRoleList.filter(function(o) {
+              return o.id == 1;
+            }).length
+          : false
     };
+
   },
   mounted() {
     this.subscribeMessage();
 
-    getMyFavorite().then(res=>{
-      if(res.tableContent.length>0){
+    getMyFavorite().then(res => {
+      if (res.tableContent.length > 0) {
         this.favoriteMenu.children = res.tableContent;
       }
-    })
+    });
 
     //获取当前用户所有待办任务
     getCurrentUserAllTasks().then(res => {
       this.allTaskCount = res.tableContent;
       //获取菜单信息
       getMenu().then(res => {
-        
-      this.urlMd5(res);
+        this.urlMd5(res);
 
-        if(this.favoriteMenu.children.length>0){
-          this.menuList = [this.favoriteMenu,...res];
-        }else{
-          this.menuList =res;
+        if (this.favoriteMenu.children.length > 0) {
+          this.menuList = [this.favoriteMenu, ...res];
+        } else {
+          this.menuList = res;
         }
         this.spinShow = false;
       });
@@ -127,6 +128,7 @@ export default {
 
       if (caseId === "apps") {
         this.cutView = true;
+        this.caseId = "apps"
       } else {
         this.cutView = false;
         this.caseId = Number(caseId);
@@ -140,7 +142,7 @@ export default {
     //订阅消息
     subscribeMessage: function() {
       let currentUser = this.$currentUser;
-      if(currentUser.nickname && currentUser.Id){
+      if (currentUser.nickname && currentUser.Id) {
         let username = [currentUser.nickname, currentUser.userId].join("|");
         let token = getToken();
         //注册deepStream
@@ -161,25 +163,24 @@ export default {
     },
 
     //处理链接过长时
-    urlMd5:function(res){
+    urlMd5: function(res) {
       let loop = function(res) {
-          let l = res.length,
-            item;
+        let l = res.length,
+          item;
 
-          while (l--) {
-            item = res[l];
-            if (item.url && item.target == "_iframe") {
-              let url = item.url,
-                outlinks = {},
-                md5Str = window.top.MD5(url),
-                newUrl = "outlink/" + md5Str;
-              item.url = newUrl;
-            }
-            if (item.children) loop(item.children);
+        while (l--) {
+          item = res[l];
+          if (item.url && item.target == "_iframe") {
+            let url = item.url,
+              outlinks = {},
+              md5Str = window.top.MD5(url),
+              newUrl = "outlink/" + md5Str;
+            item.url = newUrl;
           }
-
-        };
-        loop(res);
+          if (item.children) loop(item.children);
+        }
+      };
+      loop(res);
     }
   }
 };
@@ -251,7 +252,7 @@ export default {
 
 .main-header {
   position: fixed;
-  
+
   top: 0px;
   height: 40px;
   width: 100%;
@@ -279,6 +280,13 @@ export default {
 &-content {
   padding: 20px 25px;
   position: relative;
+}
+
+//按钮选中时样式
+.ivu-btn-active {
+  color: #fff;
+  background-color: #2d8cf0;
+  border-color: #2d8cf0;
 }
 </style>
 

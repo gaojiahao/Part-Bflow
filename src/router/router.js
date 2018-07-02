@@ -29,6 +29,30 @@ export const dashboardRouter = {
     component: () => import('@/views/dashboard/dashboard.vue')
 };
 
+export const appListRouter = {
+    path: '/appList',
+    name: 'appList',
+    meta: {
+        title: 'appList - 应用列表'
+    },
+    component: () => import('@/views/appManage/appList.vue'),
+    children: [{
+        path: 'add',
+        name: 'add',
+        meta: {
+            title: 'add - 添加应用'
+        },
+        component: () => import('@/views/appManage/appAdd.vue')
+    },{
+        path: 'appSetting',
+        name: 'appSetting',
+        meta: {
+            title: 'appSetting - 应用设置'
+        },
+        component: () => import('@/views/appManage/appSetting/appDetails.vue')
+    }]
+};
+
 export const homepageRouter = {
     path: '/homepage',
     name: 'homepage',
@@ -52,5 +76,6 @@ export const routers = [
     flowRouter,
     homepageRouter,
     dashboardRouter,
+    appListRouter,
     ...appRouter
 ];

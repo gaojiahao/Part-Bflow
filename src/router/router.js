@@ -62,6 +62,15 @@ export const homepageRouter = {
     component: () => import('@/views/home/HomePage.vue')
 };
 
+export const sujectformRouter = {
+    path:'/subjectform',
+    name:'subjectform',
+    meta: {
+        title: 'subjectform - 科目分录'
+    },
+    component: () => import('@/views/form/SubjectForm.vue')
+}
+
 export const appRouter = [
     {
         path: '/',
@@ -77,5 +86,6 @@ export const routers = [
     homepageRouter,
     dashboardRouter,
     appListRouter,
+    sujectformRouter,
     ...appRouter
 ];

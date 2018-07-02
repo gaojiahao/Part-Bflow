@@ -38,5 +38,10 @@ export const getCurrentUserAllTasks = () => request('/H_roleplay-si/ds/getMyTask
  */
 export const getMyFavorite = () => request('/H_roleplay-si/ds/getMyFavorite')
 
-
+/**
+ * 查询待办数量明细
+ * @param {Object} 参数
+ */
 export const getAppTaskCount = (params) => request('/H_roleplay-si/trans/getAppTaskCount',params)
+
+export const getMockData = () =>  request('../mock/flow/pulseGraph.json');

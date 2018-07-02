@@ -1,373 +1,502 @@
 {
     "dataItem": [
         {
-            "name": "销售与计划",
+            "name": "项目计划",
             "index": 0,
             "id": "1",
+            "title": "培训业务",
             "child": [
                 {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "1",
-                    "sort": 1,
-                    "type": "list",
-                    "value": "销售订单",
-                    "endNode": [
+                },
+                {},
+                {},
+                {
+                    "calcRelCate": 13,
+                    "allToDo": 4305,
+                    "name": "资金 - 13 - 8003",
+                    "lastNode": [
                         {
-                            "groupId": "1",
-                            "id": "2",
-                            "groupIndex": 0
-                        },
-                        {
-                            "groupId": "1",
-                            "id": "6",
-                            "groupIndex": 0
-                        },
-                        {
+                            "transType": "YW1",
                             "groupId": "2",
-                            "id": "11",
+                            "name": "订单",
+                            "id": "2",
                             "groupIndex": 1
                         }
-                    ]
-                },
-                {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "2",
-                    "sort": 2,
+                    ],
+                    "relevantNode": [],
+                    "id": "30",
+                    "sort": 2.000000,
                     "type": "subject",
-                    "value": "待计划的订单",
+                    "value": "资金",
                     "endNode": [
-                        {
-                            "groupId": "1",
-                            "id": "3",
-                            "groupIndex": 0
-                        },
-                        {
-                            "groupId": "1",
-                            "id": "5",
-                            "groupIndex": 0
-                        }
                     ]
                 },
+                {},
                 {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "3",
-                    "sort": 3,
-                    "type": "list",
-                    "value": "需求分析",
-                    "endNode": []
-                },
-                {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "4",
-                    "sort": 4,
+                    "calcRelCate": 3,
+                    "allToDo": 838,
+                    "name": "往来 - 3 - 9002,9005,9008,2221,9001,9004,9007,9010,9003,9006,9009",
+                    "lastNode": [
+                    ],
+                    "relevantNode": [],
+                    "id": "24",
+                    "sort": 3.000000,
                     "type": "subject",
-                    "value": "待领料需求",
+                    "value": "往来",
                     "endNode": [
-                        {
-                            "groupId": "1",
-                            "id": "5",
-                            "groupIndex": 0
-                        }
                     ]
                 },
+                {},
                 {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "5",
-                    "sort": 5,
-                    "type": "list",
-                    "value": "需求调整",
-                    "endNode": []
-                },
-                {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "6",
-                    "sort": 6,
+                    "calcRelCate": 6,
+                    "allToDo": 1313,
+                    "name": "毛利 - 6 - 5002,5001",
+                    "lastNode": [
+                    ],
+                    "relevantNode": [],
+                    "id": "26",
+                    "sort": 9.000000,
                     "type": "subject",
-                    "value": "待销售出库订单",
-                    "endNode": [
-                        {
-                            "groupId": "1",
-                            "id": "7",
-                            "groupIndex": 0
-                        },
-                        {
-                            "groupId": "1",
-                            "id": "5",
-                            "groupIndex": 0
-                        }
-                    ]
-                },
-                {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "7",
-                    "sort": 7,
-                    "type": "list",
-                    "value": "销售出库",
-                    "endNode": [
-                        {
-                            "groupId": "4",
-                            "id": "16",
-                            "groupIndex": 3
-                        },
-                        {
-                            "groupId": "4",
-                            "id": "20",
-                            "groupIndex": 3
-                        }
+                    "value": "毛利",
+                    "endNode": [    
                     ]
                 }
             ]
         },
         {
-            "name": "采购与生产",
+            "name": "项目结算",
             "index": 1,
             "id": "2",
+            "title": "培训业务",
             "child": [
                 {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "8",
-                    "sort": 1,
-                    "type": "list",
-                    "value": "开放式采购入库",
-                    "endNode": [
+                    "myToDo": 0,
+                    "isPermitted": true,
+                    "myDone": 0,
+                    "icon": "resources/images/icon/stock-order.png",
+                    "teamTodo": 0,
+                    "relevantNode": [
                         {
-                            "groupId": "3",
-                            "id": "15",
-                            "groupIndex": 2
-                        },
-                        {
-                            "groupId": "4",
-                            "id": "21",
-                            "groupIndex": 3
+                            "typeOrCode": "YW1",
+                            "groupId": "2",
+                            "name": "订单",
+                            "id": "2",
+                            "groupIndex": 1,
+                            "type": "list"
                         }
-                    ]
+                    ],
+                    "sort": 0.100000,
+                    "type": "list",
+                    "endNode": [
+                    ],
+                    "url": "app/d2d592a3-47e1-4df5-99bd-01739dbd3c42/2085",
+                    "listId": "d2d592a3-47e1-4df5-99bd-01739dbd3c42",
+                    "transType": "YW3",
+                    "name": "排课 - YW3",
+                    "lastNode": [],
+                    "id": "12",
+                    "teamDone": 0,
+                    "value": "排课"
                 },
                 {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "9",
-                    "sort": 2,
+                    "myToDo": 0,
+                    "isPermitted": true,
+                    "myDone": 0,
+                    "icon": "resources/images/icon/sales-order.png",
+                    "teamTodo": 0,
+                    "relevantNode": [
+                        {
+                            "typeOrCode": "YW15",
+                            "groupId": "2",
+                            "name": "收学员款",
+                            "id": "21",
+                            "groupIndex": 1,
+                            "type": "list"
+                        }
+                    ],
+                    "sort": 0.200000,
                     "type": "list",
-                    "value": "加工订单",
                     "endNode": [
                         {
+                            "typeOrCode": "9",
+                            "groupId": "3",
+                            "name": "交付",
+                            "id": "1",
+                            "groupIndex": 2
+                        }
+                    ],
+                    "url": "app/dee3df40-0f9d-4333-8a8c-dd3325d58544/2100",
+                    "listId": "dee3df40-0f9d-4333-8a8c-dd3325d58544",
+                    "transType": "YW1",
+                    "name": "订单 - YW1",
+                    "lastNode": [],
+                    "id": "2",
+                    "teamDone": 0,
+                    "value": "订单"
+                },
+                {
+                    "myToDo": 0,
+                    "isPermitted": true,
+                    "myDone": 0,
+                    "icon": "resources/images/icon/putmoney.png",
+                    "teamTodo": 0,
+                    "relevantNode": [
+                        {
+                            "typeOrCode": "YW11",
+                            "groupId": "2",
+                            "name": "退学员款",
+                            "id": "7",
+                            "groupIndex": 1,
+                            "type": "list"
+                        }
+                    ],
+                    "sort": 0.300000,
+                    "type": "list",
+                    "endNode": [
+                        {
+                            "typeOrCode": "9",
+                            "name": "往来",
+                            "id": "24",
                             "groupId": "1",
-                            "id": "4",
+                            "groupIndex": 0
+                        },{
+                            "typeOrCode": "9",
+                            "groupId": "1",
+                            "name": "资金",
+                            "id": "30",
                             "groupIndex": 0
                         }
-                    ]
+                    ],
+                    "url": "app/66f8ac19-ca24-4411-bf4d-b717d56dc326/2087",
+                    "listId": "66f8ac19-ca24-4411-bf4d-b717d56dc326",
+                    "transType": "YW15",
+                    "name": "收学员款 - YW15",
+                    "lastNode": [
+                    ],
+                    "id": "21",
+                    "teamDone": 0,
+                    "value": "收学员款"
+                }, 
+                {
+                    "myToDo": 0,
+                    "isPermitted": true,
+                    "myDone": 0,
+                    "icon": "resources/images/icon/paymoney.png",
+                    "teamTodo": 2,
+                    "relevantNode": [{
+                        "typeOrCode": "YW11",
+                        "groupId": "2",
+                        "name": "开票",
+                        "id": "31",
+                        "groupIndex": 1,
+                        "type": "list"
+                    }],
+                    "sort": 4.000000,
+                    "type": "list",
+                    "endNode": [{
+                        "typeOrCode": "9",
+                        "groupId": "1",
+                        "name": "资金",
+                        "id": "30",
+                        "groupIndex": 0
+                    }],
+                    "url": "app/91c1fb04-2add-4309-ac30-db9d3393269b/2099",
+                    "listId": "91c1fb04-2add-4309-ac30-db9d3393269b",
+                    "transType": "YW16",
+                    "name": "退学员款 - YW16",
+                    "lastNode": [],
+                    "id": "7",
+                    "teamDone": 20,
+                    "value": "退学员款"
                 },
                 {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "10",
-                    "sort": 3,
-                    "type": "list",
-                    "value": "采购订单",
+                    "calcRelCate": 14,
+                    "allToDo": 8819,
+                    "name": "开票 - 14 - 7001",
+                    "lastNode": [],
+                    "relevantNode": [
+                        {
+                            "typeOrCode": "YW11",
+                            "groupId": "2",
+                            "name": "订单核销",
+                            "id": "9",
+                            "groupIndex": 1,
+                            "type": "list"
+                        }
+                    ],
+                    "id": "31",
+                    "sort": 2.000000,
+                    "type": "subject",
+                    "value": "开票",
                     "endNode": []
                 },
                 {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "11",
-                    "sort": 4,
-                    "type": "subject",
-                    "value": "待入库销售订单",
+                    "myToDo": 0,
+                    "isPermitted": true,
+                    "myDone": 0,
+                    "icon": "resources/images/icon/work-order-task.png",
+                    "teamTodo": 7,
+                    "relevantNode": [
+                        {
+                            "typeOrCode": "YW17",
+                            "groupId": "2",
+                            "name": "对公支付成本",
+                            "id": "13",
+                            "groupIndex": 1,
+                            "type": "list"
+                        }
+                    ],
+                    "sort": 0.400000,
+                    "type": "list",
                     "endNode": [
                         {
+                            "typeOrCode": "9",
+                            "name": "往来",
+                            "id": "24",
                             "groupId": "1",
-                            "id": "5",
+                            "groupIndex": 0
+                        },{
+                            "typeOrCode": "9",
+                            "groupId": "1",
+                            "name": "毛利",
+                            "id": "26",
                             "groupIndex": 0
                         }
-                    ]
+                    ],
+                    "url": "app/2e35b3c0-9f49-45cf-a21c-8bf2017415f9/2067",
+                    "listId": "2e35b3c0-9f49-45cf-a21c-8bf2017415f9",
+                    "transType": "YW11",
+                    "name": "订单核销 - YW11",
+                    "lastNode": [
+                    ],
+                    "id": "9",
+                    "teamDone": 36,
+                    "value": "订单核销"
                 },
                 {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "12",
-                    "sort": 5,
+                    "myToDo": 0,
+                    "isPermitted": true,
+                    "myDone": 0,
+                    "icon": "resources/images/icon/charge.png",
+                    "teamTodo": 8,
+                    "relevantNode": [
+                        {
+                            "typeOrCode": "YW23",
+                            "groupId": "2",
+                            "name": "班级运营分成",
+                            "id": "4",
+                            "groupIndex": 1,
+                            "type": "list"
+                        }
+                    ],
+                    "sort": 0.500000,
                     "type": "list",
-                    "value": "采购入库",
+                    "endNode": [{
+                        "typeOrCode": "9",
+                        "groupId": "1",
+                        "name": "毛利",
+                        "id": "26",
+                        "groupIndex": 0
+                    }
+                    ],
+                    "url": "app/ea84282e-ccc5-4c65-bdfa-ddc8d296a2b1/2135",
+                    "listId": "ea84282e-ccc5-4c65-bdfa-ddc8d296a2b1",
+                    "transType": "YW17",
+                    "name": "对公支付成本 - YW17",
+                    "lastNode": [
+                    ],
+                    "id": "13",
+                    "teamDone": 85,
+                    "value": "对公支付成本"
+                },
+                {
+                    "myToDo": 0,
+                    "isPermitted": true,
+                    "myDone": 0,
+                    "icon": "resources/images/icon/charge.png",
+                    "teamTodo": 15,
+                    "relevantNode": [
+                        {
+                            "typeOrCode": "YW23",
+                            "groupId": "2",
+                            "name": "收票",
+                            "id": "25",
+                            "groupIndex": 1,
+                            "type": "list"
+                        }
+                    ],
+                    "sort": 0.600000,
+                    "type": "list",
                     "endNode": [
                         {
-                            "groupId": "3",
-                            "id": "15",
-                            "groupIndex": 2
+                            "typeOrCode": "9",
+                            "name": "往来",
+                            "id": "24",
+                            "groupId": "1",
+                            "groupIndex": 0
                         },
                         {
-                            "groupId": "4",
-                            "id": "21",
-                            "groupIndex": 3
+                            "typeOrCode": "9",
+                            "name": "费用",
+                            "id": "10",
+                            "groupId": "3",
+                            "groupIndex": 2
                         }
-                    ]
+
+                    ],
+                    "url": "app/49aa02f0-4d91-45ac-9546-a9ca3d165eae/2108",
+                    "listId": "49aa02f0-4d91-45ac-9546-a9ca3d165eae",
+                    "transType": "YW18",
+                    "name": "班主任垫付成本 - YW18",
+                    "lastNode": [
+                    ],
+                    "id": "4",
+                    "teamDone": 35,
+                    "value": "班主任垫付成本"
+                },
+                {
+                    "calcRelCate": 5,
+                    "allToDo": 164,
+                    "name": "收票 - 5 - 7002",
+                    "lastNode": [],
+                    "relevantNode": [
+                        {
+                            "typeOrCode": "YW23",
+                            "groupId": "2",
+                            "name": "付款",
+                            "id": "202",
+                            "groupIndex": 1,
+                            "type": "list"
+                        }
+                    ],
+                    "id": "25",
+                    "sort": 0.600000,
+                    "type": "subject",
+                    "value": "收票",
+                    "endNode": []
+                }, 
+                {
+                    "myToDo": 0,
+                    "isPermitted": true,
+                    "myDone": 0,
+                    "icon": "resources/images/icon/paymoney.png",
+                    "teamTodo": 0,
+                    "relevantNode": [
+                        {
+                            "typeOrCode": "YW23",
+                            "groupId": "2",
+                            "name": "班级运营分成",
+                            "id": "17",
+                            "groupIndex": 1,
+                            "type": "list"
+                        }
+                    ],
+                    "sort": 4.900000,
+                    "type": "list",
+                    "endNode": [{
+                        "typeOrCode": "9",
+                        "name": "往来",
+                        "id": "24",
+                        "groupId": "1",
+                        "groupIndex": 0
+                    },{
+                        "typeOrCode": "9",
+                        "groupId": "1",
+                        "name": "资金",
+                        "id": "30",
+                        "groupIndex": 0
+                    }],
+                    "url": "app/76069bb6-bccb-4fdc-b2e6-514c75929541/2158",
+                    "listId": "76069bb6-bccb-4fdc-b2e6-514c75929541",
+                    "transType": "YW16",
+                    "name": "付款 - YW16",
+                    "lastNode": [],
+                    "id": "202",
+                    "teamDone": 2,
+                    "value": "付款"
+                },
+                {
+                    "myToDo": 0,
+                    "isPermitted": true,
+                    "myDone": 0,
+                    "icon": "resources/images/icon/distribution-profit.png",
+                    "teamTodo": 8,
+                    "relevantNode": [],
+                    "sort": 6.000000,
+                    "type": "list",
+                    "endNode": [
+                    ],
+                    "url": "app/847784ab-ca76-4c85-beea-87a1a9cbf8aa/2149",
+                    "listId": "847784ab-ca76-4c85-beea-87a1a9cbf8aa",
+                    "transType": "YW23",
+                    "name": "班级运营分成 - YW23",
+                    "lastNode": [
+                    ],
+                    "id": "17",
+                    "teamDone": 11,
+                    "value": "班级运营分成"
                 }
             ]
         },
         {
-            "name": "库存",
+            "name": "财务",
             "index": 2,
             "id": "3",
+            "title": "培训业务",
             "child": [
+                {},{},
                 {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "13",
-                    "sort": 1,
+                    "myToDo": 0,
+                    "isPermitted": true,
+                    "myDone": 0,
+                    "icon": "resources/images/icon/addtax-in.png",
+                    "teamTodo": 0,
+                    "relevantNode": [],
+                    "sort": 0.700000,
                     "type": "list",
-                    "value": "调拨",
-                    "endNode": [
-                        {
-                            "groupId": "3",
-                            "id": "15",
-                            "groupIndex": 2
-                        },
-                        {
-                            "groupId": "4",
-                            "id": "21",
-                            "groupIndex": 3
-                        }
-                    ]
+                    "endNode": [{
+                        "typeOrCode": "YW11",
+                        "groupId": "2",
+                        "name": "订单核销",
+                        "id": "9",
+                        "groupIndex": 1,
+                        "type": "list"
+                    }],
+                    "url": "app/578eb57f-32a4-40a8-b8a2-8fa318511dd0/2102",
+                    "listId": "578eb57f-32a4-40a8-b8a2-8fa318511dd0",
+                    "transType": "YW21",
+                    "name": "交付 - YW21",
+                    "lastNode": [
+                    ],
+                    "id": "1",
+                    "teamDone": 0,
+                    "value": "交付"
                 },
+                {},
+                {},
+                {},{},
                 {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "14",
-                    "sort": 2,
+                    "myToDo": 0,
+                    "isPermitted": true,
+                    "myDone": 0,
+                    "icon": "resources/images/icon/addtax-out.png",
+                    "teamTodo": 3,
+                    "relevantNode": [],
+                    "sort": 3.000000,
                     "type": "list",
-                    "value": "加工退料",
-                    "endNode": [
-                        {
-                            "groupId": "3",
-                            "id": "15",
-                            "groupIndex": 2
-                        },
-                        {
-                            "groupId": "4",
-                            "id": "21",
-                            "groupIndex": 3
-                        }
-                    ]
-                },
-                {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "15",
-                    "sort": 3,
-                    "type": "subject",
-                    "value": "可用存货",
-                    "endNode": [
-                        {
-                            "groupId": "1",
-                            "id": "7",
-                            "groupIndex": 0
-                        },
-                        {
-                            "groupId": "3",
-                            "id": "13",
-                            "groupIndex": 2
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "财务与结算",
-            "index": 3,
-            "id": "4",
-            "child": [
-                {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "16",
-                    "sort": 1,
-                    "type": "subject",
-                    "value": "货品销售成本",
-                    "endNode": []
-                },
-                {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "17",
-                    "sort": 2,
-                    "type": "subject",
-                    "value": "货币资金",
-                    "endNode": [
-                        {
-                            "groupId": "4",
-                            "id": "19",
-                            "groupIndex": 3
-                        }
-                    ]
-                },
-                {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "18",
-                    "sort": 3,
-                    "type": "list",
-                    "value": "收款",
-                    "endNode": [
-                        {
-                            "groupId": "4",
-                            "id": "17",
-                            "groupIndex": 3
-                        }
-                    ]
-                },
-                {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "19",
-                    "sort": 4,
-                    "type": "list",
-                    "value": "付款",
-                    "endNode": []
-                },
-                {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "20",
-                    "sort": 5,
-                    "type": "subject",
-                    "value": "客户",
-                    "endNode": [
-                        {
-                            "groupId": "4",
-                            "id": "18",
-                            "groupIndex": 3
-                        }
-                    ]
-                },
-                {
-                    "allToDo": 20,
-                    "notToDo": 6,
-                    "id": "21",
-                    "sort": 6,
-                    "type": "subject",
-                    "value": "可用存货",
-                    "endNode": [
-                        {
-                            "groupId": "1",
-                            "id": "7",
-                            "groupIndex": 0
-                        },
-                        {
-                            "groupId": "3",
-                            "id": "13",
-                            "groupIndex": 2
-                        }
-                    ]
+                    "endNode": [],
+                    "url": "app/0b0e3179-e5d6-473a-bcde-013a61884ef1/2096",
+                    "listId": "0b0e3179-e5d6-473a-bcde-013a61884ef1",
+                    "transType": "YW20",
+                    "name": "费用 - YW20",
+                    "lastNode": [
+                    ],
+                    "id": "10",
+                    "teamDone": 3,
+                    "value": "费用"
                 }
             ]
         }
     ],
-    "title": "脉动图 - 直销业务"
+    "title": "培训业务"
 }

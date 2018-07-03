@@ -15,10 +15,13 @@
               <i class="iconfont">&#xe608;</i>
               全部应用
             </Button>
-            <Button size="small" v-for="(pulse,i) in  pulseGraphLlistr" :key="i" type="ghost" @click="changeView" :caseId="pulse.id" v-bind:class="caseId===pulse.id?'ivu-btn-active':''">
+            <!-- <Button size="small" v-for="(pulse,i) in  pulseGraphLlistr" :key="i" type="ghost" @click="changeView" :caseId="pulse.id" v-bind:class="caseId===pulse.id?'ivu-btn-active':''">
               <i class="iconfont">&#xe64c;</i>
               {{pulse.name}}
-            </Button>
+            </Button> -->
+            <Select v-model="model" style="width:160px" @on-change="changeView" >
+              <Option v-for="item in pulseGraphLlistr" :value="item.id" :key="item.id">{{ item.name }}</Option>
+            </Select>
           </ButtonGroup>
           </Col>
         </Row>
@@ -88,9 +91,9 @@ export default {
           ? this.$currentUser.isSysRoleList.filter(function(o) {
               return o.id == 1;
             }).length
-          : false
+          : false,
+      model: 0
     };
-
   },
   mounted() {
     this.subscribeMessage();
@@ -106,7 +109,7 @@ export default {
       this.allTaskCount = res.tableContent;
       //获取菜单信息
       getMenu().then(res => {
-        this.urlMd5(res);
+        // this.urlMd5(res);
 
         if (this.favoriteMenu.children.length > 0) {
           this.menuList = [this.favoriteMenu, ...res];
@@ -124,11 +127,17 @@ export default {
 
   methods: {
     changeView(event) {
-      let caseId = event.currentTarget.getAttribute("caseid");
-
+      if (!event) return;
+      let caseId;
+      if (event.currentTarget) {
+        caseId = event.currentTarget.getAttribute("caseid");
+      } else if (event > 0) {
+        caseId = event;
+      }
       if (caseId === "apps") {
         this.cutView = true;
-        this.caseId = "apps"
+        this.caseId = "apps";
+        this.model = 0;  //清空下拉选择框值，默认值为0
       } else {
         this.cutView = false;
         this.caseId = Number(caseId);

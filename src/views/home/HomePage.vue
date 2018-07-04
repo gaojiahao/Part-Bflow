@@ -19,7 +19,7 @@
               <i class="iconfont">&#xe64c;</i>
               {{pulse.name}}
             </Button> -->
-            <Select v-model="model" style="width:160px" @on-change="changeView">
+            <Select v-model="model" class="input-select" @on-change="changeView">
               <Option v-for="item in pulseGraphLlistr" :value="item.id" :key="item.id">{{ item.name }}</Option>
             </Select>
           </ButtonGroup>
@@ -137,7 +137,7 @@ export default {
       if (caseId === "apps") {
         this.cutView = true;
         this.caseId = "apps";
-        this.model = 0;  //清空下拉选择框值，默认值为0
+        this.model = 0; //清空下拉选择框值，默认值为0
       } else {
         this.cutView = false;
         this.caseId = Number(caseId);
@@ -195,7 +195,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less" >
 .fr {
   float: right;
 }
@@ -296,6 +296,17 @@ export default {
   color: #fff;
   background-color: #2d8cf0;
   border-color: #2d8cf0;
+}
+
+.input-select {
+  width: 160px !important;
+  margin: 0 5px !important;
+}
+
+//下拉选择器修改自带样式
+.ivu-select-selection {
+  height: 30px !important;
+  border-radius: 0px !important;
 }
 </style>
 

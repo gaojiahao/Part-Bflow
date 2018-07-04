@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/H_roleplay-si':{
-        target:'http://192.168.3.169:8080',
+        target:'http://192.168.3.164:8080',
         changeOrigin: true
       }
 

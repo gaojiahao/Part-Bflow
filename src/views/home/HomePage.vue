@@ -19,7 +19,7 @@
               <i class="iconfont">&#xe64c;</i>
               {{pulse.name}}
             </Button> -->
-            <Select v-model="model" style="width:160px" @on-change="changeView" >
+            <Select v-model="model" style="width:160px" @on-change="changeView">
               <Option v-for="item in pulseGraphLlistr" :value="item.id" :key="item.id">{{ item.name }}</Option>
             </Select>
           </ButtonGroup>
@@ -109,7 +109,7 @@ export default {
       this.allTaskCount = res.tableContent;
       //获取菜单信息
       getMenu().then(res => {
-        // this.urlMd5(res);
+         this.urlMd5(res);
 
         if (this.favoriteMenu.children.length > 0) {
           this.menuList = [this.favoriteMenu, ...res];

@@ -1,121 +1,94 @@
 <style lang="less" scoped>
-    @gray: #ddd;
-    @white: #fff;
-    @blue: #39f;
+@gray: #ddd;
+@white: #fff;
+@blue: #39f;
 
-    .ivu-table .demo-table-info-row td span{
-        color: #eee;
-    }
-    .add-btn{
-        margin-top: 1rem;
-        margin-left: 1rem;
-    }
-    .app-body{
-        position: relative;
-        top: 60px;
-        left: 0px;
-    }
-    .ivu-table-wrapper{
-        border: none;
-    }
+.ivu-table .demo-table-info-row td span {
+  color: #eee;
+}
 
-    .top-head{
-      position: fixed;
-      width: 100%;
-      height: 60px;
-      z-index: 99;
-      background-color: #fff;
-      border-bottom: 1px solid @gray;
-      .app-search{
-        float: right;
-        line-height: 60px;
-        margin-right: 58px;
-        .app-search-icon{
-          font-size: 1rem;
-          color: #39f;
-        }
-      }
-      .app-layout{
-        float: right;
-        margin-right: 30px;
-        margin-top: 24px;
-        .list-icon{
-          display: inline;
-          font-size: 1.5rem;
-          margin-right: 7px;
-          cursor: pointer;
-          padding: 2px 7px;
-          border-radius: 3px;
-        }
-        .list-icon:hover{
-          background-color: @blue;
-          color: @white;
-        }
-        .card-icon{
-          display: inline;
-          font-size: 1.5rem;
-          cursor: pointer;
-          padding: 2px 7px;
-          border-radius: 3px;
-        }
-        .card-icon:hover{
-          background-color: @blue;
-          color: @white;
-        }
-      }
+.app-body {
+  position: relative;
+  top: 60px;
+  left: 0px;
+}
+.ivu-table-wrapper {
+  border: none;
+}
+
+.top-head {
+  position: fixed;
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  z-index: 99;
+  background-color: @white;
+  border-bottom: 1px solid @gray;
+  padding: 0 15px;
+
+  &-search {
+    float: right;
+    
+    .app-search-icon {
+      font-size: 1rem;
+      color: @blue;
     }
- .ivu-btn{
-   border-radius: 0px;
- }
+  }
+  .app-layout {
+    float: right;
+  
+    .view-cut-focus {
+      display: inline;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 2px 7px;
+      border-radius: 3px;
+    }
+   
+     .view-cut-focus:hover {
+      background-color: @blue;
+      color: @white;
+    }
+    
+  }
+}
+.ivu-btn {
+  border-radius: 0px;
+}
 </style>
 
 <template>
   <div>
     <div v-if="showAppList">
-      <div class="top-head">
+      <header class="top-head">
         <router-link to="/app/add">
-          <Button 
-          @click="isShowAppList" 
-          class="add-btn"
-          icon="plus-round">
-          添加应用</Button>
+          <Button @click="isShowAppList" class="add-btn" icon="plus-round">
+            添加应用</Button>
         </router-link>
-        <Button 
-        v-if="showDeleteAll" 
-        class="add-btn" 
-        type="error" 
-        icon="android-delete">
-        批量删除</Button>
+        <Button v-if="showDeleteAll" class="top-head" type="error" icon="android-delete">
+          批量删除</Button>
         <div class="app-layout">
-          <div @click="showListView" class="list-icon">
+          <div @click="showListView" class=" view-cut-focus">
             <Tooltip content="列表视图" placement="top">
               <Icon type="android-menu"></Icon>
             </Tooltip>
           </div>
-          <div @click="showCardView" class="card-icon active">
+          <div @click="showCardView" class="view-cut-focus">
             <Tooltip content="卡片视图" placement="top">
               <Icon type="android-apps"></Icon>
             </Tooltip>
           </div>
         </div>
-        <div class="app-search">
+        <div class="top-head-search">
           <Icon class="app-search-icon" type="search"></Icon>
           <Input v-model="searchValue" placeholder="搜索" style="width: 300px"></Input>
         </div>
-      </div>
+      </header>
       <!-- 分类显示所有应用 -->
       <div class="app-body">
         <!-- 列表展示应用 -->
         <div v-if="showTableList">
-          <Table 
-          size="small" 
-          :stripe="true" 
-          :row-class-name="rowClassName" 
-          @on-select="selectApp" 
-          @on-select-cancel="cancelSelectApp" 
-          :columns="columns" 
-          :data="tableData"
-          no-data-text="暂无数据">
+          <Table size="small" :stripe="true" :row-class-name="rowClassName" @on-select="selectApp" @on-select-cancel="cancelSelectApp" :columns="columns" :data="tableData" no-data-text="暂无数据">
           </Table>
         </div>
         <!-- card展示应用 -->
@@ -293,24 +266,26 @@ export default {
   watch: {
     searchValue(text) {
       const result = [];
-      if(text){
+      if (text) {
         this.sameTableData.forEach((val, index) => {
-          if(val.title.indexOf(text) > -1){
+          if (val.title.indexOf(text) > -1) {
             result.push(val);
           }
-        })
+        });
         this.tableData = result;
-      }else{
+      } else {
         this.tableData = this.sameTableData;
       }
     }
   },
   mounted() {
-    let filterParam = JSON.stringify([{
-            "operator": "ne",
-            "value": "value",
-            "property": "type"
-        }]);
+    let filterParam = JSON.stringify([
+      {
+        operator: "ne",
+        value: "value",
+        property: "type"
+      }
+    ]);
     getAppListData(filterParam).then(res => {
       this.tableData = res.tableContent;
       this.sameTableData = res.tableContent;

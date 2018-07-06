@@ -64,6 +64,9 @@
         position: fixed;
         top: 94%;
         left: 0;
+        .add-save-btn{
+            text-align: center;
+        }
     }
 </style>
 
@@ -88,7 +91,7 @@
         </Card>
     </Row>
     <div class="add-bottom">
-        <Affix :offset-bottom="0">
+        <Affix class="add-save-btn" :offset-bottom="0">
             <Button type="primary">保存</Button>
         </Affix>
     </div>

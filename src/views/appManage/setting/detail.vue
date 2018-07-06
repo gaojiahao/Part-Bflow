@@ -90,11 +90,11 @@
         <header class="app-header">
           <Breadcrumb>
             <BreadcrumbItem to="/">首页</BreadcrumbItem>
-            <BreadcrumbItem to="/components/breadcrumb">应用列表</BreadcrumbItem>
+            <BreadcrumbItem to="/app/list">应用列表</BreadcrumbItem>
             <BreadcrumbItem>{{ appData.title }}</BreadcrumbItem>
           </Breadcrumb>
         </header>
-        <main class="app-main">
+        <div class="app-main">
           <img :src="appData.icon" />
           <div class="app-main-content">
                <h3 v-if="showEditAppInfo">{{ appData.title }}</h3>
@@ -108,7 +108,7 @@
               </div>
               <div class="app-content-section">
                 <label>状态：</label>
-                <Tag checkable color="blue">未发布</Tag>
+                <Tag color="blue" >未发布</Tag>
               </div>
               <div class="app-content-section">
                 <label>创建时间：</label>
@@ -137,7 +137,7 @@
               </div>
             </section>
           </div>
-        </main>
+        </div>
       </div>
     <!-- 应用设置信息 -->
     <app-setting @showPermissionApp="showPermissionApp" :listId="this.$route.params.listId"></app-setting>

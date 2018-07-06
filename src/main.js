@@ -11,6 +11,8 @@ Vue.config.productionTip = false
 
 Vue.use(iView)
 
+let Hub = new Vue();
+
 getCurrentUserInfo().then(res => {
   if (res) {
     Vue.prototype.$currentUser = res;

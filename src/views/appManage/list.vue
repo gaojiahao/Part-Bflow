@@ -44,7 +44,6 @@
           font-size: 1.5rem;
           margin-right: 7px;
           cursor: pointer;
-          background-color: #7f7aa6;
           padding: 2px 7px;
           border-radius: 3px;
         }
@@ -56,7 +55,6 @@
           display: inline;
           font-size: 1.5rem;
           cursor: pointer;
-          background-color: #f29d63;
           padding: 2px 7px;
           border-radius: 3px;
         }
@@ -66,13 +64,16 @@
         }
       }
     }
+ .ivu-btn{
+   border-radius: 0px;
+ }
 </style>
 
 <template>
   <div>
     <div v-if="showAppList">
       <div class="top-head">
-        <router-link to="/appList/add">
+        <router-link to="/app/add">
           <Button 
           @click="isShowAppList" 
           class="add-btn"
@@ -123,13 +124,12 @@
         </div>
       </div>
     </div>
-    <router-view></router-view>
   </div>
 </template>
 
 <script>
 import { getAppListData } from "../../services/appService.js";
-import AppCardList from './appCardList';
+import AppCardList from './cardList';
 
 export default {
   name: "appList",
@@ -285,9 +285,9 @@ export default {
     showCardView() {
       this.showTableList = false;
     },
-    hiddenAppList() {
+    hiddenAppList(listData) {
       this.showAppList = false;
-      this.$router.push({ path: "/appList/appSetting" });
+      this.$router.push({ path: "/app/detail",name:'detail', params:{appData: listData}});
     }
   },
   watch: {
@@ -306,7 +306,12 @@ export default {
     }
   },
   mounted() {
-    getAppListData().then(res => {
+    let filterParam = JSON.stringify([{
+            "operator": "ne",
+            "value": "value",
+            "property": "type"
+        }]);
+    getAppListData(filterParam).then(res => {
       this.tableData = res.tableContent;
       this.sameTableData = res.tableContent;
     });

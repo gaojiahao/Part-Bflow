@@ -58,10 +58,10 @@
      <Row class="app-container" :gutter="8">
         <Col :xs="24" :sm="12" :md="8" :lg="6" class="app-col" v-for="(list, index) of listData" :key="index">
             <Card class="app-card">
-                <img class="card-img" :src="'../../resources/images/icon/'+list.src"/>
+                <img class="card-img" :src="list.icon"/>
                 <b class="card-name">{{ list.title }}</b>
-                <span class="card-desc">{{ list.desc }}</span>
-                <a class="card-setting" type="text" @click="goAppSetting">设置</a>
+                <span class="card-desc">{{ list.comment }}</span>
+                <a class="card-setting" type="text" @click="goAppSetting(list)">设置</a>
                 <p class="card-delete">
                   <Tooltip content="删除应用" placement="top">
                     <Icon type="close-round"></Icon>
@@ -87,8 +87,8 @@ export default {
     
   },
   methods: {
-    goAppSetting() {
-      this.$emit('hiddenAppList');
+    goAppSetting(listData) {
+      this.$emit('hiddenAppList',listData);
     }
   },
   mounted() {

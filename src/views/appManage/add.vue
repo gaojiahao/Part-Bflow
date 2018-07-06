@@ -68,10 +68,10 @@
             <div @click="selectApp(index,list.name)" class="app-card" v-for="(item,index) of list.list" :key="index">
                 <Card>
                     <div class="app-block">
-                        <img class="app-img" :src="'../../resources/images/icon/'+item.src" />
+                        <img class="app-img" :src="item.icon" />
                         <p class="app-title">{{ item.title }}</p>
                         <Icon v-show="item.isSelect" class="app-select-icon" type="checkmark-round"></Icon>
-                        <p class="app-desc">{{ item.desc }}</p>
+                        <p class="app-desc">{{ item.comment }}</p>
                     </div>
                 </Card>
             </div>
@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import { getAppData } from '../../services/appService.js'
+import { getAppTemplateData } from '../../services/appService.js'
 export default {
   name: 'appAddList',
   components:{
@@ -104,11 +104,13 @@ export default {
      }
   },
   mounted() {
-      getAppData().then(res => {
+      getAppTemplateData().then(res => {
           res.tableContent.forEach((val, index) => {
               if(val.tplType === 'obj'){
+                  val.isSelect = false;
                   this.appData[0].list.push(val);
               }else if(val.tplType === 'business'){
+                  val.isSelect = false;
                   this.appData[1].list.push(val);
               }
           })

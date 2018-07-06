@@ -3,9 +3,10 @@
         float: left;
         width: 100%;
         padding-bottom: 10px;
+        overflow-x: hidden;
+        border-top-style: none;
         .app-name{
             font-size: 1rem;
-            color: #39f;
         }
         .app-body{
             &-card{
@@ -70,7 +71,7 @@ export default {
           {
             title: "默认视图",
             key: "defaultView",
-            width: 150,
+            width: 100,
             align: "center",
             render: (h, params) => {
               return h("Radio", {

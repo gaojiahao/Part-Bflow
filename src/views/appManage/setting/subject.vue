@@ -2,10 +2,11 @@
     .app-card{
         float: left;
         width: 100%;
+         border-top-style: none;
         padding-bottom: 10px;
+        overflow-x: hidden;
         .app-name{
             font-size: 1rem;
-            color: #39f;
         }
     }
 </style>

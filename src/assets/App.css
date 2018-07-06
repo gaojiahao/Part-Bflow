@@ -52,4 +52,24 @@
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
 }
 
- 
+.ivu-modal-header {
+  background-color:rgb(45, 140, 240);
+}
+
+.ivu-modal-header-inner{
+ color: #fff;
+}
+
+.ivu-icon-ios-close-empty{
+  color: #fff !important;
+}
+
+.ivu-modal-footer {
+  background-color: #e9eaec !important;
+  padding: 8px 15px;
+}
+
+.ivu-modal-footer .ivu-btn-text{
+  border: 1px solid #ddd;
+  background-color: #fff;
+}

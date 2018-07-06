@@ -60,7 +60,7 @@
                             </li>
                             <li>
                                 <b class="app-setting-dot">●</b>
-                                <a href="http://192.168.3.164/Form/index.html?viewDesign=true&list=d2d592a3-47e1-4df5-99bd-01739dbd3c42">表单设置</a>
+                                <a @click="goForm">表单设置</a>
                             </li>
                         </ul>
                     </Card>
@@ -171,6 +171,9 @@ export default {
     //展示工作流modal
     showWorkFlowModal() {
         this.showWorkFlow = true;
+    },
+    goForm() {
+        window.open('Form/index.html?viewDesign=true&list='+this.listId);
     }
   },
   mounted() {

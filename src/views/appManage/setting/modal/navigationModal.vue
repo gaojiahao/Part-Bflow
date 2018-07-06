@@ -2,11 +2,12 @@
   .nav-tree{
     height: 400px;
     overflow-y: auto;
+    overflow-x: hidden;
   }
 </style>
 <template>
-  <Modal v-model="showNav" title="工作流设置" width="300" @on-ok="publishApp" @on-visible-change="modalVisibleChange">
-    <Tree class="nav-tree" :data="navData" :load-data="loadData" show-checkbox></Tree>
+  <Modal v-model="showNav" title="导航" width="300" :mask-closable="false" @on-ok="publishApp" @on-visible-change="modalVisibleChange">
+    <Tree class="nav-tree" :data="navData" :load-data="loadData"></Tree>
   </Modal>
 </template>
 
@@ -52,14 +53,58 @@ export default {
           if(val.leaf === 1){
               this.navData.push({
                 title: val.text,
-                id: val.id
+                id: val.id,
+                render: (h, {root,node,data}) => {
+                  return h('span', {
+                        style: {
+                            display: 'inline-block',
+                            width: '100%'
+                        }
+                    }, [
+                        h('span', [
+                            h('Icon', {
+                                props: {
+                                    type: 'ios-folder-outline'
+                                },
+                                style: {
+                                    marginRight: '8px',
+                                    color: '#FF8F59',
+                                    fontSize: '1rem'
+                                }
+                            }),
+                            h('span', data.title)
+                        ])
+                    ]);
+                }
             });
           }else{
               this.navData.push({
               title: val.text,
               id: val.id,
               loading: false,
-              children: []
+              children: [],
+              render: (h, {root,node,data}) => {
+                  return h('span', {
+                        style: {
+                            display: 'inline-block',
+                            width: '100%'
+                        }
+                    }, [
+                        h('span', [
+                            h('Icon', {
+                                props: {
+                                    type: 'folder'
+                                },
+                                style: {
+                                    marginRight: '8px',
+                                    color: '#39f',
+                                    fontSize: '1.2rem'
+                                }
+                            }),
+                            h('span', data.title)
+                        ])
+                    ]);
+                }
             });
           }
         });
@@ -76,14 +121,58 @@ export default {
           if(val.leaf === 1){
             data.push({
               title: val.text,
-              id: val.id
+              id: val.id,
+              render: (h, {root,node,data}) => {
+                  return h('span', {
+                        style: {
+                            display: 'inline-block',
+                            width: '100%'
+                        }
+                    }, [
+                        h('span', [
+                            h('Icon', {
+                                props: {
+                                    type: 'ios-folder-outline'
+                                },
+                                style: {
+                                    marginRight: '8px',
+                                    color: '#FF8F59',
+                                    fontSize: '1rem'
+                                }
+                            }),
+                            h('span', data.title)
+                        ])
+                    ]);
+                }
             })
           }else{
             data.push({
               title: val.text,
               id: val.id,
               loading: false,
-              children: []
+              children: [],
+              render: (h, {root,node,data}) => {
+                  return h('span', {
+                        style: {
+                            display: 'inline-block',
+                            width: '100%'
+                        }
+                    }, [
+                        h('span', [
+                            h('Icon', {
+                                props: {
+                                    type: 'folder'
+                                },
+                                style: {
+                                    marginRight: '8px',
+                                    color: '#39f',
+                                    fontSize: '1.2rem'
+                                }
+                            }),
+                            h('span', data.title)
+                        ])
+                    ]);
+                }
             })
           }
         });

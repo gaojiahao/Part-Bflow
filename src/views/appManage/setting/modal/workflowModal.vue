@@ -1,8 +1,5 @@
 <style lang="less" scoped>
   .flow-title{
-        color: #e4393c;
-        padding: 5px 4px;
-        border-bottom: 2px solid #79b2ef;
         margin-bottom: 5px;
         .create-button{
           margin-left: 40px
@@ -17,7 +14,7 @@
   }
 </style>
 <template>
-  <Modal v-model="showWorkFlow" title="工作流设置" width="1010" @on-ok="selectWorkFlow" @on-visible-change="modalVisibleChange">
+  <Modal v-model="showWorkFlow" title="工作流设置" width="1010" @on-ok="selectWorkFlow" :mask-closable="false" @on-visible-change="modalVisibleChange">
     <Row :gutter="8">
       <Col span="12">
       <h4 class="flow-title">所有工作流
@@ -34,7 +31,7 @@
       <h4 class="flow-title">已关联的工作流
         <Button class="create-button">创建工作流</Button>
       </h4>
-      <Table  @on-row-dblclick="deleteWorkflow" :loading="loading" stripe height="350" :columns="relativeWorkFlowColumns" :data="relativeWorkFlowData"></Table>
+      <Table @on-row-dblclick="deleteWorkflow" :loading="loading" stripe height="350" :columns="relativeWorkFlowColumns" :data="relativeWorkFlowData"></Table>
       <div class="workflow-page">
         <div style="float: right;">
           <Page :total="relativeWorkFlowTotal" :current="relativeCurrentPage" :page-size="pageSize" @on-change="onRelativePageChange" size="small" show-total></Page>
@@ -189,26 +186,29 @@ export default {
     },
     //添加工作流
     addWorkflow(row, index) {
-      if(this.relativeWorkFlowData.length === 0){
-        this.relativeWorkFlowData.push(row)
-      }else{
+      if (this.relativeWorkFlowData.length === 0) {
+        this.relativeWorkFlowData.push(row);
+      } else {
         this.relativeWorkFlowData.forEach(val => {
-          if(row.id === val.id){
-            this.$Message.warning('已有选择的工作流！');
-          }else{
+          if (row.id === val.id) {
+            this.$Message.warning("已有选择的工作流！");
+          } else {
             this.relativeWorkFlowData.push(row);
           }
-        })
+        });
       }
       let obj = {};
       //去掉重复数据
-      this.relativeWorkFlowData = this.relativeWorkFlowData.reduce((cur,next) => {
-        obj[next.id] ? '' : obj[next.id] = true && cur.push(next);
-        return cur;
-      },[]);
+      this.relativeWorkFlowData = this.relativeWorkFlowData.reduce(
+        (cur, next) => {
+          obj[next.id] ? "" : (obj[next.id] = true && cur.push(next));
+          return cur;
+        },
+        []
+      );
     },
     deleteWorkflow(row, index) {
-      this.relativeWorkFlowData.splice(index,1);
+      this.relativeWorkFlowData.splice(index, 1);
     }
   },
   mounted() {

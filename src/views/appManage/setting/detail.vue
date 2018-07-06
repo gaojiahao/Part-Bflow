@@ -95,7 +95,7 @@
           </Breadcrumb>
         </header>
         <main class="app-main">
-          <img src="../../../resources/images/icon/0_0.png" />
+          <img :src="appData.icon" />
           <div class="app-main-content">
                <h3 v-if="showEditAppInfo">{{ appData.title }}</h3>
                <Input v-else v-model="appData.title" style="width: 200px"></Input>
@@ -167,7 +167,7 @@ import AppSetting from "./setting";
 import AppView from "./view";
 import AppSubject from "./subject";
 import AppPermission from './permission/permission';
-import { getAdminData, getListData } from '../../../services/appService.js';
+import { getAdminData, getListData } from '@/services/appService.js';
 export default {
   name: "detail",
   components: {

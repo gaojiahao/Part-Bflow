@@ -92,22 +92,21 @@
     </Row>
     <div class="add-bottom">
         <Affix class="add-save-btn" :offset-bottom="0">
-            <Button type="primary">保存</Button>
+            <Button @click="addAppTemplate" type="primary">保存</Button>
         </Affix>
     </div>
   </div>
 </template>
 
 <script>
-import { getAppTemplateData } from '../../services/appService.js'
+import { getAppTemplateData } from '@/services/appService.js'
 export default {
   name: 'appAddList',
-  components:{
-      
-  },
+  components:{},
   data () {
       return {
          showSelect: true,
+         selectTemplate: [],
          appData: [{name:'对象',list:[]},{name:'业务',list:[]}]
       }
   },
@@ -118,7 +117,9 @@ export default {
          }else{
              this.appData[1].list[index].isSelect = !this.appData[1].list[index].isSelect;
          }
-     }
+     },
+     //添加应用模板
+     addAppTemplate() {}
   },
   mounted() {
       getAppTemplateData().then(res => {

@@ -128,7 +128,7 @@
 </template>
 
 <script>
-import { getAppListData } from "../../services/appService.js";
+import { getAppListData } from "@/services/appService.js";
 import AppCardList from './cardList';
 
 export default {

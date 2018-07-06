@@ -122,7 +122,6 @@ export default {
                   "Tag",
                   {
                     props: {
-                      type: "border",
                       closable: true,
                       color: "yellow"
                     },
@@ -152,7 +151,6 @@ export default {
                   "Tag",
                   {
                     props: {
-                      // type: "border",
                       closable: true,
                       color: "green"
                     },
@@ -182,7 +180,6 @@ export default {
                   "Tag",
                   {
                     props: {
-                      type: "border",
                       closable: true,
                       color: "blue"
                     },
@@ -221,7 +218,6 @@ export default {
                   "Tag",
                   {
                     props: {
-                      type: "border",
                       closable: true,
                       color: "yellow"
                     },
@@ -251,7 +247,6 @@ export default {
                   "Tag",
                   {
                     props: {
-                      type: "border",
                       closable: true,
                       color: "green"
                     },
@@ -281,7 +276,6 @@ export default {
                   "Tag",
                   {
                     props: {
-                      type: "border",
                       closable: true,
                       color: "blue"
                     },
@@ -320,7 +314,6 @@ export default {
                   "Tag",
                   {
                     props: {
-                      type: "border",
                       closable: true,
                       color: "yellow"
                     },
@@ -350,7 +343,6 @@ export default {
                   "Tag",
                   {
                     props: {
-                      type: "border",
                       closable: true,
                       color: "green"
                     },
@@ -380,7 +372,6 @@ export default {
                   "Tag",
                   {
                     props: {
-                      type: "border",
                       closable: true,
                       color: "blue"
                     },

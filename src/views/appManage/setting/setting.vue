@@ -118,9 +118,7 @@
             </Card>
         </Row>
         <!-- 导航modal -->
-        <Modal v-model="showNavigation" title="发布应用" width="250" @on-ok="publishApp">
-            <Tree :data="navData" show-checkbox></Tree>
-        </Modal>
+        <nav-modal @emitNavModal="emitNavModal" :modalNavStatus="showNav"></nav-modal>
         <!-- 工作流modal -->
         <workflow-modal @emitWorkFlowModal="emitWorkFlowModal" :modalWorkflowStatus="showWorkFlow" :listId="listId"></workflow-modal>
         <!-- 权限modal -->
@@ -129,23 +127,23 @@
 </template>
 
 <script>
-import { getNavData } from "@/services//appService.js";
 import PermissionModal from './permission/permissionModal';
 import WorkflowModal from './modal/workflowModal';
+import NavModal from './modal/navigationModal'
 
 export default {
   name: "appSetting",
   components: {
       PermissionModal,
-      WorkflowModal
+      WorkflowModal,
+      NavModal
   },
   props: ["listId"],
   data() {
     return {
-      showNavigation: false,
       showPermissionModal: false,
       showWorkFlow: false,
-      navData: []
+      showNav: false
     };
   },
   methods: {
@@ -157,11 +155,13 @@ export default {
     emitWorkFlowModal() {
         this.showWorkFlow = false;
     },
-    showNavModal() {
-      this.showNavigation = true;
+    //监听导航modal返回的状态
+    emitNavModal() {
+        this.showNav = false;
     },
-    //发布应用
-    publishApp() {},
+    showNavModal() {
+      this.showNav = true;
+    },
     //展示权限modal
     showPermissionApp() {
       this.showPermissionModal = true;
@@ -174,15 +174,7 @@ export default {
     }
   },
   mounted() {
-    //获取导航数据
-    getNavData("root").then(res => {
-      res.forEach((val, index) => {
-        this.navData.push({
-          title: val.text,
-          children: []
-        });
-      });
-    });
+    
   }
 };
 </script>

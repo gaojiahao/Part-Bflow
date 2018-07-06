@@ -55,6 +55,19 @@
         overflow: hidden;
         padding: 10px !important;
     }
+    .add-bottom{
+        background-color: #fff;
+        border: 1px solid #ddd;
+        padding: 5px 5px;
+        height: 50px;
+        width: 100%;
+        position: fixed;
+        top: 94%;
+        left: 0;
+        .add-save-btn{
+            text-align: center;
+        }
+    }
 </style>
 
 <template>
@@ -77,20 +90,23 @@
             </div>
         </Card>
     </Row>
-    <!-- <Button class="app-confirm-btn" type="success" long>确定</Button> -->
+    <div class="add-bottom">
+        <Affix class="add-save-btn" :offset-bottom="0">
+            <Button @click="addAppTemplate" type="primary">保存</Button>
+        </Affix>
+    </div>
   </div>
 </template>
 
 <script>
-import { getAppTemplateData } from '../../services/appService.js'
+import { getAppTemplateData } from '@/services/appService.js'
 export default {
   name: 'appAddList',
-  components:{
-      
-  },
+  components:{},
   data () {
       return {
          showSelect: true,
+         selectTemplate: [],
          appData: [{name:'对象',list:[]},{name:'业务',list:[]}]
       }
   },
@@ -101,7 +117,9 @@ export default {
          }else{
              this.appData[1].list[index].isSelect = !this.appData[1].list[index].isSelect;
          }
-     }
+     },
+     //添加应用模板
+     addAppTemplate() {}
   },
   mounted() {
       getAppTemplateData().then(res => {

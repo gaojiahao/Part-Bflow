@@ -52,7 +52,7 @@ export const app = {
         },
         component: () => import('@/views/appManage/add.vue')
     },{
-        path: 'detail',name: 'detail',
+        path: 'detail/:listId',name: 'detail',
         meta: {
             title: 'detail - 应用详情'
         },

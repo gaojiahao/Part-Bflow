@@ -93,7 +93,7 @@
         </div>
         <!-- card展示应用 -->
         <div v-else>
-          <app-card-list :listData="tableData" @hiddenAppList="hiddenAppList"></app-card-list>
+          <app-card-list :listData="tableData"></app-card-list>
         </div>
       </div>
     </div>
@@ -101,8 +101,13 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 import { getAppListData } from "../../services/appService.js";
 import AppCardList from "./cardList";
+=======
+import { getAppListData } from "@/services/appService.js";
+import AppCardList from './cardList';
+>>>>>>> 33cbab039c1cc069ed3d673ca448d3909e9acfc5
 
 export default {
   name: "appList",
@@ -196,7 +201,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.hiddenAppList();
+                      this.goDetail(params.row);
                     }
                   }
                 },
@@ -258,13 +263,17 @@ export default {
     showCardView() {
       this.showTableList = false;
     },
-    hiddenAppList(listData) {
+    goDetail(list) {
       this.showAppList = false;
+<<<<<<< HEAD
       this.$router.push({
         path: "/app/detail",
         name: "detail",
         params: { appData: listData }
       });
+=======
+      this.$router.push({path: `/app/detail/${list.uniqueId}`,params: {listId: list.uniqueId}});
+>>>>>>> 33cbab039c1cc069ed3d673ca448d3909e9acfc5
     }
   },
   watch: {

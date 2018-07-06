@@ -18,7 +18,7 @@ export const getAppListData = (params) =>  request('/H_roleplay-si/ds/getTplList
  * @author XiaoYing
  * @description 获取应用导航数据
  */
-export const getNavData = (params) =>  request('/H_roleplay-si/ds/list/getMenuByParentId', {parentId: params});
+export const getNavData = (params) =>  request('/H_roleplay-si/ds/list/getMenuByParentId',  params);
 
 /**
  * @author XiaoYing

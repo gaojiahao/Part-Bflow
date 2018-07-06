@@ -173,7 +173,7 @@ export default {
         this.showWorkFlow = true;
     },
     goForm() {
-        window.open('Form/index.html?viewDesign=true&list='+this.listId);
+        window.open('/Form/index.html?viewDesign=true&list='+this.listId);
     }
   },
   mounted() {

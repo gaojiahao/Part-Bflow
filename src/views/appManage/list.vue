@@ -101,13 +101,8 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-import { getAppListData } from "../../services/appService.js";
-import AppCardList from "./cardList";
-=======
 import { getAppListData } from "@/services/appService.js";
 import AppCardList from './cardList';
->>>>>>> 33cbab039c1cc069ed3d673ca448d3909e9acfc5
 
 export default {
   name: "appList",
@@ -265,15 +260,7 @@ export default {
     },
     goDetail(list) {
       this.showAppList = false;
-<<<<<<< HEAD
-      this.$router.push({
-        path: "/app/detail",
-        name: "detail",
-        params: { appData: listData }
-      });
-=======
       this.$router.push({path: `/app/detail/${list.uniqueId}`,params: {listId: list.uniqueId}});
->>>>>>> 33cbab039c1cc069ed3d673ca448d3909e9acfc5
     }
   },
   watch: {

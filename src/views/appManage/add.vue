@@ -55,6 +55,16 @@
         overflow: hidden;
         padding: 10px !important;
     }
+    .add-bottom{
+        background-color: #fff;
+        border: 1px solid #ddd;
+        padding: 5px 5px;
+        height: 50px;
+        width: 100%;
+        position: fixed;
+        top: 94%;
+        left: 0;
+    }
 </style>
 
 <template>
@@ -77,7 +87,11 @@
             </div>
         </Card>
     </Row>
-    <!-- <Button class="app-confirm-btn" type="success" long>确定</Button> -->
+    <div class="add-bottom">
+        <Affix :offset-bottom="0">
+            <Button type="primary">保存</Button>
+        </Affix>
+    </div>
   </div>
 </template>
 

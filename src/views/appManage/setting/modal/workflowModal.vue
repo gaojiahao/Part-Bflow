@@ -23,7 +23,7 @@
       <h4 class="flow-title">所有工作流
         <Button class="create-button">创建工作流</Button>
       </h4>
-      <Table @on-select="addWorkflow" :loading="loading" stripe height="350" :columns="allWorkFlowColumns" :data="allWorkFlowData"></Table>
+      <Table @on-row-dblclick="addWorkflow" :loading="loading" stripe height="350" :columns="allWorkFlowColumns" :data="allWorkFlowData"></Table>
       <div class="workflow-page">
         <div style="float: right;">
           <Page :total="allWorkFlowTotal" :current="allCurrentPage" :page-size="pageSize" @on-change="onPageChange" size="small" show-total></Page>
@@ -34,7 +34,7 @@
       <h4 class="flow-title">已关联的工作流
         <Button class="create-button">创建工作流</Button>
       </h4>
-      <Table :loading="loading" stripe height="350" :columns="relativeWorkFlowColumns" :data="relativeWorkFlowData"></Table>
+      <Table  @on-row-dblclick="deleteWorkflow" :loading="loading" stripe height="350" :columns="relativeWorkFlowColumns" :data="relativeWorkFlowData"></Table>
       <div class="workflow-page">
         <div style="float: right;">
           <Page :total="relativeWorkFlowTotal" :current="relativeCurrentPage" :page-size="pageSize" @on-change="onRelativePageChange" size="small" show-total></Page>
@@ -101,11 +101,11 @@ export default {
       relativeWorkFlowColumns: [
         {
           title: "名称",
-          key: "procName"
+          key: "processName"
         },
         {
           title: "编码",
-          key: "procCode"
+          key: "processCode"
         },
         {
           title: "配置节点",
@@ -188,14 +188,27 @@ export default {
       }
     },
     //添加工作流
-    addWorkflow(selection, row) {
-      let obj = {},
-          selectData = this.relativeWorkFlowData.concat(selection);
+    addWorkflow(row, index) {
+      if(this.relativeWorkFlowData.length === 0){
+        this.relativeWorkFlowData.push(row)
+      }else{
+        this.relativeWorkFlowData.forEach(val => {
+          if(row.id === val.id){
+            this.$Message.warning('已有选择的工作流！');
+          }else{
+            this.relativeWorkFlowData.push(row);
+          }
+        })
+      }
+      let obj = {};
       //去掉重复数据
-      this.relativeWorkFlowData = selectData.reduce((cur,next) => {
+      this.relativeWorkFlowData = this.relativeWorkFlowData.reduce((cur,next) => {
         obj[next.id] ? '' : obj[next.id] = true && cur.push(next);
         return cur;
       },[]);
+    },
+    deleteWorkflow(row, index) {
+      this.relativeWorkFlowData.splice(index,1);
     }
   },
   mounted() {

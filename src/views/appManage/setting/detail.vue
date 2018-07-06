@@ -74,6 +74,13 @@
       border-right: none;
       border-radius: 0px;
     }
+    .app-search{
+      margin-bottom: 5px;
+      .app-search-icon{
+        font-size: 1rem;
+        color: #39f;
+      }
+    }
     </style>
 
 <template>
@@ -133,9 +140,9 @@
         </main>
       </div>
     <!-- 应用设置信息 -->
-    <app-setting @showPermissionApp="showPermissionApp" :listId="appData.uniqueId"></app-setting>
+    <app-setting @showPermissionApp="showPermissionApp" :listId="this.$route.params.listId"></app-setting>
     <!-- 应用权限v-if="showPermission" -->
-    <app-permission :listId="appData.uniqueId"></app-permission>
+    <app-permission :listId="this.$route.params.listId"></app-permission>
     <!-- 应用视图信息 -->
     <app-view></app-view>
     <!-- 应用科目信息 -->
@@ -145,6 +152,10 @@
         v-model="showAdminModal"
         title="请选择"
         @on-ok="confirmModal">
+        <div class="app-search">
+          <Icon class="app-search-icon" type="search"></Icon>
+          <Input v-model="searchValue" placeholder="搜索" style="width: 300px"></Input>
+        </div>
         <Table @on-select="selectAdmin" height="400" stripe :columns="adminColumns" size="small" :data="adminData"></Table>
     </Modal>
     </div>
@@ -156,7 +167,7 @@ import AppSetting from "./setting";
 import AppView from "./view";
 import AppSubject from "./subject";
 import AppPermission from './permission/permission';
-import { getAdminData } from '../../../services/appService.js';
+import { getAdminData, getListData } from '../../../services/appService.js';
 export default {
   name: "detail",
   components: {
@@ -167,12 +178,13 @@ export default {
   },
   data() {
     return {
-      appData: this.$route.params.appData,
+      appData: {},
       showEditAppInfo: true,
       showPermission: false,
       selectModel: '',
       showAdminModal: false,
       selector: '',
+      searchValue: '',
       adminColumns: [{
         type: 'selection',
         width: 60,
@@ -185,8 +197,24 @@ export default {
         key: 'nickname'
       }],
       adminData: [],
+      sameAdminData: [],
       selectAdminData: []
     };
+  },
+  watch: {
+    searchValue(text) {
+      const result = [];
+      if(text){
+        this.sameAdminData.forEach((val, index) => {
+          if(val.nickname.indexOf(text) > -1 || val.userCode.indexOf(text) > -1){
+            result.push(val);
+          }
+        })
+        this.adminData = result;
+      }else{
+        this.adminData = this.sameAdminData;
+      }
+    }
   },
   methods: {
     editAppinfo() {
@@ -207,11 +235,20 @@ export default {
   },
   
   mounted() {
-    let params = {
-      groupId: 347
-    };
-    getAdminData(params).then(res => {
+    let adminParams = {
+        groupId: 347
+      },
+        listParams = {
+          uniqueId: this.$route.params.listId
+        };
+    console.log(this.$route);
+    getAdminData(adminParams).then(res => {
       this.adminData = res.tableContent;
+      this.sameAdminData = res.tableContent;
+    })
+    //请求应用详情信息
+    getListData(listParams).then(res => {
+      this.appData = res[0];
     })
   }
 };

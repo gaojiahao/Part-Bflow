@@ -120,7 +120,7 @@
         </div>
         <!-- card展示应用 -->
         <div v-else>
-          <app-card-list :listData="tableData" @hiddenAppList="hiddenAppList"></app-card-list>
+          <app-card-list :listData="tableData"></app-card-list>
         </div>
       </div>
     </div>
@@ -223,7 +223,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.hiddenAppList();
+                      this.goDetail(params.row);
                     }
                   }
                 },
@@ -285,9 +285,9 @@ export default {
     showCardView() {
       this.showTableList = false;
     },
-    hiddenAppList(listData) {
+    goDetail(list) {
       this.showAppList = false;
-      this.$router.push({ path: "/app/detail",name:'detail', params:{appData: listData}});
+      this.$router.push({path: `/app/detail/${list.uniqueId}`,params: {listId: list.uniqueId}});
     }
   },
   watch: {

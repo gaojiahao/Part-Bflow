@@ -87,8 +87,8 @@ export default {
     
   },
   methods: {
-    goAppSetting(listData) {
-      this.$emit('hiddenAppList',listData);
+    goAppSetting(list) {
+      this.$router.push({path: `/app/detail/${list.uniqueId}`,params: {listId: list.uniqueId}});
     }
   },
   mounted() {

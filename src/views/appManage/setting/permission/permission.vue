@@ -19,19 +19,11 @@
       color: #737171;
       font-size: 12px;
     }
-    .user-table{
-      max-height: 562px;
-    }
-    .dep-table{
-      max-height: 281px;
-    }
-    .org-table{
-      max-height: 281px;
-    }
 </style>
 
 <template>
   <div>
+    <Spin v-if="spin"></Spin>
     <Row>
       <Card class="app-card">
         <p class="app-name" slot="title">
@@ -49,7 +41,7 @@
           </Row>
           <Row>
             <Col span="24">
-            <Table stripe :columns="userColumns" :data="userData" class="user-table"></Table>
+            <Table stripe height="200" :columns="userColumns" :data="userData" class="user-table"></Table>
             </Col>
           </Row>
         </Row>
@@ -66,7 +58,7 @@
           </Row>
           <Row>
             <Col span="24">
-            <Table stripe :columns="orgColumns" :data="orgData" class="org-table"></Table>
+            <Table stripe height="200" :columns="orgColumns" :data="orgData" class="org-table"></Table>
             </Col>
           </Row>
         </Row>
@@ -83,7 +75,7 @@
           </Row>
           <Row>
             <Col span="24">
-            <Table stripe :columns="departmentColumns" :data="departmentData" class="dep-table"></Table>
+            <Table stripe height="200" :columns="departmentColumns" :data="departmentData" class="dep-table"></Table>
             </Col>
           </Row>
         </Row>
@@ -110,6 +102,7 @@ export default {
       isUserEdit: false,
       isOrgEdit: false,
       isDepEdit: false,
+      spin: false,
       userColumns: [
         {
           title: "姓名",
@@ -121,7 +114,6 @@ export default {
           key: "resource",
           align: 'center',
           render: (h, params) => {
-            console.log(params);
             let renderData = [];
             params.row.resource.forEach((val, index) => {
               let pushData;
@@ -481,6 +473,7 @@ export default {
         title: '确认',
         content: '确认删除此用户权限？',
         onOk: () => {
+          this.spin = true;
           let depDeleteParams = {},
               permissionIds = [];
           //获取permissionIds的集合
@@ -506,6 +499,7 @@ export default {
           };
           deleteRelationPermission(depDeleteParams).then(res => {
             if(res.success){
+              this.spin = false;
               this.$Message.success(res.message);
               if(type === 'sys_user_permission'){
                 this.getUserPermissionData();
@@ -526,6 +520,7 @@ export default {
           title: '确认',
           content: '<b style="color:red;">注意</b>：这个操作会将<b>'+params.row.objName+'</b>从该列表中移除（如果<b>'+params.row.objName+'</b>没有其他权限的话）',
           onOk: () => {
+            this.spin = true;
             let deleteParams = {
               list: type,
               single: params.row.objId,
@@ -534,6 +529,7 @@ export default {
             if(deleteParams){
               deleteRelationPermission(deleteParams).then(res => {
                 if(res.success){
+                  this.spin = false;
                   this.$Message.success(res.message);
                   if(type === 'sys_user_permission'){
                     this.getUserPermissionData();
@@ -552,6 +548,7 @@ export default {
           title: '确认',
           content: '确认删除此权限？',
           onOk: () => {
+            this.spin = true;
             let deleteParams = {
               list: type,
               single: params.row.objId,
@@ -560,6 +557,7 @@ export default {
             if(deleteParams){
               deleteRelationPermission(deleteParams).then(res => {
                 if(res.success){
+                  this.spin = false;
                   this.$Message.success(res.message);
                   if(type === 'sys_user_permission'){
                     this.getUserPermissionData();

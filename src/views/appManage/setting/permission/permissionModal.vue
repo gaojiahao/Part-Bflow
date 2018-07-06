@@ -14,6 +14,13 @@
     .permission-top-line{
       margin:10px 0px;
     }
+    .app-search{
+      margin-bottom: 5px;
+      .app-search-icon{
+        font-size: 1rem;
+        color: #39f;
+      }
+    }
 </style>
 
 <template>
@@ -74,6 +81,10 @@
         :mask-closable="false"
         @on-ok="confirmUser"
         :transfer="false">
+        <div class="app-search">
+          <Icon class="app-search-icon" type="search"></Icon>
+          <Input v-model="searchValue" placeholder="搜索" style="width: 300px"></Input>
+        </div>
         <Table @on-select="selectUserClick" height="400" stripe size="small" :columns="userColumns" :data="userData"></Table>
       </Modal>
       <!-- 组织modal -->
@@ -112,10 +123,12 @@ export default {
       selectUser: '',
       selectOrg: '',
       selectPosition: '',
+      searchValue: '',
       showUserModal: false,
       showOrgModal: false,
       showDepartmentModal: false,
       showPermissionModal: false,
+      sameUserData: [],
       userSelectData: [],
       orgSelectData: [],
       departmentSelectData: [],
@@ -146,6 +159,19 @@ export default {
   watch: {
     modalPermissionStatus: function(value, oldValue){
       this.showPermissionModal = value;
+    },
+    searchValue(text) {
+      const result = [];
+      if(text){
+        this.sameUserData.forEach((val, index) => {
+          if(val.nickname.indexOf(text) > -1 || val.userCode.indexOf(text) > -1){
+            result.push(val);
+          }
+        })
+        this.userData = result;
+      }else{
+        this.userData = this.sameUserData;
+      }
     }
   },
   methods: {
@@ -157,6 +183,7 @@ export default {
       this.userColumns = userColumn;
       getAllUserData().then(res => {
         this.userData = res.tableContent;
+        this.sameUserData = res.tableContent;
       })
     },
     //组织数据加载

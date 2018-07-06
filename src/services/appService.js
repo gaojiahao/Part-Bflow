@@ -71,3 +71,9 @@ export const getAppDepartmentPermissionData = (params) =>  request('/H_roleplay-
  * @description 删除用户、组织、职位某一权限
  */
 export const deleteRelationPermission= (params) =>  request('/H_roleplay-si/ps/deleteRelation', params, 'POST');
+
+/**
+ * @author XiaoYing
+ * @description 获取应用信息
+ */
+export const getListData= (params) =>  request('/H_roleplay-si/ds/list/getListById', params);

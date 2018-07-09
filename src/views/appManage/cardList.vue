@@ -62,7 +62,7 @@
                 <b class="card-name">{{ list.title }}</b>
                 <span class="card-desc">{{ list.comment }}</span>
                 <a class="card-setting" type="text" @click="goAppSetting(list)">设置</a>
-                <p class="card-delete">
+                <p @click="deleteApplication(index, list)" class="card-delete">
                   <Tooltip content="删除应用" placement="top">
                     <Icon type="close-round"></Icon>
                   </Tooltip>
@@ -75,6 +75,7 @@
 </template>
 
 <script>
+import { deleteApp } from "@/services/appService.js";
 export default {
   props: {
     listData: Array
@@ -83,12 +84,31 @@ export default {
     return {
     }
   },
-  created() {
-    
-  },
+  created() {},
   methods: {
     goAppSetting(list) {
       this.$router.push({path: `/app/detail/${list.uniqueId}`,params: {listId: list.uniqueId}});
+    },
+    //删除应用
+    deleteApplication(index, list) {
+      let params = {
+        uniqueId: list.uniqueId,
+        status: 0
+      };
+      if(params){
+        this.$Modal.confirm({
+          title: '确认',
+          content: '确认删除此应用？',
+          onOk: () => {
+            deleteApp(params).then(res => {
+              if(res.success){
+                this.$Message.success(res.message);
+                this.listData.splice(index,1);
+              }
+            })
+          }
+        })
+      }
     }
   },
   mounted() {

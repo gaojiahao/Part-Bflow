@@ -44,12 +44,14 @@
       padding: 2px 7px;
       border-radius: 3px;
     }
-   
      .view-cut-focus:hover {
       background-color: @blue;
       color: @white;
     }
-    
+    .active{
+      background-color: @blue;
+      color: @white;
+    }
   }
 }
 .ivu-btn {
@@ -65,15 +67,13 @@
           <Button @click="isShowAppList" class="add-btn" icon="plus-round">
             添加应用</Button>
         </router-link>
-        <Button v-if="showDeleteAll" class="top-head" type="error" icon="android-delete">
-          批量删除</Button>
         <div class="app-layout">
-          <div @click="showListView" class=" view-cut-focus">
+          <div @click="showListView" :class="{'view-cut-focus': isViewCutFocus,'active': isListAcive}">
             <Tooltip content="列表视图" placement="top">
               <Icon type="android-menu"></Icon>
             </Tooltip>
           </div>
-          <div @click="showCardView" class="view-cut-focus">
+          <div @click="showCardView" :class="{'view-cut-focus': isViewCutFocus,'active': isCardAcive}">
             <Tooltip content="卡片视图" placement="top">
               <Icon type="android-apps"></Icon>
             </Tooltip>
@@ -88,7 +88,7 @@
       <div class="app-body">
         <!-- 列表展示应用 -->
         <div v-if="showTableList">
-          <Table size="small" :stripe="true" :row-class-name="rowClassName" @on-select="selectApp" @on-select-cancel="cancelSelectApp" :columns="columns" :data="tableData" no-data-text="暂无数据">
+          <Table size="small" :stripe="true" :columns="columns" :data="tableData" no-data-text="暂无数据">
           </Table>
         </div>
         <!-- card展示应用 -->
@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import { getAppListData } from "@/services/appService.js";
+import { getAppListData, deleteApp } from "@/services/appService.js";
 import AppCardList from './cardList';
 
 export default {
@@ -111,6 +111,9 @@ export default {
   },
   data() {
     return {
+      isListAcive: false,
+      isViewCutFocus: true,
+      isCardAcive: false,
       value1: "0",
       showDeleteAll: false,
       modal1: false,
@@ -219,7 +222,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.remove(params.index);
+                      this.deleteApplication(params.index,params.row.uniqueId);
                     }
                   }
                 },
@@ -234,36 +237,51 @@ export default {
     };
   },
   methods: {
-    selectApp(selection, row) {
-      if (selection.length > 0) {
-        this.showDeleteAll = true;
-      }
-    },
-    cancelSelectApp(selection, row) {
-      if (selection.length === 0) {
-        this.showDeleteAll = false;
-      }
-    },
     isShowAppList() {
       this.showAppList = false;
     },
-    rowClassName(row, index) {
-      if (!row.publish) {
-        return "demo-table-info-row";
+    //删除应用
+    deleteApplication(index, uniqueId) {
+      let params = {
+        uniqueId: uniqueId,
+        status: 0
+      };
+      if(params){
+        this.$Modal.confirm({
+          title: '确认',
+          content: '确认删除此应用？',
+          onOk: () => {
+            deleteApp(params).then(res => {
+              if(res.success){
+                this.$Message.success(res.message);
+                this.tableData.splice(index,1);
+                this.sameTableData.splice(index,1);
+              }
+            })
+          }
+        })
       }
     },
+    //展示列表视图
     showListView() {
       this.showTableList = true;
+      this.isCardAcive = false;
+      this.isListAcive = true;
     },
+    //展示卡片视图
     showCardView() {
       this.showTableList = false;
+      this.isCardAcive = true;
+      this.isListAcive = false;
     },
+    //点击设置
     goDetail(list) {
       this.showAppList = false;
       this.$router.push({path: `/app/detail/${list.uniqueId}`,params: {listId: list.uniqueId}});
     }
   },
   watch: {
+    //监听搜索框值变化
     searchValue(text) {
       const result = [];
       if (text) {

@@ -15,7 +15,8 @@
 import {
   getAllProcessData,
   getProcessDataByListId,
-  getNavData
+  getNavData,
+  publishApp
 } from "@/services//appService.js";
 
 export default {
@@ -26,7 +27,8 @@ export default {
   data() {
     return {
       showNav: false,
-      navData: []
+      navData: [],
+      selectedNode: {}
     };
   },
   watch: {
@@ -42,18 +44,53 @@ export default {
       }
     },
     //发布应用到菜单
-    publishApp() {},
+    publishApp() {
+        if(this.selectedNode){
+            publishApp(this.selectedNode).then(res => {
+                if(res.success){
+                    this.$Message.success(res.message);
+                    //通知应用父组件已发布
+                    this.$emit('hasPublished', '已发布');
+                }
+            })
+        }
+    },
+    //获取点击节点数据并修改样式
+    getNodeSelectedData(e, data) {
+        if(e.target.style.backgroundColor){
+            e.target.style.backgroundColor = '#fff';
+            e.target.style.padding = '0px';
+            e.target.style.color = '#333';
+        }else{
+            e.target.style.backgroundColor = 'rgba(242, 157, 30, 0.9)';
+            e.target.style.padding = '3px';
+            e.target.style.color = '#fff';
+            let selectData = {
+                list: 'nav',
+                id: data.id,
+                parentId: data.parentId,
+                url: data.url,
+                text: data.title,
+                icon: data.icon
+            };
+            this.selectedNode = selectData;
+        }
+    },
     //获取菜单
     getNavData() {
       let rootParams = {
         parentId: 'root'
       };
       getNavData(rootParams).then(res => {
+          console.log(res);
         res.forEach((val, index) => {
           if(val.leaf === 1){
               this.navData.push({
                 title: val.text,
                 id: val.id,
+                parentId: val.parentId,
+                url: val.url,
+                icon: val.icon,
                 render: (h, {root,node,data}) => {
                   return h('span', {
                         style: {
@@ -72,7 +109,16 @@ export default {
                                     fontSize: '1rem'
                                 }
                             }),
-                            h('span', data.title)
+                            h('span', {
+                                style: {
+                                    cursor: 'pointer'
+                                },
+                                on: {
+                                    click: (e) => {
+                                        this.getNodeSelectedData(e, data);
+                                    }
+                                }
+                            }, data.title)
                         ])
                     ]);
                 }
@@ -81,6 +127,9 @@ export default {
               this.navData.push({
               title: val.text,
               id: val.id,
+              parentId: val.parentId,
+              url: val.url,
+              icon: val.icon,
               loading: false,
               children: [],
               render: (h, {root,node,data}) => {
@@ -101,7 +150,16 @@ export default {
                                     fontSize: '1.2rem'
                                 }
                             }),
-                            h('span', data.title)
+                            h('span', {
+                                style: {
+                                    cursor: 'pointer'
+                                },
+                                on: {
+                                    click: (e) => {
+                                        this.getNodeSelectedData(e, data);
+                                    }
+                                }
+                            }, data.title)
                         ])
                     ]);
                 }
@@ -122,6 +180,9 @@ export default {
             data.push({
               title: val.text,
               id: val.id,
+              parentId: val.parentId,
+              url: val.url,
+              icon: val.icon,
               render: (h, {root,node,data}) => {
                   return h('span', {
                         style: {
@@ -140,7 +201,16 @@ export default {
                                     fontSize: '1rem'
                                 }
                             }),
-                            h('span', data.title)
+                            h('span', {
+                                style: {
+                                    cursor: 'pointer'
+                                },
+                                on: {
+                                    click: (e) => {
+                                        this.getNodeSelectedData(e, data);
+                                    }
+                                }
+                            }, data.title)
                         ])
                     ]);
                 }
@@ -149,6 +219,9 @@ export default {
             data.push({
               title: val.text,
               id: val.id,
+              parentId: val.parentId,
+              url: val.url,
+              icon: val.icon,
               loading: false,
               children: [],
               render: (h, {root,node,data}) => {
@@ -169,7 +242,16 @@ export default {
                                     fontSize: '1.2rem'
                                 }
                             }),
-                            h('span', data.title)
+                            h('span', {
+                                style: {
+                                    cursor: 'pointer'
+                                },
+                                on: {
+                                    click: (e) => {
+                                        this.getNodeSelectedData(e, data);
+                                    }
+                                }
+                            }, data.title)
                         ])
                     ]);
                 }

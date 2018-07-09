@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import { getAppTemplateData } from '@/services/appService.js'
+import { getAppTemplateData, addTemplateApp } from '@/services/appService.js'
 export default {
   name: 'appAddList',
   components:{},
@@ -107,29 +107,43 @@ export default {
       return {
          showSelect: true,
          selectTemplate: [],
-         appData: [{name:'对象',list:[]},{name:'业务',list:[]}]
+         appData: [{name:'业务',list:[]}]
       }
   },
   methods: {
      selectApp(index,name) {
-         if(name === '对象'){
-             this.appData[0].list[index].isSelect = !this.appData[0].list[index].isSelect;
-         }else{
-             this.appData[1].list[index].isSelect = !this.appData[1].list[index].isSelect;
-         }
+        this.appData[0].list[index].isSelect = !this.appData[0].list[index].isSelect;
      },
      //添加应用模板
-     addAppTemplate() {}
+     addAppTemplate() {
+         let addTemplateData = [];
+         this.appData[0].list.forEach(val => {
+             if(val.isSelect){
+                 this.selectTemplate.push(val);
+             }
+         });
+        this.selectTemplate.forEach(val => {
+            addTemplateData.push({
+                list: 'list',
+                title: val.title,
+                templateId: val.id,
+                type: val.tplType,
+                creator: '',
+                transType: val.transType,
+                uniqueId: val.uniqueId
+            });
+        });
+        addTemplateApp(addTemplateData).then(res =>{
+            console.log(res);
+        })
+     }
   },
   mounted() {
       getAppTemplateData().then(res => {
           res.tableContent.forEach((val, index) => {
-              if(val.tplType === 'obj'){
+              if(val.tplType === 'business'){
                   val.isSelect = false;
                   this.appData[0].list.push(val);
-              }else if(val.tplType === 'business'){
-                  val.isSelect = false;
-                  this.appData[1].list.push(val);
               }
           })
       })

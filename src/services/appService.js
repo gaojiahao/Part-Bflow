@@ -18,7 +18,7 @@ export const getAppListData = (params) =>  request('/H_roleplay-si/ds/getTplList
  * @author XiaoYing
  * @description 获取应用导航数据
  */
-export const getNavData = (params) =>  request('/H_roleplay-si/ds/list/getMenuByParentId',  params);
+export const getNavData = (params) =>  request('/H_roleplay-si/ds/list/getMenuByParentId', {parentId: params});
 
 /**
  * @author XiaoYing
@@ -62,6 +62,8 @@ export const addPermission= (params) =>  request('/H_roleplay-si/ps/insertObjPer
  * @author XiaoYing
  * @description 获取对应应用用户、组织、职位所有权限数据
  */
+export const getAppResourcesAndAuthoritys = (listId) => request('/H_roleplay-si/ds/getAppResourcesAndAuthoritys',{'listId':listId})
+
 export const getAppUserPermissionData = (params) =>  request('/H_roleplay-si/ds/getAppResourcesAndAuthority', params);
 export const getAppOrgPermissionData = (params) =>  request('/H_roleplay-si/ds/getAppResourcesAndAuthority', params);
 export const getAppDepartmentPermissionData = (params) =>  request('/H_roleplay-si/ds/getAppResourcesAndAuthority', params);

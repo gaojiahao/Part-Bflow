@@ -118,7 +118,7 @@
             </Card>
         </Row>
         <!-- 导航modal -->
-        <nav-modal @emitNavModal="emitNavModal" :modalNavStatus="showNav"></nav-modal>
+        <nav-modal @emitNavModal="emitNavModal" :modalNavStatus="showNav" @hasPublished="hasPublished"></nav-modal>
         <!-- 工作流modal -->
         <workflow-modal @emitWorkFlowModal="emitWorkFlowModal" :modalWorkflowStatus="showWorkFlow" :listId="listId"></workflow-modal>
         <!-- 权限modal -->
@@ -161,6 +161,9 @@ export default {
     },
     showNavModal() {
       this.showNav = true;
+    },
+    hasPublished(data) {
+        this.$emit('childHasPublished', data);
     },
     //展示权限modal
     showPermissionApp() {

@@ -59,6 +59,7 @@
        .app-edit-icon{
          margin-left:5px;
          cursor: pointer;
+         font-size: 17px;
        }
        .app-edit-icon:hover{
          color: #39f;
@@ -99,7 +100,18 @@
           <div class="app-main-content">
                <h3 v-if="showEditAppInfo">{{ appData.title }}</h3>
                <Input v-else v-model="appData.title" style="width: 200px"></Input>
-               <b @click="editAppinfo"><Icon class="app-edit-icon" type="edit"></Icon></b>
+               <!-- 编辑应用信息 -->
+               <b v-if="showEditClick" @click="editAppinfo">
+                 <Tooltip content="编辑" placement="top">
+                  <Icon class="app-edit-icon" type="compose"></Icon>
+                 </Tooltip>
+               </b>
+               <!-- 保存应用信息 -->
+               <b v-else @click="saveAppinfo">
+                 <Tooltip content="退出编辑并保存" placement="top">
+                  <Icon class="app-edit-icon" type="edit"></Icon>
+                 </Tooltip>
+               </b>
             <section class="app-section">
               <div class="app-content-section">
                 <label>管理员：</label>
@@ -108,7 +120,7 @@
               </div>
               <div class="app-content-section">
                 <label>状态：</label>
-                <Tag color="blue" >未发布</Tag>
+                <Tag :color="appStatusColor">{{ publishStatus }}</Tag>
               </div>
               <div class="app-content-section">
                 <label>创建时间：</label>
@@ -140,7 +152,7 @@
         </div>
       </div>
     <!-- 应用设置信息 -->
-    <app-setting @showPermissionApp="showPermissionApp" :listId="this.$route.params.listId"></app-setting>
+    <app-setting @showPermissionApp="showPermissionApp" :listId="this.$route.params.listId" @childHasPublished="childHasPublished"></app-setting>
     <!-- 应用权限v-if="showPermission" -->
     <app-permission :listId="this.$route.params.listId"></app-permission>
     <!-- 应用视图信息 -->
@@ -181,10 +193,13 @@ export default {
       appData: {},
       showEditAppInfo: true,
       showPermission: false,
+      showEditClick: true,
       selectModel: '',
       showAdminModal: false,
       selector: '',
       searchValue: '',
+      publishStatus: '未发布',
+      appStatusColor: 'blue',
       adminColumns: [{
         type: 'selection',
         width: 60,
@@ -217,18 +232,32 @@ export default {
     }
   },
   methods: {
+    //修改应用状态
+    childHasPublished(data) {
+      this.publishStatus = data;
+      this.appStatusColor = 'success';
+    },
+    //修改应用信息
     editAppinfo() {
       this.showEditAppInfo = !this.showEditAppInfo;
     },
+    //保存应用信息
+    saveAppinfo() {
+      
+    },
+    //展示权限
     showPermissionApp() {
       this.showPermission = true;
     },
+    //管理员选择modal展示
     selectAdminModal() {
       this.showAdminModal = true;
     },
+    //管理员选择确认
     confirmModal() {
       this.appData.modifer = this.selectAdminData[0].nickname;
     },
+    //存储选择的管理员
     selectAdmin(selection, row) {
       this.selectAdminData = selection;
     }
@@ -241,7 +270,6 @@ export default {
         listParams = {
           uniqueId: this.$route.params.listId
         };
-    console.log(this.$route);
     getAdminData(adminParams).then(res => {
       this.adminData = res.tableContent;
       this.sameAdminData = res.tableContent;

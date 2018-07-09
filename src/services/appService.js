@@ -77,3 +77,21 @@ export const deleteRelationPermission= (params) =>  request('/H_roleplay-si/ps/d
  * @description 获取应用信息
  */
 export const getListData= (params) =>  request('/H_roleplay-si/ds/list/getListById', params);
+
+/**
+ * @author XiaoYing
+ * @description 发布应用
+ */
+export const publishApp= (params) =>  request('/H_roleplay-si/ds/saveData', params, 'POST');
+
+/**
+ * @author XiaoYing
+ * @description 添加模板应用
+ */
+export const addTemplateApp= (params) =>  request('/H_roleplay-si/ds/savaList', {}, params, 'POST');
+
+/**
+ * @author XiaoYing
+ * @description 删除应用
+ */
+export const deleteApp= (params) =>  request('/H_roleplay-si/ds/procu/removeList', params);

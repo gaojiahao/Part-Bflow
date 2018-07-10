@@ -35,7 +35,8 @@
     .ivu-modal{
       top: 25px !important;
     }
-    
+  }
+}
 </style>
 
 <template>

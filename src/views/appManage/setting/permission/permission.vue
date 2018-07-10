@@ -1,7 +1,21 @@
 <style lang="less" scoped>
-.app-name {
-  font-size: 1rem;
+.app-card{
+  border-top: 1px solid #ddd;
+  > h2 {
+    height: 40px;
+    line-height: 40px;
+    margin-left: 15px;
+  }
+  .app-name {
+    font-size: 1rem;
+  }
+
+  .app-card-item-title{
+    font-size: 16px;
+    font-weight: bold
+  }
 }
+
 .app-permission-content {
   border-bottom: 1px solid #ddd;
   padding: 30px;
@@ -19,30 +33,20 @@
 </style>
 
 <template>
-  <div>
-    <Row>
-      <Card class="app-card">
-        <p class="app-name" slot="title">
-          应用权限
-        </p>
-        <Row v-for="item in appItem" :key="item.type">
-          <Row style="margin: 20px 0px">
-            <Col span="1">
-            <b>{{item.title}}</b>
-            </Col>
-            <Col span="23">
-            <!-- <a @click="showUserAction" :class="{isRed: isUserEdit}">修改</a> -->
-            <span class="user-permission-desc" v-html="`设置${item.title}相对于当前应用的权限`"></span>
-            </Col>
-          </Row>
-          <Row>
-            <Col span="24">
-            <Table stripe height="200" :columns="userColumns" :data="authorityList[item.type]" class="user-table"></Table>
-            </Col>
-          </Row>
-        </Row>
-
-      </Card>
+  <div class="app-card">
+    <h2 class="app-name">
+      应用权限
+    </h2>
+    <Row v-for="item in appItem" :key="item.type">
+      <Row style="margin: 10px 15px ">
+        <span class="app-card-item-title">{{item.title}}</span>
+        <span class="user-permission-desc" v-html="`设置${item.title}相对于当前应用的权限`"></span>
+      </Row>
+      <Row>
+        <Col span="24">
+        <Table stripe height="200" :columns="userColumns" :data="authorityList[item.type]" class="user-table"></Table>
+        </Col>
+      </Row>
     </Row>
   </div>
 </template>

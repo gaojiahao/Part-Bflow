@@ -49,58 +49,60 @@
 import { getAppviews } from "@/services/appService.js";
 
 export default {
-  name: 'appView',
-  components:{},
+  name: "appView",
+  components: {},
   props: {
     listId: String
   },
-  data () {
-      return {
-         columns: [
-          {
-            title: "视图名称",
-            key: "title",
-            render: (h, params) => {
-              return h('a', {},params.row.title)
+  data() {
+    return {
+      columns: [
+        {
+          title: "视图名称",
+          key: "title",
+          render: (h, params) => {
+            return h("a", {}, params.row.title);
+          }
+        },
+        {
+          title: "创建时间",
+          key: "crtTime"
+        },
+        {
+          title: "创建者",
+          key: "creator"
+        },
+        {
+          title: "默认视图",
+          key: "isDefault",
+          width: 100,
+          align: "center",
+          render: (h, params) => {
+            let defaultView = false;
+            if (params.row.isDefault === 1) {
+              defaultView = true;
             }
-          },
-          {
-            title: "创建时间",
-            key: "crtTime"
-          },
-          {
-            title: "创建者",
-            key: "creator"
-          },
-          {
-            title: "默认视图",
-            key: "isDefault",
-            width: 100,
-            align: "center",
-            render: (h, params) => {
-              let defaultView = false;
-              if(params.row.isDefault === 1){
-                defaultView = true;
-              }
-              return h("Radio", {
-                props: {
-                  value: defaultView
-                },
-                on: {
-                  'on-change': (e) => {
-                    debugger
-                  }
+            return h("Radio", {
+              props: {
+                value: defaultView
+              },
+              on: {
+                "on-change": e => {
+                  
                 }
-              });
-            }
-          },
-          {
-            title: "操作",
-            key: "action",
-            width: 150,
-            align: "center",
-            render: (h, params) => {
-              return h("Button", {
+              }
+            });
+          }
+        },
+        {
+          title: "操作",
+          key: "action",
+          width: 150,
+          align: "center",
+          render: (h, params) => {
+            return h(
+              "Button",
+              {
                 props: {
                   type: "error",
                   size: "small"
@@ -109,21 +111,23 @@ export default {
               "删除"
             );
           }
-        ],
-        tableData: []
-      }
+        }
+      ],
+      tableData: []
+    };
   },
-  methods: {
-     
-  },
+  methods: {},
   mounted() {
-      let params = {
-        filter: JSON.stringify([{operator: "eq",value: this.listId,property: "uniqueId"},{operator:"eq",value:1,property:"listViewStatus"}])
-      };
-      getAppviews(params).then(res => {
-        this.tableData = res.tableContent;
-      })
+    let params = {
+      filter: JSON.stringify([
+        { operator: "eq", value: this.listId, property: "uniqueId" },
+        { operator: "eq", value: 1, property: "listViewStatus" }
+      ])
+    };
+    getAppviews(params).then(res => {
+      this.tableData = res.tableContent;
+    });
   }
-}
+};
 </script>
 

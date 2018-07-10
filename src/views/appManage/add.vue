@@ -134,7 +134,9 @@ export default {
             });
         });
         addTemplateApp(addTemplateData).then(res =>{
-            console.log(res);
+            if(res.success){
+                this.$Message.success(res.message);
+            }
         })
      }
   },

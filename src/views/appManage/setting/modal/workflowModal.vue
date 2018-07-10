@@ -18,9 +18,9 @@
     <Row :gutter="8">
       <Col span="12">
       <h4 class="flow-title">所有工作流
-        <Button class="create-button">创建工作流</Button>
+        <Button class="create-button" @click="createWorkflow">创建工作流</Button>
       </h4>
-      <Table @on-row-dblclick="addWorkflow" :loading="loading" stripe height="350" :columns="allWorkFlowColumns" :data="allWorkFlowData"></Table>
+      <Table @on-row-dblclick="addWorkflow" :loading="loadingAll" stripe height="350" :columns="allWorkFlowColumns" :data="allWorkFlowData"></Table>
       <div class="workflow-page">
         <div style="float: right;">
           <Page :total="allWorkFlowTotal" :current="allCurrentPage" :page-size="pageSize" @on-change="onPageChange" size="small" show-total></Page>
@@ -29,9 +29,9 @@
       </Col>
       <Col span="12">
       <h4 class="flow-title">已关联的工作流
-        <Button class="create-button">创建工作流</Button>
+        <Button class="create-button" @click="createWorkflow">创建工作流</Button>
       </h4>
-      <Table @on-row-dblclick="deleteWorkflow" :loading="loading" stripe height="350" :columns="relativeWorkFlowColumns" :data="relativeWorkFlowData"></Table>
+      <Table @on-row-dblclick="deleteWorkflow" :loading="loadingRelative" stripe height="350" :columns="relativeWorkFlowColumns" :data="relativeWorkFlowData"></Table>
       <div class="workflow-page">
         <div style="float: right;">
           <Page :total="relativeWorkFlowTotal" :current="relativeCurrentPage" :page-size="pageSize" @on-change="onRelativePageChange" size="small" show-total></Page>
@@ -45,7 +45,8 @@
 <script>
 import {
   getAllProcessData,
-  getProcessDataByListId
+  getProcessDataByListId,
+  saveWorkFlowInfo
 } from "@/services//appService.js";
 
 export default {
@@ -62,7 +63,8 @@ export default {
       allCurrentPage: 1,
       relativeCurrentPage: 1,
       pageSize: 10,
-      loading: true,
+      loadingAll: true,
+      loadingRelative: true,
       allWorkFlowColumns: [
         {
           type: "selection",
@@ -83,11 +85,16 @@ export default {
           align: "center",
           render: (h, params) => {
             return h(
-              "Button",
+              "a",
               {
                 props: {
                   type: "default",
                   size: "small"
+                },
+                on: {
+                  click: () => {
+                    window.open('/myflow/viewProc.html?processId=' + params.row.id);
+                  }
                 }
               },
               "查看"
@@ -110,11 +117,16 @@ export default {
           align: "center",
           render: (h, params) => {
             return h(
-              "Button",
+              "a",
               {
                 props: {
                   type: "default",
                   size: "small"
+                },
+                on: {
+                  click: () => {
+                    window.open('/myflow/viewFlow.html?processId='+params.row.id+'&listId='+this.listId+'&processCode='+ params.row.processCode);
+                  }
                 }
               },
               "配置"
@@ -139,11 +151,11 @@ export default {
         page: this.allCurrentPage,
         limit: this.pageSize
       };
-      this.loading = true;
+      this.loadingAll = true;
       getAllProcessData(allProcessParams).then(res => {
         this.allWorkFlowData = res.tableContent;
         this.allWorkFlowTotal = res.dataCount;
-        this.loading = false;
+        this.loadingAll = false;
       });
     },
     //获取已关联流程数据
@@ -153,30 +165,22 @@ export default {
         limit: this.pageSize,
         listId: this.listId
       };
-      this.loading = true;
+      this.loadingRelative = true;
       getProcessDataByListId(relativeProcessParams).then(res => {
         this.relativeWorkFlowData = res;
         this.relativeWorkFlowTotal = res.length;
-        this.loading = false;
+        this.loadingRelative = false;
       });
     },
-    //表格分页按钮点击事件
+    //所有工作流表格分页按钮点击事件
     onPageChange(currentPage) {
       this.allCurrentPage = currentPage;
-      let processPage = {
-        page: this.allCurrentPage,
-        limit: this.pageSize
-      };
-      //分页加载所有流程数据
-      this.loading = true;
-      getAllProcessData(processPage).then(res => {
-        this.allWorkFlowData = res.tableContent;
-        this.allWorkFlowTotal = res.dataCount;
-        this.loading = false;
-      });
+      this.getAllWorkflowData();
     },
-    onRelativePageChange() {
-      this.loading = false;
+    //已关联工作流表格分页按钮点击事件
+    onRelativePageChange(currentPage) {
+      this.relativeCurrentPage = currentPage;
+      this.getRelativeWorkflowData();
     },
     //通知父组件modal的状态
     modalVisibleChange(state) {
@@ -187,28 +191,52 @@ export default {
     //添加工作流
     addWorkflow(row, index) {
       if (this.relativeWorkFlowData.length === 0) {
-        this.relativeWorkFlowData.push(row);
+        this.saveWorkFlow(row);
       } else {
-        this.relativeWorkFlowData.forEach(val => {
-          if (row.id === val.id) {
+        for(let i=0;i<this.relativeWorkFlowData.length;i++){
+          if(row.id === this.relativeWorkFlowData[i].id){
             this.$Message.warning("已有选择的工作流！");
-          } else {
-            this.relativeWorkFlowData.push(row);
+            break;
+          }else{
+            this.saveWorkFlow(row);
+            break;
           }
-        });
+        }
       }
-      let obj = {};
-      //去掉重复数据
-      this.relativeWorkFlowData = this.relativeWorkFlowData.reduce(
-        (cur, next) => {
-          obj[next.id] ? "" : (obj[next.id] = true && cur.push(next));
-          return cur;
-        },
-        []
-      );
     },
+    //保存工作流公共方法
+    saveWorkFlow(row) {
+      let params = {
+          listId: this.listId,
+          procCode: row.processCode,
+          creator: '',
+          list: 'list_process_rel',
+          status: 1
+        };
+        saveWorkFlowInfo(params).then(res => {
+          if(res.success){
+            this.$Message.success(res.message);
+            this.getRelativeWorkflowData();
+          }
+        })
+    },
+    //删除工作流
     deleteWorkflow(row, index) {
-      this.relativeWorkFlowData.splice(index, 1);
+      let params = {
+        ID: row.id,
+        list: 'list_process_rel',
+        status: 0
+      };
+      saveWorkFlowInfo(params).then(res => {
+        if(res.success){
+          this.$Message.success(res.message);
+          this.relativeWorkFlowData.splice(index, 1);
+        }
+      })
+    },
+    //创建工作流
+    createWorkflow() {
+      window.open('/myflow/createWorkFlow.html?listId=' + this.listId);
     }
   },
   mounted() {

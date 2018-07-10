@@ -45,24 +45,27 @@
 </template>
 
 <script>
+import { getAppviews } from "@/services/appService.js";
+
 export default {
   name: 'appView',
-  components:{
-      
+  components:{},
+  props: {
+    listId: String
   },
   data () {
       return {
          columns: [
           {
             title: "视图名称",
-            key: "name",
+            key: "title",
             render: (h, params) => {
-              return h('a', {},params.row.name)
+              return h('a', {},params.row.title)
             }
           },
           {
             title: "创建时间",
-            key: "createTime"
+            key: "crtTime"
           },
           {
             title: "创建者",
@@ -70,13 +73,22 @@ export default {
           },
           {
             title: "默认视图",
-            key: "defaultView",
+            key: "isDefault",
             width: 100,
             align: "center",
             render: (h, params) => {
+              let defaultView = false;
+              if(params.row.isDefault === 1){
+                defaultView = true;
+              }
               return h("Radio", {
                 props: {
-                  value: true
+                  value: defaultView
+                },
+                on: {
+                  'on-change': (e) => {
+                    debugger
+                  }
                 }
               });
             }
@@ -96,17 +108,19 @@ export default {
             }
           }
         ],
-        tableData: [
-          { name: "收款明细", createTime: '2018-6-21', creator: 'maliya'},
-          { name: "收款主表", createTime: '2018-6-21', creator: 'maliya' }
-        ]
+        tableData: []
       }
   },
   methods: {
      
   },
   mounted() {
-      
+      let params = {
+        filter: JSON.stringify([{operator: "eq",value: this.listId,property: "uniqueId"},{operator:"eq",value:1,property:"listViewStatus"}])
+      };
+      getAppviews(params).then(res => {
+        this.tableData = res.tableContent;
+      })
   }
 }
 </script>

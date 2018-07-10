@@ -113,7 +113,7 @@ export default {
     return {
       isListAcive: false,
       isViewCutFocus: true,
-      isCardAcive: false,
+      isCardAcive: true,
       value1: "0",
       showDeleteAll: false,
       modal1: false,
@@ -147,7 +147,7 @@ export default {
           key: "status",
           width: 150,
           render: (h, params) => {
-            if (params.row.publish) {
+            if (params.row.publish === 1) {
               return h("div", [
                 h(
                   "b",

@@ -98,20 +98,14 @@
         <div class="app-main">
           <img :src="appData.icon" />
           <div class="app-main-content">
-               <h3 v-if="showEditAppInfo">{{ appData.title }}</h3>
-               <Input v-else v-model="appData.title" style="width: 200px"></Input>
-               <!-- 编辑应用信息 -->
-               <b v-if="showEditClick" @click="editAppinfo">
-                 <Tooltip content="编辑" placement="top">
-                  <Icon class="app-edit-icon" type="compose"></Icon>
-                 </Tooltip>
-               </b>
-               <!-- 保存应用信息 -->
-               <b v-else @click="saveAppinfo">
-                 <Tooltip content="退出编辑并保存" placement="top">
-                  <Icon class="app-edit-icon" type="edit"></Icon>
-                 </Tooltip>
-               </b>
+            <h3 v-if="showEditAppInfo">{{ appData.title }}</h3>
+            <Input v-else v-model="appData.title" style="width: 200px"></Input>
+            <!-- 编辑应用信息 -->
+            <b @click="editAppinfo">
+              <Tooltip content="编辑" placement="top">
+                <Icon class="app-edit-icon" type="compose"></Icon>
+              </Tooltip>
+            </b>
             <section class="app-section">
               <div class="app-content-section">
                 <label>管理员：</label>
@@ -120,11 +114,11 @@
               </div>
               <div class="app-content-section">
                 <label>状态：</label>
-                <Tag :color="appStatusColor">{{ publishStatus }}</Tag>
+                <Tag :color="appData.publish === 0?notAppStatusColor:hasAppStatusColor">{{ appData.publish === 0?notPublishStatus:hasPublishStatus }}</Tag>
               </div>
               <div class="app-content-section">
                 <label>创建时间：</label>
-                <span>{{ appData.modTime }}</span>
+                <span>{{ appData.crtTime }}</span>
               </div>
             </section>
             <section class="app-section">
@@ -151,25 +145,22 @@
           </div>
         </div>
       </div>
-    <!-- 应用设置信息 -->
-    <app-setting @showPermissionApp="showPermissionApp" :listId="this.$route.params.listId" @childHasPublished="childHasPublished"></app-setting>
-    <!-- 应用权限v-if="showPermission" -->
-    <app-permission :listId="this.$route.params.listId"></app-permission>
-    <!-- 应用视图信息 -->
-    <app-view></app-view>
-    <!-- 应用科目信息 -->
-    <app-subject></app-subject>
-    <!-- 用户选择器 -->
-    <Modal
-        v-model="showAdminModal"
-        title="请选择"
-        @on-ok="confirmModal">
+      <!-- 应用设置信息 -->
+      <app-setting @showPermissionApp="showPermissionApp" :listId="this.$route.params.listId" @childHasPublished="childHasPublished" @getData="brotherGetData"></app-setting>
+      <!-- 应用权限v-if="showPermission" -->
+      <app-permission :listId="this.$route.params.listId" :regetData="regetData"></app-permission>
+      <!-- 应用视图信息 -->
+      <app-view :listId="this.$route.params.listId"></app-view>
+      <!-- 应用科目信息 -->
+      <app-subject v-if="showSubjectView" :listId="this.$route.params.listId"></app-subject>
+      <!-- 用户选择器 -->
+      <Modal v-model="showAdminModal" title="请选择" @on-ok="confirmModal">
         <div class="app-search">
           <Icon class="app-search-icon" type="search"></Icon>
           <Input v-model="searchValue" placeholder="搜索" style="width: 300px"></Input>
         </div>
-        <Table @on-select="selectAdmin" height="400" stripe :columns="adminColumns" size="small" :data="adminData"></Table>
-    </Modal>
+        <Table :highlight-row="true" @on-row-click="selectAdmin" height="400" stripe :columns="adminColumns" size="small" :data="adminData"></Table>
+      </Modal>
     </div>
   </div>
 </template>
@@ -178,8 +169,12 @@
 import AppSetting from "./setting";
 import AppView from "./view";
 import AppSubject from "./subject";
-import AppPermission from './permission/permission';
-import { getAdminData, getListData } from '@/services/appService.js';
+import AppPermission from "./permission/permission";
+import {
+  getAdminData,
+  getListData,
+  saveAppInformation
+} from "@/services/appService.js";
 export default {
   name: "detail",
   components: {
@@ -191,42 +186,47 @@ export default {
   data() {
     return {
       appData: {},
+      regetData: 1000,
       showEditAppInfo: true,
       showPermission: false,
-      showEditClick: true,
-      selectModel: '',
+      showSubjectView: false,
+      selectModel: "",
       showAdminModal: false,
-      selector: '',
-      searchValue: '',
-      publishStatus: '未发布',
-      appStatusColor: 'blue',
-      adminColumns: [{
-        type: 'selection',
-        width: 60,
-        align: 'center'
-      },{
-        title: '工号',
-        key: 'userCode'
-      },{
-        title: '姓名',
-        key: 'nickname'
-      }],
+      selector: "",
+      searchValue: "",
+      hasPublishStatus: "已发布",
+      notPublishStatus: "未发布",
+      notAppStatusColor: "blue",
+      hasAppStatusColor: "green",
+      adminColumns: [
+        {
+          title: "工号",
+          key: "userCode"
+        },
+        {
+          title: "姓名",
+          key: "nickname"
+        }
+      ],
       adminData: [],
       sameAdminData: [],
-      selectAdminData: []
+      selectAdminData: {}
     };
   },
   watch: {
     searchValue(text) {
       const result = [];
-      if(text){
+      if (text) {
         this.sameAdminData.forEach((val, index) => {
-          if(val.nickname.indexOf(text) > -1 || val.userCode.indexOf(text) > -1){
+          if (
+            val.nickname.indexOf(text) > -1 ||
+            val.userCode.indexOf(text) > -1
+          ) {
             result.push(val);
           }
-        })
+        });
         this.adminData = result;
-      }else{
+      } else {
         this.adminData = this.sameAdminData;
       }
     }
@@ -234,16 +234,26 @@ export default {
   methods: {
     //修改应用状态
     childHasPublished(data) {
-      this.publishStatus = data;
-      this.appStatusColor = 'success';
+      this.appData.publish = 1;
     },
     //修改应用信息
     editAppinfo() {
       this.showEditAppInfo = !this.showEditAppInfo;
-    },
-    //保存应用信息
-    saveAppinfo() {
-      
+      if (this.showEditAppInfo) {
+        let params = {
+          list: "list",
+          uniqueId: this.appData.uniqueId,
+          title: this.appData.title,
+          administrator: this.appData.userId,
+          comment: this.appData.comment
+        };
+        console.log(this.appData);
+        saveAppInformation(params).then(res => {
+          if (res.success) {
+            this.$Messsage.success(res.message);
+          }
+        });
+      }
     },
     //展示权限
     showPermissionApp() {
@@ -255,29 +265,36 @@ export default {
     },
     //管理员选择确认
     confirmModal() {
-      this.appData.modifer = this.selectAdminData[0].nickname;
+      this.appData.modifer = this.selectAdminData.nickname;
+      this.appData.userId = this.selectAdminData.userId;
     },
     //存储选择的管理员
     selectAdmin(selection, row) {
       this.selectAdminData = selection;
+    },
+    brotherGetData(data) {
+      this.regetData = data;
     }
   },
-  
+
   mounted() {
     let adminParams = {
         groupId: 347
       },
-        listParams = {
-          uniqueId: this.$route.params.listId
-        };
+      listParams = {
+        uniqueId: this.$route.params.listId
+      };
     getAdminData(adminParams).then(res => {
       this.adminData = res.tableContent;
       this.sameAdminData = res.tableContent;
-    })
+    });
     //请求应用详情信息
     getListData(listParams).then(res => {
       this.appData = res[0];
-    })
+      if (this.appData.type === "business") {
+        this.showSubjectView = true;
+      }
+    });
   }
 };
 </script>

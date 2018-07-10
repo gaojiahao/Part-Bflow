@@ -18,7 +18,7 @@ export const getAppListData = (params) =>  request('/H_roleplay-si/ds/getTplList
  * @author XiaoYing
  * @description 获取应用导航数据
  */
-export const getNavData = (params) =>  request('/H_roleplay-si/ds/list/getMenuByParentId', {parentId: params});
+export const getNavData = (params) =>  request('/H_roleplay-si/ds/list/getMenuByParentId', params);
 
 /**
  * @author XiaoYing
@@ -90,10 +90,28 @@ export const publishApp= (params) =>  request('/H_roleplay-si/ds/saveData', para
  * @author XiaoYing
  * @description 添加模板应用
  */
-export const addTemplateApp= (params) =>  request('/H_roleplay-si/ds/savaList', {}, params, 'POST');
+export const addTemplateApp= (params) =>  request('/H_roleplay-si/ds/saveList', {}, 'POST', params);
 
 /**
  * @author XiaoYing
  * @description 删除应用
  */
 export const deleteApp= (params) =>  request('/H_roleplay-si/ds/procu/removeList', params);
+
+/**
+ * @author XiaoYing
+ * @description 保存应用信息
+ */
+export const saveAppInformation = (params) => request('/H_roleplay-si/ds/saveData', params, 'POST');
+
+/**
+ * @author XiaoYing
+ * @description 获取应用视图
+ */
+export const getAppviews = (params) => request('/H_roleplay-si/ds/getListViewOrTempViewByUniqueId', params);
+
+/**
+ * @author XiaoYing
+ * @description 保存工作流信息
+ */
+export const saveWorkFlowInfo = (params) => request('/H_roleplay-si/ds/saveData', params, 'POST');

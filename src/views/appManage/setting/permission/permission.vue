@@ -44,7 +44,7 @@
       </Row>
       <Row>
         <Col span="24">
-        <Table stripe height="200" :columns="userColumns" :data="authorityList[item.type]" class="user-table"></Table>
+        <Table height="200" :columns="userColumns" :data="authorityList[item.type]" class="user-table"></Table>
         </Col>
       </Row>
     </Row>

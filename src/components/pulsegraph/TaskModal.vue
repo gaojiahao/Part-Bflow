@@ -58,7 +58,7 @@ export default {
           title: "交易号",
           key: "transCode",
           sortable: true,
-          width: 130,
+          width: 160,
           render: (h, params) => {
             return h(
               "a",

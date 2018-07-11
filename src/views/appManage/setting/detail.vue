@@ -109,7 +109,7 @@
             <section class="app-section">
               <div class="app-content-section">
                 <label>管理员：</label>
-                <span v-if="showEditAppInfo">{{ appData.modifer }}</span>
+                <span v-if="showEditAppInfo">{{ appData.administrator }}</span>
                 <Input v-else @on-click="selectAdminModal" v-model="appData.modifer" icon="arrow-down-b" style="width: 100px"></Input>
               </div>
               <div class="app-content-section">
@@ -150,7 +150,7 @@
       <!-- 应用权限v-if="showPermission" -->
       <app-permission :listId="this.$route.params.listId"></app-permission>
       <!-- 应用视图信息 -->
-      <app-view></app-view>
+      <app-view :listId="this.$route.params.listId" :appType="appData.type"></app-view>
       <!-- 应用科目信息 -->
       <app-subject></app-subject>
 
@@ -173,7 +173,7 @@ import AppView from "./view";
 import AppSubject from "./subject";
 import AppPermission from "./permission/permission";
 import TimeLine from "@/components/timeline/TimeLine";
-import { getAdminData, getListData } from "@/services/appService.js";
+import { getAdminData, getListData, saveAppInformation } from "@/services/appService.js";
 export default {
   name: "detail",
   components: {
@@ -247,10 +247,9 @@ export default {
           administrator: this.appData.userId,
           comment: this.appData.comment
         };
-        console.log(this.appData);
         saveAppInformation(params).then(res => {
           if (res.success) {
-            this.$Messsage.success(res.message);
+            this.$Message.success(res.message);
           }
         });
       }

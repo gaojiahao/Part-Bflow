@@ -78,12 +78,9 @@ export default {
                 }
             }
             selectData = {
-                list: 'nav',
                 id: data.id,
                 listId: this.listId,
-                parentId: data.parentId,
-                url: 'app/'+this.listId+'/'+this.viewId,
-                text: data.title
+                parentId: data.parentId
             };
             if(e.target.style.backgroundColor){
                 e.target.style.backgroundColor = '#fff';

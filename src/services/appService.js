@@ -84,13 +84,13 @@ export const getListData= (params) =>  request('/H_roleplay-si/ds/list/getListBy
  * @author XiaoYing
  * @description 发布应用
  */
-export const publishApp= (params) =>  request('/H_roleplay-si/ds/saveData', params, 'POST');
+export const publishApp= (params) =>  request('/H_roleplay-si/app/publish', params, 'POST');
 
 /**
  * @author XiaoYing
  * @description 添加模板应用
  */
-export const addTemplateApp= (params) =>  request('/H_roleplay-si/ds/saveList', {}, 'POST', params);
+export const addTemplateApp= (params) =>  request('/H_roleplay-si/app/saveList', {}, 'POST', params);
 
 /**
  * @author XiaoYing
@@ -115,3 +115,15 @@ export const getAppviews = (params) => request('/H_roleplay-si/ds/getListViewOrT
  * @description 保存工作流信息
  */
 export const saveWorkFlowInfo = (params) => request('/H_roleplay-si/ds/saveData', params, 'POST');
+
+/**
+ * @author XiaoYing
+ * @description 设置默认视图
+ */
+export const saveDefaultView = (params) => request('/H_roleplay-si/app/setAppDefaultView', params, 'POST');
+
+/**
+ * @author XiaoYing
+ * @description 删除应用视图
+ */
+export const deleteAppViews = (params) => request('/H_roleplay-si/app/deleteView', params, 'POST');

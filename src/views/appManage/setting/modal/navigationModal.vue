@@ -16,17 +16,20 @@ import {
   getAllProcessData,
   getProcessDataByListId,
   getNavData,
-  publishApp
+  publishApp,
+  getAppviews
 } from "@/services//appService.js";
 
 export default {
   name: "navModal",
   props: {
-    modalNavStatus: Boolean
+    modalNavStatus: Boolean,
+    listId: String
   },
   data() {
     return {
       showNav: false,
+      viewId: '',
       navData: [],
       selectedNode: {}
     };
@@ -34,6 +37,10 @@ export default {
   watch: {
     modalNavStatus: function(value, oldValue) {
       this.showNav = value;
+      if(value){
+          this.navData = [];
+          this.getNavData();
+      }
     }
   },
   methods: {
@@ -57,24 +64,35 @@ export default {
     },
     //获取点击节点数据并修改样式
     getNodeSelectedData(e, data) {
-        if(e.target.style.backgroundColor){
-            e.target.style.backgroundColor = '#fff';
-            e.target.style.padding = '0px';
-            e.target.style.color = '#333';
-        }else{
-            e.target.style.backgroundColor = 'rgba(242, 157, 30, 0.9)';
-            e.target.style.padding = '3px';
-            e.target.style.color = '#fff';
-            let selectData = {
-                list: 'nav',
+        let params = {
+            filter: JSON.stringify([{operator: "eq",value: this.listId,property: "uniqueId"},{operator:"eq",value:1,property:"listViewStatus"}])
+            },
+            selectData = {};
+        getAppviews(params).then(res => {
+            for(let i=0;i<res.tableContent.length;i++){
+                if(res.tableContent[i].isDefault === 1){
+                    this.viewId = res.tableContent[i].viewId;
+                    break;
+                }else{
+                    this.viewId = res.tableContent[0].viewId;
+                }
+            }
+            selectData = {
                 id: data.id,
-                parentId: data.parentId,
-                url: data.url,
-                text: data.title,
-                icon: data.icon
+                listId: this.listId,
+                parentId: data.parentId
             };
-            this.selectedNode = selectData;
-        }
+            if(e.target.style.backgroundColor){
+                e.target.style.backgroundColor = '#fff';
+                e.target.style.padding = '0px';
+                e.target.style.color = '#333';
+            }else{
+                e.target.style.backgroundColor = 'rgba(242, 157, 30, 0.9)';
+                e.target.style.padding = '3px';
+                e.target.style.color = '#fff';
+                this.selectedNode = selectData;
+            }
+        })
     },
     //获取菜单
     getNavData() {
@@ -82,7 +100,6 @@ export default {
         parentId: 'root'
       };
       getNavData(rootParams).then(res => {
-          console.log(res);
         res.forEach((val, index) => {
           if(val.leaf === 1){
               this.navData.push({
@@ -263,7 +280,7 @@ export default {
     }
   },
   mounted() {
-    this.getNavData();
+    
   }
 };
 </script>

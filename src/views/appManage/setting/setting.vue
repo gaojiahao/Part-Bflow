@@ -32,10 +32,10 @@
       height: 12px;
       line-height: 12px;
     }
+    .ivu-modal{
+      top: 25px !important;
+    }
   }
-}
-.ivu-card {
-  border-radius: 0px;
 }
 </style>
 
@@ -127,11 +127,11 @@
             </div>
         </Row>
         <!-- 导航modal -->
-        <nav-modal @emitNavModal="emitNavModal" :modalNavStatus="showNav" @hasPublished="hasPublished"></nav-modal>
+        <nav-modal @emitNavModal="emitNavModal" :listId="listId" :modalNavStatus="showNav" @hasPublished="hasPublished"></nav-modal>
         <!-- 工作流modal -->
         <workflow-modal @emitWorkFlowModal="emitWorkFlowModal" :modalWorkflowStatus="showWorkFlow" :listId="listId"></workflow-modal>
         <!-- 权限modal -->
-        <permission-modal :modalPermissionStatus="showPermissionModal" :appListId="listId" @emitPermissionModal="emitPermissionModal"></permission-modal>
+        <permission-modal :modalPermissionStatus="showPermissionModal" :appListId="listId" @emitPermissionModal="emitPermissionModal" @reGetData="reGetData"></permission-modal>
     </div>
 </template>
 
@@ -185,7 +185,10 @@ export default {
       this.showWorkFlow = true;
     },
     goForm() {
-      window.open("/Form/index.html?viewDesign=true&list=" + this.listId);
+        window.open('/Form/index.html?viewDesign=true&list='+this.listId);
+    },
+    reGetData(data) {
+        this.$emit('getData',data);
     }
   },
   mounted() {}

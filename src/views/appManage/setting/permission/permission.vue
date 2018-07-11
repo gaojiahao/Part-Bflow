@@ -60,7 +60,8 @@ export default {
   name: "appPermission",
   components: {},
   props: {
-    listId: String
+    listId: String,
+    regetData: Number
   },
   data() {
     return {
@@ -227,6 +228,11 @@ export default {
       ]
     };
   },
+  watch: {
+    regetData(value) {
+      this.getAllData();
+    }
+  },
   methods: {
     //删除用户、组织、职位全部权限公共方法
     deleteAllPermission(event, params, type) {
@@ -297,24 +303,28 @@ export default {
           }
         }
       });
+    },
+    //拿到用户、组织、职位数据
+    getAllData() {
+      var that = this;
+      getAppResourcesAndAuthoritys(this.listId).then(res => {
+        if (res.tableContent[0]) {
+          that.authorityList = res["tableContent"].reduce(function(
+            pre,
+            current,
+            index
+          ) {
+            pre[current.list] = pre[current.list] || [];
+            pre[current.list].push(current);
+            return pre;
+          },
+          {});
+        }
+      });
     }
   },
   created() {
-    var that = this;
-    getAppResourcesAndAuthoritys(this.listId).then(res => {
-      if (res.tableContent[0]) {
-        that.authorityList = res["tableContent"].reduce(function(
-          pre,
-          current,
-          index
-        ) {
-          pre[current.list] = pre[current.list] || [];
-          pre[current.list].push(current);
-          return pre;
-        },
-        {});
-      }
-    });
+    this.getAllData();
   }
 };
 </script>

@@ -7,11 +7,11 @@
     margin-left: 15px;
   }
   .app-name {
-    font-size: 1rem;
+    font-size: 0.8rem;
   }
 
   .app-card-item-title{
-    font-size: 16px;
+    font-size: 0.8rem;
     font-weight: bold
   }
 }
@@ -34,12 +34,9 @@
 
 <template>
   <div class="app-card">
-    <h2 class="app-name">
-      应用权限
-    </h2>
     <Row v-for="item in appItem" :key="item.type">
       <Row style="margin: 10px 15px ">
-        <span class="app-card-item-title">{{item.title}}</span>
+        <b class="app-card-item-title">{{item.title}}</b>
         <span class="user-permission-desc" v-html="`设置${item.title}相对于当前应用的权限`"></span>
       </Row>
       <Row>

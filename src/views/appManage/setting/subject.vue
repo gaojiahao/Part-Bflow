@@ -20,15 +20,11 @@
 </style>
 
 <template>
-  <div>
-    <Row>
-      <div class="app-card">
-        <h2 class="app-name">
-          应用科目
-        </h2>
+  <div class="app-card">
+       <Row style="margin: 10px 15px ">
+        <b class="app-name">科目关系</b>
+      </Row>
         <Table :columns="columns" :data="tableData"></Table>
-      </div>
-    </Row>
   </div>
 </template>
 

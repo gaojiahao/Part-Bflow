@@ -92,7 +92,6 @@ export default {
 
 <style lang="less" >
 .timeline-box {
-  border-top: 1px solid #ddd;
   position: relative;
   margin: 20px 0 0 0;
   h2 {

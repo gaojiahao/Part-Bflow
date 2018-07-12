@@ -6,8 +6,8 @@
 }
 .app-card {
   position: relative;
-  height: 220px;
-  padding: 10px 0px;
+  // height: 220px;
+  // padding: 10px 0px;
   width: 100%;
 }
 

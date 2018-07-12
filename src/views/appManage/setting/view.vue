@@ -6,7 +6,7 @@
   border-top-style: none;
   overflow-y: hidden;
   .app-name {
-    font-size: 1rem;
+    font-size: 0.8rem;
   }
 
   > h2 {
@@ -18,7 +18,6 @@
     margin-bottom: 7px;
     display: inline-block;
     margin-left: 17px;
-    border-bottom: 1px solid #39f;
   }
   .create-view:hover{
     color: #e4393c;
@@ -47,11 +46,13 @@
 
 <template>
   <div class="app-card">
-    <h2 class="app-name">
-      应用视图
-    </h2>
-    <a class="create-view" @click="goCreateView">创建视图</a>
-    <Table :columns="columns" :data="tableData"></Table>
+    <Row style="margin: 10px 15px ">
+      <b class="app-name"> 报表视图</b>
+      <a class="create-view" @click="goCreateView">创建视图</a>
+    </Row>
+    <Row>
+      <Table :columns="columns" :data="tableData"></Table>
+    </Row>
   </div>
 </template>
 

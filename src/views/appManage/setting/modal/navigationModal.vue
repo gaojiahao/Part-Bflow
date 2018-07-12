@@ -126,16 +126,7 @@ export default {
                                     fontSize: '1rem'
                                 }
                             }),
-                            h('span', {
-                                style: {
-                                    cursor: 'pointer'
-                                },
-                                on: {
-                                    click: (e) => {
-                                        this.getNodeSelectedData(e, data);
-                                    }
-                                }
-                            }, data.title)
+                            h('span', data.title)
                         ])
                     ]);
                 }
@@ -218,16 +209,7 @@ export default {
                                     fontSize: '1rem'
                                 }
                             }),
-                            h('span', {
-                                style: {
-                                    cursor: 'pointer'
-                                },
-                                on: {
-                                    click: (e) => {
-                                        this.getNodeSelectedData(e, data);
-                                    }
-                                }
-                            }, data.title)
+                            h('span', data.title)
                         ])
                     ]);
                 }

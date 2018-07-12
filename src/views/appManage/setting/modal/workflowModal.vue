@@ -67,11 +67,6 @@ export default {
       loadingRelative: true,
       allWorkFlowColumns: [
         {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
           title: "名称",
           key: "processName"
         },

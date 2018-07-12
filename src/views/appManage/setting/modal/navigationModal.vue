@@ -259,6 +259,14 @@ export default {
         });
         callback(data);
       })
+    },
+    //子节点重新渲染
+    renewChildRender() {
+
+    },
+    //父节点重新渲染
+    renewParentRender() {
+        
     }
   },
   mounted() {

@@ -3,7 +3,7 @@
   float: left;
   width: 100%;
   border-top: 1px solid #ddd;
-  padding: 10px 15px ;
+  padding: 10px 15px;
   .app-name {
     font-size: 1rem;
     color: #39f;
@@ -13,7 +13,7 @@
       float: left;
       width: 200px;
       height: 130px;
-          font-size: 14px;
+      font-size: 14px;
       // border-style: none;
       ul {
         list-style: none;
@@ -32,7 +32,7 @@
       height: 12px;
       line-height: 12px;
     }
-    .ivu-modal{
+    .ivu-modal {
       top: 25px !important;
     }
   }
@@ -119,6 +119,10 @@
                         </li>
                         <li>
                             <b class="app-setting-dot">●</b>
+                            <a @click="showAppLog">更新日志</a>
+                        </li>
+                        <li>
+                            <b class="app-setting-dot">●</b>
                             <a @click="showNavModal">导航</a>
                         </li>
                     </ul>
@@ -126,6 +130,29 @@
                 </Col>
             </div>
         </Row>
+        <!-- 更新日志 -->
+        <custom-modal width="600" footerBtnAlign="right" title="更新日志" v-model="visible" @onVisibleChange="modalVisibleChange" @on-ok="submitLog">
+            <div style="margin:20px auto;width:80%;">
+                <Form :label-width="80" :model="logData">
+                    <FormItem label="更新范围:">
+                        <Select multiple v-model="logData.scope">
+                            <Option value="表单">表单</Option>
+                            <Option value="科目关系">科目关系</Option>
+                            <Option value="报表">报表</Option>
+                            <Option value="工作流">工作流</Option>
+                            <Option value="权限">权限</Option>
+                        </Select>
+                    </FormItem>
+                    <FormItem label="耗用小时数:">
+                        <InputNumber v-model="logData.spendTime" />
+                        <span style="color:#ddd;margin-left:10px;">单位/分</span>
+                    </FormItem>
+                    <FormItem label="更新内容:">
+                        <Input type="textarea" v-model="logData.content" :autosize="{minRows: 2,maxRows: 5}" />
+                    </FormItem>
+                </Form>
+            </div>
+        </custom-modal>
         <!-- 导航modal -->
         <nav-modal @emitNavModal="emitNavModal" :listId="listId" :modalNavStatus="showNav" @hasPublished="hasPublished"></nav-modal>
         <!-- 工作流modal -->
@@ -139,23 +166,54 @@
 import PermissionModal from "./permission/permissionModal";
 import WorkflowModal from "./modal/workflowModal";
 import NavModal from "./modal/navigationModal";
+import CustomModal from "@/components/modal/Modal";
+import { saveAppLog } from "@/services/appService.js";
 
 export default {
   name: "appSetting",
   components: {
     PermissionModal,
     WorkflowModal,
-    NavModal
+    NavModal,
+    CustomModal
   },
   props: ["listId"],
   data() {
     return {
       showPermissionModal: false,
       showWorkFlow: false,
-      showNav: false
+      showNav: false,
+      visible: false,
+      logData: {
+        scope: "",
+        spendTime: 1,
+        content: ""
+      }
     };
   },
   methods: {
+    showAppLog() {
+      this.visible = true;
+    },
+    modalVisibleChange(val) {
+      this.visible = val;
+    },
+
+    submitLog() {
+      let params = {
+        listId: this.listId,
+        scope: this.logData.scope.join(","),
+        spendTime: this.logData.spendTime,
+        content: this.logData.content
+      };
+      saveAppLog(params).then(res => {
+        if (res.success) {
+          this.$Message.success(res.message);
+          this.visible = false;
+        }
+      });
+    },
+
     //监听权限modal返回的状态
     emitPermissionModal() {
       this.showPermissionModal = false;
@@ -185,10 +243,10 @@ export default {
       this.showWorkFlow = true;
     },
     goForm() {
-        window.open('/Form/index.html?viewDesign=true&list='+this.listId);
+      window.open("/Form/index.html?viewDesign=true&list=" + this.listId);
     },
     reGetData(data) {
-        this.$emit('getData',data);
+      this.$emit("getData", data);
     }
   },
   mounted() {}

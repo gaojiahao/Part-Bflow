@@ -2,20 +2,20 @@
     <div fix class="timeline-box">
         <h2>变更日志</h2>
         <Timeline class="timeline-list" pending>
-            <TimelineItem v-for="item in data" :key="item.transCode">
-                <p class="time">{{item.transCode}}</p>
+            <TimelineItem v-for="item in data" :key="item.VERSION">
+                <p class="time">{{item.VERSION}}</p>
                 <ul class="timeline-item-content-ul">
                     <li>
-                        <span>{{item.updateUser}}</span>
-                        <span>{{item.updateTime}}</span>
-                        <span>耗用时间:{{item.hour}}</span>
+                        <span>{{item.CREATOR_NAME}}</span>
+                        <span>{{item.CRT_TIME}}</span>
+                        <span>耗用时间:{{item.TIME_CONSUMING}}</span>
                     </li>
                     <li>
                         <span>更新范围:</span>
-                        <span class="customs-tag" v-for="(scope,index) in item.undateScope" :key="index">{{scope}}</span>
+                        <span class="customs-tag" v-for="(scope,index) in item.CHANGE_RANGE" :key="index">{{scope}}</span>
                     </li>
                     <li>
-                        <span>备注:{{item.content}}</span>
+                        <span>备注:{{item.CONTENT}}</span>
                     </li>
                 </ul>
 
@@ -27,66 +27,12 @@
 <script>
 export default {
   name: "TimeLine",
-  data() {
-    return {
-      data: [
-        {
-          transCode: "0001",
-          objName: "采购入库",
-          appType: "YW1",
-          undateScope:['表单','科目关系','报表','工作流','权限'],
-          updateUser: "管理员",
-          updateTime: "2018-07-10",
-          hour: "1:30",
-          content: "测试"
-        },
-        {
-          transCode: "0002",
-          objName: "采购入库",
-          appType: "YW1",
-          undateScope:['表单','科目关系','报表','工作流','权限'],
-          appBigType: "YW2",
-          updateUser: "管理员",
-          updateTime: "2018-07-10",
-          hour: "1:30",
-          content: "测试"
-        },
-        {
-          transCode: "0003",
-          objName: "采购入库",
-          appType: "YW1",
-          undateScope:['表单','科目关系','报表','工作流','权限'],
-          appBigType: "YW2",
-          updateUser: "管理员",
-          updateTime: "2018-07-10",
-          hour: "1:30",
-          content: "测试"
-        },
-        {
-          transCode: "0004",
-          objName: "采购入库",
-          appType: "YW1",
-          appBigType: "YW2",
-          undateScope:['表单','科目关系','报表','工作流','权限'],
-          updateUser: "管理员",
-          updateTime: "2018-07-10",
-          hour: "1:30",
-          content: "测试"
-        },
-        {
-          transCode: "0005",
-          objName: "采购入库",
-          undateScope:['表单','科目关系','报表','工作流','权限'],
-          appType: "YW1",
-          appBigType: "YW2",
-          updateUser: "管理员",
-          updateTime: "2018-07-10",
-          hour: "1:30",
-          content: "测试"
-        }
-      ]
-    };
-  }
+  props:{
+    data:{
+      type:Array,
+      default: []
+    }
+  },
 };
 </script>
 

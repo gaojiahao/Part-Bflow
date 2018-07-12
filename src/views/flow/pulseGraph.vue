@@ -41,7 +41,7 @@
               <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
             </filter>
           </defs>
-           <defs>
+          <defs>
             <marker id="arrow" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" viewBox="0 0 15 15" refX="6" refY="6" orient="auto">
               <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: #00ae9d;" />
             </marker>
@@ -65,14 +65,7 @@
           <g v-for="(business,i) in dataItem" :key="i">
             <g v-for="(item,j) in business.child" :key="j">
 
-              <image :x="40+(baseLength+graphSpace)*item.sort" 
-                :y="50+170*i" :width="baseLength" 
-                :height="baseLength" 
-                :xlink:href="item.icon" 
-                rx='10'
-                v-on:click.stop="doAction(item)"  
-                v-bind:class="{ 'svg-image-style-opacity': !item.isPermitted, 'svg-image-style': true }"
-                >
+              <image :x="40+(baseLength+graphSpace)*item.sort" :y="50+170*i" :width="baseLength" :height="baseLength" :xlink:href="item.icon" rx='10' v-on:click.stop="doAction(item)" v-bind:class="{ 'svg-image-style-opacity': !item.isPermitted, 'svg-image-style': true }">
               </image>
               <!-- 科目与业务节点title -->
 
@@ -92,7 +85,7 @@
                       {{item.notToDo}}
                     </text> -->
             </g>
-            
+
           </g>
 
           <g v-for="(point) in pointList" :key="point.id">
@@ -194,8 +187,8 @@ export default {
             this.dataItem[i].child[i2].pointX =
               40 + (baseLength + graphSpace) * data[i].child[i2].sort;
             this.dataItem[i].child[i2].pointY = 50 + baseLength / 2 + 170 * i;
-           
-           nodePointXY[this.dataItem[i].child[i2].id] =
+
+            nodePointXY[this.dataItem[i].child[i2].id] =
               this.dataItem[i].child[i2].pointX +
               "," +
               this.dataItem[i].child[i2].pointY;
@@ -216,51 +209,76 @@ export default {
           }
         }
       }
-    
+
       let that = this;
       data.forEach(function(item, itemIndex) {
-        item.child.forEach(function(child,childIndex){
-          if(child.relevantNode && child.relevantNode.length>0){
-             // 构造应用与应用之间关系
-             child.relevantNode.forEach(function(relevantNode,relIndex){
-               if(relevantNode.id in nodePointXY){
-                  tempPoint = nodePointXY[relevantNode.id].split(',');
-                  tempX = Number(tempPoint[0]);
-                  tempY = Number(tempPoint[1]);
-                  that.transTypePointList.push({
-                    id:child.id+"_"+relevantNode.id,
-                    value:(child.pointX+baseLength)+','+child.pointY+' '+(tempX-4.3)+','+tempY
-                  })
-               }
-             });
+        item.child.forEach(function(child, childIndex) {
+          if (child.relevantNode && child.relevantNode.length > 0) {
+            // 构造应用与应用之间关系
+            child.relevantNode.forEach(function(relevantNode, relIndex) {
+              if (relevantNode.id in nodePointXY) {
+                tempPoint = nodePointXY[relevantNode.id].split(",");
+                tempX = Number(tempPoint[0]);
+                tempY = Number(tempPoint[1]);
+                that.transTypePointList.push({
+                  id: child.id + "_" + relevantNode.id,
+                  value:
+                    child.pointX +
+                    baseLength +
+                    "," +
+                    child.pointY +
+                    " " +
+                    (tempX - 4.3) +
+                    "," +
+                    tempY
+                });
+              }
+            });
           }
 
-          if(child.endNode && child.endNode.length>0){
-            child.endNode.forEach(function(endNode,endIndex){
-              if(endNode.id in nodePointXY){
-                 tempPoint = nodePointXY[endNode.id].split(',');
-                  tempX = Number(tempPoint[0]);
-                  tempY = Number(tempPoint[1]);
+          if (child.endNode && child.endNode.length > 0) {
+            child.endNode.forEach(function(endNode, endIndex) {
+              if (endNode.id in nodePointXY) {
+                tempPoint = nodePointXY[endNode.id].split(",");
+                tempX = Number(tempPoint[0]);
+                tempY = Number(tempPoint[1]);
                 //线条朝上
-                if(endNode.groupIndex<item.index){
-                  let baseNum  = (tempX-child.pointX)/(baseLength+graphSpace) *8.5;
-                    that.pointList.push({
-                      id:child.id+"_"+endNode.id,
-                      value:(child.pointX+baseLength/2)+','+(child.pointY-baseLength/2)+' '+(tempX+baseLength/2 - baseNum)+','+(tempY+baseLength/2+20)
-                    });
-                }
-                //线条朝下
-                else if(endNode.groupIndex>item.index){
-                  let baseNum  = (tempX-child.pointX)/(baseLength+graphSpace) *8.5;
+                if (endNode.groupIndex < item.index) {
+                  let baseNum =
+                    (tempX - child.pointX) / (baseLength + graphSpace) * 8.5;
                   that.pointList.push({
-                    id:child.id+"_"+endNode.id,
-                    value:(child.pointX+baseLength/2)+','+(child.pointY+baseLength/2+20)+' '+(tempX+baseLength/2 - baseNum)+','+(tempY-baseLength/2-4.3)
-                  })
+                    id: child.id + "_" + endNode.id,
+                    value:
+                      child.pointX +
+                      baseLength / 2 +
+                      "," +
+                      (child.pointY - baseLength / 2) +
+                      " " +
+                      (tempX + baseLength / 2 - baseNum) +
+                      "," +
+                      (tempY + baseLength / 2 + 20)
+                  });
+                } else if (endNode.groupIndex > item.index) {
+                  //线条朝下
+                  let baseNum =
+                    (tempX - child.pointX) / (baseLength + graphSpace) * 8.5;
+                  that.pointList.push({
+                    id: child.id + "_" + endNode.id,
+                    value:
+                      child.pointX +
+                      baseLength / 2 +
+                      "," +
+                      (child.pointY + baseLength / 2 + 20) +
+                      " " +
+                      (tempX + baseLength / 2 - baseNum) +
+                      "," +
+                      (tempY - baseLength / 2 - 4.3)
+                  });
                 }
               }
-            })
+            });
           }
-        })
+        });
       });
     },
 
@@ -314,8 +332,8 @@ export default {
       }
     },
 
-    outBlur:function(e){
-       this.waterFlow = {}
+    outBlur: function(e) {
+      this.waterFlow = {};
     },
 
     /**
@@ -323,17 +341,19 @@ export default {
      */
     redirectTo: function(item, event) {
       let url = item.url;
+      let nr = window.top.document.getElementById("frame1").getAttribute("nr");
       if (item.type === "subject") return;
-
       if (item.target === "_blank") {
         window.open(item.url, "_blank");
       } else {
-        if (~url.indexOf("outlink")) {
-          url = item.url;
-        } else if (~url.indexOf("app")) {
-          url = "appReport/" + url;
-        } else {
-          url = "report/" + url;
+        if(!nr){
+          if (~url.indexOf("outlink")) {
+            url = item.url;
+          } else if (~url.indexOf("app")) {
+            url = "appReport/" + url;
+          } else {
+            url = "report/" + url;
+          }
         }
         window.top.postMessage(
           {
@@ -439,7 +459,7 @@ export default {
   },
   mounted() {
     var that = this;
-     getPulseGraph(this.caseId)
+    getPulseGraph(this.caseId)
       .then(res => {
         var getSubjectIicon = function(subjectName) {
           var icon = "";
@@ -488,16 +508,16 @@ export default {
             ? that.calcSvgWidth(res.dataItem)
             : 1400;
         let calcSvgHeight = that.calcSvgHeight(res.dataItem);
-        if(window.document.getElementById("flow-box")){
+        if (window.document.getElementById("flow-box")) {
           window.document.getElementById("flow-box").style.width =
             calcSvgWidth + "px";
           window.document.getElementById("flow-box").style.height =
             calcSvgHeight + "px";
-  
+
           that.draw();
-  
+
           this.defaultDisplayTask = this.myToDo;
-  
+
           that.spinShow = false;
         }
       })

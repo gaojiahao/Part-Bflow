@@ -78,7 +78,7 @@ export default {
             return h("a", {
               on: {
                 click: () => {
-                  window.open('/appSetting/viewConfig/'+this.listId+'/'+params.row.viewId);
+                  location.href = '/Site/index.html#/appSetting/viewConfig/'+this.listId+'/'+params.row.viewId;
                 }
               }
             }, params.row.title);
@@ -249,7 +249,7 @@ export default {
     },
     //创建视图
     goCreateView() {
-      window.open('/appSetting/'+this.listId+'/'+this.appType+'/viewTypes');
+      window.open('/Site/index.html#/appSetting/'+this.listId+'/'+this.appType+'/viewTypes');
     }
   },
   created() {

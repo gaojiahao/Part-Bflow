@@ -157,7 +157,7 @@
     <!-- 应用科目信息 -->
     <app-subject></app-subject>
 
-    <time-line></time-line>
+    <time-line :data="timeLineData"></time-line>
     <!-- 用户选择器 -->
     <Modal v-model="showAdminModal" title="请选择" @on-ok="confirmModal">
       <div class="app-search">
@@ -178,7 +178,8 @@ import TimeLine from "@/components/timeline/TimeLine";
 import {
   getAdminData,
   getListData,
-  saveAppInformation
+  saveAppInformation,
+  getChangeLog
 } from "@/services/appService.js";
 export default {
   name: "detail",
@@ -217,7 +218,8 @@ export default {
       ],
       adminData: [],
       sameAdminData: [],
-      selectAdminData: {}
+      selectAdminData: {},
+      timeLineData:[]
     };
   },
   watch: {
@@ -291,6 +293,22 @@ export default {
         this.sameAdminData = res.tableContent;
       });
     }
+  },
+
+  created(){
+    let listId =  this.$route.params.listId,
+        params = {
+        listId:listId
+      };
+
+    getChangeLog(params).then(res=>{
+      if(res.tableContent){
+        res.tableContent.map(item=>{
+          item['CHANGE_RANGE'] = item['CHANGE_RANGE'].split(',')
+        })
+        this.timeLineData = res.tableContent;
+      }
+    })
   },
 
   mounted() {

@@ -121,16 +121,20 @@ export default {
      */
     redirectTo: function(appInfo) {
       let url = appInfo.url;
+      let nr = window.top.document.getElementById("frame1").getAttribute("nr");
       if (appInfo.target === "_blank") {
         window.open(url, "_blank");
       } else {
-        if (~appInfo.url.indexOf("outlink")) {
-          url = appInfo.url;
-        } else if (~appInfo.url.indexOf("app")) {
-          url = "appReport/" + url;
-        } else {
-          url = "report/" + url;
+        if (!nr) {
+          if (~url.indexOf("outlink")) {
+            url = url;
+          } else if (~appInfo.url.indexOf("app")) {
+            url = "appReport/" + url;
+          } else {
+            url = "report/" + url;
+          }
         }
+
         window.top.postMessage(
           {
             type: "redirect",

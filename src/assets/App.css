@@ -8,13 +8,13 @@
 
   @font-face {
     font-family: 'iconfont';  /* project id 677305 */
-    src: url('//at.alicdn.com/t/font_677305_rfvmguxkwms.eot');
-    src: url('//at.alicdn.com/t/font_677305_rfvmguxkwms.eot?#iefix') format('embedded-opentype'),
-    url('//at.alicdn.com/t/font_677305_rfvmguxkwms.woff') format('woff'),
-    url('//at.alicdn.com/t/font_677305_rfvmguxkwms.ttf') format('truetype'),
-    url('//at.alicdn.com/t/font_677305_rfvmguxkwms.svg#iconfont') format('svg');
+    src: url('//at.alicdn.com/t/font_677305_l2mnwh8ppe.eot');
+    src: url('//at.alicdn.com/t/font_677305_l2mnwh8ppe.eot?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_677305_l2mnwh8ppe.woff') format('woff'),
+    url('//at.alicdn.com/t/font_677305_l2mnwh8ppe.ttf') format('truetype'),
+    url('//at.alicdn.com/t/font_677305_l2mnwh8ppe.svg#iconfont') format('svg');
   }
-
+  
   .ivu-modal-header{
     border-bottom: 0px  !important;
     padding: 15px 15px 5px 15px;

@@ -127,3 +127,15 @@ export const saveDefaultView = (params) => request('/H_roleplay-si/app/setAppDef
  * @description 删除应用视图
  */
 export const deleteAppViews = (params) => request('/H_roleplay-si/app/deleteView', params, 'POST');
+
+/** 
+ * @author GUOZHENG
+ * 更新日志
+*/
+export const saveAppLog = (params) => request('/H_roleplay-si/app/saveLog', params,"POST");
+
+/** 
+ * @author GUOZHENG
+ * 更新日志
+*/
+export const getChangeLog = (params) => request('/H_roleplay-si/ds/getChangeLog',params);

@@ -135,6 +135,10 @@
             </div>
           </section>
           <section class="app-section">
+            <div class="app-content-section">
+              <label>应用大类：</label>
+              <span>{{ appBigType }}</span>
+            </div>
             <div class="app-content-comment">
               <label>说明：</label>
               <span v-if="showEditAppInfo">{{ appData.comment }}</span>
@@ -189,6 +193,7 @@ export default {
   data() {
     return {
       appData: {},
+      appBigType: '',
       regetData: 1000,
       showEditAppInfo: true,
       showPermission: false,
@@ -316,6 +321,11 @@ export default {
       this.appData = res[0];
       if (this.appData.type === "business") {
         this.showSubjectView = true;
+        this.appBigType = '业务应用';
+      }else if(this.appData.type === "obj"){
+        this.appBigType = '基础对象';
+      }else{
+        this.appBigType = '科目应用';
       }
     });
   }

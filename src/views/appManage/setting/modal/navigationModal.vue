@@ -126,16 +126,7 @@ export default {
                                     fontSize: '1rem'
                                 }
                             }),
-                            h('span', {
-                                style: {
-                                    cursor: 'pointer'
-                                },
-                                on: {
-                                    click: (e) => {
-                                        this.getNodeSelectedData(e, data);
-                                    }
-                                }
-                            }, data.title)
+                            h('span', data.title)
                         ])
                     ]);
                 }
@@ -218,16 +209,7 @@ export default {
                                     fontSize: '1rem'
                                 }
                             }),
-                            h('span', {
-                                style: {
-                                    cursor: 'pointer'
-                                },
-                                on: {
-                                    click: (e) => {
-                                        this.getNodeSelectedData(e, data);
-                                    }
-                                }
-                            }, data.title)
+                            h('span', data.title)
                         ])
                     ]);
                 }
@@ -277,6 +259,14 @@ export default {
         });
         callback(data);
       })
+    },
+    //子节点重新渲染
+    renewChildRender() {
+
+    },
+    //父节点重新渲染
+    renewParentRender() {
+        
     }
   },
   mounted() {

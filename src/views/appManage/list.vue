@@ -135,6 +135,21 @@ export default {
           key: "transType"
         },
         {
+          title: "应用大类",
+          key: "type",
+          render: (h, params) => {
+            let bigType = '';
+            if(params.row.type === 'business'){
+              bigType = '业务应用';
+            }else if(params.row.type === 'obj'){
+              bigType = '基础对象';
+            }else{
+              bigType = '科目应用';
+            }
+            return h('span',{},bigType);
+          }
+        },
+        {
           title: "创建时间",
           key: "createTime"
         },

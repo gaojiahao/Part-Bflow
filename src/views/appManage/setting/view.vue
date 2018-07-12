@@ -4,6 +4,7 @@
   padding-bottom: 10px;
   overflow-x: hidden;
   border-top-style: none;
+  overflow-y: hidden;
   .app-name {
     font-size: 1rem;
   }
@@ -78,7 +79,7 @@ export default {
             return h("a", {
               on: {
                 click: () => {
-                  window.open('/appSetting/viewConfig/'+this.listId+'/'+params.row.viewId);
+                  location.href = '/Site/index.html#/appSetting/viewConfig/'+this.listId+'/'+params.row.viewId;
                 }
               }
             }, params.row.title);
@@ -108,13 +109,7 @@ export default {
               },
               on: {
                 "on-change": e => {
-                  this.$Modal.confirm({
-                    title: "确认",
-                    content: "你确定将此视图设为默认视图？",
-                    onOk: () => {
-                      this.setDefaultViews(params);
-                    }
-                  });
+                  this.onClickDefaultView(params);
                 }
               }
             });
@@ -190,21 +185,7 @@ export default {
       };
       getAppviews(dataParams).then(res => {
         this.tableData = res.tableContent;
-        this.columns[3].render = (h, params) => {
-          if (params.row.isDefault === 1) {
-            return h("Radio", {
-              props: {
-                value: true
-              }
-            });
-          } else {
-            return h("Radio", {
-              props: {
-                value: false
-              }
-            });
-          }
-        };
+        this.reRenderDefaultView();
         this.$Message.success(res.message);
       });
     },
@@ -249,7 +230,39 @@ export default {
     },
     //创建视图
     goCreateView() {
-      window.open('/appSetting/'+this.listId+'/'+this.appType+'/viewTypes');
+      location.href = '/Site/index.html#/appSetting/'+this.listId+'/'+this.appType+'/viewTypes';
+    },
+    //点击默认视图方法
+    onClickDefaultView(params) {
+      this.$Modal.confirm({
+        title: "确认",
+        content: "你确定将此视图设为默认视图？",
+        onOk: () => {
+          this.setDefaultViews(params);
+        },
+        onCancel: () => {
+          this.reRenderDefaultView();
+        }
+      });
+    },
+    //重新渲染默认视图columns方法
+    reRenderDefaultView() {
+      this.columns[3].render = (h, params) => {
+        let defaultView = false;
+        if(params.row.isDefault === 1){
+          defaultView = true;
+        }
+        return h("Radio", {
+          props: {
+            value: defaultView
+          },
+          on: {
+            'on-change': () => {
+              this.onClickDefaultView(params);
+            }
+          }
+        });
+      };
     }
   },
   created() {

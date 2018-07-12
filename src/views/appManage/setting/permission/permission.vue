@@ -72,7 +72,7 @@ export default {
         {
           title: "姓名",
           key: "objName",
-          width: 100,
+          width: 200,
           hidden: true
         },
         {

@@ -2,6 +2,7 @@
     .permission-tab{
       border: 1px solid #ddd;
       height: 350px;
+      overflow: hidden;
       .permission-title{
         line-height: 100px;
         font-size: 12px;
@@ -21,8 +22,9 @@
         color: #39f;
       }
     }
-    .ivu-input-icon{
-      cursor: pointer;
+    .member-body{
+      overflow-y: auto;
+      height: 100px
     }
     
 </style>
@@ -30,7 +32,7 @@
 <template>
   <Modal v-model="showPermissionModal" title="应用权限" width="1000" :mask-closable="false" @on-ok="submitPermission" @on-visible-change="modalVisibleChange">
     <div>
-      <Row :gutter="8" style="margin-bottom:15px;">
+      <Row :gutter="8" style="margin-bottom:10px;">
         <Col span="8">
         <label>用户</label>
         <Input @on-click="selectUserModal" v-model="selectUser" icon="arrow-down-b" style="width: 200px"></Input>
@@ -46,12 +48,11 @@
       </Row>
       <Row :gutter="8">
         <Col span="12" class="permission-tab">
-        <Row class="permission-top-line"></Row>
-        <Row>
+        <Row style="margin-top:10px">
           <Col span="3">
           <b class="permission-title">用户</b>
           </Col>
-          <Col span="21" style="height:100px">
+          <Col span="21" class="member-body">
           <Tag @on-close="deleteUser(index)" v-for="(userData, index) of userSelectData" :key="index" type="border" closable color="yellow">{{ userData.nickname }}</Tag>
           </Col>
         </Row>
@@ -60,7 +61,7 @@
           <Col span="3">
           <b class="permission-title">组织</b>
           </Col>
-          <Col span="21" style="height:100px">
+          <Col span="21" class="member-body">
           <Tag @on-close="deleteOrg(index)" v-for="(orgData, index) of orgSelectData" :key="index" type="border" closable color="green">{{ orgData.name }}</Tag>
           </Col>
         </Row>
@@ -69,7 +70,7 @@
           <Col span="3">
           <b class="permission-title">职位</b>
           </Col>
-          <Col span="21" style="height:100px">
+          <Col span="21" class="member-body">
           <Tag @on-close="deleteDepartment(index)" v-for="(departmentData, index) of departmentSelectData" :key="index" type="border" closable color="blue">{{ departmentData.name }}</Tag>
           </Col>
         </Row>

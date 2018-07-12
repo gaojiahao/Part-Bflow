@@ -5,6 +5,7 @@
   border-top-style: none;
   padding-bottom: 10px;
   overflow-x: hidden;
+  overflow-y: hidden;
 
   > h2 {
     height: 40px;

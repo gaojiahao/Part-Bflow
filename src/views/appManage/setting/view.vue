@@ -4,6 +4,7 @@
   padding-bottom: 10px;
   overflow-x: hidden;
   border-top-style: none;
+  overflow-y: hidden;
   .app-name {
     font-size: 1rem;
   }
@@ -244,7 +245,7 @@ export default {
         }
       });
     },
-    //重新渲染默认视图
+    //重新渲染默认视图columns方法
     reRenderDefaultView() {
       this.columns[3].render = (h, params) => {
         let defaultView = false;

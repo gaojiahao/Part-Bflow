@@ -79,7 +79,6 @@ export default {
           title: "资源",
           key: "resource",
           align: "center",
-
           render: (h, params) => {
             let renderData = [];
             let resource = JSON.parse(params.row.resource);
@@ -91,7 +90,6 @@ export default {
                     "Tag",
                     {
                       props: {
-                        type: "border",
                         closable: true,
                         color: "yellow"
                       },
@@ -168,9 +166,8 @@ export default {
                     "Tag",
                     {
                       props: {
-                        type: "border",
                         closable: true,
-                        color: "blue"
+                        color: 'blue'
                       },
                       on: {
                         "on-close": event => {

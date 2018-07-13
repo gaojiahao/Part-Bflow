@@ -109,7 +109,7 @@ export default {
       this.allTaskCount = res.tableContent;
       //获取菜单信息
       getMenu().then(res => {
-         this.urlMd5(res);
+        //  this.urlMd5(res);
 
         if (this.favoriteMenu.children.length > 0) {
           this.menuList = [this.favoriteMenu, ...res];
@@ -204,7 +204,21 @@ export default {
   font-weight: 400;
 }
 
-@media screen and (max-width: 1023px) {
+@media screen and (max-width: 521px) {
+  .ivu-col-span-4 {
+    display: block !important;
+    width: 90% !important;
+  }
+}
+
+@media screen and (min-width: 522px) and (max-width: 780px) {
+  .ivu-col-span-4 {
+    display: block !important;
+     width: 50% !important;
+  }
+}
+
+@media screen and (min-width: 781px) and (max-width: 1023px) {
   .ivu-col-span-4 {
     display: block !important;
     width: 33.333333% !important;

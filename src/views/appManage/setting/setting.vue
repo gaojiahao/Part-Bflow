@@ -132,7 +132,7 @@
         </Row>
         <!-- 更新日志 -->
         <custom-modal width="600" footerBtnAlign="right" title="更新日志" v-model="visible" @onVisibleChange="modalVisibleChange" @on-ok="submitLog">
-            <div style="margin:20px auto;width:80%;">
+            <div style="margin:20px auto;width:85%;">
                 <Form ref="formValidate" :label-width="95" :model="logData" :rules="ruleValidate">
                     <FormItem label="更新范围:" prop="scope">
                         <Select multiple v-model="logData.scope">

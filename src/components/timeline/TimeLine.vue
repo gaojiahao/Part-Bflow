@@ -1,6 +1,6 @@
 <template>
     <div fix class="timeline-box" v-show="data.length===0?false:true">
-        <h2>变更日志</h2>
+        <h2>更新日志</h2>
         <Timeline class="timeline-list" pending>
             <TimelineItem v-for="item in data" :key="item.VERSION">
                 <p class="time">{{item.VERSION}}</p>

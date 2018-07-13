@@ -291,7 +291,7 @@ export default {
             page: this.userCurrentPage,
             limit: this.pageSize,
             filter: filter
-          };
+      };
       this.showUserModal = true;
       this.userColumns = userColumn;
       this.userLoading = true;
@@ -312,7 +312,7 @@ export default {
             page: this.orgCurrentPage,
             limit: this.pageSize,
             filter: filter
-          };
+      };
       this.showOrgModal = true;
       this.orgColumns = orgColumn;
       this.orgLoading = true;
@@ -332,7 +332,7 @@ export default {
             page: this.depCurrentPage,
             limit: this.pageSize,
             filter: filter
-          };
+      };
       this.showDepartmentModal = true;
       this.departmentColumns = departmentColumn;
       this.depLoading = true;

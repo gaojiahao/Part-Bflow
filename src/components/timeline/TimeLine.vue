@@ -66,7 +66,7 @@ export default {
 .timeline-item-content-ul {
   margin-left: 20px;
   font-size: 14px;
-  list-style-type: ;
+    list-style: disc;
   span {
     padding: 0 20px 0 0;
   }

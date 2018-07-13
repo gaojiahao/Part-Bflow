@@ -165,6 +165,7 @@ export default {
       };
       saveDefaultView(defaultParams).then(res => {
         if (res.success) {
+          this.$Message.success(res.message);
           this.reloadViewData();
         }
       });
@@ -188,7 +189,6 @@ export default {
       getAppviews(dataParams).then(res => {
         this.tableData = res.tableContent;
         this.reRenderDefaultView();
-        this.$Message.success(res.message);
       });
     },
     //删除视图
@@ -238,7 +238,7 @@ export default {
     onClickDefaultView(params) {
       this.$Modal.confirm({
         title: "确认",
-        content: "你确定将此视图设为默认视图？",
+        content: '确认设置此视图为默认视图？',
         onOk: () => {
           this.setDefaultViews(params);
         },

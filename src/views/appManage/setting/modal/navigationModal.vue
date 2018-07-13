@@ -58,6 +58,8 @@ export default {
                     this.$Message.success(res.message);
                     //通知应用父组件已发布
                     this.$emit('hasPublished', '已发布');
+                }else{
+                    this.$Message.error(res.message);
                 }
             })
         }

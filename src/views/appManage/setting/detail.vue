@@ -149,7 +149,7 @@
       </div>
     </div>
     <!-- 应用设置信息 -->
-    <app-setting @showPermissionApp="showPermissionApp" :listId="this.$route.params.listId" @childHasPublished="childHasPublished" @getData="brotherGetData"></app-setting>
+    <app-setting @showPermissionApp="showPermissionApp" :listId="this.$route.params.listId" @childHasPublished="childHasPublished" @getData="brotherGetData" @callTimeLineRefesh="callTimeLineRefesh"></app-setting>
     <!-- 应用权限v-if="showPermission" -->
     <app-permission :listId="this.$route.params.listId" :regetData="regetData"></app-permission>
     <!-- 应用视图信息 -->
@@ -193,7 +193,7 @@ export default {
   data() {
     return {
       appData: {},
-      appBigType: '',
+      appBigType: "",
       regetData: 1000,
       showEditAppInfo: true,
       showPermission: false,
@@ -219,7 +219,7 @@ export default {
       adminData: [],
       sameAdminData: [],
       selectAdminData: {},
-      timeLineData:[]
+      timeLineData: []
     };
   },
   watch: {
@@ -292,23 +292,36 @@ export default {
         this.adminData = res.tableContent;
         this.sameAdminData = res.tableContent;
       });
+    },
+
+    /** 
+     * 获取变更日志
+    */
+    getChangeLog() {
+      let listId = this.$route.params.listId,
+        params = {
+          listId: listId
+        };
+
+      getChangeLog(params).then(res => {
+        if (res.tableContent) {
+          res.tableContent.map(item => {
+            if (item["CHANGE_RANGE"]) {
+              item["CHANGE_RANGE"] = item["CHANGE_RANGE"].split(",");
+            }
+          });
+          this.timeLineData = res.tableContent;
+        }
+      });
+    },
+
+    callTimeLineRefesh(){
+        this.getChangeLog();
     }
   },
 
-  created(){
-    let listId =  this.$route.params.listId,
-        params = {
-        listId:listId
-      };
-
-    getChangeLog(params).then(res=>{
-      if(res.tableContent){
-        res.tableContent.map(item=>{
-          item['CHANGE_RANGE'] = item['CHANGE_RANGE'].split(',')
-        })
-        this.timeLineData = res.tableContent;
-      }
-    })
+  created() {
+    this.getChangeLog();
   },
 
   mounted() {
@@ -321,11 +334,11 @@ export default {
       this.appData = res[0];
       if (this.appData.type === "business") {
         this.showSubjectView = true;
-        this.appBigType = '业务应用';
-      }else if(this.appData.type === "obj"){
-        this.appBigType = '基础对象';
-      }else{
-        this.appBigType = '科目应用';
+        this.appBigType = "业务应用";
+      } else if (this.appData.type === "obj") {
+        this.appBigType = "基础对象";
+      } else {
+        this.appBigType = "科目应用";
       }
     });
   }

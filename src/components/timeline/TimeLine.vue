@@ -1,5 +1,5 @@
 <template>
-    <div fix class="timeline-box">
+    <div fix class="timeline-box" v-show="data.length===0?false:true">
         <h2>变更日志</h2>
         <Timeline class="timeline-list" pending>
             <TimelineItem v-for="item in data" :key="item.VERSION">

@@ -19,8 +19,8 @@
           </main>
           <footer class="modal-content-footer" :class="inputAlign">
             <slot name="footer">
-              <input type="submit" value="确定" class="input-submit-common" @click.prevent="ok" />
               <input type="submit" value="取消" class="input-submit-common" @click.prevent="cancel" />
+                <input type="submit" value="确定" class="input-submit-common" @click.prevent="ok" />
             </slot>
           </footer>
         </div>

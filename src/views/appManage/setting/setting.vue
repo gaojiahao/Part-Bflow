@@ -133,8 +133,8 @@
         <!-- 更新日志 -->
         <custom-modal width="600" footerBtnAlign="right" title="更新日志" v-model="visible" @onVisibleChange="modalVisibleChange" @on-ok="submitLog">
             <div style="margin:20px auto;width:80%;">
-                <Form :label-width="80" :model="logData">
-                    <FormItem label="更新范围:">
+                <Form ref="formValidate" :label-width="95" :model="logData" :rules="ruleValidate">
+                    <FormItem label="更新范围:" prop="scope">
                         <Select multiple v-model="logData.scope">
                             <Option value="表单">表单</Option>
                             <Option value="科目关系">科目关系</Option>
@@ -143,11 +143,11 @@
                             <Option value="权限">权限</Option>
                         </Select>
                     </FormItem>
-                    <FormItem label="耗用小时数:">
+                    <FormItem label="耗用小时数:" prop="spendTime">
                         <InputNumber v-model="logData.spendTime" />
                         <span style="color:#ddd;margin-left:10px;">单位/分</span>
                     </FormItem>
-                    <FormItem label="更新内容:">
+                    <FormItem label="更新内容:" prop="content">
                         <Input type="textarea" v-model="logData.content" :autosize="{minRows: 2,maxRows: 5}" />
                     </FormItem>
                 </Form>
@@ -185,9 +185,32 @@ export default {
       showNav: false,
       visible: false,
       logData: {
-        scope: "",
-        spendTime: 1,
+        scope: [],
+        spendTime: 0,
         content: ""
+      },
+      ruleValidate: {
+        scope: [
+          {
+            required: true,
+            message: "Please select the city",
+            trigger: "change"
+          }
+        ],
+        spendTime: [
+          {
+            required: true,
+            message: "不允许为空",
+            trigger: "blur"
+          }
+        ],
+        content: [
+          {
+            required: true,
+            message: "不允许为空",
+            trigger: "blur"
+          }
+        ]
       }
     };
   },
@@ -195,11 +218,25 @@ export default {
     showAppLog() {
       this.visible = true;
     },
+
     modalVisibleChange(val) {
       this.visible = val;
+      if (!val) {
+        this.$refs["formValidate"].resetFields();
+      }
     },
 
-    submitLog() {
+    /**
+     * 提交变更日志
+     */
+    submitLog(event) {
+      //校验提交的数据是否为空
+      this.$refs["formValidate"].validate(valid => {
+        if (!valid) {
+          return;
+        }
+      });
+
       let params = {
         listId: this.listId,
         scope: this.logData.scope.join(","),
@@ -210,6 +247,7 @@ export default {
         if (res.success) {
           this.$Message.success(res.message);
           this.visible = false;
+          this.$emit("callTimeLineRefesh", true);
         }
       });
     },

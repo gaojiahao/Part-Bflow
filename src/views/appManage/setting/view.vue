@@ -80,7 +80,8 @@ export default {
             return h("a", {
               on: {
                 click: () => {
-                  location.href = '/Site/index.html#/appSetting/viewConfig/'+this.listId+'/'+params.row.viewId;
+                  let href = '/Site/index.html#appSetting/viewConfig/'+this.listId+'/'+params.row.viewId;
+                  window.top.location.href = href;
                 }
               }
             }, params.row.title);
@@ -231,7 +232,7 @@ export default {
     },
     //创建视图
     goCreateView() {
-      location.href = '/Site/index.html#/appSetting/'+this.listId+'/'+this.appType+'/viewTypes';
+      window.top.location.href = '/Site/index.html#appSetting/'+this.listId+'/'+this.appType+'/viewTypes';
     },
     //点击默认视图方法
     onClickDefaultView(params) {

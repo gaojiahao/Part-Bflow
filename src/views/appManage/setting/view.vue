@@ -93,7 +93,7 @@ export default {
         },
         {
           title: "创建者",
-          key: "creator"
+          key: "nickname"
         },
         {
           title: "默认视图",

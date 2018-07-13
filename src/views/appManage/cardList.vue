@@ -16,12 +16,23 @@
         position: absolute;
         top:10%;
         left: 29%;
+        font-size: 15px;
+      }
+      .card-type{
+        position: absolute;
+        top: 34%;
+        left: 29%;
+        font-size: 13px;
+      }
+      .card-admintrstor{
+        color: #39f;
+        margin-left: 2px;
       }
       .card-desc{
         position: absolute;
-        top: 35%;
+        top: 58%;
         left: 29%;
-        font-size: 0.6rem;
+        font-size: 0.7rem;
         width: 238px;
         color: #867c7c;
         overflow: hidden;
@@ -30,8 +41,8 @@
       }
       .card-setting{
         position: absolute;
-        top: 58%;
-        left: 29%;
+        top: 33%;
+        left: 69%;
         color: #39f;
       }
       .card-delete{
@@ -60,6 +71,9 @@
             <Card class="app-card">
                 <img class="card-img" :src="list.icon"/>
                 <b class="card-name">{{ list.title }}</b>
+                <span class="card-type">{{ list.transType }}
+                  <span class="card-admintrstor">{{ list.administrator }}</span>
+                </span>
                 <span class="card-desc">{{ list.comment }}</span>
                 <a class="card-setting" type="text" @click="goAppSetting(list)">设置</a>
                 <p @click="deleteApplication(index, list)" class="card-delete">

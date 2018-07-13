@@ -20,13 +20,18 @@
       .app-search-icon{
         font-size: 1rem;
         color: #39f;
+        display: inline-block;
+        cursor: pointer;
       }
     }
     .member-body{
       overflow-y: auto;
       height: 100px
     }
-    
+    .user-page{
+      margin: 10px;
+      overflow: hidden
+  }
 </style>
 
 <template>
@@ -38,17 +43,14 @@
     @on-visible-change="modalVisibleChange">
     <div>
       <Row :gutter="8" style="margin-bottom:10px;">
-        <Col span="8">
-          <label>用户</label>
-          <Input @on-click="selectUserModal" v-model="selectUser" icon="arrow-down-b" style="width: 200px"></Input>
+        <Col span="4">
+          <Button  @click="selectUserModal" type="info">用户权限选择</Button>
         </Col>
-        <Col span="8">
-          <label>组织</label>
-          <Input @on-click="selectOrgModal" v-model="selectOrg" icon="arrow-down-b" style="width: 200px"></Input>
+        <Col span="4">
+          <Button  @click="selectOrgModal" type="info">组织权限选择</Button>
         </Col>
-        <Col span="8">
-          <label>职位</label>
-          <Input @on-click="selectPositionModal" v-model="selectPosition" icon="arrow-down-b" style="width: 200px"></Input>
+        <Col span="4">
+          <Button  @click="selectPositionModal" type="info">职位权限选择</Button>
         </Col>
       </Row>
       <Row :gutter="8">
@@ -110,36 +112,68 @@
       <!-- 用户modal -->
       <Modal v-model="showUserModal" title="用户选择" :mask-closable="false" @on-ok="confirmUser" :transfer="false">
         <div class="app-search">
-          <Icon class="app-search-icon" type="search"></Icon>
-          <Input v-model="searchValue" placeholder="搜索" style="width: 300px"></Input>
+          <Input v-model="searchUserValue" placeholder="名称搜索" style="width: 300px"></Input>
+          <p @click="userFilter" class="app-search-icon">
+            <Button type="primary" size="small">查询</Button>
+          </p>
         </div>
         <Table 
           @on-select="selectUserClick" 
           @on-select-all="selectUserClick" 
-          height="400" stripe size="small" 
+          height="400" stripe size="small"
+          :loading="userLoading" 
           :columns="userColumns" 
           :data="userData">
         </Table>
+        <div class="user-page">
+          <div style="float: right;">
+            <Page :total="userTotal" :current="userCurrentPage" :page-size="pageSize" @on-change="onUserPageChange" size="small" show-total></Page>
+          </div>
+        </div>
       </Modal>
       <!-- 组织modal -->
       <Modal v-model="showOrgModal" title="组织选择" :mask-closable="false" @on-ok="confirmOrg" :transfer="false">
+        <div class="app-search">
+          <Input v-model="searchOrgValue" placeholder="搜索" style="width: 300px"></Input>
+          <p @click="orgFilter" class="app-search-icon">
+            <Button type="primary" size="small">查询</Button>
+          </p>
+        </div>
         <Table 
           @on-select="selectOrgClick" 
           @on-select-all="selectOrgClick" 
-          height="400" stripe size="small" 
+          height="400" stripe size="small"
+          :loading="orgLoading" 
           :columns="orgColumns" 
           :data="orgData">
         </Table>
+        <div class="user-page">
+          <div style="float: right;">
+            <Page :total="orgTotal" :current="orgCurrentPage" :page-size="pageSize" @on-change="onOrgPageChange" size="small" show-total></Page>
+          </div>
+        </div>
       </Modal>
       <!-- 职位modal -->
       <Modal v-model="showDepartmentModal" title="职位选择" :mask-closable="false" @on-ok="confirmDepartment" :transfer="false">
+        <div class="app-search">
+          <Input v-model="searchDepValue" placeholder="搜索" style="width: 300px"></Input>
+          <p @click="depFilter" class="app-search-icon">
+            <Button type="primary" size="small">查询</Button>
+          </p>
+        </div>
         <Table 
           @on-select="selectDepartmentClick" 
           @on-select-all="selectDepartmentClick" 
-          height="400" stripe :size="tableSize" 
+          height="400" stripe :size="tableSize"
+          :loading="depLoading" 
           :columns="departmentColumns" 
           :data="departmentData">
         </Table>
+        <div class="user-page">
+          <div style="float: right;">
+            <Page :total="depTotal" :current="depCurrentPage" :page-size="pageSize" @on-change="onDepPageChange" size="small" show-total></Page>
+          </div>
+        </div>
       </Modal>
     </div>
   </Modal>
@@ -165,10 +199,22 @@ export default {
       selectUser: "",
       selectOrg: "",
       selectPosition: "",
-      searchValue: "",
+      searchUserValue: "",
+      searchOrgValue: "",
+      searchDepValue: "",
       tableSize: "small",
+      userTotal: 0,
+      orgTotal: 0,
+      depTotal: 0,
+      userCurrentPage: 1,
+      orgCurrentPage: 1,
+      depCurrentPage: 1,
+      pageSize: 10,
       //监听数据变化刷新权限table
       emitChange: 0,
+      userLoading: true,
+      orgLoading: true,
+      depLoading: true,
       showUserModal: false,
       showOrgModal: false,
       showDepartmentModal: false,
@@ -215,62 +261,85 @@ export default {
       this.userSelection = [];
       this.orgSelection = [];
       this.departmentSelection = [];
-    },
-    searchValue(text) {
-      const result = [];
-      if (text) {
-        this.sameUserData.forEach((val, index) => {
-          if (
-            val.nickname.indexOf(text) > -1 ||
-            val.userCode.indexOf(text) > -1
-          ) {
-            result.push(val);
-          }
-        });
-        this.userData = result;
-      } else {
-        this.userData = this.sameUserData;
-      }
     }
   },
   methods: {
+    //用户过滤
+    userFilter() {
+      let filter = JSON.stringify([{operator: "like",value: this.searchUserValue,property: "nickname"}]);
+      this.selectUserModal(filter)
+    },
+    //组织过滤
+    orgFilter() {
+      let filter = JSON.stringify([{operator: "like",value: this.searchOrgValue,property: "name"}]);
+      this.selectOrgModal(filter)
+    },
+    //职位过滤
+    depFilter() {
+      let filter = JSON.stringify([{operator: "like",value: this.searchDepValue,property: "name"}]);
+      this.selectPositionModal(filter)
+    },
     confirmMember() {},
     //用户数据加载
-    selectUserModal() {
+    selectUserModal(filter) {
       let userColumn = [
         { type: "selection", width: 60, align: "center" },
         { title: "姓名", key: "nickname" },
         { title: "工号", key: "userCode" }
-      ];
+      ],
+          userParams = {
+            page: this.userCurrentPage,
+            limit: this.pageSize,
+            filter: filter
+          };
       this.showUserModal = true;
       this.userColumns = userColumn;
-      getAllUserData().then(res => {
+      this.userLoading = true;
+      getAllUserData(userParams).then(res => {
         this.userData = res.tableContent;
         this.sameUserData = res.tableContent;
+        this.userTotal = res.dataCount;
+        this.userLoading = false;
       });
     },
     //组织数据加载
-    selectOrgModal() {
+    selectOrgModal(filter) {
       let orgColumn = [
         { type: "selection", width: 60, align: "center" },
         { title: "名称", key: "name" }
-      ];
+      ],
+          orgParams = {
+            page: this.orgCurrentPage,
+            limit: this.pageSize,
+            filter: filter
+          };
       this.showOrgModal = true;
       this.orgColumns = orgColumn;
-      getAllOrgData().then(res => {
+      this.orgLoading = true;
+      getAllOrgData(orgParams).then(res => {
         this.orgData = res.tableContent;
+        this.orgTotal = res.dataCount;
+        this.orgLoading = false;
       });
     },
     //职位数据加载
-    selectPositionModal() {
+    selectPositionModal(filter) {
       let departmentColumn = [
         { type: "selection", width: 60, align: "center" },
         { title: "名称", key: "name" }
-      ];
+      ],
+          depParams = {
+            page: this.depCurrentPage,
+            limit: this.pageSize,
+            filter: filter
+          };
       this.showDepartmentModal = true;
       this.departmentColumns = departmentColumn;
-      getAllDepartmentData().then(res => {
+      this.depLoading = true;
+      getAllDepartmentData(depParams).then(res => {
         this.departmentData = res.tableContent;
+        this.depTotal = res.dataCount;
+        this.depLoading = false;
       });
     },
     //选择用户
@@ -389,6 +458,24 @@ export default {
       if (!state) {
         this.$emit("emitPermissionModal", { modal: false });
       }
+    },
+    //用户page点击
+    onUserPageChange(currentPage) {
+      let filter = JSON.stringify([{operator: "like",value: this.searchUserValue,property: "nickname"}]);
+      this.userCurrentPage = currentPage;
+      this.selectUserModal(filter);
+    },
+    //组织page点击
+    onOrgPageChange(currentPage) {
+      let filter = JSON.stringify([{operator: "like",value: this.searchOrgValue,property: "name"}]);
+      this.orgCurrentPage = currentPage;
+      this.selectOrgModal(filter);
+    },
+    //职位page点击
+    onDepPageChange(currentPage) {
+      let filter = JSON.stringify([{operator: "like",value: this.searchDepValue,property: "name"}]);
+      this.depCurrentPage = currentPage;
+      this.selectPositionModal(filter);
     }
   },
   mounted() {

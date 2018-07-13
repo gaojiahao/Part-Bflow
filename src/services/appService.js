@@ -48,9 +48,9 @@ export const getAllPermissionData = (params) =>  request('/H_roleplay-si/ds/getP
  * @author XiaoYing
  * @description 获取用户、组织、职位所有数据
  */
-export const getAllUserData = () =>  request('/H_roleplay-si/ds/getUserList2');
-export const getAllOrgData = () =>  request('/H_roleplay-si/ds/getDepartment');
-export const getAllDepartmentData = () =>  request('/H_roleplay-si/ds/getRoleList2');
+export const getAllUserData = (params) =>  request('/H_roleplay-si/ds/getUserList2', params);
+export const getAllOrgData = (params) =>  request('/H_roleplay-si/ds/getDepartment', params);
+export const getAllDepartmentData = (params) =>  request('/H_roleplay-si/ds/getRoleList2', params);
 
 /**
  * @author XiaoYing

@@ -27,12 +27,27 @@ export default {
 @import './common.less';
 
 
-@media screen and (max-width: 1023px) {
+@media screen and (max-width: 521px) {
+  .ivu-col-span-4 {
+    display: block !important;
+    width: 90% !important;
+  }
+}
+
+@media screen and (min-width: 522px) and (max-width: 780px) {
+  .ivu-col-span-4 {
+    display: block !important;
+     width: 50% !important;
+  }
+}
+
+@media screen and (min-width: 781px) and (max-width: 1023px) {
   .ivu-col-span-4 {
     display: block !important;
     width: 33.333333% !important;
   }
 }
+
 
 @media screen and (min-width:1024px) and (max-width: 1466px) {
   .ivu-col-span-4 {

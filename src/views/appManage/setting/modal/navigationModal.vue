@@ -52,7 +52,7 @@ export default {
     },
     //发布应用到菜单
     publishApp() {
-        if(this.selectedNode){
+        if(Object.keys(this.selectedNode).length !== 0){
             publishApp(this.selectedNode).then(res => {
                 if(res.success){
                     this.$Message.success(res.message);
@@ -80,14 +80,16 @@ export default {
                 }
             }
             selectData = {
-                id: data.id,
                 listId: this.listId,
-                parentId: data.parentId
+                parentId: data.id
             };
             if(e.target.style.backgroundColor){
                 e.target.style.backgroundColor = '';
                 e.target.style.padding = '0px';
                 e.target.style.color = '#333';
+                if(data.id === this.selectedNode.parentId){
+                    this.selectedNode = {};
+                }
             }else{
                 e.target.style.backgroundColor = 'rgba(242, 157, 30, 0.9)';
                 e.target.style.padding = '3px';

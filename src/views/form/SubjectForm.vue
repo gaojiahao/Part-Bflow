@@ -193,8 +193,4 @@ export default {
   }
 }
 
-.ivu-form-item-label {
-  color: #000 !important;
-  font-size: 14px !important;
-}
 </style>

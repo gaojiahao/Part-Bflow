@@ -34,14 +34,14 @@
 
 <template>
   <div class="app-card">
-    <Row v-for="item in appItem" :key="item.type">
+    <Row v-for="(item,index) in authorityList" :key="index">
       <Row style="margin: 10px 15px ">
-        <b class="app-card-item-title">{{item.title}}</b>
-        <span class="user-permission-desc" v-html="`设置${item.title}相对于当前应用的权限`"></span>
+        <b class="app-card-item-title">{{index}}</b>
+        <span class="user-permission-desc" v-html="`设置${index}相对于当前应用的权限`"></span>
       </Row>
       <Row>
         <Col span="24">
-        <Table height="200" :columns="userColumns" :data="authorityList[item.type]" class="user-table"></Table>
+        <Table height="200" :columns="columns" :data="item" class="user-table"></Table>
         </Col>
       </Row>
     </Row>
@@ -65,7 +65,7 @@ export default {
       isUserEdit: false,
       isOrgEdit: false,
       isDepEdit: false,
-      userColumns: [
+      columns: [
         {
           title: "姓名",
           key: "objName",
@@ -303,13 +303,19 @@ export default {
       var that = this;
       getAppResourcesAndAuthoritys(this.listId).then(res => {
         if (res.tableContent[0]) {
+          let valid = {
+            sys_group_permission:'组织',
+            sys_user_permission:'用户',
+            sys_role_permission:'职位'
+          }
           that.authorityList = res["tableContent"].reduce(function(
             pre,
             current,
             index
           ) {
-            pre[current.list] = pre[current.list] || [];
-            pre[current.list].push(current);
+            let list = current.list;
+            pre[valid[list]] = pre[valid[list]] || [];
+            pre[valid[list]].push(current);
             return pre;
           },
           {});

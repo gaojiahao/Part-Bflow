@@ -122,7 +122,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@main-bg-color: #2780a3;
+@main-bg-color: rgb(45, 140, 240);;
 @main-bg-color-hover: @main-bg-color+30;
 @padding-modal: 0 15px;
 .rfd-modal-mask {
@@ -197,6 +197,7 @@ export default {
       width: 100%;
       line-height: 50px;
       border-top: 1px solid #ddd;
+      background-color: #e9eaec;
       padding: @padding-modal;
 
       .input-submit-common {

@@ -145,7 +145,7 @@
                     </FormItem>
                     <FormItem label="耗用小时数:" prop="spendTime">
                         <InputNumber v-model="logData.spendTime" />
-                        <span style="color:#ddd;margin-left:10px;">单位/分</span>
+                        <span style="color:#ddd;margin-left:10px;">单位/时</span>
                     </FormItem>
                     <FormItem label="更新内容:" prop="content">
                         <Input type="textarea" v-model="logData.content" :autosize="{minRows: 2,maxRows: 5}" />
@@ -184,24 +184,24 @@ export default {
       showWorkFlow: false,
       showNav: false,
       visible: false,
-      logData: {
+      logData: {    //变更日志表单数据
         scope: [],
-        spendTime: 0,
+        spendTime: 1,
         content: ""
       },
-      ruleValidate: {
+      ruleValidate: {   //变更日志表单校验
         scope: [
           {
+            type: "array",
             required: true,
-            message: "Please select the city",
-            trigger: "change"
+            message: "不允许为空"
           }
         ],
         spendTime: [
           {
             required: true,
             message: "不允许为空",
-            trigger: "blur"
+            type: "number"
           }
         ],
         content: [
@@ -215,6 +215,9 @@ export default {
     };
   },
   methods: {
+    /** 
+     * 显示变更日志弹出框
+     * */ 
     showAppLog() {
       this.visible = true;
     },
@@ -231,25 +234,25 @@ export default {
      */
     submitLog(event) {
       //校验提交的数据是否为空
-      this.$refs["formValidate"].validate(valid => {
-        if (!valid) {
-          return;
-        }
+      let valid;
+      this.$refs["formValidate"].validate(v => {
+        valid = v;
       });
-
-      let params = {
-        listId: this.listId,
-        scope: this.logData.scope.join(","),
-        spendTime: this.logData.spendTime,
-        content: this.logData.content
-      };
-      saveAppLog(params).then(res => {
-        if (res.success) {
-          this.$Message.success(res.message);
-          this.visible = false;
-          this.$emit("callTimeLineRefesh", true);
-        }
-      });
+      if (valid) {
+        let params = {
+          listId: this.listId,
+          scope: this.logData.scope.join(","),
+          spendTime: this.logData.spendTime,
+          content: this.logData.content
+        };
+        saveAppLog(params).then(res => {
+          if (res.success) {
+            this.$Message.success(res.message);
+            this.visible = false;
+            this.$emit("callTimeLineRefesh", true);
+          }
+        });
+      }
     },
 
     //监听权限modal返回的状态

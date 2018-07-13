@@ -85,7 +85,7 @@ export default {
                 parentId: data.parentId
             };
             if(e.target.style.backgroundColor){
-                e.target.style.backgroundColor = '#fff';
+                e.target.style.backgroundColor = '';
                 e.target.style.padding = '0px';
                 e.target.style.color = '#333';
             }else{

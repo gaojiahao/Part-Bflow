@@ -72,7 +72,7 @@
 
 <template>
   <div>
-    <Row v-for="(list,k) of appData" :key="k">
+    <Row v-for="(list,k) of appData" :key="k" style="padding-bottom:35px;">
         <Card class="app-out-card">
             <p class="app-name" slot="title">
                 {{ list.name }}

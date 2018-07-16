@@ -26,7 +26,7 @@
       }
       .card-admintrstor{
         color: #39f;
-        margin-left: 2px;
+        margin-left: 8px;
       }
       .card-desc{
         position: absolute;
@@ -42,7 +42,7 @@
       .card-setting{
         position: absolute;
         top: 33%;
-        left: 69%;
+        left: 72%;
         color: #39f;
       }
       .card-delete{
@@ -63,6 +63,9 @@
       display: block;
     }
   }
+  .ivu-icon{
+    padding-right: 3px;
+  }
 </style>
 <template>
   <div class="app-list">
@@ -72,10 +75,10 @@
                 <img class="card-img" :src="list.icon"/>
                 <b class="card-name">{{ list.title }}</b>
                 <span class="card-type">{{ list.transType }}
-                  <span class="card-admintrstor">{{ list.administrator }}</span>
+                  <span class="card-admintrstor"><Icon type="person"></Icon>{{ list.administrator }}</span>
                 </span>
                 <span class="card-desc">{{ list.comment }}</span>
-                <a class="card-setting" type="text" @click="goAppSetting(list)">设置</a>
+                <a class="card-setting" type="text" @click="goAppSetting(list)">详情</a>
                 <p @click="deleteApplication(index, list)" class="card-delete">
                   <Tooltip content="删除应用" placement="top">
                     <Icon type="close-round"></Icon>

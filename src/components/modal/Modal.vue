@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-transfer-dom :data-transfer="transfer">
     <div class="rfd-modal-mask" v-show="visible" @click="mask"></div>
     <div class="rfd-modal-warp" @click="handleWrapClick" v-show="visible">
       <div class="rfd-modal" :style="mainStyles">
@@ -20,7 +20,7 @@
           <footer class="modal-content-footer" :class="inputAlign">
             <slot name="footer">
               <input type="submit" value="取消" class="input-submit-common" @click.prevent="cancel" />
-                <input type="submit" value="确定" class="input-submit-common" @click.prevent="ok" />
+              <input type="submit" value="确定" class="input-submit-common" @click.prevent="ok" />
             </slot>
           </footer>
         </div>
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import TransferDom from "./transfer-dom";
 export default {
   props: {
     value: {
@@ -58,12 +59,17 @@ export default {
     //弹出框名称
     title: {
       type: String
+    },
+
+    transfer: {
+      type: Boolean,
+      default: true
     }
   },
 
   data() {
     return {
-      visible: this.value,
+      visible: this.value
     };
   },
 
@@ -132,8 +138,7 @@ export default {
   left: 0;
   right: 0;
   background-color: rgba(55, 55, 55, 0.6);
-  height: 100%;
-  width: 100%;
+  width: auto;
   z-index: 1000;
 }
 

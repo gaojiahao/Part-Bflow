@@ -1,0 +1,13 @@
+{
+	"status": 200,
+	"message": "操作成功",
+	"data": [{
+		"during": "2018年1月",
+		"changeResult": "报表的性能得到了一定的提升",
+		"changeOpportunity": "实例增加变更历史的功能就更好了，最好是字段级别"
+	}, {
+		"during": "2018年2月",
+		"changeResult": "报表的性能得到了一定的提升",
+		"changeOpportunity": "实例增加变更历史的功能就更好了，最好是字段级别"
+	}]
+}

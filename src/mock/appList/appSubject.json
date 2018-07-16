@@ -1,11 +1,42 @@
 {
-	"tableContent": [{
-		"name": "待计划订单",
-		"type": "会计类",
-		"dataCollection": "借方"
+	"status": 200,
+	"message": "操作成功",
+	"data": [{
+		"accountCode": "8500",
+		"accountName": "待计划订单",
+		"classify": 0,
+		"calcRels": [{
+			"calcRelCode": "8004",
+			"calcRelName": "待入库采购订单",
+			"calcField": "qty",
+			"matchDirectionByDebit": -1,
+			"accountCode": null,
+			"accountName": null,
+			"containerField": "transObjCode,dealerCode",
+			"calcRelType": null
+		},{
+			"calcRelCode": "8004",
+			"calcRelName": "待入库采购订单",
+			"calcField": "qty",
+			"matchDirectionByDebit": 1,
+			"accountCode": null,
+			"accountName": null,
+			"containerField": "transObjCode,dealerCode",
+			"calcRelType": null
+		}]
 	}, {
-		"name": "待交付",
-		"type": "非会计类",
-		"dataCollection": "贷方"
+		"accountCode": "8600",
+		"accountName": "存货",
+		"classify": 1,
+		"calcRels": [{
+			"calcRelCode": "8004",
+			"calcRelName": "待入库采购订单",
+			"calcField": "qty",
+			"matchDirectionByDebit": 1,
+			"accountCode": null,
+			"accountName": null,
+			"containerField": "transObjCode,dealerCode",
+			"calcRelType": null
+		}]
 	}]
 }

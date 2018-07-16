@@ -145,3 +145,9 @@ export const getChangeLog = (params) => request('/H_roleplay-si/ds/getChangeLog'
  * 获取应用科目
 */
 export const getAppSubjectData = () =>  request('../mock/appList/appSubject.json');//mock
+
+/** 
+ * @author XiaoYing
+ * 管理员自评数据获取
+*/
+export const getAdmintrstorAssessmentData = () =>  request('../mock/appList/adminAssessment.json');//mock

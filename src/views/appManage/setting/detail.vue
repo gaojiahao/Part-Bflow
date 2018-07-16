@@ -33,9 +33,9 @@
   .app-main-content {
     width: 94%;
     position: absolute;
-    top: 50%;
+    top: 8%;
     left: 10%;
-    transform: translateY(-50%);
+    // transform: translateY(-50%);
     .app-content-section {
       display: inline-block;
       width: 290px;
@@ -46,7 +46,7 @@
     }
     .app-function{
       float: right;
-      padding-right: 56px;
+      padding-right: 75px;
     }
     .app-content-comment {
       display: inline-block;
@@ -85,6 +85,9 @@
     color: #39f;
   }
 }
+.ivu-icon{
+  padding-right: 3px;
+}
 </style>
 
 <template>
@@ -111,15 +114,22 @@
             </Tooltip>
           </b>
           <div class="app-function">
-            <a>发布</a>/
-            <a>停用</a>/
-            <a>应用</a>/
-            <a>删除</a>
+            <Dropdown>
+                <a href="javascript:void(0)">
+                    操作
+                    <Icon type="arrow-down-b"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                    <DropdownItem>停用</DropdownItem>
+                    <DropdownItem>启用</DropdownItem>
+                    <DropdownItem>删除</DropdownItem>
+                </DropdownMenu>
+            </Dropdown>
           </div>
           <section class="app-section">
             <div class="app-content-section">
               <label>管理员：</label>
-              <span v-if="showEditAppInfo">{{ appData.administrator }}</span>
+              <span v-if="showEditAppInfo"><Icon type="person"></Icon>{{ appData.administrator }}</span>
               <Input v-else @on-click="selectAdminModal" v-model="appData.administrator" icon="arrow-down-b" style="width: 100px"></Input>
             </div>
             <div class="app-content-section">
@@ -155,13 +165,11 @@
     <setting-tabs></setting-tabs>
     <!-- <app-setting @showPermissionApp="showPermissionApp" :listId="this.$route.params.listId" @childHasPublished="childHasPublished" @getData="brotherGetData" @callTimeLineRefesh="callTimeLineRefesh"></app-setting> -->
     <!-- 应用权限v-if="showPermission" -->
-    <app-permission :listId="this.$route.params.listId" :regetData="regetData"></app-permission>
+    <!-- <app-permission :listId="this.$route.params.listId" :regetData="regetData"></app-permission> -->
     <!-- 应用视图信息 -->
-    <app-view :listId="this.$route.params.listId" :appType="appData.type"></app-view>
-    <!-- 应用科目信息 -->
-    <!-- <app-subject></app-subject> -->
+    <!-- <app-view :listId="this.$route.params.listId" :appType="appData.type"></app-view> -->
 
-    <time-line :data="timeLineData"></time-line>
+    <!-- <time-line :data="timeLineData"></time-line> -->
     <!-- 用户选择器 -->
     <Modal v-model="showAdminModal" title="请选择" @on-ok="confirmModal">
       <div class="app-search">
@@ -176,7 +184,6 @@
 <script>
 import AppSetting from "./setting";
 import AppView from "./view";
-import AppSubject from "./subject";
 import AppPermission from "./permission/permission";
 import TimeLine from "@/components/timeline/TimeLine";
 import SettingTabs from "./tabs";
@@ -191,7 +198,6 @@ export default {
   components: {
     AppSetting,
     AppView,
-    AppSubject,
     AppPermission,
     TimeLine,
     SettingTabs

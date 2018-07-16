@@ -6,8 +6,6 @@
 }
 .app-card {
   position: relative;
-  // height: 220px;
-  // padding: 10px 0px;
   width: 100%;
 }
 
@@ -29,21 +27,26 @@
     left: 15px;
     -webkit-transform: translateY(-50%);
     transform: translateY(-50%);
-    height: 75px;
-    width: 75px;
+    height: 50%;
+    width: 6%;
   }
   .app-main-content {
+    width: 94%;
     position: absolute;
     top: 50%;
     left: 10%;
     transform: translateY(-50%);
     .app-content-section {
       display: inline-block;
-      width: 240px;
+      width: 381px;
       label {
         display: inline-block;
         width: 60px;
       }
+    }
+    .app-function{
+      float: right;
+      padding-right: 56px;
     }
     .app-content-comment {
       display: inline-block;
@@ -64,8 +67,8 @@
     .app-edit-icon:hover {
       color: #39f;
     }
-    h3 {
-      display: inline-block;
+    b {
+      font-size: 14px;
     }
   }
 }
@@ -97,7 +100,9 @@
       <div class="app-main">
         <img :src="appData.icon" />
         <div class="app-main-content">
-          <h3 v-if="showEditAppInfo">{{ appData.title }}</h3>
+          <b>{{ appBigType }} ></b>
+          <b>{{ appData.transType }} ></b>
+          <b v-if="showEditAppInfo">{{ appData.title }}</b>
           <Input v-else v-model="appData.title" style="width: 200px"></Input>
           <!-- 编辑应用信息 -->
           <b @click="editAppinfo">
@@ -105,6 +110,12 @@
               <Icon class="app-edit-icon" type="compose"></Icon>
             </Tooltip>
           </b>
+          <div class="app-function">
+            <a>发布</a>/
+            <a>停用</a>/
+            <a>应用</a>/
+            <a>删除</a>
+          </div>
           <section class="app-section">
             <div class="app-content-section">
               <label>管理员：</label>
@@ -112,33 +123,25 @@
               <Input v-else @on-click="selectAdminModal" v-model="appData.administrator" icon="arrow-down-b" style="width: 100px"></Input>
             </div>
             <div class="app-content-section">
-              <label>状态：</label>
+              <!-- <label>状态：</label> -->
               <Tag :color="appData.publish === 0?notAppStatusColor:hasAppStatusColor">{{ appData.publish === 0?notPublishStatus:hasPublishStatus }}</Tag>
+            </div>
+          </section>
+          <section class="app-section">
+            <div class="app-content-section">
+              <label>创建者：</label>
+              <span>{{ appData.modifer }}</span>
             </div>
             <div class="app-content-section">
               <label>创建时间：</label>
               <span>{{ appData.crtTime }}</span>
             </div>
-          </section>
-          <section class="app-section">
             <div class="app-content-section">
-              <label>实例数：</label>
-              <span>2000</span>
-            </div>
-            <div class="app-content-section">
-              <label>类型：</label>
-              <span>{{ appData.transType }}</span>
-            </div>
-            <div class="app-content-section">
-              <label>创建者：</label>
-              <span>{{ appData.modifer }}</span>
+              <label>修改时间：</label>
+              <span>{{ appData.crtTime }}</span>
             </div>
           </section>
           <section class="app-section">
-            <div class="app-content-section">
-              <label>应用大类：</label>
-              <span>{{ appBigType }}</span>
-            </div>
             <div class="app-content-comment">
               <label>说明：</label>
               <span v-if="showEditAppInfo">{{ appData.comment }}</span>
@@ -149,13 +152,14 @@
       </div>
     </div>
     <!-- 应用设置信息 -->
-    <app-setting @showPermissionApp="showPermissionApp" :listId="this.$route.params.listId" @childHasPublished="childHasPublished" @getData="brotherGetData" @callTimeLineRefesh="callTimeLineRefesh"></app-setting>
+    <setting-tabs></setting-tabs>
+    <!-- <app-setting @showPermissionApp="showPermissionApp" :listId="this.$route.params.listId" @childHasPublished="childHasPublished" @getData="brotherGetData" @callTimeLineRefesh="callTimeLineRefesh"></app-setting> -->
     <!-- 应用权限v-if="showPermission" -->
     <app-permission :listId="this.$route.params.listId" :regetData="regetData"></app-permission>
     <!-- 应用视图信息 -->
     <app-view :listId="this.$route.params.listId" :appType="appData.type"></app-view>
     <!-- 应用科目信息 -->
-    <app-subject></app-subject>
+    <!-- <app-subject></app-subject> -->
 
     <time-line :data="timeLineData"></time-line>
     <!-- 用户选择器 -->
@@ -175,6 +179,7 @@ import AppView from "./view";
 import AppSubject from "./subject";
 import AppPermission from "./permission/permission";
 import TimeLine from "@/components/timeline/TimeLine";
+import SettingTabs from "./tabs";
 import {
   getAdminData,
   getListData,
@@ -188,7 +193,8 @@ export default {
     AppView,
     AppSubject,
     AppPermission,
-    TimeLine
+    TimeLine,
+    SettingTabs
   },
   data() {
     return {

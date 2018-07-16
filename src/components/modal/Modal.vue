@@ -93,7 +93,7 @@ export default {
 
   methods: {
     close() {
-      this.visible = false;
+      this.visible = !this.visible;
       this.$emit("on-cancel");
     },
 

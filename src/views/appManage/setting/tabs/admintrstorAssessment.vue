@@ -28,14 +28,25 @@
             <b class="app-name">管理员自评：</b>
           </Col>
           <Col span="22">
-            <Button icon="plus-round" type="info" class="app-add" size="small">新增</Button>
+            <Button icon="plus-round" type="info" class="app-add" size="small" @click="addAssess">新增</Button>
             <Table :columns="columns" width=753 :data="tableData"></Table>
           </Col>
       </Row>
-      <Modal title="管理员自评" v-model="showAssessModal">
-        <label>期间（月份）：</label>
-        <DatePicker type="date" placeholder="选择日期" style="width: 200px"></DatePicker>
-      </Modal>
+      <assess-modal title="管理员自评" v-model="showAssessModal" width="650">
+        <div style="margin:20px auto;width:85%;">
+                <Form ref="formValidate" :label-width="150" :model="adminAssessData" :rules="ruleValidate">
+                    <FormItem label="期间（月份）:" prop="duringDate">
+                        <DatePicker type="date" placeholder="选择日期" style="width: 200px" v-model="adminAssessData.duringDate"></DatePicker>
+                    </FormItem>
+                    <FormItem label="效率与成本改进成果:" prop="result">
+                        <Input type="textarea" v-model="adminAssessData.result"></Input>
+                    </FormItem>
+                    <FormItem label="效率与成本改进机会:" prop="opportunity">
+                        <Input type="textarea" v-model="adminAssessData.opportunity"></Input>
+                    </FormItem>
+                </Form>
+            </div>
+      </assess-modal>
   </div>
 </template>
 
@@ -50,7 +61,36 @@ export default {
   },
   data() {
     return {
-      showAssessModal: true,
+      showAssessModal: false,
+      changeResult: '',
+      adminAssessData: {
+        duringDate: '',
+        result: '',
+        opportunity: ''
+      },
+      ruleValidate: {
+        duringDate: [
+          {
+            type: "string",
+            required: true,
+            message: "不允许为空"
+          }
+        ],
+        result: [
+          {
+            required: true,
+            message: "不允许为空",
+            type: "string"
+          }
+        ],
+        opportunity: [
+          {
+            required: true,
+            message: "不允许为空",
+            type: "string"
+          }
+        ]
+      },
       columns: [
         {
           title: "期间（月份）",
@@ -75,7 +115,10 @@ export default {
     };
   },
   methods: {
-    
+    //添加管理员自评
+    addAssess() {
+      this.showAssessModal = true;
+    }
   },
   created() {
     getAdmintrstorAssessmentData().then(res => {

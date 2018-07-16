@@ -30,8 +30,9 @@
 </template>
 
 <script>
-import TransferDom from "./transfer-dom";
+import TransferDom from "@/components/modal/transfer-dom";
 export default {
+  directives: { TransferDom },
   props: {
     value: {
       type: Boolean,

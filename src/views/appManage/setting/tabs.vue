@@ -10,21 +10,23 @@
         <TabPane label="一般" name="name1">标签一的内容</TabPane>
         <TabPane label="互动" name="name2">标签二的内容</TabPane>
         <TabPane label="资源" name="name3">标签三的内容</TabPane>
-        <TabPane label="链接" name="name4">标签三的内容</TabPane>
+        <TabPane label="链接" name="name4">
+          <!-- 应用科目 -->
+          <app-subject></app-subject>
+        </TabPane>
     </Tabs>
   </div>
 </template>
 
 <script>
-import {
-  getAppviews,
-  saveDefaultView,
-  deleteAppViews
-} from "@/services/appService.js";
+import { getAppviews } from "@/services/appService.js";
+import AppSubject from './subject';
 
 export default {
   name: "settingTabs",
-  components: {},
+  components: {
+    AppSubject
+  },
   props: {
     listId: String,
     appType: String

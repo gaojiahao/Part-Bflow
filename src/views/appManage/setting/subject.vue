@@ -14,7 +14,7 @@
   }
 
   .app-name {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 }
 </style>
@@ -22,13 +22,19 @@
 <template>
   <div class="app-card">
        <Row style="margin: 10px 15px ">
-        <b class="app-name">科目关系</b>
+          <Col span="2">
+            <b class="app-name">科目关系：</b>
+          </Col>
+          <Col span="22">
+            <Table :columns="columns" width=753 :data="tableData"></Table>
+          </Col>
       </Row>
-        <Table :columns="columns" :data="tableData"></Table>
   </div>
 </template>
 
 <script>
+import { getAppSubjectData } from "@/services/appService.js";
+
 export default {
   name: "appSubject",
   components: {},
@@ -36,34 +42,33 @@ export default {
     return {
       columns: [
         {
-          title: "名称",
-          key: "name"
+          title: "科目名称",
+          key: "name",
+          width: 300,
+          align: "center"
         },
         {
-          title: "分类",
-          key: "type"
+          title: "科目类型",
+          key: "type",
+          width: 300,
+          align: "center"
         },
         {
-          title: "启用",
-          key: "defaultView",
+          title: "数据归集",
+          key: "dataCollection",
           width: 150,
-          align: "center",
-          render: (h, params) => {
-            return h("Checkbox", {
-              props: {
-                value: true
-              }
-            });
-          }
+          align: "center"
         }
       ],
-      tableData: [
-        { name: "存货", type: "计划类" },
-        { name: "费用", type: "会计类" }
-      ]
+      tableData: []
     };
   },
   methods: {},
+  created() {
+    getAppSubjectData().then(res => {
+      this.tableData = res.tableContent;
+    })
+  },
   mounted() {}
 };
 </script>

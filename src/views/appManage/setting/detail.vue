@@ -38,7 +38,7 @@
     transform: translateY(-50%);
     .app-content-section {
       display: inline-block;
-      width: 381px;
+      width: 290px;
       label {
         display: inline-block;
         width: 60px;

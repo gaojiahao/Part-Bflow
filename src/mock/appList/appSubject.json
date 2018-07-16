@@ -1,0 +1,11 @@
+{
+	"tableContent": [{
+		"name": "待计划订单",
+		"type": "会计类",
+		"dataCollection": "借方"
+	}, {
+		"name": "待交付",
+		"type": "非会计类",
+		"dataCollection": "贷方"
+	}]
+}

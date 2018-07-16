@@ -139,3 +139,9 @@ export const saveAppLog = (params) => request('/H_roleplay-si/app/saveLog', para
  * 更新日志
 */
 export const getChangeLog = (params) => request('/H_roleplay-si/ds/getChangeLog',params);
+
+/** 
+ * @author XiaoYing
+ * 获取应用科目
+*/
+export const getAppSubjectData = () =>  request('../mock/appList/appSubject.json');//mock

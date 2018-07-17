@@ -19,12 +19,27 @@
       }
       .action-manage{
           padding-left: 74px;
+          padding-top: 13px;
+          a{
+              margin-left:15px;
+          }
       }
   }
   .app-view{
       margin-top: 10px;
       b{
           font-size: 14px;
+      }
+      .view-manage{
+         padding-left: 74px;
+         padding-top: 13px;
+         a{
+             margin-left: 15px;
+         }
+         b{
+             width: 130px;
+             display: inline-block;
+         } 
       }
   }
 }
@@ -59,7 +74,21 @@
             <a class="setting-permission" style="margin-left:10px;">新增</a>
         </Row>
         <Row>
-            
+            <div class="view-manage">
+                <b>每月销售汇总表</b>
+                <a>删除</a>
+                <span>每月的销售订单汇总记录</span>
+            </div>
+            <div class="view-manage">
+                <b>我的销售记录</b>
+                <a>删除</a>
+                <span>当前用户创建的销售订单记录</span>
+            </div>
+            <div class="view-manage">
+                <b>本部门的销售记录</b>
+                <a>删除</a>
+                <span>当前用户所属部门所有的销售订单记录</span>
+            </div>
         </Row>
     </Row>
   </div>

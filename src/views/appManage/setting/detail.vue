@@ -46,7 +46,7 @@
     }
     .app-function{
       float: right;
-      padding-right: 75px;
+      padding-right: 100px;
     }
     .app-content-comment {
       display: inline-block;
@@ -120,8 +120,9 @@
                     <Icon type="arrow-down-b"></Icon>
                 </a>
                 <DropdownMenu slot="list">
-                    <DropdownItem>停用</DropdownItem>
                     <DropdownItem>启用</DropdownItem>
+                    <DropdownItem>停用</DropdownItem>
+                    <DropdownItem>归档</DropdownItem>
                     <DropdownItem>删除</DropdownItem>
                 </DropdownMenu>
             </Dropdown>
@@ -162,7 +163,7 @@
       </div>
     </div>
     <!-- 应用设置信息 -->
-    <setting-tabs></setting-tabs>
+    <setting-tabs :listId="this.$route.params.listId"></setting-tabs>
     <!-- <app-setting @showPermissionApp="showPermissionApp" :listId="this.$route.params.listId" @childHasPublished="childHasPublished" @getData="brotherGetData" @callTimeLineRefesh="callTimeLineRefesh"></app-setting> -->
     <!-- 应用权限v-if="showPermission" -->
     <!-- <app-permission :listId="this.$route.params.listId" :regetData="regetData"></app-permission> -->
@@ -277,10 +278,12 @@ export default {
     },
     //展示权限
     showPermissionApp() {
+   
       this.showPermission = true;
     },
     //管理员选择modal展示
     selectAdminModal() {
+         console.log(this.showAdminModal);
       this.showAdminModal = true;
     },
     //管理员选择确认
@@ -297,10 +300,8 @@ export default {
     },
     //获取管理员数据
     getAdmintrstorData() {
-      let adminParams = {
-        groupId: 347
-      };
-      getAdminData(adminParams).then(res => {
+      let groupId = 347;
+      getAdminData(groupId).then(res => {
         this.adminData = res.tableContent;
         this.sameAdminData = res.tableContent;
       });
@@ -337,12 +338,10 @@ export default {
   },
 
   mounted() {
-    let listParams = {
-      uniqueId: this.$route.params.listId
-    };
+    let uniqueId = this.$route.params.listId;
     this.getAdmintrstorData();
     //请求应用详情信息
-    getListData(listParams).then(res => {
+    getListData(uniqueId).then(res => {
       this.appData = res[0];
       if (this.appData.type === "business") {
         this.showSubjectView = true;

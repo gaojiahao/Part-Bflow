@@ -36,7 +36,9 @@ export const getProcessDataByListId = (params) =>  request('/H_roleplay-si/ds/li
  * @author XiaoYing
  * @description 获取管理员数据
  */
-export const getAdminData = (params) =>  request('/H_roleplay-si/ds/getAllUsersByGroupId',params);
+export const getAdminData = (groupId) =>  request('/H_roleplay-si/ds/getAllUsersByGroupId',{
+    groupId: groupId
+});
 
 /**
  * @author XiaoYing
@@ -78,7 +80,9 @@ export const deleteRelationPermission= (params) =>  request('/H_roleplay-si/ps/d
  * @author XiaoYing
  * @description 获取应用信息
  */
-export const getListData= (params) =>  request('/H_roleplay-si/ds/list/getListById', params);
+export const getListData= (uniqueId) =>  request('/H_roleplay-si/ds/list/getListById',{
+    uniqueId: uniqueId
+});
 
 /**
  * @author XiaoYing
@@ -144,10 +148,25 @@ export const getChangeLog = (params) => request('/H_roleplay-si/ds/getChangeLog'
  * @author XiaoYing
  * 获取应用科目
 */
-export const getAppSubjectData = () =>  request('../mock/appList/appSubject.json');//mock
+export const getAppSubjectData = (listId) =>  request('/corebiz-api/calc/calcRel/findAccountByAppId',{
+    app_id: listId
+});
 
 /** 
  * @author XiaoYing
  * 管理员自评数据获取
 */
-export const getAdmintrstorAssessmentData = () =>  request('../mock/appList/adminAssessment.json');//mock
+export const getAssessmentByListId = (listId) =>  request('/H_roleplay-si/ds/getAssessmentByListId', {
+    listId: listId
+});
+
+/** 
+ * @author XiaoYing
+ * 管理员自评数据新增
+*/
+export const saveAssessment = (listId,chance,achievement,month) =>  request('/H_roleplay-si/app/saveAssessment', {
+    listId: listId,
+    chance: chance,
+    achievement: achievement,
+    month: month
+}, 'POST');

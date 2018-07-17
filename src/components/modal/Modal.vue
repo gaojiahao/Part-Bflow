@@ -93,8 +93,10 @@ export default {
 
   methods: {
     close() {
-      this.visible = !this.visible;
+      this.visible = false;
       this.$emit("on-cancel");
+      //v-model 把状态传给父组件
+       this.$emit('input', false);
     },
 
     mask() {
@@ -114,6 +116,7 @@ export default {
 
     ok() {
       this.$emit("on-ok");
+      this.$emit('input', false);
     }
   },
 

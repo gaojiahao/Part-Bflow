@@ -38,6 +38,9 @@ import { getAppSubjectData } from "@/services/appService.js";
 export default {
   name: "appSubject",
   components: {},
+  props: {
+    listId: String
+  },
   data() {
     return {
       columns: [
@@ -97,8 +100,10 @@ export default {
     
   },
   created() {
-    getAppSubjectData().then(res => {
-      this.tableData = res.data;
+    getAppSubjectData(this.listId).then(res => {
+      if(res.status === 200){
+        this.tableData = res.data;
+      }
     })
   },
   mounted() {}

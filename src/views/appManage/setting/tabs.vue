@@ -10,12 +10,16 @@
         <TabPane label="一般" name="name1">标签一的内容</TabPane>
         <TabPane label="互动" name="name2">
           <!-- 管理员自评 -->
-          <admintrstor-assessment></admintrstor-assessment>
+          <admintrstor-assessment :listId="listId"></admintrstor-assessment>
         </TabPane>
-        <TabPane label="资源" name="name3">标签三的内容</TabPane>
+        <TabPane label="资源" name="name3">
+          <permission-source></permission-source>
+        </TabPane>
         <TabPane label="链接" name="name4">
           <!-- 应用科目 -->
-          <app-subject></app-subject>
+          <div class="app-sub">
+            <app-subject :listId="listId"></app-subject>
+          </div>
         </TabPane>
     </Tabs>
   </div>
@@ -25,12 +29,14 @@
 import { getAppviews } from "@/services/appService.js";
 import AppSubject from './tabs/subject';
 import AdmintrstorAssessment from './tabs/admintrstorAssessment';
+import PermissionSource from './tabs/permissionSource';
 
 export default {
   name: "settingTabs",
   components: {
     AppSubject,
-    AdmintrstorAssessment
+    AdmintrstorAssessment,
+    PermissionSource
   },
   props: {
     listId: String,

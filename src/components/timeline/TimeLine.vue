@@ -8,7 +8,7 @@
                     <li>
                         <span>{{item.CREATOR_NAME}}</span>
                         <span>{{item.CRT_TIME}}</span>
-                        <span>耗用时间:{{item.TIME_CONSUMING}}</span>
+                        <span>耗用小时数:{{item.TIME_CONSUMING}}</span>
                     </li>
                     <li>
                         <span>更新范围:</span>

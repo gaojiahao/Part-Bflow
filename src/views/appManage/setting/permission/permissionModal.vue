@@ -1,112 +1,95 @@
-<style lang="less" scoped>
-    .permission-tab{
-      border: 1px solid #ddd;
-      height: 350px;
-      overflow: hidden;
-      .permission-title{
-        line-height: 100px;
-        font-size: 12px;
-      }
-    }
-    .permission-line{
-      border-bottom: 1px dashed #ddd;
-      margin:10px 0px;
-    }
-    .permission-top-line{
-      margin:10px 0px;
-    }
-    .app-search{
-      margin-bottom: 5px;
-      .app-search-icon{
-        font-size: 1rem;
-        color: #39f;
-        display: inline-block;
-        cursor: pointer;
-      }
-    }
-    .member-body{
-      overflow-y: auto;
-      height: 100px
-    }
-    .user-page{
-      margin: 10px;
-      overflow: hidden
+<style lang="less">
+.permission-tab {
+  border: 1px solid #ddd;
+  height: 350px;
+  overflow: hidden;
+  .permission-title {
+    line-height: 100px;
+    font-size: 12px;
   }
+}
+.permission-line {
+  border-bottom: 1px dashed #ddd;
+  margin: 10px 0px;
+}
+.permission-top-line {
+  margin: 10px 0px;
+}
+.app-search {
+  margin-bottom: 5px;
+  .app-search-icon {
+    font-size: 1rem;
+    color: #39f;
+    display: inline-block;
+    cursor: pointer;
+  }
+}
+.member-body {
+  overflow-y: auto;
+  height: 100px;
+}
+.user-page {
+  margin: 10px;
+  overflow: hidden;
+}
+
+.ivu-icon-ios-close-empty {
+  color: #fff;
+}
 </style>
 
 <template>
-  <Modal 
-    v-model="showPermissionModal" 
-    title="应用权限" width="1000" 
-    :mask-closable="false" 
-    @on-ok="submitPermission" 
-    @on-visible-change="modalVisibleChange">
+  <Modal v-model="showPermissionModal" title="应用权限" width="1000" :mask-closable="false" @on-ok="submitPermission" @on-visible-change="modalVisibleChange">
     <div>
       <Row :gutter="8" style="margin-bottom:10px;">
         <Col span="4">
-          <Button  @click="selectUserModal" type="info">用户权限选择</Button>
+        <Button @click="selectUserModal" type="info">用户权限选择</Button>
         </Col>
         <Col span="4">
-          <Button  @click="selectOrgModal" type="info">组织权限选择</Button>
+        <Button @click="selectOrgModal" type="info">组织权限选择</Button>
         </Col>
         <Col span="4">
-          <Button  @click="selectPositionModal" type="info">职位权限选择</Button>
+        <Button @click="selectPositionModal" type="info">职位权限选择</Button>
         </Col>
       </Row>
       <Row :gutter="8">
         <Col span="12" class="permission-tab">
         <Row style="margin-top:10px">
           <Col span="3">
-            <b class="permission-title">用户</b>
+          <b class="permission-title">用户</b>
           </Col>
           <Col span="21" class="member-body">
-            <Tag 
-              @on-close="deleteUser(index)" 
-              v-for="(userData, index) of userSelectData" 
-              :key="index" type="border" 
-              closable color="yellow">
-              {{ userData.nickname }}
-            </Tag>
+          <Tag @on-close="deleteUser(index)" v-for="(userData, index) of userSelectData" :key="index" type="border" closable color="yellow">
+            {{ userData.nickname }}
+          </Tag>
           </Col>
         </Row>
         <Row class="permission-line"></Row>
         <Row>
           <Col span="3">
-            <b class="permission-title">组织</b>
+          <b class="permission-title">组织</b>
           </Col>
           <Col span="21" class="member-body">
-            <Tag 
-              @on-close="deleteOrg(index)" 
-              v-for="(orgData, index) of orgSelectData" 
-              :key="index" type="border" 
-              closable color="green">
-              {{ orgData.name }}
-            </Tag>
+          <Tag @on-close="deleteOrg(index)" v-for="(orgData, index) of orgSelectData" :key="index" type="border" closable color="green">
+            {{ orgData.name }}
+          </Tag>
           </Col>
         </Row>
         <Row class="permission-line"></Row>
         <Row>
           <Col span="3">
-            <b class="permission-title">职位</b>
+          <b class="permission-title">职位</b>
           </Col>
           <Col span="21" class="member-body">
-            <Tag 
-              @on-close="deleteDepartment(index)" 
-              v-for="(departmentData, index) of departmentSelectData" 
-              :key="index" type="border" 
-              closable color="blue">
-              {{ departmentData.name }}
-            </Tag>
+          <Tag @on-close="deleteDepartment(index)" v-for="(departmentData, index) of departmentSelectData" :key="index" type="border" closable color="blue">
+            {{ departmentData.name }}
+          </Tag>
           </Col>
         </Row>
         </Col>
         <Col span="12">
-          <Table 
-            @on-select="permissionSelectData" 
-            stripe height="350" 
-            :columns="allPermissionColumns" 
-            :data="allPermissionData">
-          </Table>
+        <Table @on-select="permissionSelectData" stripe height="350" :columns="allPermissionColumns" :data="allPermissionData">
+        </Table>
         </Col>
       </Row>
       <!-- 用户modal -->
@@ -117,13 +100,7 @@
             <Button type="primary" size="small">查询</Button>
           </p>
         </div>
-        <Table 
-          @on-select="selectUserClick" 
-          @on-select-all="selectUserClick" 
-          height="400" stripe size="small"
-          :loading="userLoading" 
-          :columns="userColumns" 
-          :data="userData">
+        <Table @on-select="selectUserClick" @on-select-all="selectUserClick" height="400" stripe size="small" :loading="userLoading" :columns="userColumns" :data="userData">
         </Table>
         <div class="user-page">
           <div style="float: right;">
@@ -139,13 +116,7 @@
             <Button type="primary" size="small">查询</Button>
           </p>
         </div>
-        <Table 
-          @on-select="selectOrgClick" 
-          @on-select-all="selectOrgClick" 
-          height="400" stripe size="small"
-          :loading="orgLoading" 
-          :columns="orgColumns" 
-          :data="orgData">
+        <Table @on-select="selectOrgClick" @on-select-all="selectOrgClick" height="400" stripe size="small" :loading="orgLoading" :columns="orgColumns" :data="orgData">
         </Table>
         <div class="user-page">
           <div style="float: right;">
@@ -161,13 +132,7 @@
             <Button type="primary" size="small">查询</Button>
           </p>
         </div>
-        <Table 
-          @on-select="selectDepartmentClick" 
-          @on-select-all="selectDepartmentClick" 
-          height="400" stripe :size="tableSize"
-          :loading="depLoading" 
-          :columns="departmentColumns" 
-          :data="departmentData">
+        <Table @on-select="selectDepartmentClick" @on-select-all="selectDepartmentClick" height="400" stripe :size="tableSize" :loading="depLoading" :columns="departmentColumns" :data="departmentData">
         </Table>
         <div class="user-page">
           <div style="float: right;">
@@ -266,32 +231,38 @@ export default {
   methods: {
     //用户过滤
     userFilter() {
-      let filter = JSON.stringify([{operator: "like",value: this.searchUserValue,property: "nickname"}]);
-      this.selectUserModal(filter)
+      let filter = JSON.stringify([
+        { operator: "like", value: this.searchUserValue, property: "nickname" }
+      ]);
+      this.selectUserModal(filter);
     },
     //组织过滤
     orgFilter() {
-      let filter = JSON.stringify([{operator: "like",value: this.searchOrgValue,property: "name"}]);
-      this.selectOrgModal(filter)
+      let filter = JSON.stringify([
+        { operator: "like", value: this.searchOrgValue, property: "name" }
+      ]);
+      this.selectOrgModal(filter);
     },
     //职位过滤
     depFilter() {
-      let filter = JSON.stringify([{operator: "like",value: this.searchDepValue,property: "name"}]);
-      this.selectPositionModal(filter)
+      let filter = JSON.stringify([
+        { operator: "like", value: this.searchDepValue, property: "name" }
+      ]);
+      this.selectPositionModal(filter);
     },
     confirmMember() {},
     //用户数据加载
     selectUserModal(filter) {
       let userColumn = [
-        { type: "selection", width: 60, align: "center" },
-        { title: "姓名", key: "nickname" },
-        { title: "工号", key: "userCode" }
-      ],
-          userParams = {
-            page: this.userCurrentPage,
-            limit: this.pageSize,
-            filter: filter
-      };
+          { type: "selection", width: 60, align: "center" },
+          { title: "姓名", key: "nickname" },
+          { title: "工号", key: "userCode" }
+        ],
+        userParams = {
+          page: this.userCurrentPage,
+          limit: this.pageSize,
+          filter: filter
+        };
       this.showUserModal = true;
       this.userColumns = userColumn;
       this.userLoading = true;
@@ -305,14 +276,14 @@ export default {
     //组织数据加载
     selectOrgModal(filter) {
       let orgColumn = [
-        { type: "selection", width: 60, align: "center" },
-        { title: "名称", key: "name" }
-      ],
-          orgParams = {
-            page: this.orgCurrentPage,
-            limit: this.pageSize,
-            filter: filter
-      };
+          { type: "selection", width: 60, align: "center" },
+          { title: "名称", key: "name" }
+        ],
+        orgParams = {
+          page: this.orgCurrentPage,
+          limit: this.pageSize,
+          filter: filter
+        };
       this.showOrgModal = true;
       this.orgColumns = orgColumn;
       this.orgLoading = true;
@@ -325,14 +296,14 @@ export default {
     //职位数据加载
     selectPositionModal(filter) {
       let departmentColumn = [
-        { type: "selection", width: 60, align: "center" },
-        { title: "名称", key: "name" }
-      ],
-          depParams = {
-            page: this.depCurrentPage,
-            limit: this.pageSize,
-            filter: filter
-      };
+          { type: "selection", width: 60, align: "center" },
+          { title: "名称", key: "name" }
+        ],
+        depParams = {
+          page: this.depCurrentPage,
+          limit: this.pageSize,
+          filter: filter
+        };
       this.showDepartmentModal = true;
       this.departmentColumns = departmentColumn;
       this.depLoading = true;
@@ -419,23 +390,23 @@ export default {
     //提交权限
     submitPermission() {
       let userId = this.userSelectData.map(item => {
-            return item.userId;
-          }),
-          groupId = this.orgSelectData.map(item => {
-            return item.id;
-          }),
-          roleId = this.departmentSelectData.map(item => {
-            return item.id;
-          }),
-          permissionId = this.permissionSelectDatas.map(item => {
-            return item.id;
-          }),
-          params = {
-            userId: userId.join(","),
-            roleId: roleId.join(","),
-            groupId: groupId.join(","),
-            permissionId: permissionId.join(",")
-          };
+          return item.userId;
+        }),
+        groupId = this.orgSelectData.map(item => {
+          return item.id;
+        }),
+        roleId = this.departmentSelectData.map(item => {
+          return item.id;
+        }),
+        permissionId = this.permissionSelectDatas.map(item => {
+          return item.id;
+        }),
+        params = {
+          userId: userId.join(","),
+          roleId: roleId.join(","),
+          groupId: groupId.join(","),
+          permissionId: permissionId.join(",")
+        };
       if (params) {
         addPermission(params).then(res => {
           if (res.success) {
@@ -461,19 +432,25 @@ export default {
     },
     //用户page点击
     onUserPageChange(currentPage) {
-      let filter = JSON.stringify([{operator: "like",value: this.searchUserValue,property: "nickname"}]);
+      let filter = JSON.stringify([
+        { operator: "like", value: this.searchUserValue, property: "nickname" }
+      ]);
       this.userCurrentPage = currentPage;
       this.selectUserModal(filter);
     },
     //组织page点击
     onOrgPageChange(currentPage) {
-      let filter = JSON.stringify([{operator: "like",value: this.searchOrgValue,property: "name"}]);
+      let filter = JSON.stringify([
+        { operator: "like", value: this.searchOrgValue, property: "name" }
+      ]);
       this.orgCurrentPage = currentPage;
       this.selectOrgModal(filter);
     },
     //职位page点击
     onDepPageChange(currentPage) {
-      let filter = JSON.stringify([{operator: "like",value: this.searchDepValue,property: "name"}]);
+      let filter = JSON.stringify([
+        { operator: "like", value: this.searchDepValue, property: "name" }
+      ]);
       this.depCurrentPage = currentPage;
       this.selectPositionModal(filter);
     }

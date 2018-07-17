@@ -148,7 +148,7 @@
                         <span style="color:#ddd;margin-left:10px;">单位/时</span>
                     </FormItem>
                     <FormItem label="更新内容:" prop="content">
-                        <Input type="textarea" v-model="logData.content" :autosize="{minRows: 2,maxRows: 5}" />
+                        <Input type="textarea" v-model="logData.content" :autosize="{minRows: 4,maxRows: 6}"/>
                     </FormItem>
                 </Form>
             </div>

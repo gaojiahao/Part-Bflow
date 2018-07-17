@@ -170,3 +170,9 @@ export const saveAssessment = (listId,chance,achievement,month) =>  request('/H_
     achievement: achievement,
     month: month
 }, 'POST');
+
+/** 
+ * @author GuoZheng
+ * 获取实例数据
+*/
+export const getInstanceData = (listId,type,date) =>request('/H_roleplay-si/trans/getDetails',{listId:listId,type:type,date:date});

@@ -32,6 +32,8 @@
     border-left-style: none;
     border-right-style: none;
     border-radius: 0px;
+    box-shadow: none !important;
+    border-color: #dddee1 !important;
   }
 
   .ivu-input:focus {

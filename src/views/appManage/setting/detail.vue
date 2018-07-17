@@ -1,6 +1,6 @@
 <style lang="less" scoped>
 .app-details {
-  overflow-x: hidden;
+  overflow: hidden;
   background-color: #fff;
   padding: 0 15px;
 }
@@ -44,7 +44,7 @@
         width: 60px;
       }
     }
-    .app-function{
+    .app-function {
       float: right;
       padding-right: 100px;
     }
@@ -85,8 +85,36 @@
     color: #39f;
   }
 }
-.ivu-icon{
+.ivu-icon {
   padding-right: 3px;
+}
+
+.line-chart-header {
+  position: absolute;
+  top: 0px;
+  right: 38px;
+  z-index: 1;
+}
+.customs-tag {
+  background-color: #d8d9db;
+  padding: 2px 10px;
+  color: #403b3b;
+  font-size: 13px;
+  vertical-align: middle;
+  opacity: 1;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.customs-tag-active {
+  background-color: #19be6b;
+  color: #fff;
+}
+
+.select-range {
+  border: 1px solid #d8d9db;
+  display: inline-block;
+  background-color: #19be6b;
 }
 </style>
 
@@ -115,22 +143,23 @@
           </b>
           <div class="app-function">
             <Dropdown>
-                <a href="javascript:void(0)">
-                    操作
-                    <Icon type="arrow-down-b"></Icon>
-                </a>
-                <DropdownMenu slot="list">
-                    <DropdownItem>启用</DropdownItem>
-                    <DropdownItem>停用</DropdownItem>
-                    <DropdownItem>归档</DropdownItem>
-                    <DropdownItem>删除</DropdownItem>
-                </DropdownMenu>
+              <a href="javascript:void(0)">
+                操作
+                <Icon type="arrow-down-b"></Icon>
+              </a>
+              <DropdownMenu slot="list">
+                <DropdownItem>启用</DropdownItem>
+                <DropdownItem>停用</DropdownItem>
+                <DropdownItem>归档</DropdownItem>
+                <DropdownItem>删除</DropdownItem>
+              </DropdownMenu>
             </Dropdown>
           </div>
           <section class="app-section">
             <div class="app-content-section">
               <label>管理员：</label>
-              <span v-if="showEditAppInfo"><Icon type="person"></Icon>{{ appData.administrator }}</span>
+              <span v-if="showEditAppInfo">
+                <Icon type="person"></Icon>{{ appData.administrator }}</span>
               <Input v-else @on-click="selectAdminModal" v-model="appData.administrator" icon="arrow-down-b" style="width: 100px"></Input>
             </div>
             <div class="app-content-section">
@@ -172,6 +201,18 @@
 
     <!-- <time-line :data="timeLineData"></time-line> -->
     <!-- 用户选择器 -->
+
+    <line-chart title="数据分析" legendName="新增实例数" :xAxisData="xAxisData" :seriesData="seriesData">
+      <div slot="header" class="line-chart-header">
+        查看范围:
+        <DatePicker type="month" placeholder="选择月份" style="width: 150px;margin-left:10px;" v-model="month" format="yyyy-MM" :clearable="false"></DatePicker>
+        <div class="select-range">
+          <span v-bind:class="{'customs-tag-active':active}" class="customs-tag" @click="selectDataRange('week')">周</span>
+          <span v-bind:class="{'customs-tag-active':!active}" class="customs-tag" @click="selectDataRange('day')">天</span>
+        </div>
+      </div>
+    </line-chart>
+
     <Modal v-model="showAdminModal" title="请选择" @on-ok="confirmModal">
       <div class="app-search">
         <Icon class="app-search-icon" type="search"></Icon>
@@ -188,11 +229,14 @@ import AppView from "./view";
 import AppPermission from "./permission/permission";
 import TimeLine from "@/components/timeline/TimeLine";
 import SettingTabs from "./tabs";
+import LineChart from "@/components/Charts/LineChart";
+import { getDateFormat } from "@/utils/utils";
 import {
   getAdminData,
   getListData,
   saveAppInformation,
-  getChangeLog
+  getChangeLog,
+  getInstanceData
 } from "@/services/appService.js";
 export default {
   name: "detail",
@@ -201,7 +245,8 @@ export default {
     AppView,
     AppPermission,
     TimeLine,
-    SettingTabs
+    SettingTabs,
+    LineChart
   },
   data() {
     return {
@@ -232,10 +277,20 @@ export default {
       adminData: [],
       sameAdminData: [],
       selectAdminData: {},
-      timeLineData: []
+      timeLineData: [],
+
+      month: new Date(),
+      xAxisData: [],
+      seriesData: [],
+      active: true
     };
   },
   watch: {
+    //监听实例数据日期变化
+    month(val) {
+      this.getInstanceData();
+    },
+
     searchValue(text) {
       const result = [];
       if (text) {
@@ -254,6 +309,38 @@ export default {
     }
   },
   methods: {
+    //获取去实例数据
+    getInstanceData(t) {
+      let that = this;
+      let listId = that.$route.params.listId,
+        date = that.month,
+        type = t ? t : this.active ? "week" : "day";
+      date = getDateFormat(date, "yyyy/MM/dd");
+      getInstanceData("a4897429-f4f2-44a4-ade7-2fe8dc67c3cf", type, date).then(
+        res => {
+          if (res.list[0]) {
+            let xAxis = [],
+              series = [];
+            res.list.map(function(item) {
+              xAxis.push(item.xAxis);
+              series.push(item.num);
+            });
+            that.seriesData = series;
+            that.xAxisData = xAxis;
+          }
+        }
+      );
+    },
+
+    selectDataRange(val) {
+      if (val === "week") {
+        this.active = true;
+      } else {
+        this.active = false;
+      }
+      this.getInstanceData(val);
+    },
+
     //修改应用状态
     childHasPublished(data) {
       this.appData.publish = 1;
@@ -278,12 +365,11 @@ export default {
     },
     //展示权限
     showPermissionApp() {
-   
       this.showPermission = true;
     },
     //管理员选择modal展示
     selectAdminModal() {
-         console.log(this.showAdminModal);
+      console.log(this.showAdminModal);
       this.showAdminModal = true;
     },
     //管理员选择确认
@@ -307,9 +393,9 @@ export default {
       });
     },
 
-    /** 
+    /**
      * 获取变更日志
-    */
+     */
     getChangeLog() {
       let listId = this.$route.params.listId,
         params = {
@@ -328,13 +414,14 @@ export default {
       });
     },
 
-    callTimeLineRefesh(){
-        this.getChangeLog();
+    callTimeLineRefesh() {
+      this.getChangeLog();
     }
   },
 
   created() {
     this.getChangeLog();
+    this.getInstanceData();
   },
 
   mounted() {

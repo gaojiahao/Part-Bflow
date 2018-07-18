@@ -13,7 +13,7 @@
         <Table :columns="columns" width=943 :data="tableData"></Table>
       </Col>
     </Row>
-    
+
     <assess-modal title="管理员自评" v-model="showAssessModal" width="650" @on-ok="submitAdminAssess">
       <div style="margin:20px auto;width:85%;">
         <Form ref="formValidate" :label-width="150" :model="adminAssessData" :rules="ruleValidate">
@@ -116,6 +116,7 @@ export default {
               on: {
                 click: () => {
                   this.showAssessModal = true;
+                  this.$refs["formValidate"].resetFields();
                   this.isEdit = 'edit';
                   this.IsEditId = params.row.id;
                   this.adminAssessData.duringDate = params.row.crtTime;

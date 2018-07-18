@@ -1,52 +1,5 @@
 <style lang="less" scoped>
-.app-permission {
-  float: left;
-  width: 100%;
-  border-top-style: none;
-  padding-bottom: 10px;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  .app-des{
-      span{
-          color: #918d8d;
-          padding-left: 6px;
-      }
-  }
-  .app-action{
-      margin-top: 10px;
-      b{
-          font-size: 14px;
-      }
-      .action-manage{
-          padding-left: 74px;
-          padding-top: 13px;
-          a{
-              margin-left:15px;
-          }
-      }
-  }
-  .app-view{
-      margin-top: 10px;
-      b{
-          font-size: 14px;
-      }
-      .view-manage{
-         padding-left: 74px;
-         padding-top: 13px;
-         a{
-             margin-left: 15px;
-         }
-         b{
-             width: 130px;
-             display: inline-block;
-         } 
-      }
-  }
-}
-.setting-permission{
-    font-size: 14px;
-    font-weight: bold;
-}
+    @import './permission.less';
 </style>
 
 <template>

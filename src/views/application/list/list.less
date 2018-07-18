@@ -1,0 +1,58 @@
+@gray: #ddd;
+@white: #fff;
+@blue: #39f;
+
+.ivu-table .demo-table-info-row td span {
+  color: #eee;
+}
+
+.app-body {
+  position: relative;
+  top: 60px;
+  left: 0px;
+}
+.ivu-table-wrapper {
+  border: none;
+}
+
+.top-head {
+  position: fixed;
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  z-index: 99;
+  background-color: @white;
+  border-bottom: 1px solid @gray;
+  padding: 0 15px;
+
+  &-search {
+    float: right;
+    
+    .app-search-icon {
+      font-size: 1rem;
+      color: @blue;
+    }
+  }
+  .app-layout {
+    float: right;
+  
+    .view-cut-focus {
+      display: inline;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 2px 7px;
+      border-radius: 3px;
+    }
+     .view-cut-focus:hover {
+      background-color: @blue;
+      color: @white;
+    }
+    .active{
+      background-color: @blue;
+      color: @white;
+    }
+  }
+}
+.ivu-btn {
+  border-radius: 0px;
+}

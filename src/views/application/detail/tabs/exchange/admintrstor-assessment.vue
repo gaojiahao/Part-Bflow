@@ -1,24 +1,5 @@
 <style lang="less" scoped>
-.app-card {
-  float: left;
-  width: 100%;
-  border-top-style: none;
-  padding-bottom: 10px;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  .app-add{
-    margin-bottom: 5px;
-  }
-  > h2 {
-    height: 40px;
-    line-height: 40px;
-    margin-left: 15px;
-  }
-
-  .app-name {
-    font-size: 0.9rem;
-  }
-}
+  @import './admintrstor-assessment.less';
 </style>
 
 <template>
@@ -132,6 +113,13 @@ export default {
     },
     //添加管理员自评
     submitAdminAssess() {
+      // this.$refs["formValidate"].validate(v => {
+      //   if(valid){
+      //     console.log(1);
+      //   }else{
+      //     this.showAssessModal = true;
+      //   }
+      // });
       saveAssessment(
         this.listId,
         this.adminAssessData.opportunity,

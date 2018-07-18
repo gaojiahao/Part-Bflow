@@ -1,22 +1,5 @@
 <style lang="less" scoped>
-.app-card {
-  float: left;
-  width: 100%;
-  border-top-style: none;
-  padding-bottom: 10px;
-  overflow-x: hidden;
-  overflow-y: hidden;
-
-  > h2 {
-    height: 40px;
-    line-height: 40px;
-    margin-left: 15px;
-  }
-
-  .app-name {
-    font-size: 0.9rem;
-  }
-}
+  @import './subject.less';
 </style>
 
 <template>

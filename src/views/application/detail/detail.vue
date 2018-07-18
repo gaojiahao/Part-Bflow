@@ -70,14 +70,6 @@
         </div>
       </div>
     </line-chart> -->
-
-    <Modal v-model="showAdminModal" title="请选择" @on-ok="confirmModal">
-      <div class="app-search">
-        <Icon class="app-search-icon" type="search"></Icon>
-        <Input v-model="searchValue" placeholder="搜索" style="width: 300px"></Input>
-      </div>
-      <Table :highlight-row="true" @on-row-click="selectAdmin" height="400" stripe :columns="adminColumns" size="small" :data="adminData"></Table>
-    </Modal>
   </div>
 </template>
 

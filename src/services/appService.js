@@ -4,15 +4,15 @@ import {request} from './fetch'
  * @author XiaoYing
  * @description 获取应用模板数据
  */
-// export const getAppTemplateData = () =>  request('../mock/appList/appData.json');//mock
 export const getAppTemplateData = () =>  request('/H_roleplay-si/ds/getTplTempListInfo');
 
 /**
  * @author XiaoYing
  * @description 获取应用列表数据
  */
-// export const getAppListData = () =>  request('../mock/appList/appList.json');//mock
-export const getAppListData = (params) =>  request('/H_roleplay-si/ds/getTplListInfo', {filter: params});
+export const getAppListData = (filterParams) =>  request('/H_roleplay-si/ds/getTplListInfo', {
+    filter: filterParams
+});
 
 /**
  * @author XiaoYing

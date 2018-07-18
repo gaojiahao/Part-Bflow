@@ -3,79 +3,86 @@
 </style>
 
 <template>
-    <div>
-        <header class="app-header">
-            <Breadcrumb>
-                <BreadcrumbItem to="/">首页</BreadcrumbItem>
-                <BreadcrumbItem to="/applition/list">应用列表</BreadcrumbItem>
-                <BreadcrumbItem>{{ appData.title }}</BreadcrumbItem>
-            </Breadcrumb>
-        </header>
-        <div class="app-main">
-            <div class="app-img">
-                <img :src="appData.icon" />
-            </div>
-            <div class="app-main-content">
-                <b>{{ appBigType }} ></b>
-                <b>{{ appData.transType }} ></b>
-                <b v-if="showEditAppInfo">{{ appData.title }}</b>
-                <Input v-else v-model="appData.title" style="width: 200px"></Input>
-                <!-- 编辑应用信息 -->
-                <b @click="editAppinfo">
-                    <Tooltip content="编辑" placement="top">
-                        <Icon class="app-edit-icon" type="compose"></Icon>
-                    </Tooltip>
-                </b>
-                <div class="app-function">
-                    <Dropdown>
-                        <a href="javascript:void(0)">
-                            操作
-                            <Icon type="arrow-down-b"></Icon>
-                        </a>
-                        <DropdownMenu slot="list">
-                            <DropdownItem>启用</DropdownItem>
-                            <DropdownItem>停用</DropdownItem>
-                            <DropdownItem>归档</DropdownItem>
-                            <DropdownItem>删除</DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
-                </div>
-                <section class="app-section">
-                    <div class="app-content-section">
-                        <label>管理员：</label>
-                        <span v-if="showEditAppInfo">
-                            <Icon type="person"></Icon>{{ appData.administrator }}</span>
-                        <Input v-else @on-click="selectAdminModal" v-model="appData.administrator" icon="arrow-down-b" style="width: 100px"></Input>
-                    </div>
-                    <div class="app-content-section">
-                        <!-- <label>状态：</label> -->
-                        <Tag :color="appData.publish === 0?notAppStatusColor:hasAppStatusColor">{{ appData.publish === 0?notPublishStatus:hasPublishStatus }}</Tag>
-                    </div>
-                </section>
-                <section class="app-section">
-                    <div class="app-content-section">
-                        <label>创建者：</label>
-                        <span>{{ appData.modifer }}</span>
-                    </div>
-                    <div class="app-content-section">
-                        <label>创建时间：</label>
-                        <span>{{ appData.crtTime }}</span>
-                    </div>
-                    <div class="app-content-section">
-                        <label>修改时间：</label>
-                        <span>{{ appData.crtTime }}</span>
-                    </div>
-                </section>
-                <section class="app-section">
-                    <div class="app-content-comment">
-                        <label>说明：</label>
-                        <span v-if="showEditAppInfo">{{ appData.comment }}</span>
-                        <Input v-else v-model="appData.comment" style="width: 350px"></Input>
-                    </div>
-                </section>
-            </div>
+  <div>
+    <header class="app-header">
+      <Breadcrumb>
+        <BreadcrumbItem to="/">首页</BreadcrumbItem>
+        <BreadcrumbItem to="/applition/list">应用列表</BreadcrumbItem>
+        <BreadcrumbItem>{{ appData.title }}</BreadcrumbItem>
+      </Breadcrumb>
+    </header>
+    <div class="app-main">
+      <div class="app-img">
+        <img :src="appData.icon" />
+      </div>
+      <div class="app-main-content">
+        <b>{{ appBigType }} ></b>
+        <b>{{ appData.transType }} ></b>
+        <b v-if="showEditAppInfo">{{ appData.title }}</b>
+        <Input v-else v-model="appData.title" style="width: 200px"></Input>
+        <!-- 编辑应用信息 -->
+        <b @click="editAppinfo">
+          <Tooltip content="编辑" placement="top">
+            <Icon class="app-edit-icon" type="compose"></Icon>
+          </Tooltip>
+        </b>
+        <div class="app-function">
+          <Dropdown placement="bottom-start">
+            <a href="javascript:void(0)">
+              操作
+              <Icon type="arrow-down-b"></Icon>
+            </a>
+            <DropdownMenu slot="list">
+              <DropdownItem>启用</DropdownItem>
+              <DropdownItem>停用</DropdownItem>
+              <DropdownItem>归档</DropdownItem>
+              <DropdownItem>删除</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </div>
+        <section class="app-section">
+          <div class="app-content-section">
+            <label>管理员：</label>
+            <span v-if="showEditAppInfo">
+              <Icon type="person"></Icon>{{ appData.administrator }}</span>
+            <Input v-else @on-click="selectAdminModal" v-model="appData.administrator" icon="arrow-down-b" style="width: 100px"></Input>
+          </div>
+          <div class="app-content-section">
+            <!-- <label>状态：</label> -->
+            <Tag :color="appData.publish === 0?notAppStatusColor:hasAppStatusColor">{{ appData.publish === 0?notPublishStatus:hasPublishStatus }}</Tag>
+          </div>
+        </section>
+        <section class="app-section">
+          <div class="app-content-section">
+            <label>创建者：</label>
+            <span>{{ appData.modifer }}</span>
+          </div>
+          <div class="app-content-section">
+            <label>创建时间：</label>
+            <span>{{ appData.crtTime }}</span>
+          </div>
+          <div class="app-content-section">
+            <label>修改时间：</label>
+            <span>{{ appData.crtTime }}</span>
+          </div>
+        </section>
+        <section class="app-section">
+          <div class="app-content-comment">
+            <label>说明：</label>
+            <span v-if="showEditAppInfo">{{ appData.comment }}</span>
+            <Input v-else v-model="appData.comment" style="width: 432px"></Input>
+          </div>
+        </section>
+      </div>
     </div>
+    <Modal v-model="showAdminModal" title="请选择" @on-ok="confirmModal">
+      <div class="app-search">
+        <Icon class="app-search-icon" type="search"></Icon>
+        <Input v-model="searchValue" placeholder="搜索" style="width: 300px"></Input>
+      </div>
+      <Table :highlight-row="true" @on-row-click="selectAdmin" height="400" stripe :columns="adminColumns" size="small" :data="adminData"></Table>
+    </Modal>
+  </div>
 </template>
 
 <script>
@@ -88,7 +95,7 @@ export default {
   name: "appInfo",
   components: {},
   props: {
-      listId: String
+    listId: String
   },
   data() {
     return {

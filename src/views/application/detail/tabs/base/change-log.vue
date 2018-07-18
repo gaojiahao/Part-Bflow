@@ -1,7 +1,6 @@
 <style lang="less" >
 .timeline-box {
   position: relative;
-  height: 440px;
   border-bottom: 1px solid #ddd;
   &-header {
     height: 30px;
@@ -19,9 +18,7 @@
   }
 
   &-log {
-    height: 400px;
     padding: 15px 0;
-    overflow-y: auto;
   }
 
   .show-no-log{

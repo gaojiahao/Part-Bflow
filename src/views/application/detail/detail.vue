@@ -1,21 +1,5 @@
 <style lang="less" scoped>
-<<<<<<< HEAD
   @import './detail.less';
-=======
-.app-details {
-  overflow: hidden;
-  background-color: #fff;
-  padding: 0 15px;
-}
-
-.app-tabs{
-    border-top: 1px solid #ddd;
-
-    .ivu-tabs-bar{
-      margin-bottom: 0px !important;
-    }
-  }
->>>>>>> d40e586646bcf948a600375b6144cdaa363a2136
 </style>
 
 <template>

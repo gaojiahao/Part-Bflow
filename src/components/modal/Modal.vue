@@ -116,7 +116,7 @@ export default {
 
     ok() {
       this.$emit("on-ok");
-      this.$emit('input', false);
+      // this.$emit('input', false);
     }
   },
 

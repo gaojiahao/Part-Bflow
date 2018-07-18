@@ -1,4 +1,5 @@
 import {request} from './fetch'
+import { connect } from 'net';
 
 /**
  * @author XiaoYing
@@ -136,13 +137,13 @@ export const deleteAppViews = (params) => request('/H_roleplay-si/app/deleteView
  * @author GUOZHENG
  * 更新日志
 */
-export const saveAppLog = (params) => request('/H_roleplay-si/app/saveLog', params,"POST");
+export const saveAppLog = (listId,scope,spendTime,content) => request('/H_roleplay-si/app/saveLog', {listId:listId,scope:scope,spendTime:spendTime,content:content},"POST");
 
 /** 
  * @author GUOZHENG
  * 更新日志
 */
-export const getChangeLog = (params) => request('/H_roleplay-si/ds/getChangeLog',params);
+export const getChangeLog = (listId) => request('/H_roleplay-si/ds/getChangeLog',{listId:listId});
 
 /** 
  * @author XiaoYing

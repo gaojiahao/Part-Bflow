@@ -5,35 +5,12 @@
   padding: 0 15px;
 }
 
-.line-chart-header {
-  position: absolute;
-  top: 0px;
-  right: 38px;
-  z-index: 1;
-}
-.customs-tag {
-  background-color: #d8d9db;
-  padding: 2px 10px;
-  color: #403b3b;
-  font-size: 13px;
-  vertical-align: middle;
-  opacity: 1;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.customs-tag-active {
-  background-color: #19be6b;
-  color: #fff;
-}
-
-.select-range {
-  border: 1px solid #d8d9db;
-  display: inline-block;
-  background-color: #19be6b;
-}
 .app-tabs{
     border-top: 1px solid #ddd;
+
+    .ivu-tabs-bar{
+      margin-bottom: 0px !important;
+    }
   }
 </style>
 
@@ -44,7 +21,9 @@
     <!-- 应用tabs -->
     <div class="app-tabs">
       <Tabs value="name1">
-          <TabPane label="一般" name="name1">标签一的内容</TabPane>
+          <TabPane label="一般" name="name1">
+            <log-instance></log-instance>
+          </TabPane>
           <TabPane label="互动" name="name2">
             <!-- 管理员自评 -->
             <admintrstor-assessment :listId="this.$route.params.listId"></admintrstor-assessment>
@@ -74,108 +53,24 @@
 </template>
 
 <script>
-import { getDateFormat } from "@/utils/utils";
+import LogInstance from './tabs/base/log-instance'
 import AppInfo from './information/information';
 import AppSubject from './tabs/connection/subject';
 import AdmintrstorAssessment from './tabs/exchange/admintrstor-assessment';
 import PermissionSource from './tabs/permission/permission';
-import {
-  getAdminData,
-  getListData,
-  saveAppInformation,
-  getChangeLog,
-  getInstanceData
-} from "@/services/appService.js";
 export default {
   name: "detail",
   components: {
     AppSubject,
     AdmintrstorAssessment,
     PermissionSource,
-    AppInfo
+    AppInfo,
+    LogInstance
   },
   data() {
     return {
-      timeLineData: [],
-
-      month: new Date(),
-      xAxisData: [],
-      seriesData: [],
-      active: true
     };
   },
-  watch: {
-    //监听实例数据日期变化
-    month(val) {
-      this.getInstanceData();
-    }
-  },
-  methods: {
-    //获取去实例数据
-    getInstanceData(t) {
-      let that = this;
-      let listId = that.$route.params.listId,
-        date = that.month,
-        type = t ? t : this.active ? "week" : "day";
-      date = getDateFormat(date, "yyyy/MM/dd");
-      getInstanceData("a4897429-f4f2-44a4-ade7-2fe8dc67c3cf", type, date).then(
-        res => {
-          if (res.list[0]) {
-            let xAxis = [],
-              series = [];
-            res.list.map(function(item) {
-              xAxis.push(item.xAxis);
-              series.push(item.num);
-            });
-            that.seriesData = series;
-            that.xAxisData = xAxis;
-          }
-        }
-      );
-    },
-
-    selectDataRange(val) {
-      if (val === "week") {
-        this.active = true;
-      } else {
-        this.active = false;
-      }
-      this.getInstanceData(val);
-    },
-    /**
-     * 获取变更日志
-     */
-    getChangeLog() {
-      let listId = this.$route.params.listId,
-        params = {
-          listId: listId
-        };
-
-      getChangeLog(params).then(res => {
-        if (res.tableContent) {
-          res.tableContent.map(item => {
-            if (item["CHANGE_RANGE"]) {
-              item["CHANGE_RANGE"] = item["CHANGE_RANGE"].split(",");
-            }
-          });
-          this.timeLineData = res.tableContent;
-        }
-      });
-    },
-
-    callTimeLineRefesh() {
-      this.getChangeLog();
-    }
-  },
-
-  created() {
-    this.getChangeLog();
-    this.getInstanceData();
-  },
-
-  mounted() {
-    
-  }
 };
 </script>
 

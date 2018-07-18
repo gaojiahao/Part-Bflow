@@ -102,7 +102,7 @@
 
 <script>
 import { getAppListData, deleteApp } from "@/services/appService.js";
-import AppCardList from './cardList';
+import AppCardList from './card-list';
 
 export default {
   name: "appList",
@@ -292,7 +292,7 @@ export default {
     //点击设置
     goDetail(list) {
       this.showAppList = false;
-      this.$router.push({path: `/app/detail/${list.uniqueId}`,params: {listId: list.uniqueId}});
+      this.$router.push({path: `/application/detail/${list.uniqueId}`,params: {listId: list.uniqueId}});
     }
   },
   watch: {

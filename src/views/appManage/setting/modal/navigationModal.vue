@@ -4,6 +4,13 @@
     overflow-y: auto;
     overflow-x: hidden;
   }
+.ivu-modal-close .ivu-icon-ios-close-empty{
+    font-size: 31px;
+    color: red !important;
+    transition: color .2s ease;
+    position: relative;
+    top: 1px;
+}
 </style>
 <template>
   <Modal v-model="showNav" title="导航" width="300" :mask-closable="false" @on-ok="publishApp" @on-visible-change="modalVisibleChange">

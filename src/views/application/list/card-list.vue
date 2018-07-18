@@ -104,7 +104,7 @@ export default {
   created() {},
   methods: {
     goAppSetting(list) {
-      this.$router.push({path: `/app/detail/${list.uniqueId}`,params: {listId: list.uniqueId}});
+      this.$router.push({path: `/application/detail/${list.uniqueId}`,params: {listId: list.uniqueId}});
     },
     //删除应用
     deleteApplication(index, list) {

@@ -30,33 +30,33 @@ export const dashboardRouter = {
 };
 
 export const app = {
-    path: '/app',
-    name: 'app',
+    path: '/application',
+    name: 'application',
     meta:{
         title:'应用'
     },
-    redirect:'app/list',
-    component:() => import ('@/views/appManage/appManage.vue'),
+    redirect:'application/list',
+    component:() => import ('@/views/application/application.vue'),
     children:[{
         path:'list',
         name:'list',
         meta:{
             title:'应用列表'
         },
-        component: () => import('@/views/appManage/list.vue'),
+        component: () => import('@/views/application/list/list.vue'),
     },{
         path:'add',
         name:'add',
         meta:{
             title:'添加应用',
         },
-        component: () => import('@/views/appManage/add.vue')
+        component: () => import('@/views/application/add/add.vue')
     },{
         path: 'detail/:listId',name: 'detail',
         meta: {
             title: 'detail - 应用详情'
         },
-        component: () => import('@/views/appManage/setting/detail.vue')
+        component: () => import('@/views/application/detail/detail.vue')
     }]
 };
 

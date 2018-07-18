@@ -6,14 +6,14 @@
   <div class="app-card">
     <Row style="margin: 10px 15px ">
       <Col span="2">
-      <b class="app-name">管理员自评：</b>
+        <b class="app-name">管理员自评：</b>
       </Col>
       <Col span="22">
-      <Button icon="plus-round" type="info" class="app-add" size="small" @click="addAssess">新增</Button>
-      <Table :columns="columns" width=943 :data="tableData"></Table>
-      <!-- <edit-table refs="editTable" v-model="tableData" :columns-list="columns"></edit-table> -->
+        <Button icon="plus-round" type="info" class="app-add" size="small" @click="addAssess">新增</Button>
+        <Table :columns="columns" width=943 :data="tableData"></Table>
       </Col>
     </Row>
+    
     <assess-modal title="管理员自评" v-model="showAssessModal" width="650" @on-ok="submitAdminAssess">
       <div style="margin:20px auto;width:85%;">
         <Form ref="formValidate" :label-width="150" :model="adminAssessData" :rules="ruleValidate">
@@ -52,6 +52,8 @@ export default {
   data() {
     return {
       showAssessModal: false,
+      isEdit: '',
+      IsEditId: '',
       changeResult: "",
       adminAssessData: {
         duringDate: "",
@@ -88,7 +90,7 @@ export default {
           width: 150,
           align: "center",
           render: (h, params) => {
-            let renderDate = this.formatDate(params.row.crtTime,'-');
+            let renderDate = this.formatDate(params.row.crtTime);
             return h("span", {}, renderDate);
           }
         },
@@ -114,6 +116,8 @@ export default {
               on: {
                 click: () => {
                   this.showAssessModal = true;
+                  this.isEdit = 'edit';
+                  this.IsEditId = params.row.id;
                   this.adminAssessData.duringDate = params.row.crtTime;
                   this.adminAssessData.result = params.row.achievement;
                   this.adminAssessData.opportunity = params.row.chance;
@@ -134,18 +138,25 @@ export default {
     },
     //添加管理员自评
     submitAdminAssess() {
+      let params = {
+        listId: this.listId,
+        opportunity: this.adminAssessData.opportunity,
+        result: this.adminAssessData.result,
+        date: this.formatDate(this.adminAssessData.duringDate)
+      };
+      if(this.isEdit === 'edit'){
+        params.id = this.IsEditId;
+      }
       this.$refs["formValidate"].validate(valid => {
         if (valid) {
-          saveAssessment(
-            this.listId,
-            this.adminAssessData.opportunity,
-            this.adminAssessData.result,
-            this.formatDate(this.adminAssessData.duringDate, '/',true)
-          ).then(res => {
+          saveAssessment(params).then(res => {
             if (res.success) {
               this.$Message.success(res.message);
               this.getAssessmentData();
               this.showAssessModal = false;
+              this.isEdit = '';
+            }else{
+              this.$Message.error(res.message);
             }
           });
         }
@@ -158,7 +169,7 @@ export default {
       });
     },
     //格式化日期方法
-    formatDate(currentDate,connect,hasDay) {
+    formatDate(currentDate) {
       let date = new Date(currentDate),
         year = date.getFullYear(),
         month = date.getMonth() + 1,
@@ -166,12 +177,8 @@ export default {
       if (month >= 1 && month <= 9) {
         month = "0" + month;
       }
-      if(hasDay){
-         relDate = year + connect + month + connect + '12';
-      }else{
-        relDate = year + connect + month;
-      }
-      
+      relDate = year + '-' + month;
+
       return relDate;
     }
   },

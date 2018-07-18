@@ -170,11 +170,12 @@ export const getAssessmentByListId = (listId) =>  request('/H_roleplay-si/ds/get
  * @author XiaoYing
  * 管理员自评数据新增
 */
-export const saveAssessment = (listId,chance,achievement,month) =>  request('/H_roleplay-si/app/saveAssessment', {
-    listId: listId,
-    chance: chance,
-    achievement: achievement,
-    date: month
+export const saveAssessment = (params) =>  request('/H_roleplay-si/app/saveAssessment', {
+    listId: params.listId,
+    chance: params.opportunity,
+    achievement: params.result,
+    date: params.date,
+    id: params.id
 }, 'POST');
 
 /** 

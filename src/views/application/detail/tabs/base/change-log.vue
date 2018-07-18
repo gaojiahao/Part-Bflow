@@ -1,25 +1,36 @@
 <style lang="less" >
 .timeline-box {
   position: relative;
+  height: 440px;
   border-bottom: 1px solid #ddd;
   &-header {
     height: 30px;
     line-height: 30px;
 
-    span {
-      font-size: 14px;
+    >span {
+      font-size: 16px;
       font-weight: bold;
     }
 
     a {
       margin-left: 10px;
+      font-size: 14px;
     }
   }
 
   &-log {
     height: 400px;
-        padding: 15px 0;
+    padding: 15px 0;
     overflow-y: auto;
+  }
+
+  .show-no-log{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 16px;
+    color: darkgray;
+    transform: translateY(-50%);
   }
 }
 
@@ -57,12 +68,12 @@
 </style>
 
 <template>
-    <div fix class="timeline-box" v-show="logData.length===0?false:true">
+    <div fix class="timeline-box" >
         <div class="timeline-box-header">
             <span>更新日志:</span>
             <a @click="showAppLog">新增</a>
         </div>
-        <div class="timeline-box-log">
+        <div class="timeline-box-log" v-show="logData.length===0?false:true">
             <Timeline class="timeline-list" pending>
                 <TimelineItem v-for="item in logData" :key="item.VERSION">
                     <p class="time">{{item.VERSION}}</p>
@@ -80,9 +91,11 @@
                             <span>备注:{{item.CONTENT}}</span>
                         </li>
                     </ul>
-
                 </TimelineItem>
             </Timeline>
+        </div>
+        <div v-show="logData.length===0?true:false" class="show-no-log">
+          暂无日志...
         </div>
 
         <!-- 更新日志 -->

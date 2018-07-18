@@ -3,7 +3,7 @@
     <header>
       <slot name="header"></slot>
     </header>
-    <div class="line-chart" id="lineChart"></div>
+    <div class="rfd-line-chart" id="lineChart"></div>
   </div>
 </template>
 
@@ -42,6 +42,7 @@ export default {
         tooltip: {
           trigger: "axis"
         },
+        color:['#26bba0'],
         legend: {
           selectedMode: false,
           data: [
@@ -71,13 +72,23 @@ export default {
         },
         series: [
           {
-            name: "新增实例数",
+            name: this.legendName,
             type: "line",
             stack: "总量",
             smooth: true,
             symbolSize: 6,
+            itemStyle:{
+              normal:{
+                color:'#26bba0',
+                borderWidth:2,
+              }
+            },
+            lineStyle:{
+              color:'#26bba0'
+            },
             areaStyle: {
               normal: {
+                color:'#38cdb27d',
                 show: true,
                 position: "top"
               }
@@ -101,11 +112,10 @@ export default {
 <style lang="less">
 .line-container {
   height: 450px;
-  width: 90%;
+  width: 100%;
   position: relative;
-  margin: 0 auto;
 
-  .line-chart {
+  .rfd-line-chart {
     height: 90%;
     width: 100%;
   }

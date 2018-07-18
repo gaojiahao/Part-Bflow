@@ -7,7 +7,7 @@
     <header class="app-header">
       <Breadcrumb>
         <BreadcrumbItem to="/">首页</BreadcrumbItem>
-        <BreadcrumbItem to="/applition/list">应用列表</BreadcrumbItem>
+        <BreadcrumbItem to="/application/list">应用列表</BreadcrumbItem>
         <BreadcrumbItem>{{ appData.title }}</BreadcrumbItem>
       </Breadcrumb>
     </header>

@@ -1,4 +1,8 @@
 <style lang="less" scoped>
+.line-chart{
+  border-bottom: 1px solid #ddd;
+}
+
 .line-chart-header {
   position: absolute;
   top: 0px;
@@ -32,28 +36,34 @@
 </style>
 
 <template>
-    <div>
-        <change-log :listId="listId"></change-log>
-        <line-chart title="数据分析" legendName="新增实例数" :xAxisData="xAxisData" :seriesData="seriesData">
-            <div slot="header" class="line-chart-header">
-                查看范围:
-                <DatePicker type="month" placeholder="选择月份" style="width: 150px;margin-left:10px;" v-model="month" format="yyyy-MM" :clearable="false"></DatePicker>
-                <div class="select-range">
-                    <span v-bind:class="{'customs-tag-active':active}" class="customs-tag" @click="selectDataRange('week')">周</span>
-                    <span v-bind:class="{'customs-tag-active':!active}" class="customs-tag" @click="selectDataRange('day')">天</span>
-                </div>
-            </div>
-        </line-chart>
+  <div>
+
+    <!-- 实例图 -->
+    <div class="line-chart">
+      <line-chart title="数据分析" legendName="新增实例数" :xAxisData="xAxisData" :seriesData="seriesData">
+        <div slot="header" class="line-chart-header">
+          查看范围:
+          <DatePicker type="month" placeholder="选择月份" style="width: 150px;margin-left:10px;" v-model="month" format="yyyy-MM" :clearable="false"></DatePicker>
+          <div class="select-range">
+            <span v-bind:class="{'customs-tag-active':active}" class="customs-tag" @click="selectDataRange('week')">周</span>
+            <span v-bind:class="{'customs-tag-active':!active}" class="customs-tag" @click="selectDataRange('day')">天</span>
+          </div>
+        </div>
+      </line-chart>
     </div>
+
+    <!-- 变更日志 -->
+    <change-log :listId="listId"></change-log>
+  </div>
 </template>
 
 <script>
 import LineChart from "@/components/Charts/LineChart";
 import ChangeLog from "./change-log";
 import { getInstanceData } from "@/services/appService.js";
-import {getDateFormat} from "@/utils/utils"
+import { getDateFormat } from "@/utils/utils";
 export default {
-  name:"LogInstance",
+  name: "LogInstance",
 
   components: {
     LineChart,
@@ -84,20 +94,18 @@ export default {
         date = that.month,
         type = t ? t : this.active ? "week" : "day";
       date = getDateFormat(date, "yyyy/MM/dd");
-      getInstanceData(listId, type, date).then(
-        res => {
-          if (res.list[0]) {
-            let xAxis = [],
-              series = [];
-            res.list.map(function(item) {
-              xAxis.push(item.xAxis);
-              series.push(item.num);
-            });
-            that.seriesData = series;
-            that.xAxisData = xAxis;
-          }
+      getInstanceData(listId, type, date).then(res => {
+        if (res.list[0]) {
+          let xAxis = [],
+            series = [];
+          res.list.map(function(item) {
+            xAxis.push(item.xAxis);
+            series.push(item.num);
+          });
+          that.seriesData = series;
+          that.xAxisData = xAxis;
         }
-      );
+      });
     },
 
     selectDataRange(val) {
@@ -111,12 +119,11 @@ export default {
 
     callTimeLineRefesh() {
       this.getChangeLog();
-    
     }
   },
 
-  created(){
-      this.getInstanceData();
+  created() {
+    this.getInstanceData();
   }
 };
 </script>

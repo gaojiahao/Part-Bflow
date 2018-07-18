@@ -27,16 +27,6 @@
           </TabPane>
       </Tabs>
     </div>
-    <!-- <line-chart title="数据分析" legendName="新增实例数" :xAxisData="xAxisData" :seriesData="seriesData">
-      <div slot="header" class="line-chart-header">
-        查看范围:
-        <DatePicker type="month" placeholder="选择月份" style="width: 150px;margin-left:10px;" v-model="month" format="yyyy-MM" :clearable="false"></DatePicker>
-        <div class="select-range">
-          <span v-bind:class="{'customs-tag-active':active}" class="customs-tag" @click="selectDataRange('week')">周</span>
-          <span v-bind:class="{'customs-tag-active':!active}" class="customs-tag" @click="selectDataRange('day')">天</span>
-        </div>
-      </div>
-    </line-chart> -->
   </div>
 </template>
 

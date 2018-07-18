@@ -10,7 +10,8 @@
       </Col>
       <Col span="22">
       <Button icon="plus-round" type="info" class="app-add" size="small" @click="addAssess">新增</Button>
-      <Table :columns="columns" width=753 :data="tableData"></Table>
+      <Table :columns="columns" width=943 :data="tableData"></Table>
+      <!-- <edit-table refs="editTable" v-model="tableData" :columns-list="columns"></edit-table> -->
       </Col>
     </Row>
     <assess-modal title="管理员自评" v-model="showAssessModal" width="650" @on-ok="submitAdminAssess">
@@ -36,12 +37,14 @@ import {
   getAssessmentByListId,
   saveAssessment
 } from "@/services/appService.js";
+import EditTable from '@/components/table/edit-table';
 import AssessModal from "@/components/modal/Modal";
 
 export default {
   name: "admintrstorAssessment",
   components: {
-    AssessModal
+    AssessModal,
+    EditTable
   },
   props: {
     listId: String
@@ -85,7 +88,7 @@ export default {
           width: 150,
           align: "center",
           render: (h, params) => {
-            let renderDate = this.formatDate(params.row.crtTime);
+            let renderDate = this.formatDate(params.row.crtTime,'-');
             return h("span", {}, renderDate);
           }
         },
@@ -100,6 +103,24 @@ export default {
           key: "chance",
           width: 300,
           align: "center"
+        },
+        {
+          title: '操作',
+          align: 'center',
+          width: 190,
+          key: 'handle',
+          render: (h, params) => {
+            return h("a", {
+              on: {
+                click: () => {
+                  this.showAssessModal = true;
+                  this.adminAssessData.duringDate = params.row.crtTime;
+                  this.adminAssessData.result = params.row.achievement;
+                  this.adminAssessData.opportunity = params.row.chance;
+                }
+              }
+            }, '编辑');
+          }
         }
       ],
       tableData: []
@@ -119,7 +140,7 @@ export default {
             this.listId,
             this.adminAssessData.opportunity,
             this.adminAssessData.result,
-            this.adminAssessData.duringDate
+            this.formatDate(this.adminAssessData.duringDate, '/',true)
           ).then(res => {
             if (res.success) {
               this.$Message.success(res.message);
@@ -137,7 +158,7 @@ export default {
       });
     },
     //格式化日期方法
-    formatDate(currentDate) {
+    formatDate(currentDate,connect,hasDay) {
       let date = new Date(currentDate),
         year = date.getFullYear(),
         month = date.getMonth() + 1,
@@ -145,7 +166,12 @@ export default {
       if (month >= 1 && month <= 9) {
         month = "0" + month;
       }
-      relDate = year + "-" + month;
+      if(hasDay){
+         relDate = year + connect + month + connect + '12';
+      }else{
+        relDate = year + connect + month;
+      }
+      
       return relDate;
     }
   },

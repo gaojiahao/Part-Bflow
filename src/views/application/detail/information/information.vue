@@ -153,7 +153,6 @@ export default {
       this.showEditAppInfo = !this.showEditAppInfo;
       if (this.showEditAppInfo) {
         let params = {
-          list: "list",
           uniqueId: this.appData.uniqueId,
           title: this.appData.title,
           administrator: this.appData.userId,

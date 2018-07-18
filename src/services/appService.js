@@ -107,7 +107,12 @@ export const deleteApp= (params) =>  request('/H_roleplay-si/ds/procu/removeList
  * @author XiaoYing
  * @description 保存应用信息
  */
-export const saveAppInformation = (params) => request('/H_roleplay-si/ds/saveData', params, 'POST');
+export const saveAppInformation = (params) => request('/H_roleplay-si/app/update', {
+    uniqueId: params.uniqueId,
+    title: params.title,
+    administrator: params.administrator,
+    comment: params.comment
+}, 'POST');
 
 /**
  * @author XiaoYing
@@ -169,7 +174,7 @@ export const saveAssessment = (listId,chance,achievement,month) =>  request('/H_
     listId: listId,
     chance: chance,
     achievement: achievement,
-    month: month
+    date: month
 }, 'POST');
 
 /** 

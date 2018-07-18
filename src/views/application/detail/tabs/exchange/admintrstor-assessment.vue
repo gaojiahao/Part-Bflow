@@ -13,7 +13,7 @@
       <Table :columns="columns" width=753 :data="tableData"></Table>
       </Col>
     </Row>
-    <assess-modal title="管理员自评" v-model="showAssessModal" width="650" @on-ok="submitAdminAssess" :loading="loading">
+    <assess-modal title="管理员自评" v-model="showAssessModal" width="650" @on-ok="submitAdminAssess">
       <div style="margin:20px auto;width:85%;">
         <Form ref="formValidate" :label-width="150" :model="adminAssessData" :rules="ruleValidate">
           <FormItem label="期间（月份）:" prop="duringDate">
@@ -113,28 +113,23 @@ export default {
     },
     //添加管理员自评
     submitAdminAssess() {
-      this.$refs["formValidate"].validate(v => {
-        if(valid){
-          console.log(1);
-        }else{
-          this.showAssessModal = false;
+      this.$refs["formValidate"].validate(valid => {
+        if (valid) {
+          saveAssessment(
+            this.listId,
+            this.adminAssessData.opportunity,
+            this.adminAssessData.result,
+            this.adminAssessData.duringDate
+          ).then(res => {
+            if (res.success) {
+              this.$Message.success(res.message);
+              this.getAssessmentData();
+              this.showAssessModal = false;
+            }
+          });
         }
       });
-      // saveAssessment(
-      //   this.listId,
-      //   this.adminAssessData.opportunity,
-      //   this.adminAssessData.result,
-      //   this.adminAssessData.duringDate
-      // ).then(res => {
-      //   if (res.success) {
-      //     this.$Message.success(res.message);
-      //     this.getAssessmentData();
-      //   }
-      // });
     },
-    // dateChange() {
-    //   this.loading = false;
-    // },
     //获取管理员自评数据
     getAssessmentData() {
       getAssessmentByListId(this.listId).then(res => {

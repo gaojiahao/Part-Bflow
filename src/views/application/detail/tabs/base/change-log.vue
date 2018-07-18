@@ -7,12 +7,12 @@
     line-height: 30px;
 
     span {
-      font-size: 14px;
+      font-size: 16px;
       font-weight: bold;
     }
 
     a {
-      margin-left: 10px;
+      margin-left: 12px;
     }
   }
 

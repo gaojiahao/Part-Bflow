@@ -3,7 +3,7 @@
     <header>
       <slot name="header"></slot>
     </header>
-    <div class="line-chart" id="lineChart"></div>
+    <div class="rfd-line-chart" id="lineChart"></div>
   </div>
 </template>
 
@@ -71,7 +71,7 @@ export default {
         },
         series: [
           {
-            name: "新增实例数",
+            name: this.legendName,
             type: "line",
             stack: "总量",
             smooth: true,
@@ -101,11 +101,10 @@ export default {
 <style lang="less">
 .line-container {
   height: 450px;
-  width: 90%;
+  width: 100%;
   position: relative;
-  margin: 0 auto;
 
-  .line-chart {
+  .rfd-line-chart {
     height: 90%;
     width: 100%;
   }

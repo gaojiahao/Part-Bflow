@@ -42,6 +42,7 @@ export default {
         tooltip: {
           trigger: "axis"
         },
+        color:['#26bba0'],
         legend: {
           selectedMode: false,
           data: [
@@ -76,8 +77,18 @@ export default {
             stack: "总量",
             smooth: true,
             symbolSize: 6,
+            itemStyle:{
+              normal:{
+                color:'#26bba0',
+                borderWidth:2,
+              }
+            },
+            lineStyle:{
+              color:'#26bba0'
+            },
             areaStyle: {
               normal: {
+                color:'#38cdb27d',
                 show: true,
                 position: "top"
               }

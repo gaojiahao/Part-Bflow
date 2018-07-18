@@ -1,40 +1,5 @@
 <style lang="less" scoped>
-.app-details {
-  overflow: hidden;
-  background-color: #fff;
-  padding: 0 15px;
-}
-
-.line-chart-header {
-  position: absolute;
-  top: 0px;
-  right: 38px;
-  z-index: 1;
-}
-.customs-tag {
-  background-color: #d8d9db;
-  padding: 2px 10px;
-  color: #403b3b;
-  font-size: 13px;
-  vertical-align: middle;
-  opacity: 1;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.customs-tag-active {
-  background-color: #19be6b;
-  color: #fff;
-}
-
-.select-range {
-  border: 1px solid #d8d9db;
-  display: inline-block;
-  background-color: #19be6b;
-}
-.app-tabs{
-    border-top: 1px solid #ddd;
-  }
+  @import './detail.less';
 </style>
 
 <template>

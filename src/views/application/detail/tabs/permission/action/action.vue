@@ -39,8 +39,7 @@
 
 <script>
 import {
-  getAssessmentByListId,
-  saveAssessment
+  getAppResourcesAndAuthoritys
 } from "@/services/appService.js";
 import ActionModal from './action-modal';
 
@@ -127,10 +126,17 @@ export default {
     },
     emitPermissionModal() {
       this.showActionModal = false;
+    },
+    getActionData() {
+      getAppResourcesAndAuthoritys(this.listId).then(res => {
+        console.log(res);
+      })
     }
   },
   created() {},
-  mounted() {}
+  mounted() {
+    this.getActionData();
+  }
 };
 </script>
 

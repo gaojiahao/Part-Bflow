@@ -9,7 +9,7 @@
         </Row>
         <Row class="app-workflow-table">
             <Table :columns="columns" :data="workflows"></Table>
-            <a class="app-workflow-table-create">创建工作流</a>
+            <a class="app-workflow-table-create" @click="createWorkflow">创建工作流</a>
         </Row>
     </div>
 </template>
@@ -63,7 +63,12 @@ export default {
       ]
     };
   },
-  methods: {},
+  methods: {
+      //创建工作流
+    createWorkflow() {
+      window.open('/myflow/createWorkFlow.html?listId=' + this.listId);
+    }
+  },
   created() {},
   mounted() {}
 };

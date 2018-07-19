@@ -23,12 +23,9 @@ import AssessModal from "@/components/modal/Modal";
 export default {
   name: "formSource",
   components: {},
-  props: {
-    listId: String
-  },
   data() {
     return {
-      
+      listId: this.$route.params.listId
     };
   },
   methods: {

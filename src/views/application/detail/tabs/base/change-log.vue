@@ -65,64 +65,64 @@
 </style>
 
 <template>
-    <div fix class="timeline-box" >
-        <div class="timeline-box-header">
-            <span>更新日志:</span>
-            <a @click="showAppLog">新增</a>
-        </div>
-        <div class="timeline-box-log" v-show="logData.length===0?false:true">
-            <Timeline class="timeline-list" pending>
-                <TimelineItem v-for="item in logData" :key="item.VERSION">
-                    <p class="time">{{item.VERSION}}</p>
-                    <ul class="timeline-item-content-ul">
-                        <li>
-                            <span>{{item.CREATOR_NAME}}</span>
-                            <span>{{item.CRT_TIME}}</span>
-                            <span>耗用小时数:{{item.TIME_CONSUMING}}</span>
-                        </li>
-                        <li>
-                            <span>更新范围:</span>
-                            <span class="customs-tag" v-for="(scope,index) in item.CHANGE_RANGE" :key="index">{{scope}}</span>
-                        </li>
-                        <li>
-                            <span>备注:{{item.CONTENT}}</span>
-                        </li>
-                    </ul>
-                </TimelineItem>
-            </Timeline>
-        </div>
-        <div v-show="logData.length===0?true:false" class="show-no-log">
-          暂无日志...
-        </div>
-
-        <!-- 更新日志 -->
-        <custom-modal width="600" footerBtnAlign="right" title="更新日志" v-model="visible" @onVisibleChange="modalVisibleChange" @on-ok="submitLog">
-            <div style="margin:20px auto;width:85%;">
-                <Form ref="formValidate" :label-width="95" :model="modalFormData" :rules="ruleValidate">
-                    <FormItem label="更新范围:" prop="scope">
-                        <Select multiple v-model="modalFormData.scope">
-                            <Option value="表单">表单</Option>
-                            <Option value="科目关系">科目关系</Option>
-                            <Option value="报表">报表</Option>
-                            <Option value="工作流">工作流</Option>
-                            <Option value="权限">权限</Option>
-                        </Select>
-                    </FormItem>
-                    <FormItem label="耗用小时数:" prop="spendTime">
-                        <InputNumber v-model="modalFormData.spendTime" />
-                        <span style="color:#ddd;margin-left:10px;">单位/时</span>
-                    </FormItem>
-                    <FormItem label="更新内容:" prop="content">
-                        <Input type="textarea" v-model="modalFormData.content" :autosize="{minRows: 4,maxRows: 6}" />
-                    </FormItem>
-                </Form>
-            </div>
-        </custom-modal>
+  <div fix class="timeline-box">
+    <div class="timeline-box-header">
+      <span>更新日志:</span>
+      <a @click="showAppLog">新增</a>
     </div>
+    <div class="timeline-box-log" v-show="logData.length===0?false:true">
+      <Timeline class="timeline-list" pending>
+        <TimelineItem v-for="item in logData" :key="item.VERSION">
+          <p class="time">{{item.VERSION}}</p>
+          <ul class="timeline-item-content-ul">
+            <li>
+              <span>{{item.CREATOR_NAME}}</span>
+              <span>{{item.CRT_TIME}}</span>
+              <span>耗用小时数:{{item.TIME_CONSUMING}}</span>
+            </li>
+            <li>
+              <span>更新范围:</span>
+              <span class="customs-tag" v-for="(scope,index) in item.CHANGE_RANGE" :key="index">{{scope}}</span>
+            </li>
+            <li>
+              <span>备注:{{item.CONTENT}}</span>
+            </li>
+          </ul>
+        </TimelineItem>
+      </Timeline>
+    </div>
+    <div v-show="logData.length===0?true:false" class="show-no-log">
+      暂无日志...
+    </div>
+
+    <!-- 更新日志 -->
+    <custom-modal width="600" footerBtnAlign="right" title="更新日志" v-model="visible" @onVisibleChange="modalVisibleChange" @on-ok="submitLog">
+      <div style="margin:20px auto;width:85%;">
+        <Form ref="formValidate" :label-width="95" :model="modalFormData" :rules="ruleValidate">
+          <FormItem label="更新范围:" prop="scope">
+            <Select multiple v-model="modalFormData.scope">
+              <Option value="表单">表单</Option>
+              <Option value="科目关系">科目关系</Option>
+              <Option value="报表">报表</Option>
+              <Option value="工作流">工作流</Option>
+              <Option value="权限">权限</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="耗用小时数:" prop="spendTime">
+            <InputNumber v-model="modalFormData.spendTime" />
+            <span style="color:#ddd;margin-left:10px;">单位/时</span>
+          </FormItem>
+          <FormItem label="更新内容:" prop="content">
+            <Input type="textarea" v-model="modalFormData.content" :autosize="{minRows: 4,maxRows: 6}" />
+          </FormItem>
+        </Form>
+      </div>
+    </custom-modal>
+  </div>
 </template>
 
 <script>
-import { getChangeLog,saveAppLog } from "@/services/appService.js";
+import { getChangeLog, saveAppLog } from "@/services/appService.js";
 import CustomModal from "@/components/modal/Modal";
 export default {
   name: "ChangeLog",
@@ -202,11 +202,14 @@ export default {
           scope = this.modalFormData.scope.join(","),
           spendTime = this.modalFormData.spendTime,
           content = this.modalFormData.content;
-        saveAppLog(listId,scope,spendTime,content).then(res => {
+
+        saveAppLog(listId, scope, spendTime, content).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
             this.visible = false;
             this.getChangeLog();
+          }else{
+            //faild todo
           }
         });
       }

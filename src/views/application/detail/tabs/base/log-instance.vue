@@ -89,19 +89,23 @@ export default {
   methods: {
     //获取去实例数据
     getInstanceData(t) {
-      let that = this;
-      let listId = this.listId,
+      let that = this,
+        listId = that.listId,
         date = that.month,
         type = t ? t : this.active ? "week" : "day";
+
       date = getDateFormat(date, "yyyy/MM/dd");
+
       getInstanceData(listId, type, date).then(res => {
         if (res.list[0]) {
           let xAxis = [],
             series = [];
+
           res.list.map(function(item) {
             xAxis.push(item.xAxis);
             series.push(item.num);
           });
+
           that.seriesData = series;
           that.xAxisData = xAxis;
         }

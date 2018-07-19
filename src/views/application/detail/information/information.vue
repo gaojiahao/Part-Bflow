@@ -48,7 +48,6 @@
             <Input v-else @on-click="selectAdminModal" v-model="appData.administrator" icon="arrow-down-b" style="width: 100px"></Input>
           </div>
           <div class="app-content-section">
-            <!-- <label>状态：</label> -->
             <Tag :color="appData.publish === 0?notAppStatusColor:hasAppStatusColor">{{ appData.publish === 0?notPublishStatus:hasPublishStatus }}</Tag>
           </div>
         </section>

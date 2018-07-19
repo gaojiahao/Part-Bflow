@@ -7,7 +7,7 @@
     <!-- 动作管理 -->
     <action-manage></action-manage>
     <!-- 报表视图 -->
-    <report-view></report-view>
+    <report-view :appType="appType"></report-view>
     <!-- 表单 -->
     <app-form></app-form>
     <!-- 工作流 -->
@@ -30,7 +30,8 @@ export default {
     WorkFlow
   },
   props: {
-    listId: String
+    listId: String,
+    appType: String
   },
   data() {
     return {

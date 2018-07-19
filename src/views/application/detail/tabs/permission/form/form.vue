@@ -8,7 +8,7 @@
             <h3>表单</h3>
         </Row>
         <Row class="app-form-set">
-            <a class="app-form-set-add">设置表单</a>
+            <a class="app-form-set-add" @click="setForm">设置表单</a>
         </Row>
     </div>
 </template>
@@ -31,7 +31,11 @@ export default {
       
     };
   },
-  methods: {},
+  methods: {
+      setForm() {
+          window.open("/Form/index.html?viewDesign=true&list=" + this.listId);
+      }
+  },
   created() {},
   mounted() {}
 };

@@ -9,7 +9,7 @@
         </Row>
         <Row class="app-report-table">
             <Table :columns="columns" :data="reportSources"></Table>
-            <a class="app-report-table-add">新建报表</a>
+            <a class="app-report-table-add" @click="goCreateView">新建报表</a>
         </Row>
     </div>
 </template>
@@ -25,7 +25,8 @@ export default {
   name: "reportSource",
   components: {},
   props: {
-    listId: String
+    listId: String,
+    appType: String
   },
   data() {
     return {
@@ -56,7 +57,14 @@ export default {
                           margin: '0px 5px'
                       }
                   }),
-                  h('a',{},'修改报表'),
+                  h('a',{
+                    on: {
+                      click: () => {
+                        let href = '/Site/index.html#appSetting/viewConfig/'+this.listId+'/'+params.row.viewId;
+                        window.top.location.href = href;
+                      }
+                    }
+                  },'修改报表'),
                   h('span',{
                       style: {
                           height: '20px',
@@ -76,7 +84,12 @@ export default {
       ]
     };
   },
-  methods: {},
+  methods: {
+    //创建视图
+    goCreateView() {
+      window.top.location.href = '/Site/index.html#appSetting/'+this.listId+'/'+this.appType+'/viewTypes';
+    },
+  },
   created() {},
   mounted() {}
 };

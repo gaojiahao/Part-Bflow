@@ -202,6 +202,7 @@ export default {
     //请求应用详情信息
     getListData(uniqueId).then(res => {
       this.appData = res[0];
+      this.$emit('changeAppType', this.appData.type);
     });
   }
 };

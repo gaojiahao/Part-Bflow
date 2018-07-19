@@ -4,11 +4,14 @@
 
 <template>
   <div class="app-details">
+
+    
+
     <!-- 应用详情信息 -->
     <app-info :listId="this.$route.params.listId"></app-info>
     <!-- 应用tabs -->
-    <div class="app-tabs">
-      <Tabs value="name1">
+    <div class="rfd-tab">
+      <Tabs value="name1"  type="card">
         <TabPane label="一般" name="name1">
           <log-instance></log-instance>
         </TabPane>
@@ -27,6 +30,7 @@
         </TabPane>
       </Tabs>
     </div>
+
   </div>
 </template>
 

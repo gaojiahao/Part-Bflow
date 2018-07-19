@@ -28,11 +28,12 @@
 
                 <Row>
                     <Table :columns="columns" :data="userSources"></Table>
-                    <a class="app-action-white-list">授权</a>
+                    <a @click="showModal" class="app-action-white-list">授权</a>
                 </Row>
             </div>
         </Row>
-
+        <!-- 授权modal -->
+        <action-modal :modalStatis="showActionModal" @emitPermissionModal="emitPermissionModal"></action-modal>
     </div>
 </template>
 
@@ -41,16 +42,19 @@ import {
   getAssessmentByListId,
   saveAssessment
 } from "@/services/appService.js";
-import AssessModal from "@/components/modal/Modal";
+import ActionModal from './action-modal';
 
 export default {
   name: "permissionSource",
-  components: {},
+  components: {
+    ActionModal
+  },
   props: {
     listId: String
   },
   data() {
     return {
+      showActionModal: false,
       actionData: [
         {
           action: "新增",
@@ -117,7 +121,14 @@ export default {
       ]
     };
   },
-  methods: {},
+  methods: {
+    showModal() {
+      this.showActionModal = true;
+    },
+    emitPermissionModal() {
+      this.showActionModal = false;
+    }
+  },
   created() {},
   mounted() {}
 };

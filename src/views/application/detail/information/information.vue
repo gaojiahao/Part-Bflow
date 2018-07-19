@@ -16,16 +16,7 @@
         <img :src="appData.icon" />
       </div>
       <div class="app-main-content">
-        <b>{{ appBigType }} ></b>
-        <b>{{ appData.transType }} ></b>
-        <b v-if="showEditAppInfo">{{ appData.title }}</b>
-        <Input v-else v-model="appData.title" style="width: 200px"></Input>
-        <!-- 编辑应用信息 -->
-        <b @click="editAppinfo">
-          <Tooltip content="编辑" placement="top">
-            <Icon class="app-edit-icon" type="compose"></Icon>
-          </Tooltip>
-        </b>
+        <h2>{{ appData.title+" - 应用详情" }}</h2>
         <div class="app-function">
           <Dropdown placement="bottom-start">
             <a href="javascript:void(0)">
@@ -42,25 +33,41 @@
         </div>
         <section class="app-section">
           <div class="app-content-section">
-            <label>管理员：</label>
+            <label>应用名称：</label>
+            <span v-if="showEditAppInfo">{{ appData.title }}</span>
+            <Input v-else v-model="appData.title" style="width: 200px"></Input>
+            <!-- 编辑应用信息 -->
+            <b @click="editAppinfo">
+              <Tooltip content="编辑" placement="top">
+                <Icon class="app-edit-icon" type="compose"></Icon>
+              </Tooltip>
+            </b>
+          </div>
+          <div class="app-content-section">
+            <label>应用类型：</label>
+            <span>{{ appData.type }}</span>
+          </div>
+          <div class="app-content-section">
+            <label>应用管理员：</label>
             <span v-if="showEditAppInfo">
               <Icon type="person"></Icon>{{ appData.administrator }}</span>
             <Input v-else @on-click="selectAdminModal" v-model="appData.administrator" icon="arrow-down-b" style="width: 100px"></Input>
           </div>
-          <div class="app-content-section">
-            <Tag :color="appData.publish === 0?notAppStatusColor:hasAppStatusColor">{{ appData.publish === 0?notPublishStatus:hasPublishStatus }}</Tag>
-          </div>
         </section>
         <section class="app-section">
-          <div class="app-content-section">
+          <div class="app-content-section-create">
             <label>创建者：</label>
             <span>{{ appData.modifer }}</span>
           </div>
-          <div class="app-content-section">
+          <div class="app-content-section-create">
             <label>创建时间：</label>
             <span>{{ appData.crtTime }}</span>
           </div>
-          <div class="app-content-section">
+          <div class="app-content-section-create">
+            <label>修改者：</label>
+            <span>{{ appData.modifer }}</span>
+          </div>
+          <div class="app-content-section-create">
             <label>修改时间：</label>
             <span>{{ appData.crtTime }}</span>
           </div>
@@ -99,7 +106,6 @@ export default {
   data() {
     return {
       appData: {},
-      appBigType: "",
       showEditAppInfo: true,
       selectModel: "",
       showAdminModal: false,
@@ -196,14 +202,6 @@ export default {
     //请求应用详情信息
     getListData(uniqueId).then(res => {
       this.appData = res[0];
-      if (this.appData.type === "business") {
-        this.showSubjectView = true;
-        this.appBigType = "业务应用";
-      } else if (this.appData.type === "obj") {
-        this.appBigType = "基础对象";
-      } else {
-        this.appBigType = "科目应用";
-      }
     });
   }
 };

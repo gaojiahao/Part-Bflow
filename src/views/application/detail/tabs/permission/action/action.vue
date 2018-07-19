@@ -3,49 +3,37 @@
 </style>
 
 <template>
-  <div class="app">
-    <Row class="app-des">
-        <span>说明：黑、白名单，只能设置其一，如果都空着，表示所有用户都有权限</span>
-    </Row>
-    <Row class="app-action">
-        <Row>
-            <b>动作管理：</b>
-            <a class="app-action-white-list">添加白名单</a>
-            <a class="app-action-white-list">添加黑名单</a>
-        </Row>
-        <Row>
-            <div class="action-manage" v-for="(list,index) of actionData" :key="index">
-                <b>{{ list.action }}</b>
-                <a>{{ list.status }}</a>
-                <span>{{ list.desc }}</span>
+    <div class="app">
+        <!-- <Row class="app-des">
+            <span>说明：黑、白名单，只能设置其一，如果都空着，表示所有用户都有权限</span>
+        </Row> -->
+        <Row class="app-action">
+            <Row class="app-action-title">
+                <h3>动作</h3>
+            </Row>
+            <div class="app-action-source">
+                <Row class="app-action-source-list">
+                    <Col span="6" class="app-action-source-item" v-for="(list,index) of actionData" :key="index">
+
+                        <Col span="2" class="app-action-source-item-check">
+                            <Checkbox :value="true"></Checkbox>
+                        </Col>
+
+                        <Col span="21" class="app-action-source-item-content">
+                            <h3>{{ list.action }}</h3>
+                            <div class="app-action-source-item-desc">{{ list.desc }}</div>
+                        </Col>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Table :columns="columns" :data="userSources"></Table>
+                    <a class="app-action-white-list">授权</a>
+                </Row>
             </div>
         </Row>
-    </Row>
-    <Row class="app-view">
-        <Row>
-            <b>报表视图：</b>
-            <a class="app-action-white-list">设置权限</a>
-            <a class="app-action-white-list" style="margin-left:10px;">新增</a>
-        </Row>
-        <Row>
-            <div class="view-manage">
-                <b>每月销售汇总表</b>
-                <a>删除</a>
-                <span>每月的销售订单汇总记录</span>
-            </div>
-            <div class="view-manage">
-                <b>我的销售记录</b>
-                <a>删除</a>
-                <span>当前用户创建的销售订单记录</span>
-            </div>
-            <div class="view-manage">
-                <b>本部门的销售记录</b>
-                <a>删除</a>
-                <span>当前用户所属部门所有的销售订单记录</span>
-            </div>
-        </Row>
-    </Row>
-  </div>
+
+    </div>
 </template>
 
 <script>
@@ -57,28 +45,80 @@ import AssessModal from "@/components/modal/Modal";
 
 export default {
   name: "permissionSource",
-  components: {
-    
-  },
+  components: {},
   props: {
     listId: String
   },
   data() {
     return {
-       actionData: [{action:'新增',status: '启用',desc: '如果被禁用，用户将无法创建实例数据的入口'},
-                    {action:'删除',status: '启用',desc: '如果被禁用，用户将无法创建实例数据的入口'},
-                    {action:'修改',status: '禁用',desc: '如果被禁用，用户将无法创建实例数据的入口'},
-                    {action:'查看',status: '启用',desc: '如果被禁用，用户将无法创建实例数据的入口'},
-                    {action:'撤销',status: '禁用',desc: '如果被禁用，用户将无法创建实例数据的入口'},
-                    {action:'打印',status: '禁用',desc: '如果被禁用，用户将无法创建实例数据的入口'}] 
+      actionData: [
+        {
+          action: "新增",
+          status: "启用",
+          desc: "创建新纪录"
+        },
+        {
+          action: "删除",
+          status: "启用",
+          desc: "除了应用管理员，仅能删除本人创建的"
+        },
+        {
+          action: "修改",
+          status: "禁用",
+          desc: "除了应用管理员，仅能删除本人创建的"
+        },
+        {
+          action: "查看",
+          status: "启用",
+          desc: "默认查看所有记录"
+        },
+        {
+          action: "撤销",
+          status: "禁用",
+          desc: "把已生效的记录还原成未生效"
+        },
+        {
+          action: "打印",
+          status: "禁用",
+          desc: "打印表单"
+        }
+      ],
+      columns: [
+        {
+          title: "已授权用户",
+          key: "user"
+        },
+        {
+          title: "动作",
+          key: "source"
+        },
+        {
+          title: "操作",
+          key: "list",
+          align: "center",
+          render: (h,params) => {
+              return h('div',[
+                  h('a',{},'删除'),
+                  h('span',{
+                      style: {
+                          height: '20px',
+                          borderLeft: '1px solid #39f',
+                          margin: '0px 5px'
+                      }
+                  }),
+                  h('a',{},'修改')
+              ])
+          }
+        }
+      ],
+      userSources: [
+        { user: "张三", source: "新增、查看、删除、修改"},
+        { user: "采购部", source: "新增、查看、删除"}
+      ]
     };
   },
-  methods: {
-    
-  },
-  created() {
-    
-  },
+  methods: {},
+  created() {},
   mounted() {}
 };
 </script>

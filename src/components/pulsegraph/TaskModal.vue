@@ -48,7 +48,7 @@
 
 <script>
 import { getAppTaskCount } from "@/services/flowService";
-import { getDateFormat } from "@/utils/utils";
+import { FormatDate } from "@/utils/utils";
 export default {
   name: "TaskModal",
   data() {
@@ -154,9 +154,9 @@ export default {
       let crtTime = "";
       if (this.filterData.crtTime.length > 0 && this.filterData.crtTime[0]) {
         crtTime =
-          getDateFormat(this.filterData.crtTime[0], "yyyy-MM-dd") +
+          FormatDate(this.filterData.crtTime[0], "yyyy-MM-dd") +
           "/" +
-          getDateFormat(this.filterData.crtTime[1], "yyyy-MM-dd");
+          FormatDate(this.filterData.crtTime[1], "yyyy-MM-dd");
       }
       let params = {
         type: this.type,
@@ -229,9 +229,9 @@ export default {
       let crtTime = "";
       if (this.filterData.crtTime.length > 0 && this.filterData.crtTime[0]) {
         crtTime =
-          getDateFormat(this.filterData.crtTime[0], "yyyy-MM-dd") +
+          FormatDate(this.filterData.crtTime[0], "yyyy-MM-dd") +
           "/" +
-          getDateFormat(this.filterData.crtTime[1], "yyyy-MM-dd");
+          FormatDate(this.filterData.crtTime[1], "yyyy-MM-dd");
       }
       let params = {
         type: this.type,

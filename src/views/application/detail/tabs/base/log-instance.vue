@@ -61,7 +61,7 @@
 import LineChart from "@/components/Charts/LineChart";
 import ChangeLog from "./change-log";
 import { getInstanceData } from "@/services/appService.js";
-import { getDateFormat } from "@/utils/utils";
+import { FormatDate } from "@/utils/utils";
 export default {
   name: "LogInstance",
 
@@ -93,8 +93,7 @@ export default {
         listId = that.listId,
         date = that.month,
         type = t ? t : this.active ? "week" : "day";
-
-      date = getDateFormat(date, "yyyy/MM/dd");
+      date = FormatDate(date, "yyyy/MM/dd");
 
       getInstanceData(listId, type, date).then(res => {
         if (res.list[0]) {

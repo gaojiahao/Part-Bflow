@@ -32,27 +32,27 @@ export const dashboardRouter = {
 export const app = {
     path: '/application',
     name: 'application',
-    meta:{
-        title:'应用'
+    meta: {
+        title: '应用'
     },
-    redirect:'application/list',
-    component:() => import ('@/views/application/application.vue'),
-    children:[{
-        path:'list',
-        name:'list',
-        meta:{
-            title:'应用列表'
+    redirect: 'application/list',
+    component: () => import('@/views/application/application.vue'),
+    children: [{
+        path: 'list',
+        name: 'list',
+        meta: {
+            title: '应用列表'
         },
         component: () => import('@/views/application/list/list.vue'),
-    },{
-        path:'add',
-        name:'add',
-        meta:{
-            title:'添加应用',
+    }, {
+        path: 'add',
+        name: 'add',
+        meta: {
+            title: '添加应用',
         },
         component: () => import('@/views/application/add/add.vue')
-    },{
-        path: 'detail/:listId',name: 'detail',
+    }, {
+        path: 'detail/:listId', name: 'detail',
         meta: {
             title: 'detail - 应用详情'
         },
@@ -70,8 +70,8 @@ export const homepageRouter = {
 };
 
 export const sujectformRouter = {
-    path:'/subjectform',
-    name:'subjectform',
+    path: '/subjectform',
+    name: 'subjectform',
     meta: {
         title: 'subjectform - 科目分录'
     },
@@ -87,6 +87,16 @@ export const appRouter = [
 ]
 
 
+export const enterpriseInfo = {
+    path: '/enterpriseInfo',
+    name: 'enterpriseInfo',
+    meta: {
+        title: 'enterpriseInfo - 企业信息'
+    },
+    component: () => import('@/views/enterpriseInfo/enterpriseInfo.vue')
+}
+
+
 export const routers = [
     loginRouter,
     flowRouter,
@@ -94,5 +104,6 @@ export const routers = [
     dashboardRouter,
     app,
     sujectformRouter,
+    enterpriseInfo,
     ...appRouter
 ];

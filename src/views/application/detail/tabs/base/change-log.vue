@@ -72,7 +72,7 @@
     </div>
     <div class="timeline-box-log" v-show="logData.length===0?false:true">
       <Timeline class="timeline-list" pending>
-        <TimelineItem v-for="item in logData" :key="item.VERSION">
+        <TimelineItem v-for="(item,index) in logData" :key="index">
           <p class="time">{{item.VERSION}}</p>
           <ul class="timeline-item-content-ul">
             <li>

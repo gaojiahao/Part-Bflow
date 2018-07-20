@@ -10,7 +10,11 @@ export const getToken = () => {
     return token;
 }
 
-export const getDateFormat = (date,fmt) => {
+/**
+ * @param  {Date} date 日期
+ * @param  {} fmt   
+ */
+export const FormatDate = (date,fmt) => {
     let o = {
         "M+": date.getMonth() + 1, //月份 
         "d+": date.getDate(), //日 

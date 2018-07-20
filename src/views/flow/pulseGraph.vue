@@ -478,7 +478,17 @@ export default {
             { name: "往来", icon: "dealings.png" },
             { name: "设施", icon: "facilities.png" },
             { name: "费用", icon: "cost-sub.png" },
-            { name: "税支", icon: "taxexpenditure.png" }
+            { name: "税支", icon: "taxexpenditure.png" },
+            { name: "待收票", icon: "put-ticket.png" },
+            { name: "待开票", icon: "open-ticket.png" },
+            { name: "期间费用", icon: "cost-sub.png" },
+            { name: "企业利润", icon: "business-profit.png" },
+            { name: "待计划", icon: "plan.png" },
+            { name: "待下单", icon: "requirement.png" },
+            { name: "待领料", icon: "collar-material.png" },
+             { name: "待验收", icon: "check.png" },
+             { name: "待交付", icon: "pay.png" },
+             { name: "往来余额", icon: "dealings.png" },
           ];
 
           subjectList.map(s => {

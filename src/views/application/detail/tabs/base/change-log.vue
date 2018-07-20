@@ -2,9 +2,12 @@
 .timeline-box {
   position: relative;
   border-bottom: 1px solid #ddd;
+  background-color: #f0f0f03d;
+  border-top: 2px solid #ddd;
   &-header {
     height: 30px;
     line-height: 30px;
+    padding-left: 15px;
 
     >span {
       font-size: 16px;
@@ -18,7 +21,7 @@
   }
 
   &-log {
-    padding: 15px 0;
+    padding: 15px 15px;
   }
 
   .show-no-log{
@@ -72,7 +75,7 @@
     </div>
     <div class="timeline-box-log" v-show="logData.length===0?false:true">
       <Timeline class="timeline-list" pending>
-        <TimelineItem v-for="item in logData" :key="item.VERSION">
+        <TimelineItem v-for="(item,index) in logData" :key="index">
           <p class="time">{{item.VERSION}}</p>
           <ul class="timeline-item-content-ul">
             <li>

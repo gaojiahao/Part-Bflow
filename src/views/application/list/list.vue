@@ -6,7 +6,7 @@
   <div>
     <div v-if="showAppList">
       <header class="top-head">
-        <router-link to="/app/add">
+        <router-link to="/application/add">
           <Button @click="isShowAppList" class="add-btn" icon="plus-round">
             添加应用</Button>
         </router-link>
@@ -48,7 +48,7 @@ import { getAppListData, deleteApp } from "@/services/appService.js";
 import AppCardList from './card-list';
 
 export default {
-  name: "appList",
+  name: "applicationList",
   components: {
     AppCardList
   },
@@ -91,6 +91,10 @@ export default {
             }
             return h('span',{},bigType);
           }
+        },
+        {
+          title: "管理员",
+          key: "administrator"
         },
         {
           title: "创建时间",

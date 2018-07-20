@@ -4,11 +4,14 @@
 
 <template>
   <div class="app-details">
+
+    
+
     <!-- 应用详情信息 -->
-    <app-info :listId="this.$route.params.listId"></app-info>
+    <app-info :listId="this.$route.params.listId" @changeAppType="changeAppType"></app-info>
     <!-- 应用tabs -->
-    <div class="app-tabs">
-      <Tabs value="name1">
+    <div class="rfd-tab">
+      <Tabs value="name1"  type="card">
         <TabPane label="一般" name="name1">
           <log-instance></log-instance>
         </TabPane>
@@ -17,7 +20,7 @@
           <admintrstor-assessment :listId="this.$route.params.listId"></admintrstor-assessment>
         </TabPane>
         <TabPane label="资源" name="name3">
-          <permission-source></permission-source>
+          <permission-source :appType="appType"></permission-source>
         </TabPane>
         <TabPane label="连接" name="name4">
           <!-- 应用科目 -->
@@ -27,6 +30,7 @@
         </TabPane>
       </Tabs>
     </div>
+
   </div>
 </template>
 
@@ -44,6 +48,16 @@ export default {
     PermissionSource,
     AppInfo,
     LogInstance
+  },
+  data() {
+    return {
+      appType: ''
+    };
+  },
+  methods: {
+    changeAppType(value) {
+      this.appType = value;
+    }
   }
 };
 </script>

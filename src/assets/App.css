@@ -75,3 +75,24 @@
   border: 1px solid #ddd;
   background-color: #fff;
 }
+
+
+.rfd-tab > .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab{
+  border-radius: 0;
+  background: #f0f0f0;
+  border: 1px solid #f0f0f0;
+  margin-right: 2px;
+}
+
+.rfd-tab > .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab-active{
+  border-top: 1px solid #3399ff;
+  border-bottom: 1px solid #fff;
+  background: #fff;
+}
+
+.rfd-tab > .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab-focused{
+  border-left: 1px solid #ddd !important; 
+  border-right: 1px solid #ddd !important; 
+  border-bottom: 1px solid #ddd !important; 
+  border-bottom: 1px solid #fff !important; 
+}

@@ -58,12 +58,15 @@
                 </div>
             </section>
         </main>
+
+        
     </div>
 </template>
 
 <script>
 import { downloadImage } from "@/services/appService";
 import { getToken } from "@/utils/utils";
+import {UserModal} from "@/components/modal/Modal"
 export default {
   name: "enterpriseInfo",
   data() {

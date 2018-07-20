@@ -1,36 +1,44 @@
 <style lang="less" scoped>
-    @import './report.less';
+@import "./report.less";
 </style>
 
 <template>
-    <div class="app-report">
-        <Row class="app-report-title">
-            <h3>报表</h3>
-        </Row>
-        <Row class="app-report-table">
-            <Table :columns="columns" :data="reportSources"></Table>
-            <a class="app-report-table-add" @click="goCreateView">新建报表</a>
-        </Row>
-    </div>
+  <div class="app-report">
+    <Row class="app-report-title">
+      <h3>报表</h3>
+      <Poptip trigger="hover" content="添加动作">
+        <i class="app-report-title-add iconfont" @click="goCreateView">&#xe719;</i>
+      </Poptip>
+    </Row>
+    <Row class="app-report-table">
+      <Table :columns="columns" :data="reportSources"></Table>
+
+    </Row>
+    <report-modal :modalStatis="showReportModal" @emitPermissionModal="emitPermissionModal" :permissionId="permissionId"></report-modal>
+  </div>
 </template>
 
 <script>
 import {
-  getAppviews,
+  getListViewPermission,
   deleteAppViews,
   saveDefaultView
 } from "@/services/appService.js";
 import AssessModal from "@/components/modal/Modal";
-
+import ReportModal from "./report-modal";
 export default {
   name: "reportSource",
-  components: {},
+  components: {
+    ReportModal
+  },
   props: {
     appType: String
   },
   data() {
     return {
       listId: this.$route.params.listId,
+      showReportModal: false,
+      permissionId: "",
       columns: [
         {
           title: "报表名称",
@@ -40,13 +48,13 @@ export default {
           title: "视图类型",
           key: "viewType",
           render: (h, params) => {
-            if(params.row.type === 'normal'){
-              return h('span',{},'列表')
+            if (params.row.type === "normal") {
+              return h("span", {}, "列表");
             }
           }
         },
         {
-          title: "已授权用户",
+          title: "权限清单",
           key: "user"
         },
         {
@@ -75,39 +83,62 @@ export default {
           title: "操作",
           key: "list",
           align: "center",
-          render: (h,params) => {
-              return h('div',[
-                  h('a',{
-                    on: {
-                        click: () => {
-                          this.deleteViews(params, params.index)
-                        }
-                      }
-                  },'删除报表'),
-                  h('span',{
-                      style: {
-                          height: '20px',
-                          borderLeft: '1px solid #39f',
-                          margin: '0px 5px'
-                      }
-                  }),
-                  h('a',{
-                    on: {
-                      click: () => {
-                        let href = '/Site/index.html#appSetting/viewConfig/'+this.listId+'/'+params.row.viewId;
-                        window.top.location.href = href;
-                      }
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "a",
+                {
+                  on: {
+                    click: () => {
+                      this.deleteViews(params, params.index);
                     }
-                  },'修改报表'),
-                  h('span',{
-                      style: {
-                          height: '20px',
-                          borderLeft: '1px solid #39f',
-                          margin: '0px 5px'
-                      }
-                  }),
-                  h('a',{},'授权')
-              ])
+                  }
+                },
+                "删除报表"
+              ),
+              h("span", {
+                style: {
+                  height: "20px",
+                  borderLeft: "1px solid #39f",
+                  margin: "0px 5px"
+                }
+              }),
+              h(
+                "a",
+                {
+                  on: {
+                    click: () => {
+                      let href =
+                        "/Site/index.html#appSetting/viewConfig/" +
+                        this.listId +
+                        "/" +
+                        params.row.viewId;
+                      window.top.location.href = href;
+                    }
+                  }
+                },
+                "修改报表"
+              ),
+              h("span", {
+                style: {
+                  height: "20px",
+                  borderLeft: "1px solid #39f",
+                  margin: "0px 5px"
+                }
+              }),
+              h(
+                "a",
+                {
+                  on: {
+                    click: () => {
+                      this.permissionId = params.row.permissionId;
+                      this.showReportModal = true;
+                    }
+                  }
+                },
+                "授权"
+              )
+            ]);
           }
         }
       ],
@@ -115,22 +146,26 @@ export default {
     };
   },
   methods: {
+    emitPermissionModal() {
+      this.showReportModal = false;
+    },
+
     //创建视图
     goCreateView() {
-      window.top.location.href = '/Site/index.html#appSetting/'+this.listId+'/'+this.appType+'/viewTypes';
+      window.top.location.href =
+        "/Site/index.html#appSetting/" +
+        this.listId +
+        "/" +
+        this.appType +
+        "/viewTypes";
     },
-     //获取视图数据
+    //获取视图数据
     getViewsData() {
-      let params = {
-        filter: JSON.stringify([
-          { operator: "eq", value: this.listId, property: "uniqueId" },
-          { operator: "eq", value: 1, property: "listViewStatus" }
-        ])
-      };
-      getAppviews(params).then(res => {
+      getListViewPermission(this.listId).then(res => {
         this.reportSources = res.tableContent;
       });
     },
+
     deleteViews(params, index) {
       if (this.reportSources.length === 1) {
         this.$Message.warning("不可删除唯一视图！");
@@ -155,7 +190,7 @@ export default {
               });
             }
           });
-        }else{
+        } else {
           let deleteParams = {
             viewId: params.row.viewId,
             listId: this.listId
@@ -194,7 +229,7 @@ export default {
     onClickDefaultView(params) {
       this.$Modal.confirm({
         title: "确认",
-        content: '确认设置此视图为默认视图？',
+        content: "确认设置此视图为默认视图？",
         onOk: () => {
           this.setDefaultViews(params);
         },
@@ -220,7 +255,7 @@ export default {
     reRenderDefaultView() {
       this.columns[3].render = (h, params) => {
         let defaultView = false;
-        if(params.row.isDefault === 1){
+        if (params.row.isDefault === 1) {
           defaultView = true;
         }
         return h("Radio", {
@@ -228,7 +263,7 @@ export default {
             value: defaultView
           },
           on: {
-            'on-change': () => {
+            "on-change": () => {
               this.onClickDefaultView(params);
             }
           }

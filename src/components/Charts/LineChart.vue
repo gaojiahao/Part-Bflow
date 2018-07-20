@@ -37,7 +37,10 @@ export default {
       let lineChart = echarts.init(document.getElementById("lineChart"));
       let option = {
         title: {
-          text: this.title
+          text: this.title,
+          textStyle:{
+            fontSize:14
+          }
         },
         tooltip: {
           trigger: "axis"

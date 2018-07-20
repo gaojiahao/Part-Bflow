@@ -15,6 +15,11 @@
         <Col span="4">
         <Button @click="selectPositionModal" type="info">职位权限选择</Button>
         </Col>
+        <Col v-if="ifdisplayPermissionData" span="12">
+         <div class="selected-action">
+           <span v-for="(val,index) of displayPermissionData" :key="index">{{ val.name }}</span>
+         </div>
+        </Col>
       </Row>
       <Row :gutter="8">
         <Col span="12" class="permission-tab">
@@ -52,7 +57,7 @@
         </Row>
         </Col>
         <Col span="12">
-        <Table @on-select="permissionSelectData" stripe height="350" :columns="allPermissionColumns" :data="allPermissionData">
+        <Table @on-select="permissionSelectData" ref="actionRef" @on-select-cancel="selectCancel" stripe height="350" :columns="allPermissionColumns" :data="allPermissionData">
         </Table>
         </Col>
       </Row>
@@ -120,11 +125,15 @@ export default {
   name: "permissionModal",
   components: {},
   props: {
-    modalStatis: Boolean
+    modalStatis: Boolean,
+    editActionData: Object,
+    memberType: String,
+    isEdit: String
   },
   data() {
     return {
       appListId: this.$route.params.listId,
+      ifdisplayPermissionData: false,
       selectUser: "",
       selectOrg: "",
       selectPosition: "",
@@ -148,6 +157,7 @@ export default {
       showOrgModal: false,
       showDepartmentModal: false,
       showPermissionModal: false,
+      isShowMemberSelect: true,
       sameUserData: [],
       userSelectData: [],
       orgSelectData: [],
@@ -164,7 +174,14 @@ export default {
         {
           type: "selection",
           width: 60,
-          align: "center"
+          align: "center",
+          render: (h,params) => {
+            return h('Checkbox',{
+              props: {
+                value: true
+              }
+            })
+          }
         },
         {
           title: "类型",
@@ -177,19 +194,84 @@ export default {
       ],
       userSelection: [],
       orgSelection: [],
-      departmentSelection: []
+      departmentSelection: [],
+      displayPermissionData: []
     };
   },
   watch: {
     modalStatis: function(value, oldValue) {
+      console.log(this.editActionData);
       this.showPermissionModal = value;
-      this.getData();
-      this.userSelectData = [];
-      this.orgSelectData = [];
-      this.departmentSelectData = [];
-      this.userSelection = [];
-      this.orgSelection = [];
-      this.departmentSelection = [];
+      let memberShowData = [],
+          relPermissionData = [];
+      if(this.editActionData.action){
+        relPermissionData = JSON.parse(this.editActionData.action);
+      }
+      relPermissionData.forEach(val => {
+        for(let k in val){
+          this.permissionSelectDatas.push({
+            name: val[k],
+            id: k
+          });
+          this.displayPermissionData.push({
+            name:val[k],
+            id: k
+          });
+        }
+      })
+      if(this.isEdit === 'edit'){
+        if(this.memberType === 'user'){
+          this.orgSelectData = [];
+          this.departmentSelectData = [];
+          this.orgSelection = [];
+          this.departmentSelection = [];
+          if(Object.keys(this.editActionData).length > 0){
+            let dispalyMemberData = {
+              nickname: this.editActionData.objName,
+              userId: this.editActionData.objId
+            };
+            this.userData.push(dispalyMemberData);
+            this.userSelectData.push(dispalyMemberData);
+            this.userSelection.push(dispalyMemberData);
+          }
+        }else if(this.memberType === 'group'){
+          this.userSelectData = [];
+          this.orgSelectData = [];
+          this.userSelection = [];
+          this.orgSelection = [];
+          if(Object.keys(this.editActionData).length > 0){
+          let dispalyMemberData = {
+              name: this.editActionData.objName,
+              id: this.editActionData.objId
+            };
+            this.orgData.push(dispalyMemberData);
+            this.orgSelectData.push(dispalyMemberData);
+            this.orgSelection.push(dispalyMemberData);
+          }
+        }else{
+          this.userSelectData = [];
+          this.departmentSelectData = [];
+          this.userSelection = [];
+          this.departmentSelection = [];
+          if(Object.keys(this.editActionData).length > 0){
+          let dispalyMemberData = {
+              name: this.editActionData.objName,
+              id: this.editActionData.objId
+            };
+            this.departmentData.push(dispalyMemberData);
+            this.departmentSelectData.push(dispalyMemberData);
+            this.departmentSelection.push(dispalyMemberData);
+          }
+        }
+      }else{
+        this.getData();
+        this.userSelectData = [];
+        this.orgSelectData = [];
+        this.departmentSelectData = [];
+        this.userSelection = [];
+        this.orgSelection = [];
+        this.departmentSelection = [];
+      }
     }
   },
   methods: {
@@ -310,18 +392,31 @@ export default {
     //删除用户
     deleteUser(index) {
       this.userSelectData.splice(index, 1);
+      this.userSelection.splice(index,1);
     },
     //删除组织
     deleteOrg(index) {
       this.orgSelectData.splice(index, 1);
+      this.orgSelection.splice(index,1);
     },
     //删除职位
     deleteDepartment(index) {
       this.departmentSelectData.splice(index, 1);
+      this.departmentSelection.splice(index,1);
+    },
+    //取消选择权限
+    selectCancel(selection,row) {
+        this.displayPermissionData.splice(val.name);
     },
     //权限选择
     permissionSelectData(selection, row) {
       this.permissionSelectDatas = selection;
+      this.permissionSelectDatas.forEach(val => {
+        this.displayPermissionData.push({
+          name: val.name,
+          id: val. id
+          });
+      })
     },
     //添加用户权限
     confirmUser() {
@@ -331,6 +426,7 @@ export default {
         obj[next.userId] ? "" : (obj[next.userId] = true && cur.push(next));
         return cur;
       }, []);
+      this.userSelection = this.userSelectData;
     },
     //添加组织权限
     confirmOrg() {
@@ -339,6 +435,7 @@ export default {
         obj[next.id] ? "" : (obj[next.id] = true && cur.push(next));
         return cur;
       }, []);
+      this.orgSelection = this.orgSelectData;
     },
     //添加职位权限
     confirmDepartment() {
@@ -350,6 +447,7 @@ export default {
         },
         []
       );
+      this.departmentSelection = this.departmentSelectData
     },
     //提交权限
     submitPermission() {
@@ -382,7 +480,16 @@ export default {
       }
     },
     getData() {
-      let params = { listId: this.appListId };
+      let params = { 
+          listId: this.appListId, 
+          filter: JSON.stringify([
+          {
+            operator: "eq",
+            value: '操作',
+            property: "type"
+          }
+        ])
+        };
       //获取应用权限数据
       getAllPermissionData(params).then(res => {
         this.allPermissionData = res.tableContent;

@@ -79,9 +79,10 @@
 
 .rfd-tab > .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab{
   border-radius: 0;
-  background: #f0f0f0;
-  border: 1px solid #f0f0f0;
+  background: #ddd;
+  border: 1px solid #ddd;
   margin-right: 2px;
+  font-size: 16px;
 }
 
 .rfd-tab > .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab-active{
@@ -93,6 +94,10 @@
 .rfd-tab > .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab-focused{
   border-left: 1px solid #ddd !important; 
   border-right: 1px solid #ddd !important; 
-  border-bottom: 1px solid #ddd !important; 
   border-bottom: 1px solid #fff !important; 
+}
+
+.app-resource-group-title{
+    background-color: #F9F9F9;
+    padding: 5px 10px;
 }

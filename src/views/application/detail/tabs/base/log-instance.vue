@@ -1,6 +1,6 @@
 <style lang="less" scoped>
 .line-chart{
-  border-bottom: 1px solid #ddd;
+  // border-bottom: 1px solid #ddd;
 }
 
 .line-chart-header {

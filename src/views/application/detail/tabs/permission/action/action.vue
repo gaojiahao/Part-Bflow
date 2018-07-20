@@ -8,7 +8,7 @@
             <span>说明：黑、白名单，只能设置其一，如果都空着，表示所有用户都有权限</span>
         </Row> -->
         <Row class="app-action">
-            <Row class="app-action-title">
+            <Row class="app-resource-group-title">
                 <h3>动作</h3>
                 <i class="app-action-title-add iconfont" @click="showModal">&#xe605;</i>
             </Row>
@@ -17,11 +17,11 @@
                     <Col span="6" class="app-action-source-item" v-for="(list,index) of actionData" :key="index">
 
                         <Col span="2" class="app-action-source-item-check">
-                            <Checkbox :value="true"></Checkbox>
+                            <Checkbox @on-change="isForbidden(list)" :value="list.atype===0?true:false"></Checkbox>
                         </Col>
 
                         <Col span="21" class="app-action-source-item-content">
-                            <h3>{{ list.action }}</h3>
+                            <h3>{{ list.name }}</h3>
                             <div class="app-action-source-item-desc">{{ list.desc }}</div>
                         </Col>
                     </Col>
@@ -33,13 +33,16 @@
             </div>
         </Row>
         <!-- 授权modal -->
-        <action-modal :modalStatis="showActionModal" @emitPermissionModal="emitPermissionModal"></action-modal>
+        <action-modal @reGetData="reGetData" :modalStatis="showActionModal" :isEdit="isEdit" :memberType="memberType" @emitPermissionModal="emitPermissionModal" :editActionData="editActionData"></action-modal>
     </div>
 </template>
 
 <script>
 import {
-  getAppResourcesAndAuthoritys
+  getAppResourcesAndAuthoritys,
+  getAllPermissionData,
+  ProhibitApp,
+  deleteRelationPermission
 } from "@/services/appService.js";
 import ActionModal from './action-modal';
 
@@ -48,52 +51,42 @@ export default {
   components: {
     ActionModal
   },
-  props: {
-    listId: String
-  },
   data() {
     return {
+      listId: this.$route.params.listId,
       showActionModal: false,
-      actionData: [
-        {
-          action: "新增",
-          status: "启用",
-          desc: "创建新纪录"
-        },
-        {
-          action: "删除",
-          status: "启用",
-          desc: "除了应用管理员，仅能删除本人创建的"
-        },
-        {
-          action: "修改",
-          status: "禁用",
-          desc: "除了应用管理员，仅能删除本人创建的"
-        },
-        {
-          action: "查看",
-          status: "启用",
-          desc: "默认查看所有记录"
-        },
-        {
-          action: "撤销",
-          status: "禁用",
-          desc: "把已生效的记录还原成未生效"
-        },
-        {
-          action: "打印",
-          status: "禁用",
-          desc: "打印表单"
-        }
-      ],
+      isEdit: '',
+      editActionData: {},
+      memberType: '',
+      actionData: [],
+      //监听modal是否添加权限
+      isModalConfirm: 1000,
       columns: [
         {
           title: "已授权用户",
-          key: "user"
+          key: "objName"
         },
         {
           title: "动作",
-          key: "source"
+          key: "source",
+          render: (h,params) => {
+            let actionSource = params.row.action?JSON.parse(params.row.action): [],
+                renderData = [];
+            if (actionSource.length > 0) {
+              actionSource.forEach((val, index) => {
+                let pushData;
+                for (let k in val) {
+                  pushData = h("span",{
+                    style: {
+                      margin: '0px 5px'
+                    }
+                  },val[k]);
+                }
+                renderData.push(pushData);
+              });
+              return h("div", renderData);
+            }
+          }
         },
         {
           title: "操作",
@@ -101,7 +94,12 @@ export default {
           align: "center",
           render: (h,params) => {
               return h('div',[
-                  h('a',{},'删除'),
+                  h('a',{
+                      on: {
+                        click: () => {
+                          this.deleteAllPermission(params,params.row.list);
+                        }
+                      }},'删除'),
                   h('span',{
                       style: {
                           height: '20px',
@@ -109,7 +107,22 @@ export default {
                           margin: '0px 5px'
                       }
                   }),
-                  h('a',{},'修改')
+                  h('a',{
+                    on: {
+                      click: () => {
+                        if(params.row.list === 'sys_user_permission'){
+                          this.memberType = "user";
+                        }else if(params.row.list === 'sys_role_permission'){
+                          this.memberType = "role";
+                        }else{
+                          this.memberType = "group";
+                        }
+                        this.isEdit = 'edit';
+                        this.editActionData = params.row;
+                        this.showActionModal = true;
+                      }
+                    }
+                  },'修改')
               ])
           }
         }
@@ -120,22 +133,94 @@ export default {
       ]
     };
   },
+  watch: {
+    isModalConfirm: function(){
+      this.getActionData();
+    }
+  },
   methods: {
+    reGetData(value) {
+      this.isModalConfirm = value;
+    },
     showModal() {
+      this.editActionData = {};
       this.showActionModal = true;
+      this.isEdit = '';
     },
     emitPermissionModal() {
       this.showActionModal = false;
     },
     getActionData() {
       getAppResourcesAndAuthoritys(this.listId).then(res => {
-        console.log(res);
+        this.userSources = res.tableContent;
       })
+    },
+    //启用禁用动作权限
+    isForbidden(list) {
+      let actionStatus = list.atype===0?true:false,
+          relStatus;
+      if(actionStatus){
+        relStatus = 1;
+      }else{
+        relStatus = 0;
+      }
+      ProhibitApp(list.id,relStatus).then(res => {
+          if(res.success){
+            this.$Message.success(res.message);
+            this.getData();
+          }
+        })
+    },
+    //删除用户、组织、职位全部权限公共方法
+    deleteAllPermission(params, type) {
+      let that = this;
+      that.$Modal.confirm({
+        title: "确认",
+        content: "确认删除此用户权限？",
+        onOk: () => {
+          let depDeleteParams = {},
+            permissionIds = [];
+          //获取permissionIds的集合
+          JSON.parse(params.row.action).forEach(val => {
+            for (let k in val) {
+              permissionIds.push(k);
+            }
+          });
+          depDeleteParams = {
+            list: type,
+            single: params.row.objId,
+            multi: permissionIds.join(",")
+          };
+          deleteRelationPermission(depDeleteParams).then(res => {
+            if (res.success) {
+              that.$Message.success(res.message);
+              this.getActionData();
+            }
+          });
+        }
+      });
+    },
+    getData() {
+      let params = { 
+          listId: this.listId, 
+          filter: JSON.stringify([
+          {
+            operator: "eq",
+            value: '操作',
+            property: "type"
+          }
+        ])
+        };
+      //获取应用权限数据
+      getAllPermissionData(params).then(res => {
+        this.actionData = res.tableContent;
+      });
     }
   },
   created() {},
   mounted() {
     this.getActionData();
+    this.getData();
   }
 };
 </script>

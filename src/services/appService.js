@@ -127,7 +127,9 @@ export const getListViewPermission = (viewId) => request('/H_roleplay-si/app/get
  * @author XiaoYing
  * @description 获取应用视图
  */
-export const getAppviews = (params) => request('/H_roleplay-si/ds/getListViewOrTempViewByUniqueId', params);
+export const getAppviews = (params) => request('/H_roleplay-si/ds/getListViewOrTempViewByUniqueId', {
+    filter: params.filter
+});
 
 /**
  * @author XiaoYing
@@ -139,13 +141,19 @@ export const saveWorkFlowInfo = (params) => request('/H_roleplay-si/ds/saveData'
  * @author XiaoYing
  * @description 设置默认视图
  */
-export const saveDefaultView = (params) => request('/H_roleplay-si/app/setAppDefaultView', params, 'POST');
+export const saveDefaultView = (params) => request('/H_roleplay-si/app/setAppDefaultView', {
+    viewId: params.viewId,
+    listId: params.listId
+}, 'POST');
 
 /**
  * @author XiaoYing
  * @description 删除应用视图
  */
-export const deleteAppViews = (params) => request('/H_roleplay-si/app/deleteView', params, 'POST');
+export const deleteAppViews = (params) => request('/H_roleplay-si/app/deleteView', {
+    viewId: params.viewId,
+    listId: params.listId
+}, 'POST');
 
 /** 
  * @author GUOZHENG
@@ -191,6 +199,16 @@ export const saveAssessment = (params) => request('/H_roleplay-si/app/saveAssess
  * @author GuoZheng
  * 获取实例数据
 */
-export const getInstanceData = (listId, type, date) => request('/H_roleplay-si/trans/getDetails', { listId: listId, type: type, date: date });
+export const getInstanceData = (listId,type,date) =>request('/H_roleplay-si/trans/getDetails',{listId:listId,type:type,date:date});
+
+
+/** 
+ * @author XiaoYing
+ * 动作权限启用禁用
+*/
+export const ProhibitApp = (id,permType) =>request('/H_roleplay-si/app/ProhibitApp',{
+    id:id,
+    permType:permType
+},'POST');
 
 export const downloadImage = (url) => request('/H_roleplay-si/ds/download', { url: url })

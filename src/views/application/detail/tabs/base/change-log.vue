@@ -2,9 +2,12 @@
 .timeline-box {
   position: relative;
   border-bottom: 1px solid #ddd;
+  background-color: #f0f0f03d;
+  border-top: 2px solid #ddd;
   &-header {
     height: 30px;
     line-height: 30px;
+    padding-left: 15px;
 
     >span {
       font-size: 16px;
@@ -18,7 +21,7 @@
   }
 
   &-log {
-    padding: 15px 0;
+    padding: 15px 15px;
   }
 
   .show-no-log{

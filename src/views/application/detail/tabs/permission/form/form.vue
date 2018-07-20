@@ -4,7 +4,7 @@
 
 <template>
     <div class="app-form">
-        <Row class="app-form-title">
+        <Row class="app-resource-group-title">
             <h3>表单</h3>
              <i class="app-form-title-add iconfont" @click="setForm">&#xe606;</i>
         </Row>

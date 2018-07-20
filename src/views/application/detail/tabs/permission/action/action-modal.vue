@@ -15,11 +15,6 @@
         <Col span="4">
         <Button @click="selectPositionModal" type="info">职位权限选择</Button>
         </Col>
-        <Col v-if="ifdisplayPermissionData" span="12">
-         <div class="selected-action">
-           <span v-for="(val,index) of displayPermissionData" :key="index">{{ val.name }}</span>
-         </div>
-        </Col>
       </Row>
       <Row :gutter="8">
         <Col span="12" class="permission-tab">
@@ -57,7 +52,7 @@
         </Row>
         </Col>
         <Col span="12">
-        <Table @on-select="permissionSelectData" ref="actionRef" @on-select-cancel="selectCancel" stripe height="350" :columns="allPermissionColumns" :data="allPermissionData">
+        <Table @on-select="permissionSelectData" ref="actionRef" stripe height="350" :columns="allPermissionColumns" :data="allPermissionData">
         </Table>
         </Col>
       </Row>
@@ -133,7 +128,6 @@ export default {
   data() {
     return {
       appListId: this.$route.params.listId,
-      ifdisplayPermissionData: false,
       selectUser: "",
       selectOrg: "",
       selectPosition: "",
@@ -194,16 +188,16 @@ export default {
       ],
       userSelection: [],
       orgSelection: [],
-      departmentSelection: [],
-      displayPermissionData: []
+      departmentSelection: []
     };
   },
   watch: {
+    //监听modal状态变化
     modalStatis: function(value, oldValue) {
-      console.log(this.editActionData);
       this.showPermissionModal = value;
       let memberShowData = [],
           relPermissionData = [];
+      //获取回显动作权限数据
       if(this.editActionData.action){
         relPermissionData = JSON.parse(this.editActionData.action);
       }
@@ -211,15 +205,36 @@ export default {
         for(let k in val){
           this.permissionSelectDatas.push({
             name: val[k],
-            id: k
-          });
-          this.displayPermissionData.push({
-            name:val[k],
-            id: k
+            id: Number(k)
           });
         }
       })
+      console.log(relPermissionData);
+      //编辑状态回显用户、组织、职位
       if(this.isEdit === 'edit'){
+        let params = { 
+          listId: this.appListId, 
+          filter: JSON.stringify([
+          {
+            operator: "eq",
+            value: '操作',
+            property: "type"
+          }
+        ])
+        };
+      //获取应用权限数据
+      getAllPermissionData(params).then(res => {
+        this.allPermissionData = res.tableContent;
+        console.log(this.allPermissionData,this.permissionSelectDatas);
+
+        this.allPermissionData.map(aItem=>{
+          this.permissionSelectDatas.map(item=>{
+            if(item.id === aItem.id){
+              aItem._checked = true;
+            }
+          });
+        });
+      });
         if(this.memberType === 'user'){
           this.orgSelectData = [];
           this.departmentSelectData = [];
@@ -404,19 +419,9 @@ export default {
       this.departmentSelectData.splice(index, 1);
       this.departmentSelection.splice(index,1);
     },
-    //取消选择权限
-    selectCancel(selection,row) {
-        this.displayPermissionData.splice(val.name);
-    },
     //权限选择
     permissionSelectData(selection, row) {
       this.permissionSelectDatas = selection;
-      this.permissionSelectDatas.forEach(val => {
-        this.displayPermissionData.push({
-          name: val.name,
-          id: val. id
-          });
-      })
     },
     //添加用户权限
     confirmUser() {

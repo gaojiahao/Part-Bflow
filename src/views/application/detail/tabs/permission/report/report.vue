@@ -141,16 +141,22 @@ export default {
             viewId: params.row.viewId,
             listId: this.listId
           };
-          deleteAppViews(deleteParams).then(res => {
-            if (res.success) {
-              this.reportSources.splice(index, 1);
-              let defaultParams = {
-                viewId: this.reportSources[0].viewId,
-                listId: this.listId
-              };
-              saveDefaultView(defaultParams).then(res => {
+          this.$Modal.confirm({
+            title: "确认",
+            content: '确认删除此视图？',
+            onOk: () => {
+              deleteAppViews(deleteParams).then(res => {
                 if (res.success) {
-                  this.reloadViewData();
+                  this.reportSources.splice(index, 1);
+                  let defaultParams = {
+                    viewId: this.reportSources[0].viewId,
+                    listId: this.listId
+                  };
+                  saveDefaultView(defaultParams).then(res => {
+                    if (res.success) {
+                      this.reloadViewData();
+                    }
+                  });
                 }
               });
             }
@@ -160,10 +166,16 @@ export default {
             viewId: params.row.viewId,
             listId: this.listId
           };
-          deleteAppViews(deleteParams).then(res => {
-            if (res.success) {
-              this.reportSources.splice(index, 1);
-              this.$Message.success(res.message);
+          this.$Modal.confirm({
+            title: "确认",
+            content: '确认设置此视图为默认视图？',
+            onOk: () => {
+              deleteAppViews(deleteParams).then(res => {
+                if (res.success) {
+                  this.reportSources.splice(index, 1);
+                  this.$Message.success(res.message);
+                }
+              });
             }
           });
         }

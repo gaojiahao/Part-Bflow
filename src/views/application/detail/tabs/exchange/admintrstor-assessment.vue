@@ -3,17 +3,16 @@
 </style>
 
 <template>
-  <div class="app-card">
-    <Row style="margin: 10px 15px ">
-      <Col span="2">
-        <b class="app-name">管理员自评：</b>
-      </Col>
-      <Col span="22">
-        <Button icon="plus-round" type="info" class="app-add" size="small" @click="addAssess">新增</Button>
-        <Table :columns="columns" width=943 :data="tableData"></Table>
-      </Col>
+  <div>
+
+    <Row>
+        <h3>管理员自评：</h3>
+        <div class="toolbar">
+          <Button icon="plus-round" type="ghost" class="app-add" size="small" @click="addAssess">新增</Button>
+        </div>
+        <Table :columns="columns" :data="assessments"></Table>
     </Row>
-    
+
     <assess-modal title="管理员自评" v-model="showAssessModal" width="650" @on-ok="submitAdminAssess">
       <div style="margin:20px auto;width:85%;">
         <Form ref="formValidate" :label-width="150" :model="adminAssessData" :rules="ruleValidate">
@@ -29,6 +28,7 @@
         </Form>
       </div>
     </assess-modal>
+
   </div>
 </template>
 
@@ -47,7 +47,9 @@ export default {
     EditTable
   },
   props: {
-    listId: String
+    listId: {
+      type: String
+    }
   },
   data() {
     return {
@@ -88,7 +90,6 @@ export default {
           title: "期间（月份）",
           key: "crtTime",
           width: 150,
-          align: "center",
           render: (h, params) => {
             let renderDate = this.formatDate(params.row.crtTime);
             return h("span", {}, renderDate);
@@ -96,26 +97,22 @@ export default {
         },
         {
           title: "效率与成本改进成果",
-          key: "achievement",
-          width: 300,
-          align: "center"
+          key: "achievement"
         },
         {
           title: "效率与成本改进机会",
-          key: "chance",
-          width: 300,
-          align: "center"
+          key: "chance"
         },
         {
           title: '操作',
           align: 'center',
-          width: 190,
           key: 'handle',
           render: (h, params) => {
             return h("a", {
               on: {
                 click: () => {
                   this.showAssessModal = true;
+                  this.$refs["formValidate"].resetFields();
                   this.isEdit = 'edit';
                   this.IsEditId = params.row.id;
                   this.adminAssessData.duringDate = params.row.crtTime;
@@ -127,7 +124,7 @@ export default {
           }
         }
       ],
-      tableData: []
+      assessments: []
     };
   },
   methods: {
@@ -144,9 +141,11 @@ export default {
         result: this.adminAssessData.result,
         date: this.formatDate(this.adminAssessData.duringDate)
       };
+
       if(this.isEdit === 'edit'){
         params.id = this.IsEditId;
       }
+
       this.$refs["formValidate"].validate(valid => {
         if (valid) {
           saveAssessment(params).then(res => {
@@ -165,7 +164,7 @@ export default {
     //获取管理员自评数据
     getAssessmentData() {
       getAssessmentByListId(this.listId).then(res => {
-        this.tableData = res.tableContent;
+        this.assessments = res.tableContent;
       });
     },
     //格式化日期方法
@@ -184,8 +183,7 @@ export default {
   },
   created() {
     this.getAssessmentData();
-  },
-  mounted() {}
+  }
 };
 </script>
 

@@ -74,7 +74,6 @@ export default {
           {
             name: this.legendName,
             type: "line",
-            stack: "总量",
             smooth: true,
             symbolSize: 6,
             itemStyle:{

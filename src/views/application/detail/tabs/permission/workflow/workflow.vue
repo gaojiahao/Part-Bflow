@@ -4,7 +4,7 @@
 
 <template>
     <div class="app-workflow">
-        <Row class="app-workflow-title">
+        <Row class="app-resource-group-title">
             <h3>工作流</h3>
         </Row>
         <Row class="app-workflow-table">

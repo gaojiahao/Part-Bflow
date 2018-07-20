@@ -4,7 +4,7 @@
 
 <template>
     <div class="app-form">
-        <Row class="app-form-title">
+        <Row class="app-resource-group-title">
             <h3>表单</h3>
         </Row>
         <Row class="app-form-set">

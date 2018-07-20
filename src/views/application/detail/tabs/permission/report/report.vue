@@ -4,7 +4,7 @@
 
 <template>
     <div class="app-report">
-        <Row class="app-report-title">
+        <Row class="app-resource-group-title">
             <h3>报表</h3>
         </Row>
         <Row class="app-report-table">

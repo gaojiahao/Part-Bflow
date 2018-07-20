@@ -8,7 +8,7 @@
             <span>说明：黑、白名单，只能设置其一，如果都空着，表示所有用户都有权限</span>
         </Row> -->
         <Row class="app-action">
-            <Row class="app-action-title">
+            <Row class="app-resource-group-title">
                 <h3>动作</h3>
             </Row>
             <div class="app-action-source">

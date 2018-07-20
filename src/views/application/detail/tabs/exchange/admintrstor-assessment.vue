@@ -5,14 +5,12 @@
 <template>
   <div>
 
-    <Row>
-        <h3>管理员自评：</h3>
-        <div class="toolbar">
-          <Button icon="plus-round" type="ghost" class="app-add" size="small" @click="addAssess">新增</Button>
-        </div>
+    <Row class="app-resource-group-title">
+          <h3>管理员自评 <a @click="addAssess">添加自评</a></h3>
+    </Row>
+    <Row class="assessment-content">
         <Table :columns="columns" :data="assessments"></Table>
     </Row>
-
     <assess-modal title="管理员自评" v-model="showAssessModal" width="650" @on-ok="submitAdminAssess">
       <div style="margin:20px auto;width:85%;">
         <Form ref="formValidate" :label-width="150" :model="adminAssessData" :rules="ruleValidate">

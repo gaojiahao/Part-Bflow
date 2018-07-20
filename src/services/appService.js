@@ -62,14 +62,16 @@ export const getAllDepartmentData = (params) => request('/H_roleplay-si/ds/getRo
 export const addPermission = (params) => request('/H_roleplay-si/ps/insertObjPermission', params, 'POST');
 
 /**
+ * @author GuoZheng
+ * @description 添加视图权限
+ */
+export const saveViewPermission = (permissionId, userId, groupId, roleId) => request('/H_roleplay-si/ps/insertObjPermission', { userId: userId, groupId: groupId, roleId: roleId, permissionId: permissionId }, 'POST');
+
+/**
  * @author XiaoYing
  * @description 获取对应应用用户、组织、职位所有权限数据
  */
 export const getAppResourcesAndAuthoritys = (listId) => request('/H_roleplay-si/ds/getAppResourcesAndAuthoritys', { 'listId': listId })
-
-export const getAppUserPermissionData = (params) => request('/H_roleplay-si/ds/getAppResourcesAndAuthority', params);
-export const getAppOrgPermissionData = (params) => request('/H_roleplay-si/ds/getAppResourcesAndAuthority', params);
-export const getAppDepartmentPermissionData = (params) => request('/H_roleplay-si/ds/getAppResourcesAndAuthority', params);
 
 /**
  * @author XiaoYing
@@ -113,6 +115,13 @@ export const saveAppInformation = (params) => request('/H_roleplay-si/app/update
     administrator: params.administrator,
     comment: params.comment
 }, 'POST');
+
+/**
+  * @author GuoZheng
+  * 获取报表视图
+ */
+export const getListViewPermission = (viewId) => request('/H_roleplay-si/app/getListViewPermission', {viewId:viewId})
+
 
 /**
  * @author XiaoYing
@@ -202,4 +211,4 @@ export const ProhibitApp = (id,permType) =>request('/H_roleplay-si/app/ProhibitA
     permType:permType
 },'POST');
 
-export const downloadImage = (url) => request('/H_roleplay-si/ds/download' ,{url:url} )
+export const downloadImage = (url) => request('/H_roleplay-si/ds/download', { url: url })

@@ -10,6 +10,7 @@
         <Row class="app-action">
             <Row class="app-resource-group-title">
                 <h3>动作</h3>
+                <i class="app-action-title-add iconfont" @click="showModal">&#xe605;</i>
             </Row>
             <div class="app-action-source">
                 <Row class="app-action-source-list">
@@ -27,8 +28,7 @@
                 </Row>
 
                 <Row>
-                    <Table height="300" :columns="columns" :data="userSources"></Table>
-                    <a @click="showModal" class="app-action-white-list">授权</a>
+                    <Table :columns="columns" :data="userSources"></Table>
                 </Row>
             </div>
         </Row>

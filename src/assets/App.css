@@ -8,11 +8,11 @@
 
   @font-face {
     font-family: 'iconfont';  /* project id 677305 */
-    src: url('//at.alicdn.com/t/font_677305_gv043o71ufp.eot');
-    src: url('//at.alicdn.com/t/font_677305_gv043o71ufp.eot?#iefix') format('embedded-opentype'),
-    url('//at.alicdn.com/t/font_677305_gv043o71ufp.woff') format('woff'),
-    url('//at.alicdn.com/t/font_677305_gv043o71ufp.ttf') format('truetype'),
-    url('//at.alicdn.com/t/font_677305_gv043o71ufp.svg#iconfont') format('svg');
+    src: url('//at.alicdn.com/t/font_677305_ad1mgwgpiq.eot');
+    src: url('//at.alicdn.com/t/font_677305_ad1mgwgpiq.eot?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_677305_ad1mgwgpiq.woff') format('woff'),
+    url('//at.alicdn.com/t/font_677305_ad1mgwgpiq.ttf') format('truetype'),
+    url('//at.alicdn.com/t/font_677305_ad1mgwgpiq.svg#iconfont') format('svg');
   }
   
   .ivu-modal-header{
@@ -79,9 +79,9 @@
 
 .rfd-tab > .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab{
   border-radius: 0;
-  background: #ddd;
-  border: 1px solid #ddd;
-  margin-right: 2px;
+  background: #E0ECFA;
+  border: 1px solid #E0ECFA;
+  margin-right: 1px;
   font-size: 16px;
 }
 
@@ -100,4 +100,182 @@
 .app-resource-group-title{
     background-color: #F9F9F9;
     padding: 5px 10px;
+}
+
+.marright5 {
+	margin-right: 5px;
+}
+
+.marright10 {
+	margin-right: 10px;
+}
+
+.martop15 {
+	margin-top: 15px;
+}
+.martop20 {
+	margin-top: 20px;
+}
+.martop5 {
+	margin-top: 5px;
+}
+.martop10 {
+	margin-top: 10px;
+}
+.martop40 {
+	margin-top: 40px;
+}
+
+.martop45 {
+	margin-top: 45px;
+}
+.martop50{
+	margin-top: 50px;	
+}
+
+.mt0{
+	
+margin-top: 0;	
+}
+.pad15 {
+	padding: 15px;
+}
+.pad20 {
+	padding: 20px;
+}
+.pad10 {
+	padding: 10px;
+}
+.pad5 {
+	padding: 5px;
+}
+.pt15{
+	padding-top: 15px;
+}
+.pt0{
+	padding-top: 0px;
+}
+.pl5{
+	padding-left: 5px;
+}
+.pr5{
+	padding-right: 5px;
+	
+}
+
+.btnActive:hover{
+	opacity: 0.5;
+}
+
+.marlr {
+	margin-left: 5px;
+	margin-right: 5px;
+}
+.marlr2 {
+	margin-left: 2px;
+	margin-right: 2px;
+}
+.marlr10 {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.marbottom50{
+	margin-bottom: 50px;
+} 
+.fl {
+	float: left;
+}
+.fr {
+	float: right;
+}
+.clearfix:after {
+	content: " ";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+.disblock{
+	display: block;
+}
+.clear{
+	clear: both;
+}
+
+* html .clearfix {
+	height: 1%;
+}
+*+html .clearfix {
+	min-height: 1px;
+}
+.p_re {
+	position: relative;
+}
+.radius100{
+	border-radius: 100px;
+}
+.radius10{
+	border-radius: 10px;
+}
+.radius5{
+	border-radius: 5px;
+}
+.font10{
+	font-size: 10px;
+}
+.font12{
+	font-size: 12px;
+}
+.font14{
+	font-size: 14px;
+}
+.font16{
+	font-size: 16px;
+}
+.font18{
+	font-size: 18px;
+}
+.font20{
+	font-size: 20px;
+}
+.font24{
+	font-size: 24px;
+}
+.font28{
+	font-size: 28px;
+}
+.font34{
+	font-size: 34px;
+}
+.color888{
+	color: #888;
+}
+.color999{
+	color: #999;
+}
+.color444{
+	color: #444;
+}
+.color666{
+	color: #666;
+}
+
+
+.color_main{
+	color: #335883;;
+}
+.color_bg{
+	background-color: #335883;;
+}
+.color_red{
+	color: #F75F5B;
+}
+
+.color_fff{
+	color: #fff;
+}
+
+.lh25{
+	line-height:25px;
 }

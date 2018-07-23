@@ -117,10 +117,14 @@ export default {
   components: {},
   props: {
     modalStatis: {
-      type:Boolean
+      type: Boolean
     },
-    permissionId:{
-      type:[String,Number]
+    permissionId: {
+      type: [String, Number]
+    },
+
+    permissionData: {
+      type: Array
     }
   },
   data() {
@@ -154,7 +158,7 @@ export default {
       userSelectData: [],
       orgSelectData: [],
       departmentSelectData: [],
-      
+
       userColumns: [],
       userData: [],
       orgColumns: [],
@@ -175,6 +179,25 @@ export default {
       this.userSelection = [];
       this.orgSelection = [];
       this.departmentSelection = [];
+    },
+
+    //回显数据
+    permissionData: function(value, oldValue) {
+      this.orgSelectData = value.filter(item => {
+        return item.type === "group";
+      });
+      this.departmentSelectData = value.filter(item => {
+        return item.type === "role";
+      });
+      value.forEach(item => {
+        if (item.type === "user") {
+          this.userSelectData.push({
+            nickname: item.name,
+            userId: item.id,
+            type: item.type
+          });
+        }
+      });
     }
   },
   methods: {
@@ -304,7 +327,7 @@ export default {
     deleteDepartment(index) {
       this.departmentSelectData.splice(index, 1);
     },
-   
+
     //添加用户权限
     confirmUser() {
       let obj = {};
@@ -333,30 +356,37 @@ export default {
         []
       );
     },
-    
+
     //提交权限
     submitPermission() {
-      let userId = this.userSelectData.map(item => {
-          return item.userId;
-        }).join(","),
-        groupId = this.orgSelectData.map(item => {
-          return item.id;
-        }).join(","),
-        roleId = this.departmentSelectData.map(item => {
-          return item.id;
-        }).join(",");
+      let userId = this.userSelectData
+          .map(item => {
+            return item.userId;
+          })
+          .join(","),
+        groupId = this.orgSelectData
+          .map(item => {
+            return item.id;
+          })
+          .join(","),
+        roleId = this.departmentSelectData
+          .map(item => {
+            return item.id;
+          })
+          .join(",");
 
-        saveViewPermission(this.permissionId,userId,groupId,roleId).then(res => {
+      saveViewPermission(this.permissionId, userId, groupId, roleId).then(
+        res => {
           if (res.success) {
             this.$Message.success(res.message);
             let Num = this.emitChange++;
             this.$emit("reGetData", Num);
-          }else{
+          } else {
             this.$Message.error(res.message);
           }
-        });
+        }
+      );
     },
-
 
     //通知父组件modal的状态
     modalVisibleChange(state) {
@@ -388,8 +418,7 @@ export default {
       this.depCurrentPage = currentPage;
       this.selectPositionModal(filter);
     }
-  },
- 
+  }
 };
 </script>
 

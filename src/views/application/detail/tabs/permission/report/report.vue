@@ -14,7 +14,7 @@
       <Table :columns="columns" :data="reportSources"></Table>
 
     </Row>
-    <report-modal :modalStatis="showReportModal" @emitPermissionModal="emitPermissionModal" :permissionId="permissionId" @reGetData="reGetData"></report-modal>
+    <report-modal :modalStatis="showReportModal" @emitPermissionModal="emitPermissionModal" :permissionId="permissionId" @reGetData="reGetData" :permissionData="permissionData"></report-modal>
   </div>
 </template>
 
@@ -57,7 +57,22 @@ export default {
         {
           title: "权限清单",
           key: "permissionList",
-          width: 500
+          width: 500,
+          render:(h,params) =>{
+            let permissionList = params.row.permissionList,
+                renderData = [];
+            if (permissionList.length > 0) {
+              permissionList.forEach((val, index) => {
+                  let pushData = h("span",{
+                    style: {
+                      margin: '0px 5px'
+                    }
+                  },val.name);
+                renderData.push(pushData);
+              });
+              return h("div", renderData);
+            }
+          }
         },
         {
           title: "默认视图",
@@ -135,6 +150,7 @@ export default {
                     click: () => {
                       this.permissionId = params.row.permissionId;
                       this.showReportModal = true;
+                      this.permissionData = params.row.permissionList;
                     }
                   }
                 },
@@ -144,7 +160,9 @@ export default {
           }
         }
       ],
-      reportSources: []
+      reportSources: [],
+
+      permissionData:[]
     };
   },
   methods: {
@@ -170,17 +188,7 @@ export default {
     getViewsData() {
       getListViewPermission(this.listId).then(res => {
         res.forEach(element => {
-          element.permissionList = [];
-          if (element.groups) {
-            element.permissionList.push(element.groups);
-          }
-          if (element.roles) {
-            element.permissionList.push(element.roles);
-          }
-          if (element.users) {
-            element.permissionList.push(element.users);
-          }
-          element.permissionList = element.permissionList.join(",");
+          element.permissionList = [...element.groups,...element.roles,...element.users]
         });
         this.reportSources = res;
       });
@@ -240,18 +248,8 @@ export default {
     //重新加载视图数据并渲染默认视图
     reloadViewData() {
       getListViewPermission(this.listId).then(res => {
-        res.forEach(element => {
-          element.permissionList = [];
-          if (element.groups) {
-            element.permissionList.push(element.groups);
-          }
-          if (element.roles) {
-            element.permissionList.push(element.roles);
-          }
-          if (element.users) {
-            element.permissionList.push(element.users);
-          }
-          element.permissionList = element.permissionList.join(",");
+         res.forEach(element => {
+          element.permissionList = [...element.groups,...element.roles,...element.users]
         });
         this.reportSources = res;
         this.reRenderDefaultView();

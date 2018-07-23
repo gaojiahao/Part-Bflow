@@ -14,7 +14,7 @@
       <Table :columns="columns" :data="reportSources"></Table>
 
     </Row>
-    <report-modal :modalStatis="showReportModal" @emitPermissionModal="emitPermissionModal" :permissionId="permissionId"></report-modal>
+    <report-modal :modalStatis="showReportModal" @emitPermissionModal="emitPermissionModal" :permissionId="permissionId" @reGetData="reGetData"></report-modal>
   </div>
 </template>
 
@@ -160,6 +160,10 @@ export default {
         "/" +
         this.appType +
         "/viewTypes";
+    },
+
+     reGetData(){
+      this.getViewsData();
     },
 
     //获取视图数据

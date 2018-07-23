@@ -319,7 +319,6 @@ export default {
       ]);
       this.selectPositionModal(filter);
     },
-    confirmMember() {},
     //用户数据加载
     selectUserModal(filter) {
       let userColumn = [
@@ -385,9 +384,15 @@ export default {
     //选择用户
     selectUserClick(selection, row) {
       if (this.userSelection.length > 0) {
-        selection.forEach((val, index) => {
-          this.userSelection.push(val);
-        });
+        for(let i=0;i<selection.length;i++){
+          for(let k=0;k<this.userSelection.length;k++){
+            if(selection[i].userId === this.userSelection[k].userId){
+              continue;
+            }else{
+              this.userSelection.push(selection[i]);
+            }
+          }
+        }
       } else {
         this.userSelection = selection;
       }
@@ -395,9 +400,15 @@ export default {
     //选择组织
     selectOrgClick(selection, row) {
       if (this.orgSelection.length > 0) {
-        selection.forEach((val, index) => {
-          this.orgSelection.push(val);
-        });
+        for(let i=0;i<selection.length;i++){
+          for(let k=0;k<this.orgSelection.length;k++){
+            if(selection[i].id === this.orgSelection[k].id){
+              continue;
+            }else{
+              this.orgSelection.push(selection[i]);
+            }
+          }
+        }
       } else {
         this.orgSelection = selection;
       }
@@ -405,9 +416,15 @@ export default {
     //选择职位
     selectDepartmentClick(selection, row) {
       if (this.departmentSelection.length > 0) {
-        selection.forEach((val, index) => {
-          this.departmentSelection.push(val);
-        });
+        for(let i=0;i<selection.length;i++){
+          for(let k=0;k<this.departmentSelection.length;k++){
+            if(selection[i].id === this.departmentSelection[k].id){
+              continue;
+            }else{
+              this.departmentSelection.push(selection[i]);
+            }
+          }
+        }
       } else {
         this.departmentSelection = selection;
       }
@@ -443,7 +460,6 @@ export default {
         obj[next.userId] ? "" : (obj[next.userId] = true && cur.push(next));
         return cur;
       }, []);
-      this.userSelection = this.userSelectData;
     },
     //添加组织权限
     confirmOrg() {
@@ -452,7 +468,6 @@ export default {
         obj[next.id] ? "" : (obj[next.id] = true && cur.push(next));
         return cur;
       }, []);
-      this.orgSelection = this.orgSelectData;
     },
     //添加职位权限
     confirmDepartment() {
@@ -464,7 +479,6 @@ export default {
         },
         []
       );
-      this.departmentSelection = this.departmentSelectData;
     },
     //提交权限
     submitPermission() {

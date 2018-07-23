@@ -164,16 +164,17 @@ export default {
     getViewsData() {
       getListViewPermission(this.listId).then(res => {
         res.forEach(element => {
-           element.permissionList = []
+          element.permissionList = [];
           if (element.groups) {
-            element.permissionList.push(element.groups)
+            element.permissionList.push(element.groups);
           }
           if (element.roles) {
-            element.permissionList.push(element.roles)
+            element.permissionList.push(element.roles);
           }
           if (element.users) {
-            element.permissionList.push(element.users)
+            element.permissionList.push(element.users);
           }
+          element.permissionList = element.permissionList.join(",");
         });
         this.reportSources = res;
       });

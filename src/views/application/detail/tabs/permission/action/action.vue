@@ -151,7 +151,14 @@ export default {
       this.showActionModal = false;
     },
     getActionData() {
-      getAppResourcesAndAuthoritys(this.listId).then(res => {
+      let filter = JSON.stringify([
+          {
+            operator: "like",
+            value: '操作',
+            property: "type"
+          }
+        ]);
+      getAppResourcesAndAuthoritys(this.listId,filter).then(res => {
         this.userSources = res.tableContent;
       })
     },

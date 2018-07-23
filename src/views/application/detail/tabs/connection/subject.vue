@@ -3,9 +3,15 @@
 </style>
 
 <template>
-  <div>
-    <h3>科目关系：</h3>
-    <Table :columns="columns" :data="subjects"></Table>
+<div class="bg_ff">
+
+    <Row class="app-resource-group-title">
+         <h3>科目关系：</h3>
+    </Row>
+    <Row class="subject-content">
+         <Table :columns="columns" :data="subjects"></Table>
+    </Row>
+
   </div>
 </template>
 

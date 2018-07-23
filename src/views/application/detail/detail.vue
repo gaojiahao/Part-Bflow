@@ -9,6 +9,8 @@
 
     <!-- 应用详情信息 -->
     <app-info :listId="this.$route.params.listId" @changeAppType="changeAppType"></app-info>
+
+
     <!-- 应用tabs -->
     <div class="rfd-tab">
       <Tabs value="name1" class="rfd-tab-warp">

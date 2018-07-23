@@ -97,9 +97,26 @@
   border-bottom: 1px solid #fff !important; 
 }
 
+.rfd-tab >.ivu-tabs .ivu-tabs-tabpane {
+    flex-shrink: 0;
+    width: 100%;
+    transition: opacity .3s;
+    opacity: 1;
+    outline: 0;
+    padding: 15px 15px;
+    background-color: #f0f0f0;
+}
+.rfd-tab >.ivu-tabs >.ivu-tabs-bar{
+  border-bottom: 1px solid #dddee1;
+  margin-bottom: 0px;
+}
+
 .app-resource-group-title{
-    background-color: #F9F9F9;
-    padding: 5px 10px;
+    height: 48px;
+    line-height: 48px;
+    border-bottom: 1px solid #e8e8e8;
+    padding-left: 15px;
+    
 }
 
 .marright5 {
@@ -278,4 +295,8 @@ margin-top: 0;
 
 .lh25{
 	line-height:25px;
+}
+
+.bg_ff{
+  background-color: #fff;
 }

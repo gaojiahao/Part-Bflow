@@ -186,9 +186,11 @@ export default {
       this.orgSelectData = value.filter(item => {
         return item.type === "group";
       });
+      this.orgSelection = this.orgSelectData;
       this.departmentSelectData = value.filter(item => {
         return item.type === "role";
       });
+      this.departmentSelection = this.departmentSelectData;
       value.forEach(item => {
         if (item.type === "user") {
           this.userSelectData.push({
@@ -198,6 +200,7 @@ export default {
           });
         }
       });
+      this.userSelection = this.userSelectData;
     }
   },
   methods: {

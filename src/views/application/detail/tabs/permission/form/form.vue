@@ -5,8 +5,7 @@
 <template>
     <div class="app-form">
         <Row class="app-form-title">
-            <h3>表单</h3>
-             <i class="app-form-title-add iconfont" @click="setForm">&#xe606;</i>
+            <h3>表单 <a @click="setForm">添加表单</a></h3>
         </Row>
     </div>
 </template>

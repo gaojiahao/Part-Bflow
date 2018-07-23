@@ -9,8 +9,8 @@
         </Row> -->
         <Row class="app-action">
             <Row class="app-action-title">
-                <h3>动作</h3>
-                <i class="app-action-title-add iconfont" @click="showModal">&#xe605;</i>
+                <h3>动作  <a @click="showModal">添加动作</a></h3>
+              
             </Row>
             <div class="app-action-source">
                 <Row class="app-action-source-list">

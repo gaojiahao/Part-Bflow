@@ -5,8 +5,8 @@
 <template>
     <div class="app-workflow">
         <Row class="app-workflow-title">
-            <h3>工作流</h3>
-             <i class="app-workflow-title-add iconfont" @click="createWorkflow">&#xe64c;</i>
+            <h3>工作流   <a @click="createWorkflow">添加工作流</a></h3>
+           
         </Row>
         <Row class="app-workflow-table">
             <Table :columns="columns" :data="workflows"></Table>

@@ -17,7 +17,7 @@
                     <Col span="6" class="app-action-source-item" v-for="(list,index) of actionData" :key="index">
 
                         <Col span="2" class="app-action-source-item-check">
-                            <Checkbox @on-change="isForbidden(list)" :value="list.atype===0?true:false"></Checkbox>
+                            <Checkbox @on-change="isForbidden(list,index)" :value="list.atype===0?true:false"></Checkbox>
                         </Col>
 
                         <Col span="21" class="app-action-source-item-content">
@@ -156,7 +156,7 @@ export default {
       })
     },
     //启用禁用动作权限
-    isForbidden(list) {
+    isForbidden(list,index) {
       let actionStatus = list.atype===0?true:false,
           relStatus;
       if(actionStatus){
@@ -167,7 +167,7 @@ export default {
       ProhibitApp(list.id,relStatus).then(res => {
           if(res.success){
             this.$Message.success(res.message);
-            this.getData();
+            this.actionData[index].atype = relStatus;
           }
         })
     },

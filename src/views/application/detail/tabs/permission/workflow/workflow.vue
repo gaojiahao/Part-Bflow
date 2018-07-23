@@ -4,7 +4,7 @@
 
 <template>
     <div class="app-workflow">
-        <Row class="app-resource-group-title">
+        <Row class="app-workflow-title">
             <h3>工作流</h3>
              <i class="app-workflow-title-add iconfont" @click="createWorkflow">&#xe64c;</i>
         </Row>

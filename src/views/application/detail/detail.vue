@@ -11,7 +11,7 @@
     <app-info :listId="this.$route.params.listId" @changeAppType="changeAppType"></app-info>
     <!-- 应用tabs -->
     <div class="rfd-tab">
-      <Tabs value="name1"  type="card">
+      <Tabs value="name1" class="rfd-tab-warp">
         <TabPane label="一般" name="name1">
           <log-instance></log-instance>
         </TabPane>

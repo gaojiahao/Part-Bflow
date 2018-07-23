@@ -1,6 +1,6 @@
 <style lang="less" scoped>
 .line-chart{
-  // border-bottom: 1px solid #ddd;
+   background-color: #fff;
 }
 
 .line-chart-header {
@@ -36,8 +36,7 @@
 </style>
 
 <template>
-  <div>
-
+  <div style="background-color:#f0f0f0">
     <!-- 实例图 -->
     <div class="line-chart">
       <line-chart title="数据分析" legendName="新增实例数" :xAxisData="xAxisData" :seriesData="seriesData">

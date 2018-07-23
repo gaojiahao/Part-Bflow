@@ -55,7 +55,7 @@ export default {
         },
         {
           title: "权限清单",
-          key: "user"
+          key: "permissionList"
         },
         {
           title: "默认视图",
@@ -159,10 +159,24 @@ export default {
         this.appType +
         "/viewTypes";
     },
+
     //获取视图数据
     getViewsData() {
       getListViewPermission(this.listId).then(res => {
-        this.reportSources = res.tableContent;
+        res.forEach(element => {
+          element.permissionList = [];
+          if (element.groups) {
+            element.permissionList.push(element.groups);
+          }
+          if (element.roles) {
+            element.permissionList.push(element.roles);
+          }
+          if (element.users) {
+            element.permissionList.push(element.users);
+          }
+          element.permissionList = element.permissionList.join(",");
+        });
+        this.reportSources = res;
       });
     },
 
@@ -178,7 +192,7 @@ export default {
           };
           this.$Modal.confirm({
             title: "确认",
-            content: '确认删除此视图？',
+            content: "确认删除此视图？",
             onOk: () => {
               deleteAppViews(deleteParams).then(res => {
                 if (res.success) {
@@ -203,7 +217,7 @@ export default {
           };
           this.$Modal.confirm({
             title: "确认",
-            content: '确认设置此视图为默认视图？',
+            content: "确认设置此视图为默认视图？",
             onOk: () => {
               deleteAppViews(deleteParams).then(res => {
                 if (res.success) {
@@ -216,6 +230,7 @@ export default {
         }
       }
     },
+
     //重新加载视图数据并渲染默认视图
     reloadViewData() {
       let dataParams = {
@@ -237,6 +252,7 @@ export default {
         this.reRenderDefaultView();
       });
     },
+
     //点击默认视图方法
     onClickDefaultView(params) {
       this.$Modal.confirm({
@@ -250,6 +266,7 @@ export default {
         }
       });
     },
+
     //设置默认视图并重新渲染columns
     setDefaultViews(params) {
       let defaultParams = {
@@ -283,7 +300,6 @@ export default {
       };
     }
   },
-  created() {},
   mounted() {
     this.getViewsData();
   }

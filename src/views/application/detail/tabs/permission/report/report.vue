@@ -47,6 +47,7 @@ export default {
         {
           title: "视图类型",
           key: "viewType",
+          width: 150,
           render: (h, params) => {
             if (params.row.type === "normal") {
               return h("span", {}, "列表");
@@ -55,7 +56,8 @@ export default {
         },
         {
           title: "权限清单",
-          key: "permissionList"
+          key: "permissionList",
+          width: 500
         },
         {
           title: "默认视图",
@@ -233,22 +235,21 @@ export default {
 
     //重新加载视图数据并渲染默认视图
     reloadViewData() {
-      let dataParams = {
-        filter: JSON.stringify([
-          {
-            operator: "eq",
-            value: this.listId,
-            property: "uniqueId"
-          },
-          {
-            operator: "eq",
-            value: 1,
-            property: "listViewStatus"
+      getListViewPermission(this.listId).then(res => {
+        res.forEach(element => {
+          element.permissionList = [];
+          if (element.groups) {
+            element.permissionList.push(element.groups);
           }
-        ])
-      };
-      getAppviews(dataParams).then(res => {
-        this.reportSources = res.tableContent;
+          if (element.roles) {
+            element.permissionList.push(element.roles);
+          }
+          if (element.users) {
+            element.permissionList.push(element.users);
+          }
+          element.permissionList = element.permissionList.join(",");
+        });
+        this.reportSources = res;
         this.reRenderDefaultView();
       });
     },

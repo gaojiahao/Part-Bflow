@@ -1,14 +1,13 @@
 <style lang="less" >
 .timeline-box {
   position: relative;
-  border-bottom: 1px solid #ddd;
-  background-color: #f0f0f03d;
-  border-top: 2px solid #ddd;
+  margin-top: 15px;
+   background-color: #fff;
   &-header {
-    height: 30px;
-    line-height: 30px;
+    height: 48px;
+    line-height: 48px;
     padding-left: 15px;
-
+    border-bottom: 1px solid #e8e8e8;
     >span {
       font-size: 16px;
       font-weight: bold;

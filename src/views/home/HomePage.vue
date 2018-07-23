@@ -109,7 +109,7 @@ export default {
       this.allTaskCount = res.tableContent;
       //获取菜单信息
       getMenu().then(res => {
-        //  this.urlMd5(res);
+       this.urlMd5(res);
 
         if (this.favoriteMenu.children.length > 0) {
           this.menuList = [this.favoriteMenu, ...res];

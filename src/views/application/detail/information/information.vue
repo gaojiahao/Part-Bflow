@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <div>
+  <div class="app-card">
     <header class="app-header">
       <Breadcrumb>
         <BreadcrumbItem to="/">首页</BreadcrumbItem>

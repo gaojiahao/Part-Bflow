@@ -211,4 +211,14 @@ export const ProhibitApp = (id,permType) =>request('/H_roleplay-si/app/ProhibitA
     permType:permType
 },'POST');
 
+/** 
+ * @author XiaoYing
+ * 修改权限确认
+*/
+export const updateMemberPermission = (singleId,multiId,list) =>request('/H_roleplay-si/app/updateAppPermission',{
+    list: list,
+    single: singleId,
+    multi: multiId
+},'POST');
+
 export const downloadImage = (url) => request('/H_roleplay-si/ds/download', { url: url })

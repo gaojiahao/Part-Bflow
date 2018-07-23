@@ -5,10 +5,7 @@
 <template>
   <div class="app-report">
     <Row class="app-report-title">
-      <h3>报表</h3>
-      <Poptip trigger="hover" content="添加动作">
-        <i class="app-report-title-add iconfont" @click="goCreateView">&#xe719;</i>
-      </Poptip>
+      <h3>报表 <a @click="goCreateView">添加报表</a></h3>
     </Row>
     <Row class="app-report-table">
       <Table :columns="columns" :data="reportSources"></Table>

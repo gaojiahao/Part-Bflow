@@ -41,7 +41,8 @@ import {
 export default {
   name: "WorkflowModal",
   props: {
-    modalWorkflowStatus: Boolean
+    modalWorkflowStatus: Boolean,
+    deleteRelationWorkflow: Number
   },
   data() {
     return {
@@ -125,6 +126,9 @@ export default {
   watch: {
     modalWorkflowStatus: function(value, oldValue) {
       this.showWorkFlow = value;
+    },
+    deleteRelationWorkflow: function(){
+      this.getRelativeWorkflowData();
     }
   },
   methods: {

@@ -275,7 +275,6 @@ export default {
             this.departmentSelection = dispalyDepData;
           }
       }else{
-        this.isShowMemberSelect = true;
         //新增状态清空缓存数据
         this.getData();
         this.userSelectData = [];

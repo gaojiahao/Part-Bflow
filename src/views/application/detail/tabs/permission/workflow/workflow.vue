@@ -12,7 +12,7 @@
             <Table :columns="columns" :data="workflows"></Table>
         </Row>
         <!-- 工作流modal -->
-        <workflow-modal @emitWorkFlowModal="emitWorkFlowModal" :modalWorkflowStatus="showWorkFlow" @addWorkflow="addWorkflow"></workflow-modal>
+        <workflow-modal @emitWorkFlowModal="emitWorkFlowModal" :deleteRelationWorkflow="deleteRelationWorkflow" :modalWorkflowStatus="showWorkFlow" @addWorkflow="addWorkflow"></workflow-modal>
     </div>
 </template>
 
@@ -32,6 +32,7 @@ export default {
     return {
       listId: this.$route.params.listId,
       showWorkFlow: false,
+      deleteRelationWorkflow: -1,
       columns: [
         {
           title: "工作流名称",
@@ -105,6 +106,7 @@ export default {
               if(res.success){
                 this.$Message.success(res.message);
                 this.workflows.splice(index, 1);
+                this.deleteRelationWorkflow++;
               }
             })
           }

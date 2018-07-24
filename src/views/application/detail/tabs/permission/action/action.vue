@@ -81,10 +81,10 @@ export default {
                   "span",
                   {
                     style: {
-                      margin: "0px 5px"
+                      // margin: "0px 5px"
                     }
                   },
-                  val.name
+                  val.name+'; '
                 );
                 renderData.push(pushData);
               });

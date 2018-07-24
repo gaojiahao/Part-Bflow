@@ -99,11 +99,11 @@ export const addPermission = (params) => request('/H_roleplay-si/ps/insertObjPer
  * @author GuoZheng
  * @description 添加视图权限
  */
-export const saveViewPermission = (permissionId, userId, groupId, roleId) => request('/H_roleplay-si/ps/insertObjPermission', {
-  userId: userId,
-  groupId: groupId,
-  roleId: roleId,
-  permissionId: permissionId
+export const saveViewPermission = (permissionId, userId, groupId, roleId) => request('/H_roleplay-si/ps/updateAppPermission', {
+  user: userId,
+  group: groupId,
+  role: roleId,
+  multi: permissionId
 }, 'POST');
 
 /**

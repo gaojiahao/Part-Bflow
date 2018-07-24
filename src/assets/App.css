@@ -112,11 +112,11 @@
 }
 
 .app-resource-group-title{
-    height: 48px;
-    line-height: 48px;
+    height: 40px;
+    line-height: 40px;
     border-bottom: 1px solid #e8e8e8;
     padding-left: 15px;
-    
+    background-color: #fff;
 }
 
 .marright5 {

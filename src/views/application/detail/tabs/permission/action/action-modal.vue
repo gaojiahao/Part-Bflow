@@ -52,7 +52,7 @@
         </Row>
         </Col>
         <Col span="12">
-        <Table @on-select="permissionSelectData" @on-select-cancel="cancelSelectAction" ref="actionRef" stripe height="350" :columns="allPermissionColumns" :data="allPermissionData">
+        <Table @on-selection-change="permissionSelectChange" ref="actionRef" stripe height="350" :columns="allPermissionColumns" :data="allPermissionData">
         </Table>
         </Col>
       </Row>
@@ -64,7 +64,7 @@
             <Button type="primary" size="small">查询</Button>
           </p>
         </div>
-        <Table @on-select="selectUserClick" @on-select-all="selectUserClick" height="400" stripe size="small" :loading="userLoading" :columns="userColumns" :data="userData">
+        <Table @on-selection-change="selectUserClick" height="400" stripe size="small" :loading="userLoading" :columns="userColumns" :data="userData">
         </Table>
         <div class="user-page">
           <div style="float: right;">
@@ -80,7 +80,7 @@
             <Button type="primary" size="small">查询</Button>
           </p>
         </div>
-        <Table @on-select="selectOrgClick" @on-select-all="selectOrgClick" height="400" stripe size="small" :loading="orgLoading" :columns="orgColumns" :data="orgData">
+        <Table @on-selection-change="selectOrgClick" height="400" stripe size="small" :loading="orgLoading" :columns="orgColumns" :data="orgData">
         </Table>
         <div class="user-page">
           <div style="float: right;">
@@ -96,7 +96,7 @@
             <Button type="primary" size="small">查询</Button>
           </p>
         </div>
-        <Table @on-select="selectDepartmentClick" @on-select-all="selectDepartmentClick" height="400" stripe :size="tableSize" :loading="depLoading" :columns="departmentColumns" :data="departmentData">
+        <Table @on-selection-change="selectDepartmentClick" height="400" stripe :size="tableSize" :loading="depLoading" :columns="departmentColumns" :data="departmentData">
         </Table>
         <div class="user-page">
           <div style="float: right;">
@@ -358,15 +358,13 @@ export default {
     //选择用户
     selectUserClick(selection, row) {
       if (this.userSelection.length > 0) {
-        for(let i=0;i<selection.length;i++){
-          for(let k=0;k<this.userSelection.length;k++){
-            if(selection[i].userId === this.userSelection[k].userId){
-              continue;
-            }else{
-              this.userSelection.push(selection[i]);
-            }
-          }
-        }
+        let relSelect = [];
+        relSelect = this.userSelection.concat(selection);
+        let obj = {};
+        this.userSelection = relSelect.reduce((cur, next) => {
+          obj[next.userId] ? "" : (obj[next.userId] = true && cur.push(next));
+          return cur;
+        }, []);
       } else {
         this.userSelection = selection;
       }
@@ -374,15 +372,13 @@ export default {
     //选择组织
     selectOrgClick(selection, row) {
       if (this.orgSelection.length > 0) {
-        for(let i=0;i<selection.length;i++){
-          for(let k=0;k<this.orgSelection.length;k++){
-            if(selection[i].id === this.orgSelection[k].id){
-              continue;
-            }else{
-              this.orgSelection.push(selection[i]);
-            }
-          }
-        }
+        let relSelect = [];
+        relSelect = this.orgSelection.concat(selection);
+        let obj = {};
+        this.orgSelection = relSelect.reduce((cur, next) => {
+          obj[next.id] ? "" : (obj[next.id] = true && cur.push(next));
+          return cur;
+        }, []);
       } else {
         this.orgSelection = selection;
       }
@@ -390,15 +386,13 @@ export default {
     //选择职位
     selectDepartmentClick(selection, row) {
       if (this.departmentSelection.length > 0) {
-        for(let i=0;i<selection.length;i++){
-          for(let k=0;k<this.departmentSelection.length;k++){
-            if(selection[i].id === this.departmentSelection[k].id){
-              continue;
-            }else{
-              this.departmentSelection.push(selection[i]);
-            }
-          }
-        }
+        let relSelect = [];
+        relSelect = this.departmentSelection.concat(selection);
+        let obj = {};
+        this.departmentSelection = relSelect.reduce((cur, next) => {
+          obj[next.id] ? "" : (obj[next.id] = true && cur.push(next));
+          return cur;
+        }, []);
       } else {
         this.departmentSelection = selection;
       }
@@ -418,13 +412,9 @@ export default {
       this.departmentSelectData.splice(index, 1);
       this.departmentSelection.splice(index,1);
     },
-    //取消权限选择
-    cancelSelectAction(selection,row) {
-      this.permissionSelectDatas = selection;
-    },
     //权限选择
-    permissionSelectData(selection, row) {
-        this.permissionSelectDatas = selection;
+    permissionSelectChange(selection,row) {
+      this.permissionSelectDatas = selection;
     },
     //添加用户权限
     confirmUser() {

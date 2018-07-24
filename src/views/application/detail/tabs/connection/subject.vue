@@ -6,10 +6,10 @@
 <div class="bg_ff">
 
     <Row class="app-resource-group-title">
-         <h3>科目关系：</h3>
+         <h3>科目关系</h3>
     </Row>
     <Row class="subject-content">
-         <Table :columns="columns" :data="subjects"></Table>
+         <Table :columns="columns" :data="subjects"  size="small"></Table>
     </Row>
 
   </div>
@@ -32,12 +32,12 @@ export default {
         {
           title: "科目名称",
           key: "accountName",
-          align: "center"
+          align: "left"
         },
         {
           title: "科目类型",
           key: "classify",
-          align: "center",
+          align: "left",
           render: (h, params) => {
             if (params.row.classify === 1) {
               return h("span", {}, "会计类");
@@ -49,7 +49,7 @@ export default {
         {
           title: "数据归集",
           key: "dataCollection",
-          align: "center",
+          align: "left",
           render: (h, params) => {
             let collectionStatus = [],
               subject = params.row;

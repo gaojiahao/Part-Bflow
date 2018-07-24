@@ -106,11 +106,11 @@ export const addPermission = (params) => request('/H_roleplay-si/ps/insertObjPer
  * @author GuoZheng
  * @description 添加视图权限
  */
-export const saveViewPermission = (permissionId, userId, groupId, roleId) => request('/H_roleplay-si/ps/insertObjPermission', {
-  userId: userId,
-  groupId: groupId,
-  roleId: roleId,
-  permissionId: permissionId
+export const saveViewPermission = (permissionId, userId, groupId, roleId) => request('/H_roleplay-si/ps/updateAppPermission', {
+  user: userId,
+  group: groupId,
+  role: roleId,
+  multi: permissionId
 }, 'POST');
 
 /**
@@ -294,3 +294,13 @@ export const enabledForbiddenApp = (enabledIds,forbiddenIds) => request('/H_role
     open: enabledIds,
     close: forbiddenIds
   }, 'POST');
+
+/**
+ * 
+ * @param {String} listId  应用ID
+ * @description 获取应用相关应用信息
+ */
+// export const getRelatedApp = (listId) => request('./mock/appList/related-app.json', {listId: listId});
+export const getRelatedApp = (listId) => request('/H_roleplay-si/ds/getAppRelevantExamples', { listId: listId });
+
+

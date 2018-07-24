@@ -1,0 +1,13 @@
+{
+	"status": 200,
+	"message": "操作成功",
+	"tableContent": [
+		{
+			"relationAppName": "国内销售订单",
+			"relationAppType":"销售订单",
+			"relationType":"引用",
+			"relationAppField":"交易号",
+			"appField":"销售订单号"
+		}
+	]
+}

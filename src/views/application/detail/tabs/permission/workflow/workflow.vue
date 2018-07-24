@@ -5,38 +5,41 @@
 <template>
     <div class="app-workflow">
         <Row class="app-workflow-title">
-            <h3>工作流   <a @click="createWorkflow">添加工作流</a></h3>
+            <h3>工作流   <a @click="showWorkFlowModal">添加工作流</a></h3>
            
         </Row>
         <Row class="app-workflow-table">
             <Table :columns="columns" :data="workflows"></Table>
         </Row>
+        <!-- 工作流modal -->
+        <workflow-modal @emitWorkFlowModal="emitWorkFlowModal" :modalWorkflowStatus="showWorkFlow" @addWorkflow="addWorkflow"></workflow-modal>
     </div>
 </template>
 
 <script>
 import {
-  getAssessmentByListId,
-  saveAssessment
+  getProcessDataByListId,
+  saveWorkFlowInfo
 } from "@/services/appService.js";
-import AssessModal from "@/components/modal/Modal";
+import WorkflowModal from './workflow-modal';
 
 export default {
   name: "workflowSource",
-  components: {},
-  props: {
-    listId: String
+  components: {
+    WorkflowModal
   },
   data() {
     return {
+      listId: this.$route.params.listId,
+      showWorkFlow: false,
       columns: [
         {
           title: "工作流名称",
-          key: "workflowName"
+          key: "processName"
         },
         {
           title: "触发动作",
-          key: "action"
+          key: "triggerType"
         },
         {
           title: "操作",
@@ -44,7 +47,13 @@ export default {
           align: "center",
           render: (h,params) => {
               return h('div',[
-                  h('a',{},'删除工作流'),
+                  h('a',{
+                    on: {
+                      click: () => {
+                        this.deleteWorkflow(params.row, params.index);
+                      }
+                    }
+                  },'删除'),
                   h('span',{
                       style: {
                           height: '20px',
@@ -52,25 +61,63 @@ export default {
                           margin: '0px 5px'
                       }
                   }),
-                  h('a',{},'修改工作流')
+                  h('a',{
+                    on: {
+                      click: () => {
+                        window.open('/myflow/viewFlow.html?processId='+params.row.id+'&listId='+this.listId+'&processCode='+ params.row.processCode);
+                      }
+                    }
+                  },'修改')
               ])
           }
         }
       ],
-      workflows: [
-        { workflowName: "创建订单", action: "新建实例"},
-        { workflowName: "修改订单", action: "修改实例"}
-      ]
+      workflows: []
     };
   },
   methods: {
-      //创建工作流
-    createWorkflow() {
-      window.open('/myflow/createWorkFlow.html?listId=' + this.listId);
+    //获取已关联流程数据
+    getRelativeWorkflowData() {
+      getProcessDataByListId(this.listId).then(res => {
+        this.workflows = res;
+      });
+    },
+    //监听工作流modal返回的状态
+    emitWorkFlowModal() {
+      this.showWorkFlow = false;
+    },
+    //展示工作流modal
+    showWorkFlowModal() {
+      this.showWorkFlow = true;
+    },
+    //删除已关联的工作流
+    deleteWorkflow(row, index) {
+      this.$Modal.confirm({
+          title: "确认",
+          content: "确认删除此工作流？",
+          onOk: () => {
+            let params = {
+              ID: row.id,
+              list: 'list_process_rel',
+              status: 0
+            };
+            saveWorkFlowInfo(params).then(res => {
+              if(res.success){
+                this.$Message.success(res.message);
+                this.workflows.splice(index, 1);
+              }
+            })
+          }
+      });
+    },
+    //监听modal添加工作流刷新
+    addWorkflow() {
+      this.getRelativeWorkflowData();
     }
   },
-  created() {},
-  mounted() {}
+  created() {
+    this.getRelativeWorkflowData();
+  }
 };
 </script>
 

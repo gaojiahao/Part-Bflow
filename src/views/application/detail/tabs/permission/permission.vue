@@ -5,7 +5,7 @@
 <template>
   <div class="app-permission">
     <!-- 动作管理 -->
-    <action-manage></action-manage>
+    <action-manage :enabledForbidden="enabledForbidden"></action-manage>
     <!-- 报表视图 -->
     <report-view :appType="appType"></report-view>
     <!-- 表单 -->
@@ -31,7 +31,8 @@ export default {
   },
   props: {
     listId: String,
-    appType: String
+    appType: String,
+    enabledForbidden: Number
   },
   data() {
     return {

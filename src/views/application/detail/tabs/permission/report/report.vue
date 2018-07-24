@@ -108,7 +108,7 @@ export default {
                     }
                   }
                 },
-                "删除报表"
+                "删除"
               ),
               h("span", {
                 style: {
@@ -131,7 +131,7 @@ export default {
                     }
                   }
                 },
-                "修改报表"
+                "修改"
               ),
               h("span", {
                 style: {

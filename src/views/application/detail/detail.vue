@@ -8,7 +8,7 @@
     
 
     <!-- 应用详情信息 -->
-    <app-info :listId="this.$route.params.listId" @changeAppType="changeAppType"></app-info>
+    <app-info :listId="this.$route.params.listId" @changeAppType="changeAppType" @enabledForbiddenAppPermission="enabledForbiddenAppPermission"></app-info>
 
 
     <!-- 应用tabs -->
@@ -22,7 +22,7 @@
           <admintrstor-assessment :listId="this.$route.params.listId"></admintrstor-assessment>
         </TabPane>
         <TabPane label="资源" name="name3">
-          <permission-source :appType="appType"></permission-source>
+          <permission-source :appType="appType" :enabledForbidden="enabledForbidden"></permission-source>
         </TabPane>
         <TabPane label="连接" name="name4">
           <!-- 应用科目 -->
@@ -53,12 +53,17 @@ export default {
   },
   data() {
     return {
-      appType: ''
+      appType: '',
+      enabledForbidden: -1
     };
   },
   methods: {
     changeAppType(value) {
       this.appType = value;
+    },
+    //通知应用启用禁用动作权限
+    enabledForbiddenAppPermission() {
+      this.enabledForbidden++;
     }
   }
 };

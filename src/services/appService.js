@@ -29,13 +29,20 @@ export const getNavData = (params) => request('/H_roleplay-si/ds/list/getMenuByP
  * @author XiaoYing
  * @description 获取所有流程数据
  */
-export const getAllProcessData = (params) => request('/H_roleplay-si/ds/getDeployedProcess', params);
+export const getAllProcessData = (page,limit) => request('/H_roleplay-si/ds/getDeployedProcess', {
+    page: page,
+    limit: limit
+});
 
 /**
  * @author XiaoYing
  * @description 获取应用流程数据
  */
-export const getProcessDataByListId = (params) => request('/H_roleplay-si/ds/list/getProcessByListId', params);
+export const getProcessDataByListId = (listId,currentPage,pageSize) => request('/H_roleplay-si/ds/list/getProcessByListId', {
+    listId: listId,
+    page: currentPage,
+    limit: pageSize
+});
 
 /**
  * @author XiaoYing
@@ -268,12 +275,22 @@ export const ProhibitApp = (id, permType) => request('/H_roleplay-si/app/Prohibi
  * @author XiaoYing
  * 修改权限确认
  */
-export const updateMemberPermission = (singleId, multiId, list) => request('/H_roleplay-si/app/updateAppPermission', {
-  list: list,
-  single: singleId,
-  multi: multiId
+export const updateMemberPermission = (userId, roleId, groupId, permissionId) => request('/H_roleplay-si/app/updateAppPermission', {
+  user: userId,
+  role: roleId,
+  group: groupId,
+  multi: permissionId
 }, 'POST');
 
 export const downloadImage = (url) => request('/H_roleplay-si/ds/download', {
   url: url
 })
+
+/** 
+ * @author XiaoYing
+ * 启用禁用应用动作权限
+ */
+export const enabledForbiddenApp = (enabledIds,forbiddenIds) => request('/H_roleplay-si/app/prohibitList', {
+    open: enabledIds,
+    close: forbiddenIds
+  }, 'POST');

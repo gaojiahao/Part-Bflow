@@ -19,8 +19,8 @@
           </main>
           <footer class="modal-content-footer" :class="inputAlign">
             <slot name="footer">
-              <input type="submit" value="取消" class="input-submit-common" @click.prevent="cancel" />
-              <input type="submit" value="确定" class="input-submit-common" @click.prevent="ok" />
+              <input type="submit" value="取消" class="input-submit-cancel" @click.prevent="cancel" />
+              <input type="submit" value="确定" class="input-submit-ok" @click.prevent="ok" />
             </slot>
           </footer>
         </div>
@@ -96,7 +96,7 @@ export default {
       this.visible = false;
       this.$emit("on-cancel");
       //v-model 把状态传给父组件
-       this.$emit('input', false);
+      this.$emit("input", false);
     },
 
     mask() {
@@ -132,7 +132,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@main-bg-color: rgb(45, 140, 240);;
+@main-bg-color: rgb(45, 140, 240);
 @main-bg-color-hover: @main-bg-color+30;
 @padding-modal: 0 15px;
 .rfd-modal-mask {
@@ -209,7 +209,7 @@ export default {
       background-color: #e9eaec;
       padding: @padding-modal;
 
-      .input-submit-common {
+      .input-submit-ok {
         border: none;
         border-radius: 4px;
         width: 66px;
@@ -222,8 +222,25 @@ export default {
         font-size: 14px;
       }
 
-      .input-submit-common:hover {
+      .input-submit-ok:hover {
         background-color: @main-bg-color-hover;
+      }
+
+      .input-submit-cancel {
+        border: none;
+        border-radius: 4px;
+        width: 66px;
+        height: 32px;
+        line-height: 32px;
+        vertical-align: middle;
+        background-color: #ffffff;
+        color: #6d7380;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .input-submit-cancel:hover {
+        color: @main-bg-color;
       }
     }
 

@@ -9,7 +9,7 @@
         </Row> -->
         <Row class="app-action">
             <Row class="app-action-title">
-                <h3>动作  <a @click="showModal">添加动作</a></h3>
+                <h3>动作  <a @click="showModal">授权</a></h3>
               
             </Row>
             <div class="app-action-source">

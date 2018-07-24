@@ -108,7 +108,7 @@ export default {
                     }
                   }
                 },
-                "删除报表"
+                "删除"
               ),
               h("span", {
                 style: {
@@ -131,7 +131,7 @@ export default {
                     }
                   }
                 },
-                "修改报表"
+                "修改"
               ),
               h("span", {
                 style: {
@@ -185,6 +185,7 @@ export default {
     getViewsData() {
       getListViewPermission(this.listId).then(res => {
         res.forEach(element => {
+
           element.permissionList = [...element.groups,...element.roles,...element.users]
         });
         this.reportSources = res;

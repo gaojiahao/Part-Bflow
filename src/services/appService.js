@@ -277,3 +277,14 @@ export const updateMemberPermission = (singleId, multiId, list) => request('/H_r
 export const downloadImage = (url) => request('/H_roleplay-si/ds/download', {
   url: url
 })
+
+
+/**
+ * 
+ * @param {String} listId  应用ID
+ * @description 获取应用相关应用信息
+ */
+// export const getRelatedApp = (listId) => request('./mock/appList/related-app.json', {listId: listId});
+export const getRelatedApp = (listId) => request('/H_roleplay-si/ds/getAppRelevantExamples', { listId: listId });
+
+

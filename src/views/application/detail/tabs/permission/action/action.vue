@@ -236,7 +236,6 @@ export default {
       };
       //获取应用权限数据
       getAllPermissionData(params).then(res => {
-        console.log(APP_ACTION);
         this.actionData = res.tableContent;
 
         this.actionData.map(ac=>{

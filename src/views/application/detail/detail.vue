@@ -29,6 +29,8 @@
           <div class="app-sub">
             <app-subject :listId="this.$route.params.listId"></app-subject>
           </div>
+          <related-app></related-app>
+          
         </TabPane>
       </Tabs>
     </div>
@@ -40,6 +42,7 @@
 import LogInstance from "./tabs/base/log-instance";
 import AppInfo from "./information/information";
 import AppSubject from "./tabs/connection/subject";
+import RelatedApp from  './tabs/connection/related-app';
 import AdmintrstorAssessment from "./tabs/exchange/admintrstor-assessment";
 import PermissionSource from "./tabs/permission/permission";
 export default {
@@ -49,7 +52,8 @@ export default {
     AdmintrstorAssessment,
     PermissionSource,
     AppInfo,
-    LogInstance
+    LogInstance,
+    RelatedApp
   },
   data() {
     return {

@@ -179,30 +179,32 @@ export default {
       this.userSelection = [];
       this.orgSelection = [];
       this.departmentSelection = [];
-    },
 
-    //回显数据
-    permissionData: function(value, oldValue) {
-      this.orgSelectData = value.filter(item => {
-        return item.type === "group";
-      });
-      this.orgSelection = this.orgSelectData;
-      this.departmentSelectData = value.filter(item => {
-        return item.type === "role";
-      });
-      this.departmentSelection = this.departmentSelectData;
-      value.forEach(item => {
-        if (item.type === "user") {
-          this.userSelectData.push({
-            nickname: item.name,
-            userId: item.id,
-            type: item.type
-          });
-        }
-      });
-      this.userSelection = this.userSelectData;
+      if (value) {
+        this.orgSelectData = this.permissionData.filter(item => {
+          return item.type === "group";
+        });
+        this.orgSelection = this.orgSelectData;
+        this.departmentSelectData = this.permissionData.filter(item => {
+          return item.type === "role";
+        });
+        this.departmentSelection = this.departmentSelectData;
+        this.permissionData.forEach(item => {
+          if (item.type === "user") {
+            this.userSelectData.push({
+              nickname: item.name,
+              userId: item.id,
+              type: item.type
+            });
+          }
+        });
+        this.userSelection = this.userSelectData;
+      }
     }
   },
+
+  //回显数据
+  permissionData: function(value, oldValue) {},
   methods: {
     //用户过滤
     userFilter() {
@@ -229,19 +231,14 @@ export default {
     //用户数据加载
     selectUserModal(filter) {
       let userColumn = [
-          { type: "selection", width: 60, align: "center" },
-          { title: "姓名", key: "nickname" },
-          { title: "工号", key: "userCode" }
-        ],
-        userParams = {
-          page: this.userCurrentPage,
-          limit: this.pageSize,
-          filter: filter
-        };
+        { type: "selection", width: 60, align: "center" },
+        { title: "姓名", key: "nickname" },
+        { title: "工号", key: "userCode" }
+      ];
       this.showUserModal = true;
       this.userColumns = userColumn;
       this.userLoading = true;
-      getAllUserData(userParams).then(res => {
+      getAllUserData(this.userCurrentPage, this.pageSize, filter).then(res => {
         this.userData = res.tableContent;
         this.sameUserData = res.tableContent;
         this.userTotal = res.dataCount;
@@ -251,18 +248,13 @@ export default {
     //组织数据加载
     selectOrgModal(filter) {
       let orgColumn = [
-          { type: "selection", width: 60, align: "center" },
-          { title: "名称", key: "name" }
-        ],
-        orgParams = {
-          page: this.orgCurrentPage,
-          limit: this.pageSize,
-          filter: filter
-        };
+        { type: "selection", width: 60, align: "center" },
+        { title: "名称", key: "name" }
+      ];
       this.showOrgModal = true;
       this.orgColumns = orgColumn;
       this.orgLoading = true;
-      getAllOrgData(orgParams).then(res => {
+      getAllOrgData(this.orgCurrentPage, this.pageSize, filter).then(res => {
         this.orgData = res.tableContent;
         this.orgTotal = res.dataCount;
         this.orgLoading = false;
@@ -273,20 +265,17 @@ export default {
       let departmentColumn = [
           { type: "selection", width: 60, align: "center" },
           { title: "名称", key: "name" }
-        ],
-        depParams = {
-          page: this.depCurrentPage,
-          limit: this.pageSize,
-          filter: filter
-        };
+        ];
       this.showDepartmentModal = true;
       this.departmentColumns = departmentColumn;
       this.depLoading = true;
-      getAllDepartmentData(depParams).then(res => {
-        this.departmentData = res.tableContent;
-        this.depTotal = res.dataCount;
-        this.depLoading = false;
-      });
+      getAllDepartmentData(this.depCurrentPage, this.pageSize, filter).then(
+        res => {
+          this.departmentData = res.tableContent;
+          this.depTotal = res.dataCount;
+          this.depLoading = false;
+        }
+      );
     },
     //选择用户
     selectUserClick(selection, row) {

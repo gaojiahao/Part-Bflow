@@ -185,7 +185,15 @@ export default {
     getViewsData() {
       getListViewPermission(this.listId).then(res => {
         res.forEach(element => {
-
+          if(!element.users){
+            element.users = [];
+          }
+          if(!element.roles){
+            element.roles = [];
+          }
+          if(!element.groups){
+            element.groups = [];
+          }
           element.permissionList = [...element.groups,...element.roles,...element.users]
         });
         this.reportSources = res;

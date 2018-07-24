@@ -1,5 +1,5 @@
 <style lang="less" scoped>
-    @import './action.less';
+@import "./action.less";
 </style>
 
 <template>
@@ -44,7 +44,8 @@ import {
   ProhibitApp,
   deleteRelationPermission
 } from "@/services/appService.js";
-import ActionModal from './action-modal';
+import {APP_ACTION} from "@/assets/const";
+import ActionModal from "./action-modal";
 
 export default {
   name: "permissionSource",
@@ -55,9 +56,9 @@ export default {
     return {
       listId: this.$route.params.listId,
       showActionModal: false,
-      isEdit: '',
+      isEdit: "",
       editActionData: {},
-      memberType: '',
+      memberType: "",
       actionData: [],
       //监听modal是否添加权限
       isModalConfirm: 1000,
@@ -69,18 +70,24 @@ export default {
         {
           title: "动作",
           key: "source",
-          render: (h,params) => {
-            let actionSource = params.row.action?JSON.parse(params.row.action): [],
-                renderData = [];
+          render: (h, params) => {
+            let actionSource = params.row.action
+                ? JSON.parse(params.row.action)
+                : [],
+              renderData = [];
             if (actionSource.length > 0) {
               actionSource.forEach((val, index) => {
                 let pushData;
                 for (let k in val) {
-                  pushData = h("span",{
-                    style: {
-                      margin: '0px 5px'
-                    }
-                  },val[k]);
+                  pushData = h(
+                    "span",
+                    {
+                      style: {
+                        margin: "0px 5px"
+                      }
+                    },
+                    val[k]
+                  );
                 }
                 renderData.push(pushData);
               });
@@ -92,49 +99,58 @@ export default {
           title: "操作",
           key: "list",
           align: "center",
-          render: (h,params) => {
-              return h('div',[
-                  h('a',{
-                      on: {
-                        click: () => {
-                          this.deleteAllPermission(params,params.row.list);
-                        }
-                      }},'删除'),
-                  h('span',{
-                      style: {
-                          height: '20px',
-                          borderLeft: '1px solid #39f',
-                          margin: '0px 5px'
-                      }
-                  }),
-                  h('a',{
-                    on: {
-                      click: () => {
-                        if(params.row.list === 'sys_user_permission'){
-                          this.memberType = "user";
-                        }else if(params.row.list === 'sys_role_permission'){
-                          this.memberType = "role";
-                        }else{
-                          this.memberType = "group";
-                        }
-                        this.isEdit = 'edit';
-                        this.editActionData = params.row;
-                        this.showActionModal = true;
-                      }
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "a",
+                {
+                  on: {
+                    click: () => {
+                      this.deleteAllPermission(params, params.row.list);
                     }
-                  },'修改')
-              ])
+                  }
+                },
+                "删除"
+              ),
+              h("span", {
+                style: {
+                  height: "20px",
+                  borderLeft: "1px solid #39f",
+                  margin: "0px 5px"
+                }
+              }),
+              h(
+                "a",
+                {
+                  on: {
+                    click: () => {
+                      if (params.row.list === "sys_user_permission") {
+                        this.memberType = "user";
+                      } else if (params.row.list === "sys_role_permission") {
+                        this.memberType = "role";
+                      } else {
+                        this.memberType = "group";
+                      }
+                      this.isEdit = "edit";
+                      this.editActionData = params.row;
+                      this.showActionModal = true;
+                    }
+                  }
+                },
+                "修改"
+              )
+            ]);
           }
         }
       ],
       userSources: [
-        { user: "张三", source: "新增、查看、删除、修改"},
-        { user: "采购部", source: "新增、查看、删除"}
+        { user: "张三", source: "新增、查看、删除、修改" },
+        { user: "采购部", source: "新增、查看、删除" }
       ]
     };
   },
   watch: {
-    isModalConfirm: function(){
+    isModalConfirm: function() {
       this.getActionData();
     }
   },
@@ -145,38 +161,38 @@ export default {
     showModal() {
       this.editActionData = {};
       this.showActionModal = true;
-      this.isEdit = '';
+      this.isEdit = "";
     },
     emitPermissionModal() {
       this.showActionModal = false;
     },
     getActionData() {
       let filter = JSON.stringify([
-          {
-            operator: "like",
-            value: '操作',
-            property: "type"
-          }
-        ]);
-      getAppResourcesAndAuthoritys(this.listId,filter).then(res => {
+        {
+          operator: "like",
+          value: "操作",
+          property: "type"
+        }
+      ]);
+      getAppResourcesAndAuthoritys(this.listId, filter).then(res => {
         this.userSources = res.tableContent;
-      })
+      });
     },
     //启用禁用动作权限
-    isForbidden(list,index) {
-      let actionStatus = list.atype===0?true:false,
-          relStatus;
-      if(actionStatus){
+    isForbidden(list, index) {
+      let actionStatus = list.atype === 0 ? true : false,
+        relStatus;
+      if (actionStatus) {
         relStatus = 1;
-      }else{
+      } else {
         relStatus = 0;
       }
-      ProhibitApp(list.id,relStatus).then(res => {
-          if(res.success){
-            this.$Message.success(res.message);
-            this.actionData[index].atype = relStatus;
-          }
-        })
+      ProhibitApp(list.id, relStatus).then(res => {
+        if (res.success) {
+          this.$Message.success(res.message);
+          this.actionData[index].atype = relStatus;
+        }
+      });
     },
     //删除用户、组织、职位全部权限公共方法
     deleteAllPermission(params, type) {
@@ -208,19 +224,24 @@ export default {
       });
     },
     getData() {
-      let params = { 
-          listId: this.listId, 
-          filter: JSON.stringify([
+      let params = {
+        listId: this.listId,
+        filter: JSON.stringify([
           {
             operator: "eq",
-            value: '操作',
+            value: "操作",
             property: "type"
           }
         ])
-        };
+      };
       //获取应用权限数据
       getAllPermissionData(params).then(res => {
+        console.log(APP_ACTION);
         this.actionData = res.tableContent;
+
+        this.actionData.map(ac=>{
+          ac.desc = APP_ACTION[ac.resourceName];
+        });
       });
     }
   },

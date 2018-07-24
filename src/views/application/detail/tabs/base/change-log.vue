@@ -68,9 +68,9 @@
 
 <template>
   <div fix class="timeline-box">
-    <div class="timeline-box-header">
-      <span>更新日志:</span>
-      <a @click="showAppLog">新增</a>
+    <div class="app-resource-group-title">
+      <h3>更新日志 <a @click="showAppLog">新增</a></h3>
+      
     </div>
     <div class="timeline-box-log" v-show="logData.length===0?false:true">
       <Timeline class="timeline-list" pending>

@@ -37,9 +37,12 @@
 
 <template>
   <div style="background-color:#f0f0f0">
+    <div class="app-resource-group-title">
+      <h3>数据分析</h3>
+    </div>
     <!-- 实例图 -->
     <div class="line-chart">
-      <line-chart title="数据分析" legendName="新增实例数" :xAxisData="xAxisData" :seriesData="seriesData">
+      <line-chart  legendName="新增实例数" :xAxisData="xAxisData" :seriesData="seriesData">
         <div slot="header" class="line-chart-header">
           查看范围:
           <DatePicker type="month" placeholder="选择月份" style="width: 150px;margin-left:10px;" v-model="month" format="yyyy-MM" :clearable="false"></DatePicker>

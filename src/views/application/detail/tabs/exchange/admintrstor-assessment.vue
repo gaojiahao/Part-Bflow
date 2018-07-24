@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <div>
+  <div class="bg_ff">
 
     <Row class="app-resource-group-title">
           <h3>管理员自评 <a @click="addAssess">添加自评</a></h3>

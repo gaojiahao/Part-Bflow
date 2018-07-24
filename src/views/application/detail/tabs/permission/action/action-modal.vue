@@ -57,7 +57,7 @@
         </Col>
       </Row>
       <!-- 用户modal -->
-      <Modal v-model="showUserModal" title="用户选择" :mask-closable="false" @on-ok="confirmUser" :transfer="false">
+      <Modal v-model="showUserModal" title="用户选择" :mask-closable="false" @on-ok="confirmUser" @on-cancel="cancelSelectUser" :transfer="false">
         <div class="app-search">
           <Input v-model="searchUserValue" placeholder="名称搜索" style="width: 300px"></Input>
           <p @click="userFilter" class="app-search-icon">
@@ -73,7 +73,7 @@
         </div>
       </Modal>
       <!-- 组织modal -->
-      <Modal v-model="showOrgModal" title="组织选择" :mask-closable="false" @on-ok="confirmOrg" :transfer="false">
+      <Modal v-model="showOrgModal" title="组织选择" :mask-closable="false" @on-ok="confirmOrg" @on-cancel="cancelSelectOrg" :transfer="false">
         <div class="app-search">
           <Input v-model="searchOrgValue" placeholder="搜索" style="width: 300px"></Input>
           <p @click="orgFilter" class="app-search-icon">
@@ -89,7 +89,7 @@
         </div>
       </Modal>
       <!-- 职位modal -->
-      <Modal v-model="showDepartmentModal" title="职位选择" :mask-closable="false" @on-ok="confirmDepartment" :transfer="false">
+      <Modal v-model="showDepartmentModal" title="职位选择" :mask-closable="false" @on-ok="confirmDepartment" @on-cancel="cancelSelectDep" :transfer="false">
         <div class="app-search">
           <Input v-model="searchDepValue" placeholder="搜索" style="width: 300px"></Input>
           <p @click="depFilter" class="app-search-icon">
@@ -369,6 +369,10 @@ export default {
         this.userSelection = selection;
       }
     },
+    //取消选择用户
+    cancelSelectUser() {
+      this.userSelection = this.userSelectData;
+    },
     //选择组织
     selectOrgClick(selection, row) {
       if (this.orgSelection.length > 0) {
@@ -383,6 +387,10 @@ export default {
         this.orgSelection = selection;
       }
     },
+    //取消选择组织
+    cancelSelectOrg() {
+      this.orgSelection = this.orgSelectData;
+    },
     //选择职位
     selectDepartmentClick(selection, row) {
       if (this.departmentSelection.length > 0) {
@@ -396,6 +404,10 @@ export default {
       } else {
         this.departmentSelection = selection;
       }
+    },
+    //取消选择职位
+    cancelSelectDep() {
+      this.departmentSelection = this.departmentSelectData;
     },
     //删除用户
     deleteUser(index) {
@@ -483,7 +495,6 @@ export default {
           });
         }
       }
-      
     },
     getData() {
       let listId = this.appListId, 

@@ -5,15 +5,15 @@
 <template>
   <Modal v-model="showPermissionModal" title="应用权限" width="1000" :mask-closable="false" @on-ok="submitPermission" @on-visible-change="modalVisibleChange">
     <div>
-      <Row v-if="isShowMemberSelect" :gutter="8" style="margin-bottom:10px;">
+      <Row :gutter="8" style="margin-bottom:10px;">
         <Col span="4">
-        <Button @click="selectUserModal" type="info">用户权限选择</Button>
+        <Button @click="selectUserModal" type="info" shape="circle">选择用户</Button>
         </Col>
         <Col span="4">
-        <Button @click="selectOrgModal" type="info">组织权限选择</Button>
+        <Button @click="selectOrgModal" type="info" shape="circle">选择组织</Button>
         </Col>
         <Col span="4">
-        <Button @click="selectPositionModal" type="info">职位权限选择</Button>
+        <Button @click="selectPositionModal" type="info" shape="circle">选择职位</Button>
         </Col>
       </Row>
       <Row :gutter="8">
@@ -52,7 +52,7 @@
         </Row>
         </Col>
         <Col span="12">
-        <Table @on-select="permissionSelectData" @on-select-cancel="cancelSelectAction" ref="actionRef" stripe height="350" :columns="allPermissionColumns" :data="allPermissionData">
+        <Table @on-select="permissionSelectData" @on-select-cancel="cancelSelectAction" ref="actionRef"  height="350" :columns="allPermissionColumns" :data="allPermissionData">
         </Table>
         </Col>
       </Row>
@@ -64,7 +64,7 @@
             <Button type="primary" size="small">查询</Button>
           </p>
         </div>
-        <Table @on-select="selectUserClick" @on-select-all="selectUserClick" height="400" stripe size="small" :loading="userLoading" :columns="userColumns" :data="userData">
+        <Table @on-select="selectUserClick"  @on-select-all="selectUserClick" height="400"  size="small" :loading="userLoading" :columns="userColumns" :data="userData">
         </Table>
         <div class="user-page">
           <div style="float: right;">
@@ -80,7 +80,7 @@
             <Button type="primary" size="small">查询</Button>
           </p>
         </div>
-        <Table @on-select="selectOrgClick" @on-select-all="selectOrgClick" height="400" stripe size="small" :loading="orgLoading" :columns="orgColumns" :data="orgData">
+        <Table @on-select="selectOrgClick" @on-select-all="selectOrgClick" height="400"  size="small" :loading="orgLoading" :columns="orgColumns" :data="orgData">
         </Table>
         <div class="user-page">
           <div style="float: right;">
@@ -96,7 +96,7 @@
             <Button type="primary" size="small">查询</Button>
           </p>
         </div>
-        <Table @on-select="selectDepartmentClick" @on-select-all="selectDepartmentClick" height="400" stripe :size="tableSize" :loading="depLoading" :columns="departmentColumns" :data="departmentData">
+        <Table @on-select="selectDepartmentClick" @on-select-all="selectDepartmentClick" height="400"  :size="tableSize" :loading="depLoading" :columns="departmentColumns" :data="departmentData">
         </Table>
         <div class="user-page">
           <div style="float: right;">
@@ -117,6 +117,8 @@ import {
   getAllPermissionData,
   updateMemberPermission
 } from "@/services//appService.js";
+import {APP_ACTION} from "@/assets/const";
+
 export default {
   name: "permissionModal",
   components: {},
@@ -152,7 +154,6 @@ export default {
       showOrgModal: false,
       showDepartmentModal: false,
       showPermissionModal: false,
-      isShowMemberSelect: true,
       sameUserData: [],
       userSelectData: [],
       orgSelectData: [],
@@ -172,12 +173,13 @@ export default {
           align: "center"
         },
         {
-          title: "类型",
-          key: "type"
+          title: "动作名称",
+          key: "name",
+          width: 100,
         },
         {
-          title: "资源",
-          key: "name"
+          title: "说明",
+          key: "desc"
         }
       ],
       userSelection: [],
@@ -208,21 +210,20 @@ export default {
       
       //编辑状态回显用户、组织、职位
       if(this.isEdit === 'edit'){
-        this.isShowMemberSelect = false;
         //编辑状态回显动作权限
-          let params = { 
-            listId: this.appListId, 
-            filter: JSON.stringify([
-            {
-              operator: "eq",
-              value: '操作',
-              property: "type"
-            }
-          ])
-          };
-        getAllPermissionData(params).then(res => {
+          let listId = this.appListId, 
+              filter = JSON.stringify([
+              {
+                operator: "eq",
+                value: '操作',
+                property: "type"
+              }
+            ]);
+        getAllPermissionData(listId,filter).then(res => {
           this.allPermissionData = res.tableContent;
-
+          this.allPermissionData.map(ac=>{
+            ac.desc = APP_ACTION[ac.resourceName];
+          });
           this.allPermissionData.map(aItem=>{
             this.permissionSelectDatas.map(item=>{
               if(item.id === aItem.id){
@@ -232,7 +233,6 @@ export default {
           });
         });
         //编辑状态回显用户、组织、职位
-        if(this.memberType === 'user'){
           this.userSelectData = [];
           this.orgSelectData = [];
           this.departmentSelectData = [];
@@ -241,51 +241,40 @@ export default {
           this.departmentSelection = [];
 
           if(Object.keys(this.editActionData).length > 0){
-            let dispalyMemberData = {
-              nickname: this.editActionData.objName,
-              userId: this.editActionData.objId
-            };
-            this.userData.push(dispalyMemberData);
-            this.userSelectData.push(dispalyMemberData);
-            this.userSelection.push(dispalyMemberData);
+            let dispalyUserData = [],
+                dispalyOrgData = [],
+                dispalyDepData = [];
+            if(this.editActionData.objNames){
+              JSON.parse(this.editActionData.objNames).forEach(val => {
+                if(val.type === 'user'){
+                  dispalyUserData.push({
+                    nickname: val.name,
+                    userId: val.id
+                  });
+                }else if(val.type === 'group'){
+                  dispalyOrgData.push({
+                    name: val.name,
+                    id: val.id
+                  })
+                }else{
+                  dispalyDepData.push({
+                    name: val.name,
+                    id: val.id
+                  })
+                }
+              })
+            }
+            this.userData = dispalyUserData;
+            this.userSelectData = dispalyUserData;
+            this.userSelection = dispalyUserData;
+            this.orgData = dispalyOrgData;
+            this.orgSelectData = dispalyOrgData;
+            this.orgSelection = dispalyOrgData;
+            this.departmentData = dispalyDepData;
+            this.departmentSelectData = dispalyDepData;
+            this.departmentSelection = dispalyDepData;
           }
-        }else if(this.memberType === 'group'){
-          this.userSelectData = [];
-          this.orgSelectData = [];
-          this.departmentSelectData = [];
-          this.userSelection = [];
-          this.orgSelection = [];
-          this.departmentSelection = [];
-
-          if(Object.keys(this.editActionData).length > 0){
-          let dispalyMemberData = {
-              name: this.editActionData.objName,
-              id: this.editActionData.objId
-            };
-            this.orgData.push(dispalyMemberData);
-            this.orgSelectData.push(dispalyMemberData);
-            this.orgSelection.push(dispalyMemberData);
-          }
-        }else{
-          this.userSelectData = [];
-          this.orgSelectData = [];
-          this.departmentSelectData = [];
-          this.userSelection = [];
-          this.orgSelection = [];
-          this.departmentSelection = [];
-
-          if(Object.keys(this.editActionData).length > 0){
-          let dispalyMemberData = {
-              name: this.editActionData.objName,
-              id: this.editActionData.objId
-            };
-            this.departmentData.push(dispalyMemberData);
-            this.departmentSelectData.push(dispalyMemberData);
-            this.departmentSelection.push(dispalyMemberData);
-          }
-        }
       }else{
-        this.isShowMemberSelect = true;
         //新增状态清空缓存数据
         this.getData();
         this.userSelectData = [];
@@ -484,29 +473,15 @@ export default {
             roleId: roleId.join(","),
             groupId: groupId.join(","),
             permissionId: permissionId.join(",")
-          },
-          whichMember,
-          singleId;
+          };
       if(this.isEdit === 'edit'){
-        if(this.memberType === 'user'){
-          whichMember = 'sys_user_permission';
-          singleId = userId;
-        }else if(this.memberType === 'group'){
-          whichMember = 'sys_group_permission';
-          singleId = groupId;
-        }else{
-          whichMember = 'sys_role_permission';
-          singleId = roleId;
-        }
-        if(whichMember){
-          updateMemberPermission(singleId.join(","),permissionId.join(","),whichMember).then(res => {
+          updateMemberPermission(userId.join(","),roleId.join(","),groupId.join(","),permissionId.join(",")).then(res => {
             if(res.success){
               this.$Message.success(res.message);
               let Num = this.emitChange++;
               this.$emit("reGetData", Num);
             }
           })
-        }
       }else{
         if (params) {
           addPermission(params).then(res => {
@@ -532,6 +507,9 @@ export default {
       //获取应用权限数据
       getAllPermissionData(listId,filter).then(res => {
         this.allPermissionData = res.tableContent;
+        this.allPermissionData.map(ac=>{
+          ac.desc = APP_ACTION[ac.resourceName];
+        });
       });
     },
     //通知父组件modal的状态

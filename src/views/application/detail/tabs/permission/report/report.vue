@@ -52,7 +52,7 @@ export default {
           }
         },
         {
-          title: "权限清单",
+          title: "已授权用户",
           key: "permissionList",
           width: 500,
           render:(h,params) =>{

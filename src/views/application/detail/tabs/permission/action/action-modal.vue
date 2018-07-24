@@ -325,16 +325,11 @@ export default {
           { type: "selection", width: 60, align: "center" },
           { title: "姓名", key: "nickname" },
           { title: "工号", key: "userCode" }
-        ],
-        userParams = {
-          page: this.userCurrentPage,
-          limit: this.pageSize,
-          filter: filter
-        };
+        ];
       this.showUserModal = true;
       this.userColumns = userColumn;
       this.userLoading = true;
-      getAllUserData(userParams).then(res => {
+      getAllUserData(this.userCurrentPage,this.pageSize,filter).then(res => {
         this.userData = res.tableContent;
         this.sameUserData = res.tableContent;
         this.userTotal = res.dataCount;
@@ -346,16 +341,11 @@ export default {
       let orgColumn = [
           { type: "selection", width: 60, align: "center" },
           { title: "名称", key: "name" }
-        ],
-        orgParams = {
-          page: this.orgCurrentPage,
-          limit: this.pageSize,
-          filter: filter
-        };
+        ];
       this.showOrgModal = true;
       this.orgColumns = orgColumn;
       this.orgLoading = true;
-      getAllOrgData(orgParams).then(res => {
+      getAllOrgData(this.orgCurrentPage,this.pageSize,filter).then(res => {
         this.orgData = res.tableContent;
         this.orgTotal = res.dataCount;
         this.orgLoading = false;
@@ -366,16 +356,11 @@ export default {
       let departmentColumn = [
           { type: "selection", width: 60, align: "center" },
           { title: "名称", key: "name" }
-        ],
-        depParams = {
-          page: this.depCurrentPage,
-          limit: this.pageSize,
-          filter: filter
-        };
+        ];
       this.showDepartmentModal = true;
       this.departmentColumns = departmentColumn;
       this.depLoading = true;
-      getAllDepartmentData(depParams).then(res => {
+      getAllDepartmentData(this.depCurrentPage,this.pageSize,filter).then(res => {
         this.departmentData = res.tableContent;
         this.depTotal = res.dataCount;
         this.depLoading = false;
@@ -536,18 +521,16 @@ export default {
       
     },
     getData() {
-      let params = { 
-          listId: this.appListId, 
-          filter: JSON.stringify([
+      let listId = this.appListId, 
+          filter = JSON.stringify([
           {
             operator: "eq",
             value: '操作',
             property: "type"
           }
-        ])
-        };
+        ]);
       //获取应用权限数据
-      getAllPermissionData(params).then(res => {
+      getAllPermissionData(listId,filter).then(res => {
         this.allPermissionData = res.tableContent;
       });
     },

@@ -1,5 +1,9 @@
-import { request } from './fetch'
-import { connect } from 'net';
+import {
+  request
+} from './fetch'
+import {
+  connect
+} from 'net';
 
 /**
  * @author XiaoYing
@@ -12,7 +16,7 @@ export const getAppTemplateData = () => request('/H_roleplay-si/ds/getTplTempLis
  * @description 获取应用列表数据
  */
 export const getAppListData = (filterParams) => request('/H_roleplay-si/ds/getTplListInfo', {
-    filter: filterParams
+  filter: filterParams
 });
 
 /**
@@ -38,42 +42,77 @@ export const getProcessDataByListId = (params) => request('/H_roleplay-si/ds/lis
  * @description 获取管理员数据
  */
 export const getAdminData = (groupId) => request('/H_roleplay-si/ds/getAllUsersByGroupId', {
-    groupId: groupId
+  groupId: groupId
 });
 
 /**
  * @author XiaoYing
  * @description 获取所有权限数据
  */
-export const getAllPermissionData = (params) => request('/H_roleplay-si/ds/getPermissionByListId', params);
+export const getAllPermissionData = (listId, filter) => request('/H_roleplay-si/ds/getPermissionByListId', {
+  listId: listId,
+  filter: filter
+});
 
 /**
  * @author XiaoYing
- * @description 获取用户、组织、职位所有数据
+ * @description 获取用户数据
  */
-export const getAllUserData = (params) => request('/H_roleplay-si/ds/getUserList2', params);
-export const getAllOrgData = (params) => request('/H_roleplay-si/ds/getDepartment', params);
-export const getAllDepartmentData = (params) => request('/H_roleplay-si/ds/getRoleList2', params);
+export const getAllUserData = (currentPage, pageSize, filter) => request('/H_roleplay-si/ds/getUserList2', {
+  page: currentPage,
+  limit: pageSize,
+  filter: filter
+});
+
+/**
+ * @author XiaoYing
+ * @description 获取组织数据
+ */
+export const getAllOrgData = (currentPage, pageSize, filter) => request('/H_roleplay-si/ds/getDepartment', {
+  page: currentPage,
+  limit: pageSize,
+  filter: filter
+});
+
+/**
+ * @author XiaoYing
+ * @description 获取职位数据
+ */
+export const getAllDepartmentData = (currentPage, pageSize, filter) => request('/H_roleplay-si/ds/getRoleList2', {
+  page: currentPage,
+  limit: pageSize,
+  filter: filter
+});
 
 /**
  * @author XiaoYing
  * @description 增加权限
  */
-export const addPermission = (params) => request('/H_roleplay-si/ps/insertObjPermission', params, 'POST');
+export const addPermission = (params) => request('/H_roleplay-si/ps/insertObjPermission', {
+  userId: params.userId,
+  roleId: params.roleId,
+  groupId: params.groupId,
+  permissionId: params.permissionId
+}, 'POST');
 
 /**
  * @author GuoZheng
  * @description 添加视图权限
  */
-export const saveViewPermission = (permissionId, userId, groupId, roleId) => request('/H_roleplay-si/ps/insertObjPermission', { userId: userId, groupId: groupId, roleId: roleId, permissionId: permissionId }, 'POST');
+export const saveViewPermission = (permissionId, userId, groupId, roleId) => request('/H_roleplay-si/ps/insertObjPermission', {
+  userId: userId,
+  groupId: groupId,
+  roleId: roleId,
+  permissionId: permissionId
+}, 'POST');
 
 /**
  * @author XiaoYing
  * @description 获取对应应用用户、组织、职位所有权限数据
  */
-export const getAppResourcesAndAuthoritys = (listId,filter) => request('/H_roleplay-si/ds/getAppResourcesAndAuthoritys', {
-     listId: listId,
-     filter: filter
+export const getAppResourcesAndAuthoritys = (listId, filter) => request('/H_roleplay-si/ds/getAppResourcesAndAuthoritys', {
+  listId: listId,
+  filter: filter
 })
 
 /**
@@ -87,7 +126,7 @@ export const deleteRelationPermission = (params) => request('/H_roleplay-si/ps/d
  * @description 获取应用信息
  */
 export const getListData = (uniqueId) => request('/H_roleplay-si/ds/list/getListById', {
-    uniqueId: uniqueId
+  uniqueId: uniqueId
 });
 
 /**
@@ -113,25 +152,26 @@ export const deleteApp = (params) => request('/H_roleplay-si/ds/procu/removeList
  * @description 保存应用信息
  */
 export const saveAppInformation = (params) => request('/H_roleplay-si/app/update', {
-    uniqueId: params.uniqueId,
-    title: params.title,
-    administrator: params.administrator,
-    comment: params.comment
+  uniqueId: params.uniqueId,
+  title: params.title,
+  administrator: params.administrator,
+  comment: params.comment
 }, 'POST');
 
 /**
-  * @author GuoZheng
-  * 获取报表视图
+ * @author GuoZheng
+ * 获取报表视图
  */
-export const getListViewPermission = (viewId) => request('/H_roleplay-si/app/getListViewPermission', {viewId:viewId})
-
+export const getListViewPermission = (viewId) => request('/H_roleplay-si/app/getListViewPermission', {
+  viewId: viewId
+})
 
 /**
  * @author XiaoYing
  * @description 获取应用视图
  */
 export const getAppviews = (params) => request('/H_roleplay-si/ds/getListViewOrTempViewByUniqueId', {
-    filter: params.filter
+  filter: params.filter
 });
 
 /**
@@ -145,8 +185,8 @@ export const saveWorkFlowInfo = (params) => request('/H_roleplay-si/ds/saveData'
  * @description 设置默认视图
  */
 export const saveDefaultView = (params) => request('/H_roleplay-si/app/setAppDefaultView', {
-    viewId: params.viewId,
-    listId: params.listId
+  viewId: params.viewId,
+  listId: params.listId
 }, 'POST');
 
 /**
@@ -154,74 +194,86 @@ export const saveDefaultView = (params) => request('/H_roleplay-si/app/setAppDef
  * @description 删除应用视图
  */
 export const deleteAppViews = (params) => request('/H_roleplay-si/app/deleteView', {
-    viewId: params.viewId,
-    listId: params.listId
+  viewId: params.viewId,
+  listId: params.listId
 }, 'POST');
 
 /** 
  * @author GUOZHENG
  * 更新日志
-*/
-export const saveAppLog = (listId, scope, spendTime, content) => request('/H_roleplay-si/app/saveLog', { listId: listId, scope: scope, spendTime: spendTime, content: content }, "POST");
+ */
+export const saveAppLog = (listId, scope, spendTime, content) => request('/H_roleplay-si/app/saveLog', {
+  listId: listId,
+  scope: scope,
+  spendTime: spendTime,
+  content: content
+}, "POST");
 
 /** 
  * @author GUOZHENG
  * 更新日志
-*/
-export const getChangeLog = (listId) => request('/H_roleplay-si/ds/getChangeLog', { listId: listId });
+ */
+export const getChangeLog = (listId) => request('/H_roleplay-si/ds/getChangeLog', {
+  listId: listId
+});
 
 /** 
  * @author XiaoYing
  * 获取应用科目
-*/
+ */
 export const getAppSubjectData = (listId) => request('/corebiz-api/calc/calcRel/findAccountByAppId', {
-    app_id: listId
+  app_id: listId
 });
 
 /** 
  * @author XiaoYing
  * 管理员自评数据获取
-*/
+ */
 export const getAssessmentByListId = (listId) => request('/H_roleplay-si/ds/getAssessmentByListId', {
-    listId: listId
+  listId: listId
 });
 
 /** 
  * @author XiaoYing
  * 管理员自评数据新增
-*/
+ */
 export const saveAssessment = (params) => request('/H_roleplay-si/app/saveAssessment', {
-    listId: params.listId,
-    chance: params.opportunity,
-    achievement: params.result,
-    date: params.date,
-    id: params.id
+  listId: params.listId,
+  chance: params.opportunity,
+  achievement: params.result,
+  date: params.date,
+  id: params.id
 }, 'POST');
 
 /** 
  * @author GuoZheng
  * 获取实例数据
-*/
-export const getInstanceData = (listId,type,date) =>request('/H_roleplay-si/trans/getDetails',{listId:listId,type:type,date:date});
-
+ */
+export const getInstanceData = (listId, type, date) => request('/H_roleplay-si/trans/getDetails', {
+  listId: listId,
+  type: type,
+  date: date
+});
 
 /** 
  * @author XiaoYing
  * 动作权限启用禁用
-*/
-export const ProhibitApp = (id,permType) =>request('/H_roleplay-si/app/ProhibitApp',{
-    id:id,
-    permType:permType
-},'POST');
+ */
+export const ProhibitApp = (id, permType) => request('/H_roleplay-si/app/ProhibitApp', {
+  id: id,
+  permType: permType
+}, 'POST');
 
 /** 
  * @author XiaoYing
  * 修改权限确认
-*/
-export const updateMemberPermission = (singleId,multiId,list) =>request('/H_roleplay-si/app/updateAppPermission',{
-    list: list,
-    single: singleId,
-    multi: multiId
-},'POST');
+ */
+export const updateMemberPermission = (singleId, multiId, list) => request('/H_roleplay-si/app/updateAppPermission', {
+  list: list,
+  single: singleId,
+  multi: multiId
+}, 'POST');
 
-export const downloadImage = (url) => request('/H_roleplay-si/ds/download', { url: url })
+export const downloadImage = (url) => request('/H_roleplay-si/ds/download', {
+  url: url
+})

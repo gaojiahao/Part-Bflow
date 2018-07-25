@@ -183,9 +183,13 @@ export const getAppviews = (params) => request('/H_roleplay-si/ds/getListViewOrT
 
 /**
  * @author XiaoYing
- * @description 保存工作流信息
+ * @description 启用禁用工作流
  */
-export const saveWorkFlowInfo = (params) => request('/H_roleplay-si/ds/saveData', params, 'POST');
+export const enabledForbiddenWorkFlow = (enabledIds,forbiddenIds,deleteId) => request('/H_roleplay-si/app/prohibitProc', {
+    open: enabledIds,
+    close: forbiddenIds,
+    delete: deleteId
+}, 'POST');
 
 /**
  * @author XiaoYing

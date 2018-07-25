@@ -5,11 +5,11 @@
 <template>
     <div class="app-workflow">
         <Row class="app-workflow-title">
-            <h3>工作流   <a @click="showWorkFlowModal">添加工作流</a></h3>
+            <h3>工作流   <a @click="showWorkFlowModal">添加</a> <a @click="showWorkFlowModal">停用</a></h3>
            
         </Row>
         <Row class="app-workflow-table">
-            <Table :columns="columns" :data="workflows"></Table>
+            <Table :columns="columns" :data="workflows" size="small"></Table>
         </Row>
         <!-- 工作流modal -->
         <workflow-modal @emitWorkFlowModal="emitWorkFlowModal" :deleteRelationWorkflow="deleteRelationWorkflow" :modalWorkflowStatus="showWorkFlow" @addWorkflow="addWorkflow"></workflow-modal>
@@ -36,11 +36,41 @@ export default {
       columns: [
         {
           title: "工作流名称",
-          key: "processName"
+          key: "processName",
+          align: "left",
         },
         {
           title: "触发动作",
-          key: "triggerType"
+          key: "triggerType",
+          align: "left",
+          render: (h, params) => {
+            if (params.row.triggerType === 'create') {
+              return h("span", {}, "创建实例");
+            } else  {
+              return h("span", {}, "修改实例");
+            }
+          }
+        },
+         {
+          title: "启用",
+          key: "status",
+          align: "left",
+          render: (h, params) => {
+            let status = false;
+
+            (params.row.status === 1) && (params.row.status = true);
+
+            return h("Checkbox", {
+              props: {
+                value: params.row.status
+              },
+              on: {
+                "on-change": e => {
+                  this.updateWorkFlowStaus(params);
+                }
+              }
+            });
+          }
         },
         {
           title: "操作",
@@ -115,6 +145,30 @@ export default {
     //监听modal添加工作流刷新
     addWorkflow() {
       this.getRelativeWorkflowData();
+    },
+    //修改应用工作流状态
+    updateWorkFlowStaus(record){
+
+      let process =  record.row,
+          msContent = '确认禁用此工作流？';
+
+      // (process.status === 1) && (msContent = '确认启用该工作流？')
+      console.log(process.status);
+      
+        this.$Modal.confirm({
+          title: "系统提示",
+          content: msContent,
+          onOk: () => {
+           
+            // saveWorkFlowInfo(params).then(res => {
+            //   if(res.success){
+            //     this.$Message.success(res.message);
+            //     this.workflows.splice(index, 1);
+            //     this.deleteRelationWorkflow++;
+            //   }
+            // })
+          }
+      });
     }
   },
   created() {

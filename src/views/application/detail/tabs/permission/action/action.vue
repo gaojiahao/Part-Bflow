@@ -28,7 +28,7 @@
                 </Row>
 
                 <Row>
-                    <Table :columns="columns" :data="userSources"></Table>
+                    <Table :columns="columns" :data="userSources" size="small"></Table>
                 </Row>
             </div>
         </Row>

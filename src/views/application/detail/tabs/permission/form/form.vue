@@ -5,7 +5,7 @@
 <template>
     <div class="app-form">
         <Row class="app-form-title">
-            <h3>表单 <a @click="setForm">添加表单</a></h3>
+            <h3>表单 <a @click="setForm">设置表单</a></h3>
         </Row>
     </div>
 </template>

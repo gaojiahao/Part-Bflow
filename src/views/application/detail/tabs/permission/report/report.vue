@@ -8,7 +8,7 @@
       <h3>报表 <a @click="goCreateView">添加报表</a></h3>
     </Row>
     <Row class="app-report-table">
-      <Table :columns="columns" :data="reportSources"></Table>
+      <Table :columns="columns" :data="reportSources" size="small"></Table>
 
     </Row>
     <report-modal :modalStatis="showReportModal" @emitPermissionModal="emitPermissionModal" :permissionId="permissionId" @reGetData="reGetData" :permissionData="permissionData"></report-modal>

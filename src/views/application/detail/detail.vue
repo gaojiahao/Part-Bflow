@@ -8,21 +8,21 @@
     
 
     <!-- 应用详情信息 -->
-    <app-info :listId="this.$route.params.listId" @changeAppType="changeAppType" @enabledForbiddenAppPermission="enabledForbiddenAppPermission"></app-info>
+    <app-info :listId="this.$route.params.listId"  :isAdmin="isAdmin" :appData="appData" @changeAdmin="changeAdmin" @enabledForbiddenAppPermission="enabledForbiddenAppPermission"></app-info>
 
 
     <!-- 应用tabs -->
     <div class="rfd-tab">
       <Tabs value="name1" class="rfd-tab-warp">
         <TabPane label="一般" name="name1">
-          <log-instance></log-instance>
+          <log-instance :isAdmin="isAdmin"></log-instance>
         </TabPane>
         <TabPane label="互动" name="name2">
           <!-- 管理员自评 -->
-          <admintrstor-assessment :listId="this.$route.params.listId"></admintrstor-assessment>
+          <admintrstor-assessment :isAdmin="isAdmin" :listId="this.$route.params.listId"></admintrstor-assessment>
         </TabPane>
         <TabPane label="资源" name="name3">
-          <permission-source :appType="appType" :enabledForbidden="enabledForbidden"></permission-source>
+          <permission-source :appType="appType" :isAdmin="isAdmin" :enabledForbidden="enabledForbidden"></permission-source>
         </TabPane>
         <TabPane label="连接" name="name4">
           <!-- 应用科目 -->
@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import { getListData } from "@/services/appService.js";
 import LogInstance from "./tabs/base/log-instance";
 import AppInfo from "./information/information";
 import AppSubject from "./tabs/connection/subject";
@@ -57,18 +58,47 @@ export default {
   },
   data() {
     return {
+      listId: this.$route.params.listId,
+      //应用详情信息
+      appData: {},
+      isAdmin: false,
       appType: '',
       enabledForbidden: -1
     };
   },
   methods: {
-    changeAppType(value) {
-      this.appType = value;
-    },
     //通知应用启用禁用动作权限
     enabledForbiddenAppPermission() {
       this.enabledForbidden++;
+    },
+    changeAdmin() {
+      this.getAppInfoDatas();
+    },
+    //获取应用详情信息
+    getAppInfoDatas() {
+      let uniqueId = this.listId,
+          currentUser = this.$currentUser;
+      //请求应用详情信息
+      getListData(uniqueId).then(res => {
+        this.appData = res[0];
+        if(this.appData.type === 'business'){
+          this.appData.appType = '业务应用';
+        }else if(this.appData.type === 'subject'){
+          this.appData.appType = '科目应用';
+        }else{
+          this.appData.appType = '对象应用';
+        }
+        this.appType = this.appData.type;
+        if(currentUser.nickname === this.appData.administrator){
+          this.isAdmin = true;
+        }else{
+          this.isAdmin = false;
+        }
+      });
     }
+  },
+  created() {
+    this.getAppInfoDatas();
   }
 };
 </script>

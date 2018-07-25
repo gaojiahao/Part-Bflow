@@ -5,7 +5,7 @@
 <template>
     <div class="app-workflow">
         <Row class="app-workflow-title">
-            <h3>工作流   <a @click="showWorkFlowModal">添加工作流</a></h3>
+            <h3>工作流   <a v-if="isAdminTrue" @click="showWorkFlowModal">添加工作流</a></h3>
            
         </Row>
         <Row class="app-workflow-table">
@@ -28,10 +28,14 @@ export default {
   components: {
     WorkflowModal
   },
+  props: {
+      isAdmin: Boolean
+  },
   data() {
     return {
       listId: this.$route.params.listId,
       showWorkFlow: false,
+      isAdminTrue: false,
       deleteRelationWorkflow: -1,
       columns: [
         {
@@ -40,9 +44,24 @@ export default {
         },
         {
           title: "触发动作",
-          key: "triggerType"
-        },
-        {
+          key: "triggerType",
+          render: (h,params) => {
+            if(params.row.triggerType === 'create'){
+              return h('span',{},'新建');
+            }else if(params.row.triggerType === 'update'){
+              return h('span',{},'修改');
+            }else{
+              return h('span',{},'');
+            }
+          }
+        }
+      ],
+      workflows: []
+    };
+  },
+  watch: {
+    isAdmin: function(value) {
+      const lastColumn = {
           title: "操作",
           key: "list",
           align: "center",
@@ -71,10 +90,19 @@ export default {
                   },'修改')
               ])
           }
+        };
+      if(value){
+        this.isAdminTrue = true;
+        if(this.columns[this.columns.length-1].title !== '操作'){
+          this.columns.push(lastColumn);
         }
-      ],
-      workflows: []
-    };
+      }else{
+        this.isAdminTrue = false;
+        if(this.columns[this.columns.length-1].title === '操作'){
+          this.columns.splice(this.columns.length-1,1);
+        }
+      }
+    }
   },
   methods: {
     //获取已关联流程数据

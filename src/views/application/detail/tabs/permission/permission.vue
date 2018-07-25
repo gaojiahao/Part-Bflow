@@ -5,13 +5,13 @@
 <template>
   <div class="app-permission">
     <!-- 动作管理 -->
-    <action-manage :enabledForbidden="enabledForbidden"></action-manage>
+    <action-manage :enabledForbidden="enabledForbidden" :isAdmin="isAdmin"></action-manage>
     <!-- 报表视图 -->
-    <report-view :appType="appType"></report-view>
+    <report-view :appType="appType" :isAdmin="isAdmin"></report-view>
     <!-- 表单 -->
-    <app-form></app-form>
+    <app-form :isAdmin="isAdmin"></app-form>
     <!-- 工作流 -->
-    <work-flow></work-flow>
+    <work-flow :isAdmin="isAdmin"></work-flow>
   </div>
 </template>
 
@@ -32,7 +32,8 @@ export default {
   props: {
     listId: String,
     appType: String,
-    enabledForbidden: Number
+    enabledForbidden: Number,
+    isAdmin: Boolean
   },
   data() {
     return {

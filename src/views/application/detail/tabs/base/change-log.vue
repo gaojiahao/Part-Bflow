@@ -69,7 +69,7 @@
 <template>
   <div fix class="timeline-box">
     <div class="app-resource-group-title">
-      <h3>更新日志 <a @click="showAppLog">新增</a></h3>
+      <h3>更新日志 <a v-if="isAdminTrue" @click="showAppLog">新增</a></h3>
       
     </div>
     <div class="timeline-box-log" v-show="logData.length===0?false:true">
@@ -135,12 +135,16 @@ export default {
   props: {
     listId: {
       type: String
+    },
+    isAdmin: {
+      type: Boolean
     }
   },
 
   data() {
     return {
       visible: false,
+      isAdminTrue: false,
       logData: [],
       modalFormData: {
         //变更日志表单数据
@@ -173,6 +177,16 @@ export default {
         ]
       }
     };
+  },
+
+  watch: {
+    isAdmin: function(value) {
+      if(value){
+        this.isAdminTrue = true;
+      }else{
+        this.isAdminTrue = false;
+      }
+    }
   },
 
   methods: {

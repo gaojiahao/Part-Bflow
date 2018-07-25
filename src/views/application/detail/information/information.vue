@@ -36,7 +36,7 @@
             </Col>
           </Row>
           <Row class="pad5">
-            <Col span="6">创建者: <span>{{ appData.modifer }}</span></Col>
+            <Col span="6">创建者: <span>{{ appData.creator }}</span></Col>
             <Col span="6">创建时间: <span>{{ appData.crtTime }}</span></Col>
             <Col span="6">修改者:{{appData.modifer}}</Col>
             <Col span="6">修改时间: <span>{{ appData.crtTime }}</span></Col>

@@ -5,8 +5,9 @@
 <template>
     <div class="info-warp">
         <header class="info-warp-header">
-            <h3>企业信息
-                <input type="submit" value="保存" class="input-submit-save" @click.prevent="saveEnterpriseInfo" />
+            <h3>
+                企业信息
+                <a @click="handleEditName">{{edit}}</a>
             </h3>
         </header>
         <main class="info-warp-main">
@@ -30,28 +31,29 @@
                     <label class="left-leble">企业简称</label>
                     <span v-if="!editEnterpriseName">{{enterpriseInfo.nickname}}</span>
                     <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.nickname" class="input-common-att" />
-                    <a @click="handleEditName">{{edit}}</a>
 
                 </div>
                 <div class="select-explain">
                     <label class="left-leble">企业全称</label>
-                    <span>{{enterpriseInfo.name}}</span>
+                    <span v-if="!editEnterpriseName">{{enterpriseInfo.name}}</span>
+                    <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.name" class="input-common-att" />
                 </div>
-                <div class="select-explain">
+                <div class="select-explain-textarea">
                     <label class="left-leble">企业说明</label>
-                    <span>{{enterpriseInfo.instruction}}</span>
+                    <span v-if="!editEnterpriseName">{{enterpriseInfo.instruction}}</span>
+                    <textarea rows="3" cols="20" v-if="editEnterpriseName" v-model="enterpriseInfo.instruction" type="textarea" class="select-explain-textarea-text"></textarea>
                 </div>
             </section>
             <section class="info-warp-main-section">
                 <div class="select-explain">
                     <label class="left-leble">企业地址</label>
-                    <span>{{enterpriseInfo.address}}</span>
+                    <span v-if="!editEnterpriseName">{{enterpriseInfo.address}}</span>
+                    <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.address" class="input-common-att" />
                 </div>
                 <div class="select-explain">
                     <label class="left-leble">联系电话</label>
-                    <span v-if="!editEnterprisePhone">{{enterpriseInfo.phone}}</span>
-                    <input v-if="editEnterprisePhone" type="text" v-model="enterpriseInfo.phone" class="input-common-att" />
-                    <a @click="handleEditPhone">{{edit1}}</a>
+                    <span v-if="!editEnterpriseName">{{enterpriseInfo.phone}}</span>
+                    <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.phone" class="input-common-att" />
                 </div>
             </section>
             <section class="info-warp-main-section">
@@ -113,9 +115,7 @@ export default {
         admins: []
       },
       editEnterpriseName: false,
-      editEnterprisePhone: false,
       edit: "修改",
-      edit1: "修改",
 
       httpHeaders: {
         Authorization: "bc7cdfe127fc4c9183dff8633533ce91"
@@ -213,20 +213,15 @@ export default {
       });
     },
 
-    saveEnterpriseInfo() {
-      debugger;
-    },
-
     //编辑企业简称
     handleEditName() {
-      this.edit = this.editEnterpriseName ? "修改" : "完成";
-      this.editEnterpriseName = !this.editEnterpriseName;
-    },
+      this.edit = this.editEnterpriseName ? "修改" : "保存";
 
-    //编辑联系电话
-    handleEditPhone() {
-      this.edit1 = this.editEnterprisePhone ? "修改" : "完成";
-      this.editEnterprisePhone = !this.editEnterprisePhone;
+      //保存修改的数据
+      if (this.editEnterpriseName) {
+      }
+
+      this.editEnterpriseName = !this.editEnterpriseName;
     },
 
     handleSuccess(res, file) {

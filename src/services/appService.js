@@ -126,7 +126,7 @@ export const getAppResourcesAndAuthoritys = (listId, filter) => request('/H_role
  * @author XiaoYing
  * @description 删除用户、组织、职位某一权限
  */
-export const deleteRelationPermission = (params) => request('/H_roleplay-si/ps/deleteRelation', params, 'POST');
+export const deleteRelationPermission = (params) => request('/H_roleplay-si/app/deleteAppPermission', params, 'POST');
 
 /**
  * @author XiaoYing

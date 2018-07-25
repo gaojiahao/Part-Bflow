@@ -55,7 +55,7 @@
     </div>
 
     <!-- 变更日志 -->
-    <change-log :listId="listId"></change-log>
+    <change-log :listId="listId" :isAdmin="isAdmin"></change-log>
   </div>
 </template>
 
@@ -66,12 +66,13 @@ import { getInstanceData } from "@/services/appService.js";
 import { FormatDate } from "@/utils/utils";
 export default {
   name: "LogInstance",
-
   components: {
     LineChart,
     ChangeLog
   },
-
+  props: {
+    isAdmin: Boolean
+  },
   data() {
     return {
       listId: this.$route.params.listId,

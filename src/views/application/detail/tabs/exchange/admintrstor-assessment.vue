@@ -6,7 +6,7 @@
   <div class="bg_ff">
 
     <Row class="app-resource-group-title">
-          <h3>管理员自评 <a @click="addAssess">添加自评</a></h3>
+          <h3>管理员自评 <a v-if="isAdminTrue" @click="addAssess">添加自评</a></h3>
     </Row>
     <Row class="assessment-content">
         <Table :columns="columns" :data="assessments"></Table>
@@ -47,11 +47,15 @@ export default {
   props: {
     listId: {
       type: String
+    },
+    isAdmin: {
+      type: Boolean
     }
   },
   data() {
     return {
       showAssessModal: false,
+      isAdminTrue: false,
       isEdit: '',
       IsEditId: '',
       changeResult: "",
@@ -124,6 +128,15 @@ export default {
       ],
       assessments: []
     };
+  },
+  watch: {
+    isAdmin: function(value) {
+      if(value){
+        this.isAdminTrue = true;
+      }else{
+        this.isAdminTrue = false;
+      }
+    }
   },
   methods: {
     //展示管理员自评

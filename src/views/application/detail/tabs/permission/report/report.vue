@@ -5,7 +5,7 @@
 <template>
   <div class="app-report">
     <Row class="app-report-title">
-      <h3>报表 <a @click="goCreateView">添加报表</a></h3>
+      <h3>报表 <a v-if="isAdminTrue" @click="goCreateView">添加报表</a></h3>
     </Row>
     <Row class="app-report-table">
       <Table :columns="columns" :data="reportSources" size="small"></Table>
@@ -29,12 +29,14 @@ export default {
     ReportModal
   },
   props: {
-    appType: String
+    appType: String,
+    isAdmin: Boolean
   },
   data() {
     return {
       listId: this.$route.params.listId,
       showReportModal: false,
+      isAdminTrue: false,
       permissionId: "",
       columns: [
         {
@@ -44,7 +46,6 @@ export default {
         {
           title: "视图类型",
           key: "viewType",
-          width: 150,
           render: (h, params) => {
             if (params.row.type === "normal") {
               return h("span", {}, "列表");
@@ -54,7 +55,6 @@ export default {
         {
           title: "已授权用户",
           key: "permissionList",
-          width: 500,
           render:(h,params) =>{
             let permissionList = params.row.permissionList,
                 renderData = [];
@@ -74,7 +74,6 @@ export default {
         {
           title: "默认视图",
           key: "isDefault",
-          width: 100,
           align: "center",
           render: (h, params) => {
             let defaultView = false;
@@ -83,7 +82,8 @@ export default {
             }
             return h("Radio", {
               props: {
-                value: defaultView
+                value: defaultView,
+                disabled: !this.isAdminTrue
               },
               on: {
                 "on-change": e => {
@@ -92,8 +92,16 @@ export default {
               }
             });
           }
-        },
-        {
+        }
+      ],
+      reportSources: [],
+
+      permissionData:[]
+    };
+  },
+  watch: {
+    isAdmin: function(value) {
+      const lastColumn = {
           title: "操作",
           key: "list",
           align: "center",
@@ -155,12 +163,19 @@ export default {
               )
             ]);
           }
+        };
+      if(value){
+        this.isAdminTrue = true;
+        if(this.columns[this.columns.length-1].title !== '操作'){
+          this.columns.push(lastColumn);
         }
-      ],
-      reportSources: [],
-
-      permissionData:[]
-    };
+      }else{
+        this.isAdminTrue = false;
+        if(this.columns[this.columns.length-1].title === '操作'){
+          this.columns.splice(this.columns.length-1,1);
+        }
+      }
+    }
   },
   methods: {
     emitPermissionModal() {

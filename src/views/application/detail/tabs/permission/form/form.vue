@@ -5,7 +5,7 @@
 <template>
     <div class="app-form">
         <Row class="app-form-title">
-            <h3>表单 <a @click="setForm">设置表单</a></h3>
+            <h3>表单 <a v-if="isAdminTrue" @click="setForm">表单设置</a></h3>
         </Row>
     </div>
 </template>
@@ -20,10 +20,23 @@ import AssessModal from "@/components/modal/Modal";
 export default {
   name: "formSource",
   components: {},
+  props: {
+      isAdmin: Boolean
+  },
   data() {
     return {
-      listId: this.$route.params.listId
+      listId: this.$route.params.listId,
+      isAdminTrue: false,
     };
+  },
+  watch: {
+    isAdmin: function(value) {
+      if(value){
+        this.isAdminTrue = true;
+      }else{
+        this.isAdminTrue = false;
+      }
+    }
   },
   methods: {
       setForm() {

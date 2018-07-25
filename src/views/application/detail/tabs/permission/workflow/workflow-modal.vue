@@ -1,18 +1,7 @@
 <style lang="less" scoped>
-  .flow-title{
-        margin-bottom: 5px;
-        .create-button{
-          margin-left: 40px
-        }
-    }
-  .ivu-modal-footer{
-      padding: 3px 15px;
-  }
-  .workflow-page{
-    margin: 10px;
-    overflow: hidden
-  }
+  @import './workflow-modal.less';
 </style>
+
 <template>
   <Modal v-model="showWorkFlow" title="工作流设置" width="1010" @on-ok="selectWorkFlow" :mask-closable="false" @on-visible-change="modalVisibleChange">
     <Row :gutter="8">
@@ -53,10 +42,11 @@ export default {
   name: "WorkflowModal",
   props: {
     modalWorkflowStatus: Boolean,
-    listId: String
+    deleteRelationWorkflow: Number
   },
   data() {
     return {
+      listId: this.$route.params.listId,
       showWorkFlow: false,
       relativeWorkFlowTotal: 0,
       allWorkFlowTotal: 0,
@@ -136,18 +126,17 @@ export default {
   watch: {
     modalWorkflowStatus: function(value, oldValue) {
       this.showWorkFlow = value;
+    },
+    deleteRelationWorkflow: function(){
+      this.getRelativeWorkflowData();
     }
   },
   methods: {
     selectWorkFlow() {},
     //获取所有流程数据
     getAllWorkflowData() {
-      let allProcessParams = {
-        page: this.allCurrentPage,
-        limit: this.pageSize
-      };
       this.loadingAll = true;
-      getAllProcessData(allProcessParams).then(res => {
+      getAllProcessData(this.allCurrentPage,this.pageSize).then(res => {
         this.allWorkFlowData = res.tableContent;
         this.allWorkFlowTotal = res.dataCount;
         this.loadingAll = false;
@@ -155,13 +144,8 @@ export default {
     },
     //获取已关联流程数据
     getRelativeWorkflowData() {
-      let relativeProcessParams = {
-        page: this.relativeCurrentPage,
-        limit: this.pageSize,
-        listId: this.listId
-      };
       this.loadingRelative = true;
-      getProcessDataByListId(relativeProcessParams).then(res => {
+      getProcessDataByListId(this.listId,this.relativeCurrentPage,this.pageSize).then(res => {
         this.relativeWorkFlowData = res;
         this.relativeWorkFlowTotal = res.length;
         this.loadingRelative = false;
@@ -212,6 +196,7 @@ export default {
           if(res.success){
             this.$Message.success(res.message);
             this.getRelativeWorkflowData();
+            this.$emit('addWorkflow');
           }
         })
     },
@@ -226,6 +211,7 @@ export default {
         if(res.success){
           this.$Message.success(res.message);
           this.relativeWorkFlowData.splice(index, 1);
+          this.$emit('addWorkflow');
         }
       })
     },

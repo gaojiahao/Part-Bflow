@@ -52,6 +52,9 @@ export default {
   components: {
     ActionModal
   },
+  props: {
+    enabledForbidden: Number
+  },
   data() {
     return {
       listId: this.$route.params.listId,
@@ -65,7 +68,29 @@ export default {
       columns: [
         {
           title: "已授权用户",
-          key: "objName"
+          key: "objNames",
+          render: (h, params) => {
+            let objNames = params.row.objNames
+                ? JSON.parse(params.row.objNames)
+                : [],
+              renderData = [];
+            if (objNames.length > 0) {
+              objNames.forEach((val, index) => {
+                let pushData;
+                pushData = h(
+                  "span",
+                  {
+                    style: {
+                      // margin: "0px 5px"
+                    }
+                  },
+                  val.name+'; '
+                );
+                renderData.push(pushData);
+              });
+              return h("div", renderData);
+            }
+          }
         },
         {
           title: "动作",
@@ -137,21 +162,21 @@ export default {
                     }
                   }
                 },
-                "修改"
+                "授权"
               )
             ]);
           }
         }
       ],
-      userSources: [
-        { user: "张三", source: "新增、查看、删除、修改" },
-        { user: "采购部", source: "新增、查看、删除" }
-      ]
+      userSources: []
     };
   },
   watch: {
     isModalConfirm: function() {
       this.getActionData();
+    },
+    enabledForbidden: function() {
+      this.getData();
     }
   },
   methods: {
@@ -224,18 +249,16 @@ export default {
       });
     },
     getData() {
-      let params = {
-        listId: this.listId,
-        filter: JSON.stringify([
-          {
-            operator: "eq",
-            value: "操作",
-            property: "type"
-          }
-        ])
-      };
+      let listId = this.listId,
+          filter = JSON.stringify([
+            {
+              operator: "eq",
+              value: "操作",
+              property: "type"
+            }
+          ]);
       //获取应用权限数据
-      getAllPermissionData(params).then(res => {
+      getAllPermissionData(listId,filter).then(res => {
         this.actionData = res.tableContent;
 
         this.actionData.map(ac=>{

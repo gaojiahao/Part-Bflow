@@ -17,7 +17,7 @@
         <Col span="2" class="pad15">
           <img :src="appData.icon" class="appIcon" />
         </Col>
-        <Col span="22" class="pad15">
+        <Col span="21" class="pad15">
           <h3> {{ appData.title+" - 应用详情" }} </h3>
           <Row class="pad5">
             <Col span="6">应用名称: <span v-if="showEditAppInfo">{{ appData.title }}</span>
@@ -28,7 +28,7 @@
                 </Tooltip>
               </b>
             </Col>
-            <Col span="6">应用类型: <span>{{ appData.type }}</span></Col>
+            <Col span="6">应用类型: <span>{{ appType }}</span></Col>
             <Col span="6">应用管理员: <span v-if="showEditAppInfo">
               <Icon type="person"></Icon>{{ appData.administrator }}</span>
               <Input v-else @on-click="selectAdminModal" v-model="appData.administrator" icon="arrow-down-b" style="width: 100px">
@@ -36,7 +36,7 @@
             </Col>
           </Row>
           <Row class="pad5">
-            <Col span="6">创建着: <span>{{ appData.modifer }}</span></Col>
+            <Col span="6">创建者: <span>{{ appData.modifer }}</span></Col>
             <Col span="6">创建时间: <span>{{ appData.crtTime }}</span></Col>
             <Col span="6">修改者:{{appData.modifer}}</Col>
             <Col span="6">修改时间: <span>{{ appData.crtTime }}</span></Col>
@@ -46,7 +46,18 @@
             <Input v-else v-model="appData.comment" style="width: 432px"></Input></Col>
           </Row>
         </Col>
-
+        <Col span="1">
+          <Dropdown @on-click="changeAppStatus" class="app-dropdown">
+                <a href="javascript:void(0)">
+                    操作
+                    <Icon type="arrow-down-b"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                    <DropdownItem name="enabled">启用</DropdownItem>
+                    <DropdownItem name="forbidden">停用</DropdownItem>
+                </DropdownMenu>
+            </Dropdown>
+        </Col>
     </Row>
 
    
@@ -64,7 +75,9 @@
 import {
   getAdminData,
   getListData,
-  saveAppInformation
+  saveAppInformation,
+  getAllPermissionData,
+  enabledForbiddenApp
 } from "@/services/appService.js";
 export default {
   name: "appInfo",
@@ -77,6 +90,7 @@ export default {
       appData: {},
       showEditAppInfo: true,
       selectModel: "",
+      appType: '',
       showAdminModal: false,
       selector: "",
       searchValue: "",
@@ -141,7 +155,6 @@ export default {
     },
     //管理员选择modal展示
     selectAdminModal() {
-      console.log(this.showAdminModal);
       this.showAdminModal = true;
     },
     //管理员选择确认
@@ -160,17 +173,58 @@ export default {
         this.adminData = res.tableContent;
         this.sameAdminData = res.tableContent;
       });
+    },
+    //启用禁用应用动作权限
+    changeAppStatus(name) {
+      let listId = this.listId,
+          filter = JSON.stringify([
+            {
+              operator: "eq",
+              value: "操作",
+              property: "type"
+            }
+          ]),
+          enabledPermissionIds = [],
+          forbiddenPermissionIds = [];
+      //获取应用权限数据
+      getAllPermissionData(listId,filter).then(res => {
+        res.tableContent.forEach(val => {
+          enabledPermissionIds.push(val.id);
+          if(val.name != '查看'){
+            forbiddenPermissionIds.push(val.id);
+          }
+        })
+        if(name === 'enabled'){
+          enabledForbiddenApp(enabledPermissionIds.join(',')).then(res => {
+            if(res.success){
+              this.$Message.success(res.message);
+              this.$emit('enabledForbiddenAppPermission');
+            }
+          });
+        }else{
+          enabledForbiddenApp(null,forbiddenPermissionIds.join(',')).then(res => {
+            if(res.success){
+              this.$Message.success(res.message);
+              this.$emit('enabledForbiddenAppPermission');
+            }
+          });
+        }
+      });
     }
   },
-
-  created() {},
-
   mounted() {
     let uniqueId = this.listId;
     this.getAdmintrstorData();
     //请求应用详情信息
     getListData(uniqueId).then(res => {
       this.appData = res[0];
+      if(this.appData.type === 'business'){
+        this.appType = '业务应用';
+      }else if(this.appData.type === 'subject'){
+        this.appType = '科目应用';
+      }else{
+        this.appType = '对象应用';
+      }
       this.$emit('changeAppType', this.appData.type);
     });
   }

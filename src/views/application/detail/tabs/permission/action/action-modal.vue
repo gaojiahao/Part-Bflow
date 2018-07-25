@@ -5,15 +5,15 @@
 <template>
   <Modal v-model="showPermissionModal" title="应用权限" width="1000" :mask-closable="false" @on-ok="submitPermission" @on-visible-change="modalVisibleChange">
     <div>
-      <Row v-if="isShowMemberSelect" :gutter="8" style="margin-bottom:10px;">
+      <Row :gutter="8" style="margin-bottom:10px;">
         <Col span="4">
-        <Button @click="selectUserModal" type="info">用户权限选择</Button>
+        <Button @click="selectUserModal" type="info" shape="circle">选择用户</Button>
         </Col>
         <Col span="4">
-        <Button @click="selectOrgModal" type="info">组织权限选择</Button>
+        <Button @click="selectOrgModal" type="info" shape="circle">选择组织</Button>
         </Col>
         <Col span="4">
-        <Button @click="selectPositionModal" type="info">职位权限选择</Button>
+        <Button @click="selectPositionModal" type="info" shape="circle">选择职位</Button>
         </Col>
       </Row>
       <Row :gutter="8">
@@ -52,19 +52,19 @@
         </Row>
         </Col>
         <Col span="12">
-        <Table @on-select="permissionSelectData" @on-select-cancel="cancelSelectAction" ref="actionRef" stripe height="350" :columns="allPermissionColumns" :data="allPermissionData">
+        <Table @on-selection-change="permissionSelectChange" ref="actionRef" stripe height="350" :columns="allPermissionColumns" :data="allPermissionData">
         </Table>
         </Col>
       </Row>
       <!-- 用户modal -->
-      <Modal v-model="showUserModal" title="用户选择" :mask-closable="false" @on-ok="confirmUser" :transfer="false">
+      <Modal v-model="showUserModal" title="用户选择" :mask-closable="false" @on-ok="confirmUser" @on-cancel="cancelSelectUser" :transfer="false">
         <div class="app-search">
           <Input v-model="searchUserValue" placeholder="名称搜索" style="width: 300px"></Input>
           <p @click="userFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </p>
         </div>
-        <Table @on-select="selectUserClick" @on-select-all="selectUserClick" height="400" stripe size="small" :loading="userLoading" :columns="userColumns" :data="userData">
+        <Table @on-selection-change="selectUserClick" height="400" stripe size="small" :loading="userLoading" :columns="userColumns" :data="userData">
         </Table>
         <div class="user-page">
           <div style="float: right;">
@@ -73,14 +73,14 @@
         </div>
       </Modal>
       <!-- 组织modal -->
-      <Modal v-model="showOrgModal" title="组织选择" :mask-closable="false" @on-ok="confirmOrg" :transfer="false">
+      <Modal v-model="showOrgModal" title="组织选择" :mask-closable="false" @on-ok="confirmOrg" @on-cancel="cancelSelectOrg" :transfer="false">
         <div class="app-search">
           <Input v-model="searchOrgValue" placeholder="搜索" style="width: 300px"></Input>
           <p @click="orgFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </p>
         </div>
-        <Table @on-select="selectOrgClick" @on-select-all="selectOrgClick" height="400" stripe size="small" :loading="orgLoading" :columns="orgColumns" :data="orgData">
+        <Table @on-selection-change="selectOrgClick" height="400" stripe size="small" :loading="orgLoading" :columns="orgColumns" :data="orgData">
         </Table>
         <div class="user-page">
           <div style="float: right;">
@@ -89,14 +89,14 @@
         </div>
       </Modal>
       <!-- 职位modal -->
-      <Modal v-model="showDepartmentModal" title="职位选择" :mask-closable="false" @on-ok="confirmDepartment" :transfer="false">
+      <Modal v-model="showDepartmentModal" title="职位选择" :mask-closable="false" @on-ok="confirmDepartment" @on-cancel="cancelSelectDep" :transfer="false">
         <div class="app-search">
           <Input v-model="searchDepValue" placeholder="搜索" style="width: 300px"></Input>
           <p @click="depFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </p>
         </div>
-        <Table @on-select="selectDepartmentClick" @on-select-all="selectDepartmentClick" height="400" stripe :size="tableSize" :loading="depLoading" :columns="departmentColumns" :data="departmentData">
+        <Table @on-selection-change="selectDepartmentClick" height="400" stripe :size="tableSize" :loading="depLoading" :columns="departmentColumns" :data="departmentData">
         </Table>
         <div class="user-page">
           <div style="float: right;">
@@ -117,6 +117,8 @@ import {
   getAllPermissionData,
   updateMemberPermission
 } from "@/services//appService.js";
+import {APP_ACTION} from "@/assets/const";
+
 export default {
   name: "permissionModal",
   components: {},
@@ -152,7 +154,6 @@ export default {
       showOrgModal: false,
       showDepartmentModal: false,
       showPermissionModal: false,
-      isShowMemberSelect: true,
       sameUserData: [],
       userSelectData: [],
       orgSelectData: [],
@@ -172,12 +173,13 @@ export default {
           align: "center"
         },
         {
-          title: "类型",
-          key: "type"
+          title: "动作名称",
+          key: "name",
+          width: 100,
         },
         {
-          title: "资源",
-          key: "name"
+          title: "说明",
+          key: "desc"
         }
       ],
       userSelection: [],
@@ -208,21 +210,20 @@ export default {
       
       //编辑状态回显用户、组织、职位
       if(this.isEdit === 'edit'){
-        this.isShowMemberSelect = false;
         //编辑状态回显动作权限
-          let params = { 
-            listId: this.appListId, 
-            filter: JSON.stringify([
-            {
-              operator: "eq",
-              value: '操作',
-              property: "type"
-            }
-          ])
-          };
-        getAllPermissionData(params).then(res => {
+          let listId = this.appListId, 
+              filter = JSON.stringify([
+              {
+                operator: "eq",
+                value: '操作',
+                property: "type"
+              }
+            ]);
+        getAllPermissionData(listId,filter).then(res => {
           this.allPermissionData = res.tableContent;
-
+          this.allPermissionData.map(ac=>{
+            ac.desc = APP_ACTION[ac.resourceName];
+          });
           this.allPermissionData.map(aItem=>{
             this.permissionSelectDatas.map(item=>{
               if(item.id === aItem.id){
@@ -232,7 +233,6 @@ export default {
           });
         });
         //编辑状态回显用户、组织、职位
-        if(this.memberType === 'user'){
           this.userSelectData = [];
           this.orgSelectData = [];
           this.departmentSelectData = [];
@@ -241,51 +241,40 @@ export default {
           this.departmentSelection = [];
 
           if(Object.keys(this.editActionData).length > 0){
-            let dispalyMemberData = {
-              nickname: this.editActionData.objName,
-              userId: this.editActionData.objId
-            };
-            this.userData.push(dispalyMemberData);
-            this.userSelectData.push(dispalyMemberData);
-            this.userSelection.push(dispalyMemberData);
+            let dispalyUserData = [],
+                dispalyOrgData = [],
+                dispalyDepData = [];
+            if(this.editActionData.objNames){
+              JSON.parse(this.editActionData.objNames).forEach(val => {
+                if(val.type === 'user'){
+                  dispalyUserData.push({
+                    nickname: val.name,
+                    userId: val.id
+                  });
+                }else if(val.type === 'group'){
+                  dispalyOrgData.push({
+                    name: val.name,
+                    id: val.id
+                  })
+                }else{
+                  dispalyDepData.push({
+                    name: val.name,
+                    id: val.id
+                  })
+                }
+              })
+            }
+            this.userData = dispalyUserData;
+            this.userSelectData = dispalyUserData;
+            this.userSelection = dispalyUserData;
+            this.orgData = dispalyOrgData;
+            this.orgSelectData = dispalyOrgData;
+            this.orgSelection = dispalyOrgData;
+            this.departmentData = dispalyDepData;
+            this.departmentSelectData = dispalyDepData;
+            this.departmentSelection = dispalyDepData;
           }
-        }else if(this.memberType === 'group'){
-          this.userSelectData = [];
-          this.orgSelectData = [];
-          this.departmentSelectData = [];
-          this.userSelection = [];
-          this.orgSelection = [];
-          this.departmentSelection = [];
-
-          if(Object.keys(this.editActionData).length > 0){
-          let dispalyMemberData = {
-              name: this.editActionData.objName,
-              id: this.editActionData.objId
-            };
-            this.orgData.push(dispalyMemberData);
-            this.orgSelectData.push(dispalyMemberData);
-            this.orgSelection.push(dispalyMemberData);
-          }
-        }else{
-          this.userSelectData = [];
-          this.orgSelectData = [];
-          this.departmentSelectData = [];
-          this.userSelection = [];
-          this.orgSelection = [];
-          this.departmentSelection = [];
-
-          if(Object.keys(this.editActionData).length > 0){
-          let dispalyMemberData = {
-              name: this.editActionData.objName,
-              id: this.editActionData.objId
-            };
-            this.departmentData.push(dispalyMemberData);
-            this.departmentSelectData.push(dispalyMemberData);
-            this.departmentSelection.push(dispalyMemberData);
-          }
-        }
       }else{
-        this.isShowMemberSelect = true;
         //新增状态清空缓存数据
         this.getData();
         this.userSelectData = [];
@@ -369,50 +358,56 @@ export default {
     //选择用户
     selectUserClick(selection, row) {
       if (this.userSelection.length > 0) {
-        for(let i=0;i<selection.length;i++){
-          for(let k=0;k<this.userSelection.length;k++){
-            if(selection[i].userId === this.userSelection[k].userId){
-              continue;
-            }else{
-              this.userSelection.push(selection[i]);
-            }
-          }
-        }
+        let relSelect = [];
+        relSelect = this.userSelection.concat(selection);
+        let obj = {};
+        this.userSelection = relSelect.reduce((cur, next) => {
+          obj[next.userId] ? "" : (obj[next.userId] = true && cur.push(next));
+          return cur;
+        }, []);
       } else {
         this.userSelection = selection;
       }
     },
+    //取消选择用户
+    cancelSelectUser() {
+      this.userSelection = this.userSelectData;
+    },
     //选择组织
     selectOrgClick(selection, row) {
       if (this.orgSelection.length > 0) {
-        for(let i=0;i<selection.length;i++){
-          for(let k=0;k<this.orgSelection.length;k++){
-            if(selection[i].id === this.orgSelection[k].id){
-              continue;
-            }else{
-              this.orgSelection.push(selection[i]);
-            }
-          }
-        }
+        let relSelect = [];
+        relSelect = this.orgSelection.concat(selection);
+        let obj = {};
+        this.orgSelection = relSelect.reduce((cur, next) => {
+          obj[next.id] ? "" : (obj[next.id] = true && cur.push(next));
+          return cur;
+        }, []);
       } else {
         this.orgSelection = selection;
       }
     },
+    //取消选择组织
+    cancelSelectOrg() {
+      this.orgSelection = this.orgSelectData;
+    },
     //选择职位
     selectDepartmentClick(selection, row) {
       if (this.departmentSelection.length > 0) {
-        for(let i=0;i<selection.length;i++){
-          for(let k=0;k<this.departmentSelection.length;k++){
-            if(selection[i].id === this.departmentSelection[k].id){
-              continue;
-            }else{
-              this.departmentSelection.push(selection[i]);
-            }
-          }
-        }
+        let relSelect = [];
+        relSelect = this.departmentSelection.concat(selection);
+        let obj = {};
+        this.departmentSelection = relSelect.reduce((cur, next) => {
+          obj[next.id] ? "" : (obj[next.id] = true && cur.push(next));
+          return cur;
+        }, []);
       } else {
         this.departmentSelection = selection;
       }
+    },
+    //取消选择职位
+    cancelSelectDep() {
+      this.departmentSelection = this.departmentSelectData;
     },
     //删除用户
     deleteUser(index) {
@@ -429,13 +424,9 @@ export default {
       this.departmentSelectData.splice(index, 1);
       this.departmentSelection.splice(index,1);
     },
-    //取消权限选择
-    cancelSelectAction(selection,row) {
-      this.permissionSelectDatas = selection;
-    },
     //权限选择
-    permissionSelectData(selection, row) {
-        this.permissionSelectDatas = selection;
+    permissionSelectChange(selection,row) {
+      this.permissionSelectDatas = selection;
     },
     //添加用户权限
     confirmUser() {
@@ -484,29 +475,15 @@ export default {
             roleId: roleId.join(","),
             groupId: groupId.join(","),
             permissionId: permissionId.join(",")
-          },
-          whichMember,
-          singleId;
+          };
       if(this.isEdit === 'edit'){
-        if(this.memberType === 'user'){
-          whichMember = 'sys_user_permission';
-          singleId = userId;
-        }else if(this.memberType === 'group'){
-          whichMember = 'sys_group_permission';
-          singleId = groupId;
-        }else{
-          whichMember = 'sys_role_permission';
-          singleId = roleId;
-        }
-        if(whichMember){
-          updateMemberPermission(singleId.join(","),permissionId.join(","),whichMember).then(res => {
+          updateMemberPermission(userId.join(","),roleId.join(","),groupId.join(","),permissionId.join(",")).then(res => {
             if(res.success){
               this.$Message.success(res.message);
               let Num = this.emitChange++;
               this.$emit("reGetData", Num);
             }
           })
-        }
       }else{
         if (params) {
           addPermission(params).then(res => {
@@ -518,7 +495,6 @@ export default {
           });
         }
       }
-      
     },
     getData() {
       let listId = this.appListId, 
@@ -532,6 +508,9 @@ export default {
       //获取应用权限数据
       getAllPermissionData(listId,filter).then(res => {
         this.allPermissionData = res.tableContent;
+        this.allPermissionData.map(ac=>{
+          ac.desc = APP_ACTION[ac.resourceName];
+        });
       });
     },
     //通知父组件modal的状态

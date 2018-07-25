@@ -3,17 +3,17 @@
 </style>
 
 <template>
-  <Modal v-model="showPermissionModal" title="视图权限" width="500" :mask-closable="false" @on-ok="submitPermission" @on-visible-change="modalVisibleChange">
+  <Modal v-model="showPermissionModal" title="视图权限" width="600" :mask-closable="false" @on-ok="submitPermission" @on-visible-change="modalVisibleChange">
     <div>
       <Row :gutter="8" style="margin-bottom:10px;">
         <Col span="8">
-        <Button @click="selectUserModal" type="info">用户权限选择</Button>
+        <Button @click="selectUserModal" type="info" shape="circle">选择用户</Button>
         </Col>
         <Col span="8">
-        <Button @click="selectOrgModal" type="info">组织权限选择</Button>
+        <Button @click="selectOrgModal" type="info" shape="circle">选择组织</Button>
         </Col>
         <Col span="8">
-        <Button @click="selectPositionModal" type="info">职位权限选择</Button>
+        <Button @click="selectPositionModal" type="info" shape="circle">选择职位</Button>
         </Col>
       </Row>
       <Row :gutter="8">

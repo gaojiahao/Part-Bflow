@@ -37,14 +37,7 @@ export default {
         {
           title: "应用类型",
           key: "relationAppType",
-          align: "left",
-          render: (h, params) => {
-            if (params.row.classify === 1) {
-              return h("span", {}, "会计类");
-            } else {
-              return h("span", {}, "非会计类");
-            }
-          }
+          align: "left"
         },
         {
           title: "关系类型",
@@ -66,7 +59,7 @@ export default {
   },
   methods: {},
   created() {
-    getRelatedApp('a4897429-f4f2-44a4-ade7-2fe8dc67c3cf').then(res => {
+    getRelatedApp(this.$route.params.listId).then(res => {
         this.relatedApps = res.tableContent;
         //todo
         //提示用户，请求失败

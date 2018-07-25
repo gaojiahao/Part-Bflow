@@ -6,7 +6,7 @@ axios.defaults.timeout = 10000
 
 axios.interceptors.request.use(config => {
   let token = getToken();
-  config.headers.Authorization = '5b3ff3b18697452e9b76685396fb1841';
+  config.headers.Authorization = 'dccf7997011d4192b5291b3adc9e92a9';
   return config;
 }, err => {
   return Promise.reject(err)

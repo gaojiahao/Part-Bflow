@@ -7,13 +7,13 @@
     <div>
       <Row :gutter="8" style="margin-bottom:10px;">
         <Col span="4">
-        <Button @click="selectUserModal" type="info">用户权限选择</Button>
+        <Button @click="selectUserModal" type="info" shape="circle">选择用户</Button>
         </Col>
         <Col span="4">
-        <Button @click="selectOrgModal" type="info">组织权限选择</Button>
+        <Button @click="selectOrgModal" type="info" shape="circle">选择组织</Button>
         </Col>
         <Col span="4">
-        <Button @click="selectPositionModal" type="info">职位权限选择</Button>
+        <Button @click="selectPositionModal" type="info" shape="circle">选择职位</Button>
         </Col>
       </Row>
       <Row :gutter="8">

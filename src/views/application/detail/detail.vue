@@ -89,7 +89,8 @@ export default {
           this.appData.appType = '对象应用';
         }
         this.appType = this.appData.type;
-        if(currentUser.userId === this.appData.administratorId){
+        
+        if(currentUser.userId == this.appData.administratorId){
           this.isAdmin = true;
         }else{
           this.isAdmin = false;

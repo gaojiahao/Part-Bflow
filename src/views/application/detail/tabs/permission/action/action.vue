@@ -222,7 +222,7 @@ export default {
       let actionStatus = list.atype === 0 ? true : false,
         relStatus;
       if (actionStatus) {
-        relStatus = 1;
+        relStatus = -2;
       } else {
         relStatus = 0;
       }

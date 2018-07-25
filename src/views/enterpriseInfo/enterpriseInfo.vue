@@ -72,7 +72,7 @@
                     </div>
                 </div>
             </section>
-            
+
         </main>
         <user-modal v-model="showAdminModal" title="添加用户" @on-ok="confirmModal">
             <!-- <div class="app-search">
@@ -88,7 +88,9 @@
 import {
   downloadImage,
   getAdminData,
-  getEnterpriseById
+  getEnterpriseById,
+  updateRelation,
+  deleteRelation
 } from "@/services/enterpriseService";
 import { getToken } from "@/utils/utils";
 import UserModal from "@/components/modal/Modal";
@@ -153,7 +155,8 @@ export default {
 
     //管理员选择确认
     confirmModal() {
-      let obj = {};
+      let obj = {},
+        singleId = [];
       this.enterpriseInfo["admins"].push(...this.selectEnterPriseAdmin);
       this.enterpriseInfo["admins"] = this.enterpriseInfo["admins"].reduce(
         (cur, next) => {
@@ -162,22 +165,40 @@ export default {
         },
         []
       );
+
+      this.selectEnterPriseAdmin.map(item => {
+        singleId.push(item.userId);
+      });
+
+      updateRelation(singleId.join(",")).then(res => {
+        if (res.success) {
+          this.$Message.info("添加成功！");
+        } else {
+          this.$Message.error(res.message);
+        }
+      });
+
       this.selectEnterPriseAdmin = [];
-
-
-
       this.$refs.selection.selectAll(false); //清空选项
       this.showAdminModal = false;
     },
 
     //删除管理员节点
     deleteEnterpriseAdmin(event) {
-      let target = Number(event.target.parentElement.getAttribute("userid"));
+      let userId = Number(event.target.parentElement.getAttribute("userid"));
       this.enterpriseInfo["admins"] = this.enterpriseInfo["admins"].filter(
         f => {
-          return target !== f.userId;
+          return userId !== f.userId;
         }
       );
+
+      deleteRelation(userId).then(res => {
+        if (res.success) {
+          this.$Message.info("删除成功！");
+        } else {
+          this.$Message.error(res.message);
+        }
+      });
     },
 
     //获取管理员数据

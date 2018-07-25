@@ -1,3 +1,5 @@
+import {request} from './fetch'
+
 /** 
  * @author GuoZheng
  * 设置头像
@@ -22,13 +24,13 @@ export const downloadImage = (url) => request('/H_roleplay-si/ds/download', {
    * @author GuoZheng
    * 添加企业管理员
   */
-  export const updateRelation = (url) => request('/H_roleplay-si/ps/updateRelation')
+  export const updateRelation = (single) => request('/H_roleplay-si/ps/updateRelation',{list:'sys_user_role',single:single,multi:1},"POST")
   
   /** 
    * @author GuoZheng
    * 删除企业管理员
   */
-  export const deleteRelation = (url) => request('/H_roleplay-si/ps/deleteRelation')
+  export const deleteRelation = (single) => request('/H_roleplay-si/ps/deleteRelation',{list:'sys_user_role',single:single,multi:1},"POST")
 
   /**
  * @author XiaoYing

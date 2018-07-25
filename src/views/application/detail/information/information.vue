@@ -52,9 +52,9 @@
                     操作
                     <Icon type="arrow-down-b"></Icon>
                 </a>
-                <DropdownMenu slot="list">
-                    <DropdownItem name="enabled" :disabled="!isAdminTrue">启用</DropdownItem>
-                    <DropdownItem name="forbidden" :disabled="!isAdminTrue">停用</DropdownItem>
+                <DropdownMenu v-if="isAdminTrue" slot="list">
+                    <DropdownItem name="enabled">启用</DropdownItem>
+                    <DropdownItem name="forbidden">停用</DropdownItem>
                 </DropdownMenu>
             </Dropdown>
         </Col>

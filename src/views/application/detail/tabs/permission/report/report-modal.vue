@@ -310,14 +310,17 @@ export default {
     //删除用户
     deleteUser(index) {
       this.userSelectData.splice(index, 1);
+      this.userSelection.splice(index,1);
     },
     //删除组织
     deleteOrg(index) {
       this.orgSelectData.splice(index, 1);
+      this.orgSelection.splice(index,1);
     },
     //删除职位
     deleteDepartment(index) {
       this.departmentSelectData.splice(index, 1);
+      this.departmentSelection.splice(index,1);
     },
 
     //添加用户权限

@@ -21,23 +21,19 @@
         <Row class="app-workflow-table">
             <Table :columns="columns" :data="workflows" size="small"></Table>
         </Row>
-        <!-- 工作流modal -->
-        <workflow-modal @emitWorkFlowModal="emitWorkFlowModal" :deleteRelationWorkflow="deleteRelationWorkflow" :modalWorkflowStatus="showWorkFlow" @addWorkflow="addWorkflow"></workflow-modal>
     </div>
 </template>
 
 <script>
 import {
   getProcessDataByListId,
-  saveWorkFlowInfo,
   enabledForbiddenWorkFlow
 } from "@/services/appService.js";
-import WorkflowModal from './workflow-modal';
 
 export default {
   name: "workflowSource",
   components: {
-    WorkflowModal
+    
   },
   props: {
     isAdmin: Boolean
@@ -45,7 +41,6 @@ export default {
   data() {
     return {
       listId: this.$route.params.listId,
-      showWorkFlow: false,
       isAdminTrue: false,
       deleteRelationWorkflow: -1,
       columns: [
@@ -146,14 +141,6 @@ export default {
       getProcessDataByListId(this.listId).then(res => {
         this.workflows = res;
       });
-    },
-    //监听工作流modal返回的状态
-    emitWorkFlowModal() {
-      this.showWorkFlow = false;
-    },
-    //展示工作流modal
-    showWorkFlowModal() {
-      this.showWorkFlow = true;
     },
     //删除已关联的工作流
     deleteWorkflow(row, index) {

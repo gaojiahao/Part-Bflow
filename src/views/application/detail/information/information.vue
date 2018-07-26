@@ -20,11 +20,15 @@
         <Col span="21" class="pad15">
           <h3> {{ appData.title?appData.title:'待加载' }}  - 应用详情</h3>
           <Row class="pad5">
-            <Col span="6">应用名称: <span v-if="showEditAppInfo">{{ appData.title }}</span>
+            <Col span="6">应用名称: 
+              <span v-if="showEditAppInfo">{{ appData.title }}</span>
               <Input v-else v-model="appData.title" style="width: 200px"></Input>
               <b @click="editAppinfo">
-                <Tooltip content="编辑" placement="top">
+                <Tooltip v-if="showEditBtn" content="编辑" placement="top">
                   <Icon class="app-edit-icon" type="compose"></Icon>
+                </Tooltip>
+                <Tooltip v-else content="保存" placement="top">
+                  <Icon class="app-edit-icon" type="document-text"></Icon>
                 </Tooltip>
               </b>
             </Col>
@@ -39,7 +43,7 @@
             <Col span="6">创建者: <span>{{ appData.creator }}</span></Col>
             <Col span="6">创建时间: <span>{{ appData.crtTime }}</span></Col>
             <Col span="6">修改者:{{appData.modifer}}</Col>
-            <Col span="6">修改时间: <span>{{ appData.modtime }}</span></Col>
+            <Col span="6">修改时间: <span>{{ appData.modTime }}</span></Col>
           </Row>
           <Row class="pad5">
             <Col span="24">说明:<span v-if="showEditAppInfo">{{ appData.comment }}</span>
@@ -91,6 +95,7 @@ export default {
     return {
       showEditAppInfo: true,
       isAdminTrue: false,
+      showEditBtn: true,
       selectModel: "",
       showAdminModal: false,
       selector: "",
@@ -147,6 +152,7 @@ export default {
     //修改应用信息
     editAppinfo() {
       this.showEditAppInfo = !this.showEditAppInfo;
+      this.showEditBtn = !this.showEditBtn;
       if (this.showEditAppInfo) {
         let params = {
           uniqueId: this.appData.uniqueId,
@@ -157,6 +163,7 @@ export default {
         saveAppInformation(params).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
+            this.$emit('reloadData');
             this.$emit('changeAdmin');
           }
         });

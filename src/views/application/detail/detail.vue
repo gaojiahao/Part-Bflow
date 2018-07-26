@@ -8,7 +8,7 @@
     
 
     <!-- 应用详情信息 -->
-    <app-info :listId="this.$route.params.listId" :enforData="enforData" :isAdmin="isAdmin" :appData="appData" @changeAdmin="changeAdmin" @enabledForbiddenAppPermission="enabledForbiddenAppPermission"></app-info>
+    <app-info :listId="this.$route.params.listId" :enforData="enforData" :isAdmin="isAdmin" :appData="appData" @reloadData="reloadData" @changeAdmin="changeAdmin" @enabledForbiddenAppPermission="enabledForbiddenAppPermission"></app-info>
 
 
     <!-- 应用tabs -->
@@ -97,6 +97,10 @@ export default {
           this.isAdmin = false;
         }
       });
+    },
+    //重新刷新数据
+    reloadData() {
+      this.getAppInfoDatas();
     }
   },
   created() {

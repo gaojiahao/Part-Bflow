@@ -67,10 +67,17 @@
    
     <Modal v-model="showAdminModal" title="请选择" @on-ok="confirmModal">
       <div class="app-search">
-        <Icon class="app-search-icon" type="search"></Icon>
         <Input v-model="searchValue" placeholder="搜索" style="width: 300px"></Input>
+        <p @click="adminFilter" class="app-search-icon">
+            <Button type="primary" size="small">查询</Button>
+        </p>
       </div>
-      <Table :highlight-row="true" @on-row-click="selectAdmin" height="400" stripe :columns="adminColumns" size="small" :data="adminData"></Table>
+      <Table :highlight-row="true" @on-row-click="selectAdmin" :loading="adminLoading" height="400" stripe :columns="adminColumns" size="small" :data="adminData"></Table>
+      <div class="user-page">
+          <div style="float: right;">
+            <Page :total="total" :current="currentPage" :page-size="pageSize" @on-change="onPageChange" size="small" show-total></Page>
+          </div>
+      </div>
     </Modal>
   </div>
 </template>
@@ -96,6 +103,7 @@ export default {
       showEditAppInfo: true,
       isAdminTrue: false,
       showEditBtn: true,
+      adminLoading: true,
       selectModel: "",
       showAdminModal: false,
       selector: "",
@@ -104,6 +112,9 @@ export default {
       notPublishStatus: "未发布",
       notAppStatusColor: "blue",
       hasAppStatusColor: "green",
+      total: 0,
+      currentPage: 1,
+      pageSize: 10,
       adminColumns: [
         {
           title: "工号",
@@ -115,27 +126,10 @@ export default {
         }
       ],
       adminData: [],
-      sameAdminData: [],
       selectAdminData: {}
     };
   },
   watch: {
-    searchValue(text) {
-      const result = [];
-      if (text) {
-        this.sameAdminData.forEach((val, index) => {
-          if (
-            val.nickname.indexOf(text) > -1 ||
-            val.userCode.indexOf(text) > -1
-          ) {
-            result.push(val);
-          }
-        });
-        this.adminData = result;
-      } else {
-        this.adminData = this.sameAdminData;
-      }
-    },
     isAdmin: function(value) {
       if(value){
         this.isAdminTrue = true;
@@ -183,11 +177,13 @@ export default {
       this.selectAdminData = selection;
     },
     //获取管理员数据
-    getAdmintrstorData() {
+    getAdmintrstorData(filter) {
       let groupId = 347;
-      getAdminData(groupId).then(res => {
-        this.adminData = res.tableContent;
-        this.sameAdminData = res.tableContent;
+      this.adminLoading = true;
+      getAdminData(groupId,filter,this.currentPage,this.pageSize).then(res => {
+        this.adminData = res.tableContent; 
+        this.total = res.dataCount;
+        this.adminLoading = false;
       });
     },
     //启用禁用应用动作权限
@@ -226,6 +222,21 @@ export default {
           });
         }
       });
+    },
+    //点击页码触发
+    onPageChange(currentPage) {
+      this.currentPage = currentPage;
+      let filter = JSON.stringify([
+        { operator: "like", value: this.searchValue, property: "nickname" }
+      ]);
+      this.getAdmintrstorData(filter);
+    },
+    //查询管理员
+    adminFilter() {
+      let filter = JSON.stringify([
+        { operator: "like", value: this.searchValue, property: "nickname" }
+      ]);
+      this.getAdmintrstorData(filter);
     }
   },
   mounted() {

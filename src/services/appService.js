@@ -307,4 +307,10 @@ export const enabledForbiddenApp = (enabledIds,forbiddenIds) => request('/H_role
 // export const getRelatedApp = (listId) => request('./mock/appList/related-app.json', {listId: listId});
 export const getRelatedApp = (listId) => request('/H_roleplay-si/ds/getAppRelevantExamples', { listId: listId });
 
+/**
+ * @author zhaohuai
+ * @description 获取用户相关信息
+ */
+export const getUserInfoByUserId = (userId) => request('/H_roleplay-si/ds/getUserInfoByUserId', { userId: userId });
+
 

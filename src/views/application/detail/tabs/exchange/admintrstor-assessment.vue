@@ -15,7 +15,7 @@
       <div style="margin:20px auto;width:85%;">
         <Form ref="formValidate" :label-width="150" :model="adminAssessData" :rules="ruleValidate">
           <FormItem label="期间（月份）:" prop="duringDate">
-            <DatePicker format="yyyy年MM月" type="month" placeholder="选择日期" style="width: 200px" v-model="adminAssessData.duringDate"></DatePicker>
+            <DatePicker format="yyyy-MM" type="month" placeholder="选择日期" style="width: 200px" v-model="adminAssessData.duringDate"></DatePicker>
           </FormItem>
           <FormItem label="效率与成本改进成果:" prop="result">
             <Input type="textarea" v-model="adminAssessData.result"></Input>
@@ -93,7 +93,7 @@ export default {
           key: "crtTime",
           width: 150,
           render: (h, params) => {
-            let renderDate = this.formatDate(params.row.crtTime);
+            let renderDate = this.formatDate(params.row.date);
             return h("span", {}, renderDate);
           }
         },
@@ -117,7 +117,7 @@ export default {
                   this.$refs["formValidate"].resetFields();
                   this.isEdit = 'edit';
                   this.IsEditId = params.row.id;
-                  this.adminAssessData.duringDate = params.row.crtTime;
+                  this.adminAssessData.duringDate = params.row.date;
                   this.adminAssessData.result = params.row.achievement;
                   this.adminAssessData.opportunity = params.row.chance;
                 }
@@ -146,6 +146,7 @@ export default {
     },
     //添加管理员自评
     submitAdminAssess() {
+      debugger
       let params = {
         listId: this.listId,
         opportunity: this.adminAssessData.opportunity,

@@ -8,7 +8,7 @@
     
 
     <!-- 应用详情信息 -->
-    <app-info :listId="this.$route.params.listId"  :isAdmin="isAdmin" :appData="appData" @changeAdmin="changeAdmin" @enabledForbiddenAppPermission="enabledForbiddenAppPermission"></app-info>
+    <app-info :listId="this.$route.params.listId" :enforData="enforData" :isAdmin="isAdmin" :appData="appData" @changeAdmin="changeAdmin" @enabledForbiddenAppPermission="enabledForbiddenAppPermission"></app-info>
 
 
     <!-- 应用tabs -->
@@ -61,6 +61,7 @@ export default {
       listId: this.$route.params.listId,
       //应用详情信息
       appData: {},
+      enforData: [],
       isAdmin: false,
       appType: '',
       enabledForbidden: -1

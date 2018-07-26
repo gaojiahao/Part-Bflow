@@ -15,16 +15,16 @@
                 <div class="select-logo">
                     <label class="left-leble">企业LOGO</label>
                     <Upload ref="upload" :show-upload-list="false" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" type="drag" action="/H_roleplay-si/ds/upload" style="display: inline-block;width:128px;vertical-align: middle;" :headers="httpHeaders">
-                        <div style="width: 128px;height:128px;line-height: 128px;">
+                        <div style="width: 128px;height:128px;line-height: 128px;" v-if="!enterpriseInfo.logo">
                             <img v-if="enterpriseInfo.logo" :src="enterpriseInfo.logo">
                             <i v-if="!enterpriseInfo.logo" class="iconfont">&#xe63b;</i>
                         </div>
-                        <!-- <div style="width: 128px;height:128px;line-height: 128px;" class="demo-upload-list" v-if="imageUrl">
-                            <img :src="imageUrl">
+                        <div style="width: 128px;height:128px;line-height: 128px;" class="demo-upload-list" v-if="enterpriseInfo.logo">
+                            <img :src="enterpriseInfo.logo">
                             <div class="demo-upload-list-cover">
-                                <p class="iconfont" @click.native="handleRemove(item)">&#xe63b;</p>
+                                <Icon type="camera" color="#fff" size="30"></Icon>
                             </div>
-                        </div> -->
+                        </div>
                     </Upload>
                 </div>
                 <div class="select-explain">
@@ -74,7 +74,20 @@
                     </div>
                 </div>
             </section>
-
+            <section class="info-warp-main-section">
+                <div>
+                    <label class="left-leble">网占登录页背景图</label>
+                    <div style="display: inline-block;vertical-align: middle;">
+                        <Upload :before-upload="handleUploadBefore" :on-success="handleBackgroundSuccess" action="/H_roleplay-si/ds/upload" :headers="httpHeaders">
+                            <Button type="ghost" icon="ios-cloud-upload-outline">选择背景图</Button>
+                        </Upload>
+                        <div v-if="enterpriseInfo.backgroundName">上传文件名称: 
+                            <a :href="enterpriseInfo.backgroundImg">{{ enterpriseInfo.backgroundName }}</a>
+                            <Button type="text" @click="upload" :loading="loadingStatus">{{ loadingStatus ? '上传中' : '点击上传' }}</Button>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
         <user-modal v-model="showAdminModal" title="添加用户" @on-ok="confirmModal">
             <!-- <div class="app-search">
@@ -91,6 +104,7 @@ import {
   downloadImage,
   getAdminData,
   getEnterpriseById,
+  addOrUpdateEnterprise,
   updateRelation,
   deleteRelation
 } from "@/services/enterpriseService";
@@ -112,14 +126,18 @@ export default {
         instruction: "",
         address: "",
         phone: "",
-        admins: []
+        admins: [],
+        backgroundImg: "",
+        backgroundName: ""
       },
       editEnterpriseName: false,
       edit: "修改",
 
       httpHeaders: {
-        Authorization: "bc7cdfe127fc4c9183dff8633533ce91"
+        Authorization: "0329567ae32c4ce6a7d987d48045355d"
       },
+
+      loadingStatus: false,
 
       showAdminModal: false,
       selectEnterPriseAdmin: [],
@@ -219,15 +237,68 @@ export default {
 
       //保存修改的数据
       if (this.editEnterpriseName) {
+        let data = {
+          id: this.enterpriseInfo.id,
+          nickname: this.enterpriseInfo.nickname,
+          name: this.enterpriseInfo.name,
+          instruction: this.enterpriseInfo.instruction,
+          address: this.enterpriseInfo.address,
+          phone: this.enterpriseInfo.phone
+        };
+        addOrUpdateEnterprise(data).then(res => {
+          if (res.success) {
+            this.$Message.info("保存成功");
+          } else {
+            this.$Message.error(res.message);
+          }
+        });
       }
 
       this.editEnterpriseName = !this.editEnterpriseName;
+    },
+
+    //上传
+    handleBackgroundSuccess(res, file) {
+      this.enterpriseInfo.backgroundImg =
+        "/H_roleplay-si/ds/download?width=128&height=128&specify=true&url=" +
+        res.data[0].attacthment;
+    },
+
+    handleUploadBefore(file) {
+      this.enterpriseInfo.backgroundName = file.name;
+      return true;
+    },
+
+    upload() {
+      this.loadingStatus = true;
+      let data = {
+        id: this.enterpriseInfo.id,
+        backgroundImg: this.enterpriseInfo.backgroundImg,
+        backgroundName: this.enterpriseInfo.backgroundName
+      };
+      addOrUpdateEnterprise(data).then(res => {
+        if (res.success) {
+          this.$Message.info("图片上传成功");
+          this.loadingStatus = false;
+        } else {
+          this.$Message.error(res.message);
+        }
+      });
     },
 
     handleSuccess(res, file) {
       this.enterpriseInfo.logo =
         "/H_roleplay-si/ds/download?width=128&height=128&specify=true&url=" +
         res.data[0].attacthment;
+
+      let data = { id: this.enterpriseInfo.id, logo: this.enterpriseInfo.logo };
+      addOrUpdateEnterprise(data).then(res => {
+        if (res.success) {
+          this.$Message.info("图片上传成功");
+        } else {
+          this.$Message.error(res.message);
+        }
+      });
     },
 
     handleMaxSize(file) {
@@ -246,7 +317,7 @@ export default {
     }
   },
 
-  mounted() {
+  created() {
     this.getAdmintrstorData();
   }
 };

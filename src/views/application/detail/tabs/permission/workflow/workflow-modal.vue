@@ -217,7 +217,7 @@ export default {
     },
     //创建工作流
     createWorkflow() {
-      window.open('/myflow/createWorkFlow.html?listId=' + this.listId);
+      window.open('/myflow/createWorkFlow.html?listId=' + this.listId + '&triggerType=create');
     }
   },
   mounted() {

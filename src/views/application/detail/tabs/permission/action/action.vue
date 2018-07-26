@@ -9,15 +9,14 @@
         </Row> -->
         <Row class="app-action">
             <Row class="app-action-title">
-                <h3>动作  <a @click="showModal">授权</a></h3>
-              
+                <h3>动作  <a v-if="isAdminTrue" @click="showModal">授权</a></h3>
             </Row>
             <div class="app-action-source">
                 <Row class="app-action-source-list">
                     <Col span="6" class="app-action-source-item" v-for="(list,index) of actionData" :key="index">
 
                         <Col span="2" class="app-action-source-item-check">
-                            <Checkbox @on-change="isForbidden(list,index)" :value="list.atype===0?true:false"></Checkbox>
+                            <Checkbox @on-change="isForbidden(list,index)" :disabled="!isAdminTrue" :value="list.atype===0?true:false"></Checkbox>
                         </Col>
 
                         <Col span="21" class="app-action-source-item-content">
@@ -28,7 +27,7 @@
                 </Row>
 
                 <Row>
-                    <Table :columns="columns" :data="userSources"></Table>
+                    <Table :columns="columns" :data="userSources" size="small"></Table>
                 </Row>
             </div>
         </Row>
@@ -53,12 +52,14 @@ export default {
     ActionModal
   },
   props: {
-    enabledForbidden: Number
+    enabledForbidden: Number,
+    isAdmin: Boolean
   },
   data() {
     return {
       listId: this.$route.params.listId,
       showActionModal: false,
+      isAdminTrue: false,
       isEdit: "",
       editActionData: {},
       memberType: "",
@@ -119,8 +120,20 @@ export default {
               return h("div", renderData);
             }
           }
-        },
-        {
+        }
+      ],
+      userSources: []
+    };
+  },
+  watch: {
+    isModalConfirm: function() {
+      this.getActionData();
+    },
+    enabledForbidden: function() {
+      this.getData();
+    },
+    isAdmin: function(value) {
+      const lastColumn = {
           title: "操作",
           key: "list",
           align: "center",
@@ -166,17 +179,18 @@ export default {
               )
             ]);
           }
+        };
+      if(value){
+        this.isAdminTrue = true;
+        if(this.columns[this.columns.length-1].title !== '操作'){
+          this.columns.push(lastColumn);
         }
-      ],
-      userSources: []
-    };
-  },
-  watch: {
-    isModalConfirm: function() {
-      this.getActionData();
-    },
-    enabledForbidden: function() {
-      this.getData();
+      }else{
+        this.isAdminTrue = false;
+        if(this.columns[this.columns.length-1].title === '操作'){
+          this.columns.splice(this.columns.length-1,1);
+        }
+      }
     }
   },
   methods: {
@@ -208,7 +222,7 @@ export default {
       let actionStatus = list.atype === 0 ? true : false,
         relStatus;
       if (actionStatus) {
-        relStatus = 1;
+        relStatus = -2;
       } else {
         relStatus = 0;
       }
@@ -227,16 +241,30 @@ export default {
         content: "确认删除此用户权限？",
         onOk: () => {
           let depDeleteParams = {},
-            permissionIds = [];
+              permissionIds = [],
+              userId = [],
+              groupId = [],
+              roleId = [];
           //获取permissionIds的集合
           JSON.parse(params.row.action).forEach(val => {
             for (let k in val) {
               permissionIds.push(k);
             }
           });
+          //获取用户组织职位ids集合
+          JSON.parse(params.row.objNames).forEach(val => {
+            if(val.type === 'user'){
+              userId.push(val.id);
+            }else if(val.type === 'group'){
+              groupId.push(val.id);
+            }else{
+              roleId.push(val.id);
+            }
+          })
           depDeleteParams = {
-            list: type,
-            single: params.row.objId,
+            user: userId.join(','),
+            group: groupId.join(','),
+            role: roleId.join(','),
             multi: permissionIds.join(",")
           };
           deleteRelationPermission(depDeleteParams).then(res => {

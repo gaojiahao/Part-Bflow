@@ -28,7 +28,7 @@
                 </Tooltip>
               </b>
             </Col>
-            <Col span="6">应用类型: <span>{{ appType }}</span></Col>
+            <Col span="6">应用类型: <span>{{ appData.appType }}</span></Col>
             <Col span="6">应用管理员: <span v-if="showEditAppInfo">
               <Icon type="person"></Icon>{{ appData.administrator }}</span>
               <Input v-else @on-click="selectAdminModal" v-model="appData.administrator" icon="arrow-down-b" style="width: 100px">
@@ -36,7 +36,7 @@
             </Col>
           </Row>
           <Row class="pad5">
-            <Col span="6">创建者: <span>{{ appData.modifer }}</span></Col>
+            <Col span="6">创建者: <span>{{ appData.creator }}</span></Col>
             <Col span="6">创建时间: <span>{{ appData.crtTime }}</span></Col>
             <Col span="6">修改者:{{appData.modifer}}</Col>
             <Col span="6">修改时间: <span>{{ appData.crtTime }}</span></Col>
@@ -52,7 +52,7 @@
                     操作
                     <Icon type="arrow-down-b"></Icon>
                 </a>
-                <DropdownMenu slot="list">
+                <DropdownMenu v-if="isAdminTrue" slot="list">
                     <DropdownItem name="enabled">启用</DropdownItem>
                     <DropdownItem name="forbidden">停用</DropdownItem>
                 </DropdownMenu>
@@ -83,14 +83,15 @@ export default {
   name: "appInfo",
   components: {},
   props: {
-    listId: String
+    listId: String,
+    appData: Object,
+    isAdmin: Boolean
   },
   data() {
     return {
-      appData: {},
       showEditAppInfo: true,
+      isAdminTrue: false,
       selectModel: "",
-      appType: '',
       showAdminModal: false,
       selector: "",
       searchValue: "",
@@ -129,6 +130,13 @@ export default {
       } else {
         this.adminData = this.sameAdminData;
       }
+    },
+    isAdmin: function(value) {
+      if(value){
+        this.isAdminTrue = true;
+      }else{
+        this.isAdminTrue = false;
+      }
     }
   },
   methods: {
@@ -149,6 +157,7 @@ export default {
         saveAppInformation(params).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
+            this.$emit('changeAdmin');
           }
         });
       }
@@ -215,18 +224,6 @@ export default {
   mounted() {
     let uniqueId = this.listId;
     this.getAdmintrstorData();
-    //请求应用详情信息
-    getListData(uniqueId).then(res => {
-      this.appData = res[0];
-      if(this.appData.type === 'business'){
-        this.appType = '业务应用';
-      }else if(this.appData.type === 'subject'){
-        this.appType = '科目应用';
-      }else{
-        this.appType = '对象应用';
-      }
-      this.$emit('changeAppType', this.appData.type);
-    });
   }
 };
 </script>

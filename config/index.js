@@ -11,8 +11,8 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/H_roleplay-si': {
-        target: 'http://192.168.3.172:8080',
+      '/H_roleplay-si':{
+        target:'http://192.168.3.172:8080',
         changeOrigin: true
       },
       '/corebiz-api': {

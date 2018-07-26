@@ -126,7 +126,7 @@ export const getAppResourcesAndAuthoritys = (listId, filter) => request('/H_role
  * @author XiaoYing
  * @description 删除用户、组织、职位某一权限
  */
-export const deleteRelationPermission = (params) => request('/H_roleplay-si/ps/deleteRelation', params, 'POST');
+export const deleteRelationPermission = (params) => request('/H_roleplay-si/app/deleteAppPermission', params, 'POST');
 
 /**
  * @author XiaoYing
@@ -183,9 +183,13 @@ export const getAppviews = (params) => request('/H_roleplay-si/ds/getListViewOrT
 
 /**
  * @author XiaoYing
- * @description 保存工作流信息
+ * @description 启用禁用工作流
  */
-export const saveWorkFlowInfo = (params) => request('/H_roleplay-si/ds/saveData', params, 'POST');
+export const enabledForbiddenWorkFlow = (enabledIds,forbiddenIds,deleteId) => request('/H_roleplay-si/app/prohibitProc', {
+    open: enabledIds,
+    close: forbiddenIds,
+    delete: deleteId
+}, 'POST');
 
 /**
  * @author XiaoYing

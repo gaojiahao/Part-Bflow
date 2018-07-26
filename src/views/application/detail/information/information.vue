@@ -163,6 +163,7 @@ export default {
         saveAppInformation(params).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
+            this.$emit('reloadData');
             this.$emit('changeAdmin');
           }
         });

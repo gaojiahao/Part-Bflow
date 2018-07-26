@@ -252,7 +252,7 @@ export default {
           };
           this.$Modal.confirm({
             title: "确认",
-            content: "确认设置此视图为默认视图？",
+            content: "确认删除此视图？",
             onOk: () => {
               deleteAppViews(deleteParams).then(res => {
                 if (res.success) {

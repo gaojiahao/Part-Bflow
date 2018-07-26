@@ -18,7 +18,7 @@
           <img :src="appData.icon" class="appIcon" />
         </Col>
         <Col span="21" class="pad15">
-          <h3> {{ appData.title+" - 应用详情" }} </h3>
+          <h3> {{ appData.title?appData.title:'待加载' }}  - 应用详情</h3>
           <Row class="pad5">
             <Col span="6">应用名称: <span v-if="showEditAppInfo">{{ appData.title }}</span>
               <Input v-else v-model="appData.title" style="width: 200px"></Input>
@@ -39,11 +39,11 @@
             <Col span="6">创建者: <span>{{ appData.creator }}</span></Col>
             <Col span="6">创建时间: <span>{{ appData.crtTime }}</span></Col>
             <Col span="6">修改者:{{appData.modifer}}</Col>
-            <Col span="6">修改时间: <span>{{ appData.crtTime }}</span></Col>
+            <Col span="6">修改时间: <span>{{ appData.modtime }}</span></Col>
           </Row>
           <Row class="pad5">
             <Col span="24">说明:<span v-if="showEditAppInfo">{{ appData.comment }}</span>
-            <Input v-else v-model="appData.comment" style="width: 432px"></Input></Col>
+            <Input v-else v-model="appData.comment" style="width: 1000px"></Input></Col>
           </Row>
         </Col>
         <Col span="1">

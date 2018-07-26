@@ -134,7 +134,7 @@ export default {
       edit: "修改",
 
       httpHeaders: {
-        Authorization: "0329567ae32c4ce6a7d987d48045355d"
+        Authorization: getToken()
       },
 
       loadingStatus: false,

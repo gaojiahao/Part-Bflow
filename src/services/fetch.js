@@ -1,12 +1,14 @@
 import axios from 'axios'
-import {getToken} from '@/utils/utils'
+import {
+  getToken
+} from '@/utils/utils'
 
 axios.defaults.timeout = 10000
 
 
 axios.interceptors.request.use(config => {
   let token = getToken();
-  config.headers.Authorization = 'dccf7997011d4192b5291b3adc9e92a9';
+  config.headers.Authorization = tocken;
   return config;
 }, err => {
   return Promise.reject(err)
@@ -59,7 +61,7 @@ axios.interceptors.response.use(response => {
   } else {
     err.message = "连接到服务器失败"
   }
-    return Promise.reject(err.message )
+  return Promise.reject(err.message)
 })
 
 
@@ -71,7 +73,11 @@ axios.interceptors.response.use(response => {
  */
 export const request = (url, params = {}, method = 'get') => {
 
-  let options = Object.assign({}, {url,method,params})
+  let options = Object.assign({}, {
+    url,
+    method,
+    params
+  })
 
   return new Promise((resolve, reject) => {
     axios.request(options).then(res => {

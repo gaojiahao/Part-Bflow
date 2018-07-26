@@ -68,7 +68,7 @@
                     </label>
 
                     <div class="user-container">
-                        <Tag v-for="item in enterpriseInfo.admins" :key="item.userId" :userId="item.userId" type="border" closable color="green" size="small" @on-close="deleteEnterpriseAdmin">
+                        <Tag v-for="item in enterpriseInfo.admins" :key="item.userId" :userId="item.userId" closable color="#2c9383" size="small" @on-close="deleteEnterpriseAdmin">
                             {{item.nickname}}
                         </Tag>
                     </div>
@@ -78,11 +78,11 @@
                 <div>
                     <label class="left-leble">网占登录页背景图</label>
                     <div style="display: inline-block;vertical-align: middle;">
-                        <Upload :before-upload="handleUploadBefore" :on-success="handleBackgroundSuccess" action="/H_roleplay-si/ds/upload" :headers="httpHeaders">
+                        <Upload :show-upload-list="false" :before-upload="handleUploadBefore" :on-success="handleBackgroundSuccess" action="/H_roleplay-si/ds/upload" :headers="httpHeaders">
                             <Button type="ghost" icon="ios-cloud-upload-outline">选择背景图</Button>
                         </Upload>
                         <div v-if="enterpriseInfo.backgroundName">上传文件名称: 
-                            <a :href="enterpriseInfo.backgroundImg">{{ enterpriseInfo.backgroundName }}</a>
+                            <a :href="enterpriseInfo.backgroundImg" target="_blank">{{ enterpriseInfo.backgroundName }}</a>
                             <Button type="text" @click="upload" :loading="loadingStatus">{{ loadingStatus ? '上传中' : '点击上传' }}</Button>
                         </div>
                     </div>
@@ -265,6 +265,8 @@ export default {
     },
 
     handleUploadBefore(file) {
+        this.handleMaxSize(file);
+        this.handleFormatError(file);
       this.enterpriseInfo.backgroundName = file.name;
       return true;
     },

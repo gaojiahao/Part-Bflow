@@ -117,7 +117,7 @@ export default {
                   this.$refs["formValidate"].resetFields();
                   this.isEdit = 'edit';
                   this.IsEditId = params.row.id;
-                  this.adminAssessData.duringDate = params.row.date;
+                  this.adminAssessData.duringDate = this.formatDate(params.row.date);
                   this.adminAssessData.result = params.row.achievement;
                   this.adminAssessData.opportunity = params.row.chance;
                 }
@@ -146,7 +146,6 @@ export default {
     },
     //添加管理员自评
     submitAdminAssess() {
-      debugger
       let params = {
         listId: this.listId,
         opportunity: this.adminAssessData.opportunity,
@@ -157,7 +156,6 @@ export default {
       if(this.isEdit === 'edit'){
         params.id = this.IsEditId;
       }
-
       this.$refs["formValidate"].validate(valid => {
         if (valid) {
           saveAssessment(params).then(res => {

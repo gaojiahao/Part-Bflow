@@ -72,7 +72,7 @@
             <Button type="primary" size="small">查询</Button>
         </p>
       </div>
-      <Table :highlight-row="true" @on-row-click="selectAdmin" :loading="adminLoading" height="400" stripe :columns="adminColumns" size="small" :data="adminData"></Table>
+      <Table :highlight-row="true" @on-row-click="selectAdmin" :loading="adminLoading" height="300" stripe :columns="adminColumns" size="small" :data="adminData"></Table>
       <div class="user-page">
           <div style="float: right;">
             <Page :total="total" :current="currentPage" :page-size="pageSize" @on-change="onPageChange" size="small" show-total></Page>

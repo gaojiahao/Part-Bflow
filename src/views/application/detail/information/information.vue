@@ -22,7 +22,7 @@
           <Row class="pad5">
             <Col span="6">应用名称: 
               <span v-if="showEditAppInfo">{{ appData.title }}</span>
-              <Input v-else v-model="appData.title" style="width: 200px"></Input>
+              <Input v-else v-model="appData.title" style="width: 150px"></Input>
               <b @click="editAppinfo">
                 <Tooltip v-if="showEditBtn" content="编辑" placement="top">
                   <Icon class="app-edit-icon" type="compose"></Icon>

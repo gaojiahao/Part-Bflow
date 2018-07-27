@@ -23,7 +23,7 @@
           <b class="permission-title">用户</b>
           </Col>
           <Col span="21" class="member-body">
-          <Tag @on-close="deleteUser(userData,index)" v-for="(userData, index) of userSelectData" :key="index" type="border" closable color="yellow">
+          <Tag @on-close="deleteUser" v-for="(userData, index) of userSelectData" :key="index" :userId="userData.userId" type="border" closable color="yellow">
             {{ userData.nickname }}
           </Tag>
           </Col>
@@ -34,7 +34,7 @@
           <b class="permission-title">组织</b>
           </Col>
           <Col span="21" class="member-body">
-          <Tag @on-close="deleteOrg(orgData,index)" v-for="(orgData, index) of orgSelectData" :key="index" type="border" closable color="green">
+          <Tag @on-close="deleteOrg" v-for="(orgData, index) of orgSelectData" :key="index" :orgId="orgData.id" type="border" closable color="green">
             {{ orgData.name }}
           </Tag>
           </Col>
@@ -45,7 +45,7 @@
           <b class="permission-title">职位</b>
           </Col>
           <Col span="21" class="member-body">
-          <Tag @on-close="deleteDepartment(departmentData,index)" v-for="(departmentData, index) of departmentSelectData" :key="index" type="border" closable color="blue">
+          <Tag @on-close="deleteDepartment" v-for="(departmentData, index) of departmentSelectData" :key="index" :depId="departmentData.id" type="border" closable color="blue">
             {{ departmentData.name }}
           </Tag>
           </Col>
@@ -404,30 +404,46 @@ export default {
       this.departmentSelection = this.departmentSelectData;
     },
     //删除用户
-    deleteUser(data,index) {
-      clearAppPermission(this.appListId,data.userId).then(res => {
+    deleteUser(event) {
+      let userId = event.target.parentElement.getAttribute('userid');
+      
+      clearAppPermission(this.appListId,userId).then(res => {
         if(res.success){
-          this.userSelectData.splice(index, 1);
-          this.userSelection.splice(index,1);
+           this.userSelectData = this.userSelectData.filter(f =>{
+            return f.userId != userId;
+          })
+          this.userSelection = this.userSelection.filter(f =>{
+            return f.userId != userId;
+          })
         }
         
       });
     },
     //删除组织
-    deleteOrg(data,index) {
-      clearAppPermission(this.appListId,null,null,data.id).then(res => {
+    deleteOrg(event) {
+      let orgId = event.target.parentElement.getAttribute('orgid');
+      clearAppPermission(this.appListId,null,null,orgId).then(res => {
         if(res.success){
-          this.orgSelectData.splice(index, 1);
-          this.orgSelection.splice(index,1);
+          this.orgSelectData = this.orgSelectData.filter(f =>{
+            return f.id != orgId;
+          });
+          this.orgSelection = this.orgSelection.filter(f =>{
+            return f.id != orgId;
+          });
         }
       });
     },
     //删除职位
     deleteDepartment(data,index) {
-      clearAppPermission(this.appListId,null,data.id).then(res => {
+      let depId = event.target.parentElement.getAttribute('depid');
+      clearAppPermission(this.appListId,null,depId).then(res => {
         if(res.success){
-          this.departmentSelectData.splice(index, 1);
-          this.departmentSelection.splice(index,1);
+          this.departmentSelectData = this.departmentSelectData.filter(f =>{
+            return f.id != depId;
+          });
+          this.departmentSelection = this.departmentSelection.filter(f =>{
+            return f.id != depId;
+          });
         }
       });
     },

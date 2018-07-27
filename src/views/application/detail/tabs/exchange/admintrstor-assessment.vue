@@ -106,8 +106,15 @@ export default {
         {
           title: "效率与成本改进机会",
           key: "chance"
-        },
-        {
+        }
+      ],
+      assessments: []
+    };
+  },
+  watch: {
+    isAdmin: function(value) {
+      if (value) {
+        const lastColumn = {
           title: "操作",
           align: "center",
           key: "handle",
@@ -130,17 +137,16 @@ export default {
               "编辑"
             );
           }
-        }
-      ],
-      assessments: []
-    };
-  },
-  watch: {
-    isAdmin: function(value) {
-      if (value) {
+        };
         this.isAdminTrue = true;
+        if(this.columns[this.columns.length-1].title !== '操作'){
+          this.columns.push(lastColumn);
+        }
       } else {
         this.isAdminTrue = false;
+        if(this.columns[this.columns.length-1].title === '操作'){
+          this.columns.splice(this.columns.length-1,1);
+        }
       }
     }
   },

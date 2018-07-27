@@ -24,6 +24,7 @@
     </Row>
     <div class="add-bottom">
         <Affix class="add-save-btn" :offset-bottom="0">
+            <Button @click="goBack">返回</Button>
             <Button @click="addAppTemplate" type="primary">保存</Button>
         </Affix>
     </div>
@@ -68,12 +69,13 @@ export default {
         addTemplateApp(addTemplateData).then(res =>{
             if(res.success){
                 this.$Message.success(res.message);
+                this.selectTemplate = [];
             }
         })
-     }
-  },
-  mounted() {
-      getAppTemplateData().then(res => {
+     },
+     //获取应用模板数据
+     getTplData() {
+         getAppTemplateData().then(res => {
           res.tableContent.forEach((val, index) => {
               if(val.tplType === 'business'){
                   val.isSelect = false;
@@ -81,6 +83,13 @@ export default {
               }
           })
       })
+     },
+     goBack() {
+         this.$router.push({path: '/application/list'});
+     }
+  },
+  created() {
+      this.getTplData();
   }
 }
 </script>

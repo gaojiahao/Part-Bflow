@@ -277,16 +277,9 @@ export default {
       });
     },
     getData() {
-      let listId = this.listId,
-          filter = JSON.stringify([
-            {
-              operator: "eq",
-              value: "操作",
-              property: "type"
-            }
-          ]);
+      let listId = this.listId;
       //获取应用权限数据
-      getAllPermissionData(listId,filter).then(res => {
+      getAllPermissionData(listId).then(res => {
         this.actionData = res.tableContent;
 
         this.actionData.map(ac=>{

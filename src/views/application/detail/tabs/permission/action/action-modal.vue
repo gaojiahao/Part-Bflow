@@ -212,15 +212,8 @@ export default {
       //编辑状态回显用户、组织、职位
       if(this.isEdit === 'edit'){
         //编辑状态回显动作权限
-          let listId = this.appListId, 
-              filter = JSON.stringify([
-              {
-                operator: "eq",
-                value: '操作',
-                property: "type"
-              }
-            ]);
-        getAllPermissionData(listId,filter).then(res => {
+          let listId = this.appListId;
+        getAllPermissionData(listId).then(res => {
           this.allPermissionData = res.tableContent;
           this.allPermissionData.map(ac=>{
             ac.desc = APP_ACTION[ac.resourceName];
@@ -511,16 +504,9 @@ export default {
       }
     },
     getData() {
-      let listId = this.appListId, 
-          filter = JSON.stringify([
-          {
-            operator: "eq",
-            value: '操作',
-            property: "type"
-          }
-        ]);
+      let listId = this.appListId;
       //获取应用权限数据
-      getAllPermissionData(listId,filter).then(res => {
+      getAllPermissionData(listId).then(res => {
         this.allPermissionData = res.tableContent;
         this.allPermissionData.map(ac=>{
           ac.desc = APP_ACTION[ac.resourceName];

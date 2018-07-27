@@ -57,11 +57,10 @@ export const getAdminData = (groupId,filter,page,limit) => request('/H_roleplay-
 
 /**
  * @author XiaoYing
- * @description 获取所有权限数据
+ * @description 获取所有动作权限数据
  */
-export const getAllPermissionData = (listId, filter) => request('/H_roleplay-si/ds/getPermissionByListId', {
-  listId: listId,
-  filter: filter
+export const getAllPermissionData = (listId) => request('/H_roleplay-si/ds/getActionPermissionByListId', {
+  listId: listId
 });
 
 /**

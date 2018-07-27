@@ -14,12 +14,12 @@
             <section class="info-warp-main-section">
                 <div class="select-logo">
                     <label class="left-leble">企业LOGO</label>
-                    <Upload ref="upload" :show-upload-list="false" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" type="drag" action="/H_roleplay-si/ds/upload" style="display: inline-block;width:128px;vertical-align: middle;" :headers="httpHeaders">
-                        <div style="width: 128px;height:128px;line-height: 128px;" v-if="!enterpriseInfo.logo">
+                    <Upload ref="upload" :show-upload-list="false" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" type="drag" action="/H_roleplay-si/ds/upload" style="display: inline-block;width:256px;vertical-align: middle;" :headers="httpHeaders">
+                        <div style="width: 256px;height:64px;line-height: 64px;" v-if="!enterpriseInfo.logo">
                             <img v-if="enterpriseInfo.logo" :src="enterpriseInfo.logo">
                             <i v-if="!enterpriseInfo.logo" class="iconfont">&#xe63b;</i>
                         </div>
-                        <div style="width: 128px;height:128px;line-height: 128px;" class="demo-upload-list" v-if="enterpriseInfo.logo">
+                        <div style="width: 256px;height:64px;line-height: 64px;" class="demo-upload-list" v-if="enterpriseInfo.logo">
                             <img :src="enterpriseInfo.logo">
                             <div class="demo-upload-list-cover">
                                 <Icon type="camera" color="#fff" size="30"></Icon>
@@ -48,7 +48,7 @@
                 <div class="select-explain">
                     <label class="left-leble">企业地址</label>
                     <span v-if="!editEnterpriseName">{{enterpriseInfo.address}}</span>
-                    <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.address" style="width:400px" class="input-common-att" />
+                    <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.address"  class="input-common-att" />
                 </div>
                 <div class="select-explain">
                     <label class="left-leble">联系电话</label>
@@ -315,7 +315,7 @@ export default {
     //上传
     handleBackgroundSuccess(res, file) {
       this.enterpriseInfo.backgroundImg =
-        "/H_roleplay-si/ds/download?width=128&height=128&specify=true&url=" +
+        "/H_roleplay-si/ds/download?url=" +
         res.data[0].attacthment;
     },
 
@@ -345,7 +345,7 @@ export default {
 
     handleSuccess(res, file) {
       this.enterpriseInfo.logo =
-        "/H_roleplay-si/ds/download?width=128&height=128&specify=true&url=" +
+        "/H_roleplay-si/ds/download?width=256&height=64&url=" +
         res.data[0].attacthment;
 
       let data = { id: this.enterpriseInfo.id, logo: this.enterpriseInfo.logo };

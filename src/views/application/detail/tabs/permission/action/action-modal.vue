@@ -23,7 +23,7 @@
           <b class="permission-title">用户</b>
           </Col>
           <Col span="21" class="member-body">
-          <Tag @on-close="deleteUser(index)" v-for="(userData, index) of userSelectData" :key="index" type="border" closable color="yellow">
+          <Tag @on-close="deleteUser(userData,index)" v-for="(userData, index) of userSelectData" :key="index" type="border" closable color="yellow">
             {{ userData.nickname }}
           </Tag>
           </Col>
@@ -34,7 +34,7 @@
           <b class="permission-title">组织</b>
           </Col>
           <Col span="21" class="member-body">
-          <Tag @on-close="deleteOrg(index)" v-for="(orgData, index) of orgSelectData" :key="index" type="border" closable color="green">
+          <Tag @on-close="deleteOrg(orgData,index)" v-for="(orgData, index) of orgSelectData" :key="index" type="border" closable color="green">
             {{ orgData.name }}
           </Tag>
           </Col>
@@ -45,7 +45,7 @@
           <b class="permission-title">职位</b>
           </Col>
           <Col span="21" class="member-body">
-          <Tag @on-close="deleteDepartment(index)" v-for="(departmentData, index) of departmentSelectData" :key="index" type="border" closable color="blue">
+          <Tag @on-close="deleteDepartment(departmentData,index)" v-for="(departmentData, index) of departmentSelectData" :key="index" type="border" closable color="blue">
             {{ departmentData.name }}
           </Tag>
           </Col>
@@ -115,7 +115,8 @@ import {
   getAllOrgData,
   getAllDepartmentData,
   getAllPermissionData,
-  updateMemberPermission
+  updateMemberPermission,
+  clearAppPermission
 } from "@/services//appService.js";
 import {APP_ACTION} from "@/assets/const";
 
@@ -410,19 +411,32 @@ export default {
       this.departmentSelection = this.departmentSelectData;
     },
     //删除用户
-    deleteUser(index) {
-      this.userSelectData.splice(index, 1);
-      this.userSelection.splice(index,1);
+    deleteUser(data,index) {
+      clearAppPermission(this.appListId,data.userId).then(res => {
+        if(res.success){
+          this.userSelectData.splice(index, 1);
+          this.userSelection.splice(index,1);
+        }
+        
+      });
     },
     //删除组织
-    deleteOrg(index) {
-      this.orgSelectData.splice(index, 1);
-      this.orgSelection.splice(index,1);
+    deleteOrg(data,index) {
+      clearAppPermission(this.appListId,null,null,data.id).then(res => {
+        if(res.success){
+          this.orgSelectData.splice(index, 1);
+          this.orgSelection.splice(index,1);
+        }
+      });
     },
     //删除职位
-    deleteDepartment(index) {
-      this.departmentSelectData.splice(index, 1);
-      this.departmentSelection.splice(index,1);
+    deleteDepartment(data,index) {
+      clearAppPermission(this.appListId,null,data.id).then(res => {
+        if(res.success){
+          this.departmentSelectData.splice(index, 1);
+          this.departmentSelection.splice(index,1);
+        }
+      });
     },
     //权限选择
     permissionSelectChange(selection,row) {
@@ -477,7 +491,7 @@ export default {
             permissionId: permissionId.join(",")
           };
       if(this.isEdit === 'edit'){
-          updateMemberPermission(userId.join(","),roleId.join(","),groupId.join(","),permissionId.join(",")).then(res => {
+          updateMemberPermission(userId.join(","),roleId.join(","),groupId.join(","),permissionId.join(","),this.appListId).then(res => {
             if(res.success){
               this.$Message.success(res.message);
               let Num = this.emitChange++;

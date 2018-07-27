@@ -282,11 +282,23 @@ export const ProhibitApp = (id, permType) => request('/H_roleplay-si/app/Prohibi
  * @author XiaoYing
  * 修改权限确认
  */
-export const updateMemberPermission = (userId, roleId, groupId, permissionId) => request('/H_roleplay-si/app/updateAppPermission', {
+export const updateMemberPermission = (userId, roleId, groupId, permissionId,listId) => request('/H_roleplay-si/app/updateAppActionPermission', {
   user: userId,
   role: roleId,
   group: groupId,
-  multi: permissionId
+  multi: permissionId,
+  listId: listId
+}, 'POST');
+
+/** 
+ * @author XiaoYing
+ * 删除某一用户或组织或职位全部权限
+ */
+export const clearAppPermission = (listId,userId, roleId, groupId) => request('/H_roleplay-si/app/clearAppActionPermission', {
+  listId: listId,
+  user: userId,
+  role: roleId,
+  group: groupId
 }, 'POST');
 
 export const downloadImage = (url) => request('/H_roleplay-si/ds/download', {

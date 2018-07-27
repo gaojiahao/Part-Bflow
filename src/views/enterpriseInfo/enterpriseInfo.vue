@@ -68,7 +68,7 @@
                     </label>
 
                     <div class="user-container">
-                        <Tag v-for="item in enterpriseInfo.admins" :key="item.userId" :userId="item.userId" closable color="#2c9383" size="small" @on-close="deleteEnterpriseAdmin">
+                        <Tag v-for="item in enterpriseInfo.admins" :key="item.userId" :userId="item.userId" type="border" :closable="closable" color="blue" size="small" @on-close="deleteEnterpriseAdmin">
                             {{item.nickname}}
                         </Tag>
                     </div>
@@ -81,7 +81,7 @@
                         <Upload :show-upload-list="false" :before-upload="handleUploadBefore" :on-success="handleBackgroundSuccess" action="/H_roleplay-si/ds/upload" :headers="httpHeaders">
                             <Button type="ghost" icon="ios-cloud-upload-outline">选择背景图</Button>
                         </Upload>
-                        <div v-if="enterpriseInfo.backgroundName">上传文件名称: 
+                        <div v-if="enterpriseInfo.backgroundName">上传文件名称:
                             <a :href="enterpriseInfo.backgroundImg" target="_blank">{{ enterpriseInfo.backgroundName }}</a>
                             <Button type="text" @click="upload" :loading="loadingStatus">{{ loadingStatus ? '上传中' : '点击上传' }}</Button>
                         </div>
@@ -89,12 +89,19 @@
                 </div>
             </section>
         </main>
-        <user-modal v-model="showAdminModal" title="添加用户" @on-ok="confirmModal">
-            <!-- <div class="app-search">
-                <Icon class="app-search-icon" type="search"></Icon>
-                <Input v-model="searchValue" placeholder="搜索" style="width: 300px" />
-            </div> -->
-            <Table @on-selection-change="selectAdmin" ref="selection" height="400" :columns="adminColumns" size="small" :data="columnsData"></Table>
+        <user-modal v-model="showAdminModal" title="添加用户" @on-ok="confirmModal" @onVisibleChange="onModelVisibleChange">
+            <div class="app-search">
+                <Input v-model="searchValue" placeholder="搜索" style="width: 300px" clearable @on-enter="adminFilter" @on-change="handleInputValueChange"></Input>
+                <p class="app-search-icon">
+                    <Button @click="adminFilter" type="primary" size="small">查询</Button>
+                </p>
+            </div>
+            <Table @on-selection-change="selectAdmin" ref="selection" height="340" :columns="adminColumns" size="small" :data="columnsData" :loading="loading"></Table>
+            <div style="margin: 10px;overflow: hidden">
+                <div style="float: right;">
+                    <Page :total="pageTotal" :current="currentPage" :page-size="pageSize" size="small" @on-change="changeCurrentPage" show-total show-elevator></Page>
+                </div>
+            </div>
         </user-modal>
     </div>
 </template>
@@ -156,7 +163,14 @@ export default {
           title: "姓名",
           key: "nickname"
         }
-      ]
+      ],
+      closable: false,
+
+      searchValue: "",
+      pageTotal: 0, //table总数
+      pageSize: 8,
+      currentPage: 1, //table当前页
+      loading: false
     };
   },
 
@@ -219,21 +233,61 @@ export default {
       });
     },
 
-    //获取管理员数据
-    getAdmintrstorData() {
-      let groupId = 347;
-      getAdminData(groupId).then(res => {
-        this.columnsData = res.tableContent;
-      });
+    onModelVisibleChange(val) {
+      if (!val) {
+        this.searchValue = "";
+      } else {
+          this.getAdminData();
+      }
+    },
 
+    changeCurrentPage(currentPage) {
+      this.currentPage = currentPage;
+      let filter = JSON.stringify([
+        { operator: "like", value: this.searchValue, property: "nickname" }
+      ]);
+      this.getAdminData(filter);
+    },
+
+    //查询管理员
+    adminFilter() {
+      let filter = JSON.stringify([
+        { operator: "like", value: this.searchValue, property: "nickname" }
+      ]);
+      this.getAdminData(filter);
+    },
+
+    //清空输入框
+    handleInputValueChange(event) {
+      if (!this.searchValue) {
+        this.getAdminData();
+      }
+    },
+
+   
+    getAdmintrstorData() {
       getEnterpriseById().then(res => {
         this.enterpriseInfo = res;
       });
     },
 
+    //获取管理员数据
+    getAdminData(filter){
+        let groupId = 347;
+      this.loading = true;
+      getAdminData(groupId, filter, this.currentPage, this.pageSize).then(
+        res => {
+          this.pageTotal = res.dataCount;
+          this.columnsData = res.tableContent;
+          this.loading = false;
+        }
+      );
+    },
+
     //编辑企业简称
     handleEditName() {
       this.edit = this.editEnterpriseName ? "修改" : "保存";
+      this.closable = !this.closable;
 
       //保存修改的数据
       if (this.editEnterpriseName) {
@@ -265,8 +319,8 @@ export default {
     },
 
     handleUploadBefore(file) {
-        this.handleMaxSize(file);
-        this.handleFormatError(file);
+      this.handleMaxSize(file);
+      this.handleFormatError(file);
       this.enterpriseInfo.backgroundName = file.name;
       return true;
     },

@@ -4,12 +4,12 @@
 
 <template>
     <div class="info-warp">
-        <header class="info-warp-header">
+        <!-- <header class="info-warp-header">
             <h3>
                 企业信息
                 <a @click="handleEditName">{{edit}}</a>
             </h3>
-        </header>
+        </header> -->
         <main class="info-warp-main">
             <section class="info-warp-main-section">
                 <div class="select-logo">
@@ -31,7 +31,7 @@
                     <label class="left-leble">企业简称</label>
                     <span v-if="!editEnterpriseName">{{enterpriseInfo.nickname}}</span>
                     <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.nickname" class="input-common-att" />
-
+                     <a @click="handleEditName">{{edit}}</a>
                 </div>
                 <div class="select-explain">
                     <label class="left-leble">企业全称</label>
@@ -48,7 +48,7 @@
                 <div class="select-explain">
                     <label class="left-leble">企业地址</label>
                     <span v-if="!editEnterpriseName">{{enterpriseInfo.address}}</span>
-                    <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.address" class="input-common-att" />
+                    <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.address" style="width:400px" class="input-common-att" />
                 </div>
                 <div class="select-explain">
                     <label class="left-leble">联系电话</label>
@@ -60,17 +60,18 @@
                 <div>
                     <label class="left-leble">
                         企业管理员
-                        <b @click="selectAdminModal">
+                        <!-- <b @click="selectAdminModal">
                             <Tooltip content="编辑" placement="top">
                                 <Icon class="app-edit-icon" type="compose"></Icon>
                             </Tooltip>
-                        </b>
+                        </b> -->
                     </label>
 
                     <div class="user-container">
                         <Tag v-for="item in enterpriseInfo.admins" :key="item.userId" :userId="item.userId" type="border" :closable="closable" color="blue" size="small" @on-close="deleteEnterpriseAdmin">
                             {{item.nickname}}
                         </Tag>
+                        <a  @click="selectAdminModal" style="font-size:14px;">添加</a>
                     </div>
                 </div>
             </section>

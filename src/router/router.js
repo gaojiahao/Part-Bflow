@@ -84,25 +84,21 @@ export const addressBook = {
             title: '用户列表'
         },
         component: () => import('@/views/addressBook/user/users.vue')
-        },{
+    }, {
         path: 'details/:userId',
         name: 'details',
         meta: {
             title: '用户详情'
         },
-<<<<<<< HEAD
-        component: () => import('@/views/addressBook/user/detail.vue')
-     },{
-         path:'origanization',
-         name:'origanization',
-         meta:{
-             title:'组织列表'
-         },
-         component:() => import('@/views/addressBook/origanization/origanization.vue')
-=======
         component: () => import('@/views/addressBook/user/details.vue')
->>>>>>> fa467d2729b50ee452a56d634964c95dce6bd409
-     }]
+    }, {
+        path: 'origanization',
+        name: 'origanization',
+        meta: {
+            title: '组织列表'
+        },
+        component: () => import('@/views/addressBook/origanization/origanization.vue')
+    }]
 }
 
 export const sujectformRouter = {

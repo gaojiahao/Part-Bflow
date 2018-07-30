@@ -90,7 +90,7 @@ export const addressBook = {
         meta: {
             title: '用户详情'
         },
-        component: () => import('@/views/addressBook/user/detail.vue')
+        component: () => import('@/views/addressBook/user/details.vue')
      }]
 }
 

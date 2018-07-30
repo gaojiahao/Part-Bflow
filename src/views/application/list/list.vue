@@ -94,7 +94,17 @@ export default {
         },
         {
           title: "管理员",
-          key: "administrator"
+          key: "administrator",
+          render: (h,params) => {
+            return ('span',[
+              h('Icon',{
+                props: {
+                  type: 'person'
+                }
+              }),
+              h('span',{},params.row.administrator)
+            ])
+          }
         },
         {
           title: "创建时间",

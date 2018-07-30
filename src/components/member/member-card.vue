@@ -10,10 +10,11 @@
           </Col>
           <Col span="16" class="card-right">
             <slot name="card-right"></slot>
-            <!-- <Tag class="card-right-tag" color="green">{{ cardSatus===0?'使用中':'停用'}}</Tag>
-            <h3 class="card-right-top">{{ cardTop }}</h3>
-            <div class="card-right-middle">{{ cardMiddle }}</div>
-            <div class="card-right-middle">{{ cardBottom }}</div> -->
+            <!-- 例如 -->
+            <Tag class="card-right-tag" color="green">{{ cardSatus===0?'使用中':'停用'}}</Tag>
+            <h3 class="card-right-top">123</h3>
+            <div class="card-right-middle">123</div>
+            <div class="card-right-middle">123</div>
           </Col>
       </Row>
   </div>

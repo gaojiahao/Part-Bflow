@@ -10,6 +10,20 @@
         <a v-if="isAdminTrue" @click="addAssess">添加自评</a>
       </h3>
     </Row>
+    <!-- <Row v-for="(assess, index) of assessments" :key="index" class="pad5 ">
+      <div>
+        <img src="resources/images/icon/contactor.png"  class="user-icon">
+        <div class="font14 content" >
+          <div >
+            <h4 >黄孝辉 <span class="fr">2018-04</span></h4>
+            </div>
+          <div class="assessment-info">
+            <div><div>改进成果:</div>{{assess.achievement}}</div>
+            <div><div>改进机会:</div>{{assess.chance}}</div>
+          </div>
+        </div>
+      </div>
+    </Row> -->
     <Row class="assessment-content">
       <Table :columns="columns" :data="assessments"></Table>
     </Row>
@@ -139,13 +153,13 @@ export default {
           }
         };
         this.isAdminTrue = true;
-        if(this.columns[this.columns.length-1].title !== '操作'){
+        if (this.columns[this.columns.length - 1].title !== "操作") {
           this.columns.push(lastColumn);
         }
       } else {
         this.isAdminTrue = false;
-        if(this.columns[this.columns.length-1].title === '操作'){
-          this.columns.splice(this.columns.length-1,1);
+        if (this.columns[this.columns.length - 1].title === "操作") {
+          this.columns.splice(this.columns.length - 1, 1);
         }
       }
     }

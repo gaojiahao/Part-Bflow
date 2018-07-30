@@ -91,6 +91,13 @@ export const addressBook = {
             title: '用户详情'
         },
         component: () => import('@/views/addressBook/user/detail.vue')
+     },{
+         path:'origanization',
+         name:'origanization',
+         meta:{
+             title:'组织列表'
+         },
+         component:() => import('@/views/addressBook/origanization/origanization.vue')
      }]
 }
 

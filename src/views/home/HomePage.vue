@@ -85,13 +85,7 @@ export default {
       allTaskCount: [],
       ds: ds("wss://sunwingfood.roletask.com:6021/deepstream"),
       books$$: null,
-      isAdmin:
-        this.$currentUser.isSysRoleList &&
-        Array.isArray(this.$currentUser.isSysRoleList)
-          ? this.$currentUser.isSysRoleList.filter(function(o) {
-              return o.id == 1;
-            }).length
-          : false,
+      isAdmin:this.$currentUser.isAdmin,
       model: 0
     };
   },
@@ -151,8 +145,8 @@ export default {
     //订阅消息
     subscribeMessage: function() {
       let currentUser = this.$currentUser;
-      if (currentUser.nickname && currentUser.Id) {
-        let username = [currentUser.nickname, currentUser.userId].join("|");
+      if (currentUser.name && currentUser.Id) {
+        let username = [currentUser.name, currentUser.userId].join("|");
         let token = getToken();
         //注册deepStream
         this.ds.login(

@@ -97,6 +97,17 @@ export const enterpriseInfo = {
 }
 
 
+export const users = {
+    path: '/users',
+    name: 'users',
+    meta: {
+        title: 'users - 用户'
+    },
+    component: () => import('@/views/addressBook/user/users.vue')
+}
+
+
+
 export const routers = [
     loginRouter,
     flowRouter,
@@ -105,5 +116,6 @@ export const routers = [
     app,
     sujectformRouter,
     enterpriseInfo,
+    users,
     ...appRouter
 ];

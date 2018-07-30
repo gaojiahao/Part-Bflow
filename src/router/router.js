@@ -70,8 +70,8 @@ export const homepageRouter = {
 };
 
 export const addressBook = {
-    path: '/addressBook ',
-    name: 'addressBook ',
+    path: '/addressBook',
+    name: 'addressBook',
     meta: {
         title: '人员管理'
     },
@@ -85,8 +85,8 @@ export const addressBook = {
         },
         component: () => import('@/views/addressBook/user/users.vue')
         },{
-        path: 'detail/:userId',
-        name: 'detail',
+        path: 'details/:userId',
+        name: 'details',
         meta: {
             title: '用户详情'
         },
@@ -122,14 +122,6 @@ export const enterpriseInfo = {
 }
 
 
-export const users = {
-    path: '/users',
-    name: 'users',
-    meta: {
-        title: 'users - 用户'
-    },
-    component: () => import('@/views/addressBook/user/users.vue')
-}
 
 
 
@@ -139,9 +131,8 @@ export const routers = [
     homepageRouter,
     dashboardRouter,
     app,
+    addressBook,
     sujectformRouter,
     enterpriseInfo,
-    users,
-    ...appRouter,
-    addressBook
+    ...appRouter
 ];

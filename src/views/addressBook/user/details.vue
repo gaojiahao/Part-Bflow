@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="less">
 @import './details.less';
 </style>
 
@@ -9,7 +9,7 @@
         <BreadcrumbItem to="/addressBook/users">张晓</BreadcrumbItem>
         <BreadcrumbItem>rfd125</BreadcrumbItem>
       </Breadcrumb>
-      <Tag class="detail-header-status" color="red">使用中</Tag>
+      <Tag class="detail-header-status" color="error">使用中</Tag>
     </Row>
     <Row class="detail-header">
       <Button>返回</Button>
@@ -19,23 +19,53 @@
       </div>
     </Row>
     <div class="detail-tabs">
-      <Tabs value="name1">
-        <TabPane label="用户信息" name="name1">标签一的内容</TabPane>
-        <TabPane label="上级用户" name="name2">标签二的内容</TabPane>
-        <TabPane label="下级用户" name="name3">标签三的内容</TabPane>
-        <TabPane label="部门" name="name1">标签一的内容</TabPane>
-        <TabPane label="职位" name="name2">标签二的内容</TabPane>
-        <TabPane label="直接权限" name="name3">标签三的内容</TabPane>
-        <TabPane label="间接权限" name="name3">标签三的内容</TabPane>
+      <Tabs value="userInfo">
+        <TabPane label="用户信息" name="userInfo">
+          <user-info></user-info>
+        </TabPane>
+        <TabPane label="上级用户" name="highUser">
+          <higher-user></higher-user>
+        </TabPane>
+        <TabPane label="下级用户" name="lowUser">
+          <lower-user></lower-user>
+        </TabPane>
+        <TabPane label="部门" name="department">
+          <department-member></department-member>
+        </TabPane>
+        <TabPane label="职位" name="position">
+          <role-member></role-member>
+        </TabPane>
+        <TabPane label="直接权限" name="dirPermission">
+          <direct-permission></direct-permission>
+        </TabPane>
+        <TabPane label="间接权限" name="indirPermission">
+          <indirect-permission></indirect-permission>
+        </TabPane>
       </Tabs>
     </div>
   </div>
 </template>
 
 <script>
+import UserInfo from './detail/user-info';
+import HigherUser from './detail/instance/higher-user';
+import LowerUser from './detail/instance/lower-user';
+import DepartmentMember from './detail/instance/department';
+import RoleMember from './detail/instance/role';
+import DirectPermission from './detail/direct-permission';
+import IndirectPermission from './detail/indirect-permission';
+
 export default {
   name: "detail",
-  components: {},
+  components: {
+    UserInfo,
+    HigherUser,
+    LowerUser,
+    DepartmentMember,
+    RoleMember,
+    DirectPermission,
+    IndirectPermission
+  },
   props: {},
   data() {
     return {

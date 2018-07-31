@@ -38,14 +38,14 @@ export default {
       let option = {
         title: {
           text: this.title,
-          textStyle:{
-            fontSize:14
+          textStyle: {
+            fontSize: 14
           }
         },
         tooltip: {
           trigger: "axis"
         },
-        color:['#26bba0'],
+        color: ["#26bba0"],
         legend: {
           selectedMode: false,
           data: [
@@ -79,18 +79,25 @@ export default {
             type: "line",
             smooth: true,
             symbolSize: 6,
-            itemStyle:{
-              normal:{
-                color:'#26bba0',
-                borderWidth:2,
+            label: {
+              normal: {
+                show: true,
+                position: "top",
+                color: "#26bba0"
               }
             },
-            lineStyle:{
-              color:'#26bba0'
+            itemStyle: {
+              normal: {
+                color: "#26bba0",
+                borderWidth: 2
+              }
+            },
+            lineStyle: {
+              color: "#26bba0"
             },
             areaStyle: {
               normal: {
-                color:'#38cdb27d',
+                color: "#38cdb27d",
                 show: true,
                 position: "top"
               }

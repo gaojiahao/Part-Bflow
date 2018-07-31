@@ -13,16 +13,26 @@ Vue.use(iView)
 
 let Hub = new Vue();
 
-getCurrentUserInfo().then(res => {
-  if (res) {
-    Vue.prototype.$currentUser = res;
-    /* eslint-disable no-new */
-    new Vue({
-      el: '#app',
-      router,
-      components: { App },
-      template: '<App/>'
-    })
-  }
-})
+if(window.top.r2){
+  Vue.prototype.$currentUser = window.top.r2.global.WebContext.currentUser;
+  new Vue({
+    el: '#app',
+    router,
+    components: { App },
+    template: '<App/>'
+  })
+}else{
+  getCurrentUserInfo().then(res => {
+    if (res) {
+      Vue.prototype.$currentUser = res;
+      /* eslint-disable no-new */
+      new Vue({
+        el: '#app',
+        router,
+        components: { App },
+        template: '<App/>'
+      })
+    }
+  })
+}
 

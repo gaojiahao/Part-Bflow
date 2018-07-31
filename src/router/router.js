@@ -69,6 +69,38 @@ export const homepageRouter = {
     component: () => import('@/views/home/HomePage.vue')
 };
 
+export const addressBook = {
+    path: '/addressBook',
+    name: 'addressBook',
+    meta: {
+        title: '人员管理'
+    },
+    redirect: 'addressBook/users',
+    component: () => import('@/views/addressBook/index.vue'),
+    children: [{
+        path: 'users',
+        name: 'users',
+        meta: {
+            title: '用户列表'
+        },
+        component: () => import('@/views/addressBook/user/users.vue')
+    }, {
+        path: 'details/:userId',
+        name: 'details',
+        meta: {
+            title: '用户详情'
+        },
+        component: () => import('@/views/addressBook/user/details.vue')
+    }, {
+        path: 'organization',
+        name: 'organization',
+        meta: {
+            title: '组织列表'
+        },
+        component: () => import('@/views/addressBook/organization/organization.vue')
+    }]
+}
+
 export const sujectformRouter = {
     path: '/subjectform',
     name: 'subjectform',
@@ -112,6 +144,7 @@ export const routers = [
     homepageRouter,
     dashboardRouter,
     app,
+    addressBook,
     sujectformRouter,
     enterpriseInfo,
     companyInfo,

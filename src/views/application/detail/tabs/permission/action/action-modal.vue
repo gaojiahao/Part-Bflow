@@ -23,7 +23,7 @@
           <b class="permission-title">用户</b>
           </Col>
           <Col span="21" class="member-body">
-          <Tag @on-close="deleteUser(index)" v-for="(userData, index) of userSelectData" :key="index" type="border" closable color="yellow">
+          <Tag @on-close="deleteUser" v-for="(userData, index) of userSelectData" :key="index" :userId="userData.userId" type="border" closable color="yellow">
             {{ userData.nickname }}
           </Tag>
           </Col>
@@ -34,7 +34,7 @@
           <b class="permission-title">组织</b>
           </Col>
           <Col span="21" class="member-body">
-          <Tag @on-close="deleteOrg(index)" v-for="(orgData, index) of orgSelectData" :key="index" type="border" closable color="green">
+          <Tag @on-close="deleteOrg" v-for="(orgData, index) of orgSelectData" :key="index" :orgId="orgData.id" type="border" closable color="green">
             {{ orgData.name }}
           </Tag>
           </Col>
@@ -45,7 +45,7 @@
           <b class="permission-title">职位</b>
           </Col>
           <Col span="21" class="member-body">
-          <Tag @on-close="deleteDepartment(index)" v-for="(departmentData, index) of departmentSelectData" :key="index" type="border" closable color="blue">
+          <Tag @on-close="deleteDepartment" v-for="(departmentData, index) of departmentSelectData" :key="index" :depId="departmentData.id" type="border" closable color="blue">
             {{ departmentData.name }}
           </Tag>
           </Col>
@@ -115,7 +115,8 @@ import {
   getAllOrgData,
   getAllDepartmentData,
   getAllPermissionData,
-  updateMemberPermission
+  updateMemberPermission,
+  clearAppPermission
 } from "@/services//appService.js";
 import {APP_ACTION} from "@/assets/const";
 
@@ -211,15 +212,8 @@ export default {
       //编辑状态回显用户、组织、职位
       if(this.isEdit === 'edit'){
         //编辑状态回显动作权限
-          let listId = this.appListId, 
-              filter = JSON.stringify([
-              {
-                operator: "eq",
-                value: '操作',
-                property: "type"
-              }
-            ]);
-        getAllPermissionData(listId,filter).then(res => {
+          let listId = this.appListId;
+        getAllPermissionData(listId).then(res => {
           this.allPermissionData = res.tableContent;
           this.allPermissionData.map(ac=>{
             ac.desc = APP_ACTION[ac.resourceName];
@@ -410,19 +404,48 @@ export default {
       this.departmentSelection = this.departmentSelectData;
     },
     //删除用户
-    deleteUser(index) {
-      this.userSelectData.splice(index, 1);
-      this.userSelection.splice(index,1);
+    deleteUser(event) {
+      let userId = event.target.parentElement.getAttribute('userid');
+      
+      clearAppPermission(this.appListId,userId).then(res => {
+        if(res.success){
+           this.userSelectData = this.userSelectData.filter(f =>{
+            return f.userId != userId;
+          })
+          this.userSelection = this.userSelection.filter(f =>{
+            return f.userId != userId;
+          })
+        }
+        
+      });
     },
     //删除组织
-    deleteOrg(index) {
-      this.orgSelectData.splice(index, 1);
-      this.orgSelection.splice(index,1);
+    deleteOrg(event) {
+      let orgId = event.target.parentElement.getAttribute('orgid');
+      clearAppPermission(this.appListId,null,null,orgId).then(res => {
+        if(res.success){
+          this.orgSelectData = this.orgSelectData.filter(f =>{
+            return f.id != orgId;
+          });
+          this.orgSelection = this.orgSelection.filter(f =>{
+            return f.id != orgId;
+          });
+        }
+      });
     },
     //删除职位
-    deleteDepartment(index) {
-      this.departmentSelectData.splice(index, 1);
-      this.departmentSelection.splice(index,1);
+    deleteDepartment(data,index) {
+      let depId = event.target.parentElement.getAttribute('depid');
+      clearAppPermission(this.appListId,null,depId).then(res => {
+        if(res.success){
+          this.departmentSelectData = this.departmentSelectData.filter(f =>{
+            return f.id != depId;
+          });
+          this.departmentSelection = this.departmentSelection.filter(f =>{
+            return f.id != depId;
+          });
+        }
+      });
     },
     //权限选择
     permissionSelectChange(selection,row) {
@@ -477,7 +500,7 @@ export default {
             permissionId: permissionId.join(",")
           };
       if(this.isEdit === 'edit'){
-          updateMemberPermission(userId.join(","),roleId.join(","),groupId.join(","),permissionId.join(",")).then(res => {
+          updateMemberPermission(userId.join(","),roleId.join(","),groupId.join(","),permissionId.join(","),this.appListId).then(res => {
             if(res.success){
               this.$Message.success(res.message);
               let Num = this.emitChange++;
@@ -497,16 +520,9 @@ export default {
       }
     },
     getData() {
-      let listId = this.appListId, 
-          filter = JSON.stringify([
-          {
-            operator: "eq",
-            value: '操作',
-            property: "type"
-          }
-        ]);
+      let listId = this.appListId;
       //获取应用权限数据
-      getAllPermissionData(listId,filter).then(res => {
+      getAllPermissionData(listId).then(res => {
         this.allPermissionData = res.tableContent;
         this.allPermissionData.map(ac=>{
           ac.desc = APP_ACTION[ac.resourceName];

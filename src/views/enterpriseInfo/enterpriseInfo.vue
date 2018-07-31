@@ -4,22 +4,22 @@
 
 <template>
     <div class="info-warp">
-        <header class="info-warp-header">
+        <!-- <header class="info-warp-header">
             <h3>
                 企业信息
                 <a @click="handleEditName">{{edit}}</a>
             </h3>
-        </header>
+        </header> -->
         <main class="info-warp-main">
             <section class="info-warp-main-section">
                 <div class="select-logo">
                     <label class="left-leble">企业LOGO</label>
-                    <Upload ref="upload" :show-upload-list="false" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" type="drag" action="/H_roleplay-si/ds/upload" style="display: inline-block;width:128px;vertical-align: middle;" :headers="httpHeaders">
-                        <div style="width: 128px;height:128px;line-height: 128px;" v-if="!enterpriseInfo.logo">
+                    <Upload ref="upload" :show-upload-list="false" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" type="drag" action="/H_roleplay-si/ds/upload" style="display: inline-block;width:256px;vertical-align: middle;" :headers="httpHeaders">
+                        <div style="width: 256px;height:64px;line-height: 64px;" v-if="!enterpriseInfo.logo">
                             <img v-if="enterpriseInfo.logo" :src="enterpriseInfo.logo">
                             <i v-if="!enterpriseInfo.logo" class="iconfont">&#xe63b;</i>
                         </div>
-                        <div style="width: 128px;height:128px;line-height: 128px;" class="demo-upload-list" v-if="enterpriseInfo.logo">
+                        <div style="width: 256px;height:64px;line-height: 64px;" class="demo-upload-list" v-if="enterpriseInfo.logo">
                             <img :src="enterpriseInfo.logo">
                             <div class="demo-upload-list-cover">
                                 <Icon type="camera" color="#fff" size="30"></Icon>
@@ -31,7 +31,7 @@
                     <label class="left-leble">企业简称</label>
                     <span v-if="!editEnterpriseName">{{enterpriseInfo.nickname}}</span>
                     <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.nickname" class="input-common-att" />
-
+                     <a @click="handleEditName">{{edit}}</a>
                 </div>
                 <div class="select-explain">
                     <label class="left-leble">企业全称</label>
@@ -48,7 +48,7 @@
                 <div class="select-explain">
                     <label class="left-leble">企业地址</label>
                     <span v-if="!editEnterpriseName">{{enterpriseInfo.address}}</span>
-                    <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.address" class="input-common-att" />
+                    <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.address"  class="input-common-att" />
                 </div>
                 <div class="select-explain">
                     <label class="left-leble">联系电话</label>
@@ -60,17 +60,18 @@
                 <div>
                     <label class="left-leble">
                         企业管理员
-                        <b @click="selectAdminModal">
+                        <!-- <b @click="selectAdminModal">
                             <Tooltip content="编辑" placement="top">
                                 <Icon class="app-edit-icon" type="compose"></Icon>
                             </Tooltip>
-                        </b>
+                        </b> -->
                     </label>
 
                     <div class="user-container">
-                        <Tag v-for="item in enterpriseInfo.admins" :key="item.userId" :userId="item.userId" type="border" closable color="green" size="small" @on-close="deleteEnterpriseAdmin">
+                        <Tag v-for="item in enterpriseInfo.admins" :key="item.userId" :userId="item.userId" type="border" :closable="closable" color="blue" size="small" @on-close="deleteEnterpriseAdmin">
                             {{item.nickname}}
                         </Tag>
+                        <a  @click="selectAdminModal" style="font-size:14px;">添加</a>
                     </div>
                 </div>
             </section>
@@ -78,23 +79,30 @@
                 <div>
                     <label class="left-leble">网占登录页背景图</label>
                     <div style="display: inline-block;vertical-align: middle;">
-                        <Upload :before-upload="handleUploadBefore" :on-success="handleBackgroundSuccess" action="/H_roleplay-si/ds/upload" :headers="httpHeaders">
+                        <Upload :show-upload-list="false" :before-upload="handleUploadBefore" :on-success="handleBackgroundSuccess" action="/H_roleplay-si/ds/upload" :headers="httpHeaders">
                             <Button type="ghost" icon="ios-cloud-upload-outline">选择背景图</Button>
                         </Upload>
-                        <div v-if="enterpriseInfo.backgroundName">上传文件名称: 
-                            <a :href="enterpriseInfo.backgroundImg">{{ enterpriseInfo.backgroundName }}</a>
+                        <div v-if="enterpriseInfo.backgroundName">上传文件名称:
+                            <a :href="enterpriseInfo.backgroundImg" target="_blank">{{ enterpriseInfo.backgroundName }}</a>
                             <Button type="text" @click="upload" :loading="loadingStatus">{{ loadingStatus ? '上传中' : '点击上传' }}</Button>
                         </div>
                     </div>
                 </div>
             </section>
         </main>
-        <user-modal v-model="showAdminModal" title="添加用户" @on-ok="confirmModal">
-            <!-- <div class="app-search">
-                <Icon class="app-search-icon" type="search"></Icon>
-                <Input v-model="searchValue" placeholder="搜索" style="width: 300px" />
-            </div> -->
-            <Table @on-selection-change="selectAdmin" ref="selection" height="400" :columns="adminColumns" size="small" :data="columnsData"></Table>
+        <user-modal v-model="showAdminModal" title="添加用户" @on-ok="confirmModal" @onVisibleChange="onModelVisibleChange">
+            <div class="app-search">
+                <Input v-model="searchValue" placeholder="搜索" style="width: 300px" clearable @on-enter="adminFilter" @on-change="handleInputValueChange"></Input>
+                <p class="app-search-icon">
+                    <Button @click="adminFilter" type="primary" size="small">查询</Button>
+                </p>
+            </div>
+            <Table @on-selection-change="selectAdmin" ref="selection" height="340" :columns="adminColumns" size="small" :data="columnsData" :loading="loading"></Table>
+            <div style="margin: 10px;overflow: hidden">
+                <div style="float: right;">
+                    <Page :total="pageTotal" :current="currentPage" :page-size="pageSize" size="small" @on-change="changeCurrentPage" show-total show-elevator></Page>
+                </div>
+            </div>
         </user-modal>
     </div>
 </template>
@@ -156,7 +164,14 @@ export default {
           title: "姓名",
           key: "nickname"
         }
-      ]
+      ],
+      closable: false,
+
+      searchValue: "",
+      pageTotal: 0, //table总数
+      pageSize: 8,
+      currentPage: 1, //table当前页
+      loading: false
     };
   },
 
@@ -219,21 +234,61 @@ export default {
       });
     },
 
-    //获取管理员数据
-    getAdmintrstorData() {
-      let groupId = 347;
-      getAdminData(groupId).then(res => {
-        this.columnsData = res.tableContent;
-      });
+    onModelVisibleChange(val) {
+      if (!val) {
+        this.searchValue = "";
+      } else {
+          this.getAdminData();
+      }
+    },
 
+    changeCurrentPage(currentPage) {
+      this.currentPage = currentPage;
+      let filter = JSON.stringify([
+        { operator: "like", value: this.searchValue, property: "nickname" }
+      ]);
+      this.getAdminData(filter);
+    },
+
+    //查询管理员
+    adminFilter() {
+      let filter = JSON.stringify([
+        { operator: "like", value: this.searchValue, property: "nickname" }
+      ]);
+      this.getAdminData(filter);
+    },
+
+    //清空输入框
+    handleInputValueChange(event) {
+      if (!this.searchValue) {
+        this.getAdminData();
+      }
+    },
+
+   
+    getAdmintrstorData() {
       getEnterpriseById().then(res => {
         this.enterpriseInfo = res;
       });
     },
 
+    //获取管理员数据
+    getAdminData(filter){
+        let groupId = 347;
+      this.loading = true;
+      getAdminData(groupId, filter, this.currentPage, this.pageSize).then(
+        res => {
+          this.pageTotal = res.dataCount;
+          this.columnsData = res.tableContent;
+          this.loading = false;
+        }
+      );
+    },
+
     //编辑企业简称
     handleEditName() {
       this.edit = this.editEnterpriseName ? "修改" : "保存";
+      this.closable = !this.closable;
 
       //保存修改的数据
       if (this.editEnterpriseName) {
@@ -260,11 +315,13 @@ export default {
     //上传
     handleBackgroundSuccess(res, file) {
       this.enterpriseInfo.backgroundImg =
-        "/H_roleplay-si/ds/download?width=128&height=128&specify=true&url=" +
+        "/H_roleplay-si/ds/download?url=" +
         res.data[0].attacthment;
     },
 
     handleUploadBefore(file) {
+      this.handleMaxSize(file);
+      this.handleFormatError(file);
       this.enterpriseInfo.backgroundName = file.name;
       return true;
     },
@@ -288,7 +345,7 @@ export default {
 
     handleSuccess(res, file) {
       this.enterpriseInfo.logo =
-        "/H_roleplay-si/ds/download?width=128&height=128&specify=true&url=" +
+        "/H_roleplay-si/ds/download?width=256&height=64&url=" +
         res.data[0].attacthment;
 
       let data = { id: this.enterpriseInfo.id, logo: this.enterpriseInfo.logo };

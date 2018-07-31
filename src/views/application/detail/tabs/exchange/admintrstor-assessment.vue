@@ -1,15 +1,31 @@
 <style lang="less" scoped>
-  @import './admintrstor-assessment.less';
+@import "./admintrstor-assessment.less";
 </style>
 
 <template>
   <div class="bg_ff">
 
     <Row class="app-resource-group-title">
-          <h3>管理员自评 <a v-if="isAdminTrue" @click="addAssess">添加自评</a></h3>
+      <h3>管理员自评
+        <a v-if="isAdminTrue" @click="addAssess">添加自评</a>
+      </h3>
     </Row>
+    <!-- <Row v-for="(assess, index) of assessments" :key="index" class="pad5 ">
+      <div>
+        <img src="resources/images/icon/contactor.png"  class="user-icon">
+        <div class="font14 content" >
+          <div >
+            <h4 >黄孝辉 <span class="fr">2018-04</span></h4>
+            </div>
+          <div class="assessment-info">
+            <div><div>改进成果:</div>{{assess.achievement}}</div>
+            <div><div>改进机会:</div>{{assess.chance}}</div>
+          </div>
+        </div>
+      </div>
+    </Row> -->
     <Row class="assessment-content">
-        <Table :columns="columns" :data="assessments"></Table>
+      <Table :columns="columns" :data="assessments"></Table>
     </Row>
     <assess-modal title="管理员自评" v-model="showAssessModal" width="650" @on-ok="submitAdminAssess">
       <div style="margin:20px auto;width:85%;">
@@ -35,7 +51,7 @@ import {
   getAssessmentByListId,
   saveAssessment
 } from "@/services/appService.js";
-import EditTable from '@/components/table/edit-table';
+import EditTable from "@/components/table/edit-table";
 import AssessModal from "@/components/modal/Modal";
 
 export default {
@@ -56,8 +72,8 @@ export default {
     return {
       showAssessModal: false,
       isAdminTrue: false,
-      isEdit: '',
-      IsEditId: '',
+      isEdit: "",
+      IsEditId: "",
       changeResult: "",
       adminAssessData: {
         duringDate: "",
@@ -104,26 +120,6 @@ export default {
         {
           title: "效率与成本改进机会",
           key: "chance"
-        },
-        {
-          title: '操作',
-          align: 'center',
-          key: 'handle',
-          render: (h, params) => {
-            return h("a", {
-              on: {
-                click: () => {
-                  this.showAssessModal = true;
-                  this.$refs["formValidate"].resetFields();
-                  this.isEdit = 'edit';
-                  this.IsEditId = params.row.id;
-                  this.adminAssessData.duringDate = params.row.date;
-                  this.adminAssessData.result = params.row.achievement;
-                  this.adminAssessData.opportunity = params.row.chance;
-                }
-              }
-            }, '编辑');
-          }
         }
       ],
       assessments: []
@@ -131,10 +127,40 @@ export default {
   },
   watch: {
     isAdmin: function(value) {
-      if(value){
+      if (value) {
+        const lastColumn = {
+          title: "操作",
+          align: "center",
+          key: "handle",
+          render: (h, params) => {
+            return h(
+              "a",
+              {
+                on: {
+                  click: () => {
+                    this.showAssessModal = true;
+                    this.$refs["formValidate"].resetFields();
+                    this.isEdit = "edit";
+                    this.IsEditId = params.row.id;
+                    this.adminAssessData.duringDate = new Date(params.row.date);
+                    this.adminAssessData.result = params.row.achievement;
+                    this.adminAssessData.opportunity = params.row.chance;
+                  }
+                }
+              },
+              "编辑"
+            );
+          }
+        };
         this.isAdminTrue = true;
-      }else{
+        if (this.columns[this.columns.length - 1].title !== "操作") {
+          this.columns.push(lastColumn);
+        }
+      } else {
         this.isAdminTrue = false;
+        if (this.columns[this.columns.length - 1].title === "操作") {
+          this.columns.splice(this.columns.length - 1, 1);
+        }
       }
     }
   },
@@ -146,7 +172,6 @@ export default {
     },
     //添加管理员自评
     submitAdminAssess() {
-      debugger
       let params = {
         listId: this.listId,
         opportunity: this.adminAssessData.opportunity,
@@ -154,24 +179,25 @@ export default {
         date: this.formatDate(this.adminAssessData.duringDate)
       };
 
-      if(this.isEdit === 'edit'){
+      if (this.isEdit === "edit") {
         params.id = this.IsEditId;
       }
-
+      let v = false;
       this.$refs["formValidate"].validate(valid => {
-        if (valid) {
-          saveAssessment(params).then(res => {
-            if (res.success) {
-              this.$Message.success(res.message);
-              this.getAssessmentData();
-              this.showAssessModal = false;
-              this.isEdit = '';
-            }else{
-              this.$Message.error(res.message);
-            }
-          });
-        }
+        v = valid;
       });
+      if (v) {
+        saveAssessment(params).then(res => {
+          if (res.success) {
+            this.$Message.success(res.message);
+            this.getAssessmentData();
+            this.showAssessModal = false;
+            this.isEdit = "";
+          } else {
+            this.$Message.error(res.message);
+          }
+        });
+      }
     },
     //获取管理员自评数据
     getAssessmentData() {
@@ -188,7 +214,7 @@ export default {
       if (month >= 1 && month <= 9) {
         month = "0" + month;
       }
-      relDate = year + '-' + month;
+      relDate = year + "-" + month;
 
       return relDate;
     }

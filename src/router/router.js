@@ -97,6 +97,15 @@ export const enterpriseInfo = {
 }
 
 
+export const companyInfo = {
+    path: '/companyInfo',
+    name: 'companyInfo',
+    meta: {
+        title: 'companyInfo  - 公司信息'
+    },
+    component: () => import('@/views/companyInfo/companyInfo.vue')
+}
+
 export const routers = [
     loginRouter,
     flowRouter,
@@ -105,5 +114,6 @@ export const routers = [
     app,
     sujectformRouter,
     enterpriseInfo,
+    companyInfo,
     ...appRouter
 ];

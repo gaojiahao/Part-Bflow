@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="less" >
 .origanization-wrap {
   background-color: #fff;
   width: 100%;

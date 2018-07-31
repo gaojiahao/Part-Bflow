@@ -92,12 +92,12 @@ export const addressBook = {
         },
         component: () => import('@/views/addressBook/user/details.vue')
     }, {
-        path: 'origanization',
-        name: 'origanization',
+        path: 'organization',
+        name: 'organization',
         meta: {
             title: '组织列表'
         },
-        component: () => import('@/views/addressBook/origanization/origanization.vue')
+        component: () => import('@/views/addressBook/organization/organization.vue')
     }]
 }
 

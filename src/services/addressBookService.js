@@ -209,3 +209,53 @@ export const listUsers = (currentPage,pageSize) => request('/H_roleplay-si/ds/li
 
 
 /************  职位  **************/
+
+
+
+/************  公司  **************/
+
+/**
+ * @author zhaohuai
+ * 根据公司Id获取所属成员信息
+ */
+export const getCompanyMemberByCompanyId = (currentPage,pageSize) =>request('/H_roleplay-si/ds/listUsers',{
+    entityId:20000,
+    page: currentPage,
+    limit: pageSize,
+    start:0,
+});
+
+/**
+ * @author zhaohuai
+ * 根据公司id获取公司信息
+ * 
+ */
+export const getCompanyInfoByGroupId = (groupId) => request('/H_roleplay-si/ds/getGroupById',{
+    groupId:groupId
+})
+/**
+ * @author zhaohuai
+ * 保存公司基本信息
+ */
+export const saveCompanyInfo = (data) =>{
+    let {
+        groupName,
+        groupShortName,
+        depFunction,
+        status,
+        comment,
+        groupCode
+    } = data
+    return request('/H_roleplay-si/userInfo/saveGroup',{
+        groupName: groupName,
+        groupShortName: groupShortName,
+        depFunction: depFunction,
+        status: status,
+        comment: comment,
+        list: 'sys_group',
+        groupType: 'C',
+        parentId: '1',
+        groupCode: groupCode
+    },"POST");
+};
+/************  公司  **************/

@@ -2,7 +2,7 @@
     .higher-user{
       &-detail{
         background-color: #fff;
-        margin: 5px 93px;
+        margin: 15px 93px;
         padding: 26px 50px;
         box-shadow: 0px 1px 40px #ddd;
       }
@@ -20,7 +20,7 @@
             <Table ref="selection" :columns="columns" :loading="loading" :data="higherUserData"></Table>
             <div class="user-page">
                 <div style="float: right;">
-                  <Page :total="highUser.total" show-elevator show-sizer :current="highUser.currentPage" :page-size="highUser.pageSize" @on-change="onPageChange" size="small" show-total></Page>
+                  <Page @on-page-size-change="onPageSizeChange" :total="highUser.total" show-elevator show-sizer :current="highUser.currentPage" :page-size="highUser.pageSize" @on-change="onPageChange" size="small" show-total></Page>
                 </div>
             </div>
         </div>
@@ -32,7 +32,7 @@
             <Table ref="selection" @on-selection-change="onSelectionChange" height="400" :loading="userLoading" :columns="columns" :data="userData"></Table>
             <div class="user-page">
                 <div class="fr">
-                  <Page :total="highUser.usertotal" show-elevator show-sizer :current="highUser.usercurrentPage" :page-size="highUser.pageSize" @on-change="onUserPageChange" size="small" show-total></Page>
+                  <Page @on-page-size-change="onAllUserPageSizeChange" :total="highUser.usertotal" show-elevator show-sizer :current="highUser.usercurrentPage" :page-size="highUser.allUserpageSize" @on-change="onUserPageChange" size="small" show-total></Page>
                 </div>
             </div>
         </Modal>
@@ -54,6 +54,7 @@ export default {
         usertotal: 0,
         usercurrentPage: 1,
         pageSize: 10,
+        allUserpageSize: 10,
       },
       loading: true,
       userLoading: true,
@@ -133,7 +134,7 @@ export default {
     //获取上级用户数据
     getHigherUserData() {
       this.loading = true;
-      getHighUserData(15383,this.pageSize,this.currentPage).then(res => {
+      getHighUserData(15383,this.highUser.pageSize,this.highUser.currentPage).then(res => {
         this.higherUserData = res.tableContent;
         this.highUser.total = res.dataCount;
         this.loading = false;
@@ -143,6 +144,16 @@ export default {
     onPageChange(currentPage) {
       this.highUser.currentPage = currentPage;
       this.getHigherUserData();
+    },
+    //点击切换上级用户每页显示条数
+    onPageSizeChange(size) {
+      this.highUser.pageSize = size;
+      this.getHigherUserData();
+    },
+    //点击切换所有用户每页显示条数
+    onAllUserPageSizeChange(size) {
+      this.highUser.allUserpageSize = size;
+      this.getAllUsersData();
     },
     onUserPageChange(currentPage) {
       this.highUser.usercurrentPage = currentPage;
@@ -180,7 +191,7 @@ export default {
     //获取所有用户数据
     getAllUsersData() {
       this.userLoading = true;
-      getAllUsers(this.pageSize,this.usercurrentPage).then(res => {
+      getAllUsers(this.highUser.allUserpageSize,this.highUser.usercurrentPage).then(res => {
         this.userData = res.tableContent;
         this.highUser.usertotal = res.dataCount;
         this.userLoading = false;
@@ -188,9 +199,7 @@ export default {
     }
   },
   mounted() {
-    let relHeight = document.body.clientHeight-190;
     this.getHigherUserData();
-    document.getElementById('cliHeight').style.minHeight = relHeight+'px';
   }
 };
 </script>

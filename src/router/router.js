@@ -98,6 +98,13 @@ export const addressBook = {
                 title: '用户看板'
             },
             component: () => import('@/views/addressBook/user/board/board.vue')
+        },{
+            path: 'add',
+            name: 'add',
+            meta: {
+                title: '新增用户'
+            },
+            component: () => import('@/views/addressBook/user/detail/detail.vue')
         }]
     }, {
         path: 'organization',

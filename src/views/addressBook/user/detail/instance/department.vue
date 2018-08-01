@@ -2,7 +2,7 @@
     .department{
       &-detail{
         background-color: #fff;
-        margin: 5px 93px;
+        margin: 15px 93px;
         padding: 26px 50px;
         box-shadow: 0px 1px 40px #ddd;
       }
@@ -16,7 +16,7 @@
             <Table ref="selection" :columns="columns" :loading="loading" :data="departmentData"></Table>
             <div class="user-page">
                 <div style="float: right;">
-                  <Page :total="total" show-elevator show-sizer :current="currentPage" :page-size="pageSize" @on-change="onPageChange" size="small" show-total></Page>
+                  <Page @on-page-size-change="onPageSizeChange" :total="total" show-elevator show-sizer :current="currentPage" :page-size="pageSize" @on-change="onPageChange" size="small" show-total></Page>
                 </div>
             </div>
         </div>
@@ -106,6 +106,11 @@ export default {
       this.currentPage = currentPage;
       this.getDepartmentData();
     },
+    //点击切换每页显示条数
+    onPageSizeChange(size) {
+      this.pageSize = size;
+      this.getDepartmentData();
+    },
     //展示所有组织部门
     showGroupModal() {
       this.showModal = true;
@@ -167,9 +172,7 @@ export default {
     }
   },
   mounted() {
-    let relHeight = document.body.clientHeight-190;
     this.getDepartmentData();
-    document.getElementById('depHeight').style.minHeight = relHeight+'px';
   }
 };
 </script>

@@ -2,7 +2,7 @@
     .role{
       &-detail{
         background-color: #fff;
-        margin: 5px 93px;
+        margin: 15px 93px;
         padding: 26px 50px;
         box-shadow: 0px 1px 40px #ddd;
       }
@@ -20,7 +20,7 @@
             <Table ref="selection" :columns="columns" :loading="loading" :data="roleData"></Table>
             <div class="user-page">
                 <div style="float: right;">
-                  <Page :total="rolePage.total" show-elevator show-sizer :current="rolePage.currentPage" :page-size="rolePage.pageSize" @on-change="onPageChange" size="small" show-total></Page>
+                  <Page @on-page-size-change="onPageSizeChange" :total="rolePage.total" show-elevator show-sizer :current="rolePage.currentPage" :page-size="rolePage.pageSize" @on-change="onPageChange" size="small" show-total></Page>
                 </div>
             </div>
         </div>
@@ -32,7 +32,7 @@
             <Table ref="selection" @on-selection-change="onSelectionChange" height="400" :loading="roleLoading" :columns="columns" :data="allRoleData"></Table>
             <div class="user-page">
                 <div style="float: right;">
-                  <Page :total="rolePage.roletotal" show-elevator show-sizer :current="rolePage.rolecurrentPage" :page-size="rolePage.pageSize" @on-change="onRolePageChange" size="small" show-total></Page>
+                  <Page @on-page-size-change="onAllRolePageSizeChange" :total="rolePage.roletotal" show-elevator show-sizer :current="rolePage.rolecurrentPage" :page-size="rolePage.allRolepageSize" @on-change="onRolePageChange" size="small" show-total></Page>
                 </div>
             </div>
         </Modal>
@@ -54,6 +54,7 @@ export default {
         currentPage: 1,
         rolecurrentPage: 1,
         pageSize: 10,
+        allRolepageSize: 10,
       },
       loading: true,
       roleLoading: true,
@@ -90,7 +91,7 @@ export default {
     //获取部门数据
     getRoleData() {
       this.loading = true;
-      getRoleData(15383,this.pageSize,this.currentPage).then(res => {
+      getRoleData(15383,this.rolePage.pageSize,this.rolePage.currentPage).then(res => {
         this.roleData = res.tableContent;
         this.rolePage.total = res.dataCount;
         this.loading = false;
@@ -100,6 +101,16 @@ export default {
     onPageChange(currentPage) {
       this.rolePage.currentPage = currentPage;
       this.getRoleData();
+    },
+    //点击切换下级用户每页显示条数
+    onPageSizeChange(size) {
+      this.rolePage.pageSize = size;
+      this.getRoleData();
+    },
+    //点击切换所有用户每页显示条数
+    onAllRolePageSizeChange(size) {
+      this.rolePage.allRolepageSize = size;
+      this.getAllRoleData();
     },
     onRolePageChange(currentPage) {
       this.rolePage.rolecurrentPage = currentPage;
@@ -136,7 +147,7 @@ export default {
     //获取所有职位数据
     getAllRoleData() {
       this.roleLoading = true;
-      getAllRoleData(this.pageSize,this.rolecurrentPage).then(res => {
+      getAllRoleData(this.rolePage.allRolepageSize,this.rolePage.rolecurrentPage).then(res => {
         this.allRoleData = res.tableContent;
         this.rolePage.roletotal = res.dataCount;
         this.roleLoading = false;
@@ -144,9 +155,7 @@ export default {
     }
   },
   mounted() {
-    let relHeight = document.body.clientHeight-190;
     this.getRoleData();
-    document.getElementById('roleHeight').style.minHeight = relHeight+'px';
   }
 };
 </script>

@@ -20,54 +20,64 @@
             </Upload>
             </Col>
             <Col span="12" class="info-form">
-            <Form :model="formItem" ref="formItem" :rules="ruleValidate" :label-width="80">
-                <FormItem label="工号" prop="userId">
-                    <Input v-model="formItem.userId" placeholder=""></Input>
+            <Form :model="formItem" ref="formItem" :rules="ruleValidate" :label-width="85">
+                <FormItem label="工号：" prop="userCode">
+                    <Input v-model="formItem.userCode" placeholder=""></Input>
                 </FormItem>
-                <FormItem label="姓名" prop="userName">
-                    <Input v-model="formItem.userName" placeholder=""></Input>
+                <FormItem label="姓名：" prop="nickname">
+                    <Input v-model="formItem.nickname" placeholder=""></Input>
                 </FormItem>
-                <FormItem label="性别">
+                <FormItem label="性别：">
                     <RadioGroup v-model="formItem.gender">
-                        <Radio label="male">男</Radio>
-                        <Radio label="female">女</Radio>
+                        <Radio label="1">男</Radio>
+                        <Radio label="0">女</Radio>
                     </RadioGroup>
                 </FormItem>
-                <FormItem label="手机" prop="handphone">
-                    <Input v-model="formItem.handphone" placeholder=""></Input>
+                <FormItem label="手机：" prop="mobile">
+                    <Input v-model="formItem.mobile" placeholder=""></Input>
                 </FormItem>
-                <FormItem label="座机">
-                    <Input v-model="formItem.telphone" placeholder=""></Input>
+                <FormItem label="座机：">
+                    <Input v-model="formItem.officePhone" placeholder=""></Input>
                 </FormItem>
-                <FormItem label="邮箱" prop="mail">
-                    <Input v-model="formItem.mail" placeholder=""></Input>
+                <FormItem label="邮箱：" prop="email">
+                    <Input v-model="formItem.email" placeholder=""></Input>
                 </FormItem>
-                <FormItem label="账户有效期">
-                    <DatePicker type="date" placeholder="" v-model="formItem.date"></DatePicker>
+                <FormItem label="账户有效期：">
+                    <DatePicker type="date" placeholder="" v-model="formItem.termOfValidity"></DatePicker>
                 </FormItem>
-                <FormItem label="状态">
+                <FormItem label="状态：">
                     <Select v-model="formItem.status">
-                        <Option value="inUse">使用中</Option>
-                        <Option value="stopUse">停用</Option>
-                        <Option value="noUse">未使用</Option>
+                        <Option value="1">使用中</Option>
+                        <Option value="0">停用</Option>
+                        <Option value="-1">未使用</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="说明">
-                    <Input v-model="formItem.textarea" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder=""></Input>
+                <FormItem label="说明：">
+                    <Input v-model="formItem.comment" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder=""></Input>
                 </FormItem>
             </Form>
             </Col>
+        </Row>
+        <Row class="info-btn">
+            <Button type="info">取消</Button>
+            <Button @click="updateUserData" type="info">保存</Button>
+            <Button type="info">保存并继续添加</Button>
         </Row>
     </div>
 </template>
 
 <script>
 import { getToken } from "@/utils/utils";
+import { updateUser,addUser } from "@/services/addressBookService.js";
 
 export default {
   name: "userInfo",
   components: {},
-  props: {},
+  props: {
+      userInfo: {
+          type: Object
+      }
+  },
   data() {
     return {
       httpHeaders: {
@@ -75,45 +85,58 @@ export default {
       },
       logo: "",
       formItem: {
-        userId: "",
-        userName: "",
-        handphone: "",
-        telphone: "",
-        mail: "",
-        status: "",
-        gender: "male",
-        date: "",
-        textarea: ""
+        userCode: "",
+        nickname: "",
+        mobile: "",
+        officePhone: "",
+        email: "",
+        status: "1",
+        gender: "1",
+        termOfValidity: "",
+        comment: ""
       },
       ruleValidate: {
-          userId: [
+          userCode: [
           {
             required: true,
             message: "请输入用户工号",
             trigger: "blur"
           }
         ],
-        userName: [
+        nickname: [
           {
             required: true,
             message: "请输入用户名称",
             trigger: "blur"
           }
         ],
-        handphone: [
+        mobile: [
           {
             required: true,
             message: "手机号不允许为空",
             trigger: "blur"
           }
         ],
-        mail: [
+        email: [
           { type: "email", message: "邮箱输入不合法", trigger: "blur" }
         ]
       }
     };
   },
-  created() {},
+  watch: {
+      userInfo: function(){
+          this.formItem.userCode = this.userInfo.userCode;
+          this.formItem.nickname = this.userInfo.nickname;
+          this.formItem.mobile = this.userInfo.mobile;
+          this.formItem.officePhone = this.userInfo.officePhone;
+          this.formItem.email = this.userInfo.email;
+          this.formItem.termOfValidity = this.userInfo.termOfValidity;
+          this.formItem.comment = this.userInfo.comment;
+          this.formItem.gender = String(this.userInfo.gender);
+          this.formItem.status = String(this.userInfo.status);
+          this.logo = this.userInfo.photo;
+      }
+  },
   methods: {
     handleSuccess(res, file) {
       this.logo =
@@ -134,8 +157,35 @@ export default {
         title: "文件格式不对",
         desc: "请上传格式为png 或者 jpg 的图片"
       });
+    },
+    //更新用户详情信息
+    updateUserData() {
+        this.formItem.photo = this.logo;
+        this.formItem.userId = this.userInfo.userId;
+        this.formItem.termOfValidity = this.formatDate(this.formItem.termOfValidity);
+        updateUser(this.formItem).then(res => {
+            if(res.success){
+                this.$Message.success(res.message);
+            }
+        })
+    },
+    //格式化日期方法
+    formatDate(currentDate) {
+      let date = new Date(currentDate),
+        year = date.getFullYear(),
+        month = date.getMonth() + 1,
+        day = date.getDate(),
+        relDate;
+      if (month >= 1 && month <= 9) {
+        month = "0" + month;
+      }
+      relDate = year + "-" + month + "-" + day;
+
+      return relDate;
     }
   },
-  mounted() {}
+  mounted() {
+     
+  }
 };
 </script>

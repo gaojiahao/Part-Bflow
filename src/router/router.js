@@ -73,25 +73,26 @@ export const addressBook = {
     path: '/addressBook',
     name: 'addressBook',
     meta: {
-        title: '人员管理'
+        title: '通讯录'
     },
-    redirect: 'addressBook/users',
+    redirect: 'addressBook/user',
     component: () => import('@/views/addressBook/index.vue'),
     children: [{
-        path: 'users',
-        name: 'users',
+        path: 'user',
+        name: 'user',
         meta: {
-            title: '用户列表'
+            title: '用户'
         },
-        component: () => import('@/views/addressBook/user/users.vue')
-    }, {
-        path: 'details/:userId',
-        name: 'details',
-        meta: {
-            title: '用户详情'
-        },
-        component: () => import('@/views/addressBook/user/details.vue')
-    }, {
+        component: () => import('@/views/addressBook/user/index.vue'),
+        children: [{
+            path: 'detail/:userId',
+            name: 'detail',
+            meta: {
+                title: '用户详情'
+            },
+            component: () => import('@/views/addressBook/user/detail/detail.vue')
+        }]
+    },{
         path: 'organization',
         name: 'organization',
         meta: {

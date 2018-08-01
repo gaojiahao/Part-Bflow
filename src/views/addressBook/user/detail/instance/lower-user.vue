@@ -20,7 +20,7 @@
             <Table ref="selection" :columns="columns" :loading="loading" :data="lowerUserData"></Table>
             <div class="user-page">
                 <div style="float: right;">
-                  <Page :total="total" show-elevator show-sizer :current="currentPage" :page-size="pageSize" @on-change="onPageChange" size="small" show-total></Page>
+                  <Page :total="lowUser.total" show-elevator show-sizer :current="lowUser.currentPage" :page-size="lowUser.pageSize" @on-change="onPageChange" size="small" show-total></Page>
                 </div>
             </div>
         </div>
@@ -32,7 +32,7 @@
             <Table ref="selection" @on-selection-change="onSelectionChange" height="400" :loading="userLoading" :columns="columns" :data="userData"></Table>
             <div class="user-page">
                 <div style="float: right;">
-                  <Page :total="usertotal" show-elevator show-sizer :current="usercurrentPage" :page-size="pageSize" @on-change="onUserPageChange" size="small" show-total></Page>
+                  <Page :total="lowUser.usertotal" show-elevator show-sizer :current="lowUser.usercurrentPage" :page-size="lowUser.pageSize" @on-change="onUserPageChange" size="small" show-total></Page>
                 </div>
             </div>
         </Modal>
@@ -48,11 +48,13 @@ export default {
   props: {},
   data() {
     return {
-      total: 0,
-      usertotal: 0,
-      currentPage: 1,
-      usercurrentPage: 1,
-      pageSize: 10,
+      lowUser: {
+        total: 0,
+        usertotal: 0,
+        currentPage: 1,
+        usercurrentPage: 1,
+        pageSize: 10,
+      },
       loading: true,
       userLoading: true,
       showModal: false,
@@ -133,17 +135,17 @@ export default {
       this.loading = true;
       getLowUserData(15383,this.pageSize,this.currentPage).then(res => {
         this.lowerUserData = res.tableContent;
-        this.total = res.dataCount;
+        this.lowUser.total = res.dataCount;
         this.loading = false;
       })
     },
     //点击分页
     onPageChange(currentPage) {
-      this.currentPage = currentPage;
+      this.lowUser.currentPage = currentPage;
       this.getLowerUserData();
     },
     onUserPageChange(currentPage) {
-      this.usercurrentPage = currentPage;
+      this.lowUser.usercurrentPage = currentPage;
       this.getAllUsersData();
     },
     //添加上级用户
@@ -179,7 +181,7 @@ export default {
       this.userLoading = true;
       getAllUsers(this.pageSize,this.usercurrentPage).then(res => {
         this.userData = res.tableContent;
-        this.usertotal = res.dataCount;
+        this.lowUser.usertotal = res.dataCount;
         this.userLoading = false;
       })
     }

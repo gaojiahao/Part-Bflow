@@ -91,14 +91,29 @@ export const addressBook = {
                 title: '用户详情'
             },
             component: () => import('@/views/addressBook/user/detail/detail.vue')
+        },{
+            path: 'board',
+            name: 'board',
+            meta: {
+                title: '用户看板'
+            },
+            component: () => import('@/views/addressBook/user/board/board.vue')
         }]
-    },{
+    }, {
         path: 'organization',
         name: 'organization',
         meta: {
-            title: '组织列表'
+            title: '组织'
         },
-        component: () => import('@/views/addressBook/organization/organization.vue')
+        component: () => import('@/views/addressBook/organization/index.vue'),
+        children: [{
+            path: 'board',
+            name: 'board',
+            meta: {
+                title: '组织看板'
+            },
+            component: () => import('@/views/addressBook/organization/board/board.vue')
+        }]
     }]
 }
 

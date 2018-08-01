@@ -75,6 +75,17 @@ export const getAllUserData = (currentPage, pageSize, filter) => request('/H_rol
 
 /**
  * @author XiaoYing
+ * @description 获取用户数据
+ */
+export const getAllUsers = (currentPage, pageSize, filter) => request('/H_roleplay-si/ds/getAllUsers', {
+  page: currentPage,
+  limit: pageSize,
+  filter: filter
+});
+
+
+/**
+ * @author XiaoYing
  * @description 获取组织数据
  */
 export const getAllOrgData = (currentPage, pageSize, filter) => request('/H_roleplay-si/ds/getDepartment', {

@@ -184,6 +184,14 @@ export const listUsers = (currentPage,pageSize) => request('/H_roleplay-si/ds/li
     start:0,
 });
 
+/**
+ * @author snack.huang
+ * @description 获取所有组织 [管理层、事业部、部门、小组]
+ */
+export const getOrganizations = (pageInfo) => request('/H_roleplay-si/ds/getAllGroup', pageInfo);
+
+
+
 
 /************  职位  **************/
 

@@ -1,5 +1,5 @@
 <style lang="less">
-@import './details.less';
+@import './detail.less';
 </style>
 
 <template>
@@ -15,7 +15,7 @@
       <Button>返回</Button>
       <div class="detail-header-icon">
         <Icon class="detail-header-icon-back" type="ios-arrow-back" />
-        <Icon type="ios-arrow-forward" />
+        <Icon class="detail-header-icon-forward" type="ios-arrow-forward" />
       </div>
     </Row>
     <div class="detail-tabs">
@@ -47,13 +47,13 @@
 </template>
 
 <script>
-import UserInfo from './detail/user-info';
-import HigherUser from './detail/instance/higher-user';
-import LowerUser from './detail/instance/lower-user';
-import DepartmentMember from './detail/instance/department';
-import RoleMember from './detail/instance/role';
-import DirectPermission from './detail/direct-permission';
-import IndirectPermission from './detail/indirect-permission';
+import UserInfo from './instance/user-info';
+import HigherUser from './instance/higher-user';
+import LowerUser from './instance/lower-user';
+import DepartmentMember from './instance/department';
+import RoleMember from './instance/role';
+import DirectPermission from './instance/direct-permission';
+import IndirectPermission from './instance/indirect-permission';
 
 export default {
   name: "detail",

@@ -26,17 +26,22 @@
                     <base-info></base-info>
                 </TabPane>
                 <TabPane label="下级公司" name="name2">标签二的内容</TabPane>
-                <TabPane label="成员" name="name3">标签三的内容</TabPane>
+                <TabPane label="成员" name="memberInfo">
+                    <member-info></member-info>
+                </TabPane>
             </Tabs>
         </div>
     </div>
 </template>
 
 <script>
-import BaseInfo from "@/views/companyInfo/baseInfo/baseInfo";
+import BaseInfo from "@/views/addressBook/companyInfo/baseInfo/baseInfo";
+import MemberInfo from "@/views/addressBook/companyInfo/memberInfo/memberInfo";
 export default {
+    
   components: {
-    BaseInfo
+    BaseInfo,
+    MemberInfo
   }
 };
 </script>

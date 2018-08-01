@@ -98,6 +98,13 @@ export const addressBook = {
             title: '组织列表'
         },
         component: () => import('@/views/addressBook/organization/organization.vue')
+    },{
+        path: 'companyInfo/:groupId',
+        name: 'companyInfo',
+        meta: {
+        title: 'companyInfo  - 公司信息'
+        },
+        component: () => import('@/views/addressBook/companyInfo/companyInfo.vue')  
     }]
 }
 
@@ -129,14 +136,6 @@ export const enterpriseInfo = {
 }
 
 
-export const companyInfo = {
-    path: '/companyInfo',
-    name: 'companyInfo',
-    meta: {
-        title: 'companyInfo  - 公司信息'
-    },
-    component: () => import('@/views/companyInfo/companyInfo.vue')
-}
 
 export const routers = [
     loginRouter,
@@ -147,6 +146,5 @@ export const routers = [
     addressBook,
     sujectformRouter,
     enterpriseInfo,
-    companyInfo,
     ...appRouter
 ];

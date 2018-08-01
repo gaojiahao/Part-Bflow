@@ -236,7 +236,7 @@ export default {
       this.memberInfoLoading = true;
       getUsersByGroupId(groupId, currentPage, pageSize).then(res => {
         if (res.tableContent[0]) {
-          this.pageTotal = res.summary.total;
+          this.c = res.summary.total;
           this.memberInfoData = res.tableContent;
           this.memberInfoLoading = false;
         }

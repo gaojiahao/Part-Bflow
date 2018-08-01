@@ -147,6 +147,26 @@ export const deleteIndirPermission = (single,multi) => request('/H_roleplay-si/p
     single: single
 });
 
+/**
+ * @author XiaoYing
+ * @description 获取用户详情信息
+ */
+export const getUserInfoById = (userId) => request('/H_roleplay-si/ds/getUserInfoById',{
+    userId: userId
+});
+
+/**
+ * @author XiaoYing
+ * @description 更新用户
+ */
+export const updateUser = (params) => request('/H_roleplay-si/userInfo/updateUser',{},'POST',params);
+
+/**
+ * @author XiaoYing
+ * @description 新增用户
+ */
+export const addUser = (params) => request('/H_roleplay-si/userInfo/addUser',{},'POST',params);
+
 
 /************  组织  **************/
 

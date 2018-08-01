@@ -37,13 +37,46 @@
     }
 }
 .detail-tabs{
-    .ivu-tabs-nav{
-        float: right !important;
+    width: 100%;
+    background-color: #fff;
+    overflow: hidden;
+    &-child{
+        float: right;
+        border-left: 1px solid #ddd;
+        padding: 2px 5px;
+        text-align: center;
+        cursor: pointer;
+        &-right{
+            vertical-align: middle;
+            text-align: center;
+            display: inline-block;
+            span{
+                color: red;
+                font-weight: bold;
+            }
+            p{
+                font-weight: bold;
+                font-size: 14px;
+            }
+        }
+        img{
+            width: 36px;
+            height: 28px;
+            vertical-align: middle;
+            padding: 0px 5px;
+        }
     }
-    .ivu-tabs-nav-scroll{
-        background-color: #fff;
+    .active{
+        background-color: #ddd;
+        border-radius: 2px;
+        p{
+            color: #39f;
+        }
     }
 }
 .ivu-breadcrumb{
     font-size: 18px;
+}
+.detail-content{
+    overflow: auto;
 }

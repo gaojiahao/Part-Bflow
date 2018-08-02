@@ -1,34 +1,35 @@
 <style lang="less" scoped>
-.userCardItem{
-    height: 85px;
-    min-width: 230px;
+.orgCardItem{
+    height:80px;
+    min-width: 260px;
+    margin: 5px;
     width: 16%;
     float: left;
-    margin: 5px;
 }
-.usertCardItem-content{
-    overflow:hidden;
+.org-name{
+    overflow: hidden;
     text-overflow:ellipsis;
-    white-space:nowrap
+    white-space: nowrap;
 }
 </style>
 
 <template>
     <div class="pad5">
         <!-- <Row  :gutter="8"> -->
-            <!-- <Col :xs="24" :sm="12" :md="8" :lg="4" v-for="(org, index) of orgs" :key="index" class="pad5 " > -->
-                <Card  class="radius0 userCardItem"  v-for="(org, index) of orgs" :key="index">
-                    <div>
-                        <div  class="marright5 fl" style="min-width: 70px;">
+            <!-- <Col :xs="24" :sm="12" :md="8" :lg="5" v-for="(org, index) of orgs" :key="index" class="pad5 " > -->
+                <Card  class="radius0 orgCardItem" v-for="(org, index) of orgs" :key="index" >
+                    <Row  style="min-width: 260px;">
+                        <Col span="3" class="marright5" style="min-width: 60px;">
                         <!-- principalPhoto -->
-                            <img src="resources/images/icon/contactor.png"  width="62px">
-                        </div>
-                        <div class="fl" style="width:160px;">
-                            <h4 class="usertCardItem-content" style="width:100%">{{ org.groupName }}</h4>
-                            <div>{{org.groupType}}<Tag  color="blue" class="fr radius10">使用中</Tag></div>
-                            <div>{{org.principalName}}</div>
-                        </div>
-                    </div>
+                            <img src="resources/images/icon/sales-order.png"  style="width:50px;">
+                        </Col>
+                        <Col span="17" style="min-width:180px;">
+                            <h5 class="org-name">{{ org.groupName }}
+                            </h5>
+                            <p>{{org.groupType}}<Tag  color="blue" class="fr radius10">使用中</Tag></p>
+                            <p>{{org.principalName}}</p>
+                        </Col>
+                    </Row>
                 </Card>
             <!-- </Col> -->
         <!-- </Row> -->

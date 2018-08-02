@@ -104,10 +104,10 @@ export default {
     onClickTab(currentIndex) {
       this.relativeInstance.forEach((val,k) => {
         if(currentIndex === k){
-          val.isShow = true;
+          val.isShowAcive = true;
           this.whichShow[val.showName] = true;
         }else{
-          val.isShow = false;
+          val.isShowAcive = false;
           this.whichShow[val.showName] = false;
         }
       })

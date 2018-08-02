@@ -48,9 +48,7 @@ export const getProcessDataByListId = (listId,currentPage,pageSize) => request('
  * @author XiaoYing
  * @description 获取管理员数据
  */
-export const getAdminData = (groupId,filter,page,limit) => request('/H_roleplay-si/ds/getAllUsersByGroupId', {
-  groupId: groupId,
-  filter: filter,
+export const getAdminData = (page,limit) => request('/H_roleplay-si/ds/getAllUsers', {
   page: page,
   limit: limit
 });

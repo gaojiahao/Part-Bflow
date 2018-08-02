@@ -60,9 +60,9 @@
             </Col>
         </Row>
         <Row class="info-btn">
-            <Button type="info">取消</Button>
+            <Button @click="goUserList" type="info">取消</Button>
             <Button @click="updateUserData" type="info">保存</Button>
-            <Button type="info">保存并继续添加</Button>
+            <Button v-if="userInfo.userId?noShowSaveAddBtn:showSaveAddBtn" @click="saveAndAddUser" type="info">保存并继续添加</Button>
         </Row>
     </div>
 </template>
@@ -84,6 +84,8 @@ export default {
       httpHeaders: {
         Authorization: getToken()
       },
+      showSaveAddBtn: true,
+      noShowSaveAddBtn: false,
       logo: "",
       formItem: {
         userCode: "",
@@ -127,16 +129,18 @@ export default {
   },
   watch: {
       userInfo: function(){
-          this.formItem.userCode = this.userInfo.userCode;
-          this.formItem.nickname = this.userInfo.nickname;
-          this.formItem.mobile = this.userInfo.mobile;
-          this.formItem.officePhone = this.userInfo.officePhone;
-          this.formItem.email = this.userInfo.email;
-          this.formItem.termOfValidity = this.userInfo.termOfValidity;
-          this.formItem.comment = this.userInfo.comment;
-          this.formItem.gender = String(this.userInfo.gender);
-          this.formItem.status = String(this.userInfo.status);
-          this.logo = this.userInfo.photo;
+          if(Object.keys(this.userInfo).length > 0){
+                this.formItem.userCode = this.userInfo.userCode;
+                this.formItem.nickname = this.userInfo.nickname;
+                this.formItem.mobile = this.userInfo.mobile;
+                this.formItem.officePhone = this.userInfo.officePhone;
+                this.formItem.email = this.userInfo.email;
+                this.formItem.termOfValidity = this.userInfo.termOfValidity;
+                this.formItem.comment = this.userInfo.comment;
+                this.formItem.gender = String(this.userInfo.gender);
+                this.formItem.status = String(this.userInfo.status);
+                this.logo = this.userInfo.photo;
+          }
       }
   },
   methods: {
@@ -165,17 +169,55 @@ export default {
         this.$refs["formItem"].validate(valid => {
             if(valid){
                 this.formItem.photo = this.logo;
-                this.formItem.userId = this.userInfo.userId;
-                this.formItem.termOfValidity = this.formatDate(this.formItem.termOfValidity);
-                updateUser(this.formItem).then(res => {
+                if(this.formItem.termOfValidity){
+                    this.formItem.termOfValidity = this.formatDate(this.formItem.termOfValidity);
+                }
+                
+                if(this.userInfo.userId){
+                    this.formItem.userId = this.userInfo.userId;
+                    updateUser(this.formItem).then(res => {
+                        if(res.success){
+                            this.$Message.success(res.message);
+                            this.$router.push({ path: '/addressBook/user/board'});
+                        }
+                    }).catch(error => {
+                        this.$Message.error(error.data.message);
+                    })
+                }else{
+                   addUser(this.formItem).then(res => {
+                       if(res.success){
+                           this.$Message.success(res.message);
+                           this.$router.push({ path: '/addressBook/user/board'});
+                       }
+                   }).catch(error => {
+                        this.$Message.error(error.data.message);
+                    })
+                }
+            }
+        })
+    },
+    //保存并继续添加用户
+    saveAndAddUser() {
+        this.$refs["formItem"].validate(valid => {
+            if(valid){
+                this.formItem.photo = this.logo;
+                if(this.formItem.termOfValidity){
+                    this.formItem.termOfValidity = this.formatDate(this.formItem.termOfValidity);
+                }
+                
+                addUser(this.formItem).then(res => {
                     if(res.success){
                         this.$Message.success(res.message);
+                        this.$refs["formItem"].resetFields();
                     }
                 }).catch(error => {
                     this.$Message.error(error.data.message);
                 })
             }
         })
+    },
+    goUserList() {
+        this.$router.push({ path: '/addressBook/user/board'});
     },
     //格式化日期方法
     formatDate(currentDate) {
@@ -193,7 +235,7 @@ export default {
     }
   },
   mounted() {
-     
+     console.log(this.$route.params.isEdit);
   }
 };
 </script>

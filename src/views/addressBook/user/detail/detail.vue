@@ -6,10 +6,10 @@
   <Row class="detail">
     <Row class="detail-header">
       <Breadcrumb class="detail-header-bread">
-        <BreadcrumbItem to="/addressBook/user/board">{{ userInformation.nickname }}</BreadcrumbItem>
-        <BreadcrumbItem>{{ userInformation.userCode }}</BreadcrumbItem>
+        <BreadcrumbItem to="/addressBook/user/board">{{ userInformation.nickname?userInformation.nickname:'用户' }}</BreadcrumbItem>
+        <BreadcrumbItem>{{ userInformation.userCode?userInformation.userCode:'创建' }}</BreadcrumbItem>
       </Breadcrumb>
-      <Tag class="detail-header-status" v-instanceStateDirective="{status:userInformation.status,color:'red'}"></Tag>
+      <Tag v-show="userInformation.status?showTag:!showTag" class="detail-header-status" v-instanceStateDirective="{status:userInformation.status,color:'#eb2f96'}"></Tag>
     </Row>
     <Row class="detail-header">
       <Button type="info" @click="goBack">返回</Button>
@@ -75,6 +75,7 @@ export default {
   data() {
     return {
       userId: this.$route.params.userId,
+      showTag: true,
       whichShow: {
         userinfo: true,
         highuser: false,

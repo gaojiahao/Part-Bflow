@@ -1,5 +1,6 @@
 <template>
     <div class="pad5">
+      <Button @click="addUser">新增</Button>
         <Row  :gutter="8">
             <Col :xs="24" :sm="12" :md="8" :lg="6" v-for="(user, index) of users" :key="index" class="pad5 " >
               <div @click="goDetail(user)">
@@ -48,8 +49,11 @@ export default {
     goDetail(userItem) {
       this.$router.push({
         path: `/addressBook/user/detail/${userItem.userId}`,
-        params: { userId: userItem.userId }
+        params: { userId: userItem.userId ,isEdit: 'edit'}
       });
+    },
+    addUser(){
+      this.$router.push({ path: '/addressBook/user/add',params: { isEdit: 'add' }});
     }
   },
   watch: {

@@ -4,7 +4,7 @@
         background-color: #fff;
         margin: 15px 93px;
         padding: 26px 50px;
-        box-shadow: 0px 1px 40px #ddd;
+        box-shadow: 0px 1px 10px #ddd;
       }
   }
   .dep-tree{
@@ -99,12 +99,16 @@ export default {
   methods: {
     //获取部门数据
     getDepartmentData() {
-      this.loading = true;
-      getDepartmentData(this.userId,this.pageSize,this.currentPage).then(res => {
-        this.departmentData = res.tableContent;
-        this.total = res.dataCount;
-        this.loading = false;
-      })
+      if(this.userId){
+        this.loading = true;
+        getDepartmentData(this.userId,this.pageSize,this.currentPage).then(res => {
+          this.departmentData = res.tableContent;
+          this.total = res.dataCount;
+          this.loading = false;
+        })
+      }else{
+          this.loading = false;
+      }
     },
     //点击分页
     onPageChange(currentPage) {
@@ -123,7 +127,7 @@ export default {
     },
     //添加组织部门
     addDepartment() {
-      if(this.selectGroup){
+      if(this.selectGroup && this.userId){
         addGroupMember(this.selectGroup.groupId,this.userId).then(res => {
           if(res.success){
             this.$Message.success(res.message);

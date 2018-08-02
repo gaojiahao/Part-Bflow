@@ -9,7 +9,7 @@
         <BreadcrumbItem to="/addressBook/user/board">{{ userInformation.nickname }}</BreadcrumbItem>
         <BreadcrumbItem>{{ userInformation.userCode }}</BreadcrumbItem>
       </Breadcrumb>
-      <Tag class="detail-header-status" v-instanceStateDirective="userInformation.status"></Tag>
+      <Tag class="detail-header-status" v-instanceStateDirective="{status:userInformation.status,color:'red'}"></Tag>
     </Row>
     <Row class="detail-header">
       <Button type="info" @click="goBack">返回</Button>
@@ -86,8 +86,8 @@ export default {
       },
       userInformation: {},
       relativeInstance: [
-        { name: "间接权限", showName: 'indirper', isShow: false, relativeNum: 1, },
-        { name: "直接权限", showName: 'dirper', isShow: false, relativeNum: 1, },
+        { name: "间接权限", showName: 'indirper', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/2_1.png' },
+        { name: "直接权限", showName: 'dirper', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/1_4.png' },
         { name: "用户职位", showName: 'role', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/job.png' },
         { name: "用户部门", showName: 'dep', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/organization.png' },
         { name: "下级用户", showName: 'lowuser', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' },
@@ -112,9 +112,11 @@ export default {
     },
     //获取用户详情信息
     getUserInfoData() {
-      getUserInfoById(this.userId).then(res => {
-        this.userInformation = res.tableContent[0];
-      });
+      if(this.userId){
+        getUserInfoById(this.userId).then(res => {
+          this.userInformation = res.tableContent[0];
+        });
+      }
     },
     goBack() {
       this.$router.push({path: '/addressBook/user/board'});

@@ -13,7 +13,7 @@
     </Row>
     <Row class="detail-header">
       <Button type="info" @click="goBack">返回</Button>
-      <div class="detail-header-icon">
+      <div v-show="userInformation.status?showTag:!showTag" class="detail-header-icon">
         <Icon class="detail-header-icon-back" type="ios-arrow-back" />
         <Icon class="detail-header-icon-forward" type="ios-arrow-forward" />
       </div>
@@ -88,7 +88,7 @@ export default {
       },
       userInformation: {},
       relativeInstance: [
-        { name: "间接权限", showName: 'indirper', isShow: true, isShowMar: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/2_1.png' },
+        { name: "间接权限", showName: 'indirper', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/2_1.png' },
         { name: "直接权限", showName: 'dirper', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/1_4.png' },
         { name: "用户职位", showName: 'role', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/job.png' },
         { name: "用户部门", showName: 'dep',  isShow: true,isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/organization.png' },
@@ -104,10 +104,10 @@ export default {
     onClickTab(currentIndex) {
       this.relativeInstance.forEach((val,k) => {
         if(currentIndex === k){
-          val.isShow = true;
+          val.isShowAcive = true;
           this.whichShow[val.showName] = true;
         }else{
-          val.isShow = false;
+          val.isShowAcive = false;
           this.whichShow[val.showName] = false;
         }
       })

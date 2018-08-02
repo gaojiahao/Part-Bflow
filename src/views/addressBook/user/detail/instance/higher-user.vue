@@ -7,10 +7,6 @@
         box-shadow: 0px 1px 40px #ddd;
       }
   }
-  .user-page {
-    margin: 10px;
-    overflow: hidden;
-  }
 </style>
 
 <template>
@@ -18,18 +14,18 @@
         <div class="higher-user-detail" id="cliHeight">
             <Button type="info" @click="showUserModal" style="margin-bottom:5px">选择上级用户</Button>
             <Table ref="selection" :columns="columns" :loading="loading" :data="higherUserData"></Table>
-            <div class="user-page">
+            <!-- <div class="user-page">
                 <div style="float: right;">
                   <Page @on-page-size-change="onPageSizeChange" :total="highUser.total" show-elevator show-sizer :current="highUser.currentPage" :page-size="highUser.pageSize" @on-change="onPageChange" size="small" show-total></Page>
                 </div>
-            </div>
+            </div> -->
         </div>
         <Modal
             v-model="showModal"
             title="选择用户"
             @on-ok="addHighUser"
             width="1000">
-            <Table ref="selection" @on-selection-change="onSelectionChange" height="400" :loading="userLoading" :columns="columns" :data="userData"></Table>
+            <Table ref="selection" :highlight-row="true" @on-row-click="onSelectionChange" height="400" :loading="userLoading" :columns="columns" :data="userData"></Table>
             <div class="user-page">
                 <div class="fr">
                   <Page @on-page-size-change="onAllUserPageSizeChange" :total="highUser.usertotal" show-elevator show-sizer :current="highUser.usercurrentPage" :page-size="highUser.allUserpageSize" @on-change="onUserPageChange" size="small" show-total></Page>
@@ -48,6 +44,7 @@ export default {
   props: {},
   data() {
     return {
+      userId: this.$route.params.userId,
       highUser: {
         total: 0,
         currentPage: 1,
@@ -60,11 +57,6 @@ export default {
       userLoading: true,
       showModal: false,
       columns: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
         {
           title: "工号",
           key: "userCode"
@@ -127,14 +119,14 @@ export default {
       ],
       higherUserData: [],
       userData: [],
-      selectUserData: []
+      selectUserData: {}
     };
   },
   methods: {
     //获取上级用户数据
     getHigherUserData() {
       this.loading = true;
-      getHighUserData(15383,this.highUser.pageSize,this.highUser.currentPage).then(res => {
+      getHighUserData(this.userId,this.highUser.pageSize,this.highUser.currentPage).then(res => {
         this.higherUserData = res.tableContent;
         this.highUser.total = res.dataCount;
         this.loading = false;
@@ -161,17 +153,15 @@ export default {
     },
     //添加上级用户
     addHighUser() {
-      let parentId = [];
-      if(this.selectUserData.length > 0){
-        this.selectUserData.forEach(val => {
-          parentId.push(val.userId);
-        });
+      let parentId;
+      if(Object.keys(this.selectUserData).length > 0){
+        parentId = this.selectUserData.userId;
       }else{
         this.$Message.warning('请选择至少一个用户！');
       }
       
       if(parentId){
-        updateHighUser(15383,parentId.join(',')).then(res => {
+        updateHighUser(this.userId,parentId).then(res => {
           if(res.success){
             this.$Message.success(res.message);
             this.getHigherUserData();

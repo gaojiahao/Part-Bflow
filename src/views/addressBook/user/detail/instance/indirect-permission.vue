@@ -35,6 +35,7 @@ export default {
   props: {},
   data() {
     return {
+      userId: this.$route.params.userId,
       total: 0,
       currentPage: 1,
       pageSize: 10,
@@ -61,9 +62,9 @@ export default {
     //获取间接权限数据
     getIndirPermissionData() {
       this.loading = true;
-      getIndirectPermissionData(15383,this.pageSize,this.currentPage).then(res => {
-        this.indirPermissionData = res;
-        this.total = res.length;
+      getIndirectPermissionData(this.userId,this.pageSize,this.currentPage).then(res => {
+        this.indirPermissionData = res.tableContent;
+        this.total = res.dataCount;
         this.loading = false;
       })
     },

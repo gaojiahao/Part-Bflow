@@ -12,7 +12,7 @@
       <Tag class="detail-header-status" color="error">{{ userInformation.userStatus }}</Tag>
     </Row>
     <Row class="detail-header">
-      <Button>返回</Button>
+      <Button type="info" @click="goBack">返回</Button>
       <div class="detail-header-icon">
         <Icon class="detail-header-icon-back" type="ios-arrow-back" />
         <Icon class="detail-header-icon-forward" type="ios-arrow-forward" />
@@ -24,9 +24,9 @@
         :class="{'detail-tabs-child':true,'active':item.isShow}" 
         v-for="(item,index) of relativeInstance" 
         :key="index">
-        <img src="../../../../resources/images/icon/0_4.png"/>
+        <img :src="item.imgUrl"/>
         <div class="detail-tabs-child-right">
-          <span>5</span>
+          <span>{{ item.relativeNum }}</span>
           <p>{{ item.name }}</p>
         </div>
       </div>
@@ -74,6 +74,7 @@ export default {
   props: {},
   data() {
     return {
+      userId: this.$route.params.userId,
       whichShow: {
         userinfo: true,
         highuser: false,
@@ -85,13 +86,13 @@ export default {
       },
       userInformation: {},
       relativeInstance: [
-        { name: "间接权限", showName: 'indirper', isShow: false },
-        { name: "直接权限", showName: 'dirper', isShow: false },
-        { name: "用户职位", showName: 'role', isShow: false },
-        { name: "用户部门", showName: 'dep', isShow: false },
-        { name: "下级用户", showName: 'lowuser', isShow: false },
-        { name: "上级用户", showName: 'highuser', isShow: false },
-        { name: "用户信息", showName: 'userinfo', isShow: true }
+        { name: "间接权限", showName: 'indirper', isShow: false, relativeNum: 1, },
+        { name: "直接权限", showName: 'dirper', isShow: false, relativeNum: 1, },
+        { name: "用户职位", showName: 'role', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/job.png' },
+        { name: "用户部门", showName: 'dep', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/organization.png' },
+        { name: "下级用户", showName: 'lowuser', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' },
+        { name: "上级用户", showName: 'highuser', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' },
+        { name: "用户信息", showName: 'userinfo', isShow: true, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' }
       ]
     };
   },
@@ -111,16 +112,21 @@ export default {
     },
     //获取用户详情信息
     getUserInfoData() {
-      getUserInfoById(15383).then(res => {
+      getUserInfoById(this.userId).then(res => {
         this.userInformation = res.tableContent[0];
         if (this.userInformation.status === 1) {
           this.userInformation.userStatus = "使用中";
         } else if (this.userInformation.status === 0) {
           this.userInformation.userStatus = "停用";
-        } else {
+        } else if(this.userInformation.status === 2){
           this.userInformation.userStatus = "未使用";
+        }else{
+          this.userInformation.userStatus = "草稿";
         }
       });
+    },
+    goBack() {
+      this.$router.push({path: '/addressBook/user/board'});
     }
   },
   mounted() {

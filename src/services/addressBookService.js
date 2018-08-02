@@ -205,6 +205,64 @@ export const listUsers = (currentPage,pageSize) => request('/H_roleplay-si/ds/li
 });
 
 /**
+ * @author GuoZheng
+ * @description 添加组织权限
+ */
+export const addOrgPermission = (single,multi) => request('/H_roleplay-si/ps/updatePermissionRelation',{
+    list: 'sys_group_permission',
+    multi: multi,
+    single: single
+},'POST');
+
+/**
+ * @author GuoZheng
+ * @description 删除组织权限
+ */
+export const deleteOrgPermission = (single,multi) => request('/H_roleplay-si/ps/deletePermissionRelation',{
+    list: 'sys_group_permission',
+    multi: multi,
+    single: single
+});
+
+/**
+ * @author GuoZheng
+ * @description 添加组织成员
+ */
+export const addOrgMember = (single,multi) => request('/H_roleplay-si/ps/updateRelation',{
+    list: 'sys_group_user',
+    multi: multi,
+    single: single,
+},'POST');
+
+/**
+ * @author GuoZheng
+ * @description 删除组织成员
+ */
+export const deleteOrgMember = (single,multi) => request('/H_roleplay-si/ps/deleteRelation',{
+    list: 'sys_group_user',
+    multi: multi,
+    single: single,
+},'POST');
+
+/**
+ * @author GuoZheng
+ * @description 删除组织成员
+ */
+export const getAllGroup = (currentPage,pageSize,filter) => request('/H_roleplay-si/ds/getAllGroup',{
+    page: currentPage,
+    limit: pageSize,
+    start:0,
+});
+
+
+
+/**
+ * @author GuoZheng
+ * @description 获取用户列表
+ */
+export const getTableData = (url,params) => request('/H_roleplay-si'+url,params);
+
+/*
  * @author snack.huang
  * @description 获取所有组织 [管理层、事业部、部门、小组]
  */

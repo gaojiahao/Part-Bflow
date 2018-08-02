@@ -11,6 +11,10 @@
     margin: 10px;
     overflow: hidden;
   }
+  .app-tree{
+    height: 350px;
+    overflow: auto;
+  }
 </style>
 
 <template>
@@ -30,7 +34,7 @@
             title="选择权限"
             @on-ok="addPermission"
             width="400">
-            <Tree :data="allPermissionData" :multiple="false" @on-check-change="onCheckChange" :load-data="loadData" show-checkbox></Tree>
+            <Tree class="app-tree" :data="allPermissionData" :multiple="false" @on-check-change="onCheckChange" :load-data="loadData" show-checkbox></Tree>
         </Modal>
     </div>
 </template>

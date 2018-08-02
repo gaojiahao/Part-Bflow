@@ -7,6 +7,10 @@
         box-shadow: 0px 1px 40px #ddd;
       }
   }
+  .dep-tree{
+    height: 350px;
+    overflow: auto;
+  }
 </style>
 
 <template>
@@ -25,7 +29,7 @@
             title="选择部门"
             @on-ok="addDepartment"
             width="300">
-            <Tree :data="groupData" @on-select-change="selectNode" :load-data="loadData"></Tree>
+            <Tree class="dep-tree" :data="groupData" @on-select-change="selectNode" :load-data="loadData"></Tree>
         </Modal>
     </div>
 </template>

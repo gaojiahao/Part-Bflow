@@ -13,7 +13,7 @@
                 <Col span="17" class="rfd-card-content">
                     <h5 class="text-nowrap font14">{{ user.nickname }}
                     </h5>
-                    <p>{{user.mobile}}<Tag  color="blue" class="fr radius10" >使用中</Tag></p>
+                    <p>{{user.mobile}}<Tag  color="blue" class="fr radius10 "  v-instanceStateDirective="{status:user.status}"></Tag></p>
                     <p>{{user.userCode}}</p>
                 </Col>
             </Row>

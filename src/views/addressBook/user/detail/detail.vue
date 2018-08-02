@@ -9,10 +9,10 @@
         <BreadcrumbItem to="/addressBook/user/board">{{ userInformation.nickname?userInformation.nickname:'用户' }}</BreadcrumbItem>
         <BreadcrumbItem>{{ userInformation.userCode?userInformation.userCode:'创建' }}</BreadcrumbItem>
       </Breadcrumb>
-      <Tag v-show="userInformation.status?showTag:!showTag" class="detail-header-status" v-instanceStateDirective="{status:userInformation.status,color:'#eb2f96'}"></Tag>
+      <Tag v-show="userInformation.status?showTag:!showTag"   class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:userInformation.status,color:'#eb2f96'}"></Tag>
     </Row>
     <Row class="detail-header">
-      <Button type="info" @click="goBack">返回</Button>
+      <Button @click="goBack" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">返回</Button>
       <div v-show="userInformation.status?showTag:!showTag" class="detail-header-icon">
         <Icon class="detail-header-icon-back" type="ios-arrow-back" />
         <Icon class="detail-header-icon-forward" type="ios-arrow-forward" />

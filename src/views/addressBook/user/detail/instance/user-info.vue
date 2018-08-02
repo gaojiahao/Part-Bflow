@@ -6,62 +6,73 @@
     <div class="info">
         <Row class="info-detail">
             <Col span="4" class="info-logo">
-            <Upload ref="upload" :show-upload-list="false" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" type="drag" action="/H_roleplay-si/ds/upload" style="display: inline-block;width:128px;vertical-align: middle;" :headers="httpHeaders">
-                <div style="width: 128px;height:128px;line-height: 128px;" v-if="!logo">
-                    <img v-if="logo" :src="logo">
-                    <i v-if="!logo" class="iconfont">&#xe63b;</i>
-                </div>
-                <div style="width: 128px;height:128px;line-height: 128px;" class="demo-upload-list" v-if="logo">
-                    <img :src="logo">
-                    <div class="demo-upload-list-cover">
-                        <Icon type="camera" color="#fff" size="30"></Icon>
+                <Upload ref="upload"  
+                    :show-upload-list="false" 
+                    :on-success="handleSuccess" 
+                    :format="['jpg','jpeg','png']" 
+                    :max-size="2048" 
+                    :on-format-error="handleFormatError" 
+                    :on-exceeded-size="handleMaxSize" 
+                    type="drag" 
+                    class="fr"
+                    action="/H_roleplay-si/ds/upload" 
+                    style="display: inline-block;width:128px;vertical-align: middle;" 
+                    :headers="httpHeaders">
+                    <div style="width: 128px;height:128px;line-height: 128px;" v-if="!logo">
+                        <img v-if="logo" :src="logo">
+                        <i v-if="!logo" class="iconfont">&#xe63b;</i>
                     </div>
-                </div>
-            </Upload>
+                    <div style="width: 128px;height:128px;line-height: 128px;" class="demo-upload-list" v-if="logo">
+                        <img :src="logo">
+                        <div class="demo-upload-list-cover">
+                            <Icon type="camera" color="#fff" size="30"></Icon>
+                        </div>
+                    </div>
+                </Upload>
             </Col>
             <Col span="12" class="info-form">
-            <Form :model="formItem" ref="formItem" :rules="ruleValidate" :label-width="85">
-                <FormItem label="工号：" prop="userCode">
-                    <Input v-model="formItem.userCode" placeholder=""></Input>
-                </FormItem>
-                <FormItem label="姓名：" prop="nickname">
-                    <Input v-model="formItem.nickname" placeholder=""></Input>
-                </FormItem>
-                <FormItem label="性别：">
-                    <RadioGroup v-model="formItem.gender">
-                        <Radio label="1">男</Radio>
-                        <Radio label="0">女</Radio>
-                    </RadioGroup>
-                </FormItem>
-                <FormItem label="手机：" prop="mobile">
-                    <Input v-model="formItem.mobile" placeholder=""></Input>
-                </FormItem>
-                <FormItem label="座机：">
-                    <Input v-model="formItem.officePhone" placeholder=""></Input>
-                </FormItem>
-                <FormItem label="邮箱：" prop="email">
-                    <Input v-model="formItem.email" placeholder=""></Input>
-                </FormItem>
-                <FormItem label="账户有效期：">
-                    <DatePicker type="date" placeholder="" v-model="formItem.termOfValidity"></DatePicker>
-                </FormItem>
-                <FormItem label="状态：">
-                    <Select v-model="formItem.status">
-                        <Option value="1">使用中</Option>
-                        <Option value="3">草稿</Option>
-                        <Option value="0">停用</Option>
-                        <Option value="2">未使用</Option>
-                    </Select>
-                </FormItem>
-                <FormItem label="说明：">
-                    <Input v-model="formItem.comment" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder=""></Input>
-                </FormItem>
-            </Form>
+                <Form :model="formItem" ref="formItem" :rules="ruleValidate" :label-width="85">
+                    <FormItem label="工号：" prop="userCode">
+                        <Input v-model="formItem.userCode" placeholder=""></Input>
+                    </FormItem>
+                    <FormItem label="姓名：" prop="nickname">
+                        <Input v-model="formItem.nickname" placeholder=""></Input>
+                    </FormItem>
+                    <FormItem label="性别：">
+                        <RadioGroup v-model="formItem.gender">
+                            <Radio label="1">男</Radio>
+                            <Radio label="0">女</Radio>
+                        </RadioGroup>
+                    </FormItem>
+                    <FormItem label="手机：" prop="mobile">
+                        <Input v-model="formItem.mobile" placeholder=""></Input>
+                    </FormItem>
+                    <FormItem label="座机：">
+                        <Input v-model="formItem.officePhone" placeholder=""></Input>
+                    </FormItem>
+                    <FormItem label="邮箱：" prop="email">
+                        <Input v-model="formItem.email" placeholder=""></Input>
+                    </FormItem>
+                    <FormItem label="账户有效期：">
+                        <DatePicker type="date" placeholder="" v-model="formItem.termOfValidity"></DatePicker>
+                    </FormItem>
+                    <FormItem label="状态：">
+                        <Select v-model="formItem.status">
+                            <Option value="1">使用中</Option>
+                            <Option value="3">草稿</Option>
+                            <Option value="0">停用</Option>
+                            <Option value="2">未使用</Option>
+                        </Select>
+                    </FormItem>
+                    <FormItem label="说明：">
+                        <Input v-model="formItem.comment" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder=""></Input>
+                    </FormItem>
+                </Form>
             </Col>
         </Row>
         <Row class="info-btn">
-            <Button @click="goUserList" type="info">取消</Button>
-            <Button @click="updateUserData" type="info">保存</Button>
+            <Button @click="goUserList"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">取消</Button>
+            <Button @click="updateUserData"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存</Button>
             <Button v-if="userInfo.userId?noShowSaveAddBtn:showSaveAddBtn" @click="saveAndAddUser" type="info">保存并继续添加</Button>
         </Row>
     </div>

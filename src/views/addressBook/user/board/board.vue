@@ -38,7 +38,7 @@ export default {
   methods: {
     getUsers: function() {
       let pageData = this.$route.query;
-      getAllUsers(pageData.page, pageData.limit).then(res => {
+      getAllUsers( pageData.limit,pageData.page).then(res => {
         this.users = res.tableContent;
         window.top.getTotal = function () {
             return res.dataCount;

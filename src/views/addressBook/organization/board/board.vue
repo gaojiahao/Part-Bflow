@@ -1,24 +1,38 @@
+<style lang="less" scoped>
+.orgCardItem{
+    height:80px;
+    min-width: 260px;
+    margin: 5px;
+    width: 16%;
+    float: left;
+}
+.org-name{
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+}
+</style>
+
 <template>
     <div class="pad5">
-        <Row  :gutter="8">
-            <Col :xs="24" :sm="12" :md="8" :lg="6" v-for="(org, index) of orgs" :key="index" class="pad5 " >
-                <Card  class="radius0">
-                    <Row>
-                        <Col span="4" class="marright5" >
+        <!-- <Row  :gutter="8"> -->
+            <!-- <Col :xs="24" :sm="12" :md="8" :lg="5" v-for="(org, index) of orgs" :key="index" class="pad5 " > -->
+                <Card  class="radius0 orgCardItem" v-for="(org, index) of orgs" :key="index" >
+                    <Row  style="min-width: 260px;">
+                        <Col span="3" class="marright5" style="min-width: 60px;">
                         <!-- principalPhoto -->
-                            <img src="resources/images/icon/contactor.png"  style="width:100%">
+                            <img src="resources/images/icon/sales-order.png"  style="width:50px;">
                         </Col>
-                        <Col span="18">
-                            <p>{{ org.groupName }}
-                                 <Tag  color="blue" class="fr radius10">使用中</Tag>
-                            </p>
-                            <p>{{org.groupType}}</p>
+                        <Col span="17" style="min-width:180px;">
+                            <h5 class="org-name">{{ org.groupName }}
+                            </h5>
+                            <p>{{org.groupType}}<Tag  color="blue" class="fr radius10">使用中</Tag></p>
                             <p>{{org.principalName}}</p>
                         </Col>
                     </Row>
                 </Card>
-            </Col>
-        </Row>
+            <!-- </Col> -->
+        <!-- </Row> -->
   </div>
 
 </template>

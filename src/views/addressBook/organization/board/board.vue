@@ -1,39 +1,23 @@
 <style lang="less" scoped>
-.orgCardItem{
-    height:80px;
-    min-width: 260px;
-    margin: 5px;
-    width: 16%;
-    float: left;
-}
-.org-name{
-    overflow: hidden;
-    text-overflow:ellipsis;
-    white-space: nowrap;
-}
+@import "./board.less";
 </style>
 
 <template>
     <div class="pad5">
-        <!-- <Row  :gutter="8"> -->
-            <!-- <Col :xs="24" :sm="12" :md="8" :lg="5" v-for="(org, index) of orgs" :key="index" class="pad5 " > -->
-                <Card  class="radius0 orgCardItem" v-for="(org, index) of orgs" :key="index" >
-                    <Row  style="min-width: 260px;">
-                        <Col span="3" class="marright5" style="min-width: 60px;">
-                        <!-- principalPhoto -->
-                            <img src="resources/images/icon/sales-order.png"  style="width:50px;">
-                        </Col>
-                        <Col span="17" style="min-width:180px;">
-                            <h5 class="org-name">{{ org.groupName }}
-                            </h5>
-                            <p>{{org.groupType}}<Tag  color="blue" class="fr radius10">使用中</Tag></p>
-                            <p>{{org.principalName}}</p>
-                        </Col>
-                    </Row>
-                </Card>
-            <!-- </Col> -->
-        <!-- </Row> -->
-  </div>
+        <Card  class="radius0 rfd-card" v-for="(org, index) of orgs" :key="index" >
+            <Row  class="rfd-card-container">
+                <Col span="3" class="marright5 rfd-card-left">
+                    <img src="resources/images/icon/sales-order.png" class="rfd-card-img">
+                </Col>
+                <Col span="17" class="rfd-card-content">
+                    <h5 class="text-nowrap font14">{{ org.groupName }}
+                    </h5>
+                    <p>{{org.groupType}}<Tag  color="blue" class="fr radius10" >使用中</Tag></p>
+                    <p>{{org.principalName}}</p>
+                </Col>
+            </Row>
+        </Card>
+    </div>
 
 </template>
 

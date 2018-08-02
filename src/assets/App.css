@@ -303,3 +303,10 @@ margin-top: 0;
 .bg_ff{
   background-color: #fff;
 }
+
+
+.text-nowrap{
+   overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}

@@ -6,10 +6,10 @@
   <Row class="detail">
     <Row class="detail-header">
       <Breadcrumb class="detail-header-bread">
-        <BreadcrumbItem to="/addressBook/user/board">{{ userInformation.nickname }}</BreadcrumbItem>
-        <BreadcrumbItem>{{ userInformation.userCode }}</BreadcrumbItem>
+        <BreadcrumbItem to="/addressBook/user/board">{{ userInformation.nickname?userInformation.nickname:'用户' }}</BreadcrumbItem>
+        <BreadcrumbItem>{{ userInformation.userCode?userInformation.userCode:'创建' }}</BreadcrumbItem>
       </Breadcrumb>
-      <Tag class="detail-header-status" v-instanceStateDirective="userInformation.status"></Tag>
+      <Tag v-show="userInformation.status?showTag:!showTag" class="detail-header-status" v-instanceStateDirective="{status:userInformation.status,color:'#eb2f96'}"></Tag>
     </Row>
     <Row class="detail-header">
       <Button type="info" @click="goBack">返回</Button>
@@ -21,7 +21,8 @@
     <Row class="detail-tabs">
       <div 
         @click="onClickTab(index)"
-        :class="{'detail-tabs-child':true,'active':item.isShow}" 
+        v-if="userInformation.userId?item.isShow:item.isShowAcive"
+        :class="{'detail-tabs-child':true,'active':item.isShowAcive}" 
         v-for="(item,index) of relativeInstance" 
         :key="index">
         <img :src="item.imgUrl"/>
@@ -75,6 +76,7 @@ export default {
   data() {
     return {
       userId: this.$route.params.userId,
+      showTag: true,
       whichShow: {
         userinfo: true,
         highuser: false,
@@ -86,13 +88,13 @@ export default {
       },
       userInformation: {},
       relativeInstance: [
-        { name: "间接权限", showName: 'indirper', isShow: false, relativeNum: 1, },
-        { name: "直接权限", showName: 'dirper', isShow: false, relativeNum: 1, },
-        { name: "用户职位", showName: 'role', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/job.png' },
-        { name: "用户部门", showName: 'dep', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/organization.png' },
-        { name: "下级用户", showName: 'lowuser', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' },
-        { name: "上级用户", showName: 'highuser', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' },
-        { name: "用户信息", showName: 'userinfo', isShow: true, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' }
+        { name: "间接权限", showName: 'indirper', isShow: true, isShowMar: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/2_1.png' },
+        { name: "直接权限", showName: 'dirper', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/1_4.png' },
+        { name: "用户职位", showName: 'role', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/job.png' },
+        { name: "用户部门", showName: 'dep',  isShow: true,isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/organization.png' },
+        { name: "下级用户", showName: 'lowuser', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' },
+        { name: "上级用户", showName: 'highuser', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' },
+        { name: "用户信息", showName: 'userinfo', isShow: true, isShowAcive: true, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' }
       ]
     };
   },
@@ -112,9 +114,11 @@ export default {
     },
     //获取用户详情信息
     getUserInfoData() {
-      getUserInfoById(this.userId).then(res => {
-        this.userInformation = res.tableContent[0];
-      });
+      if(this.userId){
+        getUserInfoById(this.userId).then(res => {
+          this.userInformation = res.tableContent[0];
+        });
+      }
     },
     goBack() {
       this.$router.push({path: '/addressBook/user/board'});

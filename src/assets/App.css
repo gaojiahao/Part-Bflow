@@ -36,6 +36,13 @@
     border-color: #dddee1 !important;
   }
 
+  .ivu-select-selection{
+    border-top-style: none;
+    border-left-style: none;
+    border-right-style: none;
+    border-radius: 0px;
+  }
+
   .ivu-input:focus {
     border-bottom-color: #57a3f3;
     box-shadow: 0 0 0 2px #fff;

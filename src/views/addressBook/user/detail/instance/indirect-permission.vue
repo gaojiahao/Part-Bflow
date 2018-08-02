@@ -4,7 +4,7 @@
         background-color: #fff;
         margin: 15px 93px;
         padding: 26px 50px;
-        box-shadow: 0px 1px 40px #ddd;
+        box-shadow: 0px 1px 10px #ddd;
       }
   }
   .user-page {
@@ -61,12 +61,16 @@ export default {
   methods: {
     //获取间接权限数据
     getIndirPermissionData() {
-      this.loading = true;
-      getIndirectPermissionData(this.userId,this.pageSize,this.currentPage).then(res => {
-        this.indirPermissionData = res.tableContent;
-        this.total = res.dataCount;
-        this.loading = false;
-      })
+      if(this.userId){
+        this.loading = true;
+        getIndirectPermissionData(this.userId,this.pageSize,this.currentPage).then(res => {
+          this.indirPermissionData = res.tableContent;
+          this.total = res.dataCount;
+          this.loading = false;
+        })
+      }else{
+          this.loading = false;
+      }
     },
     //点击分页
     onPageChange(currentPage) {

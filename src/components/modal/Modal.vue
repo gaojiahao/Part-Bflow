@@ -32,6 +32,8 @@
 <script>
 import TransferDom from "@/components/modal/transfer-dom";
 export default {
+  name:'custom-modal',
+  
   directives: { TransferDom },
   props: {
     value: {

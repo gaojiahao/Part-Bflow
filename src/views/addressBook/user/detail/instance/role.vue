@@ -4,7 +4,7 @@
         background-color: #fff;
         margin: 15px 93px;
         padding: 26px 50px;
-        box-shadow: 0px 1px 40px #ddd;
+        box-shadow: 0px 1px 10px #ddd;
       }
   }
   .user-page {
@@ -91,12 +91,16 @@ export default {
   methods: {
     //获取部门数据
     getRoleData() {
-      this.loading = true;
-      getRoleData(this.userId,this.rolePage.pageSize,this.rolePage.currentPage).then(res => {
-        this.roleData = res.tableContent;
-        this.rolePage.total = res.dataCount;
-        this.loading = false;
-      })
+      if(this.userId){
+        this.loading = true;
+        getRoleData(this.userId,this.rolePage.pageSize,this.rolePage.currentPage).then(res => {
+          this.roleData = res.tableContent;
+          this.rolePage.total = res.dataCount;
+          this.loading = false;
+        })
+      }else{
+          this.loading = false;
+      }
     },
     //点击分页
     onPageChange(currentPage) {
@@ -127,13 +131,15 @@ export default {
       }else{
         this.$Message.warning('请选择至少一个职位！');
       }
-      if(multiId){
+      if(multiId && this.userId){
         addRoleMember(this.userId,multiId.join(',')).then(res => {
           if(res.success){
             this.$Message.success(res.message);
             this.getRoleData();
           }
         })
+      }else{
+        this.$Message.warning('无用户ID，请先保存用户再进行编辑！');
       }
     },
     //选择职位

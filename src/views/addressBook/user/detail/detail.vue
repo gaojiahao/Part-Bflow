@@ -9,7 +9,7 @@
         <BreadcrumbItem to="/addressBook/user/board">{{ userInformation.nickname }}</BreadcrumbItem>
         <BreadcrumbItem>{{ userInformation.userCode }}</BreadcrumbItem>
       </Breadcrumb>
-      <Tag class="detail-header-status" color="error">{{ userInformation.userStatus }}</Tag>
+      <Tag class="detail-header-status" v-instanceStateDirective="userInformation.status"></Tag>
     </Row>
     <Row class="detail-header">
       <Button type="info" @click="goBack">返回</Button>
@@ -114,15 +114,6 @@ export default {
     getUserInfoData() {
       getUserInfoById(this.userId).then(res => {
         this.userInformation = res.tableContent[0];
-        if (this.userInformation.status === 1) {
-          this.userInformation.userStatus = "使用中";
-        } else if (this.userInformation.status === 0) {
-          this.userInformation.userStatus = "停用";
-        } else if(this.userInformation.status === 2){
-          this.userInformation.userStatus = "未使用";
-        }else{
-          this.userInformation.userStatus = "草稿";
-        }
       });
     },
     goBack() {

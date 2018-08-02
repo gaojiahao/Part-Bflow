@@ -179,7 +179,7 @@ export default {
     //获取管理员数据
     getAdmintrstorData(filter) {
       this.adminLoading = true;
-      getAdminData(this.currentPage,this.pageSize).then(res => {
+      getAdminData(filter,this.currentPage,this.pageSize).then(res => {
         this.adminData = res.tableContent; 
         this.total = res.dataCount;
         this.adminLoading = false;

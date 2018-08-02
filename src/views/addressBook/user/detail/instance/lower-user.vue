@@ -2,7 +2,7 @@
     .lower-user{
       &-detail{
         background-color: #fff;
-        margin: 5px 93px;
+        margin: 15px 93px;
         padding: 26px 50px;
         box-shadow: 0px 1px 40px #ddd;
       }
@@ -20,7 +20,7 @@
             <Table ref="selection" :columns="columns" :loading="loading" :data="lowerUserData"></Table>
             <div class="user-page">
                 <div style="float: right;">
-                  <Page :total="lowUser.total" show-elevator show-sizer :current="lowUser.currentPage" :page-size="lowUser.pageSize" @on-change="onPageChange" size="small" show-total></Page>
+                  <Page @on-page-size-change="onPageSizeChange" :total="lowUser.total" show-elevator show-sizer :current="lowUser.currentPage" :page-size="lowUser.pageSize" @on-change="onPageChange" size="small" show-total></Page>
                 </div>
             </div>
         </div>
@@ -32,7 +32,7 @@
             <Table ref="selection" @on-selection-change="onSelectionChange" height="400" :loading="userLoading" :columns="columns" :data="userData"></Table>
             <div class="user-page">
                 <div style="float: right;">
-                  <Page :total="lowUser.usertotal" show-elevator show-sizer :current="lowUser.usercurrentPage" :page-size="lowUser.pageSize" @on-change="onUserPageChange" size="small" show-total></Page>
+                  <Page @on-page-size-change="onAllUserPageSizeChange" :total="lowUser.usertotal" show-elevator show-sizer :current="lowUser.usercurrentPage" :page-size="lowUser.allUserpageSize" @on-change="onUserPageChange" size="small" show-total></Page>
                 </div>
             </div>
         </Modal>
@@ -48,12 +48,14 @@ export default {
   props: {},
   data() {
     return {
+      userId: this.$route.params.userId,
       lowUser: {
         total: 0,
         usertotal: 0,
         currentPage: 1,
         usercurrentPage: 1,
         pageSize: 10,
+        allUserpageSize: 10,
       },
       loading: true,
       userLoading: true,
@@ -133,7 +135,7 @@ export default {
     //获取下级用户数据
     getLowerUserData() {
       this.loading = true;
-      getLowUserData(15383,this.pageSize,this.currentPage).then(res => {
+      getLowUserData(this.userId,this.lowUser.pageSize,this.lowUser.currentPage).then(res => {
         this.lowerUserData = res.tableContent;
         this.lowUser.total = res.dataCount;
         this.loading = false;
@@ -143,6 +145,16 @@ export default {
     onPageChange(currentPage) {
       this.lowUser.currentPage = currentPage;
       this.getLowerUserData();
+    },
+    //点击切换下级用户每页显示条数
+    onPageSizeChange(size) {
+      this.lowUser.pageSize = size;
+      this.getLowerUserData();
+    },
+    //点击切换所有用户每页显示条数
+    onAllUserPageSizeChange(size) {
+      this.lowUser.allUserpageSize = size;
+      this.getAllUsersData();
     },
     onUserPageChange(currentPage) {
       this.lowUser.usercurrentPage = currentPage;
@@ -159,7 +171,7 @@ export default {
         this.$Message.warning('请选择至少一个用户！');
       }
       if(parentId){
-        updateHighUser(parentId.join(','),15383).then(res => {
+        updateHighUser(parentId.join(','),this.userId).then(res => {
           if(res.success){
             this.$Message.success(res.message);
             this.getLowerUserData();
@@ -179,7 +191,7 @@ export default {
     //获取所有用户数据
     getAllUsersData() {
       this.userLoading = true;
-      getAllUsers(this.pageSize,this.usercurrentPage).then(res => {
+      getAllUsers(this.lowUser.allUserpageSize,this.lowUser.usercurrentPage).then(res => {
         this.userData = res.tableContent;
         this.lowUser.usertotal = res.dataCount;
         this.userLoading = false;
@@ -187,9 +199,7 @@ export default {
     }
   },
   mounted() {
-    let relHeight = document.body.clientHeight-190;
     this.getLowerUserData();
-    document.getElementById('lowHeight').style.minHeight = relHeight+'px';
   }
 };
 </script>

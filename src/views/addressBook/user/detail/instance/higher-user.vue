@@ -2,14 +2,10 @@
     .higher-user{
       &-detail{
         background-color: #fff;
-        margin: 5px 93px;
+        margin: 15px 93px;
         padding: 26px 50px;
         box-shadow: 0px 1px 40px #ddd;
       }
-  }
-  .user-page {
-    margin: 10px;
-    overflow: hidden;
   }
 </style>
 
@@ -18,21 +14,21 @@
         <div class="higher-user-detail" id="cliHeight">
             <Button type="info" @click="showUserModal" style="margin-bottom:5px">选择上级用户</Button>
             <Table ref="selection" :columns="columns" :loading="loading" :data="higherUserData"></Table>
-            <div class="user-page">
+            <!-- <div class="user-page">
                 <div style="float: right;">
-                  <Page :total="highUser.total" show-elevator show-sizer :current="highUser.currentPage" :page-size="highUser.pageSize" @on-change="onPageChange" size="small" show-total></Page>
+                  <Page @on-page-size-change="onPageSizeChange" :total="highUser.total" show-elevator show-sizer :current="highUser.currentPage" :page-size="highUser.pageSize" @on-change="onPageChange" size="small" show-total></Page>
                 </div>
-            </div>
+            </div> -->
         </div>
         <Modal
             v-model="showModal"
             title="选择用户"
             @on-ok="addHighUser"
             width="1000">
-            <Table ref="selection" @on-selection-change="onSelectionChange" height="400" :loading="userLoading" :columns="columns" :data="userData"></Table>
+            <Table ref="selection" :highlight-row="true" @on-row-click="onSelectionChange" height="400" :loading="userLoading" :columns="columns" :data="userData"></Table>
             <div class="user-page">
                 <div class="fr">
-                  <Page :total="highUser.usertotal" show-elevator show-sizer :current="highUser.usercurrentPage" :page-size="highUser.pageSize" @on-change="onUserPageChange" size="small" show-total></Page>
+                  <Page @on-page-size-change="onAllUserPageSizeChange" :total="highUser.usertotal" show-elevator show-sizer :current="highUser.usercurrentPage" :page-size="highUser.allUserpageSize" @on-change="onUserPageChange" size="small" show-total></Page>
                 </div>
             </div>
         </Modal>
@@ -48,22 +44,19 @@ export default {
   props: {},
   data() {
     return {
+      userId: this.$route.params.userId,
       highUser: {
         total: 0,
         currentPage: 1,
         usertotal: 0,
         usercurrentPage: 1,
         pageSize: 10,
+        allUserpageSize: 10,
       },
       loading: true,
       userLoading: true,
       showModal: false,
       columns: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
         {
           title: "工号",
           key: "userCode"
@@ -126,14 +119,14 @@ export default {
       ],
       higherUserData: [],
       userData: [],
-      selectUserData: []
+      selectUserData: {}
     };
   },
   methods: {
     //获取上级用户数据
     getHigherUserData() {
       this.loading = true;
-      getHighUserData(15383,this.pageSize,this.currentPage).then(res => {
+      getHighUserData(this.userId,this.highUser.pageSize,this.highUser.currentPage).then(res => {
         this.higherUserData = res.tableContent;
         this.highUser.total = res.dataCount;
         this.loading = false;
@@ -144,23 +137,31 @@ export default {
       this.highUser.currentPage = currentPage;
       this.getHigherUserData();
     },
+    //点击切换上级用户每页显示条数
+    onPageSizeChange(size) {
+      this.highUser.pageSize = size;
+      this.getHigherUserData();
+    },
+    //点击切换所有用户每页显示条数
+    onAllUserPageSizeChange(size) {
+      this.highUser.allUserpageSize = size;
+      this.getAllUsersData();
+    },
     onUserPageChange(currentPage) {
       this.highUser.usercurrentPage = currentPage;
       this.getAllUsersData();
     },
     //添加上级用户
     addHighUser() {
-      let parentId = [];
-      if(this.selectUserData.length > 0){
-        this.selectUserData.forEach(val => {
-          parentId.push(val.userId);
-        });
+      let parentId;
+      if(Object.keys(this.selectUserData).length > 0){
+        parentId = this.selectUserData.userId;
       }else{
         this.$Message.warning('请选择至少一个用户！');
       }
       
       if(parentId){
-        updateHighUser(15383,parentId.join(',')).then(res => {
+        updateHighUser(this.userId,parentId).then(res => {
           if(res.success){
             this.$Message.success(res.message);
             this.getHigherUserData();
@@ -180,7 +181,7 @@ export default {
     //获取所有用户数据
     getAllUsersData() {
       this.userLoading = true;
-      getAllUsers(this.pageSize,this.usercurrentPage).then(res => {
+      getAllUsers(this.highUser.allUserpageSize,this.highUser.usercurrentPage).then(res => {
         this.userData = res.tableContent;
         this.highUser.usertotal = res.dataCount;
         this.userLoading = false;
@@ -188,9 +189,7 @@ export default {
     }
   },
   mounted() {
-    let relHeight = document.body.clientHeight-190;
     this.getHigherUserData();
-    document.getElementById('cliHeight').style.minHeight = relHeight+'px';
   }
 };
 </script>

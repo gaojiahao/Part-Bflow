@@ -2,10 +2,18 @@
     .direct{
       &-detail{
         background-color: #fff;
-        margin: 5px 93px;
+        margin: 15px 93px;
         padding: 26px 50px;
         box-shadow: 0px 1px 40px #ddd;
       }
+  }
+  .user-page {
+    margin: 10px;
+    overflow: hidden;
+  }
+  .app-tree{
+    height: 350px;
+    overflow: auto;
   }
 </style>
 
@@ -17,7 +25,7 @@
             <Table ref="selection" @on-selection-change="onSelectionChange" :columns="columns" :loading="loading" :data="dirPermissionData"></Table>
             <div class="user-page">
                 <div style="float: right;">
-                  <Page :total="total" :current="currentPage" :page-size="pageSize" @on-change="onPageChange" size="small" show-total></Page>
+                  <Page @on-page-size-change="onPageSizeChange" :total="total" show-elevator show-sizer :current="currentPage" :page-size="pageSize" @on-change="onPageChange" size="small" show-total></Page>
                 </div>
             </div>
         </div>
@@ -26,7 +34,7 @@
             title="选择权限"
             @on-ok="addPermission"
             width="400">
-            <Tree :data="allPermissionData" :multiple="false" @on-check-change="onCheckChange" :load-data="loadData" show-checkbox></Tree>
+            <Tree class="app-tree" :data="allPermissionData" :multiple="false" @on-check-change="onCheckChange" :load-data="loadData" show-checkbox></Tree>
         </Modal>
     </div>
 </template>
@@ -40,7 +48,7 @@ export default {
   props: {},
   data() {
     return {
-      clientHeight: document.body.clientHeight,
+      userId: this.$route.params.userId,
       total: 0,
       currentPage: 1,
       pageSize: 10,
@@ -68,7 +76,7 @@ export default {
     //获取直接权限数据
     getDirPermissionData() {
       this.loading = true;
-      getDirectPermissionData(15383,this.pageSize,this.currentPage).then(res => {
+      getDirectPermissionData(this.userId,this.pageSize,this.currentPage).then(res => {
         this.dirPermissionData = res.tableContent;
         this.total = res.dataCount;
         this.loading = false;
@@ -77,6 +85,11 @@ export default {
     //点击分页
     onPageChange(currentPage) {
       this.currentPage = currentPage;
+      this.getDirPermissionData();
+    },
+    //点击切换每页显示条数
+    onPageSizeChange(size) {
+      this.pageSize = size;
       this.getDirPermissionData();
     },
     //未选中禁用删除权限按钮
@@ -104,7 +117,7 @@ export default {
         multiId.push(val.id);
       });
       if(multiId){
-        addIndirPermission(15383,multiId.join(',')).then(res => {
+        addIndirPermission(this.userId,multiId.join(',')).then(res => {
           if(res.success){
             this.$Message.success(res.message);
             this.getDirPermissionData();
@@ -119,7 +132,7 @@ export default {
         multiId.push(val.id);
       });
       if(multiId){
-        deleteIndirPermission(15383,multiId.join(',')).then(res => {
+        deleteIndirPermission(this.userId,multiId.join(',')).then(res => {
           if(res.success){
             this.$Message.success(res.message);
             this.getDirPermissionData();
@@ -167,9 +180,7 @@ export default {
     }
   },
   mounted() {
-    let relHeight = document.body.clientHeight-190;
     this.getDirPermissionData();
-    document.getElementById('directHeight').style.minHeight = relHeight+'px';
   }
 };
 </script>

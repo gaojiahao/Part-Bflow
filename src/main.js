@@ -5,6 +5,9 @@ import iView from 'iview'
 import 'iview/dist/styles/iview.css'
 import fontIcon from './assets/App.css'
 import { getCurrentUserInfo } from "@/services/flowService"
+import instanceStateDirective from  '@/directive/instanceStateDirective';
+
+Vue.directive('instanceStateDirective',instanceStateDirective);
 require('./assets/App.css')
 
 Vue.config.productionTip = false

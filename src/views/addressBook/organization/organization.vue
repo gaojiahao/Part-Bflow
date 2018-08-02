@@ -161,7 +161,53 @@ export default {
     handlerViewChange(index) {
       this.actionIndex = index;
     },
+<<<<<<< HEAD
     
+=======
+
+    //获取成员信息
+    getUsersByGroupId(groupId, currentPage, pageSize) {
+      this.memberInfoLoading = true;
+      getUsersByGroupId(groupId, currentPage, pageSize).then(res => {
+        if (res.tableContent[0]) {
+          this.c = res.summary.total;
+          this.memberInfoData = res.tableContent;
+          this.memberInfoLoading = false;
+        }
+      });
+    },
+
+    //获取用户列表
+    getListUsers(currentPage, pageSize) {
+      this.listUserLoading = true;
+      listUsers(currentPage, pageSize).then(res => {
+        if (res.tableContent[0]) {
+          this.listUserPageTotal = res.summary.total;
+          this.listUserData = res.tableContent;
+          this.listUserLoading = false;
+        }
+      });
+    },
+
+    listUserChangePage(currentPage) {
+      this.getListUsers(currentPage, this.pageSize);
+    },
+
+    //添加成员
+    addUser() {},
+
+    //显示模态框-添加成员
+    showMemberModal() {
+      this.isShowMemberModal = true;
+      this.getListUsers(this.listUserCurrentPage, this.pageSize);
+    },
+    //成员信息导出xmls
+    exportData() {
+      this.$refs.table.exportCsv({
+        filename: "成员信息"
+      });
+    }
+>>>>>>> 095bdd6a146cbef770c4688d8134660fb3cfd13c
   },
 
   mounted() {

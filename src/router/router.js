@@ -91,14 +91,51 @@ export const addressBook = {
                 title: '用户详情'
             },
             component: () => import('@/views/addressBook/user/detail/detail.vue')
+        },{
+            path: 'board',
+            name: 'board',
+            meta: {
+                title: '用户看板'
+            },
+            component: () => import('@/views/addressBook/user/board/board.vue')
+        },{
+            path: 'add',
+            name: 'add',
+            meta: {
+                title: '新增用户'
+            },
+            component: () => import('@/views/addressBook/user/detail/detail.vue')
         }]
-    },{
+    }, {
         path: 'organization',
         name: 'organization',
         meta: {
-            title: '组织列表'
+            title: '组织'
         },
-        component: () => import('@/views/addressBook/organization/organization.vue')
+        component: () => import('@/views/addressBook/organization/index.vue'),
+        children: [{
+            path: 'board',
+            name: 'board',
+            meta: {
+                title: '组织看板'
+            },
+            component: () => import('@/views/addressBook/organization/board/board.vue')
+        },{
+            path: 'detail/:id',
+            name: 'detail',
+            meta: {
+                title: '组织详情'
+            },
+            component: () => import('@/views/addressBook/organization/organization.vue') 
+        }]
+        
+    },{
+        path: 'companyInfo/:groupId',
+        name: 'companyInfo',
+        meta: {
+        title: 'companyInfo  - 公司信息'
+        },
+        component: () => import('@/views/addressBook/companyInfo/companyInfo.vue')  
     }]
 }
 
@@ -130,14 +167,6 @@ export const enterpriseInfo = {
 }
 
 
-export const companyInfo = {
-    path: '/companyInfo',
-    name: 'companyInfo',
-    meta: {
-        title: 'companyInfo  - 公司信息'
-    },
-    component: () => import('@/views/companyInfo/companyInfo.vue')
-}
 
 export const routers = [
     loginRouter,
@@ -148,6 +177,5 @@ export const routers = [
     addressBook,
     sujectformRouter,
     enterpriseInfo,
-    companyInfo,
     ...appRouter
 ];

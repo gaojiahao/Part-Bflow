@@ -147,6 +147,26 @@ export const deleteIndirPermission = (single,multi) => request('/H_roleplay-si/p
     single: single
 });
 
+/**
+ * @author XiaoYing
+ * @description 获取用户详情信息
+ */
+export const getUserInfoById = (userId) => request('/H_roleplay-si/ds/getUserInfoById',{
+    userId: userId
+});
+
+/**
+ * @author XiaoYing
+ * @description 更新用户
+ */
+export const updateUser = (params) => request('/H_roleplay-si/userInfo/updateUser',{},'POST',params);
+
+/**
+ * @author XiaoYing
+ * @description 新增用户
+ */
+export const addUser = (params) => request('/H_roleplay-si/userInfo/addUser',{},'POST',params);
+
 
 /************  组织  **************/
 
@@ -242,8 +262,66 @@ export const getAllGroup = (currentPage,pageSize,filter) => request('/H_roleplay
  */
 export const getTableData = (url,params) => request('/H_roleplay-si'+url,params);
 
+/*
+ * @author snack.huang
+ * @description 获取所有组织 [管理层、事业部、部门、小组]
+ */
+export const getOrganizations = (pageInfo) => request('/H_roleplay-si/ds/getAllGroup', pageInfo);
+
+
+
 
 /************  职位  **************/
 
 
 /************  职位  **************/
+
+
+
+/************  公司  **************/
+
+/**
+ * @author zhaohuai
+ * 根据公司Id获取所属成员信息
+ */
+export const getCompanyMemberByCompanyId = (currentPage,pageSize) =>request('/H_roleplay-si/ds/listUsers',{
+    entityId:20000,
+    page: currentPage,
+    limit: pageSize,
+    start:0,
+});
+
+/**
+ * @author zhaohuai
+ * 根据公司id获取公司信息
+ * 
+ */
+export const getCompanyInfoByGroupId = (groupId) => request('/H_roleplay-si/ds/getGroupById',{
+    groupId:groupId
+})
+/**
+ * @author zhaohuai
+ * 保存公司基本信息
+ */
+export const saveCompanyInfo = (data) =>{
+    let {
+        groupName,
+        groupShortName,
+        depFunction,
+        status,
+        comment,
+        groupCode
+    } = data
+    return request('/H_roleplay-si/userInfo/saveGroup',{
+        groupName: groupName,
+        groupShortName: groupShortName,
+        depFunction: depFunction,
+        status: status,
+        comment: comment,
+        list: 'sys_group',
+        groupType: 'C',
+        parentId: '1',
+        groupCode: groupCode
+    },"POST");
+};
+/************  公司  **************/

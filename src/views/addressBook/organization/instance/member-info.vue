@@ -33,11 +33,17 @@ export default {
     CustomTable
   },
 
+   props: {
+    groupId: {
+      type: String
+    }
+  },
+
   data() {
     return {
       memberInfoLoading: false,
       memberInfoParams: {
-        groupId: 990345,
+        groupId: this.groupId,
         page: 1,
         limit: 8
       },
@@ -156,7 +162,7 @@ export default {
         multiId.push(val.userId);
       });
       if (multiId) {
-        addOrgMember(990345, multiId.join(","),1).then(res => {
+        addOrgMember(this.groupId, multiId.join(","),1).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
             this.reload = true;
@@ -172,7 +178,7 @@ export default {
         multiId.push(val.userId);
       });
       if (multiId) {
-        deleteOrgMember(990345, multiId.join(","),0).then(res => {
+        deleteOrgMember(this.groupId, multiId.join(","),0).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
              this.reload = true;

@@ -121,7 +121,7 @@ export const addressBook = {
             },
             component: () => import('@/views/addressBook/organization/board/board.vue')
         },{
-            path: 'detail/:id',
+            path: 'detail/:groupId',
             name: 'detail',
             meta: {
                 title: '组织详情'

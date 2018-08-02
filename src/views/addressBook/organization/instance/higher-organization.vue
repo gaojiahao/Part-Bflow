@@ -36,11 +36,17 @@ export default {
     MemberModal
   },
 
+  props: {
+    groupId: {
+      type: String
+    }
+  },
+
   data() {
     return {
       //上级组织
       highOrganizationParams: {
-        groupId: 990345,
+        groupId: this.groupId,
         page: 1,
         limit: 8
       },

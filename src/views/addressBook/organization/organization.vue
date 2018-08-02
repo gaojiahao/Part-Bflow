@@ -67,23 +67,23 @@
             </section>
             <!-- 上级组织 -->
             <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===4">
-                <high-organization></high-organization>
+                <high-organization :groupId="groupId"></high-organization>
             </section>
             <!-- 下级组织 -->
             <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===3">
-                <lower-organization></lower-organization>
+                <lower-organization :groupId="groupId"></lower-organization>
             </section>
             <!-- 负责人 -->
             <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===2">
-                <principal></principal>
+                <principal :groupId="groupId"></principal>
             </section>
             <!-- 成员信息 -->
             <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===1">
-                <member-info></member-info>
+                <member-info :groupId="groupId"></member-info>
             </section>
             <!-- 权限 -->
             <section class="permission-container rfd-tab-container-common" v-if="actionIndex===0">
-              <permission></permission>
+                <permission :groupId="groupId"></permission>
             </section>
         </div>
 
@@ -128,89 +128,44 @@ export default {
         },
         {
           label: "成员信息",
-          imgPath: "../../../resources/images/icon/0_0.png",
+          imgPath: "../../../resources/images/icon/0_1.png",
           number: 0
         },
         {
           label: "负责人",
-          imgPath: "../../../resources/images/icon/0_0.png",
+          imgPath: "../../../resources/images/icon/0_2.png",
           number: 0
         },
         {
           label: "下级组织",
-          imgPath: "../../../resources/images/icon/0_0.png",
+          imgPath: "../../../resources/images/icon/0_3.png",
           number: 0
         },
         {
           label: "上级组织",
-          imgPath: "../../../resources/images/icon/0_0.png",
+          imgPath: "../../../resources/images/icon/0_4.png",
           number: 0
         },
         {
           label: "基本信息",
-          imgPath: "../../../resources/images/icon/0_0.png",
+          imgPath: "../../../resources/images/icon/0_5.png",
           number: 0
         }
       ],
       actionIndex: 5,
 
+      groupId: this.$route.params.groupId
     };
   },
 
   methods: {
     handlerViewChange(index) {
       this.actionIndex = index;
-    },
-<<<<<<< HEAD
-    
-=======
-
-    //获取成员信息
-    getUsersByGroupId(groupId, currentPage, pageSize) {
-      this.memberInfoLoading = true;
-      getUsersByGroupId(groupId, currentPage, pageSize).then(res => {
-        if (res.tableContent[0]) {
-          this.c = res.summary.total;
-          this.memberInfoData = res.tableContent;
-          this.memberInfoLoading = false;
-        }
-      });
-    },
-
-    //获取用户列表
-    getListUsers(currentPage, pageSize) {
-      this.listUserLoading = true;
-      listUsers(currentPage, pageSize).then(res => {
-        if (res.tableContent[0]) {
-          this.listUserPageTotal = res.summary.total;
-          this.listUserData = res.tableContent;
-          this.listUserLoading = false;
-        }
-      });
-    },
-
-    listUserChangePage(currentPage) {
-      this.getListUsers(currentPage, this.pageSize);
-    },
-
-    //添加成员
-    addUser() {},
-
-    //显示模态框-添加成员
-    showMemberModal() {
-      this.isShowMemberModal = true;
-      this.getListUsers(this.listUserCurrentPage, this.pageSize);
-    },
-    //成员信息导出xmls
-    exportData() {
-      this.$refs.table.exportCsv({
-        filename: "成员信息"
-      });
     }
->>>>>>> 095bdd6a146cbef770c4688d8134660fb3cfd13c
   },
 
   mounted() {
+      debugger
     let tabsMaxHight = document.body.clientHeight - 95;
     window.document.getElementsByClassName(
       "organization-wrap-tabs"

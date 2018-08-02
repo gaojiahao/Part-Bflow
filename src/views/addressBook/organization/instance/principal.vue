@@ -26,10 +26,16 @@ export default {
     CustomTable
   },
 
+  props:{
+      groupId:{
+          type:String
+      }
+  },
+
   data() {
     return {
       principalParams: {
-        groupId: 990345,
+        groupId: this.groupId,
         page: 1,
         limit: 8
       },

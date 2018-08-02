@@ -31,11 +31,17 @@ export default {
     MemberModal
   },
 
+  props: {
+    groupId: {
+      type: String
+    }
+  },
+
   data() {
     return {
       permissionParams: {
         objectName: "group",
-        objectId: 990345,
+        objectId: this.groupId,
         page: 1,
         limit: 8,
         start: 0
@@ -88,7 +94,7 @@ export default {
         multiId.push(val.id);
       });
       if (multiId) {
-        deleteOrgPermission(990345, multiId.join(",")).then(res => {
+        deleteOrgPermission(this.groupId, multiId.join(",")).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
             this.reload = true;
@@ -126,7 +132,7 @@ export default {
         multiId.push(val.id);
       });
       if (multiId) {
-        addOrgPermission(990345, multiId.join(",")).then(res => {
+        addOrgPermission(this.groupId, multiId.join(",")).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
             this.reload = true;

@@ -26,11 +26,17 @@ import CustomTable from "./CustomTable";
 export default {
   name: "lower-organization",
 
+  props: {
+    groupId: {
+      type: String
+    }
+  },
+
   data() {
     return {
       //下级组织
       lowOrganizationParams: {
-        parentId: 990345,
+        parentId: this.groupId,
         page: 1,
         limit: 8
       },

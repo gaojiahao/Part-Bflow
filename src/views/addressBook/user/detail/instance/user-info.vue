@@ -114,8 +114,9 @@ export default {
         mobile: [
           {
             required: true,
-            message: "手机号不允许为空",
-            trigger: "blur"
+            message: "手机号输入不合法",
+            trigger: "blur",
+            pattern: /^[1][3,4,5,7,8][0-9]{9}$/
           }
         ],
         email: [
@@ -170,6 +171,8 @@ export default {
                     if(res.success){
                         this.$Message.success(res.message);
                     }
+                }).catch(error => {
+                    this.$Message.error(error.data.message);
                 })
             }
         })

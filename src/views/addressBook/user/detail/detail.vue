@@ -6,7 +6,7 @@
   <Row class="detail">
     <Row class="detail-header">
       <Breadcrumb class="detail-header-bread">
-        <BreadcrumbItem to="/addressBook/users">{{ userInformation.nickname }}</BreadcrumbItem>
+        <BreadcrumbItem to="/addressBook/user/board">{{ userInformation.nickname }}</BreadcrumbItem>
         <BreadcrumbItem>{{ userInformation.userCode }}</BreadcrumbItem>
       </Breadcrumb>
       <Tag class="detail-header-status" color="error">{{ userInformation.userStatus }}</Tag>

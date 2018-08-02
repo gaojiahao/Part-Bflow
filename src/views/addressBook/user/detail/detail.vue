@@ -21,7 +21,8 @@
     <Row class="detail-tabs">
       <div 
         @click="onClickTab(index)"
-        :class="{'detail-tabs-child':true,'active':item.isShow}" 
+        v-if="userInformation.userId?item.isShow:item.isShowAcive"
+        :class="{'detail-tabs-child':true,'active':item.isShowAcive}" 
         v-for="(item,index) of relativeInstance" 
         :key="index">
         <img :src="item.imgUrl"/>
@@ -87,13 +88,13 @@ export default {
       },
       userInformation: {},
       relativeInstance: [
-        { name: "间接权限", showName: 'indirper', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/2_1.png' },
-        { name: "直接权限", showName: 'dirper', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/1_4.png' },
-        { name: "用户职位", showName: 'role', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/job.png' },
-        { name: "用户部门", showName: 'dep', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/organization.png' },
-        { name: "下级用户", showName: 'lowuser', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' },
-        { name: "上级用户", showName: 'highuser', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' },
-        { name: "用户信息", showName: 'userinfo', isShow: true, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' }
+        { name: "间接权限", showName: 'indirper', isShow: true, isShowMar: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/2_1.png' },
+        { name: "直接权限", showName: 'dirper', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/1_4.png' },
+        { name: "用户职位", showName: 'role', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/job.png' },
+        { name: "用户部门", showName: 'dep',  isShow: true,isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/organization.png' },
+        { name: "下级用户", showName: 'lowuser', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' },
+        { name: "上级用户", showName: 'highuser', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' },
+        { name: "用户信息", showName: 'userinfo', isShow: true, isShowAcive: true, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' }
       ]
     };
   },

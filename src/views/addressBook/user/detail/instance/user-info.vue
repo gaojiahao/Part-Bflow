@@ -48,8 +48,9 @@
                 <FormItem label="状态：">
                     <Select v-model="formItem.status">
                         <Option value="1">使用中</Option>
+                        <Option value="3">草稿</Option>
                         <Option value="0">停用</Option>
-                        <Option value="-1">未使用</Option>
+                        <Option value="2">未使用</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="说明：">
@@ -160,12 +161,16 @@ export default {
     },
     //更新用户详情信息
     updateUserData() {
-        this.formItem.photo = this.logo;
-        this.formItem.userId = this.userInfo.userId;
-        this.formItem.termOfValidity = this.formatDate(this.formItem.termOfValidity);
-        updateUser(this.formItem).then(res => {
-            if(res.success){
-                this.$Message.success(res.message);
+        this.$refs["formItem"].validate(valid => {
+            if(valid){
+                this.formItem.photo = this.logo;
+                this.formItem.userId = this.userInfo.userId;
+                this.formItem.termOfValidity = this.formatDate(this.formItem.termOfValidity);
+                updateUser(this.formItem).then(res => {
+                    if(res.success){
+                        this.$Message.success(res.message);
+                    }
+                })
             }
         })
     },

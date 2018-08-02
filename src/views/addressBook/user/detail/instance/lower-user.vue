@@ -48,6 +48,7 @@ export default {
   props: {},
   data() {
     return {
+      userId: this.$route.params.userId,
       lowUser: {
         total: 0,
         usertotal: 0,
@@ -134,7 +135,7 @@ export default {
     //获取下级用户数据
     getLowerUserData() {
       this.loading = true;
-      getLowUserData(15383,this.lowUser.pageSize,this.lowUser.currentPage).then(res => {
+      getLowUserData(this.userId,this.lowUser.pageSize,this.lowUser.currentPage).then(res => {
         this.lowerUserData = res.tableContent;
         this.lowUser.total = res.dataCount;
         this.loading = false;
@@ -170,7 +171,7 @@ export default {
         this.$Message.warning('请选择至少一个用户！');
       }
       if(parentId){
-        updateHighUser(parentId.join(','),15383).then(res => {
+        updateHighUser(parentId.join(','),this.userId).then(res => {
           if(res.success){
             this.$Message.success(res.message);
             this.getLowerUserData();

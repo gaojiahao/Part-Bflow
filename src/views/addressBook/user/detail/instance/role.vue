@@ -48,6 +48,7 @@ export default {
   props: {},
   data() {
     return {
+      userId: this.$route.params.userId,
       rolePage: {
         total: 0,
         roletotal: 0,
@@ -91,7 +92,7 @@ export default {
     //获取部门数据
     getRoleData() {
       this.loading = true;
-      getRoleData(15383,this.rolePage.pageSize,this.rolePage.currentPage).then(res => {
+      getRoleData(this.userId,this.rolePage.pageSize,this.rolePage.currentPage).then(res => {
         this.roleData = res.tableContent;
         this.rolePage.total = res.dataCount;
         this.loading = false;
@@ -127,7 +128,7 @@ export default {
         this.$Message.warning('请选择至少一个职位！');
       }
       if(multiId){
-        addRoleMember(15383,multiId.join(',')).then(res => {
+        addRoleMember(this.userId,multiId.join(',')).then(res => {
           if(res.success){
             this.$Message.success(res.message);
             this.getRoleData();

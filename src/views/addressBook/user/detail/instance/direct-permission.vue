@@ -44,6 +44,7 @@ export default {
   props: {},
   data() {
     return {
+      userId: this.$route.params.userId,
       total: 0,
       currentPage: 1,
       pageSize: 10,
@@ -71,7 +72,7 @@ export default {
     //获取直接权限数据
     getDirPermissionData() {
       this.loading = true;
-      getDirectPermissionData(15383,this.pageSize,this.currentPage).then(res => {
+      getDirectPermissionData(this.userId,this.pageSize,this.currentPage).then(res => {
         this.dirPermissionData = res.tableContent;
         this.total = res.dataCount;
         this.loading = false;
@@ -112,7 +113,7 @@ export default {
         multiId.push(val.id);
       });
       if(multiId){
-        addIndirPermission(15383,multiId.join(',')).then(res => {
+        addIndirPermission(this.userId,multiId.join(',')).then(res => {
           if(res.success){
             this.$Message.success(res.message);
             this.getDirPermissionData();
@@ -127,7 +128,7 @@ export default {
         multiId.push(val.id);
       });
       if(multiId){
-        deleteIndirPermission(15383,multiId.join(',')).then(res => {
+        deleteIndirPermission(this.userId,multiId.join(',')).then(res => {
           if(res.success){
             this.$Message.success(res.message);
             this.getDirPermissionData();

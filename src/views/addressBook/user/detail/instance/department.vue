@@ -39,6 +39,7 @@ export default {
   props: {},
   data() {
     return {
+      userId: this.$route.params.userId,
       total: 0,
       currentPage: 1,
       pageSize: 10,
@@ -95,7 +96,7 @@ export default {
     //获取部门数据
     getDepartmentData() {
       this.loading = true;
-      getDepartmentData(15383,this.pageSize,this.currentPage).then(res => {
+      getDepartmentData(this.userId,this.pageSize,this.currentPage).then(res => {
         this.departmentData = res.tableContent;
         this.total = res.dataCount;
         this.loading = false;
@@ -119,7 +120,7 @@ export default {
     //添加组织部门
     addDepartment() {
       if(this.selectGroup){
-        addGroupMember(this.selectGroup.groupId,15383).then(res => {
+        addGroupMember(this.selectGroup.groupId,this.userId).then(res => {
           if(res.success){
             this.$Message.success(res.message);
             this.getDepartmentData();

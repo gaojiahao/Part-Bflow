@@ -199,9 +199,7 @@ export default {
     },
 
     modalVisibleChange(val) {
-      if (!val) {
         this.$refs["formValidate"].resetFields();
-      }
     },
 
     /**

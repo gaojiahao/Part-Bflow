@@ -301,6 +301,13 @@ export const getOrgBaseInfo = (filter) => request('/H_roleplay-si/ds/getAllGroup
 
 /**
  * @author GuoZheng
+ * @description 保存组织基本信息
+ */
+export const saveBaseinfo = (data) => request('/H_roleplay-si/sysGroup/save', {}, "POST", data);
+
+
+/**
+ * @author GuoZheng
  * @description 获取用户列表
  */
 export const getTableData = (url, params) => request('/H_roleplay-si' + url, params);

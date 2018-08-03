@@ -5,7 +5,7 @@
 <template>
   <div class="organization-wrap">
     <header class="organization-wrap-header">
-      <h2>
+      <h2 v-if="groupId">
         <span style="color:#4CAF50">{{formItem.groupName}}</span>
         <span style="color:#808080;margin-left:10px">/</span>
         <span style="color:#808080;margin-left:10px">{{formItem.groupType}}</span>

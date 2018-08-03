@@ -153,6 +153,7 @@ export default {
           if(res.success){
             this.$Message.success(res.message);
             this.getDepartmentData();
+            this.$emit('changeInstance');
           }else{
             this.$Message.warning('请选择组织！');
           }

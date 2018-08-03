@@ -133,6 +133,7 @@ export default {
           if(res.success){
             this.$Message.success(res.message);
             this.getDirPermissionData();
+            this.$emit('changeInstance');
           }
         })
       }
@@ -149,6 +150,7 @@ export default {
             this.$Message.success(res.message);
             this.getDirPermissionData();
             this.isDisabled = true;
+            this.$emit('changeInstance');
           }
         })
       }

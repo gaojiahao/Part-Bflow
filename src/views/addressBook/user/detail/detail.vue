@@ -41,17 +41,17 @@
       <!-- 用户信息 -->
       <user-info v-show="whichShow.userinfo" :userInfo="userInformation"></user-info>
       <!-- 上级用户 -->
-      <higher-user v-if="whichShow.highuser"></higher-user>
+      <higher-user @changeInstance="getInstanceCount" v-if="whichShow.highuser"></higher-user>
       <!-- 下级用户 -->
-      <lower-user v-if="whichShow.lowuser"></lower-user>
+      <lower-user @changeInstance="getInstanceCount" v-if="whichShow.lowuser"></lower-user>
       <!-- 部门 -->
-      <department-member v-if="whichShow.dep"></department-member>
+      <department-member @changeInstance="getInstanceCount" v-if="whichShow.dep"></department-member>
       <!-- 职位 -->
-      <role-member v-if="whichShow.role"></role-member>
+      <role-member @changeInstance="getInstanceCount" v-if="whichShow.role"></role-member>
       <!-- 直接权限 -->
-      <direct-permission v-if="whichShow.dirper"></direct-permission>
+      <direct-permission @changeInstance="getInstanceCount" v-if="whichShow.dirper"></direct-permission>
       <!-- 间接权限 -->
-      <indirect-permission v-if="whichShow.indirper"></indirect-permission>
+      <indirect-permission @changeInstance="getInstanceCount" v-if="whichShow.indirper"></indirect-permission>
     </Row>
   </Row>
 </template>

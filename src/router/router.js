@@ -136,6 +136,29 @@ export const addressBook = {
             component: () => import('@/views/addressBook/organization/organization.vue')
         }]
         
+    }, {
+        path: 'job',
+        name: 'job',
+        meta: {
+            title: '职位'
+        },
+        component: () => import('@/views/addressBook/job/index.vue'),
+        children: [{
+            path: 'board',
+            name: 'board',
+            meta: {
+                title: '职位看板'
+            },
+            component: () => import('@/views/addressBook/job/board/board.vue')
+        },{
+            path: 'detail/:jobId',
+            name: 'detail',
+            meta: {
+                title: '职位详情'
+            },
+            component: () => import('@/views/addressBook/job/job.vue') 
+        }]
+        
     },{
         path: 'companyInfo/:groupId',
         name: 'companyInfo',

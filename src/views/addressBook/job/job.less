@@ -1,0 +1,103 @@
+.job-wrap {
+    background-color: #fff;
+    width: 100%;
+    &-header {
+      height: 44px;
+      line-height: 44px;
+      width: 100%;
+      padding: 0 15px;
+      border-bottom: 1px solid #e8e8e8;
+  
+      h2 span:first-child {
+        color: red;
+      }
+    }
+  
+    &-action {
+      width: 100%;
+      padding:2px 0;
+      border-bottom: 1px solid #e8e8e8;
+      overflow: hidden;
+      &-li{
+          float: right;
+          list-style: none;
+          padding: 0 10px;
+          border-left: 1px solid #d5d5d5;
+          border-right: 1px solid #d5d5d5;
+            cursor: pointer;
+          div{
+              display: inline-block;
+              text-align: center;
+
+              span{
+                  color: red;
+              }
+          }
+      }
+
+      &-li:hover{
+        h3{
+            color: #3e76f6;
+        }
+      }
+
+      &-li-active{
+        background-color: #f2f2f2;
+        h3{
+            color: #3e76f6;
+        }
+      }
+    }
+
+    &-tabs{
+        background-color: #f0f0f0;
+        padding: 30px 0;
+        overflow: auto;
+    }
+  
+    .rfd-tab-container-common {
+      margin: 0px auto;
+      width: 75%;
+      min-height: 500px;
+      background-color: #fff;
+    }
+  
+    .baseinfo-container {
+      padding: 20px 10%;
+      position: relative;
+      //form表单标签字体样式
+      .ivu-form-item-label {
+        font-size: 14px;
+        color: #6e6e6e;
+      }
+  
+      &-action {
+        position: absolute;
+        height: 44px;
+        line-height: 44px;
+        bottom: 45px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+  
+    .memberinfo-container {
+      padding: 20px 20px;
+  
+      &-table {
+        margin-top: 10px;
+      }
+
+      .permission-container-btn-export{
+          float: right ;
+      }
+    }
+  
+    .permission-container {
+      padding: 20px 20px;
+  
+      &-table {
+        margin-top: 10px;
+      }
+    }
+  }

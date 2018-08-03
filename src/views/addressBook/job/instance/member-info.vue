@@ -3,7 +3,7 @@
     <custom-table apiUrl="/ds/getUsersByGroupId" :columns="memberInfoColumns" :apiParams="memberInfoParams" v-model="reload" @on-selection-change="onSelectionChange" @on-refesh-change='onRefeshChange'>
       <div slot="header">
         <Button icon="md-add" type="primary" @click="showMemberModal">添加成员</Button>
-        <Button icon="md-remove" type="info" @click="deleteMemberInfo" :disabled="deleteBtnDisable">移除成员</Button>
+        <Button icon="md-remove" type="primary" @click="deleteMemberInfo" :disabled="deleteBtnDisable">移除成员</Button>
         <Button icon="ios-download-outline" type="primary" class="permission-container-btn-export" @click="exportData">导出</Button>
       </div>
     </custom-table>

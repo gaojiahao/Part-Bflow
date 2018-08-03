@@ -166,6 +166,7 @@ export default {
             this.showModal = false;
             this.$Message.success(res.message);
             this.getHigherUserData();
+            this.$emit('changeInstance');
           }
         })
       }

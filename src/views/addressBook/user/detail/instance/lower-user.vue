@@ -171,7 +171,7 @@ export default {
       this.lowUser.usercurrentPage = currentPage;
       this.getAllUsersData();
     },
-    //添加上级用户
+    //添加下级用户
     addLowUser() {
       let parentId = [];
       if(this.selectUserData.length > 0){
@@ -186,6 +186,7 @@ export default {
           if(res.success){
             this.$Message.success(res.message);
             this.getLowerUserData();
+            this.$emit('changeInstance');
           }
         })
       }else{

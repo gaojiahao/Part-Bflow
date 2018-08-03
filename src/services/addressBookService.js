@@ -320,6 +320,15 @@ export const getOrganizations = (pageInfo) => request('/H_roleplay-si/ds/getAllG
 
 
 /************  职位  **************/
+/**
+ * @author GuoZheng
+ * @description 获取组织基本信息
+ */
+export const getAllRole = (filter) => request('/H_roleplay-si/ds/getAllRole', {
+    filter: filter,
+});
+
+
 
 
 /************  职位  **************/

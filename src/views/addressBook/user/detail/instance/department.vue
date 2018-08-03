@@ -60,12 +60,22 @@ export default {
           key: "groupType",
           render: (h,params) => {
               let type = '';
-              if(params.row.groupType === 'O'){
+              switch(params.row.groupType){
+                case 'O': 
                   type = '部门';
-              }else if(params.row.groupType === 'A'){
+                  break;
+                case 'A': 
                   type = '事业部';
-              }else{
+                  break;
+                case 'R': 
                   type = '岗位';
+                  break;
+                case 'M': 
+                  type = '主体';
+                  break;
+                case 'C': 
+                  type = '公司';
+                  break;
               }
               return h('span',{},type);
           }

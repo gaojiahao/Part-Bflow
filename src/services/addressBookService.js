@@ -251,10 +251,26 @@ export const deleteOrgMember = (single,multi) => request('/H_roleplay-si/ps/dele
 export const getAllGroup = (currentPage,pageSize,filter) => request('/H_roleplay-si/ds/getAllGroup',{
     page: currentPage,
     limit: pageSize,
+    filter:filter,
     start:0,
 });
 
+/**
+ * @author GuoZheng
+ * @description 保存上级组织列表
+ */
+export const saveHighOrg = (parentId,groupId) => request('/H_roleplay-si/userInfo/saveGroup',{
+    parentId: parentId,
+    groupId: groupId,
+},"POST");
 
+/**
+ * @author GuoZheng
+ * @description 获取组织基本信息
+ */
+export const getOrgBaseInfo = (filter) => request('/H_roleplay-si/ds/getAllGroup',{
+    filter: filter,
+});
 
 /**
  * @author GuoZheng

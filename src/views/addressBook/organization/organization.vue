@@ -13,12 +13,9 @@
         <span style="color:#808080;margin-left:10px">{{groupId}}</span>
         <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status,color:'#eb2f96'}"></Tag>
       </h2>
-<<<<<<< HEAD
-=======
       <h2  v-if="!groupId">
         <span style="color:#4CAF50">添加组织</span>
       </h2>
->>>>>>> c427049e6ced9914caa1f24eb02c2dcb2a8cdfd9
     </header>
 
     <div class="organization-wrap-action">
@@ -66,14 +63,9 @@
           </FormItem>
         </Form>
         <div class="baseinfo-container-action">
-<<<<<<< HEAD
-          <input type='submit' value="编辑" class="baseinfo-container-action-submit"/>
-           <input type='submit' value="保存" class="baseinfo-container-action-submit"/>
-=======
           <input type='submit' value="取消" class="baseinfo-container-action-submit" @click="cancle" />
           <input type='submit' value="保存" class="baseinfo-container-action-submit"  @click="saveBaseinfo" />
           <input type='submit' value="保存并添加" class="baseinfo-container-action-submit" v-if="!groupId" @click="saveAndAdd" />
->>>>>>> c427049e6ced9914caa1f24eb02c2dcb2a8cdfd9
         </div>
       </section>
       <!-- 上级组织 -->
@@ -191,8 +183,6 @@ export default {
   methods: {
     handlerViewChange(index) {
       this.actionIndex = index;
-<<<<<<< HEAD
-=======
     },
 
     cancle() {
@@ -218,7 +208,6 @@ export default {
           }
         });
       }
->>>>>>> c427049e6ced9914caa1f24eb02c2dcb2a8cdfd9
     }
   },
 

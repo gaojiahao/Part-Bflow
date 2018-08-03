@@ -1,22 +1,38 @@
-<template>
-    <div>
-        <custom-table apiUrl="/ds/getParentGroupByGroupId" :columns="highOrgColumns" :apiParams="highOrganizationParams" v-model="reload" @on-refesh-change='onRefeshChange'>
-            <div slot="header">
-                <Button icon="md-add" type="primary" @click="showHighOrgModal">添加上级组织</Button>
-            </div>
-        </custom-table>
+<style lang="less" scoped>
+.header-action {
+  lebal {
+    color: #009688;
+    font-size: 17px;
+    cursor: pointer;
+    font-weight: bold;
+  }
 
-        <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionHighOrg">
-            <div>
-                <Table :loading="listUserLoading" :columns="highOrgColumnsModal" :data="listUserData" size='small' highlight-row ref="currentRowTable" @on-current-change="onSelectUserList"></Table>
-                <div style="margin: 10px;overflow: hidden">
-                    <div style="float: right;">
-                        <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" show-total show-elevator></Page>
-                    </div>
-                </div>
-            </div>
-        </member-modal>
-    </div>
+  span {
+    color: rgb(122, 118, 118);
+  }
+}
+</style>
+
+<template>
+  <div>
+    <custom-table apiUrl="/ds/getParentGroupByGroupId" :columns="highOrgColumns" :apiParams="highOrganizationParams" v-model="reload" @on-refesh-change='onRefeshChange'>
+      <div slot="header" class="header-action">
+        <lebal @click="showHighOrgModal">上级组织</lebal>
+        <span>-选择上级用户</span>
+      </div>
+    </custom-table>
+
+    <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionHighOrg">
+      <div>
+        <Table :loading="listUserLoading" :columns="highOrgColumnsModal" :data="listUserData" size='small' highlight-row ref="currentRowTable" @on-current-change="onSelectUserList"></Table>
+        <div style="margin: 10px;overflow: hidden">
+          <div style="float: right;">
+            <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" show-total show-elevator></Page>
+          </div>
+        </div>
+      </div>
+    </member-modal>
+  </div>
 </template>
 
 <script>
@@ -288,6 +304,3 @@ export default {
   }
 };
 </script>
-
-<style>
-</style>

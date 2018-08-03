@@ -1,23 +1,42 @@
-<template>
-    <div>
-        <custom-table apiUrl="/ds/getAllGroup" :columns="lowerOrgColumns" :apiParams="lowOrganizationParams" v-model="reload" @on-refesh-change='onRefeshChange' @on-selection-change="onSelectionChange">
-            <div slot="header">
-                <Button icon="md-add" type="primary" @click="showLoverOrgModal">添加下级组织</Button>
-                <Button icon="md-remove" type="info" @click="deleteLoverOrg" :disabled="deleteBtnDisable">移除下级组织</Button>
-            </div>
-        </custom-table>
+<style lang="less" scoped>
+.header-action {
+  lebal {
+    color: #009688;
+    font-size: 17px;
+    cursor: pointer;
+    font-weight: bold;
+  }
 
-        <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionLowerOrg">
-            <div>
-                <Table :loading="listUserLoading" :columns="lowerOrgColumns" :data="listUserData" size='small' ref="selection" @on-selection-change="onSelectLowerUser"></Table>
-                <div style="margin: 10px;overflow: hidden">
-                    <div style="float: right;">
-                        <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" show-total show-elevator></Page>
-                    </div>
-                </div>
-            </div>
-        </member-modal>
-    </div>
+  span {
+    color: rgb(122, 118, 118);
+  }
+}
+</style>
+
+<template>
+  <div>
+    <custom-table apiUrl="/ds/getAllGroup" :columns="lowerOrgColumns" :apiParams="lowOrganizationParams" v-model="reload" @on-refesh-change='onRefeshChange' @on-selection-change="onSelectionChange">
+     
+      <div slot="header" class="header-action">
+        <lebal @click="showLoverOrgModal">添加下级组织</lebal>
+        <span>-添加下级组织</span>
+
+         <lebal @click="deleteLoverOrg">删除下级组织</lebal>
+        <span>-删除下级组织</span>
+      </div>
+    </custom-table>
+
+    <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionLowerOrg">
+      <div>
+        <Table :loading="listUserLoading" :columns="lowerOrgColumns" :data="listUserData" size='small' ref="selection" @on-selection-change="onSelectLowerUser"></Table>
+        <div style="margin: 10px;overflow: hidden">
+          <div style="float: right;">
+            <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" show-total show-elevator></Page>
+          </div>
+        </div>
+      </div>
+    </member-modal>
+  </div>
 </template>
 
 <script>
@@ -149,7 +168,6 @@ export default {
       }
     },
 
-    
     onRefeshChange(val) {
       if (!val) {
         this.reload = val;
@@ -263,5 +281,3 @@ export default {
 };
 </script>
 
-<style>
-</style>

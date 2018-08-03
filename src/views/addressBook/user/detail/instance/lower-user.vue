@@ -5,6 +5,12 @@
         margin: 15px 93px;
         padding: 26px 50px;
         box-shadow: 0px 1px 10px #ddd;
+        &-btn{
+          margin-bottom:5px;
+          color: rgb(0, 150, 136);
+          font-size: 17px;
+          cursor: pointer;
+        }
       }
   }
   .user-page {
@@ -16,7 +22,8 @@
 <template>
     <div class="lower-user">
         <div class="lower-user-detail" id="lowHeight">
-            <Button type="info" @click="showUserModal" style="margin-bottom:5px">选择下级用户</Button>
+            <b @click="showUserModal" class="lower-user-detail-btn">下级用户</b>
+            <span style="color: #7a7676;">-选择下级用户</span>
             <Table ref="selection" :columns="columns" :loading="loading" :data="lowerUserData"></Table>
             <div class="user-page">
                 <div style="float: right;">
@@ -164,7 +171,7 @@ export default {
       this.lowUser.usercurrentPage = currentPage;
       this.getAllUsersData();
     },
-    //添加上级用户
+    //添加下级用户
     addLowUser() {
       let parentId = [];
       if(this.selectUserData.length > 0){
@@ -179,6 +186,7 @@ export default {
           if(res.success){
             this.$Message.success(res.message);
             this.getLowerUserData();
+            this.$emit('changeInstance');
           }
         })
       }else{

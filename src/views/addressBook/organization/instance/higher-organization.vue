@@ -1,32 +1,43 @@
-<template>
-    <div>
-        <custom-table apiUrl="/ds/getParentGroupByGroupId" :columns="highOrgColumns" :apiParams="highOrganizationParams" @on-selection-change="onSelectionChange" @on-refesh-change='onRefeshChange'>
-            <div slot="header">
-                <Button icon="md-add" type="primary" @click="showHighOrgModal">添加上级组织</Button>
-                <Button icon="md-remove" type="primary" @click="deleteHighOrg" :disabled="deleteBtnDisable">移除上级组织</Button>
-            </div>
-        </custom-table>
+<style lang="less" scoped>
+.header-action {
+  lebal {
+    color: #009688;
+    font-size: 17px;
+    cursor: pointer;
+    font-weight: bold;
+  }
 
-        <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionOrg">
-            <div>
-                <Table :loading="listUserLoading" :columns="highOrgColumns" :data="listUserData" size='small' ref="selection"></Table>
-                <div style="margin: 10px;overflow: hidden">
-                    <div style="float: right;">
-                        <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" show-total show-elevator></Page>
-                    </div>
-                </div>
-            </div>
-        </member-modal>
-    </div>
+  span {
+    color: rgb(122, 118, 118);
+  }
+}
+</style>
+
+<template>
+  <div>
+    <custom-table apiUrl="/ds/getParentGroupByGroupId" :columns="highOrgColumns" :apiParams="highOrganizationParams" v-model="reload" @on-refesh-change='onRefeshChange'>
+      <div slot="header" class="header-action">
+        <lebal @click="showHighOrgModal">上级组织</lebal>
+        <span>-选择上级用户</span>
+      </div>
+    </custom-table>
+
+    <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionHighOrg">
+      <div>
+        <Table :loading="listUserLoading" :columns="highOrgColumnsModal" :data="listUserData" size='small' highlight-row ref="currentRowTable" @on-current-change="onSelectUserList"></Table>
+        <div style="margin: 10px;overflow: hidden">
+          <div style="float: right;">
+            <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" show-total show-elevator></Page>
+          </div>
+        </div>
+      </div>
+    </member-modal>
+  </div>
 </template>
 
 <script>
 import MemberModal from "@/components/modal/Modal";
-import {
-  getAllGroup,
-  addOrgMember,
-  deleteOrgMember
-} from "@/services/addressBookService.js";
+import { saveHighOrg, getAllGroup } from "@/services/addressBookService.js";
 import CustomTable from "./CustomTable";
 export default {
   name: "higher-organization",
@@ -38,6 +49,9 @@ export default {
 
   props: {
     groupId: {
+      type: String
+    },
+    groupType: {
       type: String
     }
   },
@@ -67,7 +81,7 @@ export default {
         },
         {
           title: "组织类型",
-          key: "OrgUnitType"
+          key: "groupType"
         },
         {
           title: "部门职能类型",
@@ -75,7 +89,63 @@ export default {
         },
         {
           title: "组织状态",
-          key: "OrgUnitStatus",
+          key: "status",
+          render: (h, params) => {
+            let status = params.row.status,
+              value = "";
+            switch (status) {
+              case 0:
+                value = "停用";
+                break;
+              case 1:
+                value = "使用中";
+                break;
+              case 2:
+                value = "未使用";
+                break;
+              case 3:
+                value = "草稿";
+                break;
+            }
+            return h(
+              "span",
+              {
+                style: {
+                  color: status ? "#0279f6" : "#f03707",
+                  cursor: "default"
+                }
+              },
+              value
+            );
+          }
+        },
+        {
+          title: "组织说明",
+          key: "comment"
+        }
+      ],
+
+      highOrgColumnsModal: [
+        {
+          type: "index",
+          width: 60,
+          align: "center"
+        },
+        {
+          title: "组织名称",
+          key: "groupName"
+        },
+        {
+          title: "组织类型",
+          key: "groupType"
+        },
+        {
+          title: "部门职能类型",
+          key: "depFunction"
+        },
+        {
+          title: "组织状态",
+          key: "status",
           render: (h, params) => {
             let status = params.row.status,
               value = "";
@@ -118,8 +188,8 @@ export default {
       listUserCurrentPage: 1,
       pageSize: 8,
 
-      deleteBtnDisable: false,
-      reload: false
+      reload: false,
+      onSelectionModal: []
     };
   },
 
@@ -128,20 +198,15 @@ export default {
       this.getAllGroup(currentPage, this.pageSize);
     },
 
+    //监听模态框选中的用户
+    onSelectUserList(currentRow, oldCurrentRow) {
+      this.onSelectionModal = currentRow;
+    },
+
     //显示模态框-添加上级组织
     showMemberModal() {
       this.isShowMemberModal = true;
       this.getListUsers(this.listUserCurrentPage, this.pageSize);
-    },
-
-    //选中的成员信息
-    onSelectionChange(selection) {
-      if (selection.length > 0) {
-        this.deleteBtnDisable = false;
-        this.selectDeleteMemberInfo = selection;
-      } else {
-        this.deleteBtnDisable = true;
-      }
     },
 
     onRefeshChange(val) {
@@ -156,14 +221,79 @@ export default {
       this.getAllGroup();
     },
 
-    //
-    deleteHighOrg() {},
-
-    saveSelectionOrg() {},
+    //添加上级组织
+    saveSelectionHighOrg() {
+      let parentId = "";
+      parentId = this.onSelectionModal.groupId;
+      saveHighOrg(parentId, this.groupId).then(res => {
+        if (res.success) {
+          this.$Message.success("保存成功");
+          this.isShowMemberModal = false;
+          this.reload = true;
+        }
+      });
+    },
 
     getAllGroup() {
       this.listUserLoading = true;
-      getAllGroup(this.listUserCurrentPage, this.pageSize).then(res => {
+      let filter = [];
+      if (this.groupType) {
+        switch (this.groupType) {
+          case "小组":
+            filter.push({
+              operator: "ne",
+              value: "岗位",
+              property: "groupType"
+            }); //岗位
+            filter.push({
+              operator: "ne",
+              value: "小组",
+              property: "groupType"
+            }); //小组
+            break;
+          case "部门":
+            filter.push({
+              operator: "ne",
+              value: "岗位",
+              property: "groupType"
+            }); //岗位
+            filter.push({
+              operator: "ne",
+              value: "小组",
+              property: "groupType"
+            }); //小组
+            filter.push({
+              operator: "ne",
+              value: "部门",
+              property: "groupType"
+            }); //部门
+            break;
+          case "事业部":
+            filter.push({
+              operator: "ne",
+              value: "岗位",
+              property: "groupType"
+            }); //岗位
+            filter.push({
+              operator: "ne",
+              value: "小组",
+              property: "groupType"
+            }); //小组
+            filter.push({
+              operator: "ne",
+              value: "部门",
+              property: "groupType"
+            }); //部门
+            filter.push({
+              operator: "ne",
+              value: "事业部",
+              property: "groupType"
+            }); //事业部
+            break;
+        }
+        filter = JSON.stringify(filter);
+      }
+      getAllGroup(this.listUserCurrentPage, this.pageSize, filter).then(res => {
         if (res.tableContent[0]) {
           this.listUserPageTotal = res.summary.total;
           this.listUserData = res.tableContent;
@@ -174,6 +304,3 @@ export default {
   }
 };
 </script>
-
-<style>
-</style>

@@ -6,7 +6,8 @@
   <Row class="detail">
     <Row class="detail-header">
       <Breadcrumb class="detail-header-bread">
-        <BreadcrumbItem to="/addressBook/user/board">{{ userInformation.nickname?userInformation.nickname:'用户' }}</BreadcrumbItem>
+        <BreadcrumbItem to="/addressBook/user/board">用户</BreadcrumbItem>
+        <BreadcrumbItem>{{ userInformation.nickname?userInformation.nickname:'待添加' }}</BreadcrumbItem>
         <BreadcrumbItem>{{ userInformation.userCode?userInformation.userCode:'创建' }}</BreadcrumbItem>
       </Breadcrumb>
       <Tag v-show="userInformation.status?showTag:!showTag"   class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:userInformation.status,color:'#eb2f96'}"></Tag>
@@ -40,17 +41,17 @@
       <!-- 用户信息 -->
       <user-info v-show="whichShow.userinfo" :userInfo="userInformation"></user-info>
       <!-- 上级用户 -->
-      <higher-user v-if="whichShow.highuser"></higher-user>
+      <higher-user @changeInstance="getInstanceCount" v-if="whichShow.highuser"></higher-user>
       <!-- 下级用户 -->
-      <lower-user v-if="whichShow.lowuser"></lower-user>
+      <lower-user @changeInstance="getInstanceCount" v-if="whichShow.lowuser"></lower-user>
       <!-- 部门 -->
-      <department-member v-if="whichShow.dep"></department-member>
+      <department-member @changeInstance="getInstanceCount" v-if="whichShow.dep"></department-member>
       <!-- 职位 -->
-      <role-member v-if="whichShow.role"></role-member>
+      <role-member @changeInstance="getInstanceCount" v-if="whichShow.role"></role-member>
       <!-- 直接权限 -->
-      <direct-permission v-if="whichShow.dirper"></direct-permission>
+      <direct-permission @changeInstance="getInstanceCount" v-if="whichShow.dirper"></direct-permission>
       <!-- 间接权限 -->
-      <indirect-permission v-if="whichShow.indirper"></indirect-permission>
+      <indirect-permission @changeInstance="getInstanceCount" v-if="whichShow.indirper"></indirect-permission>
     </Row>
   </Row>
 </template>

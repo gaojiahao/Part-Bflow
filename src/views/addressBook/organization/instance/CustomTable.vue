@@ -1,20 +1,20 @@
 <template>
-    <div class="rfd-cs">
-        <header class="rfd-cs-header">
-            <slot name="header"></slot>
-        </header>
-        <div class="rfd-cs-table">
-            <Table :loading="loading" :columns="columns" :data="columnsData" ref="selection" @on-selection-change='onSelectionChange'></Table>
-        </div>
-        <div class="rfd-cs-table">
-            <div style="float: right;">
-                <Page :total="pageTotal" :current="currentPage" :page-size="pageSize" size="small" @on-change="changeCurrentPage" @on-page-size-change="onPageSizeChange" show-total show-elevator show-sizer></Page>
-            </div>
-        </div>
-        <footer class="rfd-cs-footer">
-            <slot name="footer"></slot>
-        </footer>
+  <div class="rfd-cs">
+    <header class="rfd-cs-header">
+      <slot name="header"></slot>
+    </header>
+    <div class="rfd-cs-table">
+      <Table :loading="loading" :columns="columns" :data="columnsData" ref="selection" @on-selection-change='onSelectionChange'></Table>
     </div>
+    <div class="rfd-cs-table">
+      <div style="float: right;">
+        <Page :total="pageTotal" :current="currentPage" :page-size="pageSize" size="small" @on-change="changeCurrentPage" @on-page-size-change="onPageSizeChange" show-total show-elevator show-sizer></Page>
+      </div>
+    </div>
+    <footer class="rfd-cs-footer">
+      <slot name="footer"></slot>
+    </footer>
+  </div>
 </template>
 
 <script>
@@ -35,11 +35,10 @@ export default {
       type: Object
     },
 
-   
-     value: {
+    value: {
       type: Boolean,
       default: false
-    },
+    }
   },
 
   data() {
@@ -54,10 +53,10 @@ export default {
 
   watch: {
     value(val) {
-     if (val) {
+      if (val) {
         this.getTableData(this.apiParams);
       }
-    },
+    }
   },
 
   methods: {
@@ -67,8 +66,8 @@ export default {
       this.getTableData(params);
     },
 
-    onSelectionChange(selection){
-        this.$emit('on-selection-change',selection);
+    onSelectionChange(selection) {
+      this.$emit("on-selection-change", selection);
     },
 
     //点击切换每页显示条数
@@ -84,9 +83,9 @@ export default {
         if (res.tableContent[0]) {
           this.pageTotal = res.summary.total;
           this.columnsData = res.tableContent;
-          this.loading = false;
-          this.$emit('on-refesh-change',false);
+          this.$emit("on-refesh-change", false);
         }
+        this.loading = false;
       });
     }
   },
@@ -97,12 +96,19 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .rfd-cs {
   width: 100%;
   min-height: 500px;
   background-color: #fff;
   padding: 20px 20px;
+
+  &-header {
+    .ivu-btn-primary {
+      background-color: #2db7f5;
+      border-color: #2db7f5;
+    }
+  }
 
   &-table {
     margin-top: 10px;

@@ -1,33 +1,65 @@
-<template>
-    <div>
-        <custom-table apiUrl="/ds/getUserGroupByParentId" :columns="highOrgColumns" :apiParams="lowOrganizationParams">
-            <div slot="header">
-                <Button icon="md-add" type="primary">添加下级组织</Button>
-                <Button icon="md-remove" type="primary">移除下级组织</Button>
-            </div>
-        </custom-table>
+<style lang="less" scoped>
+.header-action {
+  lebal {
+    color: #009688;
+    font-size: 17px;
+    cursor: pointer;
+    font-weight: bold;
+  }
 
-        <!-- <member-modal v-model="isShowModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="addUser">
-            <div>
-                <Table :loading="listUserLoading" :columns="highOrgColumns" :data="listUserData" size='small' ref="selection"></Table>
-                <div style="margin: 10px;overflow: hidden">
-                    <div style="float: right;">
-                        <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" show-total show-elevator></Page>
-                    </div>
-                </div>
-            </div>
-        </member-modal> -->
-    </div>
+  span {
+    color: rgb(122, 118, 118);
+  }
+}
+</style>
+
+<template>
+  <div>
+    <custom-table apiUrl="/ds/getAllGroup" :columns="lowerOrgColumns" :apiParams="lowOrganizationParams" v-model="reload" @on-refesh-change='onRefeshChange' @on-selection-change="onSelectionChange">
+     
+      <div slot="header" class="header-action">
+        <lebal @click="showLoverOrgModal">添加下级组织</lebal>
+        <span>-添加下级组织</span>
+
+         <lebal @click="deleteLoverOrg">删除下级组织</lebal>
+        <span>-删除下级组织</span>
+      </div>
+    </custom-table>
+
+    <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionLowerOrg">
+      <div>
+        <Table :loading="listUserLoading" :columns="lowerOrgColumns" :data="listUserData" size='small' ref="selection" @on-selection-change="onSelectLowerUser"></Table>
+        <div style="margin: 10px;overflow: hidden">
+          <div style="float: right;">
+            <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" show-total show-elevator></Page>
+          </div>
+        </div>
+      </div>
+    </member-modal>
+  </div>
 </template>
 
 <script>
 import MemberModal from "@/components/modal/Modal";
 import CustomTable from "./CustomTable";
+import {
+  saveBatchChildGroup,
+  deleteBatchGroup,
+  getAllGroup
+} from "@/services/addressBookService.js";
 export default {
   name: "lower-organization",
 
+  components: {
+    CustomTable,
+    MemberModal
+  },
+
   props: {
     groupId: {
+      type: String
+    },
+    groupType: {
       type: String
     }
   },
@@ -36,11 +68,13 @@ export default {
     return {
       //下级组织
       lowOrganizationParams: {
-        parentId: this.groupId,
+        filter: JSON.stringify([
+          { operator: "eq", value: this.groupId, property: "parentId" }
+        ]),
         page: 1,
         limit: 8
       },
-      highOrgColumns: [
+      lowerOrgColumns: [
         {
           type: "selection",
           width: 60,
@@ -57,7 +91,7 @@ export default {
         },
         {
           title: "组织类型",
-          key: "OrgUnitType"
+          key: "groupType"
         },
         {
           title: "部门职能类型",
@@ -65,7 +99,7 @@ export default {
         },
         {
           title: "组织状态",
-          key: "OrgUnitStatus",
+          key: "status",
           render: (h, params) => {
             let status = params.row.status,
               value = "";
@@ -101,17 +135,149 @@ export default {
         }
       ],
 
-      isShowModal: false,
-
-      listUserLoading: false
+      isShowMemberModal: false,
+      listUserLoading: false,
+      listUserData: [],
+      listUserPageTotal: 0,
+      listUserCurrentPage: 1,
+      pageSize: 8,
+      deleteBtnDisable: true,
+      reload: false,
+      onSelectionModal: [],
+      selectDeleteLowerOrg: []
     };
   },
 
-  components: {
-    CustomTable
+  methods: {
+    listUserChangePage(currentPage) {
+      this.getAllGroup(currentPage, this.pageSize);
+    },
+
+    //监听模态框选中的用户
+    onSelectLowerUser(currentRow) {
+      this.onSelectionModal = currentRow;
+    },
+
+    //选中的下级组织信息
+    onSelectionChange(selection) {
+      if (selection.length > 0) {
+        this.deleteBtnDisable = false;
+        this.selectDeleteLowerOrg = selection;
+      } else {
+        this.deleteBtnDisable = true;
+      }
+    },
+
+    onRefeshChange(val) {
+      if (!val) {
+        this.reload = val;
+      }
+    },
+
+    //显示上级组织模态框
+    showLoverOrgModal() {
+      this.isShowMemberModal = true;
+      this.getAllGroup();
+    },
+
+    //添加组织
+    saveSelectionLowerOrg() {
+      let childrenId = [];
+      this.onSelectionModal.forEach(val => {
+        childrenId.push(val.groupId);
+      });
+      saveBatchChildGroup(this.groupId, childrenId.join(",")).then(res => {
+        if (res.success) {
+          this.$Message.success("保存成功");
+          this.isShowMemberModal = false;
+          this.reload = true;
+        }
+      });
+    },
+    //删除下级组织
+    deleteLoverOrg() {
+      let multiId = [];
+      this.selectDeleteLowerOrg.forEach(val => {
+        multiId.push(val.groupId);
+      });
+      if (multiId) {
+        deleteBatchGroup(multiId.join(",")).then(res => {
+          if (res.success) {
+            this.$Message.success(res.message);
+            this.reload = true;
+          }
+        });
+      }
+    },
+
+    getAllGroup() {
+      this.listUserLoading = true;
+      let filter = [];
+      if (this.groupType) {
+        switch (this.groupType) {
+          case "小组":
+            filter.push({
+              operator: "ne",
+              value: "小组",
+              property: "groupType"
+            }); //小组
+            filter.push({
+              operator: "ne",
+              value: "部门",
+              property: "groupType"
+            }); //部门
+            filter.push({
+              operator: "ne",
+              value: "事业部",
+              property: "groupType"
+            }); //事业部
+            filter.push({
+              operator: "ne",
+              value: "管理层",
+              property: "groupType"
+            }); //小组
+            break;
+          case "部门":
+            filter.push({
+              operator: "ne",
+              value: "部门",
+              property: "groupType"
+            }); //部门
+            filter.push({
+              operator: "ne",
+              value: "事业部",
+              property: "groupType"
+            }); //事业部
+            filter.push({
+              operator: "ne",
+              value: "管理层",
+              property: "groupType"
+            }); //小组
+            break;
+          case "事业部":
+            filter.push({
+              operator: "ne",
+              value: "事业部",
+              property: "groupType"
+            }); //事业部
+            filter.push({
+              operator: "ne",
+              value: "管理层",
+              property: "groupType"
+            }); //小组
+            break;
+        }
+        filter = JSON.stringify(filter);
+      }
+      getAllGroup(this.listUserCurrentPage, this.pageSize, filter).then(res => {
+        if (res.tableContent[0]) {
+          this.listUserPageTotal = res.summary.total;
+          this.listUserData = res.tableContent;
+        }
+        this.listUserLoading = false;
+      });
+    }
   }
 };
 </script>
 
-<style>
-</style>

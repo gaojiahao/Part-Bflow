@@ -60,7 +60,7 @@
             <Button type="primary" size="small">查询</Button>
           </p>
         </div>
-        <Table @on-select="selectUserClick" @on-select-all="selectUserClick" height="310" stripe size="small" :loading="userLoading" :columns="userColumns" :data="userData">
+        <Table @on-select-cancel="selectUserCancel" @on-select="selectUserClick" @on-select-all="selectUserClick" height="310" stripe size="small" :loading="userLoading" :columns="userColumns" :data="userData">
         </Table>
         <div class="user-page">
           <div style="float: right;">
@@ -76,7 +76,7 @@
             <Button type="primary" size="small">查询</Button>
           </p>
         </div>
-        <Table @on-select="selectOrgClick" @on-select-all="selectOrgClick" height="310" stripe size="small" :loading="orgLoading" :columns="orgColumns" :data="orgData">
+        <Table @on-select-cancel="selectOrgCancel" @on-select="selectOrgClick" @on-select-all="selectOrgClick" height="310" stripe size="small" :loading="orgLoading" :columns="orgColumns" :data="orgData">
         </Table>
         <div class="user-page">
           <div style="float: right;">
@@ -92,7 +92,7 @@
             <Button type="primary" size="small">查询</Button>
           </p>
         </div>
-        <Table @on-select="selectDepartmentClick" @on-select-all="selectDepartmentClick" height="310" stripe :size="tableSize" :loading="depLoading" :columns="departmentColumns" :data="departmentData">
+        <Table @on-select-cancel="selectDepCancel" @on-select="selectDepartmentClick" @on-select-all="selectDepartmentClick" height="310" stripe :size="tableSize" :loading="depLoading" :columns="departmentColumns" :data="departmentData">
         </Table>
         <div class="user-page">
           <div style="float: right;">
@@ -287,6 +287,14 @@ export default {
         this.userSelection = selection;
       }
     },
+     //取消选择的用户
+    selectUserCancel(selection,row){
+      this.userSelection.forEach((val,index) => {
+        if(val.userId === row.userId){
+          this.userSelection.splice(index,1);
+        }
+      })
+    },
     //选择组织
     selectOrgClick(selection, row) {
       if (this.orgSelection.length > 0) {
@@ -297,6 +305,14 @@ export default {
         this.orgSelection = selection;
       }
     },
+    //取消选择的组织
+    selectOrgCancel(selection,row) {
+      this.orgSelection.forEach((val,index) => {
+        if(val.id === row.id){
+          this.orgSelection.splice(index,1);
+        }
+      })
+    },
     //选择职位
     selectDepartmentClick(selection, row) {
       if (this.departmentSelection.length > 0) {
@@ -306,6 +322,14 @@ export default {
       } else {
         this.departmentSelection = selection;
       }
+    },
+     //取消选择的职位
+    selectDepCancel(selection,row) {
+      this.departmentSelection.forEach((val,index) => {
+        if(val.id === row.id){
+          this.departmentSelection.splice(index,1);
+        }
+      })
     },
     //删除用户
     deleteUser(event) {

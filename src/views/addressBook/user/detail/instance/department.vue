@@ -7,9 +7,9 @@
         box-shadow: 0px 1px 10px #ddd;
       }
   }
-  .dep-tree{
-    height: 350px;
-    overflow: auto;
+  .user-page {
+    margin: 10px;
+    overflow: hidden;
   }
 </style>
 
@@ -60,12 +60,22 @@ export default {
           key: "groupType",
           render: (h,params) => {
               let type = '';
-              if(params.row.groupType === 'O'){
+              switch(params.row.groupType){
+                case 'O': 
                   type = '部门';
-              }else if(params.row.groupType === 'A'){
+                  break;
+                case 'A': 
                   type = '事业部';
-              }else{
+                  break;
+                case 'R': 
                   type = '岗位';
+                  break;
+                case 'M': 
+                  type = '主体';
+                  break;
+                case 'C': 
+                  type = '公司';
+                  break;
               }
               return h('span',{},type);
           }
@@ -179,6 +189,10 @@ export default {
     selectNode(node) {
       this.selectGroup = node[0];
     }
+  },
+  created(){
+    let length = window.location.href.split('#')[1].split('/').length;
+    this.userId = window.location.href.split('#')[1].split('/')[length - 1];
   },
   mounted() {
     this.getDepartmentData();

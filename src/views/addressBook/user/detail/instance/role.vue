@@ -74,7 +74,24 @@ export default {
           title: "职位类型",
           key: "type",
           render: (h,params) => {
-              let type = params.row.type==='C'?'操作类':'';
+              let type = '';
+              switch(params.row.groupType){
+                case 'Y': 
+                  type = '营销类';
+                  break;
+                case 'C': 
+                  type = '操作类';
+                  break;
+                case 'J': 
+                  type = '技术类';
+                  break;
+                case 'M': 
+                  type = '管理类';
+                  break;
+                case 'Z': 
+                  type = '专职类';
+                  break;
+              }
               return h('span',{},type);
           }
         },
@@ -160,6 +177,10 @@ export default {
         this.roleLoading = false;
       })
     }
+  },
+  created(){
+    let length = window.location.href.split('#')[1].split('/').length;
+    this.userId = window.location.href.split('#')[1].split('/')[length - 1];
   },
   mounted() {
     this.getRoleData();

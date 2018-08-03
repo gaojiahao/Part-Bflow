@@ -1,9 +1,33 @@
+<style lang="less" scoped>
+.header-action {
+  lebal {
+    color: #009688;
+    font-size: 17px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  span {
+    color: rgb(122, 118, 118);
+  }
+}
+</style>
+
 <template>
   <div>
     <custom-table apiUrl="/ds/getObjectPermission2Oneself" :columns="permissionColumns" :apiParams="permissionParams" :reload="reload" @on-selection-change="onSelectionChange" @on-refesh-change='onRefeshChange'>
-      <div slot="header" class="permission-container-btn">
+      <!-- <div slot="header" class="permission-container-btn">
         <Button icon="md-add" type="primary" @click="addPermission">添加权限</Button>
         <Button icon="md-remove" type="info" @click="deletePermission" :disabled="deleteBtnDisable">移除权限</Button>
+      </div> -->
+
+      <div slot="header" class="header-action">
+        <lebal @click="addPermission">添加权限</lebal>
+        <span>-添加权限</span>
+
+        <lebal @click="deleteBtnDisable">移除权限</lebal>
+        <span>-移除权限</span>
+
       </div>
     </custom-table>
 
@@ -183,6 +207,3 @@ export default {
   }
 };
 </script>
-
-<style>
-</style>

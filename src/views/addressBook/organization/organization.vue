@@ -60,9 +60,8 @@
           </FormItem>
         </Form>
         <div class="baseinfo-container-action">
-          <Button type="success">编辑</Button>
-          <Button type="success">删除</Button>
-          <Button type="success">保存</Button>
+          <input type='submit' value="编辑" class="baseinfo-container-action-submit"/>
+           <input type='submit' value="保存" class="baseinfo-container-action-submit"/>
         </div>
       </section>
       <!-- 上级组织 -->
@@ -142,32 +141,32 @@ export default {
       actionBtn: [
         {
           label: "权限",
-          imgPath: "/resources/images/icon/2_0.png",
+          imgPath: "resources/images/icon/2_0.png",
           number: 0
         },
         {
           label: "成员信息",
-          imgPath: "/resources/images/icon/user.png",
+          imgPath: "resources/images/icon/user.png",
           number: 0
         },
         {
           label: "负责人",
-          imgPath: "/resources/images/icon/user.png",
+          imgPath: "resources/images/icon/user.png",
           number: 0
         },
         {
           label: "下级组织",
-          imgPath: "/resources/images/icon/organization.png",
+          imgPath: "resources/images/icon/organization.png",
           number: 0
         },
         {
           label: "上级组织",
-          imgPath: "/resources/images/icon/organization.png",
+          imgPath: "resources/images/icon/organization.png",
           number: 0
         },
         {
           label: "基本信息",
-          imgPath: "/resources/images/icon/organization.png",
+          imgPath: "resources/images/icon/organization.png",
           number: 0
         }
       ],

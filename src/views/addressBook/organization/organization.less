@@ -58,13 +58,13 @@
     .rfd-tab-container-common {
       margin: 0px auto;
       width: 75%;
-      min-height: 500px;
       background-color: #fff;
     }
   
     .baseinfo-container {
       padding: 20px 10%;
       position: relative;
+      min-height: 450px;
       //form表单标签字体样式
       .ivu-form-item-label {
         font-size: 14px;
@@ -72,12 +72,15 @@
       }
   
       &-action {
-        position: absolute;
-        height: 44px;
-        line-height: 44px;
-        bottom: 45px;
-        left: 50%;
-        transform: translateX(-50%);
+        position: fixed;
+        height: 50px;
+        line-height: 50px;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        background-color: #fff;
+        border-top: 1px solid #ddd;
       }
     }
   

@@ -157,6 +157,13 @@ export const addressBook = {
                 title: '职位详情'
             },
             component: () => import('@/views/addressBook/job/job.vue') 
+        }, {
+            path: 'add',
+            name: 'add',
+            meta: {
+                title: '新增职位'
+            },
+            component: () => import('@/views/addressBook/job/job.vue')
         }]
         
     },{

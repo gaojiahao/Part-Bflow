@@ -7,7 +7,7 @@
     <div class="pad5">
         <Card  class="radius0 rfd-card" v-for="(user, index) of users" :key="index" >
             <Row  class="rfd-card-container">
-                <Col span="3" class="marright5 rfd-card-left">
+                <Col span="3" class="rfd-card-left">
                 <!--  -->
                     <img :src="user.photo || 'resources/images/icon/default_profile_bigger.png'" class="rfd-card-img" @click="goDetail(user)">
                 </Col>

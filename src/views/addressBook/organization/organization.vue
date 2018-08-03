@@ -60,9 +60,8 @@
           </FormItem>
         </Form>
         <div class="baseinfo-container-action">
-          <Button type="success">编辑</Button>
-          <Button type="success">删除</Button>
-          <Button type="success">保存</Button>
+          <input type='submit' value="编辑" class="baseinfo-container-action-submit"/>
+           <input type='submit' value="保存" class="baseinfo-container-action-submit"/>
         </div>
       </section>
       <!-- 上级组织 -->

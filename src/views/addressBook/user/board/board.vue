@@ -47,12 +47,7 @@ export default {
       });
     },
     goDetail(userItem) {
-<<<<<<< HEAD
-      // window.open('/Site/index.html#page/user/detail/' + userItem.userId);
-      this.$router.push({ path: '/addressBook/user/detail/' + userItem.userId});
-=======
       window.open('/dist/index.html#/addressBook/user/detail/' + userItem.userId);
->>>>>>> 433b9939c68fb739a41b302a69464bb293c7e16d
     },
     addUser(){
       window.open('/dist/index.html#/addressBook/user/add');

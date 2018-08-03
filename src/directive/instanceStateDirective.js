@@ -2,7 +2,7 @@
  * @author xiaoying
  * @description 数据实例状态标签指令
  * @prop status 实例数据值
- * @example  <Tag v-instanceStateDirective="obj.status"></Tag>
+ * @example  <Tag v-instanceStateDirective="{status:obj.status}"></Tag>
  */
 function render (el, bind) {
     switch (bind.value.status) {

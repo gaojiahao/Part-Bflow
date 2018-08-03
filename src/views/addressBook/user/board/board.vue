@@ -46,13 +46,10 @@ export default {
       });
     },
     goDetail(userItem) {
-      this.$router.push({
-        path: `/addressBook/user/detail/${userItem.userId}`,
-        params: { userId: userItem.userId ,isEdit: 'edit'}
-      });
+      window.open('/Site/index.html#page/user/detail/' + userItem.userId);
     },
     addUser(){
-      this.$router.push({ path: '/addressBook/user/add',params: { isEdit: 'add' }});
+      window.open('/Site/index.html#page/user/add');
     }
   },
   watch: {

@@ -38,7 +38,7 @@
     </Row>
     <Row class="detail-content">
       <!-- 用户信息 -->
-      <user-info v-if="whichShow.userinfo" :userInfo="userInformation"></user-info>
+      <user-info v-show="whichShow.userinfo" :userInfo="userInformation"></user-info>
       <!-- 上级用户 -->
       <higher-user v-if="whichShow.highuser"></higher-user>
       <!-- 下级用户 -->
@@ -63,7 +63,7 @@ import DepartmentMember from "./instance/department";
 import RoleMember from "./instance/role";
 import DirectPermission from "./instance/direct-permission";
 import IndirectPermission from "./instance/indirect-permission";
-import { getUserInfoById } from "@/services/addressBookService.js";
+import { getUserInfoById,getInstanceCountByUserId } from "@/services/addressBookService.js";
 
 export default {
   name: "detail",
@@ -79,7 +79,7 @@ export default {
   props: {},
   data() {
     return {
-      userId: this.$route.params.userId,
+      userId: '',
       showTag: true,
       whichShow: {
         userinfo: true,
@@ -129,10 +129,26 @@ export default {
     },
 
     //更新相关实例数量{}
-    getInstanceNum() {},
+    getInstanceCount() {
+      if(this.userId){
+        getInstanceCountByUserId(this.userId).then(res => {
+          this.relativeInstance[0].relativeNum = res.SysPermission;
+          this.relativeInstance[1].relativeNum = res.objectPermission;
+          this.relativeInstance[2].relativeNum = res.role;
+          this.relativeInstance[3].relativeNum = res.group;
+          this.relativeInstance[4].relativeNum = res.subordinate;
+          this.relativeInstance[5].relativeNum = res.superior;
+        })
+      }
+    },
+  },
+  created(){
+    let length = window.location.href.split('#')[1].split('/').length;
+    this.userId = window.location.href.split('#')[1].split('/')[length - 1];
   },
   mounted() {
     this.getUserInfoData();
+    this.getInstanceCount();
     let tabsMaxHeight = document.body.clientHeight - 165;
     window.document.getElementsByClassName('detail-content')[0].style.height = tabsMaxHeight + 'px';
   }

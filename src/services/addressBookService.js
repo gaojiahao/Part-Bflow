@@ -169,6 +169,14 @@ export const updateUser = (params) => request('/H_roleplay-si/userInfo/updateUse
  */
 export const addUser = (params) => request('/H_roleplay-si/userInfo/addUser', {}, 'POST', params);
 
+/**
+ * @author XiaoYing
+ * @description 获取用户相关实例数量
+ */
+export const getInstanceCountByUserId = (userId) => request('/H_roleplay-si/app/getObjDetailsCountByUserId',{
+    userId: userId
+});
+
 
 /************  组织  **************/
 

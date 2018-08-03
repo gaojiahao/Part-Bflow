@@ -7,9 +7,9 @@
         box-shadow: 0px 1px 10px #ddd;
       }
   }
-  .dep-tree{
-    height: 350px;
-    overflow: auto;
+  .user-page {
+    margin: 10px;
+    overflow: hidden;
   }
 </style>
 
@@ -189,6 +189,10 @@ export default {
     selectNode(node) {
       this.selectGroup = node[0];
     }
+  },
+  created(){
+    let length = window.location.href.split('#')[1].split('/').length;
+    this.userId = window.location.href.split('#')[1].split('/')[length - 1];
   },
   mounted() {
     this.getDepartmentData();

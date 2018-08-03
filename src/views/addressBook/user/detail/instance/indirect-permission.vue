@@ -83,6 +83,10 @@ export default {
       this.getIndirPermissionData();
     }
   },
+  created(){
+    let length = window.location.href.split('#')[1].split('/').length;
+    this.userId = window.location.href.split('#')[1].split('/')[length - 1];
+  },
   mounted() {
     this.getIndirPermissionData();
   }

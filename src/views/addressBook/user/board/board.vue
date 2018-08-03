@@ -8,7 +8,8 @@
         <Card  class="radius0 rfd-card" v-for="(user, index) of users" :key="index" >
             <Row  class="rfd-card-container">
                 <Col span="3" class="marright5 rfd-card-left">
-                    <img src="resources/images/icon/sales-order.png" class="rfd-card-img" @click="goDetail(user)">
+                <!--  -->
+                    <img :src="user.photo || 'resources/images/icon/default_profile_bigger.png'" class="rfd-card-img" @click="goDetail(user)">
                 </Col>
                 <Col span="17" class="rfd-card-content">
                     <h5 class="text-nowrap font14">{{ user.nickname }}
@@ -46,13 +47,10 @@ export default {
       });
     },
     goDetail(userItem) {
-      this.$router.push({
-        path: `/addressBook/user/detail/${userItem.userId}`,
-        params: { userId: userItem.userId ,isEdit: 'edit'}
-      });
+      window.open('/dist/index.html#/addressBook/user/detail/' + userItem.userId);
     },
     addUser(){
-      this.$router.push({ path: '/addressBook/user/add',params: { isEdit: 'add' }});
+      window.open('/dist/index.html#/addressBook/user/add');
     }
   },
   watch: {

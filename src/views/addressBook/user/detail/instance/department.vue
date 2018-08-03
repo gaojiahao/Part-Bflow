@@ -4,12 +4,12 @@
         background-color: #fff;
         margin: 15px 93px;
         padding: 26px 50px;
-        box-shadow: 0px 1px 40px #ddd;
+        box-shadow: 0px 1px 10px #ddd;
       }
   }
-  .dep-tree{
-    height: 350px;
-    overflow: auto;
+  .user-page {
+    margin: 10px;
+    overflow: hidden;
   }
 </style>
 
@@ -60,12 +60,22 @@ export default {
           key: "groupType",
           render: (h,params) => {
               let type = '';
-              if(params.row.groupType === 'O'){
+              switch(params.row.groupType){
+                case 'O': 
                   type = '部门';
-              }else if(params.row.groupType === 'A'){
+                  break;
+                case 'A': 
                   type = '事业部';
-              }else{
+                  break;
+                case 'R': 
                   type = '岗位';
+                  break;
+                case 'M': 
+                  type = '主体';
+                  break;
+                case 'C': 
+                  type = '公司';
+                  break;
               }
               return h('span',{},type);
           }
@@ -99,12 +109,16 @@ export default {
   methods: {
     //获取部门数据
     getDepartmentData() {
-      this.loading = true;
-      getDepartmentData(this.userId,this.pageSize,this.currentPage).then(res => {
-        this.departmentData = res.tableContent;
-        this.total = res.dataCount;
-        this.loading = false;
-      })
+      if(this.userId){
+        this.loading = true;
+        getDepartmentData(this.userId,this.pageSize,this.currentPage).then(res => {
+          this.departmentData = res.tableContent;
+          this.total = res.dataCount;
+          this.loading = false;
+        })
+      }else{
+          this.loading = false;
+      }
     },
     //点击分页
     onPageChange(currentPage) {
@@ -123,7 +137,7 @@ export default {
     },
     //添加组织部门
     addDepartment() {
-      if(this.selectGroup){
+      if(this.selectGroup && this.userId){
         addGroupMember(this.selectGroup.groupId,this.userId).then(res => {
           if(res.success){
             this.$Message.success(res.message);
@@ -175,6 +189,10 @@ export default {
     selectNode(node) {
       this.selectGroup = node[0];
     }
+  },
+  created(){
+    let length = window.location.href.split('#')[1].split('/').length;
+    this.userId = window.location.href.split('#')[1].split('/')[length - 1];
   },
   mounted() {
     this.getDepartmentData();

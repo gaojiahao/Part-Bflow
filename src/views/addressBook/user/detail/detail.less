@@ -1,6 +1,6 @@
 .detail-header{
     border-bottom: 1px solid #ddd;
-    padding: 10px 17px;
+    padding: 5px 10px;
     background-color: #fff;
     &-status{
         float: left;
@@ -40,12 +40,14 @@
     width: 100%;
     background-color: #fff;
     overflow: hidden;
+    border-bottom: 1px solid #ddd;
     &-child{
         float: right;
         border-left: 1px solid #ddd;
-        padding: 2px 5px;
+        padding: 2px 9px;
         text-align: center;
         cursor: pointer;
+        color: gray;
         &-right{
             vertical-align: middle;
             text-align: center;
@@ -56,15 +58,21 @@
             }
             p{
                 font-weight: bold;
-                font-size: 14px;
+                font-size: 12px;
             }
         }
         img{
-            width: 36px;
-            height: 28px;
+            width: 42px;
             vertical-align: middle;
             padding: 0px 5px;
         }
+    }
+    &-child:first-child{
+        border-right: 1px solid #ddd;
+        margin-right: 10px;
+    }
+    &-child:last-child{
+        height: 40px;
     }
     .active{
         background-color: #ddd;

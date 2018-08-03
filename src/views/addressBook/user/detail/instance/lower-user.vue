@@ -4,7 +4,7 @@
         background-color: #fff;
         margin: 15px 93px;
         padding: 26px 50px;
-        box-shadow: 0px 1px 40px #ddd;
+        box-shadow: 0px 1px 10px #ddd;
       }
   }
   .user-page {
@@ -134,12 +134,16 @@ export default {
   methods: {
     //获取下级用户数据
     getLowerUserData() {
-      this.loading = true;
-      getLowUserData(this.userId,this.lowUser.pageSize,this.lowUser.currentPage).then(res => {
-        this.lowerUserData = res.tableContent;
-        this.lowUser.total = res.dataCount;
-        this.loading = false;
-      })
+      if(this.userId){
+        this.loading = true;
+        getLowUserData(this.userId,this.lowUser.pageSize,this.lowUser.currentPage).then(res => {
+          this.lowerUserData = res.tableContent;
+          this.lowUser.total = res.dataCount;
+          this.loading = false;
+        })
+      }else{
+          this.loading = false;
+      }
     },
     //点击分页
     onPageChange(currentPage) {
@@ -170,13 +174,15 @@ export default {
       }else{
         this.$Message.warning('请选择至少一个用户！');
       }
-      if(parentId){
+      if(parentId && this.userId){
         updateHighUser(parentId.join(','),this.userId).then(res => {
           if(res.success){
             this.$Message.success(res.message);
             this.getLowerUserData();
           }
         })
+      }else{
+        this.$Message.warning('无用户ID，请先保存用户再进行编辑！');
       }
     },
     //选择下级用户
@@ -197,6 +203,10 @@ export default {
         this.userLoading = false;
       })
     }
+  },
+  created(){
+    let length = window.location.href.split('#')[1].split('/').length;
+    this.userId = window.location.href.split('#')[1].split('/')[length - 1];
   },
   mounted() {
     this.getLowerUserData();

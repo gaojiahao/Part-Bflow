@@ -4,7 +4,7 @@
         background-color: #fff;
         margin: 15px 93px;
         padding: 26px 50px;
-        box-shadow: 0px 1px 40px #ddd;
+        box-shadow: 0px 1px 10px #ddd;
       }
   }
   .user-page {
@@ -74,7 +74,24 @@ export default {
           title: "职位类型",
           key: "type",
           render: (h,params) => {
-              let type = params.row.type==='C'?'操作类':'';
+              let type = '';
+              switch(params.row.groupType){
+                case 'Y': 
+                  type = '营销类';
+                  break;
+                case 'C': 
+                  type = '操作类';
+                  break;
+                case 'J': 
+                  type = '技术类';
+                  break;
+                case 'M': 
+                  type = '管理类';
+                  break;
+                case 'Z': 
+                  type = '专职类';
+                  break;
+              }
               return h('span',{},type);
           }
         },
@@ -91,12 +108,16 @@ export default {
   methods: {
     //获取部门数据
     getRoleData() {
-      this.loading = true;
-      getRoleData(this.userId,this.rolePage.pageSize,this.rolePage.currentPage).then(res => {
-        this.roleData = res.tableContent;
-        this.rolePage.total = res.dataCount;
-        this.loading = false;
-      })
+      if(this.userId){
+        this.loading = true;
+        getRoleData(this.userId,this.rolePage.pageSize,this.rolePage.currentPage).then(res => {
+          this.roleData = res.tableContent;
+          this.rolePage.total = res.dataCount;
+          this.loading = false;
+        })
+      }else{
+          this.loading = false;
+      }
     },
     //点击分页
     onPageChange(currentPage) {
@@ -127,13 +148,15 @@ export default {
       }else{
         this.$Message.warning('请选择至少一个职位！');
       }
-      if(multiId){
+      if(multiId && this.userId){
         addRoleMember(this.userId,multiId.join(',')).then(res => {
           if(res.success){
             this.$Message.success(res.message);
             this.getRoleData();
           }
         })
+      }else{
+        this.$Message.warning('无用户ID，请先保存用户再进行编辑！');
       }
     },
     //选择职位
@@ -154,6 +177,10 @@ export default {
         this.roleLoading = false;
       })
     }
+  },
+  created(){
+    let length = window.location.href.split('#')[1].split('/').length;
+    this.userId = window.location.href.split('#')[1].split('/')[length - 1];
   },
   mounted() {
     this.getRoleData();

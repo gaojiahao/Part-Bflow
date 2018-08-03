@@ -127,6 +127,13 @@ export const addressBook = {
                 title: '组织详情'
             },
             component: () => import('@/views/addressBook/organization/organization.vue') 
+        }, {
+            path: 'add',
+            name: 'add',
+            meta: {
+                title: '添加组织'
+            },
+            component: () => import('@/views/addressBook/organization/organization.vue')
         }]
         
     }, {

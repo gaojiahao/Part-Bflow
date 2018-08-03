@@ -6,23 +6,28 @@
   <Row class="detail">
     <Row class="detail-header">
       <Breadcrumb class="detail-header-bread">
-        <BreadcrumbItem to="/addressBook/user/board">{{ userInformation.nickname }}</BreadcrumbItem>
-        <BreadcrumbItem>{{ userInformation.userCode }}</BreadcrumbItem>
+        <BreadcrumbItem to="/addressBook/user/board">{{ userInformation.nickname?userInformation.nickname:'用户' }}</BreadcrumbItem>
+        <BreadcrumbItem>{{ userInformation.userCode?userInformation.userCode:'创建' }}</BreadcrumbItem>
       </Breadcrumb>
-      <Tag class="detail-header-status" v-instanceStateDirective="{status:userInformation.status,color:'red'}"></Tag>
+      <Tag v-show="userInformation.status?showTag:!showTag"   class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:userInformation.status,color:'#eb2f96'}"></Tag>
     </Row>
     <Row class="detail-header">
-      <Button type="info" @click="goBack">返回</Button>
-      <div class="detail-header-icon">
-        <Icon class="detail-header-icon-back" type="ios-arrow-back" />
-        <Icon class="detail-header-icon-forward" type="ios-arrow-forward" />
+      <Button @click="goBack" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">返回</Button>
+      <div v-show="userInformation.status?showTag:!showTag" class="detail-header-icon">
+        <span>
+          <Icon class="detail-header-icon-back" type="ios-arrow-back" />
+        </span>
+        <span>
+          <Icon class="detail-header-icon-forward" type="ios-arrow-forward" />
+        </span>
       </div>
     </Row>
     <Row class="detail-tabs">
       <div 
         @click="onClickTab(index)"
-        :class="{'detail-tabs-child':true,'active':item.isShow}" 
-        v-for="(item,index) of relativeInstance" 
+        v-if="userInformation.userId?item.isShow:item.isShowAcive"
+        :class="{'detail-tabs-child':true,'active':item.isShowAcive}" 
+        v-for="(item,index) of relativeInstance"
         :key="index">
         <img :src="item.imgUrl"/>
         <div class="detail-tabs-child-right">
@@ -35,17 +40,17 @@
       <!-- 用户信息 -->
       <user-info v-show="whichShow.userinfo" :userInfo="userInformation"></user-info>
       <!-- 上级用户 -->
-      <higher-user v-show="whichShow.highuser"></higher-user>
+      <higher-user v-if="whichShow.highuser"></higher-user>
       <!-- 下级用户 -->
-      <lower-user v-show="whichShow.lowuser"></lower-user>
+      <lower-user v-if="whichShow.lowuser"></lower-user>
       <!-- 部门 -->
-      <department-member v-show="whichShow.dep"></department-member>
+      <department-member v-if="whichShow.dep"></department-member>
       <!-- 职位 -->
-      <role-member v-show="whichShow.role"></role-member>
+      <role-member v-if="whichShow.role"></role-member>
       <!-- 直接权限 -->
-      <direct-permission v-show="whichShow.dirper"></direct-permission>
+      <direct-permission v-if="whichShow.dirper"></direct-permission>
       <!-- 间接权限 -->
-      <indirect-permission v-show="whichShow.indirper"></indirect-permission>
+      <indirect-permission v-if="whichShow.indirper"></indirect-permission>
     </Row>
   </Row>
 </template>
@@ -58,7 +63,7 @@ import DepartmentMember from "./instance/department";
 import RoleMember from "./instance/role";
 import DirectPermission from "./instance/direct-permission";
 import IndirectPermission from "./instance/indirect-permission";
-import { getUserInfoById } from "@/services/addressBookService.js";
+import { getUserInfoById,getInstanceCountByUserId } from "@/services/addressBookService.js";
 
 export default {
   name: "detail",
@@ -74,7 +79,8 @@ export default {
   props: {},
   data() {
     return {
-      userId: this.$route.params.userId,
+      userId: '',
+      showTag: true,
       whichShow: {
         userinfo: true,
         highuser: false,
@@ -86,13 +92,13 @@ export default {
       },
       userInformation: {},
       relativeInstance: [
-        { name: "间接权限", showName: 'indirper', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/2_1.png' },
-        { name: "直接权限", showName: 'dirper', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/1_4.png' },
-        { name: "用户职位", showName: 'role', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/job.png' },
-        { name: "用户部门", showName: 'dep', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/organization.png' },
-        { name: "下级用户", showName: 'lowuser', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' },
-        { name: "上级用户", showName: 'highuser', isShow: false, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' },
-        { name: "用户信息", showName: 'userinfo', isShow: true, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' }
+        { name: "间接权限", showName: 'indirper', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/1_4.png' },
+        { name: "直接权限", showName: 'dirper', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/1_4.png' },
+        { name: "用户职位", showName: 'role', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/job.png' },
+        { name: "用户部门", showName: 'dep',  isShow: true,isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/organization.png' },
+        { name: "下级用户", showName: 'lowuser', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' },
+        { name: "上级用户", showName: 'highuser', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' },
+        { name: "用户信息", showName: 'userinfo', isShow: true, isShowAcive: true, imgUrl: 'resources/images/icon/user.png' }
       ]
     };
   },
@@ -102,10 +108,10 @@ export default {
     onClickTab(currentIndex) {
       this.relativeInstance.forEach((val,k) => {
         if(currentIndex === k){
-          val.isShow = true;
+          val.isShowAcive = true;
           this.whichShow[val.showName] = true;
         }else{
-          val.isShow = false;
+          val.isShowAcive = false;
           this.whichShow[val.showName] = false;
         }
       })
@@ -120,10 +126,29 @@ export default {
     },
     goBack() {
       this.$router.push({path: '/addressBook/user/board'});
-    }
+    },
+
+    //更新相关实例数量{}
+    getInstanceCount() {
+      if(this.userId){
+        getInstanceCountByUserId(this.userId).then(res => {
+          this.relativeInstance[0].relativeNum = res.SysPermission;
+          this.relativeInstance[1].relativeNum = res.objectPermission;
+          this.relativeInstance[2].relativeNum = res.role;
+          this.relativeInstance[3].relativeNum = res.group;
+          this.relativeInstance[4].relativeNum = res.subordinate;
+          this.relativeInstance[5].relativeNum = res.superior;
+        })
+      }
+    },
+  },
+  created(){
+    let length = window.location.href.split('#')[1].split('/').length;
+    this.userId = window.location.href.split('#')[1].split('/')[length - 1];
   },
   mounted() {
     this.getUserInfoData();
+    this.getInstanceCount();
     let tabsMaxHeight = document.body.clientHeight - 165;
     window.document.getElementsByClassName('detail-content')[0].style.height = tabsMaxHeight + 'px';
   }

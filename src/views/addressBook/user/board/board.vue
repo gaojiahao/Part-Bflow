@@ -1,28 +1,28 @@
+<style lang="less" scoped>
+@import "../../organization/board/board.less";
+</style>
+
+
 <template>
     <div class="pad5">
-        <Row  :gutter="8">
-            <Col :xs="24" :sm="12" :md="8" :lg="6" v-for="(user, index) of users" :key="index" class="pad5 " >
-              <div @click="goDetail(user)">
-                <Card class="radius0">
-                    <Row>
-                        <Col span="4" class="marright5" >
-                            <img src="resources/images/icon/contactor.png"  style="width:100%">
-                        </Col>
-                        <Col span="18">
-                            <p>{{ user.nickname }}
-                                 <Tag  color="blue" class="fr radius10">使用中</Tag>
-                            </p>
-                            <p>{{user.mobile}}</p>
-                            <p>{{user.userCode}}</p>
-                        </Col>
-                    </Row>
-                  </Card>
-                </div>
-            </Col>
-        </Row>
-  </div>
+        <Card  class="radius0 rfd-card" v-for="(user, index) of users" :key="index" >
+            <Row  class="rfd-card-container">
+                <Col span="3" class="marright5 rfd-card-left">
+                    <img src="resources/images/icon/sales-order.png" class="rfd-card-img" @click="goDetail(user)">
+                </Col>
+                <Col span="17" class="rfd-card-content">
+                    <h5 class="text-nowrap font14">{{ user.nickname }}
+                    </h5>
+                    <p>{{user.mobile}}<Tag  color="blue" class="fr radius10 "  v-instanceStateDirective="{status:user.status}"></Tag></p>
+                    <p>{{user.userCode}}</p>
+                </Col>
+            </Row>
+        </Card>
+    </div>
 
 </template>
+
+
 
 <script>
 import { getAllUsers } from "@/services/addressBookService.js";
@@ -46,10 +46,10 @@ export default {
       });
     },
     goDetail(userItem) {
-      this.$router.push({
-        path: `/addressBook/user/detail/${userItem.userId}`,
-        params: { userId: userItem.userId }
-      });
+      window.open('/Site/index.html#page/user/detail/' + userItem.userId);
+    },
+    addUser(){
+      window.open('/Site/index.html#page/user/add');
     }
   },
   watch: {

@@ -12,7 +12,7 @@
                 <Col span="17" class="rfd-card-content">
                     <h5 class="text-nowrap font14">{{ org.groupName }}
                     </h5>
-                    <p>{{org.groupType}}<Tag  color="blue" class="fr radius10" >使用中</Tag></p>
+                    <p>{{org.groupType}}<Tag  color="blue"  class="fr radius10 color_fff"  v-instanceStateDirective="{status:org.status}" ></Tag></p>
                     <p>{{org.principalName}}</p>
                 </Col>
             </Row>

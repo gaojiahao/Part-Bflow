@@ -5,7 +5,17 @@
         margin: 15px 93px;
         padding: 26px 50px;
         box-shadow: 0px 1px 10px #ddd;
+        &-btn{
+          margin-bottom:5px;
+          color: rgb(0, 150, 136);
+          font-size: 17px;
+          cursor: pointer;
+        }
       }
+  }
+  .dep-tree{
+    height: 350px;
+    overflow: auto;
   }
   .user-page {
     margin: 10px;
@@ -16,7 +26,8 @@
 <template>
     <div class="department">
         <div class="department-detail" id="depHeight">
-            <Button type="info" @click="showGroupModal" style="margin-bottom:5px">选择部门</Button>
+            <b type="info" @click="showGroupModal" class="department-detail-btn">部门</b>
+            <span style="color: #7a7676;">-选择用户部门</span>
             <Table ref="selection" :columns="columns" :loading="loading" :data="departmentData"></Table>
             <div class="user-page">
                 <div style="float: right;">

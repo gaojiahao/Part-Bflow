@@ -46,7 +46,8 @@ export default {
       });
     },
     goDetail(userItem) {
-      window.open('/Site/index.html#page/user/detail/' + userItem.userId);
+      // window.open('/Site/index.html#page/user/detail/' + userItem.userId);
+      this.$router.push({ path: '/addressBook/user/detail/' + userItem.userId});
     },
     addUser(){
       window.open('/Site/index.html#page/user/add');

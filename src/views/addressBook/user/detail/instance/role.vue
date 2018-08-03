@@ -5,6 +5,12 @@
         margin: 15px 93px;
         padding: 26px 50px;
         box-shadow: 0px 1px 10px #ddd;
+        &-btn{
+          margin-bottom:5px;
+          color: rgb(0, 150, 136);
+          font-size: 17px;
+          cursor: pointer;
+        }
       }
   }
   .user-page {
@@ -16,7 +22,8 @@
 <template>
     <div class="role">
         <div class="role-detail" id="roleHeight">
-            <Button type="info" @click="showRoleModal" style="margin-bottom:5px">选择职位</Button>
+            <b @click="showRoleModal"  class="role-detail-btn">职位</b>
+            <span style="color: #7a7676;">-选择用户职位</span>
             <Table ref="selection" :columns="columns" :loading="loading" :data="roleData"></Table>
             <div class="user-page">
                 <div style="float: right;">

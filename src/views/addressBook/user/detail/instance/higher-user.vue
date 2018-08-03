@@ -5,6 +5,12 @@
         margin: 15px 93px;
         padding: 26px 50px;
         box-shadow: 0px 1px 10px #ddd;
+        &-btn{
+          margin-bottom:5px;
+          color: rgb(0, 150, 136);
+          font-size: 17px;
+          cursor: pointer;
+        }
       }
   }
 </style>
@@ -12,20 +18,16 @@
 <template>
     <div class="higher-user">
         <div class="higher-user-detail" id="cliHeight">
-            <Button type="info" @click="showUserModal" style="margin-bottom:5px">选择上级用户</Button>
+            <b @click="showUserModal" class="higher-user-detail-btn">上级用户</b>
+            <span style="color: #7a7676;">-选择上级用户</span>
             <Table ref="selection" :columns="columns" :loading="loading" :data="higherUserData"></Table>
-            <!-- <div class="user-page">
-                <div style="float: right;">
-                  <Page @on-page-size-change="onPageSizeChange" :total="highUser.total" show-elevator show-sizer :current="highUser.currentPage" :page-size="highUser.pageSize" @on-change="onPageChange" size="small" show-total></Page>
-                </div>
-            </div> -->
         </div>
         <Modal
             v-model="showModal"
             title="选择用户"
-            @on-ok="addHighUser"
+            :footer-hide="true"
             width="1000">
-            <Table ref="selection" :highlight-row="true" @on-row-click="onSelectionChange" height="400" :loading="userLoading" :columns="columns" :data="userData"></Table>
+            <Table @on-row-dblclick="onDbClick" ref="selection" :highlight-row="true" height="400" :loading="userLoading" :columns="columns" :data="userData"></Table>
             <div class="user-page">
                 <div class="fr">
                   <Page @on-page-size-change="onAllUserPageSizeChange" :total="highUser.usertotal" show-elevator show-sizer :current="highUser.usercurrentPage" :page-size="highUser.allUserpageSize" @on-change="onUserPageChange" size="small" show-total></Page>
@@ -118,8 +120,7 @@ export default {
         }
       ],
       higherUserData: [],
-      userData: [],
-      selectUserData: {}
+      userData: []
     };
   },
   methods: {
@@ -156,28 +157,18 @@ export default {
       this.getAllUsersData();
     },
     //添加上级用户
-    addHighUser() {
-      let parentId;
-      if(Object.keys(this.selectUserData).length > 0){
-        parentId = this.selectUserData.userId;
-      }else{
-        this.$Message.warning('请选择至少一个用户！');
-      }
+    onDbClick(selection,index) {
+      let parentId = selection.userId;
       
       if(parentId && this.userId){
         updateHighUser(this.userId,parentId).then(res => {
           if(res.success){
+            this.showModal = false;
             this.$Message.success(res.message);
             this.getHigherUserData();
           }
         })
-      }else{
-        this.$Message.warning('无用户ID，请先保存用户再进行编辑！');
       }
-    },
-    //选择上级用户
-    onSelectionChange(selection) {
-      this.selectUserData = selection;
     },
     //展示所有用户
     showUserModal() {

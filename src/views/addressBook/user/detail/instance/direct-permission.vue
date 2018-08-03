@@ -5,6 +5,12 @@
         margin: 15px 93px;
         padding: 26px 50px;
         box-shadow: 0px 1px 10px #ddd;
+        &-btn{
+          margin-bottom:5px;
+          color: rgb(0, 150, 136);
+          font-size: 17px;
+          cursor: pointer;
+        }
       }
   }
   .user-page {
@@ -20,8 +26,10 @@
 <template>
     <div class="direct">
         <div class="direct-detail" id="directHeight">
-            <Button type="info" @click="showAddPermission" icon="md-add" size="small" style="margin-bottom:5px">添加权限</Button>
-            <Button type="info" @click="deletePermission" icon="md-remove" :disabled="isDisabled" size="small" style="margin-bottom:5px">删除权限</Button>
+            <b @click="showAddPermission" class="direct-detail-btn">添加权限</b>
+            <span style="color: #7a7676;">-添加直接权限</span>
+            <b @click="deletePermission" class="direct-detail-btn">删除权限</b>
+            <span style="color: #7a7676;">-删除直接权限</span>
             <Table ref="selection" @on-selection-change="onSelectionChange" :columns="columns" :loading="loading" :data="dirPermissionData"></Table>
             <div class="user-page">
                 <div style="float: right;">

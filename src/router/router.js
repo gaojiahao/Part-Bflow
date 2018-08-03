@@ -137,26 +137,26 @@ export const addressBook = {
         }]
         
     }, {
-        path: 'role',
-        name: 'role',
+        path: 'job',
+        name: 'job',
         meta: {
             title: '职位'
         },
-        component: () => import('@/views/addressBook/role/index.vue'),
+        component: () => import('@/views/addressBook/job/index.vue'),
         children: [{
             path: 'board',
             name: 'board',
             meta: {
                 title: '职位看板'
             },
-            component: () => import('@/views/addressBook/role/board/board.vue')
+            component: () => import('@/views/addressBook/job/board/board.vue')
         },{
-            path: 'detail/:roleId',
+            path: 'detail/:jobId',
             name: 'detail',
             meta: {
                 title: '职位详情'
             },
-            component: () => import('@/views/addressBook/role/role.vue') 
+            component: () => import('@/views/addressBook/job/job.vue') 
         }]
         
     },{

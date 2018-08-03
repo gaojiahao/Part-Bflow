@@ -1,10 +1,40 @@
+<style lang="less" scoped>
+.permission-container-btn-export {
+  float: right;
+}
+
+.header-action {
+  lebal {
+    color: #009688;
+    font-size: 17px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  span {
+    color: rgb(122, 118, 118);
+  }
+}
+</style>
+
+
 <template>
   <div>
     <custom-table apiUrl="/ds/getUsersByGroupId" :columns="memberInfoColumns" :apiParams="memberInfoParams" v-model="reload" @on-selection-change="onSelectionChange" @on-refesh-change='onRefeshChange'>
-      <div slot="header">
+      <!-- <div slot="header">
         <Button icon="md-add" type="primary" @click="showMemberModal">添加成员</Button>
         <Button icon="md-remove" type="info" @click="deleteMemberInfo" :disabled="deleteBtnDisable">移除成员</Button>
         <Button icon="ios-download-outline" type="primary" class="permission-container-btn-export" @click="exportData">导出</Button>
+      </div> -->
+
+      <div slot="header" class="header-action">
+        <lebal @click="showMemberModal">添加成员</lebal>
+        <span>-添加成员</span>
+
+        <lebal @click="deleteBtnDisable">移除成员</lebal>
+        <span>-移除成员</span>
+
+        <lebal @click="exportData" class="permission-container-btn-export">导出</lebal>
       </div>
     </custom-table>
 
@@ -23,7 +53,11 @@
 
 <script>
 import MemberModal from "@/components/modal/Modal";
-import { listUsers, addOrgMember ,deleteOrgMember} from "@/services/addressBookService.js";
+import {
+  listUsers,
+  addOrgMember,
+  deleteOrgMember
+} from "@/services/addressBookService.js";
 import CustomTable from "./CustomTable";
 export default {
   name: "member-info",
@@ -33,7 +67,7 @@ export default {
     CustomTable
   },
 
-   props: {
+  props: {
     groupId: {
       type: String
     }
@@ -144,8 +178,8 @@ export default {
       }
     },
 
-    onRefeshChange(val){
-      if(!val){
+    onRefeshChange(val) {
+      if (!val) {
         this.reload = val;
       }
     },
@@ -162,7 +196,7 @@ export default {
         multiId.push(val.userId);
       });
       if (multiId) {
-        addOrgMember(this.groupId, multiId.join(","),1).then(res => {
+        addOrgMember(this.groupId, multiId.join(","), 1).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
             this.reload = true;
@@ -178,10 +212,10 @@ export default {
         multiId.push(val.userId);
       });
       if (multiId) {
-        deleteOrgMember(this.groupId, multiId.join(","),0).then(res => {
+        deleteOrgMember(this.groupId, multiId.join(","), 0).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
-             this.reload = true;
+            this.reload = true;
           }
         });
       }
@@ -218,8 +252,3 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.permission-container-btn-export {
-  float: right;
-}
-</style>

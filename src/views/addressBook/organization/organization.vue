@@ -6,9 +6,12 @@
   <div class="organization-wrap">
     <header class="organization-wrap-header">
       <h2>
-        <span>管理员</span>
-        <span>/岗位/</span>
-        <span>001</span>
+        <span style="color:#4CAF50">{{formItem.groupName}}</span>
+        <span style="color:#808080;margin-left:10px">/</span>
+        <span style="color:#808080;margin-left:10px">{{formItem.groupType}}</span>
+        <span style="color:#808080;margin-left:10px">/</span>
+        <span style="color:#808080;margin-left:10px">{{groupId}}</span>
+        <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status,color:'#eb2f96'}"></Tag>
       </h2>
     </header>
 
@@ -44,7 +47,7 @@
               <Radio label="小组">小组</Radio>
             </RadioGroup>
           </FormItem>
-          <FormItem label="部门职能类型" :labelWidth="100">
+          <FormItem label="部门职能类型" :labelWidth="100" v-if="formItem.groupType ==='部门'">
             <RadioGroup v-model="formItem.depFunction">
               <Radio label="管理">管理</Radio>
               <Radio label="销售">销售</Radio>
@@ -57,9 +60,8 @@
           </FormItem>
         </Form>
         <div class="baseinfo-container-action">
-          <Button type="success">编辑</Button>
-          <Button type="success">删除</Button>
-          <Button type="success">保存</Button>
+          <input type='submit' value="编辑" class="baseinfo-container-action-submit"/>
+           <input type='submit' value="保存" class="baseinfo-container-action-submit"/>
         </div>
       </section>
       <!-- 上级组织 -->
@@ -139,32 +141,32 @@ export default {
       actionBtn: [
         {
           label: "权限",
-          imgPath: "../../../resources/images/icon/0_0.png",
+          imgPath: "/resources/images/icon/2_0.png",
           number: 0
         },
         {
           label: "成员信息",
-          imgPath: "../../../resources/images/icon/0_1.png",
+          imgPath: "/resources/images/icon/user.png",
           number: 0
         },
         {
           label: "负责人",
-          imgPath: "../../../resources/images/icon/0_2.png",
+          imgPath: "/resources/images/icon/user.png",
           number: 0
         },
         {
           label: "下级组织",
-          imgPath: "../../../resources/images/icon/0_3.png",
+          imgPath: "/resources/images/icon/organization.png",
           number: 0
         },
         {
           label: "上级组织",
-          imgPath: "../../../resources/images/icon/0_4.png",
+          imgPath: "/resources/images/icon/organization.png",
           number: 0
         },
         {
           label: "基本信息",
-          imgPath: "../../../resources/images/icon/0_5.png",
+          imgPath: "/resources/images/icon/organization.png",
           number: 0
         }
       ],
@@ -198,7 +200,7 @@ export default {
     ]);
     getOrgBaseInfo(filter).then(res => {
       if (res.tableContent[0]) {
-        let tableContent = res.tableContent[0];
+        this.formItem = res.tableContent[0];
         this.formItem.groupName = tableContent.groupName;
         this.formItem.groupType = tableContent.groupType;
         this.formItem.depFunction = tableContent.depFunction;

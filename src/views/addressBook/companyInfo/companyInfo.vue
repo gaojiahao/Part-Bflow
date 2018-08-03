@@ -24,7 +24,7 @@
                 <BreadcrumbItem>{{ companyInformation.nickname?companyInformation.nickname:'用户' }}</BreadcrumbItem>
                 <BreadcrumbItem>{{ companyInformation.userCode?companyInformation.userCode:'创建' }}</BreadcrumbItem>
             </Breadcrumb>
-            <Tag v-show="companyInformation.status?showTag:!showTag" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:companyInformation.status,color:'#eb2f96'}"></Tag>
+            <Tag v-show="companyInformation.status" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:companyInformation.status,color:'#eb2f96'}"></Tag>
         </Row>
         <Row class="detail-tabs">
             <div @click="onClickTab(index)" v-if="groupId?item.isShow:item.isShowAcive" :class="{'detail-tabs-child':true,'active':item.isShowAcive}" v-for="(item,index) of relativeInstance" :key="index">
@@ -72,28 +72,20 @@ export default {
       },
       relativeInstance: [
         {
-          name: "上级公司",
-          showName: "higherCompany",
-          isShow: true,
-          isShowAcive: false,
-          relativeNum: 1,
-          imgUrl: "resources/images/icon/2_1.png"
-        },
-        {
           name: "下级公司",
           showName: "lowerCompany",
           isShow: true,
           isShowAcive: false,
           relativeNum: 1,
-          imgUrl: "resources/images/icon/1_4.png"
+          imgUrl: "resources/images/icon/company.png"
         },
         {
-          name: "公司信息",
-          showName: "baseInfo",
+          name: "上级公司",
+          showName: "higherCompany",
           isShow: true,
-          isShowAcive: true,
+          isShowAcive: false,
           relativeNum: 1,
-          imgUrl: "resources/images/icon/job.png"
+          imgUrl: "resources/images/icon/company.png"
         },
         {
           name: "公司成员",
@@ -102,6 +94,14 @@ export default {
           isShowAcive: false,
           relativeNum: 1,
           imgUrl: "resources/images/icon/organization.png"
+        },
+        {
+          name: "公司信息",
+          showName: "baseInfo",
+          isShow: true,
+          isShowAcive: true,
+          relativeNum: 1,
+          imgUrl: "resources/images/icon/0_3.png"
         }
       ]
     };

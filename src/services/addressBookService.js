@@ -173,8 +173,8 @@ export const addUser = (params) => request('/H_roleplay-si/userInfo/addUser', {}
  * @author XiaoYing
  * @description 获取用户相关实例数量
  */
-export const getInstanceCountByUserId = (userId) => request('/H_roleplay-si/app/getObjDetailsCountByUserId',{
-    userId: userId
+export const getInstanceCountByUserId = (userId) => request('/H_roleplay-si/app/getObjDetailsCountByUserId', {
+  userId: userId
 });
 
 
@@ -332,17 +332,56 @@ export const saveCompanyInfo = (data) => {
     groupType: 'C',
     parentId: '1',
     groupCode: groupCode
-  }, "POST");
+  }, 'POST');
+};
+/**
+ * @author zhaohuai
+ * 更新公司基本信息
+ */
+export const updateCompanyInfo = (data) => {
+  let {
+    groupName,
+    groupShortName,
+    depFunction,
+    status,
+    comment,
+    groupCode,
+    groupId
+  } = data
+  return request('/H_roleplay-si/userInfo/saveGroup', {
+    groupName: groupName,
+    groupShortName: groupShortName,
+    depFunction: depFunction,
+    status: status,
+    comment: comment,
+    list: 'sys_group',
+    groupType: 'C',
+    parentId: '1',
+    groupCode: groupCode,
+    groupId: groupId
+  }, 'POST');
 };
 /**
  * @author zhaohuai
  * 获取公司列表信息
  * 
  */
-export const getCompanyList = (groupId, target, currentPage, pageSize) => request('/H_roleplay-si/ds/getCompanyList', {
+export const getCompanyList = (groupId, target, currentPage, pageSize) => request('/H_roleplay-si/sysGroup/getCompanyList', {
   groupId: groupId,
   target: target,
   currentPage: currentPage,
   pageSize: pageSize
 });
+/**
+ * 
+ * @author zhaohuai
+ * 新增上级公司
+ */
+export const updateHighCompany = (groupId, parentId) => {
+  let data = [{
+    groupId: groupId,
+    parentId: parentId
+  }];
+  return request('/H_roleplay-si/sysGroup/update', {}, 'POST', data);
+}
 /************  公司  **************/

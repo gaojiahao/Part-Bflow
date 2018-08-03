@@ -73,7 +73,7 @@
         <Row class="info-btn">
             <Button @click="goUserList"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">取消</Button>
             <Button @click="updateUserData"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存</Button>
-            <Button v-if="userInfo.userId?noShowSaveAddBtn:showSaveAddBtn" @click="saveAndAddUser" type="info">保存并继续添加</Button>
+            <Button v-if="userInfo.userId?noShowSaveAddBtn:showSaveAddBtn" @click="saveAndAddUser" class="radius0"style="background-color: rgb(0, 150, 136) !important;color:#fff">保存并继续添加</Button>
         </Row>
     </div>
 </template>

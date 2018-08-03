@@ -1,4 +1,6 @@
-import { request } from './fetch';
+import {
+  request
+} from './fetch';
 
 /************  用户  **************/
 
@@ -7,9 +9,9 @@ import { request } from './fetch';
  * @description 获取user上级用户数据
  */
 export const getHighUserData = (userId, pageSize, currentPage) => request('/H_roleplay-si/ds/getSuperior', {
-    userId: userId,
-    page: currentPage,
-    limit: pageSize
+  userId: userId,
+  page: currentPage,
+  limit: pageSize
 });
 
 /**
@@ -17,9 +19,9 @@ export const getHighUserData = (userId, pageSize, currentPage) => request('/H_ro
  * @description 获取user下级用户数据
  */
 export const getLowUserData = (userId, pageSize, currentPage) => request('/H_roleplay-si/ds/getSubordinate', {
-    userId: userId,
-    page: currentPage,
-    limit: pageSize
+  userId: userId,
+  page: currentPage,
+  limit: pageSize
 });
 
 /**
@@ -27,9 +29,9 @@ export const getLowUserData = (userId, pageSize, currentPage) => request('/H_rol
  * @description 获取user部门数据
  */
 export const getDepartmentData = (userId, pageSize, currentPage) => request('/H_roleplay-si/ds/getUserGroupByUserId', {
-    userId: userId,
-    page: currentPage,
-    limit: pageSize
+  userId: userId,
+  page: currentPage,
+  limit: pageSize
 });
 
 /**
@@ -37,9 +39,9 @@ export const getDepartmentData = (userId, pageSize, currentPage) => request('/H_
  * @description 获取user职位数据
  */
 export const getRoleData = (userId, pageSize, currentPage) => request('/H_roleplay-si/ds/getUserRoleByUserId', {
-    userId: userId,
-    page: currentPage,
-    limit: pageSize
+  userId: userId,
+  page: currentPage,
+  limit: pageSize
 });
 
 /**
@@ -47,10 +49,10 @@ export const getRoleData = (userId, pageSize, currentPage) => request('/H_rolepl
  * @description 获取user直接权限数据
  */
 export const getDirectPermissionData = (userId, pageSize, currentPage) => request('/H_roleplay-si/ds/getObjectPermission2Oneself', {
-    objectName: 'user',
-    objectId: userId,
-    page: currentPage,
-    limit: pageSize
+  objectName: 'user',
+  objectId: userId,
+  page: currentPage,
+  limit: pageSize
 });
 
 /**
@@ -58,9 +60,9 @@ export const getDirectPermissionData = (userId, pageSize, currentPage) => reques
  * @description 获取user间接权限数据
  */
 export const getIndirectPermissionData = (userId, pageSize, currentPage) => request('/H_roleplay-si/ps/getUserOrGroupPermissionById', {
-    userId: userId,
-    page: currentPage,
-    limit: pageSize
+  userId: userId,
+  page: currentPage,
+  limit: pageSize
 });
 
 /**
@@ -68,8 +70,8 @@ export const getIndirectPermissionData = (userId, pageSize, currentPage) => requ
  * @description 获取所有用户数据
  */
 export const getAllUsers = (pageSize, currentPage) => request('/H_roleplay-si/ds/getAllUsers', {
-    page: currentPage,
-    limit: pageSize
+  page: currentPage,
+  limit: pageSize
 });
 
 /**
@@ -77,9 +79,9 @@ export const getAllUsers = (pageSize, currentPage) => request('/H_roleplay-si/ds
  * @description 添加上级用户
  */
 export const updateHighUser = (userId, parentId) => request('/H_roleplay-si/userInfo/updateParentId', {
-    list: 'sys_userinfo',
-    userId: userId,
-    parentId: parentId
+  list: 'sys_userinfo',
+  userId: userId,
+  parentId: parentId
 });
 
 /**
@@ -87,7 +89,7 @@ export const updateHighUser = (userId, parentId) => request('/H_roleplay-si/user
  * @description 获取组织部门数据
  */
 export const getGroupData = (parentId) => request('/H_roleplay-si/ds/getUserGroupByParentId', {
-    parentId: parentId
+  parentId: parentId
 });
 
 /**
@@ -95,9 +97,9 @@ export const getGroupData = (parentId) => request('/H_roleplay-si/ds/getUserGrou
  * @description 添加组织部门
  */
 export const addGroupMember = (groupId, userId) => request('/H_roleplay-si/ds/saveData', {
-    list: 'sys_group_user',
-    groupId: groupId,
-    userId: userId
+  list: 'sys_group_user',
+  groupId: groupId,
+  userId: userId
 }, 'POST');
 
 /**
@@ -105,8 +107,8 @@ export const addGroupMember = (groupId, userId) => request('/H_roleplay-si/ds/sa
  * @description 获取所有职位数据
  */
 export const getAllRoleData = (pageSize, currentPage) => request('/H_roleplay-si/ds/getRoleList2', {
-    page: currentPage,
-    limit: pageSize
+  page: currentPage,
+  limit: pageSize
 });
 
 /**
@@ -114,9 +116,9 @@ export const getAllRoleData = (pageSize, currentPage) => request('/H_roleplay-si
  * @description 添加职位
  */
 export const addRoleMember = (single, multi) => request('/H_roleplay-si/ps/updateRelation', {
-    list: 'sys_user_role',
-    multi: multi,
-    single: single
+  list: 'sys_user_role',
+  multi: multi,
+  single: single
 }, 'POST');
 
 /**
@@ -124,7 +126,7 @@ export const addRoleMember = (single, multi) => request('/H_roleplay-si/ps/updat
  * @description 获取所用权限数据
  */
 export const getAllPermissionData = (parentId) => request('/H_roleplay-si/ds/getPermissionListByParentId', {
-    parentId: parentId
+  parentId: parentId
 });
 
 /**
@@ -132,9 +134,9 @@ export const getAllPermissionData = (parentId) => request('/H_roleplay-si/ds/get
  * @description 添加权限
  */
 export const addIndirPermission = (single, multi) => request('/H_roleplay-si/ps/updatePermissionRelation', {
-    list: 'sys_user_permission',
-    multi: multi,
-    single: single
+  list: 'sys_user_permission',
+  multi: multi,
+  single: single
 }, 'POST');
 
 /**
@@ -142,9 +144,9 @@ export const addIndirPermission = (single, multi) => request('/H_roleplay-si/ps/
  * @description 删除权限
  */
 export const deleteIndirPermission = (single, multi) => request('/H_roleplay-si/ps/deletePermissionRelation', {
-    list: 'sys_user_permission',
-    multi: multi,
-    single: single
+  list: 'sys_user_permission',
+  multi: multi,
+  single: single
 });
 
 /**
@@ -152,7 +154,7 @@ export const deleteIndirPermission = (single, multi) => request('/H_roleplay-si/
  * @description 获取用户详情信息
  */
 export const getUserInfoById = (userId) => request('/H_roleplay-si/ds/getUserInfoById', {
-    userId: userId
+  userId: userId
 });
 
 /**
@@ -172,7 +174,7 @@ export const addUser = (params) => request('/H_roleplay-si/userInfo/addUser', {}
  * @description 获取用户相关实例数量
  */
 export const getInstanceCountByUserId = (userId) => request('/H_roleplay-si/app/getObjDetailsCountByUserId', {
-    userId: userId
+  userId: userId
 });
 
 
@@ -183,10 +185,10 @@ export const getInstanceCountByUserId = (userId) => request('/H_roleplay-si/app/
  * @description 获取组织成员信息
  */
 export const getUsersByGroupId = (groupId, currentPage, pageSize) => request('/H_roleplay-si/ds/getUsersByGroupId', {
-    groupId: groupId,
-    page: currentPage,
-    limit: pageSize,
-    start: 0,
+  groupId: groupId,
+  page: currentPage,
+  limit: pageSize,
+  start: 0,
 });
 
 /**
@@ -194,11 +196,11 @@ export const getUsersByGroupId = (groupId, currentPage, pageSize) => request('/H
  * @description 获取组织权限
  */
 export const getObjectPermission2Oneself = (objectName, objectId, currentPage, pageSize) => request('/H_roleplay-si/ds/getObjectPermission2Oneself', {
-    objectName: objectName,
-    objectId: objectId,
-    page: currentPage,
-    limit: pageSize,
-    start: 0,
+  objectName: objectName,
+  objectId: objectId,
+  page: currentPage,
+  limit: pageSize,
+  start: 0,
 });
 
 /**
@@ -206,10 +208,10 @@ export const getObjectPermission2Oneself = (objectName, objectId, currentPage, p
  * @description 获取用户列表
  */
 export const listUsers = (currentPage, pageSize) => request('/H_roleplay-si/ds/listUsers', {
-    entityId: 20000,
-    page: currentPage,
-    limit: pageSize,
-    start: 0,
+  entityId: 20000,
+  page: currentPage,
+  limit: pageSize,
+  start: 0,
 });
 
 /**
@@ -217,9 +219,9 @@ export const listUsers = (currentPage, pageSize) => request('/H_roleplay-si/ds/l
  * @description 添加组织权限
  */
 export const addOrgPermission = (single, multi) => request('/H_roleplay-si/ps/updatePermissionRelation', {
-    list: 'sys_group_permission',
-    multi: multi,
-    single: single
+  list: 'sys_group_permission',
+  multi: multi,
+  single: single
 }, 'POST');
 
 /**
@@ -227,9 +229,9 @@ export const addOrgPermission = (single, multi) => request('/H_roleplay-si/ps/up
  * @description 删除组织权限
  */
 export const deleteOrgPermission = (single, multi) => request('/H_roleplay-si/ps/deletePermissionRelation', {
-    list: 'sys_group_permission',
-    multi: multi,
-    single: single
+  list: 'sys_group_permission',
+  multi: multi,
+  single: single
 });
 
 /**
@@ -237,9 +239,9 @@ export const deleteOrgPermission = (single, multi) => request('/H_roleplay-si/ps
  * @description 添加组织成员
  */
 export const addOrgMember = (single, multi) => request('/H_roleplay-si/ps/updateRelation', {
-    list: 'sys_group_user',
-    multi: multi,
-    single: single,
+  list: 'sys_group_user',
+  multi: multi,
+  single: single,
 }, 'POST');
 
 /**
@@ -247,9 +249,9 @@ export const addOrgMember = (single, multi) => request('/H_roleplay-si/ps/update
  * @description 删除组织成员
  */
 export const deleteOrgMember = (single, multi) => request('/H_roleplay-si/ps/deleteRelation', {
-    list: 'sys_group_user',
-    multi: multi,
-    single: single,
+  list: 'sys_group_user',
+  multi: multi,
+  single: single,
 }, 'POST');
 
 /**
@@ -257,10 +259,10 @@ export const deleteOrgMember = (single, multi) => request('/H_roleplay-si/ps/del
  * @description 删除组织成员
  */
 export const getAllGroup = (currentPage, pageSize, filter) => request('/H_roleplay-si/ds/getAllGroup', {
-    page: currentPage,
-    limit: pageSize,
-    filter: filter,
-    start: 0,
+  page: currentPage,
+  limit: pageSize,
+  filter: filter,
+  start: 0,
 });
 
 /**
@@ -268,8 +270,8 @@ export const getAllGroup = (currentPage, pageSize, filter) => request('/H_rolepl
  * @description 添加上级组织
  */
 export const saveHighOrg = (parentId, groupId) => request('/H_roleplay-si/userInfo/saveGroup', {
-    parentId: parentId,
-    groupId: groupId,
+  parentId: parentId,
+  groupId: groupId,
 }, "POST");
 
 /**
@@ -277,8 +279,8 @@ export const saveHighOrg = (parentId, groupId) => request('/H_roleplay-si/userIn
  * @description 添加下级组织
  */
 export const saveBatchChildGroup = (parentId, childrenId) => request('/H_roleplay-si/userInfo/saveBatchChildGroup', {
-    parentId: parentId,
-    childrenId: childrenId,
+  parentId: parentId,
+  childrenId: childrenId,
 }, "POST");
 
 /**
@@ -286,7 +288,7 @@ export const saveBatchChildGroup = (parentId, childrenId) => request('/H_rolepla
  * @description 删除下级组织
  */
 export const deleteBatchGroup = (groupId) => request('/H_roleplay-si/userInfo/deleteBatchGroup', {
-    groupId: groupId,
+  groupId: groupId,
 }, "POST");
 
 /**
@@ -294,14 +296,14 @@ export const deleteBatchGroup = (groupId) => request('/H_roleplay-si/userInfo/de
  * @description 获取组织基本信息
  */
 export const getOrgBaseInfo = (filter) => request('/H_roleplay-si/ds/getAllGroup', {
-    filter: filter,
+  filter: filter,
 });
 
 /**
  * @author GuoZheng
  * @description 保存组织基本信息
  */
-export const saveBaseinfo = (data) => request('/H_roleplay-si/sysGroup/save', {},"POST",data);
+export const saveBaseinfo = (data) => request('/H_roleplay-si/sysGroup/save', {}, "POST", data);
 
 
 /**
@@ -333,10 +335,10 @@ export const getOrganizations = (pageInfo) => request('/H_roleplay-si/ds/getAllG
  * 根据公司Id获取所属成员信息
  */
 export const getCompanyMemberByCompanyId = (currentPage, pageSize) => request('/H_roleplay-si/ds/listUsers', {
-    entityId: 20000,
-    page: currentPage,
-    limit: pageSize,
-    start: 0,
+  entityId: 20000,
+  page: currentPage,
+  limit: pageSize,
+  start: 0,
 });
 
 /**
@@ -345,31 +347,81 @@ export const getCompanyMemberByCompanyId = (currentPage, pageSize) => request('/
  * 
  */
 export const getCompanyInfoByGroupId = (groupId) => request('/H_roleplay-si/ds/getGroupById', {
-    groupId: groupId
+  groupId: groupId
 })
 /**
  * @author zhaohuai
  * 保存公司基本信息
  */
 export const saveCompanyInfo = (data) => {
-    let {
-        groupName,
-        groupShortName,
-        depFunction,
-        status,
-        comment,
-        groupCode
-    } = data
-    return request('/H_roleplay-si/userInfo/saveGroup', {
-        groupName: groupName,
-        groupShortName: groupShortName,
-        depFunction: depFunction,
-        status: status,
-        comment: comment,
-        list: 'sys_group',
-        groupType: 'C',
-        parentId: '1',
-        groupCode: groupCode
-    }, "POST");
+  let {
+    groupName,
+    groupShortName,
+    depFunction,
+    status,
+    comment,
+    groupCode
+  } = data
+  return request('/H_roleplay-si/userInfo/saveGroup', {
+    groupName: groupName,
+    groupShortName: groupShortName,
+    depFunction: depFunction,
+    status: status,
+    comment: comment,
+    list: 'sys_group',
+    groupType: 'C',
+    parentId: '1',
+    groupCode: groupCode
+  }, 'POST');
 };
+/**
+ * @author zhaohuai
+ * 更新公司基本信息
+ */
+export const updateCompanyInfo = (data) => {
+  let {
+    groupName,
+    groupShortName,
+    depFunction,
+    status,
+    comment,
+    groupCode,
+    groupId
+  } = data
+  return request('/H_roleplay-si/userInfo/saveGroup', {
+    groupName: groupName,
+    groupShortName: groupShortName,
+    depFunction: depFunction,
+    status: status,
+    comment: comment,
+    list: 'sys_group',
+    groupType: 'C',
+    parentId: '1',
+    groupCode: groupCode,
+    groupId: groupId
+  }, 'POST');
+};
+/**
+ * @author zhaohuai
+ * 获取公司列表信息
+ * 
+ */
+export const getCompanyList = (groupId, target, currentPage, pageSize) => request('/H_roleplay-si/sysGroup/getCompanyList', {
+  groupId: groupId,
+  target: target,
+  currentPage: currentPage,
+  pageSize: pageSize
+});
+/**
+ * 
+ * @author zhaohuai
+ * 新增上级公司
+ */
+export const updateHighCompany = (groupId, parentId) => {
+  let data = [{
+    groupId: groupId,
+    parentId: parentId
+  }];
+  return request('/H_roleplay-si/sysGroup/update', {}, 'POST', data);
+}
 /************  公司  **************/

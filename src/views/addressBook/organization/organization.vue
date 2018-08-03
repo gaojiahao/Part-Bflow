@@ -5,7 +5,7 @@
 <template>
   <div class="organization-wrap">
     <header class="organization-wrap-header">
-      <h2 v-if="groupId">
+      <h2>
         <span style="color:#4CAF50">{{formItem.groupName}}</span>
         <span style="color:#808080;margin-left:10px">/</span>
         <span style="color:#808080;margin-left:10px">{{formItem.groupType}}</span>
@@ -20,7 +20,7 @@
 
     <div class="organization-wrap-action">
       <ul>
-        <li v-for="(item,index) in actionBtn" :key="index" v-if="!item.hidden" class="organization-wrap-action-li" v-bind:class="index===actionIndex?'organization-wrap-action-li-active':''" @click="handlerViewChange(index)">
+        <li v-for="(item,index) in actionBtn" :key="index" class="organization-wrap-action-li" v-bind:class="index===actionIndex?'organization-wrap-action-li-active':''" @click="handlerViewChange(index)">
           <img :src="item.imgPath" height="30px" width="30px"><img>
           <div>
             <span>{{item.number}}</span>
@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import { getOrgBaseInfo, saveBaseinfo } from "@/services/addressBookService.js";
+import { getOrgBaseInfo } from "@/services/addressBookService.js";
 import MemberModal from "@/components/modal/Modal";
 import HighOrganization from "./instance/higher-organization";
 import LowerOrganization from "./instance/lower-origanization";
@@ -146,44 +146,32 @@ export default {
         {
           label: "权限",
           imgPath: "resources/images/icon/2_0.png",
-          number: 0,
-          id: 6,
-          hidden: false
+          number: 0
         },
         {
           label: "成员信息",
           imgPath: "resources/images/icon/user.png",
-          number: 0,
-          id: 5,
-          hidden: false
+          number: 0
         },
         {
           label: "负责人",
           imgPath: "resources/images/icon/user.png",
-          number: 0,
-          id: 4,
-          hidden: false
+          number: 0
         },
         {
           label: "下级组织",
           imgPath: "resources/images/icon/organization.png",
-          number: 0,
-          id: 3,
-          hidden: false
+          number: 0
         },
         {
           label: "上级组织",
           imgPath: "resources/images/icon/organization.png",
-          number: 0,
-          hidden: false,
-          id: 2
+          number: 0
         },
         {
           label: "基本信息",
           imgPath: "resources/images/icon/organization.png",
-          number: 0,
-          hidden: false,
-          id: 1
+          number: 0
         }
       ],
       actionIndex: 5,
@@ -236,28 +224,19 @@ export default {
     )[0].style.maxHeight =
       tabsMaxHight + "px";
 
-    //当组织id不存在时，为添加界面
-    if (this.groupId) {
-      let filter = JSON.stringify([
-        { operator: "eq", value: this.groupId, property: "groupId" }
-      ]);
-      getOrgBaseInfo(filter).then(res => {
-        if (res.tableContent[0]) {
-          this.formItem = res.tableContent[0];
-          this.formItem.groupName = tableContent.groupName;
-          this.formItem.groupType = tableContent.groupType;
-          this.formItem.depFunction = tableContent.depFunction;
-          this.formItem.status = tableContent.status;
-          this.formItem.comment = tableContent.comment;
-        }
-      });
-    } else if (this.$route.name === "add" && !this.groupId) {
-      this.actionBtn.forEach(item => {
-        if (item.id !== 1) {
-          item.hidden = true;
-        }
-      });
-    }
+    let filter = JSON.stringify([
+      { operator: "eq", value: this.groupId, property: "groupId" }
+    ]);
+    getOrgBaseInfo(filter).then(res => {
+      if (res.tableContent[0]) {
+        this.formItem = res.tableContent[0];
+        this.formItem.groupName = tableContent.groupName;
+        this.formItem.groupType = tableContent.groupType;
+        this.formItem.depFunction = tableContent.depFunction;
+        this.formItem.status = tableContent.status;
+        this.formItem.comment = tableContent.comment;
+      }
+    });
   }
 };
 </script>

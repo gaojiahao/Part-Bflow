@@ -14,14 +14,6 @@
     </Row>
     <Row class="detail-header">
       <Button @click="goBack" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">返回</Button>
-      <div v-show="userInformation.status?showTag:!showTag" class="detail-header-icon">
-        <span>
-          <Icon class="detail-header-icon-back" type="ios-arrow-back" />
-        </span>
-        <span>
-          <Icon class="detail-header-icon-forward" type="ios-arrow-forward" />
-        </span>
-      </div>
     </Row>
     <Row class="detail-tabs">
       <div 
@@ -80,7 +72,7 @@ export default {
   props: {},
   data() {
     return {
-      userId: '',
+      userId: this.$route.params.userId,
       showTag: true,
       whichShow: {
         userinfo: true,
@@ -142,15 +134,6 @@ export default {
         })
       }
     },
-  },
-  created(){
-    let length = window.location.href.split('#')[1].split('/').length,
-        relUserId = window.location.href.split('#')[1].split('/')[length - 1];
-    if(relUserId == 'add'){
-      this.userId = '';
-    }else{
-      this.userId = relUserId;
-    }
   },
   mounted() {
     this.getUserInfoData();

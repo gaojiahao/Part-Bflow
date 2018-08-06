@@ -24,7 +24,9 @@
         <div class="lower-user-detail" id="lowHeight">
             <b @click="showUserModal" class="lower-user-detail-btn">下级用户</b>
             <span style="color: #7a7676;">-选择下级用户</span>
-            <Table ref="selection" :columns="columns" :loading="loading" :data="lowerUserData"></Table>
+            <b @click="deleteLowUser" class="lower-user-detail-btn">删除</b>
+            <span style="color: #7a7676;">-批量删除下级用户</span>
+            <Table ref="selection" @on-selection-change="selectLowUser" :columns="columns" :loading="loading" :data="lowerUserData"></Table>
             <div class="user-page">
                 <div style="float: right;">
                   <Page @on-page-size-change="onPageSizeChange" :total="lowUser.total" show-elevator show-sizer :current="lowUser.currentPage" :page-size="lowUser.pageSize" @on-change="onPageChange" size="small" show-total></Page>
@@ -47,7 +49,7 @@
 </template>
 
 <script>
-import { getLowUserData,getAllUsers,updateHighUser } from "@/services/addressBookService.js";
+import { getLowUserData,getAllUsers,updateHighUser,deleteUser } from "@/services/addressBookService.js";
 
 export default {
   name: "lowerUser",
@@ -131,11 +133,45 @@ export default {
         {
           title: "修改时间",
           key: "modTime"
+        },
+        {
+          title: '操作',
+          key: 'action',
+          width: 150,
+          align: 'center',
+          render: (h,params) => {
+            return h('span',{
+              props: {
+                type: 'md-close'
+              },
+              style: {
+                cursor: 'pointer',
+                color: '#39f',
+                'font-weight': 'bold'
+              },
+              on: {
+                click: () => {
+                  this.$Modal.confirm({
+                    title: '确认',
+                    content: '确认删除此用户？',
+                    onOk: () => {
+                      deleteUser(params.row.userId).then(res => {
+                        this.$Message.success(res.message);
+                        this.getLowerUserData();
+                        this.$emit('changeInstance');
+                      })
+                    }
+                  });
+                }
+              }
+            },'删除')
+          }
         }
       ],
       lowerUserData: [],
       userData: [],
-      selectUserData: []
+      selectUserData: [],
+      selectLowUserData: []
     };
   },
   methods: {
@@ -171,6 +207,10 @@ export default {
       this.lowUser.usercurrentPage = currentPage;
       this.getAllUsersData();
     },
+    //选择要删除的下级用户
+    selectLowUser(selection) {
+      this.selectLowUserData = selection;
+    },
     //添加下级用户
     addLowUser() {
       let parentId = [];
@@ -193,6 +233,29 @@ export default {
         this.$Message.warning('无用户ID，请先保存用户再进行编辑！');
       }
     },
+    //删除下级用户
+    deleteLowUser() {
+      let userIds = [];
+      if(this.selectLowUserData.length === 0){
+        this.$Message.warning('请先选择要删除的用户！');
+      }else{
+        this.selectLowUserData.forEach(val => {
+          userIds.push(val.userId);
+        })
+        this.$Modal.confirm({
+          title: '确认',
+          content: '确认删除选择的用户？',
+          onOk: () => {
+            deleteUser(userIds.join(',')).then(res => {
+              this.selectLowUserData = [];
+              this.$Message.success(res.message);
+              this.getLowerUserData();
+              this.$emit('changeInstance');
+            })
+          }
+        });
+      }
+    },
     //选择下级用户
     onSelectionChange(selection) {
       this.selectUserData = selection;
@@ -211,10 +274,6 @@ export default {
         this.userLoading = false;
       })
     }
-  },
-  created(){
-    let length = window.location.href.split('#')[1].split('/').length;
-    this.userId = window.location.href.split('#')[1].split('/')[length - 1];
   },
   mounted() {
     this.getLowerUserData();

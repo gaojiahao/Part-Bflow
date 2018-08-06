@@ -13,6 +13,10 @@
         }
       }
   }
+  .user-page {
+    margin: 10px;
+    overflow: hidden;
+  }
 </style>
 
 <template>
@@ -38,7 +42,7 @@
 </template>
 
 <script>
-import { getHighUserData,getAllUsers,updateHighUser } from "@/services/addressBookService.js";
+import { getHighUserData,getAllUsers,updateHighUser,deleteUser } from "@/services/addressBookService.js";
 
 export default {
   name: "higherUser",
@@ -117,6 +121,41 @@ export default {
         {
           title: "修改时间",
           key: "modTime"
+        },
+        {
+          title: '操作',
+          key: 'action',
+          width: 150,
+          align: 'center',
+          render: (h,params) => {
+            return h('span',{
+              props: {
+                type: 'md-close'
+              },
+              style: {
+                cursor: 'pointer',
+                color: '#39f',
+                'font-weight': 'bold'
+              },
+              on: {
+                click: () => {
+                  this.$Modal.confirm({
+                    title: '确认',
+                    content: '确认删除此用户？',
+                    onOk: () => {
+                      deleteUser(this.userId).then(res => {
+                        if(res.success){
+                          this.$Message.success(res.message);
+                          this.getHigherUserData();
+                          this.$emit('changeInstance');
+                        }
+                      })
+                    }
+                  });
+                }
+              }
+            },'删除')
+          }
         }
       ],
       higherUserData: [],
@@ -185,10 +224,6 @@ export default {
         this.userLoading = false;
       })
     }
-  },
-  created(){
-    let length = window.location.href.split('#')[1].split('/').length;
-    this.userId = window.location.href.split('#')[1].split('/')[length - 1];
   },
   mounted() {
     this.getHigherUserData();

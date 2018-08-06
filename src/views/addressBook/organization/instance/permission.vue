@@ -1,6 +1,6 @@
 <style lang="less" scoped>
 .header-action {
-  lebal {
+  label {
     color: #009688;
     font-size: 17px;
     cursor: pointer;
@@ -15,17 +15,17 @@
 
 <template>
   <div>
-    <custom-table apiUrl="/ds/getObjectPermission2Oneself" :columns="permissionColumns" :apiParams="permissionParams" :reload="reload" @on-selection-change="onSelectionChange" @on-refesh-change='onRefeshChange'>
+    <custom-table apiUrl="/ds/getObjectPermission2Oneself" :columns="permissionColumns" :apiParams="permissionParams" v-model="reload" @on-selection-change="onSelectionChange" @on-refesh-change='onRefeshChange'>
       <!-- <div slot="header" class="permission-container-btn">
         <Button icon="md-add" type="primary" @click="addPermission">添加权限</Button>
         <Button icon="md-remove" type="info" @click="deletePermission" :disabled="deleteBtnDisable">移除权限</Button>
       </div> -->
 
       <div slot="header" class="header-action">
-        <lebal @click="addPermission">添加权限</lebal>
+        <label @click="addPermission">添加权限</label>
         <span>-添加权限</span>
 
-        <lebal @click="deleteBtnDisable">移除权限</lebal>
+        <label @click="deletePermission">移除权限</label>
         <span>-移除权限</span>
 
       </div>
@@ -91,7 +91,6 @@ export default {
           key: "name"
         }
       ],
-      deleteBtnDisable: true,
 
       //模态框参数
       isShowModal: false,
@@ -113,6 +112,7 @@ export default {
     },
 
     deletePermission() {
+      let that = this;
       let multiId = [];
       this.selectDeletePermission.forEach(val => {
         multiId.push(val.id);
@@ -120,10 +120,10 @@ export default {
       if (multiId) {
         deleteOrgPermission(this.groupId, multiId.join(",")).then(res => {
           if (res.success) {
-            this.$Message.success(res.message);
-            this.reload = true;
-            this.isShowModal = false;
-            this.deleteBtnDisable = true;
+            that.$Message.success(res.message);
+            that.reload = true;
+            that.isShowModal = false;
+             this.$emit("on-permission-change", true);
           }
         });
       }
@@ -131,11 +131,8 @@ export default {
 
     onSelectionChange(selection) {
       if (selection.length > 0) {
-        this.deleteBtnDisable = false;
         this.selectDeletePermission = selection;
-      } else {
-        this.deleteBtnDisable = true;
-      }
+      } 
     },
 
     onRefeshChange(val) {
@@ -161,6 +158,7 @@ export default {
             this.$Message.success(res.message);
             this.reload = true;
             this.isShowModal = false;
+             this.$emit("on-permission-change", true);
           }
         });
       }

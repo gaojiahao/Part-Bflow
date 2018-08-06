@@ -178,6 +178,14 @@ export const addressBook = {
       },
       component: () =>
         import ('@/views/addressBook/job/job.vue')
+    },{
+      path: 'add',
+      name: 'add',
+      meta: {
+        title: '添加职位'
+      },
+      component: () =>
+      import ('@/views/addressBook/job/job.vue')
     }]
 
   }, {

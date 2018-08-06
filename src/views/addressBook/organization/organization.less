@@ -19,27 +19,36 @@
       border-bottom: 1px solid #ddd;
       overflow: hidden;
       &-li{
-          float: right;
-          list-style: none;
-          padding: 0 10px;
-          border-left: 1px solid #d5d5d5;
-            cursor: pointer;
-          div{
-              display: inline-block;
-              text-align: center;
-              padding: 2px 0;
-              span{
-                  color: red;
-              }
+        float: right;
+        list-style: none;
+        padding: 0px 10px;
+        border-left: 1px solid #d5d5d5;
+          cursor: pointer;
 
-              h3{
-                color: #808080;
-              }
-          }
-      }
+        &-img{
+          height: 32px;
+          width:32px;
+        }
 
-      &-li:first-child {
-        border-right: 1px solid #ddd;
+        .left-content{
+            display: inline-block;
+            text-align: center;
+            span{
+                color: red;
+            }
+            
+            h3{
+              color: #808080;
+            }
+        }
+    }
+
+    &-li:first-child {
+      border-right: 1px solid #ddd;
+    }
+
+    &-li:last-child {
+      height: 49px;
     }
 
       &-li:hover{

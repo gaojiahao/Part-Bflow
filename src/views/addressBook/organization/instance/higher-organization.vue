@@ -1,6 +1,6 @@
 <style lang="less" scoped>
 .header-action {
-  lebal {
+  label {
     color: #009688;
     font-size: 17px;
     cursor: pointer;
@@ -17,7 +17,7 @@
   <div>
     <custom-table apiUrl="/ds/getParentGroupByGroupId" :columns="highOrgColumns" :apiParams="highOrganizationParams" v-model="reload" @on-refesh-change='onRefeshChange'>
       <div slot="header" class="header-action">
-        <lebal @click="showHighOrgModal">上级组织</lebal>
+        <label @click="showHighOrgModal">上级组织</label>
         <span>-选择上级用户</span>
       </div>
     </custom-table>
@@ -127,6 +127,11 @@ export default {
 
       highOrgColumnsModal: [
         {
+          type: "selection",
+          width: 60,
+          align: "center"
+        },
+        {
           type: "index",
           width: 60,
           align: "center"
@@ -230,6 +235,7 @@ export default {
           this.$Message.success("保存成功");
           this.isShowMemberModal = false;
           this.reload = true;
+          this.$emit('on-high-organization-change',true);
         }
       });
     },

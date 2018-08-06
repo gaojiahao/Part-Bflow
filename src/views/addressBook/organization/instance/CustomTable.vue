@@ -83,7 +83,9 @@ export default {
         if (res.tableContent[0]) {
           this.pageTotal = res.summary.total;
           this.columnsData = res.tableContent;
-          this.$emit("on-refesh-change", false);
+          if (this.value) {
+            this.$emit("on-refesh-change", false);
+          }
         }
         this.loading = false;
       });

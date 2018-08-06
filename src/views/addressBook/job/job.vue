@@ -5,20 +5,26 @@
 <template>
     <div class="job-wrap">
         <header class="job-wrap-header">
-            <h2>
-                <span>管理员</span>
-                <span>/岗位/</span>
-                <span>001</span>
+            <h2 v-if="jobId">
+                <span style="color:#4CAF50">{{formItem.name}}</span>
+                <span style="color:#808080;margin-left:10px">/</span>
+                <span style="color:#808080;margin-left:10px">{{jobId}}</span>
+                <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status,color:'#eb2f96'}"></Tag>
+            </h2>
+            <h2 v-if="!jobId">
+                <span style="color:#4CAF50">添加职位</span>
             </h2>
         </header>
 
         <div class="job-wrap-action">
             <ul>
-                <li v-for="(item,index) in actionBtn" :key="index" class="job-wrap-action-li" v-bind:class="index===actionIndex?'job-wrap-action-li-active':''" @click="handlerViewChange(index)">
-                    <img :src="item.imgPath" height="30px" width="30px"><img>
-                    <div>
-                        <span>{{item.number}}</span>
-                        <h3>{{item.label}}</h3>
+                <li v-for="(item,index) in actionBtn" :key="index" v-if="!item.hidden" class="job-wrap-action-li" v-bind:class="index===actionIndex?'job-wrap-action-li-active':''" @click="handlerViewChange(index)">
+                    <div style="padding:5px 0">
+                        <img :src="item.imgPath" class="job-wrap-action-li-img"><img>
+                        <div class="left-content">
+                            <span v-show="item.number!=='undefine'">{{item.number}}</span>
+                            <h3>{{item.label}}</h3>
+                        </div>
                     </div>
                 </li>
             </ul>
@@ -29,7 +35,7 @@
             <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===2">
                 <Form :model="formItem" :labelWidth="100">
                     <FormItem label="职位名称:" style="font-size:16px">
-                        <Input v-model="formItem.groupName" />
+                        <Input v-model="formItem.name" />
                     </FormItem>
                     <FormItem label="职位状态" :labelWidth="100">
                         <Select v-model="formItem.status">
@@ -37,31 +43,31 @@
                         </Select>
                     </FormItem>
                     <FormItem label="职位类型" :labelWidth="100">
-                        <RadioGroup v-model="formItem.groupType">
-                            <Radio label="管理类">管理类</Radio>
-                            <Radio label="营销类">营销类</Radio>
-                            <Radio label="技术类">技术类</Radio>
-                            <Radio label="专业类">专业类</Radio>
-                             <Radio label="操作类">操作类</Radio>
+                        <RadioGroup v-model="formItem.type">
+                            <Radio label="M">管理类</Radio>
+                            <Radio label="Y">营销类</Radio>
+                            <Radio label="J">技术类</Radio>
+                            <Radio label="Z">专业类</Radio>
+                            <Radio label="C">操作类</Radio>
                         </RadioGroup>
                     </FormItem>
                     <FormItem label="职位说明" :labelWidth="100">
-                        <Input v-model="formItem.comment" type="textarea" :autosize="{minRows: 3,maxRows: 5}" />
+                        <Input v-model="formItem.describe" type="textarea" :autosize="{minRows: 3,maxRows: 5}" />
                     </FormItem>
                 </Form>
                 <div class="baseinfo-container-action">
-                    <Button type="success">编辑</Button>
-                    <Button type="success">删除</Button>
-                    <Button type="success">保存</Button>
+                    <input type='submit' value="取消" class="baseinfo-container-action-submit" @click="cancle" />
+                    <input type='submit' value="保存" class="baseinfo-container-action-submit" @click="saveBaseinfo" />
+                    <input type='submit' value="保存并添加" class="baseinfo-container-action-submit" v-if="!jobId" @click="saveAndAdd" />
                 </div>
             </section>
             <!-- 成员信息 -->
-            <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===1">
-                <member-info :jobId="jobId"></member-info>
+            <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===1" >
+                <member-info :jobId="jobId" @on-member-info-change='handleChangeObjDetailsCount'></member-info>
             </section>
             <!-- 权限 -->
             <section class="permission-container rfd-tab-container-common" v-if="actionIndex===0">
-                <permission :jobId="jobId"></permission>
+                <permission :jobId="jobId"  @on-permission-change='handleChangeObjDetailsCount'></permission>
             </section>
         </div>
 
@@ -69,10 +75,14 @@
 </template>
 
 <script>
-import { getOrgBaseInfo } from "@/services/addressBookService.js";
+import {
+  getAllRole,
+  saveRoleBaseInfo,
+  getObjDetailsCountByRoleId
+} from "@/services/addressBookService.js";
 import MemberModal from "@/components/modal/Modal";
-import MemberInfo from "./instance/member-info";
-import Permission from "./instance/permission";
+import MemberInfo from "./instance/job-member-info";
+import Permission from "./instance/job-permission";
 export default {
   name: "job",
 
@@ -85,42 +95,51 @@ export default {
   data() {
     return {
       formItem: {
-        groupName: "",
-        groupType: "",
-        depFunction: "",
-        comment: "",
+        name: "",
+        type: "",
+        describe: "",
         status: ""
       },
 
-      statusRadio:[{
-          name:'停用',
-          value:0
-      },{
-          name:'使用中',
-          value:1
-      },{
-          name:'未使用',
-          value:2
-      },{
-          name:'草稿',
-          value:3
-      }],
+      statusRadio: [
+        {
+          name: "停用",
+          value: 0
+        },
+        {
+          name: "使用中",
+          value: 1
+        },
+        {
+          name: "未使用",
+          value: 2
+        },
+        {
+          name: "草稿",
+          value: 3
+        }
+      ],
 
       actionBtn: [
         {
           label: "权限",
-          imgPath: "../../../resources/images/icon/0_0.png",
-          number: 0
+          imgPath: "resources/images/icon/0_0.png",
+          number: 0,
+          hidden: false,
+          id: "objectPermission"
         },
         {
           label: "成员信息",
-          imgPath: "../../../resources/images/icon/0_1.png",
-          number: 0
+          imgPath: "resources/images/icon/0_1.png",
+          number: 0,
+          hidden: false,
+          id: "user"
         },
         {
           label: "基本信息",
-          imgPath: "../../../resources/images/icon/0_5.png",
-          number: 0
+          imgPath: "resources/images/icon/0_5.png",
+          hidden: false,
+          id: "baseinfo"
         }
       ],
       actionIndex: 2,
@@ -132,30 +151,76 @@ export default {
   methods: {
     handlerViewChange(index) {
       this.actionIndex = index;
+    },
+
+    cancle() {
+      this.$router.push({ path: "/addressBook/job/board" });
+    },
+
+    saveAndAdd() {
+      if (!this.jobId) {
+        saveBaseinfo(this.formItem).then(res => {
+          if (res.success) {
+            this.$Message.success("保存成功");
+            this.$refs["formItem"].resetFields();
+          }
+        });
+      }
+    },
+
+    saveBaseinfo() {
+      if (!this.jobId) {
+        saveRoleBaseInfo(this.formItem).then(res => {
+          if (res.success) {
+            this.$Message.success("保存成功");
+          }
+        });
+      }
+    },
+
+    getObjDetailsCountByRoleId(jobId) {
+      getObjDetailsCountByRoleId(jobId).then(res => {
+        this.actionBtn.forEach(element => {
+          element.number = res[element.id];
+        });
+      });
+    },
+
+    handleChangeObjDetailsCount(val){
+        if(val){
+            this.getObjDetailsCountByRoleId(this.jobId)
+        }
     }
+
   },
 
   mounted() {
     let tabsMaxHight = document.body.clientHeight - 95;
-    window.document.getElementsByClassName(
-      "job-wrap-tabs"
-    )[0].style.height =
+    window.document.getElementsByClassName("job-wrap-tabs")[0].style.height =
       tabsMaxHight + "px";
 
     let filter = JSON.stringify([
-      { operator: "eq", value: this.jobId, property: "jobId" }
+      { operator: "eq", value: this.jobId, property: "id" }
     ]);
-    getOrgBaseInfo(filter).then(res => {
-      if (res.tableContent[0]) {
-        let tableContent = res.tableContent[0];
-        this.formItem.groupName = tableContent.groupName;
-        this.formItem.groupType = tableContent.groupType;
-        this.formItem.depFunction = tableContent.depFunction;
-        this.formItem.status = tableContent.status;
-        this.formItem.comment = tableContent.comment;
-    
-      }
-    });
+    let that = this;
+    if (this.jobId) {
+      getAllRole(filter).then(res => {
+        if (res.tableContent[0]) {
+          let tableContent = res.tableContent[0];
+          that.formItem.name = tableContent.name;
+          that.formItem.type = tableContent.type;
+          that.formItem.status = tableContent.status;
+          that.formItem.describe = tableContent.describe;
+        }
+      });
+      this.getObjDetailsCountByRoleId(this.jobId);
+    } else if (!this.jobId && this.$route.name == "add") {
+      this.actionBtn.forEach(element => {
+        if (element.id !== "baseinfo") {
+          element.hidden = true;
+        }
+      });
+    }
   }
 };
 </script>

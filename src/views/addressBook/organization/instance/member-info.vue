@@ -4,7 +4,7 @@
 }
 
 .header-action {
-  lebal {
+  label {
     color: #009688;
     font-size: 17px;
     cursor: pointer;
@@ -28,13 +28,13 @@
       </div> -->
 
       <div slot="header" class="header-action">
-        <lebal @click="showMemberModal">添加成员</lebal>
+        <label @click="showMemberModal">添加成员</label>
         <span>-添加成员</span>
 
-        <lebal @click="deleteBtnDisable">移除成员</lebal>
+        <label @click="deleteMemberInfo">移除成员</label>
         <span>-移除成员</span>
 
-        <lebal @click="exportData" class="permission-container-btn-export">导出</lebal>
+        <label @click="exportData" class="permission-container-btn-export">导出</label>
       </div>
     </custom-table>
 
@@ -162,7 +162,6 @@ export default {
       //模态框参数
       onSelectionModal: [],
       selectDeleteMemberInfo: [],
-      deleteBtnDisable: true,
       reload: false
     };
   },
@@ -171,11 +170,8 @@ export default {
     //选中的成员信息
     onSelectionChange(selection) {
       if (selection.length > 0) {
-        this.deleteBtnDisable = false;
         this.selectDeleteMemberInfo = selection;
-      } else {
-        this.deleteBtnDisable = true;
-      }
+      } 
     },
 
     onRefeshChange(val) {
@@ -201,6 +197,7 @@ export default {
             this.$Message.success(res.message);
             this.reload = true;
             this.isShowMemberModal = false;
+            this.$emit('on-member-info-change',true);
           }
         });
       }
@@ -216,6 +213,7 @@ export default {
           if (res.success) {
             this.$Message.success(res.message);
             this.reload = true;
+            this.$emit('on-member-info-change',true);
           }
         });
       }

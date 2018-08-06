@@ -195,7 +195,7 @@ export default {
 
   methods: {
     listUserChangePage(currentPage) {
-      this.getAllGroup(currentPage, this.pageSize);
+      this.getAllGroup(currentPage);
     },
 
     //监听模态框选中的用户
@@ -218,7 +218,7 @@ export default {
     //显示上级组织模态框
     showHighOrgModal() {
       this.isShowMemberModal = true;
-      this.getAllGroup();
+      this.getAllGroup(this.listUserCurrentPage);
     },
 
     //添加上级组织
@@ -234,7 +234,7 @@ export default {
       });
     },
 
-    getAllGroup() {
+    getAllGroup(currentPage) {
       this.listUserLoading = true;
       let filter = [];
       if (this.groupType) {
@@ -293,7 +293,7 @@ export default {
         }
         filter = JSON.stringify(filter);
       }
-      getAllGroup(this.listUserCurrentPage, this.pageSize, filter).then(res => {
+      getAllGroup(currentPage, this.pageSize, filter).then(res => {
         if (res.tableContent[0]) {
           this.listUserPageTotal = res.summary.total;
           this.listUserData = res.tableContent;

@@ -5,13 +5,16 @@
 <template>
   <div class="organization-wrap">
     <header class="organization-wrap-header">
-      <h2>
+      <h2 v-if="groupId">
         <span style="color:#4CAF50">{{formItem.groupName}}</span>
         <span style="color:#808080;margin-left:10px">/</span>
         <span style="color:#808080;margin-left:10px">{{formItem.groupType}}</span>
         <span style="color:#808080;margin-left:10px">/</span>
         <span style="color:#808080;margin-left:10px">{{groupId}}</span>
         <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status,color:'#eb2f96'}"></Tag>
+      </h2>
+      <h2  v-if="!groupId">
+        <span style="color:#4CAF50">添加组织</span>
       </h2>
     </header>
 
@@ -30,7 +33,7 @@
     <div class="organization-wrap-tabs">
       <!-- 基本信息 -->
       <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===5">
-        <Form :model="formItem" :labelWidth="100">
+        <Form :model="formItem" :labelWidth="100" ref="formItem">
           <FormItem label="组织名称:" style="font-size:16px">
             <Input v-model="formItem.groupName" />
           </FormItem>
@@ -60,8 +63,9 @@
           </FormItem>
         </Form>
         <div class="baseinfo-container-action">
-          <input type='submit' value="编辑" class="baseinfo-container-action-submit"/>
-           <input type='submit' value="保存" class="baseinfo-container-action-submit"/>
+          <input type='submit' value="取消" class="baseinfo-container-action-submit" @click="cancle" />
+          <input type='submit' value="保存" class="baseinfo-container-action-submit"  @click="saveBaseinfo" />
+          <input type='submit' value="保存并添加" class="baseinfo-container-action-submit" v-if="!groupId" @click="saveAndAdd" />
         </div>
       </section>
       <!-- 上级组织 -->
@@ -179,6 +183,31 @@ export default {
   methods: {
     handlerViewChange(index) {
       this.actionIndex = index;
+    },
+
+    cancle() {
+      this.$router.push({ path: "/addressBook/organization/board" });
+    },
+
+    saveAndAdd() {
+      if (!this.groupId) {
+        saveBaseinfo(this.formItem).then(res => {
+          if (res.success) {
+            this.$Message.success("保存成功");
+            this.$refs["formItem"].resetFields();
+          }
+        });
+      }
+    },
+
+    saveBaseinfo() {
+      if (!this.groupId) {
+        saveBaseinfo(this.formItem).then(res => {
+          if (res.success) {
+            this.$Message.success("保存成功");
+          }
+        });
+      }
     }
   },
 

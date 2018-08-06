@@ -28,7 +28,9 @@
         <div class="department-detail" id="depHeight">
             <b type="info" @click="showGroupModal" class="department-detail-btn">部门</b>
             <span style="color: #7a7676;">-选择用户部门</span>
-            <Table ref="selection" :columns="columns" :loading="loading" :data="departmentData"></Table>
+            <b type="info" @click="deleteGroup" class="department-detail-btn">删除</b>
+            <span style="color: #7a7676;">-批量删除用户部门</span>
+            <Table ref="selection" @on-selection-change="selectDeleteGroup" :columns="columns" :loading="loading" :data="departmentData"></Table>
             <div class="user-page">
                 <div style="float: right;">
                   <Page @on-page-size-change="onPageSizeChange" :total="total" show-elevator show-sizer :current="currentPage" :page-size="pageSize" @on-change="onPageChange" size="small" show-total></Page>
@@ -40,13 +42,13 @@
             title="选择部门"
             @on-ok="addDepartment"
             width="300">
-            <Tree class="dep-tree" :data="groupData" @on-select-change="selectNode" :load-data="loadData"></Tree>
+            <Tree :multiple="true" class="dep-tree" :data="groupData" @on-select-change="selectNode" :load-data="loadData"></Tree>
         </Modal>
     </div>
 </template>
 
 <script>
-import { getDepartmentData,getGroupData,addGroupMember } from "@/services/addressBookService.js";
+import { getDepartmentData,getGroupData,addMember,deleteMember } from "@/services/addressBookService.js";
 
 export default {
   name: "departmentMember",
@@ -110,11 +112,47 @@ export default {
         {
           title: "离开时间",
           key: "leaveTime"
+        },
+        {
+          title: '操作',
+          key: 'action',
+          width: 150,
+          align: 'center',
+          render: (h,params) => {
+            return h('span',{
+              props: {
+                type: 'md-close'
+              },
+              style: {
+                cursor: 'pointer',
+                color: '#39f',
+                'font-weight': 'bold'
+              },
+              on: {
+                click: () => {
+                  this.$Modal.confirm({
+                    title: '确认',
+                    content: '确认删除此部门？',
+                    onOk: () => {
+                      deleteMember('sys_group_user',params.row.groupId,this.userId).then(res => {
+                        if(res.success){
+                          this.$Message.success(res.message);
+                          this.getDepartmentData();
+                          this.$emit('changeInstance');
+                        }
+                      })
+                    }
+                  });
+                }
+              }
+            },'删除')
+          }
         }
       ],
       departmentData: [],
       groupData: [],
-      selectGroup: {}
+      selectGroup: [],
+      selectDeleteGroupData: []
     };
   },
   methods: {
@@ -144,18 +182,51 @@ export default {
     //展示所有组织部门
     showGroupModal() {
       this.showModal = true;
+      this.groupData = [];
       this.getAllGroupData(6);
+    },
+    //删除选择的用户部门
+    deleteGroup() {
+      let groupIds = [];
+      if(this.selectDeleteGroupData.length === 0){
+        this.$Message.warning('请先选择要删除的用户部门！');
+      }else{
+        this.selectDeleteGroupData.forEach(val => {
+          groupIds.push(val.groupId);
+        })
+        this.$Modal.confirm({
+          title: '确认',
+          content: '确认删除选择的用户部门？',
+          onOk: () => {
+            deleteMember('sys_group_user',groupIds.join(','),this.userId).then(res => {
+              if(res.success){
+                this.selectDeleteGroupData = [];
+                this.$Message.success(res.message);
+                this.getDepartmentData();
+                this.$emit('changeInstance');
+              }
+            })
+          }
+        });
+      }
+    },
+    //选择要删除的用户部门
+    selectDeleteGroup(selection) {
+      this.selectDeleteGroupData = selection;
     },
     //添加组织部门
     addDepartment() {
       if(this.selectGroup && this.userId){
-        addGroupMember(this.selectGroup.groupId,this.userId).then(res => {
+        let groupIds = [];
+        this.selectGroup.forEach(val => {
+          groupIds.push(val.groupId);
+        });
+        addMember('sys_group_user',groupIds.join(','),this.userId).then(res => {
           if(res.success){
+            this.selectGroup = [];
             this.$Message.success(res.message);
             this.getDepartmentData();
             this.$emit('changeInstance');
-          }else{
-            this.$Message.warning('请选择组织！');
           }
         })
       }
@@ -199,12 +270,8 @@ export default {
     },
     //选择树节点
     selectNode(node) {
-      this.selectGroup = node[0];
+      this.selectGroup = node;
     }
-  },
-  created(){
-    let length = window.location.href.split('#')[1].split('/').length;
-    this.userId = window.location.href.split('#')[1].split('/')[length - 1];
   },
   mounted() {
     this.getDepartmentData();

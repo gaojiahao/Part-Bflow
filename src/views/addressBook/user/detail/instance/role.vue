@@ -24,7 +24,9 @@
         <div class="role-detail" id="roleHeight">
             <b @click="showRoleModal"  class="role-detail-btn">职位</b>
             <span style="color: #7a7676;">-选择用户职位</span>
-            <Table ref="selection" :columns="columns" :loading="loading" :data="roleData"></Table>
+            <b @click="deleteUserRole"  class="role-detail-btn">删除</b>
+            <span style="color: #7a7676;">-批量删除用户职位</span>
+            <Table ref="selection" @on-selection-change="selectDeleteRole" :columns="columns" :loading="loading" :data="roleData"></Table>
             <div class="user-page">
                 <div style="float: right;">
                   <Page @on-page-size-change="onPageSizeChange" :total="rolePage.total" show-elevator show-sizer :current="rolePage.currentPage" :page-size="rolePage.pageSize" @on-change="onPageChange" size="small" show-total></Page>
@@ -47,7 +49,7 @@
 </template>
 
 <script>
-import { getRoleData,getAllRoleData,addRoleMember } from "@/services/addressBookService.js";
+import { getRoleData,getAllRoleData,addMember,deleteMember } from "@/services/addressBookService.js";
 
 export default {
   name: "roleMember",
@@ -82,7 +84,7 @@ export default {
           key: "type",
           render: (h,params) => {
               let type = '';
-              switch(params.row.groupType){
+              switch(params.row.type){
                 case 'Y': 
                   type = '营销类';
                   break;
@@ -105,11 +107,47 @@ export default {
         {
           title: "说明",
           key: "describe"
+        },
+        {
+          title: '操作',
+          key: 'action',
+          width: 150,
+          align: 'center',
+          render: (h,params) => {
+            return h('span',{
+              props: {
+                type: 'md-close'
+              },
+              style: {
+                cursor: 'pointer',
+                color: '#39f',
+                'font-weight': 'bold'
+              },
+              on: {
+                click: () => {
+                  this.$Modal.confirm({
+                    title: '确认',
+                    content: '确认删除此职位？',
+                    onOk: () => {
+                      deleteMember('sys_user_role',this.userId,params.row.id).then(res => {
+                        if(res.success){
+                          this.$Message.success(res.message);
+                          this.getRoleData();
+                          this.$emit('changeInstance');
+                        }
+                      })
+                    }
+                  });
+                }
+              }
+            },'删除')
+          }
         }
       ],
       roleData: [],
       selectRoleData: [],
-      allRoleData: []
+      allRoleData: [],
+      selectDeleteRoleData: []
     };
   },
   methods: {
@@ -145,6 +183,35 @@ export default {
       this.rolePage.rolecurrentPage = currentPage;
       this.getAllRoleData();
     },
+    //选择要删除的用户职位
+    selectDeleteRole(selection) {
+      this.selectDeleteRoleData = selection;
+    },
+    //删除已选择的用户职位
+    deleteUserRole() {
+      let roleIds = [];
+      if(this.selectDeleteRoleData.length === 0){
+        this.$Message.warning('请先选择要删除的用户职位！');
+      }else{
+        this.selectDeleteRoleData.forEach(val => {
+          roleIds.push(val.id);
+        })
+        this.$Modal.confirm({
+          title: '确认',
+          content: '确认删除选择的用户职位？',
+          onOk: () => {
+            deleteMember('sys_user_role',this.userId,roleIds.join(',')).then(res => {
+              if(res.success){
+                this.selectDeleteRoleData = [];
+                this.$Message.success(res.message);
+                this.getRoleData();
+                this.$emit('changeInstance');
+              }
+            })
+          }
+        });
+      }
+    },
     //添加职位
     addRole() {
       let multiId = [];
@@ -156,7 +223,7 @@ export default {
         this.$Message.warning('请选择至少一个职位！');
       }
       if(multiId && this.userId){
-        addRoleMember(this.userId,multiId.join(',')).then(res => {
+        addMember('sys_user_role',this.userId,multiId.join(',')).then(res => {
           if(res.success){
             this.$Message.success(res.message);
             this.getRoleData();
@@ -185,10 +252,6 @@ export default {
         this.roleLoading = false;
       })
     }
-  },
-  created(){
-    let length = window.location.href.split('#')[1].split('/').length;
-    this.userId = window.location.href.split('#')[1].split('/')[length - 1];
   },
   mounted() {
     this.getRoleData();

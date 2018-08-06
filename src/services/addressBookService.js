@@ -28,7 +28,7 @@ export const getLowUserData = (userId, pageSize, currentPage) => request('/H_rol
  * @author XiaoYing
  * @description 获取user部门数据
  */
-export const getDepartmentData = (userId, pageSize, currentPage) => request('/H_roleplay-si/ds/getUserGroupByUserId', {
+export const getDepartmentData = (userId, pageSize, currentPage) => request('/H_roleplay-si/ds/getUserGroupByUserId2', {
   userId: userId,
   page: currentPage,
   limit: pageSize
@@ -76,13 +76,21 @@ export const getAllUsers = (pageSize, currentPage) => request('/H_roleplay-si/ds
 
 /**
  * @author XiaoYing
- * @description 添加上级用户
+ * @description 添加上下级用户
  */
 export const updateHighUser = (userId, parentId) => request('/H_roleplay-si/userInfo/updateParentId', {
-  list: 'sys_userinfo',
   userId: userId,
   parentId: parentId
-});
+},'POST');
+
+/**
+ * @author XiaoYing
+ * @description 删除上下级用户
+ */
+export const deleteUser = (userId) => request('/H_roleplay-si/userInfo/updateParentId', {
+  parentId: null,
+  userId: userId
+},'POST');
 
 /**
  * @author XiaoYing
@@ -94,12 +102,23 @@ export const getGroupData = (parentId) => request('/H_roleplay-si/ds/getUserGrou
 
 /**
  * @author XiaoYing
- * @description 添加组织部门
+ * @description 添加组织或职位
  */
-export const addGroupMember = (groupId, userId) => request('/H_roleplay-si/ds/saveData', {
-  list: 'sys_group_user',
-  groupId: groupId,
-  userId: userId
+export const addMember = (list,groupId, userId) => request('/H_roleplay-si/ps/updateRelation', {
+  list: list,
+  single: groupId,
+  multi: userId,
+  status: 0
+}, 'POST');
+
+/**
+ * @author XiaoYing
+ * @description 删除组织或职位
+ */
+export const deleteMember = (list,groupId,userId) => request('/H_roleplay-si/ps/deleteRelation', {
+  list: list,
+  single: groupId,
+  multi: userId
 }, 'POST');
 
 /**
@@ -110,16 +129,6 @@ export const getAllRoleData = (pageSize, currentPage) => request('/H_roleplay-si
   page: currentPage,
   limit: pageSize
 });
-
-/**
- * @author XiaoYing
- * @description 添加职位
- */
-export const addRoleMember = (single, multi) => request('/H_roleplay-si/ps/updateRelation', {
-  list: 'sys_user_role',
-  multi: multi,
-  single: single
-}, 'POST');
 
 /**
  * @author XiaoYing

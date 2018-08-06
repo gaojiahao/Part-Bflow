@@ -42,7 +42,7 @@
             title="选择权限"
             @on-ok="addPermission"
             width="400">
-            <Tree class="app-tree" :data="allPermissionData" :multiple="false" @on-check-change="onCheckChange" :load-data="loadData" show-checkbox></Tree>
+            <Tree class="app-tree" :data="allPermissionData" :multiple="true" @on-select-change="onCheckChange" :load-data="loadData"></Tree>
         </Modal>
     </div>
 </template>
@@ -61,7 +61,6 @@ export default {
       currentPage: 1,
       pageSize: 10,
       loading: true,
-      isDisabled: true,
       showModal: false,
       columns: [
         {
@@ -72,6 +71,41 @@ export default {
         {
           title: "名称",
           key: "name"
+        },
+        {
+          title: '操作',
+          key: 'action',
+          width: 150,
+          align: 'center',
+          render: (h,params) => {
+            return h('span',{
+              props: {
+                type: 'md-close'
+              },
+              style: {
+                cursor: 'pointer',
+                color: '#39f',
+                'font-weight': 'bold'
+              },
+              on: {
+                click: () => {
+                  this.$Modal.confirm({
+                    title: '确认',
+                    content: '确认删除此权限？',
+                    onOk: () => {
+                      deleteIndirPermission(this.userId,params.row.id).then(res => {
+                        if(res.success){
+                          this.$Message.success(res.message);
+                          this.getDirPermissionData();
+                          this.$emit('changeInstance');
+                        }
+                      })
+                    }
+                  });
+                }
+              }
+            },'删除')
+          }
         }
       ],
       dirPermissionData: [],
@@ -104,19 +138,15 @@ export default {
       this.pageSize = size;
       this.getDirPermissionData();
     },
-    //未选中禁用删除权限按钮
+    //选择要删除的权限
     onSelectionChange(selection) {
-        if(selection.length === 0) {
-            this.isDisabled = true;
-        }else{
-            this.isDisabled = false;
-        }
         this.selectDeletePermission = selection;
     },
     //展示添加权限modal
     showAddPermission() {
       this.showModal = true;
-      this.getAllPermissionData();
+      this.allPermissionData = [];
+      this.getAllPermissionDatas();
     },
     //点击节点选择权限
     onCheckChange(node) {
@@ -131,6 +161,7 @@ export default {
       if(multiId && this.userId){
         addIndirPermission(this.userId,multiId.join(',')).then(res => {
           if(res.success){
+            this.selectPermissionNode = [];
             this.$Message.success(res.message);
             this.getDirPermissionData();
             this.$emit('changeInstance');
@@ -141,22 +172,32 @@ export default {
     //删除权限
     deletePermission() {
       let multiId = [];
-      this.selectDeletePermission.forEach(val => {
-        multiId.push(val.id);
-      });
-      if(multiId && this.userId){
-        deleteIndirPermission(this.userId,multiId.join(',')).then(res => {
-          if(res.success){
-            this.$Message.success(res.message);
-            this.getDirPermissionData();
-            this.isDisabled = true;
-            this.$emit('changeInstance');
-          }
-        })
+      if(this.selectDeletePermission.length === 0){
+        this.$Message.warning('请先选择要删除的权限！');
+      }else{
+        this.selectDeletePermission.forEach(val => {
+          multiId.push(val.id);
+        });
+        if(multiId && this.userId){
+          this.$Modal.confirm({
+            title: '确认',
+            content: '确认删除已选的权限？',
+            onOk: () => {
+              deleteIndirPermission(this.userId,multiId.join(',')).then(res => {
+                if(res.success){
+                  this.selectDeletePermission = [];
+                  this.$Message.success(res.message);
+                  this.getDirPermissionData();
+                  this.$emit('changeInstance');
+                }
+              })
+            }
+          });
+        }
       }
     },
     //加载所有权限数据
-    getAllPermissionData() {
+    getAllPermissionDatas() {
       if(this.allPermissionData.length === 0){
         getAllPermissionData(0).then(res => {
           res.tableContent.forEach(val => {
@@ -192,10 +233,6 @@ export default {
         callback(data);
       })
     }
-  },
-  created(){
-    let length = window.location.href.split('#')[1].split('/').length;
-    this.userId = window.location.href.split('#')[1].split('/')[length - 1];
   },
   mounted() {
     this.getDirPermissionData();

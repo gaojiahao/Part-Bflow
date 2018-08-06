@@ -25,10 +25,14 @@
                     <div style="width: 128px;height:128px;line-height: 128px;" class="demo-upload-list" v-if="logo">
                         <img :src="logo">
                         <div class="demo-upload-list-cover">
-                            <Icon type="camera" color="#fff" size="30"></Icon>
+                            <Icon type="ios-eye-outline" color="#fff" size="30" @click.stop="handleView"></Icon>
+                            <Icon type="ios-trash-outline" color="#fff" size="30" @click.stop="handleRemove"></Icon>
                         </div>
                     </div>
                 </Upload>
+                <Modal title="查看头像" v-model="visible">
+                    <img :src="logo" v-if="visible" style="width: 100%">
+                </Modal>
             </Col>
             <Col span="12" class="info-form">
                 <Form :model="formItem" ref="formItem" :rules="ruleValidate" :label-width="85">
@@ -98,6 +102,7 @@ export default {
       showSaveAddBtn: true,
       noShowSaveAddBtn: false,
       logo: "",
+      visible: false,
       formItem: {
         userCode: "",
         nickname: "",
@@ -161,6 +166,16 @@ export default {
         res.data[0].attacthment;
     },
 
+    //查看头像
+    handleView() {
+        this.visible = true;
+    },
+    //删除头像
+    handleRemove() {
+        this.logo = '';
+        this.$refs['upload'].fileList.splice(0,this.$refs['upload'].fileList.length);
+    },
+
     handleMaxSize(file) {
       this.$Notice.warning({
         title: "文件大小超出范围",
@@ -189,7 +204,7 @@ export default {
                     updateUser(this.formItem).then(res => {
                         if(res.success){
                             this.$Message.success(res.message);
-                            this.$router.push({ path: '/addressBook/user/board'});
+                            this.$router.push({ path: '/dist/index.html#/addressBook/user/board'});
                         }
                     }).catch(error => {
                         this.$Message.error(error.data.message);
@@ -198,7 +213,7 @@ export default {
                    addUser(this.formItem).then(res => {
                        if(res.success){
                            this.$Message.success(res.message);
-                           this.$router.push({ path: '/addressBook/user/board'});
+                           this.$router.push({ path: '/dist/index.html#/addressBook/user/board'});
                        }
                    }).catch(error => {
                         this.$Message.error(error.data.message);
@@ -220,6 +235,11 @@ export default {
                     if(res.success){
                         this.$Message.success(res.message);
                         this.$refs["formItem"].resetFields();
+                        this.formItem.termOfValidity = '';
+                        this.formItem.comment = '';
+                        this.logo = '';
+                        this.formItem.photo = '';
+                        this.$refs['upload'].fileList.splice(0,this.$refs['upload'].fileList.length);
                     }
                 }).catch(error => {
                     this.$Message.error(error.data.message);
@@ -228,7 +248,7 @@ export default {
         })
     },
     goUserList() {
-        this.$router.push({ path: '/addressBook/user/board'});
+        this.$router.push({ path: '/dist/index.html#/addressBook/user/board'});
     },
     //格式化日期方法
     formatDate(currentDate) {

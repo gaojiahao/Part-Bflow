@@ -144,8 +144,13 @@ export default {
     },
   },
   created(){
-    let length = window.location.href.split('#')[1].split('/').length;
-    this.userId = window.location.href.split('#')[1].split('/')[length - 1];
+    let length = window.location.href.split('#')[1].split('/').length,
+        relUserId = window.location.href.split('#')[1].split('/')[length - 1];
+    if(relUserId == 'add'){
+      this.userId = '';
+    }else{
+      this.userId = relUserId;
+    }
   },
   mounted() {
     this.getUserInfoData();

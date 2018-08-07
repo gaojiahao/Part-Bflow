@@ -5,15 +5,16 @@
 <template>
   <div class="member-wrap">
     <div class="member-wrap-table">
-      <Button icon="md-add" type="primary" @click="showAllMember">添加</Button>
+      <Button type="info" @click="showAllMember" style="margin-bottom:5px;">添加</Button>
+      <Button type="info" @click="delCompanyMember" style="margin-bottom:5px;">删除</Button>
       <br>
-      <Table :loading="memberLoading" :columns="columns1" :data="memberData">
+      <Table :loading="memberLoading" :columns="columns1" :data="memberData" @on-selection-change="onMemberSelectionChange">
       </Table>
       <div class="member-wrap-page">
         <Page :total="pageTotal" :current="memberCurrentPage" :page-size="pageSize" size="small" @on-change="pageChange" show-sizer show-elevator/>
       </div>
       <Modal v-model="showModal" title="选择用户" @on-ok="addCompanyMember" width="950">
-        <Table ref="selection" :highlight-row="true" @on-row-click="onSelectionChange" height="400" :loading="allMemberLoading" :columns="columns1" :data="allMemberData"></Table>
+        <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" height="400" :loading="allMemberLoading" :columns="columns1" :data="allMemberData"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div class="fr">
             <Page @on-page-size-change="onAllMemberPageSizeChange" :total="allMemberTotal" show-elevator show-sizer :current="allMemberCurrentPage" :page-size="allMemberPageSize" @on-change="onMemberPageChange" size="small" show-total></Page>
@@ -22,14 +23,14 @@
       </Modal>
     </div>
   </div>
-
 </template>
 
 <script>
 import {
   getCompanyList,
   getAllUser,
-  addCompanyMember
+  addCompanyMember,
+  removeCompanyMember
 } from "@/services/addressBookService.js";
 export default {
   data() {
@@ -74,7 +75,56 @@ export default {
           title: "创建时间",
           width: 150,
           key: "crtTime"
+        },
+        {
+          title: "状态",
+          key: "status",
+          render: (h, params) => {
+            let userStatus = "";
+            if (params.row.status === 1) {
+              userStatus = "使用中";
+            } else if (params.row.status === 0) {
+              userStatus = "停用";
+            } else {
+              userStatus = "未使用";
+            }
+            return h(
+              "span",
+              {
+                style: {
+                  color: "#39f"
+                }
+              },
+              userStatus
+            );
+          }
         }
+        //,
+        // {
+        //   title: "操作",
+        //   key: "action",
+        //   width: 150,
+        //   align: "center",
+        //   render: (h, params) => {
+        //     return h("div", [
+        //       h(
+        //         "Button",
+        //         {
+        //           props: {
+        //             type: "error",
+        //             size: "small"
+        //           },
+        //           on: {
+        //             click: () => {
+        //               this.delCompanyMember(params.index);
+        //             }
+        //           }
+        //         },
+        //         "删除"
+        //       )
+        //     ]);
+        //   }
+        // }
       ],
       groupId: this.$route.params.groupId,
       memberData: [],
@@ -89,7 +139,8 @@ export default {
       allMemberPageSize: 10,
       allMemberData: [],
       target: 4,
-      memberSelectionData: []
+      memberSelectionData: [],
+      nowMemberselectionData: []
     };
   },
   methods: {
@@ -106,6 +157,7 @@ export default {
         }
       );
     },
+    //获取公司成员信息
     getCompanyMember() {
       this.memberLoading = true;
       getCompanyList(
@@ -121,6 +173,23 @@ export default {
         }
       });
     },
+    //删除公司成员
+    delCompanyMember() {
+      let userIds = [];
+      if (this.nowMemberselectionData.length > 0) {
+        this.nowMemberselectionData.forEach(function(s) {
+          userIds.push(s.userId);
+        });
+        removeCompanyMember(userIds, this.groupId).then(res => {
+          if (res.success) {
+            this.$Message.success("删除成功!");
+            this.getCompanyMember();
+          }
+        });
+      } else {
+        this.$Message.warning("请选择至少一个成员！");
+      }
+    },
     //当前页改变
     pageChange(memberCurrentPage) {
       this.getCompanyMember(memberCurrentPage, this.pageSize);
@@ -133,6 +202,9 @@ export default {
     onSelectionChange(selection) {
       this.memberSelectionData = selection;
     },
+    onMemberSelectionChange(selection) {
+      this.nowMemberselectionData = selection;
+    },
     onMemberPageChange(currentPage) {
       this.allMemberCurrentPage = currentPage;
       this.getAllUser();
@@ -141,18 +213,16 @@ export default {
       this.allMemberPageSize = pageSize;
       this.getAllUser();
     },
+    //新增公司成员
     addCompanyMember() {
-      let data = [];
-      if (Object.keys(this.memberSelectionData.length > 0)) {
+      let userIds = [];
+      if (this.memberSelectionData.length > 0) {
         this.memberSelectionData.forEach(function(s) {
-          data.push({
-            groupId: this.groupId,
-            userId: s.userId
-          });
+          userIds.push(s.userId);
         });
-        addCompanyMember(data).then(res => {
+        addCompanyMember(userIds, this.groupId).then(res => {
           if (res.success) {
-            this.$Message.success(res.message);
+            this.$Message.success("新增成功!");
             this.getCompanyMember();
           }
         });

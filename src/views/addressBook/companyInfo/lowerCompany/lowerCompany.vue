@@ -11,8 +11,9 @@
 <template>
     <div class="lower-company">
         <div class="lower-company-detail" id="cliHeight">
-            <Button type="info" @click="showCompanyModal" style="margin-bottom:5px">选择下级用户</Button>
-            <Table ref="selection" :columns="columns" :loading="lowerLoading" :data="lowerCompanyData"></Table>
+            <Button type="info" @click="showCompanyModal" style="margin-bottom:5px">选择下级公司</Button>
+            <Button type="info" @click="delCompany" style="margin-bottom:5px">删除</Button>
+            <Table ref="selection" :columns="columns" :loading="lowerLoading" :data="lowerCompanyData" @on-selection-change="delCompanyChange"></Table>
             <div>
                 <div style="float: right; ">
                     <Page @on-page-size-change="onPageSizeChange" :total="lowerCompanyTotal" show-elevator show-sizer :current="lowerCompanyCurrentPage" :page-size="lowerCompanyPageSize" @on-change="onPageChange" size="small" show-total></Page>
@@ -20,7 +21,7 @@
             </div>
         </div>
         <Modal v-model="showModal" title="选择用户" @on-ok="addlowerCompany" width="1000">
-            <Table ref="selection" :highlight-row="true" @on-row-click="onSelectionChange" height="400" :loading="companyLoading" :columns="columns" :data="companyData"></Table>
+            <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" height="400" :loading="companyLoading" :columns="columns" :data="companyData"></Table>
             <div style="margin: 10px;overflow: hidden">
                 <div class="fr">
                     <Page @on-page-size-change="onAllCompanyPageSizeChange" :total="companyTotal" show-elevator show-sizer :current="companyCurrentPage" :page-size="companyPageSize" @on-change="onCompanyPageChange" size="small" show-total></Page>
@@ -33,7 +34,8 @@
 <script>
 import {
   getCompanyList,
-  addLowerCompany
+  addLowerCompany,
+  removeCompany
 } from "@/services/addressBookService.js";
 export default {
   data() {
@@ -50,6 +52,16 @@ export default {
       companyPageSize: 10,
       companyData: [],
       columns: [
+        {
+          type: "selection",
+          width: 60,
+          align: "center"
+        },
+        {
+          type: "index",
+          width: 60,
+          align: "center"
+        },
         {
           title: "公司ID",
           key: "groupId"
@@ -107,6 +119,7 @@ export default {
         }
       ],
       selectCompanyData: {},
+      deleteCompanyData: [],
       showModal: false
     };
   },
@@ -169,26 +182,42 @@ export default {
     onCompanyPageChange(currentPage) {
       this.companyCurrentPage = currentPage;
     },
-    //确认选择
-    //添加上级用户
+    //添加下级用户
     addlowerCompany() {
-      let parentId;
-      if (Object.keys(this.selectCompanyData).length > 0) {
-        parentId = this.selectCompanyData.groupId;
-      } else {
-        this.$Message.warning("请选择至少一个公司！");
-      }
-
-      if (parentId && this.groupId) {
-        addLowerCompany(Number(parentId), Number(this.groupId)).then(res => {
+      let parentIds = [];
+      if (this.selectCompanyData.length > 0) {
+        this.selectCompanyData.forEach(function(s) {
+          parentIds.push(s.groupId);
+        });
+        addLowerCompany(parentIds, this.groupId).then(res => {
           if (res.success) {
-            this.$Message.success(res.message);
+            this.$Message.success("新增成功");
             this.getlowerCompanyData();
           }
         });
       } else {
-        this.$Message.warning("无公司ID，请先保存公司再进行编辑！");
+        this.$Message.warning("请选择至少一个公司！");
       }
+    },
+    //删除
+    delCompany() {
+      let groupIds = [];
+      if (this.deleteCompanyData.length > 0) {
+        this.deleteCompanyData.forEach(function(d) {
+          groupIds.push(d.groupId);
+        });
+        removeCompany(groupIds).then(res => {
+          if (res.success) {
+            this.$Message.success("删除成功!");
+            this.getlowerCompanyData();
+          }
+        });
+      } else {
+        this.$Message.warning("请选择至少一个公司！");
+      }
+    },
+    delCompanyChange(selection) {
+      this.deleteCompanyData = selection;
     }
   },
   mounted() {

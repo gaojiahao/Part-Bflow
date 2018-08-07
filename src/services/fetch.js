@@ -71,7 +71,7 @@ axios.interceptors.response.use(response => {
  * @param {Object} params 请求参数
  * @param {String} method 请求类型 ['get','post','put','patch','delete']
  */
-export const request = (url, params = {}, method = 'get',data) => {
+export const request = (url, params = {}, method = 'get', data) => {
 
   let options = Object.assign({}, {
     url,

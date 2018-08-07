@@ -334,7 +334,7 @@ export const getOrganizations = (pageInfo) => request('/H_roleplay-si/ds/getAllG
  * @author zhaohuai
  * 根据公司Id获取所属成员信息
  */
-export const getCompanyMemberByCompanyId = (currentPage, pageSize) => request('/H_roleplay-si/ds/listUsers', {
+export const getAllUser = (currentPage, pageSize) => request('/H_roleplay-si/ds/listUsers', {
   entityId: 20000,
   page: currentPage,
   limit: pageSize,
@@ -361,8 +361,8 @@ export const saveCompanyInfo = (data) => {
     status,
     comment,
     groupCode
-  } = data
-  return request('/H_roleplay-si/userInfo/saveGroup', {
+  } = data;
+  return request('/H_roleplay-si/sysGroup/saveBatch', {}, 'POST', [{
     groupName: groupName,
     groupShortName: groupShortName,
     depFunction: depFunction,
@@ -372,7 +372,7 @@ export const saveCompanyInfo = (data) => {
     groupType: 'C',
     parentId: '1',
     groupCode: groupCode
-  }, 'POST');
+  }]);
 };
 /**
  * @author zhaohuai
@@ -388,7 +388,7 @@ export const updateCompanyInfo = (data) => {
     groupCode,
     groupId
   } = data
-  return request('/H_roleplay-si/userInfo/saveGroup', {
+  return request('/H_roleplay-si/userInfo/saveGroup', {}, 'POST', {
     groupName: groupName,
     groupShortName: groupShortName,
     depFunction: depFunction,
@@ -399,7 +399,7 @@ export const updateCompanyInfo = (data) => {
     parentId: '1',
     groupCode: groupCode,
     groupId: groupId
-  }, 'POST');
+  });
 };
 /**
  * @author zhaohuai
@@ -417,11 +417,31 @@ export const getCompanyList = (groupId, target, currentPage, pageSize) => reques
  * @author zhaohuai
  * 新增上级公司
  */
-export const updateHighCompany = (groupId, parentId) => {
+export const addHigherCompany = (groupId, parentId) => {
   let data = [{
-    groupId: groupId,
-    parentId: parentId
+    "groupId": groupId,
+    "parentId": parentId
   }];
   return request('/H_roleplay-si/sysGroup/update', {}, 'POST', data);
+}
+
+/**
+ * @author zhaohuai
+ * 新增下级公司
+ */
+export const addLowerCompany = (groupId, parentId) => {
+  let data = [{
+    "groupId": groupId,
+    "parentId": parentId
+  }];
+  return request('/H_roleplay-si/sysGroup/update', {}, 'POST', data);
+}
+/**
+ *@author zhaohuai 
+ 新增公司成员
+ * 
+ */
+export const addCompanyMember = (data) => {
+  return request('/H_roleplay-si/sysGroup/addGroupUser', "POST", data);
 }
 /************  公司  **************/

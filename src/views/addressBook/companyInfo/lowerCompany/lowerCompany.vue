@@ -1,5 +1,5 @@
 <style lang="less">
-.higher-company {
+.lower-company {
   &-detail {
     background-color: #fff;
     margin: 15px 93px;
@@ -9,41 +9,41 @@
 }
 </style>
 <template>
-  <div class="higher-company">
-    <div class="higher-company-detail" id="cliHeight">
-      <Button type="info" @click="showCompanyModal" style="margin-bottom:5px">选择上级用户</Button>
-      <Table ref="selection" :columns="columns" :loading="higherLoading" :data="higherCompanyData"></Table>
-      <div>
-        <div style="float: right; ">
-          <Page @on-page-size-change="onPageSizeChange" :total="higherCompanyTotal" show-elevator show-sizer :current="higherCompanyCurrentPage" :page-size="higherCompanyPageSize" @on-change="onPageChange" size="small" show-total></Page>
+    <div class="lower-company">
+        <div class="lower-company-detail" id="cliHeight">
+            <Button type="info" @click="showCompanyModal" style="margin-bottom:5px">选择下级用户</Button>
+            <Table ref="selection" :columns="columns" :loading="lowerLoading" :data="lowerCompanyData"></Table>
+            <div>
+                <div style="float: right; ">
+                    <Page @on-page-size-change="onPageSizeChange" :total="lowerCompanyTotal" show-elevator show-sizer :current="lowerCompanyCurrentPage" :page-size="lowerCompanyPageSize" @on-change="onPageChange" size="small" show-total></Page>
+                </div>
+            </div>
         </div>
-      </div>
+        <Modal v-model="showModal" title="选择用户" @on-ok="addlowerCompany" width="1000">
+            <Table ref="selection" :highlight-row="true" @on-row-click="onSelectionChange" height="400" :loading="companyLoading" :columns="columns" :data="companyData"></Table>
+            <div style="margin: 10px;overflow: hidden">
+                <div class="fr">
+                    <Page @on-page-size-change="onAllCompanyPageSizeChange" :total="companyTotal" show-elevator show-sizer :current="companyCurrentPage" :page-size="companyPageSize" @on-change="onCompanyPageChange" size="small" show-total></Page>
+                </div>
+            </div>
+        </Modal>
     </div>
-    <Modal v-model="showModal" title="选择用户" @on-ok="addHigherCompany" width="1000">
-      <Table ref="selection" :highlight-row="true" @on-row-click="onSelectionChange" height="400" :loading="companyLoading" :columns="columns" :data="companyData"></Table>
-      <div style="margin: 10px;overflow: hidden">
-        <div class="fr">
-          <Page @on-page-size-change="onAllCompanyPageSizeChange" :total="companyTotal" show-elevator show-sizer :current="companyCurrentPage" :page-size="companyPageSize" @on-change="onCompanyPageChange" size="small" show-total></Page>
-        </div>
-      </div>
-    </Modal>
-  </div>
 </template>
    
 <script>
 import {
   getCompanyList,
-  addHigherCompany
+  addLowerCompany
 } from "@/services/addressBookService.js";
 export default {
   data() {
     return {
       groupId: this.$route.params.groupId,
-      higherLoading: false,
-      higherCompanyData: [],
-      higherCompanyTotal: 0,
-      higherCompanyCurrentPage: 1,
-      higherCompanyPageSize: 10,
+      lowerLoading: false,
+      lowerCompanyData: [],
+      lowerCompanyTotal: 0,
+      lowerCompanyCurrentPage: 1,
+      lowerCompanyPageSize: 10,
       companyLoading: false,
       companyTotal: 0,
       companyCurrentPage: 1,
@@ -80,7 +80,7 @@ export default {
         },
         {
           title: "创建者",
-          key: "creator"
+          key: "principalInfo.nikeName"
         },
         {
           title: "状态",
@@ -127,18 +127,18 @@ export default {
       });
     },
     //获取上级公司信息
-    getHigherCompanyData() {
-      let target = 1;
-      this.higherLoading = true;
+    getlowerCompanyData() {
+      let target = 2;
+      this.lowerLoading = true;
       getCompanyList(
         this.groupId,
         target,
-        this.higherCompanyCurrentPage,
-        this.higherCompanyPageSize
+        this.lowerCompanyCurrentPage,
+        this.lowerCompanyPageSize
       ).then(res => {
-        this.higherCompanyData = res;
-        this.higherCompanyTotal = res.length;
-        this.higherLoading = false;
+        this.lowerCompanyData = res;
+        this.lowerCompanyTotal = res.length;
+        this.lowerLoading = false;
       });
     },
     //选择上级公司
@@ -153,12 +153,12 @@ export default {
     //上级公司页数改变
     onPageSizeChange(size) {
       this.highCompanyPageSize = size;
-      this.getHigherCompanyData();
+      this.getlowerCompanyData();
     },
     //上级公司页码改变
     onPageChange(currentPage) {
       this.highCompanyCurrentPage = currentPage;
-      this.getHigherCompanyData();
+      this.getlowerCompanyData();
     },
     //所有公司列表页码改变
     onAllCompanyPageSizeChange(size) {
@@ -171,7 +171,7 @@ export default {
     },
     //确认选择
     //添加上级用户
-    addHigherCompany() {
+    addlowerCompany() {
       let parentId;
       if (Object.keys(this.selectCompanyData).length > 0) {
         parentId = this.selectCompanyData.groupId;
@@ -180,10 +180,10 @@ export default {
       }
 
       if (parentId && this.groupId) {
-        addHigherCompany(Number(this.groupId), Number(parentId)).then(res => {
+        addLowerCompany(Number(parentId), Number(this.groupId)).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
-            this.getHigherCompanyData();
+            this.getlowerCompanyData();
           }
         });
       } else {
@@ -192,7 +192,7 @@ export default {
     }
   },
   mounted() {
-    this.getHigherCompanyData();
+    this.getlowerCompanyData();
   }
 };
 </script>

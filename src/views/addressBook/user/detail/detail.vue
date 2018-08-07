@@ -118,7 +118,7 @@ export default {
       }
     },
     goBack() {
-      this.$router.push({path: '/dist/index.html#/addressBook/user/board'});
+      this.$router.push({path: '/addressBook/user/board'});
     },
 
     //更新相关实例数量{}

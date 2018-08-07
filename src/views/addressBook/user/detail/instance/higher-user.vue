@@ -81,7 +81,8 @@ export default {
         },
         {
           title: "手机号",
-          key: "mobile"
+          key: "mobile",
+          width: 100
         },
         {
           title: "部门",
@@ -93,7 +94,8 @@ export default {
         },
         {
           title: "职位",
-          key: "role"
+          key: "role",
+          width: 150
         },
         {
           title: "状态",
@@ -116,16 +118,18 @@ export default {
         },
         {
           title: "创建时间",
-          key: "crtTime"
+          key: "crtTime",
+          width: 150
         },
         {
           title: "修改时间",
-          key: "modTime"
+          key: "modTime",
+          width: 150
         },
         {
           title: '操作',
           key: 'action',
-          width: 150,
+          width: 80,
           align: 'center',
           render: (h,params) => {
             return h('span',{

@@ -20,14 +20,14 @@
 
 <template>
   <div>
-    <custom-table apiUrl="/ds/getUsersByGroupId" :columns="memberInfoColumns" :apiParams="memberInfoParams" v-model="reload" @on-selection-change="onSelectionChange" @on-refesh-change='onRefeshChange'>
+    <custom-table apiUrl="/ds/getRoleUser2Oneself" :columns="memberInfoColumns" :apiParams="memberInfoParams" v-model="reload" @on-selection-change="onSelectionChange" @on-refesh-change='onRefeshChange'>
       <!-- <div slot="header">
         <Button icon="md-add" type="primary" @click="showMemberModal">添加成员</Button>
-        <Button icon="md-remove" type="info" @click="deleteMemberInfo" :disabled="deleteBtnDisable">移除成员</Button>
+        <Button icon="md-remove" type="primary" @click="deleteMemberInfo" :disabled="deleteBtnDisable">移除成员</Button>
         <Button icon="ios-download-outline" type="primary" class="permission-container-btn-export" @click="exportData">导出</Button>
       </div> -->
 
-      <div slot="header" class="header-action">
+       <div slot="header" class="header-action">
         <label @click="showMemberModal">添加成员</label>
         <span>-添加成员</span>
 
@@ -38,7 +38,7 @@
       </div>
     </custom-table>
 
-    <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionUser">
+   <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionUser">
       <div>
         <Table :loading="listUserLoading" :columns="memberInfoColumns" :data="listUserData" size='small' ref="selection" @on-selection-change="onSelectUserList"></Table>
         <div style="margin: 10px;overflow: hidden">
@@ -53,22 +53,18 @@
 
 <script>
 import MemberModal from "@/components/modal/Modal";
-import {
-  listUsers,
-  addOrgMember,
-  deleteOrgMember
-} from "@/services/addressBookService.js";
-import CustomTable from "./CustomTable";
+import {  listUsers,deleteBatchRole, saveBatchChildRole } from "@/services/addressBookService.js";
+import CustomTable from "@/views/addressBook/organization/instance/CustomTable";
 export default {
-  name: "member-info",
+  name: "job-member-info",
 
   components: {
     MemberModal,
     CustomTable
   },
 
-  props: {
-    groupId: {
+   props: {
+    jobId: {
       type: String
     }
   },
@@ -77,7 +73,7 @@ export default {
     return {
       memberInfoLoading: false,
       memberInfoParams: {
-        groupId: this.groupId,
+        roleId: this.jobId,
         page: 1,
         limit: 8
       },
@@ -171,11 +167,11 @@ export default {
     onSelectionChange(selection) {
       if (selection.length > 0) {
         this.selectDeleteMemberInfo = selection;
-      } 
+      }
     },
 
-    onRefeshChange(val) {
-      if (!val) {
+    onRefeshChange(val){
+      if(!val){
         this.reload = val;
       }
     },
@@ -192,12 +188,12 @@ export default {
         multiId.push(val.userId);
       });
       if (multiId) {
-        addOrgMember(this.groupId, multiId.join(","), 1).then(res => {
+        saveBatchChildRole(this.jobId, multiId.join(","),1).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
             this.reload = true;
             this.isShowMemberModal = false;
-            this.$emit('on-member-info-change',true);
+            this.$emit('on-member-info-change',true)
           }
         });
       }
@@ -209,11 +205,11 @@ export default {
         multiId.push(val.userId);
       });
       if (multiId) {
-        deleteOrgMember(this.groupId, multiId.join(","), 0).then(res => {
+        deleteBatchRole(this.jobId, multiId.join(","),0).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
-            this.reload = true;
-            this.$emit('on-member-info-change',true);
+             this.reload = true;
+              this.$emit('on-member-info-change',true)
           }
         });
       }
@@ -249,4 +245,3 @@ export default {
   }
 };
 </script>
-

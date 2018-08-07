@@ -18,7 +18,7 @@
     <custom-table apiUrl="/ds/getObjectPermission2Oneself" :columns="permissionColumns" :apiParams="permissionParams" v-model="reload" @on-selection-change="onSelectionChange" @on-refesh-change='onRefeshChange'>
       <!-- <div slot="header" class="permission-container-btn">
         <Button icon="md-add" type="primary" @click="addPermission">添加权限</Button>
-        <Button icon="md-remove" type="info" @click="deletePermission" :disabled="deleteBtnDisable">移除权限</Button>
+        <Button icon="md-remove" type="primary" @click="deletePermission" :disabled="deleteBtnDisable">移除权限</Button>
       </div> -->
 
       <div slot="header" class="header-action">
@@ -27,7 +27,6 @@
 
         <label @click="deletePermission">移除权限</label>
         <span>-移除权限</span>
-
       </div>
     </custom-table>
 
@@ -43,12 +42,12 @@
 import MemberModal from "@/components/modal/Modal";
 import {
   getAllPermissionData,
-  addOrgPermission,
-  deleteOrgPermission
+  addRolePermission,
+  deleteRolePermission
 } from "@/services/addressBookService.js";
-import CustomTable from "./CustomTable";
+import CustomTable from "@/views/addressBook/organization/instance/CustomTable";
 export default {
-  name: "principal",
+  name: "job-permission",
 
   components: {
     CustomTable,
@@ -56,7 +55,7 @@ export default {
   },
 
   props: {
-    groupId: {
+    jobId: {
       type: String
     }
   },
@@ -64,8 +63,8 @@ export default {
   data() {
     return {
       permissionParams: {
-        objectName: "group",
-        objectId: this.groupId,
+        objectName: "role",
+        objectId: this.jobId,
         page: 1,
         limit: 8,
         start: 0
@@ -111,19 +110,23 @@ export default {
       this.getAllPermissionData();
     },
 
+    onRefeshChange(val) {
+      if (!val) {
+        this.reload = val;
+      }
+    },
+
     deletePermission() {
-      let that = this;
       let multiId = [];
       this.selectDeletePermission.forEach(val => {
         multiId.push(val.id);
       });
       if (multiId) {
-        deleteOrgPermission(this.groupId, multiId.join(",")).then(res => {
+        deleteRolePermission(this.jobId, multiId.join(",")).then(res => {
           if (res.success) {
-            that.$Message.success(res.message);
-            that.reload = true;
-            that.isShowModal = false;
-             this.$emit("on-permission-change", true);
+            this.$Message.success(res.message);
+            this.reload = true;
+            this.$emit("on-permission-change", true);
           }
         });
       }
@@ -132,12 +135,6 @@ export default {
     onSelectionChange(selection) {
       if (selection.length > 0) {
         this.selectDeletePermission = selection;
-      } 
-    },
-
-    onRefeshChange(val) {
-      if (!val) {
-        this.reload = val;
       }
     },
 
@@ -153,12 +150,12 @@ export default {
         multiId.push(val.id);
       });
       if (multiId) {
-        addOrgPermission(this.groupId, multiId.join(",")).then(res => {
+        addRolePermission(this.jobId, multiId.join(",")).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
             this.reload = true;
+            this.$emit("on-permission-change", true);
             this.isShowModal = false;
-             this.$emit("on-permission-change", true);
           }
         });
       }
@@ -205,3 +202,4 @@ export default {
   }
 };
 </script>
+

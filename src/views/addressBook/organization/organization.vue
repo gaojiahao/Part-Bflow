@@ -5,7 +5,7 @@
 <template>
   <div class="organization-wrap">
     <header class="organization-wrap-header">
-      <h2>
+      <h2 v-if="groupId">
         <span style="color:#4CAF50">{{formItem.groupName}}</span>
         <span style="color:#808080;margin-left:10px">/</span>
         <span style="color:#808080;margin-left:10px">{{formItem.groupType}}</span>
@@ -13,18 +13,20 @@
         <span style="color:#808080;margin-left:10px">{{groupId}}</span>
         <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status,color:'#eb2f96'}"></Tag>
       </h2>
-      <h2  v-if="!groupId">
+      <h2 v-if="!groupId">
         <span style="color:#4CAF50">添加组织</span>
       </h2>
     </header>
 
     <div class="organization-wrap-action">
       <ul>
-        <li v-for="(item,index) in actionBtn" :key="index" class="organization-wrap-action-li" v-bind:class="index===actionIndex?'organization-wrap-action-li-active':''" @click="handlerViewChange(index)">
-          <img :src="item.imgPath" height="30px" width="30px"><img>
-          <div>
-            <span>{{item.number}}</span>
-            <h3>{{item.label}}</h3>
+        <li v-for="(item,index) in actionBtn" :key="index" v-if="!item.hidden" class="organization-wrap-action-li" v-bind:class="index===actionIndex?'organization-wrap-action-li-active':''" @click="handlerViewChange(index)">
+          <div style="padding:5px 0">
+            <img :src="item.imgPath" class="organization-wrap-action-li-img"><img>
+            <div class="left-content">
+              <span v-show="item.number!=='undefine'">{{item.number}}</span>
+              <h3>{{item.label}}</h3>
+            </div>
           </div>
         </li>
       </ul>
@@ -64,29 +66,29 @@
         </Form>
         <div class="baseinfo-container-action">
           <input type='submit' value="取消" class="baseinfo-container-action-submit" @click="cancle" />
-          <input type='submit' value="保存" class="baseinfo-container-action-submit"  @click="saveBaseinfo" />
+          <input type='submit' value="保存" class="baseinfo-container-action-submit" @click="saveBaseinfo" />
           <input type='submit' value="保存并添加" class="baseinfo-container-action-submit" v-if="!groupId" @click="saveAndAdd" />
         </div>
       </section>
       <!-- 上级组织 -->
       <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===4">
-        <high-organization :groupId="groupId" :groupType="formItem.groupType"></high-organization>
+        <high-organization :groupId="groupId" :groupType="formItem.groupType" @on-high-organization-change='handleChangeObjDetailsCount'></high-organization>
       </section>
       <!-- 下级组织 -->
       <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===3">
-        <lower-organization :groupId="groupId" :groupType="formItem.groupType"></lower-organization>
+        <lower-organization :groupId="groupId" :groupType="formItem.groupType" @on-lower-organization-change='handleChangeObjDetailsCount'></lower-organization>
       </section>
       <!-- 负责人 -->
       <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===2">
-        <principal :groupId="groupId"></principal>
+        <principal :groupId="groupId" ></principal>
       </section>
       <!-- 成员信息 -->
       <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===1">
-        <member-info :groupId="groupId"></member-info>
+        <member-info :groupId="groupId" @on-member-info-change='handleChangeObjDetailsCount'></member-info>
       </section>
       <!-- 权限 -->
       <section class="permission-container rfd-tab-container-common" v-if="actionIndex===0">
-        <permission :groupId="groupId"></permission>
+        <permission :groupId="groupId" @on-permission-change='handleChangeObjDetailsCount'></permission>
       </section>
     </div>
 
@@ -94,7 +96,10 @@
 </template>
 
 <script>
-import { getOrgBaseInfo } from "@/services/addressBookService.js";
+import {
+  getOrgBaseInfo,
+  getObjDetailsCountByGroupId
+} from "@/services/addressBookService.js";
 import MemberModal from "@/components/modal/Modal";
 import HighOrganization from "./instance/higher-organization";
 import LowerOrganization from "./instance/lower-origanization";
@@ -146,32 +151,43 @@ export default {
         {
           label: "权限",
           imgPath: "resources/images/icon/2_0.png",
-          number: 0
+          number: 0,
+          hidden: false,
+          id: "objectPermission"
         },
         {
           label: "成员信息",
           imgPath: "resources/images/icon/user.png",
-          number: 0
+          number: 0,
+          hidden: false,
+          id: "user"
         },
         {
           label: "负责人",
           imgPath: "resources/images/icon/user.png",
-          number: 0
+          number: 0,
+          hidden: false,
+          id: "groupPrincipal"
         },
         {
           label: "下级组织",
           imgPath: "resources/images/icon/organization.png",
-          number: 0
+          number: 0,
+          hidden: false,
+          id: "childGroup"
         },
         {
           label: "上级组织",
           imgPath: "resources/images/icon/organization.png",
-          number: 0
+          number: 0,
+          hidden: false,
+          id: "parentGroup"
         },
         {
           label: "基本信息",
           imgPath: "resources/images/icon/organization.png",
-          number: 0
+          hidden: false,
+          id: "baseinfo"
         }
       ],
       actionIndex: 5,
@@ -208,6 +224,20 @@ export default {
           }
         });
       }
+    },
+
+    getObjDetailsCountByGroupId(groupId) {
+      getObjDetailsCountByGroupId(groupId).then(res => {
+        this.actionBtn.forEach(element => {
+          element.number = res[element.id];
+        });
+      });
+    },
+
+    handleChangeObjDetailsCount(val){
+        if(val){
+            this.getObjDetailsCountByGroupId(this.groupId)
+        }
     }
   },
 
@@ -227,16 +257,25 @@ export default {
     let filter = JSON.stringify([
       { operator: "eq", value: this.groupId, property: "groupId" }
     ]);
-    getOrgBaseInfo(filter).then(res => {
-      if (res.tableContent[0]) {
-        this.formItem = res.tableContent[0];
-        this.formItem.groupName = tableContent.groupName;
-        this.formItem.groupType = tableContent.groupType;
-        this.formItem.depFunction = tableContent.depFunction;
-        this.formItem.status = tableContent.status;
-        this.formItem.comment = tableContent.comment;
-      }
-    });
+    if (this.groupId) {
+      getOrgBaseInfo(filter).then(res => {
+        if (res.tableContent[0]) {
+          let tableContent = res.tableContent[0];
+          this.formItem.groupName = tableContent.groupName;
+          this.formItem.groupType = tableContent.groupType;
+          this.formItem.depFunction = tableContent.depFunction;
+          this.formItem.status = tableContent.status;
+          this.formItem.comment = tableContent.comment;
+        }
+      });
+      this.getObjDetailsCountByGroupId(this.groupId);
+    } else if (!this.groupId && this.$route.name == "add") {
+      this.actionBtn.forEach(element => {
+        if (element.id !== "baseinfo") {
+          element.hidden = true;
+        }
+      });
+    }
   }
 };
 </script>

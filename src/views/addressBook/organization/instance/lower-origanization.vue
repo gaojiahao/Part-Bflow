@@ -1,6 +1,6 @@
 <style lang="less" scoped>
 .header-action {
-  lebal {
+  label {
     color: #009688;
     font-size: 17px;
     cursor: pointer;
@@ -18,10 +18,10 @@
     <custom-table apiUrl="/ds/getAllGroup" :columns="lowerOrgColumns" :apiParams="lowOrganizationParams" v-model="reload" @on-refesh-change='onRefeshChange' @on-selection-change="onSelectionChange">
      
       <div slot="header" class="header-action">
-        <lebal @click="showLoverOrgModal">添加下级组织</lebal>
+        <label @click="showLoverOrgModal">添加下级组织</label>
         <span>-添加下级组织</span>
 
-         <lebal @click="deleteLoverOrg">删除下级组织</lebal>
+         <label @click="deleteLoverOrg">删除下级组织</label>
         <span>-删除下级组织</span>
       </div>
     </custom-table>
@@ -150,7 +150,7 @@ export default {
 
   methods: {
     listUserChangePage(currentPage) {
-      this.getAllGroup(currentPage, this.pageSize);
+      this.getAllGroup(currentPage);
     },
 
     //监听模态框选中的用户
@@ -177,7 +177,7 @@ export default {
     //显示上级组织模态框
     showLoverOrgModal() {
       this.isShowMemberModal = true;
-      this.getAllGroup();
+      this.getAllGroup(this.listUserCurrentPage);
     },
 
     //添加组织
@@ -191,6 +191,7 @@ export default {
           this.$Message.success("保存成功");
           this.isShowMemberModal = false;
           this.reload = true;
+          this.$emit('on-lower-organization-change',true)
         }
       });
     },
@@ -205,12 +206,13 @@ export default {
           if (res.success) {
             this.$Message.success(res.message);
             this.reload = true;
+            this.$emit('on-lower-organization-change',true)
           }
         });
       }
     },
 
-    getAllGroup() {
+    getAllGroup(currentPage) {
       this.listUserLoading = true;
       let filter = [];
       if (this.groupType) {
@@ -269,7 +271,7 @@ export default {
         }
         filter = JSON.stringify(filter);
       }
-      getAllGroup(this.listUserCurrentPage, this.pageSize, filter).then(res => {
+      getAllGroup(currentPage, this.pageSize, filter).then(res => {
         if (res.tableContent[0]) {
           this.listUserPageTotal = res.summary.total;
           this.listUserData = res.tableContent;

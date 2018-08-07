@@ -1,14 +1,44 @@
+<style lang="less" scoped>
+.permission-container-btn-export {
+  float: right;
+}
+
+.header-action {
+  label {
+    color: #009688;
+    font-size: 17px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  span {
+    color: rgb(122, 118, 118);
+  }
+}
+</style>
+
+
 <template>
   <div>
-    <custom-table apiUrl="/ds/getUsersByGroupId" :columns="memberInfoColumns" :apiParams="memberInfoParams" v-model="reload" @on-selection-change="onSelectionChange" @on-refesh-change='onRefeshChange'>
-      <div slot="header">
+    <custom-table apiUrl="/ds/getRoleUser2Oneself" :columns="memberInfoColumns" :apiParams="memberInfoParams" v-model="reload" @on-selection-change="onSelectionChange" @on-refesh-change='onRefeshChange'>
+      <!-- <div slot="header">
         <Button icon="md-add" type="primary" @click="showMemberModal">添加成员</Button>
         <Button icon="md-remove" type="primary" @click="deleteMemberInfo" :disabled="deleteBtnDisable">移除成员</Button>
         <Button icon="ios-download-outline" type="primary" class="permission-container-btn-export" @click="exportData">导出</Button>
+      </div> -->
+
+       <div slot="header" class="header-action">
+        <label @click="showMemberModal">添加成员</label>
+        <span>-添加成员</span>
+
+        <label @click="deleteMemberInfo">移除成员</label>
+        <span>-移除成员</span>
+
+        <label @click="exportData" class="permission-container-btn-export">导出</label>
       </div>
     </custom-table>
 
-    <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionUser">
+   <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionUser">
       <div>
         <Table :loading="listUserLoading" :columns="memberInfoColumns" :data="listUserData" size='small' ref="selection" @on-selection-change="onSelectUserList"></Table>
         <div style="margin: 10px;overflow: hidden">
@@ -23,10 +53,10 @@
 
 <script>
 import MemberModal from "@/components/modal/Modal";
-import { listUsers, addOrgMember ,deleteOrgMember} from "@/services/addressBookService.js";
-import CustomTable from "./CustomTable";
+import {  listUsers,deleteBatchRole, saveBatchChildRole } from "@/services/addressBookService.js";
+import CustomTable from "@/views/addressBook/organization/instance/CustomTable";
 export default {
-  name: "member-info",
+  name: "job-member-info",
 
   components: {
     MemberModal,
@@ -34,7 +64,7 @@ export default {
   },
 
    props: {
-    groupId: {
+    jobId: {
       type: String
     }
   },
@@ -43,7 +73,7 @@ export default {
     return {
       memberInfoLoading: false,
       memberInfoParams: {
-        groupId: this.groupId,
+        roleId: this.jobId,
         page: 1,
         limit: 8
       },
@@ -128,7 +158,6 @@ export default {
       //模态框参数
       onSelectionModal: [],
       selectDeleteMemberInfo: [],
-      deleteBtnDisable: true,
       reload: false
     };
   },
@@ -137,10 +166,7 @@ export default {
     //选中的成员信息
     onSelectionChange(selection) {
       if (selection.length > 0) {
-        this.deleteBtnDisable = false;
         this.selectDeleteMemberInfo = selection;
-      } else {
-        this.deleteBtnDisable = true;
       }
     },
 
@@ -162,11 +188,12 @@ export default {
         multiId.push(val.userId);
       });
       if (multiId) {
-        addOrgMember(this.groupId, multiId.join(","),1).then(res => {
+        saveBatchChildRole(this.jobId, multiId.join(","),1).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
             this.reload = true;
             this.isShowMemberModal = false;
+            this.$emit('on-member-info-change',true)
           }
         });
       }
@@ -178,10 +205,11 @@ export default {
         multiId.push(val.userId);
       });
       if (multiId) {
-        deleteOrgMember(this.groupId, multiId.join(","),0).then(res => {
+        deleteBatchRole(this.jobId, multiId.join(","),0).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
              this.reload = true;
+              this.$emit('on-member-info-change',true)
           }
         });
       }
@@ -217,9 +245,3 @@ export default {
   }
 };
 </script>
-
-<style lang="less" scoped>
-.permission-container-btn-export {
-  float: right;
-}
-</style>

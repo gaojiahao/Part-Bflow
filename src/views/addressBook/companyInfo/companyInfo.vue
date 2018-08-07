@@ -37,11 +37,14 @@
         </Row>
         <Row class="detail-content">
             <!-- 公司基本信息 -->
-            <base-info v-show="whichShow.baseInfo"></base-info>
+            <base-info v-if="whichShow.baseInfo"></base-info>
             <!-- 公司成员-->
-            <member-info v-show="whichShow.member"></member-info>
+            <member-info v-if="whichShow.member"></member-info>
             <!--上级公司-->
-            <higher-company v-show="whichShow.higherCompany"></higher-company>
+            <higher-company v-if="whichShow.higherCompany"></higher-company>
+            <!--下级公司-->
+            <lower-company v-if="whichShow.lowerCompany"></lower-company>
+
         </Row>
     </div>
 </template>
@@ -50,11 +53,13 @@
 import BaseInfo from "@/views/addressBook/companyInfo/baseInfo/baseInfo";
 import MemberInfo from "@/views/addressBook/companyInfo/memberInfo/memberInfo";
 import HigherCompany from "@/views/addressBook/companyInfo/higherCompany/higherCompany";
+import LowerCompany from "@/views/addressBook/companyInfo/lowerCompany/lowerCompany";
 export default {
   components: {
     BaseInfo,
     MemberInfo,
-    HigherCompany
+    HigherCompany,
+    LowerCompany
   },
   data() {
     return {
@@ -93,7 +98,7 @@ export default {
           isShow: true,
           isShowAcive: false,
           relativeNum: 1,
-          imgUrl: "resources/images/icon/organization.png"
+          imgUrl: "resources/images/icon/user.png"
         },
         {
           name: "公司信息",
@@ -101,7 +106,7 @@ export default {
           isShow: true,
           isShowAcive: true,
           relativeNum: 1,
-          imgUrl: "resources/images/icon/0_3.png"
+          imgUrl: "resources/images/icon/company.png"
         }
       ]
     };

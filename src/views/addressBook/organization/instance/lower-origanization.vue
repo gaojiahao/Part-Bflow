@@ -1,6 +1,6 @@
 <style lang="less" scoped>
 .header-action {
-  lebal {
+  label {
     color: #009688;
     font-size: 17px;
     cursor: pointer;
@@ -18,10 +18,10 @@
     <custom-table apiUrl="/ds/getAllGroup" :columns="lowerOrgColumns" :apiParams="lowOrganizationParams" v-model="reload" @on-refesh-change='onRefeshChange' @on-selection-change="onSelectionChange">
      
       <div slot="header" class="header-action">
-        <lebal @click="showLoverOrgModal">添加下级组织</lebal>
+        <label @click="showLoverOrgModal">添加下级组织</label>
         <span>-添加下级组织</span>
 
-         <lebal @click="deleteLoverOrg">删除下级组织</lebal>
+         <label @click="deleteLoverOrg">删除下级组织</label>
         <span>-删除下级组织</span>
       </div>
     </custom-table>
@@ -191,6 +191,7 @@ export default {
           this.$Message.success("保存成功");
           this.isShowMemberModal = false;
           this.reload = true;
+          this.$emit('on-lower-organization-change',true)
         }
       });
     },
@@ -205,6 +206,7 @@ export default {
           if (res.success) {
             this.$Message.success(res.message);
             this.reload = true;
+            this.$emit('on-lower-organization-change',true)
           }
         });
       }

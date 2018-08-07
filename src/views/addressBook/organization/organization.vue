@@ -6,7 +6,7 @@
   <div class="organization-wrap">
     <header class="organization-wrap-header">
       <h2 v-if="groupId">
-        <span style="color:#4CAF50">{{formItem.groupName}}</span>
+        <span style="color:#4CAF50;cursor:pointer" @click="goBack">{{formItem.groupName}}</span>
         <span style="color:#808080;margin-left:10px">/</span>
         <span style="color:#808080;margin-left:10px">{{formItem.groupType}}</span>
         <span style="color:#808080;margin-left:10px">/</span>
@@ -66,7 +66,7 @@
         </Form>
         <div class="baseinfo-container-action">
           <input type='submit' value="取消" class="baseinfo-container-action-submit" @click="cancle" />
-          <input type='submit' value="保存" class="baseinfo-container-action-submit" @click="saveBaseinfo" />
+          <input type='submit' value="保存" class="baseinfo-container-action-submit" @click="save" />
           <input type='submit' value="保存并添加" class="baseinfo-container-action-submit" v-if="!groupId" @click="saveAndAdd" />
         </div>
       </section>
@@ -80,7 +80,7 @@
       </section>
       <!-- 负责人 -->
       <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===2">
-        <principal :groupId="groupId" ></principal>
+        <principal :groupId="groupId"></principal>
       </section>
       <!-- 成员信息 -->
       <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===1">
@@ -98,7 +98,8 @@
 <script>
 import {
   getOrgBaseInfo,
-  getObjDetailsCountByGroupId
+  getObjDetailsCountByGroupId,
+  saveBaseinfo
 } from "@/services/addressBookService.js";
 import MemberModal from "@/components/modal/Modal";
 import HighOrganization from "./instance/higher-organization";
@@ -202,11 +203,12 @@ export default {
     },
 
     cancle() {
-      this.$router.push({ path: "/addressBook/organization/board" });
+      this.$router.push({ path: "/dist/index.html#/addressBook/organization/board" });
     },
 
     saveAndAdd() {
       if (!this.groupId) {
+        this.formItem.groupId = this.groupId;
         saveBaseinfo(this.formItem).then(res => {
           if (res.success) {
             this.$Message.success("保存成功");
@@ -216,14 +218,14 @@ export default {
       }
     },
 
-    saveBaseinfo() {
-      if (!this.groupId) {
-        saveBaseinfo(this.formItem).then(res => {
-          if (res.success) {
-            this.$Message.success("保存成功");
-          }
-        });
-      }
+    save() {
+      this.formItem.groupId = this.groupId;
+      saveBaseinfo(this.formItem).then(res => {
+        if (res.success) {
+          this.$Message.success("保存成功");
+          this.$router.push({ path: '/addressBook/organization/board'});
+        }
+      });
     },
 
     getObjDetailsCountByGroupId(groupId) {
@@ -234,10 +236,16 @@ export default {
       });
     },
 
-    handleChangeObjDetailsCount(val){
-        if(val){
-            this.getObjDetailsCountByGroupId(this.groupId)
-        }
+    handleChangeObjDetailsCount(val) {
+      if (val) {
+        this.getObjDetailsCountByGroupId(this.groupId);
+      }
+    },
+
+    goBack() {
+      this.$router.push({
+        path: "/addressBook/organization/board"
+      });
     }
   },
 

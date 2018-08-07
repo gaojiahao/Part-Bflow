@@ -38,7 +38,7 @@
             title="选择用户"
             @on-ok="addRole"
             width="1000">
-            <Table ref="selection" @on-selection-change="onSelectionChange" height="400" :loading="roleLoading" :columns="columns" :data="allRoleData"></Table>
+            <Table ref="selection" @on-selection-change="onSelectionChange" height="400" :loading="roleLoading" :columns="RoleColumns" :data="allRoleData"></Table>
             <div class="user-page">
                 <div style="float: right;">
                   <Page @on-page-size-change="onAllRolePageSizeChange" :total="rolePage.roletotal" show-elevator show-sizer :current="rolePage.rolecurrentPage" :page-size="rolePage.allRolepageSize" @on-change="onRolePageChange" size="small" show-total></Page>
@@ -142,6 +142,46 @@ export default {
               }
             },'删除')
           }
+        }
+      ],
+      RoleColumns: [
+        {
+          type: "selection",
+          width: 60,
+          align: "center"
+        },
+        {
+          title: "职位名称",
+          key: "name"
+        },
+        {
+          title: "职位类型",
+          key: "type",
+          render: (h,params) => {
+              let type = '';
+              switch(params.row.type){
+                case 'Y': 
+                  type = '营销类';
+                  break;
+                case 'C': 
+                  type = '操作类';
+                  break;
+                case 'J': 
+                  type = '技术类';
+                  break;
+                case 'M': 
+                  type = '管理类';
+                  break;
+                case 'Z': 
+                  type = '专职类';
+                  break;
+              }
+              return h('span',{},type);
+          }
+        },
+        {
+          title: "说明",
+          key: "describe"
         }
       ],
       roleData: [],

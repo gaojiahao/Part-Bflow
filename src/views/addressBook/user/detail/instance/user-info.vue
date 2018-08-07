@@ -204,7 +204,7 @@ export default {
                     updateUser(this.formItem).then(res => {
                         if(res.success){
                             this.$Message.success(res.message);
-                            this.$router.push({ path: '/dist/index.html#/addressBook/user/board'});
+                            this.$router.push({ path: '/addressBook/user/board'});
                         }
                     }).catch(error => {
                         this.$Message.error(error.data.message);
@@ -213,7 +213,7 @@ export default {
                    addUser(this.formItem).then(res => {
                        if(res.success){
                            this.$Message.success(res.message);
-                           this.$router.push({ path: '/dist/index.html#/addressBook/user/board'});
+                           this.$router.push({ path: '/addressBook/user/board'});
                        }
                    }).catch(error => {
                         this.$Message.error(error.data.message);
@@ -239,6 +239,9 @@ export default {
                         this.formItem.comment = '';
                         this.logo = '';
                         this.formItem.photo = '';
+                        this.formItem.gender = "1";
+                        this.formItem.status = "1";
+                        this.comment = '';
                         this.$refs['upload'].fileList.splice(0,this.$refs['upload'].fileList.length);
                     }
                 }).catch(error => {
@@ -248,7 +251,7 @@ export default {
         })
     },
     goUserList() {
-        this.$router.push({ path: '/dist/index.html#/addressBook/user/board'});
+        this.$router.push({ path: '/addressBook/user/board'});
     },
     //格式化日期方法
     formatDate(currentDate) {

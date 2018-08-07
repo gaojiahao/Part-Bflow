@@ -28,7 +28,7 @@ export const getLowUserData = (userId, pageSize, currentPage) => request('/H_rol
  * @author XiaoYing
  * @description 获取user部门数据
  */
-export const getDepartmentData = (userId, pageSize, currentPage) => request('/H_roleplay-si/ds/getUserGroupByUserId', {
+export const getDepartmentData = (userId, pageSize, currentPage) => request('/H_roleplay-si/ds/getUserGroupByUserId2', {
   userId: userId,
   page: currentPage,
   limit: pageSize
@@ -76,13 +76,21 @@ export const getAllUsers = (pageSize, currentPage) => request('/H_roleplay-si/ds
 
 /**
  * @author XiaoYing
- * @description 添加上级用户
+ * @description 添加上下级用户
  */
 export const updateHighUser = (userId, parentId) => request('/H_roleplay-si/userInfo/updateParentId', {
-  list: 'sys_userinfo',
   userId: userId,
   parentId: parentId
-});
+},'POST');
+
+/**
+ * @author XiaoYing
+ * @description 删除上下级用户
+ */
+export const deleteUser = (userId) => request('/H_roleplay-si/userInfo/updateParentId', {
+  parentId: null,
+  userId: userId
+},'POST');
 
 /**
  * @author XiaoYing
@@ -94,12 +102,23 @@ export const getGroupData = (parentId) => request('/H_roleplay-si/ds/getUserGrou
 
 /**
  * @author XiaoYing
- * @description 添加组织部门
+ * @description 添加组织或职位
  */
-export const addGroupMember = (groupId, userId) => request('/H_roleplay-si/ds/saveData', {
-  list: 'sys_group_user',
-  groupId: groupId,
-  userId: userId
+export const addMember = (list,groupId, userId) => request('/H_roleplay-si/ps/updateRelation', {
+  list: list,
+  single: groupId,
+  multi: userId,
+  status: 0
+}, 'POST');
+
+/**
+ * @author XiaoYing
+ * @description 删除组织或职位
+ */
+export const deleteMember = (list,groupId,userId) => request('/H_roleplay-si/ps/deleteRelation', {
+  list: list,
+  single: groupId,
+  multi: userId
 }, 'POST');
 
 /**
@@ -110,16 +129,6 @@ export const getAllRoleData = (pageSize, currentPage) => request('/H_roleplay-si
   page: currentPage,
   limit: pageSize
 });
-
-/**
- * @author XiaoYing
- * @description 添加职位
- */
-export const addRoleMember = (single, multi) => request('/H_roleplay-si/ps/updateRelation', {
-  list: 'sys_user_role',
-  multi: multi,
-  single: single
-}, 'POST');
 
 /**
  * @author XiaoYing
@@ -179,6 +188,14 @@ export const getInstanceCountByUserId = (userId) => request('/H_roleplay-si/app/
 
 
 /************  组织  **************/
+
+/**
+ * @author GuoZheng
+ * @description 获取职位相关实例
+ */
+export const getObjDetailsCountByGroupId = (groupId) => request('/H_roleplay-si/app/getObjDetailsCountByGroupId', {
+  groupId: groupId,
+});
 
 /**
  * @author GuoZheng
@@ -323,6 +340,69 @@ export const getOrganizations = (pageInfo) => request('/H_roleplay-si/ds/getAllG
 
 /************  职位  **************/
 
+/**
+ * @author GuoZheng
+ * @description 获取职位相关实例
+ */
+export const getObjDetailsCountByRoleId = (roleId) => request('/H_roleplay-si/app/getObjDetailsCountByRoleId', {
+  roleId: roleId,
+});
+
+/**
+ * @author GuoZheng
+ * @description 获取组织基本信息
+ */
+export const getAllRole = (filter) => request('/H_roleplay-si/ds/getAllRole', {
+    filter: filter,
+});
+
+/**
+ * @author GuoZheng
+ * @description 保存组织基本信息
+ */
+export const saveRoleBaseInfo = (data) => request('/H_roleplay-si/sysRole/save', {}, "POST", data);
+
+
+/**
+ * @author GuoZheng
+ * @description 添加职位成员
+ */
+export const saveBatchChildRole = (roleId, userId) => request('/H_roleplay-si/ps/updateRelation', {
+  list: 'sys_user_role',
+  multi: roleId,
+  single: userId,
+}, 'POST');
+
+/**
+ * @author GuoZheng
+ * @description 添加职位成员
+ */
+export const deleteBatchRole = (roleId, userId) => request('/H_roleplay-si/ps/deleteRelation', {
+  list: 'sys_user_role',
+  multi: roleId,
+  single: userId,
+}, 'POST');
+
+
+/**
+ * @author GuoZheng
+ * @description 添加职位权限
+ */
+export const addRolePermission = (single, multi) => request('/H_roleplay-si/ps/updatePermissionRelation', {
+  list: 'sys_role_permission',
+  single: single,
+  multi: multi
+}, 'POST');
+
+/**
+ * @author GuoZheng
+ * @description 删除职位权限
+ */
+export const deleteRolePermission = (single, multi) => request('/H_roleplay-si/ps/deletePermissionRelation', {
+  list: 'sys_role_permission',
+  single: single,
+  multi: multi
+});
 
 /************  职位  **************/
 

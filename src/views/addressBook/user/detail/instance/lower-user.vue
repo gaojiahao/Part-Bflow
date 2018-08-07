@@ -38,7 +38,7 @@
             title="选择用户"
             @on-ok="addLowUser"
             width="1000">
-            <Table ref="selection" @on-selection-change="onSelectionChange" height="400" :loading="userLoading" :columns="columns" :data="userData"></Table>
+            <Table ref="selection" @on-selection-change="onSelectionChange" height="400" :loading="userLoading" :columns="userColumns" :data="userData"></Table>
             <div class="user-page">
                 <div style="float: right;">
                   <Page @on-page-size-change="onAllUserPageSizeChange" :total="lowUser.usertotal" show-elevator show-sizer :current="lowUser.usercurrentPage" :page-size="lowUser.allUserpageSize" @on-change="onUserPageChange" size="small" show-total></Page>
@@ -170,6 +170,76 @@ export default {
               }
             },'删除')
           }
+        }
+      ],
+      userColumns: [
+        {
+          type: "selection",
+          width: 60,
+          align: "center"
+        },
+        {
+          title: "工号",
+          key: "userCode"
+        },
+        {
+          title: "姓名",
+          key: "nickname"
+        },
+        {
+          title: "性别",
+          key: "gender",
+          render: (h, params) => {
+            let gender = params.row.gender === 1 ? "男" : "女";
+            return h("span", {}, gender);
+          }
+        },
+        {
+          title: "手机号",
+          key: "mobile",
+          width: 90
+        },
+        {
+          title: "部门",
+          key: "dept"
+        },
+        {
+          title: "小组",
+          key: "dept"
+        },
+        {
+          title: "职位",
+          key: "role",
+          width: 130
+        },
+        {
+          title: "状态",
+          key: "status",
+          render: (h, params) => {
+            let userStatus = "";
+            if (params.row.status === 1) {
+              userStatus = "使用中";
+            } else if (params.row.status === 0) {
+              userStatus = "停用";
+            } else {
+              userStatus = "未使用";
+            }
+            return h('span',{
+              style: {
+                color: '#39f'
+              }
+            },userStatus);
+          }
+        },
+        {
+          title: "创建时间",
+          key: "crtTime",
+          width: 130
+        },
+        {
+          title: "修改时间",
+          key: "modTime",
+          width: 130
         }
       ],
       lowerUserData: [],

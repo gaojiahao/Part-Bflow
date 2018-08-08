@@ -16,7 +16,7 @@
   <div class="content-wrap">
     <Row class="detail-header">
       <Breadcrumb class="detail-header-bread">
-        <BreadcrumbItem to="/addressBook/companyInfo/board">公司列表</BreadcrumbItem>
+        <BreadcrumbItem to="/addressBook/companyInfo/board">公司</BreadcrumbItem>
         <BreadcrumbItem>{{ companyInformation.groupName?companyInformation.groupShortName:'待添加' }}</BreadcrumbItem>
         <BreadcrumbItem>{{ companyInformation.groupId?companyInformation.groupId:'创建' }}</BreadcrumbItem>
       </Breadcrumb>

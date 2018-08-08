@@ -6,9 +6,9 @@
   <div class="organization-wrap">
     <header class="organization-wrap-header">
       <h2 v-if="groupId">
-        <span style="color:#4CAF50;cursor:pointer" @click="goBack">{{formItem.groupName}}</span>
+        <span style="color:#4CAF50;cursor:pointer" @click="goBack">组织</span>
         <span style="color:#808080;margin-left:10px">/</span>
-        <span style="color:#808080;margin-left:10px">{{groupType}}</span>
+        <span style="color:#808080;margin-left:10px">{{formItem.groupName}}</span>
         <span style="color:#808080;margin-left:10px">/</span>
         <span style="color:#808080;margin-left:10px">{{groupId}}</span>
         <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status,color:'#eb2f96'}"></Tag>

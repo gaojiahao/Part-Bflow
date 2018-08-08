@@ -33,7 +33,7 @@
     <div class="job-wrap-tabs">
       <!-- 基本信息 -->
       <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===2">
-        <Form :model="formItem" :labelWidth="100">
+        <Form :model="formItem" :labelWidth="100" ref="formItem">
           <FormItem label="职位名称:" style="font-size:16px">
             <Input v-model="formItem.name" />
           </FormItem>
@@ -159,8 +159,8 @@ export default {
 
     saveAndAdd() {
       if (!this.jobId) {
-        this.formItem.jobId = this.jobId;
-        saveBaseinfo(this.formItem).then(res => {
+        this.formItem.id = this.jobId;
+        saveRoleBaseInfo(this.formItem).then(res => {
           if (res.success) {
             this.$Message.success("保存成功");
             this.$refs["formItem"].resetFields();
@@ -176,7 +176,7 @@ export default {
     },
 
     save() {
-      this.formItem.jobId = this.jobId;
+      this.formItem.id = this.jobId;
       saveRoleBaseInfo(this.formItem).then(res => {
         if (res.success) {
           this.$Message.success("保存成功");

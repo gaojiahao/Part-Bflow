@@ -5,30 +5,39 @@
     margin: 15px 93px;
     padding: 26px 50px;
     box-shadow: 0px 1px 10px #ddd;
+    &-btn {
+      margin-bottom: 5px;
+      color: rgb(0, 150, 136);
+      font-size: 17px;
+      cursor: pointer;
+    }
   }
 }
 </style>
 <template>
-    <div class="lower-company">
-        <div class="lower-company-detail" id="cliHeight">
-            <Button type="info" @click="showCompanyModal" style="margin-bottom:5px">选择下级公司</Button>
-            <Button type="info" @click="delCompany" style="margin-bottom:5px">删除</Button>
-            <Table ref="selection" :columns="columns" :loading="lowerLoading" :data="lowerCompanyData" @on-selection-change="delCompanyChange"></Table>
-            <div>
-                <div style="float: right; ">
-                    <Page @on-page-size-change="onPageSizeChange" :total="lowerCompanyTotal" show-elevator show-sizer :current="lowerCompanyCurrentPage" :page-size="lowerCompanyPageSize" @on-change="onPageChange" size="small" show-total></Page>
-                </div>
-            </div>
+  <div class="lower-company">
+    <div class="lower-company-detail" id="cliHeight">
+      <b @click="showCompanyModal" class="lower-company-detail-btn">公司列表</b>
+      <span style="color: #7a7676;">-选择下级公司</span>
+      <b @click="delCompany" class="lower-company-detail-btn">删除</b>
+      <span style="color: #7a7676;">-批量删除公司成员</span>
+      <br>
+      <Table ref="selection" :columns="columns" :loading="lowerLoading" :data="lowerCompanyData" @on-selection-change="delCompanyChange"></Table>
+      <div>
+        <div style="float: right; ">
+          <Page @on-page-size-change="onPageSizeChange" :total="lowerCompanyTotal" show-elevator show-sizer :current="lowerCompanyCurrentPage" :page-size="lowerCompanyPageSize" @on-change="onPageChange" size="small" show-total></Page>
         </div>
-        <Modal v-model="showModal" title="选择用户" @on-ok="addlowerCompany" width="1000">
-            <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" height="400" :loading="companyLoading" :columns="columns" :data="companyData"></Table>
-            <div style="margin: 10px;overflow: hidden">
-                <div class="fr">
-                    <Page @on-page-size-change="onAllCompanyPageSizeChange" :total="companyTotal" show-elevator show-sizer :current="companyCurrentPage" :page-size="companyPageSize" @on-change="onCompanyPageChange" size="small" show-total></Page>
-                </div>
-            </div>
-        </Modal>
+      </div>
     </div>
+    <Modal v-model="showModal" title="选择下级公司" @on-ok="addlowerCompany" width="1000">
+      <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" height="400" :loading="companyLoading" :columns="columns1" :data="companyData"></Table>
+      <div style="margin: 10px;overflow: hidden">
+        <div class="fr">
+          <Page @on-page-size-change="onAllCompanyPageSizeChange" :total="companyTotal" show-elevator show-sizer :current="companyCurrentPage" :page-size="companyPageSize" @on-change="onCompanyPageChange" size="small" show-total></Page>
+        </div>
+      </div>
+    </Modal>
+  </div>
 </template>
    
 <script>
@@ -79,8 +88,92 @@ export default {
           key: "depFunction"
         },
         {
+          title: "修改时间",
+          key: "modTime"
+        },
+        {
+          title: "创建时间",
+          key: "crtTime"
+        },
+        {
+          title: "创建者",
+          key: "principalInfo.nikeName"
+        },
+        {
+          title: "状态",
+          key: "status",
+          render: (h, params) => {
+            let userStatus = "";
+            if (params.row.status === 1) {
+              userStatus = "使用中";
+            } else if (params.row.status === 0) {
+              userStatus = "停用";
+            } else {
+              userStatus = "未使用";
+            }
+            return h(
+              "span",
+              {
+                style: {
+                  color: "#39f"
+                }
+              },
+              userStatus
+            );
+          }
+        },
+        {
+          title: "操作",
+          key: "action",
+          width: 150,
+          align: "center",
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "error",
+                    size: "small"
+                  },
+                  on: {
+                    click: () => {
+                      this.delLowerCompanyOne(params.index);
+                    }
+                  }
+                },
+                "删除"
+              )
+            ]);
+          }
+        }
+      ],
+      columns1: [
+        {
+          type: "selection",
+          width: 60,
+          align: "center"
+        },
+        {
+          type: "index",
+          width: 60,
+          align: "center"
+        },
+        {
+          title: "公司ID",
+          key: "groupId"
+        },
+        {
+          title: "公司名称",
+          key: "groupName"
+        },
+        {
           title: "公司简称",
           key: "groupShortName"
+        },
+        {
+          title: "公司类型",
+          key: "depFunction"
         },
         {
           title: "修改时间",
@@ -134,8 +227,8 @@ export default {
         this.companyCurrentPage,
         this.companyPageSize
       ).then(res => {
-        this.companyData = res;
-        this.companyTotal = res.length;
+        this.companyData = res.tableContent;
+        this.companyTotal = res.dataCount;
         this.companyLoading = false;
       });
     },
@@ -149,8 +242,8 @@ export default {
         this.lowerCompanyCurrentPage,
         this.lowerCompanyPageSize
       ).then(res => {
-        this.lowerCompanyData = res;
-        this.lowerCompanyTotal = res.length;
+        this.lowerCompanyData = res.tableContent;
+        this.lowerCompanyTotal = res.dataCount;
         this.lowerLoading = false;
       });
     },
@@ -206,15 +299,37 @@ export default {
         this.deleteCompanyData.forEach(function(d) {
           groupIds.push(d.groupId);
         });
-        removeCompany(groupIds).then(res => {
-          if (res.success) {
-            this.$Message.success("删除成功!");
-            this.getlowerCompanyData();
+        this.$Modal.confirm({
+          title: "确认",
+          content: "确认批量删除下级公司？",
+          onOk: () => {
+            removeCompany(groupIds).then(res => {
+              if (res.success) {
+                this.$Message.success("删除成功!");
+                this.getlowerCompanyData();
+              }
+            });
           }
         });
       } else {
         this.$Message.warning("请选择至少一个公司！");
       }
+    },
+    delLowerCompanyOne(index) {
+      let groupIds = [];
+      groupIds.push(this.lowerCompanyData[index].groupId);
+      this.$Modal.confirm({
+        title: "确认",
+        content: "确认删除此下级公司？",
+        onOk: () => {
+          removeCompany(groupIds).then(res => {
+            if (res.success) {
+              this.$Message.success("删除成功!");
+              this.getlowerCompanyData();
+            }
+          });
+        }
+      });
     },
     delCompanyChange(selection) {
       this.deleteCompanyData = selection;

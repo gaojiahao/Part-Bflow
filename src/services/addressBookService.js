@@ -186,6 +186,16 @@ export const getInstanceCountByUserId = (userId) => request('/H_roleplay-si/app/
   userId: userId
 });
 
+/**
+ * @author XiaoYing
+ * @description 获取用户工作流任务数据
+ */
+export const getWorkFlowTaskByUserId = (userId,currentPage,pageSize) => request('/H_roleplay-si/ds/getWorkFlowTaskByUserId', {
+  userId: userId,
+  page: currentPage,
+  limit: pageSize
+});
+
 
 /************  组织  **************/
 
@@ -592,4 +602,30 @@ export const removeCompany = (groupIds) => {
  * 
  */
 export const getAllCompanys = () => request('/H_roleplay-si/sysGroup/getCompanyList');
+
+/**
+ * @author zhaohuai
+ * 更新公司信息
+ * 
+ */
+export const updateConpanyInfo = (data) => {
+  let {
+    groupName,
+    groupShortName,
+    depFunction,
+    status,
+    comment,
+    groupId,
+    groupPic
+  } = data
+  return request('/H_roleplay-si/sysGroup/update', {}, 'POST', [{
+    groupName: groupName,
+    groupShortName: groupShortName,
+    depFunction: depFunction,
+    status: status,
+    comment: comment,
+    groupId: groupId,
+    groupPic: groupPic
+  }])
+}
 /************  公司  **************/

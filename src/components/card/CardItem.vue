@@ -48,6 +48,15 @@ export default {
           }
         },
         {
+          title: "当前节点",
+          key: "nodeName"
+        },
+        {
+          title: "审批者",
+          key: "assigneeName",
+          width: 90
+        },
+        {
           title: "创建者",
           key: "creatorName",
           sortable: true

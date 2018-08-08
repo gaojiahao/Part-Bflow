@@ -186,6 +186,16 @@ export const getInstanceCountByUserId = (userId) => request('/H_roleplay-si/app/
   userId: userId
 });
 
+/**
+ * @author XiaoYing
+ * @description 获取用户工作流任务数据
+ */
+export const getWorkFlowTaskByUserId = (userId,currentPage,pageSize) => request('/H_roleplay-si/ds/getWorkFlowTaskByUserId', {
+  userId: userId,
+  page: currentPage,
+  limit: pageSize
+});
+
 
 /************  组织  **************/
 

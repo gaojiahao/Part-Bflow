@@ -43,7 +43,9 @@
       <!-- 直接权限 -->
       <direct-permission @changeInstance="getInstanceCount" v-if="whichShow.dirper"></direct-permission>
       <!-- 间接权限 -->
-      <indirect-permission @changeInstance="getInstanceCount" v-if="whichShow.indirper"></indirect-permission>
+      <indirect-permission v-if="whichShow.indirper"></indirect-permission>
+      <!-- 工作流任务 -->
+      <workfow-task  v-if="whichShow.workflow"></workfow-task>
     </Row>
   </Row>
 </template>
@@ -56,6 +58,7 @@ import DepartmentMember from "./instance/department";
 import RoleMember from "./instance/role";
 import DirectPermission from "./instance/direct-permission";
 import IndirectPermission from "./instance/indirect-permission";
+import WorkfowTask from './instance/workflow-task';
 import { getUserInfoById,getInstanceCountByUserId } from "@/services/addressBookService.js";
 
 export default {
@@ -67,7 +70,8 @@ export default {
     DepartmentMember,
     RoleMember,
     DirectPermission,
-    IndirectPermission
+    IndirectPermission,
+    WorkfowTask
   },
   props: {},
   data() {
@@ -82,15 +86,17 @@ export default {
         role: false,
         dirper: false,
         indirper: false,
+        workflow: false,
       },
       userInformation: {},
       relativeInstance: [
-        { name: "间接权限", showName: 'indirper', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/1_4.png' },
-        { name: "直接权限", showName: 'dirper', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/1_4.png' },
-        { name: "用户职位", showName: 'role', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/job.png' },
-        { name: "用户部门", showName: 'dep',  isShow: true,isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/organization.png' },
-        { name: "下级用户", showName: 'lowuser', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' },
-        { name: "上级用户", showName: 'highuser', isShow: true, isShowAcive: false, relativeNum: 1, imgUrl: 'resources/images/icon/user.png' },
+        { name: "工作流任务", showName: 'workflow', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/2_5.png' },
+        { name: "间接权限", showName: 'indirper', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/1_4.png' },
+        { name: "直接权限", showName: 'dirper', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/1_4.png' },
+        { name: "用户职位", showName: 'role', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/job.png' },
+        { name: "用户部门", showName: 'dep',  isShow: true,isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/organization.png' },
+        { name: "下级用户", showName: 'lowuser', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/user.png' },
+        { name: "上级用户", showName: 'highuser', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/user.png' },
         { name: "用户信息", showName: 'userinfo', isShow: true, isShowAcive: true, imgUrl: 'resources/images/icon/user.png' }
       ]
     };
@@ -125,12 +131,12 @@ export default {
     getInstanceCount() {
       if(this.userId){
         getInstanceCountByUserId(this.userId).then(res => {
-          this.relativeInstance[0].relativeNum = res.SysPermission;
-          this.relativeInstance[1].relativeNum = res.objectPermission;
-          this.relativeInstance[2].relativeNum = res.role;
-          this.relativeInstance[3].relativeNum = res.group;
-          this.relativeInstance[4].relativeNum = res.subordinate;
-          this.relativeInstance[5].relativeNum = res.superior;
+          this.relativeInstance[1].relativeNum = res.SysPermission;
+          this.relativeInstance[2].relativeNum = res.objectPermission;
+          this.relativeInstance[3].relativeNum = res.role;
+          this.relativeInstance[4].relativeNum = res.group;
+          this.relativeInstance[5].relativeNum = res.subordinate;
+          this.relativeInstance[6].relativeNum = res.superior;
         })
       }
     },

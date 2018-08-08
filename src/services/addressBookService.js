@@ -81,7 +81,7 @@ export const getAllUsers = (pageSize, currentPage) => request('/H_roleplay-si/ds
 export const updateHighUser = (userId, parentId) => request('/H_roleplay-si/userInfo/updateParentId', {
   userId: userId,
   parentId: parentId
-},'POST');
+}, 'POST');
 
 /**
  * @author XiaoYing
@@ -90,7 +90,7 @@ export const updateHighUser = (userId, parentId) => request('/H_roleplay-si/user
 export const deleteUser = (userId) => request('/H_roleplay-si/userInfo/updateParentId', {
   parentId: null,
   userId: userId
-},'POST');
+}, 'POST');
 
 /**
  * @author XiaoYing
@@ -104,7 +104,7 @@ export const getGroupData = (parentId) => request('/H_roleplay-si/ds/getUserGrou
  * @author XiaoYing
  * @description 添加组织或职位
  */
-export const addMember = (list,groupId, userId) => request('/H_roleplay-si/ps/updateRelation', {
+export const addMember = (list, groupId, userId) => request('/H_roleplay-si/ps/updateRelation', {
   list: list,
   single: groupId,
   multi: userId,
@@ -115,7 +115,7 @@ export const addMember = (list,groupId, userId) => request('/H_roleplay-si/ps/up
  * @author XiaoYing
  * @description 删除组织或职位
  */
-export const deleteMember = (list,groupId,userId) => request('/H_roleplay-si/ps/deleteRelation', {
+export const deleteMember = (list, groupId, userId) => request('/H_roleplay-si/ps/deleteRelation', {
   list: list,
   single: groupId,
   multi: userId
@@ -353,7 +353,7 @@ export const getObjDetailsCountByRoleId = (roleId) => request('/H_roleplay-si/ap
  * @description 获取组织基本信息
  */
 export const getAllRole = (filter) => request('/H_roleplay-si/ds/getAllRole', {
-    filter: filter,
+  filter: filter,
 });
 
 /**
@@ -509,11 +509,14 @@ export const addHigherCompany = (groupId, parentId) => {
  * @author zhaohuai
  * 新增下级公司
  */
-export const addLowerCompany = (groupId, parentId) => {
-  let data = [{
-    "groupId": groupId,
-    "parentId": parentId
-  }];
+export const addLowerCompany = (groupIds, parentId) => {
+  let data = [];
+  groupIds.forEach(function (g) {
+    data.push({
+      groupId: g,
+      parentId: parentId
+    })
+  });
   return request('/H_roleplay-si/sysGroup/update', {}, 'POST', data);
 }
 /**
@@ -521,7 +524,47 @@ export const addLowerCompany = (groupId, parentId) => {
  新增公司成员
  * 
  */
-export const addCompanyMember = (data) => {
-  return request('/H_roleplay-si/sysGroup/addGroupUser', "POST", data);
+export const addCompanyMember = (userIds, groupId) => {
+  let data = [];
+  userIds.forEach(function (u) {
+    data.push({
+      "userId": u,
+      "groupId": groupId
+    });
+  });
+  return request('/H_roleplay-si/sysGroup/addGroupUser', {}, 'POST', data);
+}
+/**
+ * @author zhaohuai
+ * 删除公司成员
+ */
+export const removeCompanyMember = (userIds, groupId) => {
+  let data = [];
+  if (userIds.length > 0) {
+    userIds.forEach(function (u) {
+      data.push({
+        "userId": u,
+        "groupId": groupId
+      });
+    });
+  }
+  return request('/H_roleplay-si/sysGroup/delGroupUser', {}, 'POST', data);
+}
+/**
+ * 
+ * @author zhaohuai
+ * 删除公司
+ */
+export const removeCompany = (groupIds) => {
+  let data = [];
+  if (groupIds.length > 0) {
+    groupIds.forEach(function (g) {
+      data.push({
+        "groupId": g,
+        "parentId": ""
+      })
+    });
+  }
+  return request('/H_roleplay-si/sysGroup/update', {}, 'POST', data);
 }
 /************  公司  **************/

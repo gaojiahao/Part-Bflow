@@ -14,11 +14,6 @@
 </style>
 <template>
     <div class="content-wrap">
-        <!-- <h3 class="herder-title">
-                <span style="color:red;">公司名称</span>&nbsp;/
-                <span>SODL_1807_0063</span>&nbsp;/
-                <span>行程中</span>
-            </h3> -->
         <Row class="detail-header">
             <Breadcrumb class="detail-header-bread">
                 <BreadcrumbItem>{{ companyInformation.nickname?companyInformation.nickname:'用户' }}</BreadcrumbItem>
@@ -124,6 +119,11 @@ export default {
         }
       });
     }
+  },
+  mounted() {
+    let tabsMaxHeight = document.body.clientHeight - 165;
+    window.document.getElementsByClassName("detail-content")[0].style.height =
+      tabsMaxHeight + "px";
   }
 };
 </script>

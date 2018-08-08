@@ -11,7 +11,8 @@
 <template>
   <div class="higher-company">
     <div class="higher-company-detail" id="cliHeight">
-      <Button type="info" @click="showCompanyModal" style="margin-bottom:5px">选择上级用户</Button>
+      <Button type="info" @click="showCompanyModal" style="margin-bottom:5px">选择上级公司</Button>
+      <Button type="info" @click="delCompany" style="margin-bottom:5px">删除</Button>
       <Table ref="selection" :columns="columns" :loading="higherLoading" :data="higherCompanyData"></Table>
       <div>
         <div style="float: right; ">
@@ -33,7 +34,8 @@
 <script>
 import {
   getCompanyList,
-  addHigherCompany
+  addHigherCompany,
+  removeCompany
 } from "@/services/addressBookService.js";
 export default {
   data() {
@@ -50,6 +52,11 @@ export default {
       companyPageSize: 10,
       companyData: [],
       columns: [
+        {
+          type: "index",
+          width: 60,
+          align: "center"
+        },
         {
           title: "公司ID",
           key: "groupId"
@@ -169,26 +176,33 @@ export default {
     onCompanyPageChange(currentPage) {
       this.companyCurrentPage = currentPage;
     },
-    //确认选择
     //添加上级用户
     addHigherCompany() {
       let parentId;
+      if (this.higherCompanyData.length > 0) {
+        this.$Message.warning("上级公司只能有一个！");
+        return;
+      }
       if (Object.keys(this.selectCompanyData).length > 0) {
         parentId = this.selectCompanyData.groupId;
-      } else {
-        this.$Message.warning("请选择至少一个公司！");
-      }
-
-      if (parentId && this.groupId) {
-        addHigherCompany(Number(this.groupId), Number(parentId)).then(res => {
+        addHigherCompany(this.groupId, parentId).then(res => {
           if (res.success) {
-            this.$Message.success(res.message);
+            this.$Message.success("新增成功!");
             this.getHigherCompanyData();
           }
         });
       } else {
-        this.$Message.warning("无公司ID，请先保存公司再进行编辑！");
+        this.$Message.warning("请选择至少一个公司！");
       }
+    },
+    //删除
+    delCompany() {
+      removeCompany([this.groupId]).then(res => {
+        if (res.success) {
+          this.$Message.success("删除成功!");
+          this.getHigherCompanyData();
+        }
+      });
     }
   },
   mounted() {

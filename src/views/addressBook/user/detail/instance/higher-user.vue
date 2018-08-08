@@ -82,15 +82,17 @@ export default {
         {
           title: "手机号",
           key: "mobile",
-          width: 100
+          width: 130
         },
         {
           title: "部门",
-          key: "dept"
+          key: "dept",
+          width: 200
         },
         {
           title: "小组",
-          key: "dept"
+          key: "dept",
+          width: 200
         },
         {
           title: "职位",
@@ -115,16 +117,6 @@ export default {
               }
             },userStatus);
           }
-        },
-        {
-          title: "创建时间",
-          key: "crtTime",
-          width: 150
-        },
-        {
-          title: "修改时间",
-          key: "modTime",
-          width: 150
         },
         {
           title: '操作',
@@ -215,16 +207,6 @@ export default {
               }
             },userStatus);
           }
-        },
-        {
-          title: "创建时间",
-          key: "crtTime",
-          width: 150
-        },
-        {
-          title: "修改时间",
-          key: "modTime",
-          width: 150
         }
       ],
       higherUserData: [],

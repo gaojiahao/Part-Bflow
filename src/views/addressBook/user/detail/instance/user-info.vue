@@ -175,7 +175,7 @@ export default {
         this.logo = '';
         this.$refs['upload'].fileList.splice(0,this.$refs['upload'].fileList.length);
     },
-
+    //判断上传头像大小
     handleMaxSize(file) {
       this.$Notice.warning({
         title: "文件大小超出范围",
@@ -256,10 +256,10 @@ export default {
     //格式化日期方法
     formatDate(currentDate) {
       let date = new Date(currentDate),
-        year = date.getFullYear(),
-        month = date.getMonth() + 1,
-        day = date.getDate(),
-        relDate;
+          year = date.getFullYear(),
+          month = date.getMonth() + 1,
+          day = date.getDate(),
+          relDate;
       if (month >= 1 && month <= 9) {
         month = "0" + month;
       }
@@ -268,8 +268,6 @@ export default {
       return relDate;
     }
   },
-  mounted() {
-     console.log(this.$route.params.isEdit);
-  }
+  mounted() {}
 };
 </script>

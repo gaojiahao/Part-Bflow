@@ -33,7 +33,7 @@
 
     <member-modal v-model="isShowModal" width="600" footerBtnAlign="right" title="权限列表" @on-ok="savePermission">
       <div style="max-height:350px;overflow:auto">
-        <Tree :data="allPermissionData" :multiple="false" @on-check-change="onCheckChange" :load-data="loadData" show-checkbox></Tree>
+        <Tree :data="allPermissionData" :multiple="true" @on-select-change="onCheckChange" :load-data="loadData" ></Tree>
       </div>
     </member-modal>
   </div>
@@ -156,6 +156,7 @@ export default {
         addOrgPermission(this.groupId, multiId.join(",")).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
+            this.selectPermissionNode = [];
             this.reload = true;
             this.isShowModal = false;
              this.$emit("on-permission-change", true);

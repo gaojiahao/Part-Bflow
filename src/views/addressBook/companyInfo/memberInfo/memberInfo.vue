@@ -52,25 +52,23 @@ export default {
         },
         {
           title: "工号",
-          width: 100,
           key: "userCode"
         },
         {
           title: "姓名",
-          width: 100,
           key: "nickname"
         },
         {
           title: "性别",
           key: "gender",
           render: (h, params) => {
-            let userStatus = "";
+            let gender = "";
             if (params.row.gender === 0) {
-              userStatus = "女";
+              gender = "女";
             } else if (params.row.gender === 1) {
-              userStatus = "男";
+              gender = "男";
             } else {
-              userStatus = "未知";
+              gender = "未知";
             }
             return h(
               "span",
@@ -79,33 +77,28 @@ export default {
                   color: "#39f"
                 }
               },
-              userStatus
+              gender
             );
           }
         },
         {
           title: "手机",
-          width: 150,
           key: "mobile"
         },
         {
           title: "邮箱",
-          width: 200,
           key: "email"
         },
         {
           title: "修改时间",
-          width: 150,
           key: "modTime"
         },
         {
           title: "创建时间",
-          width: 150,
           key: "crtTime"
         },
         {
           title: "创建者",
-          width: 150,
           key: "creator"
         },
         {

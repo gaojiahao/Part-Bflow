@@ -180,7 +180,9 @@ export default {
         S4()
       );
     },
-    goCompanyList() {}
+    goCompanyList() {
+      this.$router.push({ path: "/addressBook/companyInfo/board" });
+    }
   },
   mounted() {
     let groupId =

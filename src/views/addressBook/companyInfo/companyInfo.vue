@@ -16,7 +16,7 @@
   <div class="content-wrap">
     <Row class="detail-header">
       <Breadcrumb class="detail-header-bread">
-        <BreadcrumbItem to="/addressBook/user/board">公司列表</BreadcrumbItem>
+        <BreadcrumbItem to="/addressBook/companyInfo/board">公司列表</BreadcrumbItem>
         <BreadcrumbItem>{{ companyInformation.groupName?companyInformation.groupShortName:'待添加' }}</BreadcrumbItem>
         <BreadcrumbItem>{{ companyInformation.groupId?companyInformation.groupId:'创建' }}</BreadcrumbItem>
       </Breadcrumb>
@@ -136,7 +136,7 @@ export default {
     }
   },
   mounted() {
-    let tabsMaxHeight = document.body.clientHeight - 165;
+    let tabsMaxHeight = document.body.clientHeight - 120;
     window.document.getElementsByClassName("detail-content")[0].style.height =
       tabsMaxHeight + "px";
     let groupId =

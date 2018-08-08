@@ -74,7 +74,7 @@ export default {
   data() {
     return {
       httpHeaders: {
-        Authorization: "7c1b4ebb6d4a4b54afdeeab90b964a97"
+        Authorization: getToken()
       },
       logo: "",
       visible: false,

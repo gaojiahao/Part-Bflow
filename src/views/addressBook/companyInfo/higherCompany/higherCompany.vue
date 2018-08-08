@@ -231,8 +231,8 @@ export default {
         this.higherCompanyCurrentPage,
         this.higherCompanyPageSize
       ).then(res => {
-        this.higherCompanyData = res.tableContent;
-        this.higherCompanyTotal = res.dataCount;
+        this.higherCompanyData = res;
+        this.higherCompanyTotal = res.length;
         this.higherLoading = false;
       });
     },

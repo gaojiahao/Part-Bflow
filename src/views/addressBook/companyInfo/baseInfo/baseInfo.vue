@@ -23,7 +23,7 @@
             <img :src="logo" v-if="visible" style="width: 100%">
           </Modal>
         </div>
-        <Form :model="baseInfoItem" :label-width="80" :rules="ruleValidate">
+        <Form :model="baseInfoItem" ref="baseInfoItem" :label-width="80" :rules="ruleValidate">
           <FormItem label="公司名称" prop="groupName">
             <Input v-model="baseInfoItem.groupName"></Input>
           </FormItem>
@@ -56,9 +56,10 @@
       </div>
     </div>
     <Row class="info-btn">
-      <Button @click="updateCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存</Button>
+      <Button v-if="baseInfoItem.groupId" @click="updateCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">更新</Button>
+      <Button v-else @click="addCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存</Button>
       <Button @click="goCompanyList" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">取消</Button>
-      <!-- <Button v-if="groupId?noShowSaveAddBtn:showSaveAddBtn" @click="saveAndAddUser" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存并继续添加</Button> -->
+      <Button v-if="!baseInfoItem.groupId" @click="saveAndAddCompany" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存并继续添加</Button>
     </Row>
   </div>
 </template>
@@ -68,7 +69,8 @@ import { getToken } from "@/utils/utils";
 import {
   saveCompanyInfo,
   updateCompanyInfo,
-  getCompanyInfoByGroupId
+  getCompanyInfoByGroupId,
+  updateConpanyInfo
 } from "@/services/addressBookService.js";
 export default {
   data() {
@@ -130,7 +132,7 @@ export default {
       });
     },
     //保存公司基本信息
-    updateCompanyData() {
+    addCompanyData() {
       let baseInfo = this.baseInfoItem;
       let data = {
         groupName: baseInfo.groupName,
@@ -141,15 +143,20 @@ export default {
         groupCode: this.guid(),
         groupPic: this.logo
       };
-      saveCompanyInfo(data).then(res => {
-        let groupId =
-          this.$route.name == "add"
-            ? this.$route.name
-            : this.$route.params.groupId;
-        if (res.success) {
-          this.$Message.info("保存成功");
-        } else {
-          this.$Message.error(res.message);
+      this.$refs["baseInfoItem"].validate(valid => {
+        if (valid) {
+          saveCompanyInfo(data).then(res => {
+            let groupId =
+              this.$route.name == "add"
+                ? this.$route.name
+                : this.$route.params.groupId;
+            if (res.success) {
+              this.$Message.info("保存成功");
+              this.$router.push({ path: "/addressBook/companyInfo/board" });
+            } else {
+              this.$Message.error(res.message);
+            }
+          });
         }
       });
     },
@@ -182,6 +189,72 @@ export default {
     },
     goCompanyList() {
       this.$router.push({ path: "/addressBook/companyInfo/board" });
+    },
+    //保存并新增
+    saveAndAddCompany() {
+      let baseInfo = this.baseInfoItem;
+      let data = {
+        groupName: baseInfo.groupName,
+        groupShortName: baseInfo.groupShortName,
+        depFunction: baseInfo.depFunction,
+        status: baseInfo.status,
+        comment: baseInfo.comment,
+        groupCode: this.guid(),
+        groupPic: this.logo
+      };
+      this.$refs["baseInfoItem"].validate(valid => {
+        if (valid) {
+          saveCompanyInfo(data).then(res => {
+            let groupId =
+              this.$route.name == "add"
+                ? this.$route.name
+                : this.$route.params.groupId;
+            if (res.success) {
+              this.$Message.info("保存成功");
+              this.$refs["baseInfoItem"].resetFields();
+              this.logo = "";
+              this.baseInfoItem.groupName = "";
+              this.baseInfoItem.groupShortName = "";
+              this.baseInfoItem.status = "1";
+              this.baseInfoItem.depFunction = "";
+              this.baseInfoItem.comment = "";
+              this.$refs["upload"].fileList.splice(
+                0,
+                this.$refs["upload"].fileList.length
+              );
+            } else {
+              this.$Message.error(res.message);
+            }
+          });
+        }
+      });
+    },
+    updateCompanyData() {
+      let baseInfo = this.baseInfoItem;
+      let groupId =
+        this.$route.name == "add"
+          ? this.$route.name
+          : this.$route.params.groupId;
+      let data = {
+        groupName: baseInfo.groupName,
+        groupShortName: baseInfo.groupShortName,
+        depFunction: baseInfo.depFunction,
+        status: baseInfo.status,
+        comment: baseInfo.comment,
+        groupId: groupId,
+        groupPic: this.logo
+      };
+      this.$refs["baseInfoItem"].validate(valid => {
+        if (valid) {
+          updateConpanyInfo(data).then(res => {
+            if (res.success) {
+              this.$Message.info("更新成功");
+            } else {
+              this.$Message.error(res.message);
+            }
+          });
+        }
+      });
     }
   },
   mounted() {

@@ -12,7 +12,7 @@
                 <Col span="17" class="rfd-card-content">
                     <h5 class="text-nowrap font14">{{ company.groupName }}
                     </h5>
-                    <p>{{company.groupType}}<Tag class="fr radius10 color_fff"  v-instanceStateDirective="{status:company.status}" ></Tag></p>
+                    <p>{{company.depFunction}}<Tag class="fr radius10 color_fff"  v-instanceStateDirective="{status:company.status}" ></Tag></p>
                     <p>{{company.principal}}</p>
                 </Col>
             </Row>

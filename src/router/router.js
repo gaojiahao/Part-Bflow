@@ -87,7 +87,8 @@ export const addressBook = {
   redirect: 'addressBook/user',
   component: () =>
     import ('@/views/addressBook/index.vue'),
-  children: [{
+  children: [
+    {
     path: 'user',
     name: 'user',
     meta: {
@@ -120,7 +121,8 @@ export const addressBook = {
       component: () =>
         import ('@/views/addressBook/user/detail/detail.vue')
     }]
-  }, {
+    }, 
+    {
     path: 'organization',
     name: 'organization',
     meta: {
@@ -154,7 +156,8 @@ export const addressBook = {
         import ('@/views/addressBook/organization/organization.vue')
     }]
 
-  }, {
+    }, 
+    {
     path: 'job',
     name: 'job',
     meta: {
@@ -187,8 +190,8 @@ export const addressBook = {
       component: () =>
       import ('@/views/addressBook/job/job.vue')
     }]
-
-  }, {
+    }, 
+    {
     path: 'companyInfo',
     name: 'companyInfo',
     meta: {
@@ -197,6 +200,14 @@ export const addressBook = {
     component: () =>
       import ('@/views/addressBook/companyInfo/index.vue'),
     children: [{
+      path: 'board',
+      name: 'board',
+      meta: {
+        title: '公司看板'
+      },
+      component: () =>
+        import ('@/views/addressBook/companyInfo/board/board.vue')
+    },{
       path: 'baseInfo/:groupId',
       name: 'companyInfo',
       meta: {
@@ -204,52 +215,14 @@ export const addressBook = {
       },
       component: () =>
         import ('@/views/addressBook/companyInfo/companyInfo.vue'),
-    }, {
-        path: 'job',
-        name: 'job',
-        meta: {
-            title: '职位'
-        },
-        component: () => import('@/views/addressBook/job/index.vue'),
-        children: [{
-            path: 'board',
-            name: 'board',
-            meta: {
-                title: '职位看板'
-            },
-            component: () => import('@/views/addressBook/job/board/board.vue')
-        },{
-            path: 'detail/:jobId',
-            name: 'detail',
-            meta: {
-                title: '职位详情'
-            },
-            component: () => import('@/views/addressBook/job/job.vue') 
-        }, {
-            path: 'add',
-            name: 'add',
-            meta: {
-                title: '新增职位'
-            },
-            component: () => import('@/views/addressBook/job/job.vue')
-        }]
-        
     },{
-        path: 'companyInfo/:groupId',
-        name: 'companyInfo',
-        meta: {
-        title: 'companyInfo  - 公司信息'
-        },
-        component: () => import('@/views/addressBook/companyInfo/companyInfo.vue')  },
-        {
-          path: 'add',
-          name: 'add',
-          meta: {
-            title: '新增'
-          },
-          component: () =>import('@/views/addressBook/companyInfo/companyInfo.vue')
-        }
-     ]
+      path: 'add',
+      name: 'add',
+      meta: {
+        title: '新增'
+      },
+      component: () =>import('@/views/addressBook/companyInfo/companyInfo.vue')
+    }]
   }]
 }
 

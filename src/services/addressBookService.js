@@ -426,7 +426,7 @@ export const getAllUser = (currentPage, pageSize) => request('/H_roleplay-si/ds/
  * 根据公司id获取公司信息
  * 
  */
-export const getCompanyInfoByGroupId = (groupId) => request('/H_roleplay-si/ds/getGroupById', {
+export const getCompanyInfoByGroupId = (groupId) => request('/H_roleplay-si/sysGroup/getCompanyList', {
   groupId: groupId
 })
 /**
@@ -440,7 +440,8 @@ export const saveCompanyInfo = (data) => {
     depFunction,
     status,
     comment,
-    groupCode
+    groupCode,
+    groupPic
   } = data;
   return request('/H_roleplay-si/sysGroup/saveBatch', {}, 'POST', [{
     groupName: groupName,
@@ -451,7 +452,8 @@ export const saveCompanyInfo = (data) => {
     list: 'sys_group',
     groupType: 'C',
     parentId: '1',
-    groupCode: groupCode
+    groupCode: groupCode,
+    groupPic: groupPic
   }]);
 };
 /**
@@ -492,6 +494,22 @@ export const getCompanyList = (groupId, target, currentPage, pageSize) => reques
   currentPage: currentPage,
   pageSize: pageSize
 });
+/**
+ * @author zhaohuai
+ * 获取公司成员
+ */
+export const getGroupUser = (groupId, currentPage, pageSize) => request('/H_roleplay-si/sysGroup/getGroupUser', {
+  groupId: groupId,
+  currentPage: currentPage,
+  pageSize: pageSize
+})
+/**
+ * @author zhaohuai
+ * 获取公司相关实例数
+ */
+export const getInstanceCountByGroupId = (groupId) => request('/H_roleplay-si/sysGroup/getGroupExampleCount', {
+  groupId: groupId,
+})
 /**
  * 
  * @author zhaohuai
@@ -543,8 +561,8 @@ export const removeCompanyMember = (userIds, groupId) => {
   if (userIds.length > 0) {
     userIds.forEach(function (u) {
       data.push({
-        "userId": u,
-        "groupId": groupId
+        "userId": Number(u),
+        "groupId": Number(groupId)
       });
     });
   }
@@ -560,7 +578,7 @@ export const removeCompany = (groupIds) => {
   if (groupIds.length > 0) {
     groupIds.forEach(function (g) {
       data.push({
-        "groupId": g,
+        "groupId": Number(g),
         "parentId": ""
       })
     });

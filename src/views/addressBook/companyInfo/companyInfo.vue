@@ -13,35 +13,37 @@
 }
 </style>
 <template>
-    <div class="content-wrap">
-        <Row class="detail-header">
-            <Breadcrumb class="detail-header-bread">
-                <BreadcrumbItem>{{ companyInformation.nickname?companyInformation.nickname:'用户' }}</BreadcrumbItem>
-                <BreadcrumbItem>{{ companyInformation.userCode?companyInformation.userCode:'创建' }}</BreadcrumbItem>
-            </Breadcrumb>
-            <Tag v-show="companyInformation.status" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:companyInformation.status,color:'#eb2f96'}"></Tag>
-        </Row>
-        <Row class="detail-tabs">
-            <div @click="onClickTab(index)" v-if="groupId?item.isShow:item.isShowAcive" :class="{'detail-tabs-child':true,'active':item.isShowAcive}" v-for="(item,index) of relativeInstance" :key="index">
-                <img :src="item.imgUrl" />
-                <div class="detail-tabs-child-right">
-                    <span>{{ item.relativeNum }}</span>
-                    <p>{{ item.name }}</p>
-                </div>
-            </div>
-        </Row>
-        <Row class="detail-content">
-            <!-- 公司基本信息 -->
-            <base-info v-if="whichShow.baseInfo"></base-info>
-            <!-- 公司成员-->
-            <member-info v-if="whichShow.member"></member-info>
-            <!--上级公司-->
-            <higher-company v-if="whichShow.higherCompany"></higher-company>
-            <!--下级公司-->
-            <lower-company v-if="whichShow.lowerCompany"></lower-company>
+  <div class="content-wrap">
+    <Row class="detail-header">
+      <Breadcrumb class="detail-header-bread">
+        <BreadcrumbItem to="/addressBook/user/board">公司列表</BreadcrumbItem>
+        <BreadcrumbItem>{{ companyInformation.groupName?companyInformation.groupShortName:'待添加' }}</BreadcrumbItem>
+        <BreadcrumbItem>{{ companyInformation.groupId?companyInformation.groupId:'创建' }}</BreadcrumbItem>
+      </Breadcrumb>
+      <Tag v-show="companyInformation.status" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:companyInformation.status,color:'#eb2f96'}"></Tag>
+    </Row>
+    <Row class="detail-tabs">
+      <div @click="onClickTab(index)" v-if="groupId?item.isShow:item.isShowAcive" :class="{'detail-tabs-child':true,'active':item.isShowAcive}" v-for="(item,index) of relativeInstance" :key="index">
+        <img :src="item.imgUrl" />
+        <div class="detail-tabs-child-right">
+          <span v-if="item.relativeNum">{{ item.relativeNum }}</span>
+          <span v-else>&nbsp;</span>
+          <p>{{ item.name }}</p>
+        </div>
+      </div>
+    </Row>
+    <Row class="detail-content">
+      <!-- 公司基本信息 -->
+      <base-info v-if="whichShow.baseInfo"></base-info>
+      <!-- 公司成员-->
+      <member-info v-if="whichShow.member"></member-info>
+      <!--上级公司-->
+      <higher-company v-if="whichShow.higherCompany"></higher-company>
+      <!--下级公司-->
+      <lower-company v-if="whichShow.lowerCompany"></lower-company>
 
-        </Row>
-    </div>
+    </Row>
+  </div>
 </template>
 
 <script>
@@ -49,6 +51,10 @@ import BaseInfo from "@/views/addressBook/companyInfo/baseInfo/baseInfo";
 import MemberInfo from "@/views/addressBook/companyInfo/memberInfo/memberInfo";
 import HigherCompany from "@/views/addressBook/companyInfo/higherCompany/higherCompany";
 import LowerCompany from "@/views/addressBook/companyInfo/lowerCompany/lowerCompany";
+import {
+  getCompanyInfoByGroupId,
+  getInstanceCountByGroupId
+} from "@/services/addressBookService.js";
 export default {
   components: {
     BaseInfo,
@@ -66,9 +72,9 @@ export default {
         member: false
       },
       companyInformation: {
-        nickname: "测试",
-        userCode: "1234",
-        status: 1
+        nickname: "",
+        userCode: "",
+        status: 3
       },
       relativeInstance: [
         {
@@ -76,7 +82,6 @@ export default {
           showName: "lowerCompany",
           isShow: true,
           isShowAcive: false,
-          relativeNum: 1,
           imgUrl: "resources/images/icon/company.png"
         },
         {
@@ -84,7 +89,6 @@ export default {
           showName: "higherCompany",
           isShow: true,
           isShowAcive: false,
-          relativeNum: 1,
           imgUrl: "resources/images/icon/company.png"
         },
         {
@@ -92,7 +96,6 @@ export default {
           showName: "member",
           isShow: true,
           isShowAcive: false,
-          relativeNum: 1,
           imgUrl: "resources/images/icon/user.png"
         },
         {
@@ -100,7 +103,6 @@ export default {
           showName: "baseInfo",
           isShow: true,
           isShowAcive: true,
-          relativeNum: 1,
           imgUrl: "resources/images/icon/company.png"
         }
       ]
@@ -118,12 +120,32 @@ export default {
           this.whichShow[val.showName] = false;
         }
       });
+    },
+    //获取公司基本信息
+    getCompanyInfo(groupId) {
+      getCompanyInfoByGroupId(groupId).then(res => {
+        this.companyInformation = res[0];
+      });
+    },
+    //更新相关实例数量{}
+    getInstanceCount() {
+      getInstanceCountByGroupId(this.groupId).then(res => {
+        this.relativeInstance[2].relativeNum = res.groupUser;
+        this.relativeInstance[0].relativeNum = res.subord;
+      });
     }
   },
   mounted() {
     let tabsMaxHeight = document.body.clientHeight - 165;
     window.document.getElementsByClassName("detail-content")[0].style.height =
       tabsMaxHeight + "px";
+    let groupId =
+      this.$route.name == "add" ? this.$route.name : this.$route.params.groupId;
+    if ("add" == groupId) {
+      return;
+    }
+    this.getCompanyInfo(groupId);
+    this.getInstanceCount();
   }
 };
 </script>

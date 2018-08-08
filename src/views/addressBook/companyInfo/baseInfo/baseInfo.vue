@@ -5,16 +5,27 @@
   <div class="baseInfo">
     <div class="baseInfo-warp">
       <div class="baseInfo-body">
-          <div class="uploadImg">
-          <Upload ref="upload" :show-upload-list="false" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" multiple type="drag" action="//jsonplaceholder.typicode.com/posts/">
-            <div style="width: 58px;height:58px;line-height: 58px;">
-              <Icon type="ios-camera" size="20"></Icon>
+        <div class="uploadImg">
+          <Upload ref="upload" :show-upload-list="false" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" multiple type="drag" action="/H_roleplay-si/ds/upload" :headers="httpHeaders" style="display: inline-block;width:128px;vertical-align: middle;">
+            <div style="width: 128px;height:128px;line-height: 128px;" v-if="!logo">
+              <img v-if="logo" :src="logo">
+              <i v-if="!logo" class="iconfont">&#xe63b;</i>
+            </div>
+            <div style="width: 128px;height:128px;line-height: 128px;" class="demo-upload-list" v-if="logo">
+              <img :src="logo">
+              <div class="demo-upload-list-cover">
+                <Icon type="ios-eye-outline" color="#fff" size="30" @click.stop="handleView"></Icon>
+                <Icon type="ios-trash-outline" color="#fff" size="30" @click.stop="handleRemove"></Icon>
+              </div>
             </div>
           </Upload>
+          <Modal title="查看头像" v-model="visible">
+            <img :src="logo" v-if="visible" style="width: 100%">
+          </Modal>
         </div>
         <Form :model="baseInfoItem" :label-width="80" :rules="ruleValidate">
-          <FormItem label="公司名称">
-            <Input v-model="baseInfoItem.groupName" pop="groupName"></Input>
+          <FormItem label="公司名称" prop="groupName">
+            <Input v-model="baseInfoItem.groupName"></Input>
           </FormItem>
           <FormItem label="公司简称">
             <Input v-model="baseInfoItem.groupShortName"></Input>
@@ -53,6 +64,7 @@
 </template>
 
 <script>
+import { getToken } from "@/utils/utils";
 import {
   saveCompanyInfo,
   updateCompanyInfo,
@@ -61,6 +73,11 @@ import {
 export default {
   data() {
     return {
+      httpHeaders: {
+        Authorization: "7c1b4ebb6d4a4b54afdeeab90b964a97"
+      },
+      logo: "",
+      visible: false,
       baseInfoItem: {
         groupName: "",
         groupShortName: "",
@@ -80,6 +97,38 @@ export default {
     };
   },
   methods: {
+    handleSuccess(res, file) {
+      this.logo =
+        "/H_roleplay-si/ds/download?width=128&height=128&specify=true&url=" +
+        res.data[0].attacthment;
+    },
+
+    //查看头像
+    handleView() {
+      this.visible = true;
+    },
+    //删除头像
+    handleRemove() {
+      this.logo = "";
+      this.$refs["upload"].fileList.splice(
+        0,
+        this.$refs["upload"].fileList.length
+      );
+    },
+    handleMaxSize(file) {
+      this.$Notice.warning({
+        title: "文件大小超出范围",
+        desc: "文件大小最大为2M"
+      });
+    },
+
+    //判断上传图片格式是否有误
+    handleFormatError(file) {
+      this.$Notice.warning({
+        title: "文件格式不对",
+        desc: "请上传格式为png 或者 jpg 的图片"
+      });
+    },
     //保存公司基本信息
     updateCompanyData() {
       let baseInfo = this.baseInfoItem;
@@ -89,9 +138,9 @@ export default {
         depFunction: baseInfo.depFunction,
         status: baseInfo.status,
         comment: baseInfo.comment,
-        groupCode: this.guid()
+        groupCode: this.guid(),
+        groupPic: this.logo
       };
-      //保存公司基本信息
       saveCompanyInfo(data).then(res => {
         let groupId =
           this.$route.name == "add"
@@ -107,7 +156,8 @@ export default {
     //获取公司基本信息
     getCompanyInfo(groupId) {
       getCompanyInfoByGroupId(groupId).then(res => {
-        this.baseInfoItem = res.tableContent[0];
+        this.baseInfoItem = res[0];
+        this.logo = res[0].groupPic;
         this.baseInfoItem.status = String(this.baseInfoItem.status);
       });
     },

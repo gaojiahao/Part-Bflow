@@ -7,9 +7,25 @@
     padding: 50px 200px 20px 200px;
     min-height: 740px;
 }
+.demo-upload-list-cover {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+  }
+  .demo-upload-list:hover .demo-upload-list-cover {
+    display: block;
+  }
+  .demo-upload-list-cover i {
+    cursor: pointer;
+  }
 .uploadImg {
-    display: absolute;
-    width: 59px;
+    position: absolute;
+    margin-top: 10px;
+    margin-left: -150px;
 }
 .info-btn{
       width: 100%;
@@ -20,5 +36,5 @@
       position: fixed !important;
       bottom: 0px;
       border-bottom: 5px solid rgb(102, 102, 102) !important;
-      border-top: 1px solid #ddd;
+      //border-top: 1px solid #ddd;
 }

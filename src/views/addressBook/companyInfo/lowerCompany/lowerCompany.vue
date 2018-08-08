@@ -17,10 +17,10 @@
 <template>
   <div class="lower-company">
     <div class="lower-company-detail" id="cliHeight">
-      <b @click="showCompanyModal" class="lower-company-detail-btn">公司列表</b>
+      <b @click="showCompanyModal" class="lower-company-detail-btn">添加公司</b>
       <span style="color: #7a7676;">-选择下级公司</span>
       <b @click="delCompany" class="lower-company-detail-btn">删除</b>
-      <span style="color: #7a7676;">-批量删除公司成员</span>
+      <span style="color: #7a7676;">-批量删除下级公司</span>
       <br>
       <Table ref="selection" :columns="columns" :loading="lowerLoading" :data="lowerCompanyData" @on-selection-change="delCompanyChange"></Table>
       <div style="margin: 10px;overflow: hidden">

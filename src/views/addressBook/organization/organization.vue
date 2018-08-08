@@ -126,9 +126,9 @@ export default {
         groupType: "",
         depFunction: "",
         comment: "",
-        status: "1"
+        status: 1
       },
-      groupType:'',
+      groupType: "",
 
       statusRadio: [
         {
@@ -204,7 +204,9 @@ export default {
     },
 
     cancle() {
-      this.$router.push({ path: "/dist/index.html#/addressBook/organization/board" });
+      this.$router.push({
+        path: "/dist/index.html#/addressBook/organization/board"
+      });
     },
 
     saveAndAdd() {
@@ -214,6 +216,13 @@ export default {
           if (res.success) {
             this.$Message.success("保存成功");
             this.$refs["formItem"].resetFields();
+            this.formItem = {
+              groupName: "",
+              groupType: "",
+              depFunction: "",
+              comment: "",
+              status: 1
+            };
           }
         });
       }
@@ -224,7 +233,7 @@ export default {
       saveBaseinfo(this.formItem).then(res => {
         if (res.success) {
           this.$Message.success("保存成功");
-          this.$router.push({ path: '/addressBook/organization/board'});
+          this.$router.push({ path: "/addressBook/organization/board" });
         }
       });
     },
@@ -275,19 +284,19 @@ export default {
           this.formItem.depFunction = tableContent.depFunction;
           this.formItem.status = tableContent.status;
           this.formItem.comment = tableContent.comment;
-          switch(tableContent.groupType){
-            case 'M':
-            this.groupType = "管理层"
-            break;
-            case 'A':
-              this.groupType = "事业部"
-            break;
-            case 'O':
-              this.groupType = "部门"
-            break;
-            case 'G':
-              this.groupType = "小组"
-            break;
+          switch (tableContent.groupType) {
+            case "M":
+              this.groupType = "管理层";
+              break;
+            case "A":
+              this.groupType = "事业部";
+              break;
+            case "O":
+              this.groupType = "部门";
+              break;
+            case "G":
+              this.groupType = "小组";
+              break;
           }
         }
       });

@@ -66,11 +66,6 @@ export default {
       },
       highOrgColumns: [
         {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
           type: "index",
           width: 60,
           align: "center"

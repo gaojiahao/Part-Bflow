@@ -46,18 +46,18 @@
           </FormItem>
           <FormItem label="组织类型" :labelWidth="100">
             <RadioGroup v-model="formItem.groupType">
-              <Radio label="管理层">管理层</Radio>
-              <Radio label="事业部">事业部</Radio>
-              <Radio label="部门">部门</Radio>
-              <Radio label="小组">小组</Radio>
+              <Radio label="M">管理层</Radio>
+              <Radio label="A">事业部</Radio>
+              <Radio label="O">部门</Radio>
+              <Radio label="G">小组</Radio>
             </RadioGroup>
           </FormItem>
           <FormItem label="部门职能类型" :labelWidth="100" v-if="formItem.groupType ==='部门'">
             <RadioGroup v-model="formItem.depFunction">
-              <Radio label="管理">管理</Radio>
-              <Radio label="销售">销售</Radio>
-              <Radio label="制造">制造</Radio>
-              <Radio label="研发">研发</Radio>
+              <Radio label="M">管理</Radio>
+              <Radio label="S">销售</Radio>
+              <Radio label="C">制造</Radio>
+              <Radio label="R">研发</Radio>
             </RadioGroup>
           </FormItem>
           <FormItem label="组织说明" :labelWidth="100">

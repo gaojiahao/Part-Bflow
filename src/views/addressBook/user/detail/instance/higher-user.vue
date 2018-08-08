@@ -30,7 +30,8 @@
             v-model="showModal"
             title="选择用户"
             :footer-hide="true"
-            width="1000">
+            width="1000"
+            :draggable="true">
             <Table @on-row-dblclick="onDbClick" ref="selection" :highlight-row="true" height="400" :loading="userLoading" :columns="userColumns" :data="userData"></Table>
             <div class="user-page">
                 <div class="fr">

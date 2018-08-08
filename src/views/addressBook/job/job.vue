@@ -3,75 +3,75 @@
 </style>
 
 <template>
-    <div class="job-wrap">
-        <header class="job-wrap-header">
-            <h2 v-if="jobId">
-                <span style="color:#4CAF50">{{formItem.name}}</span>
-                <span style="color:#808080;margin-left:10px">/</span>
-                <span style="color:#808080;margin-left:10px">{{jobId}}</span>
-                <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status,color:'#eb2f96'}"></Tag>
-            </h2>
-            <h2 v-if="!jobId">
-                <span style="color:#4CAF50">添加职位</span>
-            </h2>
-        </header>
+  <div class="job-wrap">
+    <header class="job-wrap-header">
+      <h2 v-if="jobId">
+        <span style="color:#4CAF50">{{formItem.name}}</span>
+        <span style="color:#808080;margin-left:10px">/</span>
+        <span style="color:#808080;margin-left:10px">{{jobId}}</span>
+        <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status,color:'#eb2f96'}"></Tag>
+      </h2>
+      <h2 v-if="!jobId">
+        <span style="color:#4CAF50">添加职位</span>
+      </h2>
+    </header>
 
-        <div class="job-wrap-action">
-            <ul>
-                <li v-for="(item,index) in actionBtn" :key="index" v-if="!item.hidden" class="job-wrap-action-li" v-bind:class="index===actionIndex?'job-wrap-action-li-active':''" @click="handlerViewChange(index)">
-                    <div style="padding:5px 0">
-                        <img :src="item.imgPath" class="job-wrap-action-li-img"><img>
-                        <div class="left-content">
-                            <span v-show="item.number!=='undefine'">{{item.number}}</span>
-                            <h3>{{item.label}}</h3>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-
-        <div class="job-wrap-tabs">
-            <!-- 基本信息 -->
-            <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===2">
-                <Form :model="formItem" :labelWidth="100">
-                    <FormItem label="职位名称:" style="font-size:16px">
-                        <Input v-model="formItem.name" />
-                    </FormItem>
-                    <FormItem label="职位状态" :labelWidth="100">
-                        <Select v-model="formItem.status">
-                            <Option v-for="(item,index) in statusRadio" :key="index" :value="item.value">{{item.name}}</Option>
-                        </Select>
-                    </FormItem>
-                    <FormItem label="职位类型" :labelWidth="100">
-                        <RadioGroup v-model="formItem.type">
-                            <Radio label="M">管理类</Radio>
-                            <Radio label="Y">营销类</Radio>
-                            <Radio label="J">技术类</Radio>
-                            <Radio label="Z">专业类</Radio>
-                            <Radio label="C">操作类</Radio>
-                        </RadioGroup>
-                    </FormItem>
-                    <FormItem label="职位说明" :labelWidth="100">
-                        <Input v-model="formItem.describe" type="textarea" :autosize="{minRows: 3,maxRows: 5}" />
-                    </FormItem>
-                </Form>
-                <div class="baseinfo-container-action">
-                    <input type='submit' value="取消" class="baseinfo-container-action-submit" @click="cancle" />
-                    <input type='submit' value="保存" class="baseinfo-container-action-submit" @click="saveBaseinfo" />
-                    <input type='submit' value="保存并添加" class="baseinfo-container-action-submit" v-if="!jobId" @click="saveAndAdd" />
-                </div>
-            </section>
-            <!-- 成员信息 -->
-            <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===1" >
-                <member-info :jobId="jobId" @on-member-info-change='handleChangeObjDetailsCount'></member-info>
-            </section>
-            <!-- 权限 -->
-            <section class="permission-container rfd-tab-container-common" v-if="actionIndex===0">
-                <permission :jobId="jobId"  @on-permission-change='handleChangeObjDetailsCount'></permission>
-            </section>
-        </div>
-
+    <div class="job-wrap-action">
+      <ul>
+        <li v-for="(item,index) in actionBtn" :key="index" v-if="!item.hidden" class="job-wrap-action-li" v-bind:class="index===actionIndex?'job-wrap-action-li-active':''" @click="handlerViewChange(index)">
+          <div style="padding:5px 0">
+            <img :src="item.imgPath" class="job-wrap-action-li-img"><img>
+            <div class="left-content">
+              <span v-show="item.number!=='undefine'">{{item.number}}</span>
+              <h3>{{item.label}}</h3>
+            </div>
+          </div>
+        </li>
+      </ul>
     </div>
+
+    <div class="job-wrap-tabs">
+      <!-- 基本信息 -->
+      <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===2">
+        <Form :model="formItem" :labelWidth="100">
+          <FormItem label="职位名称:" style="font-size:16px">
+            <Input v-model="formItem.name" />
+          </FormItem>
+          <FormItem label="职位状态" :labelWidth="100">
+            <Select v-model="formItem.status">
+              <Option v-for="(item,index) in statusRadio" :key="index" :value="item.value">{{item.name}}</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="职位类型" :labelWidth="100">
+            <RadioGroup v-model="formItem.type">
+              <Radio label="M">管理类</Radio>
+              <Radio label="Y">营销类</Radio>
+              <Radio label="J">技术类</Radio>
+              <Radio label="Z">专业类</Radio>
+              <Radio label="C">操作类</Radio>
+            </RadioGroup>
+          </FormItem>
+          <FormItem label="职位说明" :labelWidth="100">
+            <Input v-model="formItem.describe" type="textarea" :autosize="{minRows: 3,maxRows: 5}" />
+          </FormItem>
+        </Form>
+        <div class="baseinfo-container-action">
+          <input type='submit' value="取消" class="baseinfo-container-action-submit" @click="cancle" />
+          <input type='submit' value="保存" class="baseinfo-container-action-submit" @click="save" />
+          <input type='submit' value="保存并添加" class="baseinfo-container-action-submit" v-if="!jobId" @click="saveAndAdd" />
+        </div>
+      </section>
+      <!-- 成员信息 -->
+      <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===1">
+        <member-info :jobId="jobId" @on-member-info-change='handleChangeObjDetailsCount'></member-info>
+      </section>
+      <!-- 权限 -->
+      <section class="permission-container rfd-tab-container-common" v-if="actionIndex===0">
+        <permission :jobId="jobId" @on-permission-change='handleChangeObjDetailsCount'></permission>
+      </section>
+    </div>
+
+  </div>
 </template>
 
 <script>
@@ -98,7 +98,7 @@ export default {
         name: "",
         type: "",
         describe: "",
-        status: ""
+        status: 1
       },
 
       statusRadio: [
@@ -159,23 +159,29 @@ export default {
 
     saveAndAdd() {
       if (!this.jobId) {
+        this.formItem.jobId = this.jobId;
         saveBaseinfo(this.formItem).then(res => {
           if (res.success) {
             this.$Message.success("保存成功");
             this.$refs["formItem"].resetFields();
+            this.formItem = {
+              name: "",
+              type: "",
+              describe: "",
+              status: 1
+            };
           }
         });
       }
     },
 
-    saveBaseinfo() {
-      if (!this.jobId) {
-        saveRoleBaseInfo(this.formItem).then(res => {
-          if (res.success) {
-            this.$Message.success("保存成功");
-          }
-        });
-      }
+    save() {
+      this.formItem.jobId = this.jobId;
+      saveRoleBaseInfo(this.formItem).then(res => {
+        if (res.success) {
+          this.$Message.success("保存成功");
+        }
+      });
     },
 
     getObjDetailsCountByRoleId(jobId) {
@@ -186,12 +192,11 @@ export default {
       });
     },
 
-    handleChangeObjDetailsCount(val){
-        if(val){
-            this.getObjDetailsCountByRoleId(this.jobId)
-        }
+    handleChangeObjDetailsCount(val) {
+      if (val) {
+        this.getObjDetailsCountByRoleId(this.jobId);
+      }
     }
-
   },
 
   mounted() {

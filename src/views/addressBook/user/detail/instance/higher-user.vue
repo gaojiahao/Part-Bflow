@@ -30,7 +30,8 @@
             v-model="showModal"
             title="选择用户"
             :footer-hide="true"
-            width="1000">
+            width="1000"
+            :draggable="true">
             <Table @on-row-dblclick="onDbClick" ref="selection" :highlight-row="true" height="400" :loading="userLoading" :columns="userColumns" :data="userData"></Table>
             <div class="user-page">
                 <div class="fr">
@@ -82,15 +83,17 @@ export default {
         {
           title: "手机号",
           key: "mobile",
-          width: 100
+          width: 130
         },
         {
           title: "部门",
-          key: "dept"
+          key: "dept",
+          width: 200
         },
         {
           title: "小组",
-          key: "dept"
+          key: "dept",
+          width: 200
         },
         {
           title: "职位",
@@ -115,16 +118,6 @@ export default {
               }
             },userStatus);
           }
-        },
-        {
-          title: "创建时间",
-          key: "crtTime",
-          width: 150
-        },
-        {
-          title: "修改时间",
-          key: "modTime",
-          width: 150
         },
         {
           title: '操作',
@@ -215,16 +208,6 @@ export default {
               }
             },userStatus);
           }
-        },
-        {
-          title: "创建时间",
-          key: "crtTime",
-          width: 150
-        },
-        {
-          title: "修改时间",
-          key: "modTime",
-          width: 150
         }
       ],
       higherUserData: [],

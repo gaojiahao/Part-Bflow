@@ -585,4 +585,11 @@ export const removeCompany = (groupIds) => {
   }
   return request('/H_roleplay-si/sysGroup/update', {}, 'POST', data);
 }
+
+/**
+ * @author XiaoYing
+ * 获取所有公司数据
+ * 
+ */
+export const getAllCompanys = () => request('/H_roleplay-si/sysGroup/getCompanyList');
 /************  公司  **************/

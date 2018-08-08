@@ -95,7 +95,8 @@ export default {
         },
         {
           title: "名称",
-          key: "groupName"
+          key: "groupName",
+          width: 200
         },
         {
           title: "标签",

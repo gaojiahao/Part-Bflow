@@ -76,11 +76,47 @@ export default {
         },
         {
           title: "组织类型",
-          key: "groupType"
+          key: "groupType",
+          render: (h, params) => {
+            let groupType = params.row.groupType;
+            switch (groupType) {
+              case "M":
+                groupType = "管理层";
+                break;
+              case "A":
+                groupType = "事业部";
+                break;
+              case "O":
+                groupType = "部门";
+                break;
+              case "G":
+                groupType = "小组";
+                break;
+            }
+            return h("span", groupType);
+          }
         },
         {
           title: "部门职能类型",
-          key: "depFunction"
+          key: "depFunction",
+          render: (h, params) => {
+            let groupType = params.row.groupType;
+            switch (groupType) {
+              case "M":
+                groupType = "管理";
+                break;
+              case "S":
+                groupType = "销售";
+                break;
+              case "C":
+                groupType = "制造";
+                break;
+              case "R":
+                groupType = "研发";
+                break;
+            }
+            return h("span", groupType);
+          }
         },
         {
           title: "组织状态",
@@ -121,11 +157,6 @@ export default {
       ],
 
       highOrgColumnsModal: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
         {
           type: "index",
           width: 60,
@@ -230,7 +261,7 @@ export default {
           this.$Message.success("保存成功");
           this.isShowMemberModal = false;
           this.reload = true;
-          this.$emit('on-high-organization-change',true);
+          this.$emit("on-high-organization-change", true);
         }
       });
     },

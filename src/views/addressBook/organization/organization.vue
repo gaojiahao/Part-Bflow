@@ -8,7 +8,7 @@
       <h2 v-if="groupId">
         <span style="color:#4CAF50;cursor:pointer" @click="goBack">{{formItem.groupName}}</span>
         <span style="color:#808080;margin-left:10px">/</span>
-        <span style="color:#808080;margin-left:10px">{{formItem.groupType}}</span>
+        <span style="color:#808080;margin-left:10px">{{groupType}}</span>
         <span style="color:#808080;margin-left:10px">/</span>
         <span style="color:#808080;margin-left:10px">{{groupId}}</span>
         <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status,color:'#eb2f96'}"></Tag>
@@ -52,7 +52,7 @@
               <Radio label="G">小组</Radio>
             </RadioGroup>
           </FormItem>
-          <FormItem label="部门职能类型" :labelWidth="100" v-if="formItem.groupType ==='部门'">
+          <FormItem label="部门职能类型" :labelWidth="100" v-if="formItem.groupType ==='O'">
             <RadioGroup v-model="formItem.depFunction">
               <Radio label="M">管理</Radio>
               <Radio label="S">销售</Radio>
@@ -126,8 +126,9 @@ export default {
         groupType: "",
         depFunction: "",
         comment: "",
-        status: ""
+        status: "1"
       },
+      groupType:'',
 
       statusRadio: [
         {
@@ -274,6 +275,20 @@ export default {
           this.formItem.depFunction = tableContent.depFunction;
           this.formItem.status = tableContent.status;
           this.formItem.comment = tableContent.comment;
+          switch(tableContent.groupType){
+            case 'M':
+            this.groupType = "管理层"
+            break;
+            case 'A':
+              this.groupType = "事业部"
+            break;
+            case 'O':
+              this.groupType = "部门"
+            break;
+            case 'G':
+              this.groupType = "小组"
+            break;
+          }
         }
       });
       this.getObjDetailsCountByGroupId(this.groupId);

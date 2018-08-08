@@ -23,8 +23,8 @@
       <span style="color: #7a7676;">-批量删除公司成员</span> -->
       <br>
       <Table ref="selection" :columns="columns1" :loading="higherLoading" :data="higherCompanyData"></Table>
-      <div>
-        <div style="float: right; ">
+      <div style="margin: 10px;overflow: hidden">
+        <div class="fr">
           <Page @on-page-size-change="onPageSizeChange" :total="higherCompanyTotal" show-elevator show-sizer :current="higherCompanyCurrentPage" :page-size="higherCompanyPageSize" @on-change="onPageChange" size="small" show-total></Page>
         </div>
       </div>

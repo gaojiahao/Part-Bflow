@@ -12,8 +12,10 @@
       <br>
       <Table :loading="memberLoading" :columns="columns1" :data="memberData" @on-selection-change="onMemberSelectionChange">
       </Table>
-      <div class="member-wrap-page">
-        <Page :total="pageTotal" :current="memberCurrentPage" :page-size="pageSize" size="small" @on-change="pageChange" show-sizer show-elevator/>
+      <div style="margin: 10px;overflow: hidden">
+        <div class="fr">
+          <Page :total="pageTotal" :current="memberCurrentPage" :page-size="pageSize" size="small" @on-change="pageChange" show-sizer show-elevator/>
+        </div>
       </div>
     </div>
     <Modal v-model="showModal" title="选择公司成员" @on-ok="addCompanyMember" width="1000">
@@ -60,7 +62,6 @@ export default {
         },
         {
           title: "性别",
-          width: 100,
           key: "gender",
           render: (h, params) => {
             let userStatus = "";

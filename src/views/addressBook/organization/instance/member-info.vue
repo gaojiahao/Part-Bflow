@@ -148,6 +148,46 @@ export default {
         {
           title: "修改时间",
           key: "changeTime"
+        },
+        {
+          title: "操作",
+          key: "action",
+          width: 120,
+          align: "center",
+          render: (h, params) => {
+            return h(
+              "span",
+              {
+                style: {
+                  cursor: "pointer",
+                  color: "red",
+                  "font-weight": "bold"
+                },
+                on: {
+                  click: () => {
+                    this.$Modal.confirm({
+                      title: "确认",
+                      content: "确认删除该成员？",
+                      onOk: () => {
+                        deleteOrgMember(
+                          this.groupId,
+                          params.row.userId,
+                          0
+                        ).then(res => {
+                          if (res.success) {
+                            this.$Message.success(res.message);
+                            this.reload = true;
+                            this.$emit("on-member-info-change", true);
+                          }
+                        });
+                      }
+                    });
+                  }
+                }
+              },
+              "删除"
+            );
+          }
         }
       ],
 
@@ -171,7 +211,7 @@ export default {
     onSelectionChange(selection) {
       if (selection.length > 0) {
         this.selectDeleteMemberInfo = selection;
-      } 
+      }
     },
 
     onRefeshChange(val) {
@@ -197,7 +237,7 @@ export default {
             this.$Message.success(res.message);
             this.reload = true;
             this.isShowMemberModal = false;
-            this.$emit('on-member-info-change',true);
+            this.$emit("on-member-info-change", true);
           }
         });
       }
@@ -213,7 +253,7 @@ export default {
           if (res.success) {
             this.$Message.success(res.message);
             this.reload = true;
-            this.$emit('on-member-info-change',true);
+            this.$emit("on-member-info-change", true);
           }
         });
       }
@@ -242,7 +282,7 @@ export default {
     },
     //成员信息导出xmls
     exportData() {
-      this.$refs.table.exportCsv({
+      this.$refs.selection.exportCsv({
         filename: "成员信息"
       });
     }

@@ -314,9 +314,7 @@ export const saveBatchChildGroup = (parentId, childrenId) => request('/H_rolepla
  * @author GuoZheng
  * @description 删除下级组织
  */
-export const deleteBatchGroup = (groupId) => request('/H_roleplay-si/userInfo/deleteBatchGroup', {
-  groupId: groupId,
-}, "POST");
+export const deleteBatchGroup = (data) => request('/H_roleplay-si/sysGroup/update', {}, "POST", data);
 
 /**
  * @author GuoZheng

@@ -16,12 +16,12 @@
 <template>
   <div>
     <custom-table apiUrl="/ds/getAllGroup" :columns="lowerOrgColumns" :apiParams="lowOrganizationParams" v-model="reload" @on-refesh-change='onRefeshChange' @on-selection-change="onSelectionChange">
-     
+
       <div slot="header" class="header-action">
         <label @click="showLoverOrgModal">添加下级组织</label>
         <span>-添加下级组织</span>
 
-         <label @click="deleteLoverOrg">删除下级组织</label>
+        <label @click="deleteLoverOrg">删除下级组织</label>
         <span>-删除下级组织</span>
       </div>
     </custom-table>
@@ -114,7 +114,7 @@ export default {
         {
           title: "部门职能类型",
           key: "depFunction",
-           render: (h, params) => {
+          render: (h, params) => {
             let depFunction = params.row.depFunction;
             switch (depFunction) {
               case "M":
@@ -168,6 +168,44 @@ export default {
         {
           title: "组织说明",
           key: "comment"
+        },
+        {
+          title: "操作",
+          key: "action",
+          width: 120,
+          align: "center",
+          render: (h, params) => {
+            return h(
+              "span",
+              {
+                style: {
+                  cursor: "pointer",
+                  color: "red",
+                  "font-weight": "bold"
+                },
+                on: {
+                  click: () => {
+                    this.$Modal.confirm({
+                      title: "确认",
+                      content: "确认删除此组织？",
+                      onOk: () => {
+                        let del = { groupId: params.row.groupId, parentId: "" };
+
+                        deleteBatchGroup(delData).then(res => {
+                          if (res.success) {
+                            this.$Message.success(res.message);
+                            this.reload = true;
+                            this.$emit("on-lower-organization-change", true);
+                          }
+                        });
+                      }
+                    });
+                  }
+                }
+              },
+              "删除"
+            );
+          }
         }
       ],
 
@@ -227,22 +265,22 @@ export default {
           this.$Message.success("保存成功");
           this.isShowMemberModal = false;
           this.reload = true;
-          this.$emit('on-lower-organization-change',true)
+          this.$emit("on-lower-organization-change", true);
         }
       });
     },
     //删除下级组织
     deleteLoverOrg() {
-      let multiId = [];
+      let delData = [];
       this.selectDeleteLowerOrg.forEach(val => {
-        multiId.push(val.groupId);
+        delData.push({ groupId: val.groupId, parentId: "" });
       });
-      if (multiId) {
-        deleteBatchGroup(multiId.join(",")).then(res => {
+      if (delData) {
+        deleteBatchGroup(delData).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
             this.reload = true;
-            this.$emit('on-lower-organization-change',true)
+            this.$emit("on-lower-organization-change", true);
           }
         });
       }

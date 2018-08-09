@@ -19,7 +19,12 @@
       </div>
     </div>
     <Modal v-model="showModal" title="选择公司成员" @on-ok="addCompanyMember" width="1000">
-      <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" height="400" :loading="allMemberLoading" :columns="columns2" :data="allMemberData"></Table>
+      <div class="serach">
+        <Input placeholder="请输入姓名" class="serach-btn" v-model="nikeName" />
+        <Button type="primary" shape="circle" icon="ios-search" @click="search">搜索</Button>
+      </div>
+      <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" height="400" :loading="allMemberLoading" :columns="columns2" :data="allMemberData">
+      </Table>
       <div style="margin: 10px;overflow: hidden">
         <div class="fr">
           <Page @on-page-size-change="onAllMemberPageSizeChange" :total="allMemberTotal" show-elevator show-sizer :current="allMemberCurrentPage" :page-size="allMemberPageSize" @on-change="onMemberPageChange" size="small" show-total></Page>
@@ -34,7 +39,8 @@ import {
   getAllUser,
   addCompanyMember,
   removeCompanyMember,
-  getGroupUser
+  getGroupUser,
+  filterUser
 } from "@/services/addressBookService.js";
 export default {
   data() {
@@ -229,7 +235,8 @@ export default {
       allMemberData: [],
       target: 4,
       memberSelectionData: [],
-      nowMemberselectionData: []
+      nowMemberselectionData: [],
+      nikeName: ""
     };
   },
   methods: {
@@ -337,6 +344,14 @@ export default {
       } else {
         this.$Message.warning("请选择至少一个公司！");
       }
+    },
+    search() {
+      filterUser(this.nikeName).then(res => {
+        if (res.tableContent[0]) {
+          this.allMemberData = res.tableContent;
+          this.allMemberTotal = res.summary.total;
+        }
+      });
     }
   },
   mounted() {

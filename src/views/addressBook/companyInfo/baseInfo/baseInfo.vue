@@ -27,7 +27,7 @@
           <FormItem label="公司名称" prop="groupName">
             <Input v-model="baseInfoItem.groupName"></Input>
           </FormItem>
-          <FormItem label="公司简称">
+          <FormItem label="公司简称" prop="groupShortName">
             <Input v-model="baseInfoItem.groupShortName"></Input>
           </FormItem>
           <FormItem label="公司类型">
@@ -68,7 +68,6 @@
 import { getToken } from "@/utils/utils";
 import {
   saveCompanyInfo,
-  updateCompanyInfo,
   getCompanyInfoByGroupId,
   updateConpanyInfo
 } from "@/services/addressBookService.js";
@@ -92,6 +91,13 @@ export default {
           {
             required: true,
             message: "请输入公司名称",
+            trigger: "blur"
+          }
+        ],
+        groupShortName: [
+          {
+            required: true,
+            message: "请输入公司简称",
             trigger: "blur"
           }
         ]
@@ -150,9 +156,12 @@ export default {
               this.$route.name == "add"
                 ? this.$route.name
                 : this.$route.params.groupId;
-            if (res.success) {
+            if (res[0].groupId) {
               this.$Message.info("保存成功");
-              this.$router.push({ path: "/addressBook/companyInfo/board" });
+              this.$router.push({
+                path: "/addressBook/companyInfo/baseInfo/" + res[0].groupId
+              });
+              window.location.reload();
             } else {
               this.$Message.error(res.message);
             }
@@ -209,7 +218,7 @@ export default {
               this.$route.name == "add"
                 ? this.$route.name
                 : this.$route.params.groupId;
-            if (res.success) {
+            if (res[0].groupId) {
               this.$Message.info("保存成功");
               this.$refs["baseInfoItem"].resetFields();
               this.logo = "";

@@ -190,7 +190,7 @@ export const getInstanceCountByUserId = (userId) => request('/H_roleplay-si/app/
  * @author XiaoYing
  * @description 获取用户工作流任务数据
  */
-export const getWorkFlowTaskByUserId = (userId,currentPage,pageSize) => request('/H_roleplay-si/ds/getWorkFlowTaskByUserId', {
+export const getWorkFlowTaskByUserId = (userId, currentPage, pageSize) => request('/H_roleplay-si/ds/getWorkFlowTaskByUserId', {
   userId: userId,
   page: currentPage,
   limit: pageSize
@@ -433,6 +433,20 @@ export const getAllUser = (currentPage, pageSize) => request('/H_roleplay-si/ds/
 
 /**
  * @author zhaohuai
+ * 过滤成员信息
+ */
+export const filterUser = (nikeName) => {
+  let filter = JSON.stringify([{
+    operator: "like",
+    value: nikeName,
+    property: "nickname"
+  }]);
+  return request('/H_roleplay-si/ds/listUsers', {
+    filter: filter
+  })
+};
+/**
+ * @author zhaohuai
  * 根据公司id获取公司信息
  * 
  */
@@ -465,33 +479,6 @@ export const saveCompanyInfo = (data) => {
     groupCode: groupCode,
     groupPic: groupPic
   }]);
-};
-/**
- * @author zhaohuai
- * 更新公司基本信息
- */
-export const updateCompanyInfo = (data) => {
-  let {
-    groupName,
-    groupShortName,
-    depFunction,
-    status,
-    comment,
-    groupCode,
-    groupId
-  } = data
-  return request('/H_roleplay-si/userInfo/saveGroup', {}, 'POST', {
-    groupName: groupName,
-    groupShortName: groupShortName,
-    depFunction: depFunction,
-    status: status,
-    comment: comment,
-    list: 'sys_group',
-    groupType: 'C',
-    parentId: '1',
-    groupCode: groupCode,
-    groupId: groupId
-  });
 };
 /**
  * @author zhaohuai
@@ -627,5 +614,20 @@ export const updateConpanyInfo = (data) => {
     groupId: groupId,
     groupPic: groupPic
   }])
+}
+/**
+ * @author zhaohuai
+ * 搜索公司
+ */
+export const searchCompany = (groupName) => {
+  let filter = JSON.stringify([{
+    operator: "like",
+    value: groupName,
+    property: "groupName"
+
+  }]);
+  return request('/H_roleplay-si/sysGroup/getCompanyList', {
+    filter: filter
+  });
 }
 /************  公司  **************/

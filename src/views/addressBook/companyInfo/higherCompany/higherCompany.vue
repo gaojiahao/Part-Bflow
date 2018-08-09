@@ -125,10 +125,6 @@ export default {
           align: "center"
         },
         {
-          title: "公司ID",
-          key: "groupId"
-        },
-        {
           title: "公司名称",
           key: "groupName"
         },

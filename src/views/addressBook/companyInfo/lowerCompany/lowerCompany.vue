@@ -13,6 +13,14 @@
     }
   }
 }
+.serach {
+  margin-bottom: 5px;
+  &-btn {
+    width: 150px;
+    border: 1px solid #ddd;
+    border-bottom: none;
+  }
+}
 </style>
 <template>
   <div class="lower-company">
@@ -30,6 +38,10 @@
       </div>
     </div>
     <Modal v-model="showModal" title="选择下级公司" @on-ok="addlowerCompany" width="1000">
+      <div class="serach">
+        <Input placeholder="请输入公司名称" class="serach-btn" v-model="groupName" />
+        <Button type="primary" shape="circle" icon="ios-search" @click="search">搜索</Button>
+      </div>
       <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" height="400" :loading="companyLoading" :columns="columns1" :data="companyData"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div class="fr">
@@ -44,7 +56,8 @@
 import {
   getCompanyList,
   addLowerCompany,
-  removeCompany
+  removeCompany,
+  searchCompany
 } from "@/services/addressBookService.js";
 export default {
   data() {
@@ -72,10 +85,6 @@ export default {
           align: "center"
         },
         {
-          title: "公司ID",
-          key: "groupId"
-        },
-        {
           title: "公司名称",
           key: "groupName"
         },
@@ -97,7 +106,7 @@ export default {
         },
         {
           title: "创建者",
-          key: "principalInfo.nikeName"
+          key: "creator"
         },
         {
           title: "状态",
@@ -185,7 +194,7 @@ export default {
         },
         {
           title: "创建者",
-          key: "principalInfo.nikeName"
+          key: "creator"
         },
         {
           title: "状态",
@@ -213,7 +222,8 @@ export default {
       ],
       selectCompanyData: {},
       deleteCompanyData: [],
-      showModal: false
+      showModal: false,
+      groupName: ""
     };
   },
   methods: {
@@ -333,6 +343,12 @@ export default {
     },
     delCompanyChange(selection) {
       this.deleteCompanyData = selection;
+    },
+    search() {
+      searchCompany(this.groupName).then(res => {
+        this.companyData = res.tableContent;
+        this.companyTotal = res.dataCount;
+      });
     }
   },
   mounted() {

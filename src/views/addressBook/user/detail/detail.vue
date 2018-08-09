@@ -7,7 +7,7 @@
     <Row class="detail-header">
       <Breadcrumb class="detail-header-bread">
         <BreadcrumbItem to="/addressBook/user/board">用户</BreadcrumbItem>
-        <BreadcrumbItem>{{ userInformation.nickname?userInformation.nickname:'待添加' }}</BreadcrumbItem>
+        <BreadcrumbItem v-if="userInformation.nickname?true:false">{{ userInformation.nickname }}</BreadcrumbItem>
         <BreadcrumbItem>{{ userInformation.userCode?userInformation.userCode:'创建' }}</BreadcrumbItem>
       </Breadcrumb>
       <Tag v-show="userInformation.status?showTag:!showTag"   class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:userInformation.status,color:'#eb2f96'}"></Tag>
@@ -131,6 +131,7 @@ export default {
     getInstanceCount() {
       if(this.userId){
         getInstanceCountByUserId(this.userId).then(res => {
+          this.relativeInstance[0].relativeNum = res.workFlow;
           this.relativeInstance[1].relativeNum = res.SysPermission;
           this.relativeInstance[2].relativeNum = res.objectPermission;
           this.relativeInstance[3].relativeNum = res.role;
@@ -144,7 +145,7 @@ export default {
   mounted() {
     this.getUserInfoData();
     this.getInstanceCount();
-    let tabsMaxHeight = document.body.clientHeight - 165;
+    let tabsMaxHeight = document.body.clientHeight - 125;
     window.document.getElementsByClassName('detail-content')[0].style.height = tabsMaxHeight + 'px';
   }
 };

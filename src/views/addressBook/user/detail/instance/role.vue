@@ -17,15 +17,24 @@
     margin: 10px;
     overflow: hidden;
   }
+  .app-search {
+    margin-bottom: 5px;
+    .app-search-icon {
+      font-size: 1rem;
+      color: #39f;
+      display: inline-block;
+      cursor: pointer;
+    }
+  }
 </style>
 
 <template>
     <div class="role">
         <div class="role-detail" id="roleHeight">
             <b @click="showRoleModal"  class="role-detail-btn">职位</b>
-            <span style="color: #7a7676;">-选择用户职位</span>
+            <span style="color: #7a7676;">-添加职位</span>
             <b @click="deleteUserRole"  class="role-detail-btn">删除</b>
-            <span style="color: #7a7676;">-批量删除用户职位</span>
+            <span style="color: #7a7676;">-批量删除职位</span>
             <Table ref="selection" @on-selection-change="selectDeleteRole" :columns="columns" :loading="loading" :data="roleData"></Table>
             <div class="user-page">
                 <div style="float: right;">
@@ -35,9 +44,15 @@
         </div>
         <Modal
             v-model="showModal"
-            title="选择用户"
+            title="选择职位"
             @on-ok="addRole"
             width="1000">
+            <div class="app-search">
+              <Input @on-search="roleFilter" :search="true" v-model="searchValue" placeholder="搜索" style="width: 300px"></Input>
+              <p @click="roleFilter" class="app-search-icon">
+                  <Button type="primary" size="small">查询</Button>
+              </p>
+            </div>
             <Table ref="selection" @on-selection-change="onSelectionChange" height="400" :loading="roleLoading" :columns="RoleColumns" :data="allRoleData"></Table>
             <div class="user-page">
                 <div style="float: right;">
@@ -66,6 +81,7 @@ export default {
         pageSize: 10,
         allRolepageSize: 10,
       },
+      searchValue: '',
       loading: true,
       roleLoading: true,
       showModal: false,
@@ -114,14 +130,10 @@ export default {
           width: 150,
           align: 'center',
           render: (h,params) => {
-            return h('span',{
+            return h('Button',{
               props: {
-                type: 'md-close'
-              },
-              style: {
-                cursor: 'pointer',
-                color: '#39f',
-                'font-weight': 'bold'
+                type: 'error',
+                size: 'small'
               },
               on: {
                 click: () => {
@@ -216,12 +228,18 @@ export default {
     },
     //点击切换所有用户每页显示条数
     onAllRolePageSizeChange(size) {
+      let filter = JSON.stringify([
+        { operator: "like", value: this.searchValue, property: "name" }
+      ]);
       this.rolePage.allRolepageSize = size;
-      this.getAllRoleData();
+      this.getAllRoleData(filter);
     },
     onRolePageChange(currentPage) {
+      let filter = JSON.stringify([
+        { operator: "like", value: this.searchValue, property: "name" }
+      ]);
       this.rolePage.rolecurrentPage = currentPage;
-      this.getAllRoleData();
+      this.getAllRoleData(filter);
     },
     //选择要删除的用户职位
     selectDeleteRole(selection) {
@@ -284,13 +302,19 @@ export default {
       this.getAllRoleData();
     },
     //获取所有职位数据
-    getAllRoleData() {
+    getAllRoleData(filter) {
       this.roleLoading = true;
-      getAllRoleData(this.rolePage.allRolepageSize,this.rolePage.rolecurrentPage).then(res => {
+      getAllRoleData(this.rolePage.allRolepageSize,this.rolePage.rolecurrentPage,filter).then(res => {
         this.allRoleData = res.tableContent;
         this.rolePage.roletotal = res.dataCount;
         this.roleLoading = false;
       })
+    },
+    roleFilter() {
+      let filter = JSON.stringify([
+        { operator: "like", value: this.searchValue, property: "name" }
+      ]);
+      this.getAllRoleData(filter);
     }
   },
   mounted() {

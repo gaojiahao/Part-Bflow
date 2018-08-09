@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="less" scoped>
 @import './user-info.less';
 </style>
 
@@ -211,9 +211,9 @@ export default {
                     })
                 }else{
                    addUser(this.formItem).then(res => {
-                       if(res.success){
-                           this.$Message.success(res.message);
-                           this.$router.push({ path: '/addressBook/user/board'});
+                       if(res){
+                           this.$Message.success('新增成功！');
+                           this.$router.push({ path: '/addressBook/user/detail/'+res.user_id});
                        }
                    }).catch(error => {
                         this.$Message.error(error.data.message);
@@ -232,8 +232,8 @@ export default {
                 }
                 
                 addUser(this.formItem).then(res => {
-                    if(res.success){
-                        this.$Message.success(res.message);
+                    if(res){
+                        this.$Message.success('新增成功！');
                         this.$refs["formItem"].resetFields();
                         this.formItem.termOfValidity = '';
                         this.formItem.comment = '';

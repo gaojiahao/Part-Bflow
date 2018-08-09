@@ -15,6 +15,8 @@
       </h2>
       <h2 v-if="!groupId">
         <span style="color:#4CAF50">添加组织</span>
+        <span style="color:#808080;margin-left:10px">/</span>
+        <span style="color:#808080;margin-left:10px">创建</span>
       </h2>
     </header>
 
@@ -99,7 +101,8 @@
 import {
   getOrgBaseInfo,
   getObjDetailsCountByGroupId,
-  saveBaseinfo
+  saveBaseinfo,
+  updateBaseinfo
 } from "@/services/addressBookService.js";
 import MemberModal from "@/components/modal/Modal";
 import HighOrganization from "./instance/higher-organization";
@@ -205,13 +208,16 @@ export default {
 
     cancle() {
       this.$router.push({
-        path: "/dist/index.html#/addressBook/organization/board"
+        path: "addressBook/organization/board"
       });
     },
 
     saveAndAdd() {
       if (!this.groupId) {
-        this.formItem.groupId = this.groupId;
+        delete this.formItem.groupId;
+        if (this.formItem.groupType === "O") {
+          this.formItem.depFunction = "";
+        }
         saveBaseinfo(this.formItem).then(res => {
           if (res.success) {
             this.$Message.success("保存成功");
@@ -229,13 +235,26 @@ export default {
     },
 
     save() {
-      this.formItem.groupId = this.groupId;
-      saveBaseinfo(this.formItem).then(res => {
-        if (res.success) {
-          this.$Message.success("保存成功");
-          this.$router.push({ path: "/addressBook/organization/board" });
-        }
-      });
+      if (this.formItem.groupType === "O") {
+        this.formItem.depFunction = "";
+      }
+      if (!this.groupId) {
+        delete this.formItem.groupId;
+        saveBaseinfo(this.formItem).then(res => {
+          if (res.success) {
+            this.$Message.success("保存成功");
+            this.$router.push({ path: "/addressBook/organization/board" });
+          }
+        });
+      }else{
+        this.formItem.groupId = this.groupId;
+        updateBaseinfo(this.formItem).then(res => {
+          if (res.success) {
+            this.$Message.success("保存成功");
+            this.$router.push({ path: "/addressBook/organization/board" });
+          }
+        });
+      }
     },
 
     getObjDetailsCountByGroupId(groupId) {

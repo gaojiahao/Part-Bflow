@@ -32,7 +32,7 @@
 
     <member-modal v-model="isShowModal" width="600" footerBtnAlign="right" title="权限列表" @on-ok="savePermission">
       <div style="max-height:350px;overflow:auto">
-        <Tree :data="allPermissionData" :multiple="true" @on-select-change="onCheckChange" :load-data="loadData" ></Tree>
+        <Tree :data="allPermissionData" :multiple="true" @on-select-change="onCheckChange" :load-data="loadData"></Tree>
       </div>
     </member-modal>
   </div>
@@ -69,6 +69,7 @@ export default {
         limit: 8,
         start: 0
       },
+
       permissionColumns: [
         {
           type: "selection",
@@ -88,6 +89,46 @@ export default {
         {
           title: "名称",
           key: "name"
+        },
+        {
+          title: "操作",
+          key: "action",
+          width: 120,
+          align: "center",
+          render: (h, params) => {
+            return h(
+              "Button",
+              {
+                props: {
+                  type: "error",
+                  size: "small"
+                },
+                style: {
+                  cursor: "pointer",
+                },
+                on: {
+                  click: () => {
+                    this.$Modal.confirm({
+                      title: "确认",
+                      content: "确认删除该权限？",
+                      onOk: () => {
+                        deleteRolePermission(this.jobId, params.row.id).then(
+                          res => {
+                            if (res.success) {
+                              this.$Message.success(res.message);
+                              this.reload = true;
+                              this.$emit("on-permission-change", true);
+                            }
+                          }
+                        );
+                      }
+                    });
+                  }
+                }
+              },
+              "删除"
+            );
+          }
         }
       ],
 
@@ -125,7 +166,7 @@ export default {
         deleteRolePermission(this.jobId, multiId.join(",")).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
-             this.selectPermissionNode = [];
+            this.selectPermissionNode = [];
             this.reload = true;
             this.$emit("on-permission-change", true);
           }

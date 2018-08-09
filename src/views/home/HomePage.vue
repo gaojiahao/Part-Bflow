@@ -11,7 +11,7 @@
               <i class="iconfont">&#xe6cf;</i>
               应用管理
             </Button> -->
-            <Button size="small" @click="changeView" type="ghost" caseId='apps' v-bind:class="caseId==='apps'?'ivu-btn-active':''">
+            <Button size="small" @click="changeView" caseId='apps' v-bind:class="caseId==='apps'?'ivu-btn-active':''">
               <i class="iconfont">&#xe608;</i>
               全部应用
             </Button>

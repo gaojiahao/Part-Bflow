@@ -69,9 +69,10 @@ export const getIndirectPermissionData = (userId, pageSize, currentPage) => requ
  * @author XiaoYing
  * @description 获取所有用户数据
  */
-export const getAllUsers = (pageSize, currentPage) => request('/H_roleplay-si/ds/getAllUsers', {
+export const getAllUsers = (pageSize, currentPage,filter) => request('/H_roleplay-si/ds/getAllUsers', {
   page: currentPage,
-  limit: pageSize
+  limit: pageSize,
+  filter: filter
 });
 
 /**
@@ -125,9 +126,10 @@ export const deleteMember = (list, groupId, userId) => request('/H_roleplay-si/p
  * @author XiaoYing
  * @description 获取所有职位数据
  */
-export const getAllRoleData = (pageSize, currentPage) => request('/H_roleplay-si/ds/getRoleList2', {
+export const getAllRoleData = (pageSize, currentPage,filter) => request('/H_roleplay-si/ds/getRoleList2', {
   page: currentPage,
-  limit: pageSize
+  limit: pageSize,
+  filter: filter
 });
 
 /**
@@ -314,9 +316,7 @@ export const saveBatchChildGroup = (parentId, childrenId) => request('/H_rolepla
  * @author GuoZheng
  * @description 删除下级组织
  */
-export const deleteBatchGroup = (groupId) => request('/H_roleplay-si/userInfo/deleteBatchGroup', {
-  groupId: groupId,
-}, "POST");
+export const deleteBatchGroup = (data) => request('/H_roleplay-si/sysGroup/updateBatch', {}, "POST", data);
 
 /**
  * @author GuoZheng
@@ -328,9 +328,15 @@ export const getOrgBaseInfo = (filter) => request('/H_roleplay-si/ds/getAllGroup
 
 /**
  * @author GuoZheng
- * @description 保存组织基本信息
+ * @description 保存组织基本信息,
  */
 export const saveBaseinfo = (data) => request('/H_roleplay-si/sysGroup/save', {}, "POST", data);
+
+/**
+ * @author GuoZheng
+ * @description 修改组织基本信息,
+ */
+export const updateBaseinfo = (data) => request('/H_roleplay-si/sysGroup/update', {}, "POST", data);
 
 
 /**

@@ -316,7 +316,7 @@ export const saveBatchChildGroup = (parentId, childrenId) => request('/H_rolepla
  * @author GuoZheng
  * @description 删除下级组织
  */
-export const deleteBatchGroup = (data) => request('/H_roleplay-si/sysGroup/update', {}, "POST", data);
+export const deleteBatchGroup = (data) => request('/H_roleplay-si/sysGroup/updateBatch', {}, "POST", data);
 
 /**
  * @author GuoZheng
@@ -328,9 +328,15 @@ export const getOrgBaseInfo = (filter) => request('/H_roleplay-si/ds/getAllGroup
 
 /**
  * @author GuoZheng
- * @description 保存组织基本信息
+ * @description 保存组织基本信息,
  */
 export const saveBaseinfo = (data) => request('/H_roleplay-si/sysGroup/save', {}, "POST", data);
+
+/**
+ * @author GuoZheng
+ * @description 修改组织基本信息,
+ */
+export const updateBaseinfo = (data) => request('/H_roleplay-si/sysGroup/update', {}, "POST", data);
 
 
 /**

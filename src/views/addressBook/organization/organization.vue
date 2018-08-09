@@ -244,6 +244,7 @@ export default {
           if (res) {
             this.$Message.success("保存成功");
             this.$router.push({ path: "/addressBook/organization/detail/"+res.groupId });
+            window.loaction.reload();
           }
         });
       }else{

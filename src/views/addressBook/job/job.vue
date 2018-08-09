@@ -166,7 +166,7 @@ export default {
       if (!this.jobId) {
         this.formItem.id = this.jobId;
         saveRoleBaseInfo(this.formItem).then(res => {
-          if (res.success) {
+          if (res) {
             this.$Message.success("保存成功");
             this.$refs["formItem"].resetFields();
             this.formItem = {
@@ -183,8 +183,10 @@ export default {
     save() {
       this.formItem.id = this.jobId;
       saveRoleBaseInfo(this.formItem).then(res => {
-        if (res.success) {
+        if (res) {
           this.$Message.success("保存成功");
+          this.$router.push({ path: "/addressBook/job/detail/"+res.id });
+          window.loaction.reload();
         }
       });
     },

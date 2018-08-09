@@ -39,8 +39,8 @@
     </custom-table>
 
     <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionUser">
-      <div>
-        <Table :loading="listUserLoading" :columns="memberInfoColumns" :data="listUserData" size='small' ref="selection" @on-selection-change="onSelectUserList"></Table>
+      <div style="margin-top:10px;">
+        <Table :loading="listUserLoading" :columns="memberInfoColumnsModel" :data="listUserData" size='small' ref="selection" @on-selection-change="onSelectUserList"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
             <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" show-total show-elevator></Page>
@@ -188,6 +188,75 @@ export default {
               "删除"
             );
           }
+        }
+      ],
+      memberInfoColumnsModel: [
+        {
+          type: "selection",
+          width: 60,
+          align: "center"
+        },
+        {
+          type: "index",
+          width: 60,
+          align: "center"
+        },
+        {
+          title: "工号",
+          width: 100,
+          key: "userCode"
+        },
+        {
+          title: "姓名",
+          width: 100,
+          key: "nickname"
+        },
+        {
+          title: "性别",
+          key: "gender",
+          width: 60,
+          render: (h, params) => {
+            let gender = params.row.gender;
+            return h(
+              "span",
+              gender === 1 ? "男" : gender === 0 ? "女" : "未知"
+            );
+          }
+        },
+        {
+          title: "手机号",
+          key: "mobile"
+        },
+        {
+          title: "状态",
+          width: 60,
+          key: "status",
+          render: (h, params) => {
+            let status = params.row.status;
+            return h(
+              "span",
+              {
+                style: {
+                  color: status ? "#0279f6" : "#f03707",
+                  cursor: "default"
+                }
+              },
+              status ? "在职" : "离职"
+            );
+          }
+        },
+        {
+          title: "创建者",
+          key: "creator",
+          width: 100
+        },
+        {
+          title: "创建时间",
+          key: "crtTime"
+        },
+        {
+          title: "修改时间",
+          key: "changeTime"
         }
       ],
 

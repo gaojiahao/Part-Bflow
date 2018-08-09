@@ -27,8 +27,8 @@
     </custom-table>
 
     <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionLowerOrg">
-      <div>
-        <Table :loading="listUserLoading" :columns="lowerOrgColumns" :data="listUserData" size='small' ref="selection" @on-selection-change="onSelectLowerUser"></Table>
+      <div style="margin-top:10px;">
+        <Table :loading="listUserLoading" :columns="lowerOrgColumnsModel" :data="listUserData" size='small' ref="selection" @on-selection-change="onSelectLowerUser"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
             <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" show-total show-elevator></Page>
@@ -190,8 +190,7 @@ export default {
                       content: "确认删除此组织？",
                       onOk: () => {
                         let del = { groupId: params.row.groupId, parentId: "" };
-
-                        deleteBatchGroup(delData).then(res => {
+                        deleteBatchGroup(del).then(res => {
                           if (res.success) {
                             this.$Message.success(res.message);
                             this.reload = true;
@@ -206,6 +205,103 @@ export default {
               "删除"
             );
           }
+        }
+      ],
+
+     lowerOrgColumnsModel: [
+        {
+          type: "selection",
+          width: 60,
+          align: "center"
+        },
+        {
+          type: "index",
+          width: 60,
+          align: "center"
+        },
+        {
+          title: "组织名称",
+          key: "groupName"
+        },
+        {
+          title: "组织类型",
+          key: "groupType",
+          render: (h, params) => {
+            let groupType = params.row.groupType;
+            switch (groupType) {
+              case "M":
+                groupType = "管理层";
+                break;
+              case "A":
+                groupType = "事业部";
+                break;
+              case "O":
+                groupType = "部门";
+                break;
+              case "G":
+                groupType = "小组";
+                break;
+            }
+            return h("span", groupType);
+          }
+        },
+        {
+          title: "部门职能类型",
+          key: "depFunction",
+          render: (h, params) => {
+            let depFunction = params.row.depFunction;
+            switch (depFunction) {
+              case "M":
+                depFunction = "管理层";
+                break;
+              case "A":
+                depFunction = "事业部";
+                break;
+              case "O":
+                depFunction = "部门";
+                break;
+              case "G":
+                depFunction = "小组";
+                break;
+            }
+            return h("span", depFunction);
+          }
+        },
+        {
+          title: "组织状态",
+          key: "status",
+          render: (h, params) => {
+            let status = params.row.status,
+              value = "";
+            switch (status) {
+              case 0:
+                value = "停用";
+                break;
+              case 1:
+                value = "使用中";
+                break;
+              case 2:
+                value = "未使用";
+                break;
+              case 3:
+                value = "草稿";
+                break;
+            }
+            return h(
+              "span",
+              {
+                style: {
+                  color: status ? "#0279f6" : "#f03707",
+                  cursor: "default"
+                }
+              },
+              value
+            );
+          }
+        },
+        {
+          title: "组织说明",
+          key: "comment"
         }
       ],
 

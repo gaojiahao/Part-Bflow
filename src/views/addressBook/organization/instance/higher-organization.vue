@@ -23,7 +23,7 @@
     </custom-table>
 
     <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionHighOrg">
-      <div>
+      <div style="margin-top:10px;">
         <Table :loading="listUserLoading" :columns="highOrgColumnsModal" :data="listUserData" size='small' highlight-row ref="currentRowTable" @on-current-change="onSelectUserList"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">

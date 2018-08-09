@@ -27,7 +27,7 @@
         <Button icon="ios-download-outline" type="primary" class="permission-container-btn-export" @click="exportData">导出</Button>
       </div> -->
 
-       <div slot="header" class="header-action">
+      <div slot="header" class="header-action">
         <label @click="showMemberModal">添加成员</label>
         <span>-添加成员</span>
 
@@ -38,9 +38,9 @@
       </div>
     </custom-table>
 
-   <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionUser">
-      <div>
-        <Table :loading="listUserLoading" :columns="memberInfoColumns" :data="listUserData" size='small' ref="selection" @on-selection-change="onSelectUserList"></Table>
+    <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionUser">
+      <div style="margin-top:10px">
+        <Table :loading="listUserLoading" :columns="memberInfoColumnsModel" :data="listUserData" size='small' ref="selection" @on-selection-change="onSelectUserList"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
             <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" show-total show-elevator></Page>
@@ -53,7 +53,11 @@
 
 <script>
 import MemberModal from "@/components/modal/Modal";
-import {  listUsers,deleteBatchRole, saveBatchChildRole } from "@/services/addressBookService.js";
+import {
+  listUsers,
+  deleteBatchRole,
+  saveBatchChildRole
+} from "@/services/addressBookService.js";
 import CustomTable from "@/views/addressBook/organization/instance/CustomTable";
 export default {
   name: "job-member-info",
@@ -63,7 +67,7 @@ export default {
     CustomTable
   },
 
-   props: {
+  props: {
     jobId: {
       type: String
     }
@@ -78,6 +82,114 @@ export default {
         limit: 8
       },
       memberInfoColumns: [
+        {
+          type: "selection",
+          width: 60,
+          align: "center"
+        },
+        {
+          type: "index",
+          width: 60,
+          align: "center"
+        },
+        {
+          title: "工号",
+          width: 100,
+          key: "userCode"
+        },
+        {
+          title: "姓名",
+          width: 100,
+          key: "nickname"
+        },
+        {
+          title: "性别",
+          key: "gender",
+          width: 60,
+          render: (h, params) => {
+            let gender = params.row.gender;
+            return h(
+              "span",
+              gender === 1 ? "男" : gender === 0 ? "女" : "未知"
+            );
+          }
+        },
+        {
+          title: "手机号",
+          key: "mobile"
+        },
+        {
+          title: "状态",
+          width: 60,
+          key: "status",
+          render: (h, params) => {
+            let status = params.row.status;
+            return h(
+              "span",
+              {
+                style: {
+                  color: status ? "#0279f6" : "#f03707",
+                  cursor: "default"
+                }
+              },
+              status ? "在职" : "离职"
+            );
+          }
+        },
+        {
+          title: "创建者",
+          key: "creator",
+          width: 100
+        },
+        {
+          title: "创建时间",
+          key: "crtTime"
+        },
+        {
+          title: "修改时间",
+          key: "changeTime"
+        },
+        {
+          title: "操作",
+          key: "action",
+          width: 120,
+          align: "center",
+          render: (h, params) => {
+            return h(
+              "span",
+              {
+                style: {
+                  cursor: "pointer",
+                  color: "red",
+                  "font-weight": "bold"
+                },
+                on: {
+                  click: () => {
+                    this.$Modal.confirm({
+                      title: "确认",
+                      content: "确认删除该成员？",
+                      onOk: () => {
+                        deleteBatchRole(this.jobId, params.row.userId).then(
+                          res => {
+                            if (res.success) {
+                              this.$Message.success(res.message);
+                              this.reload = true;
+                              this.$emit("on-member-info-change", true);
+                            }
+                          }
+                        );
+                      }
+                    });
+                  }
+                }
+              },
+              "删除"
+            );
+          }
+        }
+      ],
+
+      memberInfoColumnsModel: [
         {
           type: "selection",
           width: 60,
@@ -170,8 +282,8 @@ export default {
       }
     },
 
-    onRefeshChange(val){
-      if(!val){
+    onRefeshChange(val) {
+      if (!val) {
         this.reload = val;
       }
     },
@@ -188,12 +300,12 @@ export default {
         multiId.push(val.userId);
       });
       if (multiId) {
-        saveBatchChildRole(this.jobId, multiId.join(","),1).then(res => {
+        saveBatchChildRole(this.jobId, multiId.join(","), 1).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
             this.reload = true;
             this.isShowMemberModal = false;
-            this.$emit('on-member-info-change',true)
+            this.$emit("on-member-info-change", true);
           }
         });
       }
@@ -205,11 +317,11 @@ export default {
         multiId.push(val.userId);
       });
       if (multiId) {
-        deleteBatchRole(this.jobId, multiId.join(","),0).then(res => {
+        deleteBatchRole(this.jobId, multiId.join(","), 0).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
-             this.reload = true;
-              this.$emit('on-member-info-change',true)
+            this.reload = true;
+            this.$emit("on-member-info-change", true);
           }
         });
       }
@@ -238,7 +350,7 @@ export default {
     },
     //成员信息导出xmls
     exportData() {
-      this.$refs.table.exportCsv({
+      this.$refs.selection.exportCsv({
         filename: "成员信息"
       });
     }

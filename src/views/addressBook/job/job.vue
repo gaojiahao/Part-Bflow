@@ -6,13 +6,17 @@
   <div class="job-wrap">
     <header class="job-wrap-header">
       <h2 v-if="jobId">
-        <span style="color:#4CAF50">{{formItem.name}}</span>
+         <span style="color:#4CAF50;cursor:pointer">职位</span>
+           <span style="color:#808080;margin-left:10px">/</span>
+        <span style="color:#808080">{{formItem.name}}</span>
         <span style="color:#808080;margin-left:10px">/</span>
         <span style="color:#808080;margin-left:10px">{{jobId}}</span>
         <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status,color:'#eb2f96'}"></Tag>
       </h2>
       <h2 v-if="!jobId">
         <span style="color:#4CAF50">添加职位</span>
+         <span style="color:#808080;margin-left:10px">/</span>
+        <span style="color:#808080;margin-left:10px">创建</span>
       </h2>
     </header>
 

@@ -204,7 +204,6 @@ export default {
                     updateUser(this.formItem).then(res => {
                         if(res.success){
                             this.$Message.success(res.message);
-                            this.$router.push({ path: '/addressBook/user/board'});
                         }
                     }).catch(error => {
                         this.$Message.error(error.data.message);
@@ -214,6 +213,7 @@ export default {
                        if(res){
                            this.$Message.success('新增成功！');
                            this.$router.push({ path: '/addressBook/user/detail/'+res.user_id});
+                           window.location.reload();
                        }
                    }).catch(error => {
                         this.$Message.error(error.data.message);

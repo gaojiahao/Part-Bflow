@@ -235,7 +235,7 @@ export default {
     },
 
     save() {
-      if (this.formItem.groupType === "O") {
+      if (this.formItem.groupType !== "O") {
         this.formItem.depFunction = "";
       }
       if (!this.groupId) {

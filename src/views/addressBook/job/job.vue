@@ -158,7 +158,8 @@ export default {
     },
 
     cancle() {
-      this.$router.push({ path: "/addressBook/job/board" });
+      location.href('/Site/index.html#page/jobs','_self')
+      // this.$router.push({ path: "/addressBook/job/board" });
     },
 
     saveAndAdd() {

@@ -207,13 +207,16 @@ export default {
 
     cancle() {
       this.$router.push({
-        path: "/dist/index.html#/addressBook/organization/board"
+        path: "addressBook/organization/board"
       });
     },
 
     saveAndAdd() {
       if (!this.groupId) {
         this.formItem.groupId = this.groupId;
+        if(this.formItem.groupType ==='O'){
+          this.formItem.depFunction = '';
+        }
         saveBaseinfo(this.formItem).then(res => {
           if (res.success) {
             this.$Message.success("保存成功");
@@ -232,6 +235,9 @@ export default {
 
     save() {
       this.formItem.groupId = this.groupId;
+       if(this.formItem.groupType ==='O'){
+          this.formItem.depFunction = '';
+        }
       saveBaseinfo(this.formItem).then(res => {
         if (res.success) {
           this.$Message.success("保存成功");

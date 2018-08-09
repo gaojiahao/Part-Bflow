@@ -156,12 +156,14 @@ export default {
           align: "center",
           render: (h, params) => {
             return h(
-              "span",
+              "Button",
               {
+                props: {
+                  type: "error",
+                  size: "small"
+                },
                 style: {
                   cursor: "pointer",
-                  color: "red",
-                  "font-weight": "bold"
                 },
                 on: {
                   click: () => {

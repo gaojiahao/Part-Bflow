@@ -23,7 +23,7 @@
     <div class="lower-user">
         <div class="lower-user-detail" id="lowHeight">
             <b @click="showUserModal" class="lower-user-detail-btn">下级用户</b>
-            <span style="color: #7a7676;">-选择下级用户</span>
+            <span style="color: #7a7676;">-添加下级用户</span>
             <b @click="deleteLowUser" class="lower-user-detail-btn">删除</b>
             <span style="color: #7a7676;">-批量删除下级用户</span>
             <Table ref="selection" @on-selection-change="selectLowUser" :columns="columns" :loading="loading" :data="lowerUserData"></Table>

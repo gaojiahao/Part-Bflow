@@ -14,7 +14,7 @@
       }
   }
   .user-page {
-    margin: 10px;
+    margin-top: 10px;
     overflow: hidden;
   }
   .app-tree{
@@ -33,7 +33,7 @@
             <Table ref="selection" @on-selection-change="onSelectionChange" :columns="columns" :loading="loading" :data="dirPermissionData"></Table>
             <div class="user-page">
                 <div style="float: right;">
-                  <Page @on-page-size-change="onPageSizeChange" :total="total" show-elevator show-sizer :current="currentPage" :page-size="pageSize" @on-change="onPageChange" size="small" show-total></Page>
+                  <Page @on-page-size-change="onPageSizeChange" :total="total" :current="currentPage" :page-size="pageSize" @on-change="onPageChange" show-total show-elevator show-sizer></Page>
                 </div>
             </div>
         </div>

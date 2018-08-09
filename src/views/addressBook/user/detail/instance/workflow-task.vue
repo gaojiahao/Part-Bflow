@@ -95,16 +95,8 @@ export default {
           }
         },
         {
-          title: "流程名称",
+          title: "应用名称",
           key: "processName"
-        },
-        {
-          title: "流程版本号",
-          key: "procDefId",
-          render: (h,params) => {
-              let workflowDefId = params.row.procDefId.split(':')[1];
-              return h('span',{},workflowDefId);
-          }
         },
         {
           title: "经办人",
@@ -119,7 +111,7 @@ export default {
           key: "handlerUnitName"
         },
         {
-          title: "待办创建时间",
+          title: "创建时间",
           key: "startTime"
         },
         {

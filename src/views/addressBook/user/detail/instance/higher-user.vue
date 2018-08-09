@@ -23,7 +23,7 @@
     <div class="higher-user">
         <div class="higher-user-detail" id="cliHeight">
             <b @click="showUserModal" class="higher-user-detail-btn">上级用户</b>
-            <span style="color: #7a7676;">-选择上级用户</span>
+            <span style="color: #7a7676;">-添加上级用户</span>
             <Table ref="selection" :columns="columns" :loading="loading" :data="higherUserData"></Table>
         </div>
         <Modal

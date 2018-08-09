@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="less" scoped>
     .lower-user{
       &-detail{
         background-color: #fff;

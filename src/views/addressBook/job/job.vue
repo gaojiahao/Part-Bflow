@@ -186,7 +186,7 @@ export default {
         if (res) {
           this.$Message.success("保存成功");
           this.$router.push({ path: "/addressBook/job/detail/"+res.id });
-          window.loaction.reload();
+          window.location.reload();
         }
       });
     },

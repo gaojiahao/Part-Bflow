@@ -1,10 +1,11 @@
-<style lang="less">
+<style lang="less" scoped>
     .role{
       &-detail{
         background-color: #fff;
         margin: 15px 93px;
         padding: 26px 50px;
         box-shadow: 0px 1px 10px #ddd;
+        position: relative;
         &-btn{
           margin-bottom:5px;
           color: rgb(0, 150, 136);

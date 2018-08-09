@@ -27,9 +27,9 @@
     <div class="department">
         <div class="department-detail" id="depHeight">
             <b type="info" @click="showGroupModal" class="department-detail-btn">部门</b>
-            <span style="color: #7a7676;">-选择用户部门</span>
+            <span style="color: #7a7676;">-添加部门</span>
             <b type="info" @click="deleteGroup" class="department-detail-btn">删除</b>
-            <span style="color: #7a7676;">-批量删除用户部门</span>
+            <span style="color: #7a7676;">-批量删除部门</span>
             <Table ref="selection" @on-selection-change="selectDeleteGroup" :columns="columns" :loading="loading" :data="departmentData"></Table>
             <div class="user-page">
                 <div style="float: right;">

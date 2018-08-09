@@ -23,9 +23,9 @@
     <div class="role">
         <div class="role-detail" id="roleHeight">
             <b @click="showRoleModal"  class="role-detail-btn">职位</b>
-            <span style="color: #7a7676;">-选择用户职位</span>
+            <span style="color: #7a7676;">-添加职位</span>
             <b @click="deleteUserRole"  class="role-detail-btn">删除</b>
-            <span style="color: #7a7676;">-批量删除用户职位</span>
+            <span style="color: #7a7676;">-批量删除职位</span>
             <Table ref="selection" @on-selection-change="selectDeleteRole" :columns="columns" :loading="loading" :data="roleData"></Table>
             <div class="user-page">
                 <div style="float: right;">

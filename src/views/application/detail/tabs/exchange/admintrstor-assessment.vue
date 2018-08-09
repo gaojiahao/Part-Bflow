@@ -10,20 +10,26 @@
         <a v-if="isAdminTrue" @click="addAssess">添加自评</a>
       </h3>
     </Row>
-    <!-- <Row v-for="(assess, index) of assessments" :key="index" class="pad5 ">
+    <Row v-for="(assess, index) of assessments" :key="index" class="pad5 ">
       <div>
         <img src="resources/images/icon/contactor.png"  class="user-icon">
         <div class="font14 content" >
           <div >
-            <h4 >黄孝辉 <span class="fr">2018-04</span></h4>
+            <h4 >黄孝辉 <span class="fr">{{assess.date}}</span></h4>
             </div>
           <div class="assessment-info">
-            <div><div>改进成果:</div>{{assess.achievement}}</div>
-            <div><div>改进机会:</div>{{assess.chance}}</div>
+            <div>
+              <span style="color: #a06970">改进成果:</span>
+              <span class="assessment-info-text">{{assess.achievement}}</span>
+            </div>
+            <div>
+              <span style="color: #a06970">改进机会:</span>
+              <span class="assessment-info-text">{{assess.chance}}</span>
+            </div>
           </div>
         </div>
       </div>
-    </Row> -->
+    </Row>
     <Row class="assessment-content">
       <Table :columns="columns" :data="assessments"></Table>
     </Row>

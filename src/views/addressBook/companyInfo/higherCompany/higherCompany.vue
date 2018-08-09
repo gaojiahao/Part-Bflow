@@ -12,6 +12,14 @@
       cursor: pointer;
     }
   }
+  .serach {
+    margin-bottom: 5px;
+    &-btn {
+      width: 150px;
+      border: 1px solid #ddd;
+      border-bottom: none;
+    }
+  }
 }
 </style>
 <template>
@@ -30,6 +38,10 @@
       </div>
     </div>
     <Modal v-model="showModal" title="选择用户" @on-ok="addHigherCompany" width="1000">
+      <div class="serach">
+        <Input placeholder="请输入公司名称" class="serach-btn" v-model="groupName" />
+        <Button type="primary" shape="circle" icon="ios-search" @click="search">搜索</Button>
+      </div>
       <Table ref="selection" :highlight-row="true" @on-row-click="onSelectionChange" height="400" :loading="companyLoading" :columns="columns" :data="companyData"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div class="fr">
@@ -44,7 +56,8 @@
 import {
   getCompanyList,
   addHigherCompany,
-  removeCompany
+  removeCompany,
+  searchCompany
 } from "@/services/addressBookService.js";
 export default {
   data() {
@@ -288,6 +301,12 @@ export default {
             }
           });
         }
+      });
+    },
+    search() {
+      searchCompany(this.groupName).then(res => {
+        this.companyData = res.tableContent;
+        this.companyTotal = res.dataCount;
       });
     }
   },

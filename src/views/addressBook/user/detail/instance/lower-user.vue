@@ -17,6 +17,15 @@
     margin: 10px;
     overflow: hidden;
   }
+  .app-search {
+    margin-bottom: 5px;
+    .app-search-icon {
+      font-size: 1rem;
+      color: #39f;
+      display: inline-block;
+      cursor: pointer;
+    }
+  }
 </style>
 
 <template>
@@ -38,6 +47,12 @@
             title="选择用户"
             @on-ok="addLowUser"
             width="1000">
+            <div class="app-search">
+              <Input @on-search="userFilter" :search="true" v-model="searchValue" placeholder="搜索" style="width: 300px"></Input>
+              <p @click="userFilter" class="app-search-icon">
+                  <Button type="primary" size="small">查询</Button>
+              </p>
+            </div>
             <Table ref="selection" @on-selection-change="onSelectionChange" height="400" :loading="userLoading" :columns="userColumns" :data="userData"></Table>
             <div class="user-page">
                 <div style="float: right;">
@@ -66,6 +81,7 @@ export default {
         pageSize: 10,
         allUserpageSize: 10,
       },
+      searchValue: '',
       loading: true,
       userLoading: true,
       showModal: false,
@@ -77,11 +93,13 @@ export default {
         },
         {
           title: "工号",
-          key: "userCode"
+          key: "userCode",
+          width: 80
         },
         {
           title: "姓名",
-          key: "nickname"
+          key: "nickname",
+          width: 80
         },
         {
           title: "性别",
@@ -94,7 +112,7 @@ export default {
         {
           title: "手机号",
           key: "mobile",
-          width: 130
+          width: 100
         },
         {
           title: "部门",
@@ -109,11 +127,12 @@ export default {
         {
           title: "职位",
           key: "role",
-          width: 150
+          width: 140
         },
         {
           title: "状态",
           key: "status",
+          width: 70,
           render: (h, params) => {
             let userStatus = "";
             if (params.row.status === 1) {
@@ -133,17 +152,13 @@ export default {
         {
           title: '操作',
           key: 'action',
-          width: 80,
+          width: 70,
           align: 'center',
           render: (h,params) => {
-            return h('span',{
+            return h('Button',{
               props: {
-                type: 'md-close'
-              },
-              style: {
-                cursor: 'pointer',
-                color: '#39f',
-                'font-weight': 'bold'
+                type: 'error',
+                size: 'small'
               },
               on: {
                 click: () => {
@@ -256,12 +271,16 @@ export default {
     },
     //点击切换所有用户每页显示条数
     onAllUserPageSizeChange(size) {
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      ]);
       this.lowUser.allUserpageSize = size;
-      this.getAllUsersData();
+      this.getAllUsersData(filter);
     },
     onUserPageChange(currentPage) {
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      ]);
       this.lowUser.usercurrentPage = currentPage;
-      this.getAllUsersData();
+      this.getAllUsersData(filter);
     },
     //选择要删除的下级用户
     selectLowUser(selection) {
@@ -322,13 +341,19 @@ export default {
       this.getAllUsersData();
     },
     //获取所有用户数据
-    getAllUsersData() {
+    getAllUsersData(filter) {
       this.userLoading = true;
-      getAllUsers(this.lowUser.allUserpageSize,this.lowUser.usercurrentPage).then(res => {
+      getAllUsers(this.lowUser.allUserpageSize,this.lowUser.usercurrentPage,filter).then(res => {
         this.userData = res.tableContent;
         this.lowUser.usertotal = res.dataCount;
         this.userLoading = false;
       })
+    },
+    //查询用户
+    userFilter() {
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      ]);
+      this.getAllUsersData(filter);
     }
   },
   mounted() {

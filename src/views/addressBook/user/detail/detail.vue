@@ -145,7 +145,7 @@ export default {
   mounted() {
     this.getUserInfoData();
     this.getInstanceCount();
-    let tabsMaxHeight = document.body.clientHeight - 165;
+    let tabsMaxHeight = document.body.clientHeight - 125;
     window.document.getElementsByClassName('detail-content')[0].style.height = tabsMaxHeight + 'px';
   }
 };

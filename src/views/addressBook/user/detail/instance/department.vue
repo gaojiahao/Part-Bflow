@@ -120,14 +120,10 @@ export default {
           width: 150,
           align: 'center',
           render: (h,params) => {
-            return h('span',{
+            return h('Button',{
               props: {
-                type: 'md-close'
-              },
-              style: {
-                cursor: 'pointer',
-                color: '#39f',
-                'font-weight': 'bold'
+                type: 'error',
+                size: 'small'
               },
               on: {
                 click: () => {

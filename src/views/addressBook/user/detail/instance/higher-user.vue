@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="less" scoped>
     .higher-user{
       &-detail{
         background-color: #fff;
@@ -17,6 +17,15 @@
     margin: 10px;
     overflow: hidden;
   }
+  .app-search {
+    margin-bottom: 5px;
+    .app-search-icon {
+      font-size: 1rem;
+      color: #39f;
+      display: inline-block;
+      cursor: pointer;
+    }
+  }
 </style>
 
 <template>
@@ -32,6 +41,12 @@
             :footer-hide="true"
             width="1000"
             :draggable="true">
+            <div class="app-search">
+              <Input @on-search="userFilter" :search="true" v-model="searchValue" placeholder="搜索工号或名称" style="width: 300px"></Input>
+              <p @click="userFilter" class="app-search-icon">
+                  <Button type="primary" size="small">查询</Button>
+              </p>
+            </div>
             <Table @on-row-dblclick="onDbClick" ref="selection" :highlight-row="true" height="400" :loading="userLoading" :columns="userColumns" :data="userData"></Table>
             <div class="user-page">
                 <div class="fr">
@@ -60,6 +75,7 @@ export default {
         pageSize: 10,
         allUserpageSize: 10,
       },
+      searchValue: '',
       loading: true,
       userLoading: true,
       showModal: false,
@@ -125,14 +141,10 @@ export default {
           width: 80,
           align: 'center',
           render: (h,params) => {
-            return h('span',{
+            return h('Button',{
               props: {
-                type: 'md-close'
-              },
-              style: {
-                cursor: 'pointer',
-                color: '#39f',
-                'font-weight': 'bold'
+                type: 'error',
+                size: 'small'
               },
               on: {
                 click: () => {
@@ -240,12 +252,16 @@ export default {
     },
     //点击切换所有用户每页显示条数
     onAllUserPageSizeChange(size) {
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      ]);
       this.highUser.allUserpageSize = size;
-      this.getAllUsersData();
+      this.getAllUsersData(filter);
     },
     onUserPageChange(currentPage) {
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      ]);
       this.highUser.usercurrentPage = currentPage;
-      this.getAllUsersData();
+      this.getAllUsersData(filter);
     },
     //添加上级用户
     onDbClick(selection,index) {
@@ -268,13 +284,19 @@ export default {
       this.getAllUsersData();
     },
     //获取所有用户数据
-    getAllUsersData() {
+    getAllUsersData(filter) {
       this.userLoading = true;
-      getAllUsers(this.highUser.allUserpageSize,this.highUser.usercurrentPage).then(res => {
+      getAllUsers(this.highUser.allUserpageSize,this.highUser.usercurrentPage,filter).then(res => {
         this.userData = res.tableContent;
         this.highUser.usertotal = res.dataCount;
         this.userLoading = false;
       })
+    },
+    //查询用户
+    userFilter() {
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      ]);
+      this.getAllUsersData(filter);
     }
   },
   mounted() {

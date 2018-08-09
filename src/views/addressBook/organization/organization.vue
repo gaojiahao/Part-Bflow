@@ -219,7 +219,7 @@ export default {
           this.formItem.depFunction = "";
         }
         saveBaseinfo(this.formItem).then(res => {
-          if (res.success) {
+          if (res) {
             this.$Message.success("保存成功");
             this.$refs["formItem"].resetFields();
             this.formItem = {
@@ -241,17 +241,16 @@ export default {
       if (!this.groupId) {
         delete this.formItem.groupId;
         saveBaseinfo(this.formItem).then(res => {
-          if (res.success) {
+          if (res) {
             this.$Message.success("保存成功");
-            this.$router.push({ path: "/addressBook/organization/board" });
+            this.$router.push({ path: "/addressBook/organization/detail/"+res.groupId });
           }
         });
       }else{
         this.formItem.groupId = this.groupId;
         updateBaseinfo(this.formItem).then(res => {
-          if (res.success) {
+          if (res) {
             this.$Message.success("保存成功");
-            this.$router.push({ path: "/addressBook/organization/board" });
           }
         });
       }

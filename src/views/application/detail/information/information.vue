@@ -67,7 +67,7 @@
    
     <Modal v-model="showAdminModal" title="请选择" @on-ok="confirmModal">
       <div class="app-search">
-        <Input v-model="searchValue" placeholder="搜索" style="width: 300px"></Input>
+        <Input @on-search="adminFilter" :search="true" v-model="searchValue" placeholder="搜索" style="width: 300px"></Input>
         <p @click="adminFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
         </p>

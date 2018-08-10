@@ -37,7 +37,7 @@
             <Col span="12" class="info-form">
                 <Form :model="formItem" ref="formItem" :rules="ruleValidate" :label-width="85">
                     <FormItem label="工号：" prop="userCode">
-                        <Input v-model="formItem.userCode" placeholder=""></Input>
+                        <Input @on-blur="userCodeBlur" v-model="formItem.userCode" placeholder=""></Input>
                     </FormItem>
                     <FormItem label="姓名：" prop="nickname">
                         <Input v-model="formItem.nickname" placeholder=""></Input>
@@ -84,7 +84,7 @@
 
 <script>
 import { getToken } from "@/utils/utils";
-import { updateUser,addUser } from "@/services/addressBookService.js";
+import { updateUser,addUser,checkoutFieldIsOnly } from "@/services/addressBookService.js";
 
 export default {
   name: "userInfo",
@@ -103,6 +103,7 @@ export default {
       noShowSaveAddBtn: false,
       logo: "",
       visible: false,
+      checkout: true,
       formItem: {
         userCode: "",
         nickname: "",
@@ -163,6 +164,18 @@ export default {
       }
   },
   methods: {
+    //工号失去焦点验证唯一
+    userCodeBlur() {
+        if(this.formItem.userCode){
+            let value = this.formItem.userCode;
+            checkoutFieldIsOnly('sys_user','userCode',value).then(res => {
+                if(res.result === 1){
+                    this.checkout = false;
+                    this.$Message.error('工号已存在，请重新输入！');
+                }
+            })
+        }
+    },
     handleSuccess(res, file) {
       this.logo =
         "/H_roleplay-si/ds/download?width=128&height=128&specify=true&url=" +

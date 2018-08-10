@@ -80,13 +80,11 @@ export default {
     getTableData(params) {
       this.loading = true;
       getTableData(this.apiUrl, params).then(res => {
-        if (res.tableContent[0]) {
           this.pageTotal = res.dataCount?res.dataCount:res.summary.total;
           this.columnsData = res.tableContent;
           if (this.value) {
             this.$emit("on-refesh-change", false);
           }
-        }
         this.loading = false;
       });
     }

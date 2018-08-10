@@ -12,13 +12,13 @@
       cursor: pointer;
     }
   }
-  .serach {
-    margin-bottom: 5px;
-    &-btn {
-      width: 150px;
-      border: 1px solid #ddd;
-      border-bottom: none;
-    }
+}
+.serach {
+  margin-bottom: 5px;
+  &-btn {
+    width: 150px;
+    border: 1px solid #ddd;
+    border-bottom: none;
   }
 }
 </style>
@@ -211,7 +211,8 @@ export default {
         }
       ],
       selectCompanyData: {},
-      showModal: false
+      showModal: false,
+      groupName: ""
     };
   },
   methods: {
@@ -272,6 +273,7 @@ export default {
     //所有公司页码改变
     onCompanyPageChange(currentPage) {
       this.companyCurrentPage = currentPage;
+      this.getAllCompanyList();
     },
     //添加上级用户
     addHigherCompany() {

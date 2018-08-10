@@ -30,7 +30,7 @@
           <FormItem label="公司简称" prop="groupShortName">
             <Input v-model="baseInfoItem.groupShortName"></Input>
           </FormItem>
-          <FormItem label="公司类型">
+          <FormItem label="公司类型" prop="depFunction">
             <RadioGroup v-model="baseInfoItem.depFunction">
               <Radio label='有限责任公司'></Radio>
               <Radio label='股份有限公司'></Radio>
@@ -69,7 +69,8 @@ import { getToken } from "@/utils/utils";
 import {
   saveCompanyInfo,
   getCompanyInfoByGroupId,
-  updateConpanyInfo
+  updateConpanyInfo,
+  checkValue
 } from "@/services/addressBookService.js";
 export default {
   data() {
@@ -83,21 +84,28 @@ export default {
         groupName: "",
         groupShortName: "",
         depFunction: "",
-        status: "",
+        status: "1",
         comment: ""
       },
       ruleValidate: {
         groupName: [
           {
             required: true,
-            message: "请输入公司名称",
+            validator: this.groupNameValidator,
             trigger: "blur"
           }
         ],
         groupShortName: [
           {
             required: true,
-            message: "请输入公司简称",
+            validator: this.groupShortNameValidator,
+            trigger: "blur"
+          }
+        ],
+        depFunction: [
+          {
+            required: true,
+            message: "请选择公司类型",
             trigger: "blur"
           }
         ]
@@ -264,6 +272,34 @@ export default {
           });
         }
       });
+    },
+    groupNameValidator: function(rule, value, callback) {
+      if (!value) {
+        return callback(new Error("请输入公司名"));
+      } else if (!this.$route.params.groupId) {
+        let test = { name: "groupName", value: value };
+        checkValue(test).then(res => {
+          if (!res.result == 0) {
+            return callback(new Error("公司名称已存在！"));
+          }
+        });
+      } else {
+        callback();
+      }
+    },
+    groupShortNameValidator: function(rule, value, callback) {
+      if (!value) {
+        return callback(new Error("请输入公司简称"));
+      } else if (!this.$route.params.groupId) {
+        let test = { name: "groupShortName", value: value };
+        checkValue(test).then(res => {
+          if (!res.result == 0) {
+            return callback(new Error("公司简称已存在！"));
+          }
+        });
+      } else {
+        callback();
+      }
     }
   },
   mounted() {

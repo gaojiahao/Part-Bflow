@@ -18,8 +18,9 @@
         </div>
       </div>
     </div>
-    <Modal v-model="showModal" title="选择公司成员" @on-ok="addCompanyMember" width="1000">
+    <Modal v-model="showModal" title="选择公司成员" @on-ok="addCompanyMember" width="1200">
       <div class="serach">
+        <!-- <Input placeholder="请输入工号" class="serach-btn" v-model="userCode" /> -->
         <Input placeholder="请输入姓名" class="serach-btn" v-model="nikeName" />
         <Button type="primary" shape="circle" icon="ios-search" @click="search">搜索</Button>
       </div>
@@ -196,6 +197,11 @@ export default {
           title: "创建时间",
           width: 150,
           key: "crtTime"
+        },
+        {
+          title: "创建者",
+          width: 150,
+          key: "creator"
         },
         {
           title: "状态",

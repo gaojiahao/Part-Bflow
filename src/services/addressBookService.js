@@ -523,7 +523,7 @@ export const addHigherCompany = (groupId, parentId) => {
     "groupId": groupId,
     "parentId": parentId
   }];
-  return request('/H_roleplay-si/sysGroup/update', {}, 'POST', data);
+  return request('/H_roleplay-si/sysGroup/updateBatch', {}, 'POST', data);
 }
 
 /**
@@ -538,7 +538,7 @@ export const addLowerCompany = (groupIds, parentId) => {
       parentId: parentId
     })
   });
-  return request('/H_roleplay-si/sysGroup/update', {}, 'POST', data);
+  return request('/H_roleplay-si/sysGroup/updateBatch', {}, 'POST', data);
 }
 /**
  *@author zhaohuai 
@@ -586,7 +586,7 @@ export const removeCompany = (groupIds) => {
       })
     });
   }
-  return request('/H_roleplay-si/sysGroup/update', {}, 'POST', data);
+  return request('/H_roleplay-si/sysGroup/updateBatch', {}, 'POST', data);
 }
 
 /**
@@ -611,7 +611,7 @@ export const updateConpanyInfo = (data) => {
     groupId,
     groupPic
   } = data
-  return request('/H_roleplay-si/sysGroup/update', {}, 'POST', [{
+  return request('/H_roleplay-si/sysGroup/updateBatch', {}, 'POST', [{
     groupName: groupName,
     groupShortName: groupShortName,
     depFunction: depFunction,
@@ -625,9 +625,17 @@ export const updateConpanyInfo = (data) => {
  * @author zhaohuai
  * 搜索公司
  */
-export const searchCompany = (groupName) => {
-  return request('/H_roleplay-si/sysGroup/getCompanyList', {
-    search: groupName
-  });
-}
+export const searchCompany = (groupName) => request('/H_roleplay-si/sysGroup/getCompanyList', {
+  search: groupName
+});
+/**
+ * @author zhaohuai
+ * 唯一校验
+ */
+export const checkValue = (test) => request('/H_roleplay-si/trans/cntvalue', {
+  tn: "sys_group",
+  fn: test.name,
+  value: test.value
+})
+
 /************  公司  **************/

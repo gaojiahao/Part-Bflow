@@ -284,6 +284,7 @@ export default {
     //所有公司页码改变
     onCompanyPageChange(currentPage) {
       this.companyCurrentPage = currentPage;
+      this.getAllCompanyList();
     },
     //添加下级用户
     addlowerCompany() {

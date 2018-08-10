@@ -8,7 +8,7 @@ export const loginRouter = {
     title: 'Login - 登录'
   },
   component: () =>
-    import ('@/views/login.vue')
+    import('@/views/login.vue')
 };
 
 export const flowRouter = {
@@ -19,7 +19,7 @@ export const flowRouter = {
     title: 'pulseGraph - 脉动图'
   },
   component: () =>
-    import ('@/views/flow/pulseGraph.vue')
+    import('@/views/flow/pulseGraph.vue')
 };
 
 export const dashboardRouter = {
@@ -29,7 +29,7 @@ export const dashboardRouter = {
     title: 'dashboard - 仪表盘'
   },
   component: () =>
-    import ('@/views/dashboard/dashboard.vue')
+    import('@/views/dashboard/dashboard.vue')
 };
 
 export const app = {
@@ -40,7 +40,7 @@ export const app = {
   },
   redirect: 'application/list',
   component: () =>
-    import ('@/views/application/application.vue'),
+    import('@/views/application/application.vue'),
   children: [{
     path: 'list',
     name: 'list',
@@ -48,7 +48,7 @@ export const app = {
       title: '应用列表'
     },
     component: () =>
-      import ('@/views/application/list/list.vue'),
+      import('@/views/application/list/list.vue'),
   }, {
     path: 'add',
     name: 'add',
@@ -56,7 +56,7 @@ export const app = {
       title: '添加应用',
     },
     component: () =>
-      import ('@/views/application/add/add.vue')
+      import('@/views/application/add/add.vue')
   }, {
     path: 'detail/:listId',
     name: 'detail',
@@ -64,7 +64,7 @@ export const app = {
       title: 'detail - 应用详情'
     },
     component: () =>
-      import ('@/views/application/detail/detail.vue')
+      import('@/views/application/detail/detail.vue')
   }]
 };
 
@@ -75,7 +75,7 @@ export const homepageRouter = {
     title: 'homepage - 全部应用'
   },
   component: () =>
-    import ('@/views/home/HomePage.vue')
+    import('@/views/home/HomePage.vue')
 };
 
 export const addressBook = {
@@ -86,144 +86,144 @@ export const addressBook = {
   },
   redirect: 'addressBook/user',
   component: () =>
-    import ('@/views/addressBook/index.vue'),
+    import('@/views/addressBook/index.vue'),
   children: [
     {
-    path: 'user',
-    name: 'user',
-    meta: {
-      title: '用户'
+      path: 'user',
+      name: 'user',
+      meta: {
+        title: '用户'
+      },
+      component: () =>
+        import('@/views/addressBook/user/index.vue'),
+      children: [{
+        path: 'detail/:userId',
+        name: 'detail',
+        meta: {
+          title: '用户详情'
+        },
+        component: () =>
+          import('@/views/addressBook/user/detail/detail.vue')
+      }, {
+        path: 'board',
+        name: 'board',
+        meta: {
+          title: '用户看板'
+        },
+        component: () =>
+          import('@/views/addressBook/user/board/board.vue')
+      }, {
+        path: 'add',
+        name: 'add',
+        meta: {
+          title: '新增用户'
+        },
+        component: () =>
+          import('@/views/addressBook/user/detail/detail.vue')
+      }]
     },
-    component: () =>
-      import ('@/views/addressBook/user/index.vue'),
-    children: [{
-      path: 'detail/:userId',
-      name: 'detail',
-      meta: {
-        title: '用户详情'
-      },
-      component: () =>
-        import ('@/views/addressBook/user/detail/detail.vue')
-    }, {
-      path: 'board',
-      name: 'board',
-      meta: {
-        title: '用户看板'
-      },
-      component: () =>
-        import ('@/views/addressBook/user/board/board.vue')
-    }, {
-      path: 'add',
-      name: 'add',
-      meta: {
-        title: '新增用户'
-      },
-      component: () =>
-        import ('@/views/addressBook/user/detail/detail.vue')
-    }]
-    }, 
     {
-    path: 'organization',
-    name: 'organization',
-    meta: {
-      title: '组织'
-    },
-    component: () =>
-      import ('@/views/addressBook/organization/index.vue'),
-    children: [{
-      path: 'board',
-      name: 'board',
+      path: 'organization',
+      name: 'organization',
       meta: {
-        title: '组织看板'
+        title: '组织'
       },
       component: () =>
-        import ('@/views/addressBook/organization/board/board.vue')
-    }, {
-      path: 'detail/:groupId',
-      name: 'detail',
-      meta: {
-        title: '组织详情'
-      },
-      component: () =>
-        import ('@/views/addressBook/organization/organization.vue')
-    }, {
-      path: 'add',
-      name: 'add',
-      meta: {
-        title: '添加组织'
-      },
-      component: () =>
-        import ('@/views/addressBook/organization/organization.vue')
-    }]
+        import('@/views/addressBook/organization/index.vue'),
+      children: [{
+        path: 'board',
+        name: 'board',
+        meta: {
+          title: '组织看板'
+        },
+        component: () =>
+          import('@/views/addressBook/organization/board/board.vue')
+      }, {
+        path: 'detail/:groupId',
+        name: 'detail',
+        meta: {
+          title: '组织详情'
+        },
+        component: () =>
+          import('@/views/addressBook/organization/organization.vue')
+      }, {
+        path: 'add',
+        name: 'add',
+        meta: {
+          title: '添加组织'
+        },
+        component: () =>
+          import('@/views/addressBook/organization/organization.vue')
+      }]
 
-    }, 
-    {
-    path: 'job',
-    name: 'job',
-    meta: {
-      title: '职位'
     },
-    component: () =>
-      import ('@/views/addressBook/job/index.vue'),
-    children: [{
-      path: 'board',
-      name: 'board',
-      meta: {
-        title: '职位看板'
-      },
-      component: () =>
-        import ('@/views/addressBook/job/board/board.vue')
-    }, {
-      path: 'detail/:jobId',
-      name: 'detail',
-      meta: {
-        title: '职位详情'
-      },
-      component: () =>
-        import ('@/views/addressBook/job/job.vue')
-    },{
-      path: 'add',
-      name: 'add',
-      meta: {
-        title: '添加职位'
-      },
-      component: () =>
-      import ('@/views/addressBook/job/job.vue')
-    }]
-    }, 
     {
-    path: 'companyInfo',
-    name: 'companyInfo',
-    meta: {
-      title: '公司'
-    },
-    component: () =>
-      import ('@/views/addressBook/companyInfo/index.vue'),
-    children: [{
-      path: 'board',
-      name: 'board',
+      path: 'job',
+      name: 'job',
       meta: {
-        title: '公司看板'
+        title: '职位'
       },
       component: () =>
-        import ('@/views/addressBook/companyInfo/board/board.vue')
-    },{
-      path: 'baseInfo/:groupId',
+        import('@/views/addressBook/job/index.vue'),
+      children: [{
+        path: 'board',
+        name: 'board',
+        meta: {
+          title: '职位看板'
+        },
+        component: () =>
+          import('@/views/addressBook/job/board/board.vue')
+      }, {
+        path: 'detail/:jobId',
+        name: 'detail',
+        meta: {
+          title: '职位详情'
+        },
+        component: () =>
+          import('@/views/addressBook/job/job.vue')
+      }, {
+        path: 'add',
+        name: 'add',
+        meta: {
+          title: '添加职位'
+        },
+        component: () =>
+          import('@/views/addressBook/job/job.vue')
+      }]
+    },
+    {
+      path: 'companyInfo',
       name: 'companyInfo',
       meta: {
-        title: '基本信息'
+        title: '公司'
       },
       component: () =>
-        import ('@/views/addressBook/companyInfo/companyInfo.vue'),
-    },{
-      path: 'add',
-      name: 'add',
-      meta: {
-        title: '新增'
-      },
-      component: () =>import('@/views/addressBook/companyInfo/companyInfo.vue')
+        import('@/views/addressBook/companyInfo/index.vue'),
+      children: [{
+        path: 'board',
+        name: 'board',
+        meta: {
+          title: '公司看板'
+        },
+        component: () =>
+          import('@/views/addressBook/companyInfo/board/board.vue')
+      }, {
+        path: 'baseInfo/:groupId',
+        name: 'companyInfo',
+        meta: {
+          title: '基本信息'
+        },
+        component: () =>
+          import('@/views/addressBook/companyInfo/companyInfo.vue'),
+      }, {
+        path: 'add',
+        name: 'add',
+        meta: {
+          title: '新增'
+        },
+        component: () => import('@/views/addressBook/companyInfo/companyInfo.vue')
+      }]
     }]
-  }]
 }
 
 export const sujectformRouter = {
@@ -233,14 +233,14 @@ export const sujectformRouter = {
     title: 'subjectform - 科目分录'
   },
   component: () =>
-    import ('@/views/form/SubjectForm.vue')
+    import('@/views/form/SubjectForm.vue')
 }
 
 export const appRouter = [{
   path: '/',
   name: 'home_index',
   component: () =>
-    import ('@/components/home.vue')
+    import('@/components/home.vue')
 }]
 
 
@@ -251,7 +251,7 @@ export const enterpriseInfo = {
     title: 'enterpriseInfo - 企业信息'
   },
   component: () =>
-    import ('@/views/enterpriseInfo/enterpriseInfo.vue')
+    import('@/views/enterpriseInfo/enterpriseInfo.vue')
 }
 
 

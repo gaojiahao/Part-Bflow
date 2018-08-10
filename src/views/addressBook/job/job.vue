@@ -6,16 +6,16 @@
   <div class="job-wrap">
     <header class="job-wrap-header">
       <h2 v-if="jobId">
-         <span style="color:#4CAF50;cursor:pointer">职位</span>
-           <span style="color:#808080;margin-left:10px">/</span>
-        <span style="color:#808080">{{formItem.name}}</span>
+        <span style="color:#4CAF50;cursor:pointer">职位</span>
+        <span style="color:#808080;margin-left:10px">/</span>
+        <span style="color:#808080">{{name}}</span>
         <span style="color:#808080;margin-left:10px">/</span>
         <span style="color:#808080;margin-left:10px">{{jobId}}</span>
         <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status,color:'#eb2f96'}"></Tag>
       </h2>
       <h2 v-if="!jobId">
         <span style="color:#4CAF50">添加职位</span>
-         <span style="color:#808080;margin-left:10px">/</span>
+        <span style="color:#808080;margin-left:10px">/</span>
         <span style="color:#808080;margin-left:10px">创建</span>
       </h2>
     </header>
@@ -37,9 +37,9 @@
     <div class="job-wrap-tabs">
       <!-- 基本信息 -->
       <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===2">
-        <Form :model="formItem" :labelWidth="100" ref="formItem">
-          <FormItem label="职位名称:" style="font-size:16px">
-            <Input v-model="formItem.name" />
+        <Form :model="formItem" :labelWidth="100" ref="formItem" :rules="ruleValidate">
+          <FormItem label="职位名称:" style="font-size:16px" prop="name">
+            <Input v-model="formItem.name" @on-blur="onGroupNameOutBlur" />
           </FormItem>
           <FormItem label="职位状态" :labelWidth="100">
             <Select v-model="formItem.status">
@@ -82,7 +82,8 @@
 import {
   getAllRole,
   saveRoleBaseInfo,
-  getObjDetailsCountByRoleId
+  getObjDetailsCountByRoleId,
+  checkoutFieldIsOnly
 } from "@/services/addressBookService.js";
 import MemberModal from "@/components/modal/Modal";
 import MemberInfo from "./instance/job-member-info";
@@ -104,6 +105,7 @@ export default {
         describe: "",
         status: 1
       },
+      name: "",
 
       statusRadio: [
         {
@@ -148,6 +150,17 @@ export default {
       ],
       actionIndex: 2,
 
+      ruleValidate: {
+        name: [
+          {
+            required: true,
+            message: "请输入职位名称",
+            trigger: "blur"
+          }
+        ]
+      },
+      checkout: true,
+
       jobId: this.$route.params.jobId
     };
   },
@@ -158,13 +171,12 @@ export default {
     },
 
     cancle() {
-      location.href('/Site/index.html#page/jobs','_self')
-      // this.$router.push({ path: "/addressBook/job/board" });
+      window.location.url = "/Site/index.html#page/jobs" ;
     },
 
     saveAndAdd() {
-      if (!this.jobId) {
-        this.formItem.id = this.jobId;
+      if (!this.jobId && this.checkout) {
+        delete this.formItem.id;
         saveRoleBaseInfo(this.formItem).then(res => {
           if (res) {
             this.$Message.success("保存成功");
@@ -176,19 +188,35 @@ export default {
               status: 1
             };
           }
+        }).catch(errer=>{
+          this.$Message.errer(error.data.message)
         });
       }
     },
 
     save() {
-      this.formItem.id = this.jobId;
-      saveRoleBaseInfo(this.formItem).then(res => {
-        if (res) {
-          this.$Message.success("保存成功");
-          this.$router.push({ path: "/addressBook/job/detail/"+res.id });
-          window.location.reload();
-        }
-      });
+      //判断是编辑,还是新增保存
+      if (this.jobId) {
+        this.formItem.id = this.jobId;
+        saveRoleBaseInfo(this.formItem).then(res => {
+          if (res) {
+            this.$Message.success("保存成功");
+          }
+        }).catch(errer=>{
+          this.$Message.errer(error.data.message)
+        });
+      } else if (!this.jobId && this.checkout) {
+        delete this.formItem.id;
+        saveRoleBaseInfo(this.formItem).then(res => {
+          if (res) {
+            this.$Message.success("保存成功");
+            this.$router.push({ path: "/addressBook/job/detail/" + res.id });
+            window.location.reload();
+          }
+        }).catch(errer=>{
+          this.$Message.errer(error.data.message)
+        });
+      }
     },
 
     getObjDetailsCountByRoleId(jobId) {
@@ -202,6 +230,25 @@ export default {
     handleChangeObjDetailsCount(val) {
       if (val) {
         this.getObjDetailsCountByRoleId(this.jobId);
+      }
+    },
+
+    //当职位名称失去焦点的是校验名称
+    onGroupNameOutBlur() {
+      //当groupId不存在时，校验名称是否唯一
+      if (!this.jobId) {
+        checkoutFieldIsOnly("sys_role", "name", this.formItem.name)
+          .then(res => {
+            if (res.result > 0) {
+              this.checkout = false;
+              this.$Message.error("名称已经存在!");
+            } else {
+              this.checkout = true;
+            }
+          })
+          .catch(error => {
+            this.$Message.error(error.data.message);
+          });
       }
     }
   },
@@ -220,6 +267,7 @@ export default {
         if (res.tableContent[0]) {
           let tableContent = res.tableContent[0];
           that.formItem.name = tableContent.name;
+          this.name = tableContent.name;
           that.formItem.type = tableContent.type;
           that.formItem.status = tableContent.status;
           that.formItem.describe = tableContent.describe;

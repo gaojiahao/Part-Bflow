@@ -308,6 +308,8 @@ export default {
             if (res.result > 0) {
               this.checkout = false;
               this.$Message.error("名称已经存在!");
+            } else {
+              this.checkout = true;
             }
           })
           .catch(error => {

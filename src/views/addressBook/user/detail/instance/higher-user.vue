@@ -3,8 +3,10 @@
       &-detail{
         background-color: #fff;
         margin: 15px 93px;
+        min-height: 500px;
         padding: 26px 50px;
         box-shadow: 0px 1px 10px #ddd;
+        position: relative;
         &-btn{
           margin-bottom:5px;
           color: rgb(0, 150, 136);
@@ -37,17 +39,16 @@
         </div>
         <Modal
             v-model="showModal"
+            @on-ok="addHighUser"
             title="选择用户"
-            :footer-hide="true"
-            width="1000"
-            :draggable="true">
+            width="1000">
             <div class="app-search">
               <Input @on-search="userFilter" :search="true" v-model="searchValue" placeholder="搜索工号或名称" style="width: 300px"></Input>
               <p @click="userFilter" class="app-search-icon">
                   <Button type="primary" size="small">查询</Button>
               </p>
             </div>
-            <Table @on-row-dblclick="onDbClick" ref="selection" :highlight-row="true" height="400" :loading="userLoading" :columns="userColumns" :data="userData"></Table>
+            <Table @on-row-dblclick="onDbClick" @on-row-click="onRowClick" ref="selection" :highlight-row="true" height="400" :loading="userLoading" :columns="userColumns" :data="userData"></Table>
             <div class="user-page">
                 <div class="fr">
                   <Page @on-page-size-change="onAllUserPageSizeChange" :total="highUser.usertotal" show-elevator show-sizer :current="highUser.usercurrentPage" :page-size="highUser.allUserpageSize" @on-change="onUserPageChange" size="small" show-total></Page>
@@ -223,7 +224,8 @@ export default {
         }
       ],
       higherUserData: [],
-      userData: []
+      userData: [],
+      onRowClickSelectData: {}
     };
   },
   methods: {
@@ -252,13 +254,15 @@ export default {
     },
     //点击切换所有用户每页显示条数
     onAllUserPageSizeChange(size) {
-      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"},
+      {operator:"ne",value:this.userId,property:"userId"}
       ]);
       this.highUser.allUserpageSize = size;
       this.getAllUsersData(filter);
     },
     onUserPageChange(currentPage) {
-      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"},
+      {operator:"ne",value:this.userId,property:"userId"}
       ]);
       this.highUser.usercurrentPage = currentPage;
       this.getAllUsersData(filter);
@@ -278,6 +282,22 @@ export default {
         })
       }
     },
+    addHighUser() {
+      let parentId = this.onRowClickSelectData.userId;
+      
+      if(parentId && this.userId){
+        updateHighUser(this.userId,parentId).then(res => {
+          if(res.success){
+            this.$Message.success(res.message);
+            this.getHigherUserData();
+            this.$emit('changeInstance');
+          }
+        })
+      }
+    },
+    onRowClick(selection,index) {
+      this.onRowClickSelectData = selection;
+    },
     //展示所有用户
     showUserModal() {
       this.showModal = true;
@@ -285,8 +305,9 @@ export default {
     },
     //获取所有用户数据
     getAllUsersData(filter) {
+      let relFilter = filter?filter:JSON.stringify([{operator:"ne",value:this.userId,property:"userId"}]);
       this.userLoading = true;
-      getAllUsers(this.highUser.allUserpageSize,this.highUser.usercurrentPage,filter).then(res => {
+      getAllUsers(this.highUser.allUserpageSize,this.highUser.usercurrentPage,relFilter).then(res => {
         this.userData = res.tableContent;
         this.highUser.usertotal = res.dataCount;
         this.userLoading = false;
@@ -294,7 +315,8 @@ export default {
     },
     //查询用户
     userFilter() {
-      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"},
+      {operator:"ne",value:this.userId,property:"userId"}
       ]);
       this.getAllUsersData(filter);
     }

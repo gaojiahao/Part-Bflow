@@ -1,10 +1,11 @@
-<style lang="less">
+<style lang="less" scoped>
     .role{
       &-detail{
         background-color: #fff;
         margin: 15px 93px;
         padding: 26px 50px;
         box-shadow: 0px 1px 10px #ddd;
+        position: relative;
         &-btn{
           margin-bottom:5px;
           color: rgb(0, 150, 136);
@@ -48,7 +49,7 @@
             @on-ok="addRole"
             width="1000">
             <div class="app-search">
-              <Input @on-search="roleFilter" :search="true" v-model="searchValue" placeholder="搜索" style="width: 300px"></Input>
+              <Input @on-search="roleFilter" :search="true" v-model="searchValue" placeholder="搜索职位名称" style="width: 300px"></Input>
               <p @click="roleFilter" class="app-search-icon">
                   <Button type="primary" size="small">查询</Button>
               </p>
@@ -229,14 +230,16 @@ export default {
     //点击切换所有用户每页显示条数
     onAllRolePageSizeChange(size) {
       let filter = JSON.stringify([
-        { operator: "like", value: this.searchValue, property: "name" }
+        { operator: "like", value: this.searchValue, property: "name" },
+        { operator: "eq", value: 1, property: "status" }
       ]);
       this.rolePage.allRolepageSize = size;
       this.getAllRoleData(filter);
     },
     onRolePageChange(currentPage) {
       let filter = JSON.stringify([
-        { operator: "like", value: this.searchValue, property: "name" }
+        { operator: "like", value: this.searchValue, property: "name" },
+        { operator: "eq", value: 1, property: "status" }
       ]);
       this.rolePage.rolecurrentPage = currentPage;
       this.getAllRoleData(filter);
@@ -303,8 +306,11 @@ export default {
     },
     //获取所有职位数据
     getAllRoleData(filter) {
+      let relFilter = filter?filter:JSON.stringify([
+        { operator: "eq", value: 1, property: "status" }
+      ]);
       this.roleLoading = true;
-      getAllRoleData(this.rolePage.allRolepageSize,this.rolePage.rolecurrentPage,filter).then(res => {
+      getAllRoleData(this.rolePage.allRolepageSize,this.rolePage.rolecurrentPage,relFilter).then(res => {
         this.allRoleData = res.tableContent;
         this.rolePage.roletotal = res.dataCount;
         this.roleLoading = false;
@@ -312,7 +318,8 @@ export default {
     },
     roleFilter() {
       let filter = JSON.stringify([
-        { operator: "like", value: this.searchValue, property: "name" }
+        { operator: "like", value: this.searchValue, property: "name" },
+        { operator: "eq", value: 1, property: "status" }
       ]);
       this.getAllRoleData(filter);
     }

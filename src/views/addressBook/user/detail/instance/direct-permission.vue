@@ -4,7 +4,9 @@
         background-color: #fff;
         margin: 15px 93px;
         padding: 26px 50px;
+        min-height: 500px;
         box-shadow: 0px 1px 10px #ddd;
+        position: relative;
         &-btn{
           margin-bottom:5px;
           color: rgb(0, 150, 136);
@@ -213,17 +215,60 @@ export default {
         let data = [];
         res.tableContent.forEach(val => {
           if(val.leaf === 'false'){
-            data.push({
-              title: val.name,
-              id: val.id,
-              loading: false,
-              children: []
-            })
+            if(val.permType === -2){
+              data.push({
+                title: val.name,
+                id: val.id,
+                loading: false,
+                children: [],
+                render: (h,{ root, node, data }) => {
+                  return h('span', [
+                      h('Icon', {
+                          props: {
+                              type: 'ios-folder-outline'
+                          },
+                          style: {
+                              marginRight: '8px'
+                          }
+                      }),
+                      h('span', data.title)
+                  ])
+                }
+              })
+            }else{
+              data.push({
+                title: val.name,
+                id: val.id,
+                loading: false,
+                children: []
+              })
+            }
           }else{
-            data.push({
-              title: val.name,
-              id: val.id,
-            })
+            if(val.permType === -2){
+              data.push({
+                title: val.name,
+                id: val.id,
+                render: (h,{ root, node, data }) => {
+                  console.log(data);
+                  return h('span', [
+                      h('Icon', {
+                          props: {
+                              type: 'ios-folder-outline'
+                          },
+                          style: {
+                              marginRight: '8px'
+                          }
+                      }),
+                      h('span', data.title)
+                  ])
+                }
+              })
+            }else{
+              data.push({
+                title: val.name,
+                id: val.id,
+              })
+            }
           } 
         })
         callback(data);

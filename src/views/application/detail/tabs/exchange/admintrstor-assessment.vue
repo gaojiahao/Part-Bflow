@@ -4,35 +4,33 @@
 
 <template>
   <div class="bg_ff">
-
+    <div>
     <Row class="app-resource-group-title">
       <h3>管理员自评
         <a v-if="isAdminTrue" @click="addAssess">添加自评</a>
       </h3>
     </Row>
-    <Row v-for="(assess, index) of assessments" :key="index" class="pad5 ">
-      <div>
-        <img src="resources/images/icon/contactor.png"  class="user-icon">
-        <div class="font14 content" >
-          <div >
-            <h4 >黄孝辉 <span class="fr">{{assess.date}}</span></h4>
-            </div>
-          <div class="assessment-info">
-            <div>
-              <span style="color: #a06970">改进成果:</span>
-              <span class="assessment-info-text">{{assess.achievement}}</span>
-            </div>
-            <div>
-              <span style="color: #a06970">改进机会:</span>
-              <span class="assessment-info-text">{{assess.chance}}</span>
+        <div v-for="(assess, index) of assessments" :key="index" class="pad10 bg_ff">
+          <img :src="assess.photo?assess.photo:'resources/images/icon/contactor.png'"  class="user-icon">
+          <div class="font14 content" >
+            <div >
+              <h4>{{ assess.creator }} <span class="fr">{{ formatDate(assess.date) }}</span></h4>
+              </div>
+            <div class="assessment-info">
+              <div>
+                <span style="color: #a06970">改进成果:</span>
+                <span class="assessment-info-text">{{assess.achievement}}</span>
+              </div>
+              <div>
+                <span style="color: #a06970">改进机会:</span>
+                <span class="assessment-info-text">{{assess.chance}}</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </Row>
-    <Row class="assessment-content">
-      <Table :columns="columns" :data="assessments"></Table>
-    </Row>
+    </div>
+
+   
     <assess-modal title="管理员自评" v-model="showAssessModal" width="650" @on-ok="submitAdminAssess">
       <div style="margin:20px auto;width:85%;">
         <Form ref="formValidate" :label-width="150" :model="adminAssessData" :rules="ruleValidate">
@@ -109,65 +107,12 @@ export default {
           }
         ]
       },
-      columns: [
-        {
-          title: "期间（月份）",
-          key: "crtTime",
-          width: 150,
-          render: (h, params) => {
-            let renderDate = this.formatDate(params.row.date);
-            return h("span", {}, renderDate);
-          }
-        },
-        {
-          title: "效率与成本改进成果",
-          key: "achievement"
-        },
-        {
-          title: "效率与成本改进机会",
-          key: "chance"
-        }
-      ],
       assessments: []
     };
   },
   watch: {
     isAdmin: function(value) {
-      if (value) {
-        const lastColumn = {
-          title: "操作",
-          align: "center",
-          key: "handle",
-          render: (h, params) => {
-            return h(
-              "a",
-              {
-                on: {
-                  click: () => {
-                    this.showAssessModal = true;
-                    this.$refs["formValidate"].resetFields();
-                    this.isEdit = "edit";
-                    this.IsEditId = params.row.id;
-                    this.adminAssessData.duringDate = new Date(params.row.date);
-                    this.adminAssessData.result = params.row.achievement;
-                    this.adminAssessData.opportunity = params.row.chance;
-                  }
-                }
-              },
-              "编辑"
-            );
-          }
-        };
-        this.isAdminTrue = true;
-        if (this.columns[this.columns.length - 1].title !== "操作") {
-          this.columns.push(lastColumn);
-        }
-      } else {
-        this.isAdminTrue = false;
-        if (this.columns[this.columns.length - 1].title === "操作") {
-          this.columns.splice(this.columns.length - 1, 1);
-        }
-      }
+      (value) && (this.isAdminTrue=true);
     }
   },
   methods: {

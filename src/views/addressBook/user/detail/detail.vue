@@ -29,7 +29,7 @@
         </div>
       </div>
     </Row>
-    <Row class="detail-content">
+    <Row class="detail-content-tabs">
       <!-- 用户信息 -->
       <user-info v-show="whichShow.userinfo" :userInfo="userInformation"></user-info>
       <!-- 上级用户 -->
@@ -86,7 +86,7 @@ export default {
         role: false,
         dirper: false,
         indirper: false,
-        workflow: false,
+        workflow: false
       },
       userInformation: {},
       relativeInstance: [
@@ -146,7 +146,8 @@ export default {
     this.getUserInfoData();
     this.getInstanceCount();
     let tabsMaxHeight = document.body.clientHeight - 125;
-    window.document.getElementsByClassName('detail-content')[0].style.height = tabsMaxHeight + 'px';
+    window.document.getElementsByClassName('detail-content-tabs')[0].style.height = tabsMaxHeight + 'px';
+    window.document.getElementsByClassName('detail-content-tabs')[0].style.maxHeight = tabsMaxHeight + 'px';
   }
 };
 </script>

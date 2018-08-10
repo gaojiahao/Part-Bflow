@@ -5,6 +5,7 @@
         margin: 15px 93px;
         padding: 26px 50px;
         box-shadow: 0px 1px 10px #ddd;
+        position: relative;
         &-btn{
           margin-bottom:5px;
           color: rgb(0, 150, 136);
@@ -48,7 +49,7 @@
             @on-ok="addLowUser"
             width="1000">
             <div class="app-search">
-              <Input @on-search="userFilter" :search="true" v-model="searchValue" placeholder="搜索" style="width: 300px"></Input>
+              <Input @on-search="userFilter" :search="true" v-model="searchValue" placeholder="搜索工号或姓名" style="width: 300px"></Input>
               <p @click="userFilter" class="app-search-icon">
                   <Button type="primary" size="small">查询</Button>
               </p>
@@ -271,13 +272,15 @@ export default {
     },
     //点击切换所有用户每页显示条数
     onAllUserPageSizeChange(size) {
-      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"},
+      {operator:"ne",value:this.userId,property:"userId"}
       ]);
       this.lowUser.allUserpageSize = size;
       this.getAllUsersData(filter);
     },
     onUserPageChange(currentPage) {
-      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"},
+      {operator:"ne",value:this.userId,property:"userId"}
       ]);
       this.lowUser.usercurrentPage = currentPage;
       this.getAllUsersData(filter);
@@ -342,8 +345,9 @@ export default {
     },
     //获取所有用户数据
     getAllUsersData(filter) {
+      let relFilter = filter?filter:JSON.stringify([{operator:"ne",value:this.userId,property:"userId"}]);
       this.userLoading = true;
-      getAllUsers(this.lowUser.allUserpageSize,this.lowUser.usercurrentPage,filter).then(res => {
+      getAllUsers(this.lowUser.allUserpageSize,this.lowUser.usercurrentPage,relFilter).then(res => {
         this.userData = res.tableContent;
         this.lowUser.usertotal = res.dataCount;
         this.userLoading = false;
@@ -351,7 +355,8 @@ export default {
     },
     //查询用户
     userFilter() {
-      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"},
+      {operator:"ne",value:this.userId,property:"userId"}
       ]);
       this.getAllUsersData(filter);
     }

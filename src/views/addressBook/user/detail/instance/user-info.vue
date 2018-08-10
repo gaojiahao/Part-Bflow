@@ -51,7 +51,7 @@
                     <FormItem label="手机：" prop="mobile">
                         <Input v-model="formItem.mobile" placeholder=""></Input>
                     </FormItem>
-                    <FormItem label="座机：">
+                    <FormItem label="座机：" prop="officePhone">
                         <Input v-model="formItem.officePhone" placeholder=""></Input>
                     </FormItem>
                     <FormItem label="邮箱：" prop="email">
@@ -139,6 +139,9 @@ export default {
         ],
         email: [
           { type: "email", message: "邮箱输入不合法", trigger: "blur" }
+        ],
+        officePhone: [
+          { message: "电话输入不合法", trigger: "blur",pattern: /^((0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/ }
         ]
       }
     };
@@ -204,6 +207,7 @@ export default {
                     updateUser(this.formItem).then(res => {
                         if(res.success){
                             this.$Message.success(res.message);
+                            window.location.reload();
                         }
                     }).catch(error => {
                         this.$Message.error(error.data.message);

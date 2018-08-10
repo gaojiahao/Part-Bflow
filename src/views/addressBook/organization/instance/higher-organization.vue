@@ -168,11 +168,47 @@ export default {
         },
         {
           title: "组织类型",
-          key: "groupType"
+          key: "groupType",
+           render: (h, params) => {
+            let groupType = params.row.groupType;
+            switch (groupType) {
+              case "M":
+                groupType = "管理层";
+                break;
+              case "A":
+                groupType = "事业部";
+                break;
+              case "O":
+                groupType = "部门";
+                break;
+              case "G":
+                groupType = "小组";
+                break;
+            }
+            return h("span", groupType);
+          }
         },
         {
           title: "部门职能类型",
-          key: "depFunction"
+          key: "depFunction",
+           render: (h, params) => {
+            let depFunction = params.row.depFunction;
+            switch (depFunction) {
+              case "M":
+                depFunction = "管理";
+                break;
+              case "S":
+                depFunction = "销售";
+                break;
+              case "C":
+                depFunction = "制造";
+                break;
+              case "R":
+                depFunction = "研发";
+                break;
+            }
+            return h("span", depFunction);
+          }
         },
         {
           title: "组织状态",

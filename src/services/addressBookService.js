@@ -2,6 +2,17 @@ import {
   request
 } from './fetch';
 
+/*************  公共  ****************/
+/**
+ * @author GuoZheng
+ * @description 获取组织成员信息
+ */
+export const checkoutFieldIsOnly = (tn,fileName, value) => request('/H_roleplay-si/trans/cntvalue', {
+  tn: tn,
+  fn: fileName,
+  value: value,
+});
+
 /************  用户  **************/
 
 /**
@@ -220,6 +231,8 @@ export const getUsersByGroupId = (groupId, currentPage, pageSize) => request('/H
   start: 0,
 });
 
+
+
 /**
  * @author GuoZheng
  * @description 获取组织权限
@@ -307,7 +320,7 @@ export const saveHighOrg = (parentId, groupId) => request('/H_roleplay-si/userIn
  * @author GuoZheng
  * @description 添加下级组织
  */
-export const saveBatchChildGroup = (parentId, childrenId) => request('/H_roleplay-si/userInfo/saveBatchChildGroup', {
+export const saveBatchChildGroup = (parentId, childrenId) => request('/H_roleplay-si/sysGroup/saveBatchChildGroup', {
   parentId: parentId,
   childrenId: childrenId,
 }, "POST");
@@ -316,7 +329,14 @@ export const saveBatchChildGroup = (parentId, childrenId) => request('/H_rolepla
  * @author GuoZheng
  * @description 删除下级组织
  */
-export const deleteBatchGroup = (data) => request('/H_roleplay-si/sysGroup/updateBatch', {}, "POST", data);
+export const deleteBatchGroup = (data) => request('/H_roleplay-si/sysGroup/deleteBatchGroup', {}, "POST", data);
+
+/**
+ * @author GuoZheng
+ * @description 添加负责人
+ */
+export const savePrincipal = (data) => request('/H_roleplay-si/sysGroup/update', {},"POST",data);
+
 
 /**
  * @author GuoZheng

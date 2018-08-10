@@ -234,12 +234,19 @@ export default {
       if(this.groupData.length === 0){
         getGroupData(parentId).then(res => {
           res.tableContent.forEach(val => {
-                this.groupData.push({
+            if(val.leaf === 0){
+              this.groupData.push({
                 title: val.groupName,
                 groupId: val.groupId,
                 loading: false,
                 children: []
               })
+            }else{
+              this.groupData.push({
+                title: val.groupName,
+                groupId: val.groupId
+              })
+            } 
           })
         })
       }

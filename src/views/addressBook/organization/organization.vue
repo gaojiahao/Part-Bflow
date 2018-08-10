@@ -8,7 +8,7 @@
       <h2 v-if="groupId">
         <span style="color:#4CAF50;cursor:pointer" @click="goBack">组织</span>
         <span style="color:#808080;margin-left:10px">/</span>
-        <span style="color:#808080;margin-left:10px">{{formItem.groupName}}</span>
+        <span style="color:#808080;margin-left:10px">{{name}}</span>
         <span style="color:#808080;margin-left:10px">/</span>
         <span style="color:#808080;margin-left:10px">{{groupId}}</span>
         <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status,color:'#eb2f96'}"></Tag>
@@ -37,9 +37,9 @@
     <div class="organization-wrap-tabs">
       <!-- 基本信息 -->
       <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===5">
-        <Form :model="formItem" :labelWidth="100" ref="formItem">
-          <FormItem label="组织名称:" style="font-size:16px">
-            <Input v-model="formItem.groupName" />
+        <Form :model="formItem" :labelWidth="100" ref="formItem" :rules="ruleValidate">
+          <FormItem label="组织名称:" style="font-size:16px" prop="groupName">
+            <Input v-model="formItem.groupName" @on-blur="onGroupNameOutBlur" />
           </FormItem>
           <FormItem label="组织状态" :labelWidth="100">
             <Select v-model="formItem.status">
@@ -82,7 +82,7 @@
       </section>
       <!-- 负责人 -->
       <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===2">
-        <principal :groupId="groupId"></principal>
+        <principal :groupId="groupId"  @on-principal-change='handleChangeObjDetailsCount'></principal>
       </section>
       <!-- 成员信息 -->
       <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===1">
@@ -102,7 +102,8 @@ import {
   getOrgBaseInfo,
   getObjDetailsCountByGroupId,
   saveBaseinfo,
-  updateBaseinfo
+  updateBaseinfo,
+  checkoutFieldIsOnly
 } from "@/services/addressBookService.js";
 import MemberModal from "@/components/modal/Modal";
 import HighOrganization from "./instance/higher-organization";
@@ -131,6 +132,7 @@ export default {
         comment: "",
         status: 1
       },
+      name: "",
       groupType: "",
 
       statusRadio: [
@@ -197,6 +199,18 @@ export default {
       ],
       actionIndex: 5,
 
+      ruleValidate: {
+        groupName: [
+          {
+            required: true,
+            message: "请输入组织名称",
+            trigger: "blur"
+          }
+        ]
+      },
+
+      checkout: true,
+
       groupId: this.$route.params.groupId
     };
   },
@@ -213,48 +227,56 @@ export default {
     },
 
     saveAndAdd() {
-      if (!this.groupId) {
-        delete this.formItem.groupId;
-        if (this.formItem.groupType === "O") {
-          this.formItem.depFunction = "";
-        }
-        saveBaseinfo(this.formItem).then(res => {
-          if (res) {
-            this.$Message.success("保存成功");
-            this.$refs["formItem"].resetFields();
-            this.formItem = {
-              groupName: "",
-              groupType: "",
-              depFunction: "",
-              comment: "",
-              status: 1
-            };
+      this.$refs["formItem"].validate(valid => {
+        if (valid && !this.groupId && this.checkout) {
+          delete this.formItem.groupId;
+          if (this.formItem.groupType === "O") {
+            this.formItem.depFunction = "";
           }
-        });
-      }
+          saveBaseinfo(this.formItem).then(res => {
+            if (res) {
+              this.$Message.success("保存成功");
+              this.$refs["formItem"].resetFields();
+              this.formItem = {
+                groupName: "",
+                groupType: "",
+                depFunction: "",
+                comment: "",
+                status: 1
+              };
+            }
+          });
+        }
+      });
     },
 
     save() {
-      if (this.formItem.groupType !== "O") {
-        this.formItem.depFunction = "";
-      }
-      if (!this.groupId) {
-        delete this.formItem.groupId;
-        saveBaseinfo(this.formItem).then(res => {
-          if (res) {
-            this.$Message.success("保存成功");
-            this.$router.push({ path: "/addressBook/organization/detail/"+res.groupId });
-            window.location.reload();
+      this.$refs["formItem"].validate(valid => {
+        if (valid) {
+          if (this.formItem.groupType !== "O") {
+            this.formItem.depFunction = "";
           }
-        });
-      }else{
-        this.formItem.groupId = this.groupId;
-        updateBaseinfo(this.formItem).then(res => {
-          if (res) {
-            this.$Message.success("保存成功");
+          if (!this.groupId && this.checkout) {
+            delete this.formItem.groupId;
+            saveBaseinfo(this.formItem).then(res => {
+              if (res) {
+                this.$Message.success("保存成功");
+                this.$router.push({
+                  path: "/addressBook/organization/detail/" + res.groupId
+                });
+                window.location.reload();
+              }
+            });
+          } else if(this.groupId && this.checkout){
+            this.formItem.groupId = this.groupId;
+            updateBaseinfo(this.formItem).then(res => {
+              if (res) {
+                this.$Message.success("保存成功");
+              }
+            });
           }
-        });
-      }
+        }
+      });
     },
 
     getObjDetailsCountByGroupId(groupId) {
@@ -275,6 +297,23 @@ export default {
       this.$router.push({
         path: "/addressBook/organization/board"
       });
+    },
+
+    //当组织名称失去焦点的是校验名称
+    onGroupNameOutBlur() {
+      //当groupId不存在时，校验名称是否唯一
+      if (!this.groupId) {
+        checkoutFieldIsOnly('sys_group',"groupName", this.formItem.groupName)
+          .then(res => {
+            if (res.result > 0) {
+              this.checkout = false;
+              this.$Message.error("名称已经存在!");
+            }
+          })
+          .catch(error => {
+            this.$Message.error(error.data.message);
+          });
+      }
     }
   },
 
@@ -299,6 +338,7 @@ export default {
         if (res.tableContent[0]) {
           let tableContent = res.tableContent[0];
           this.formItem.groupName = tableContent.groupName;
+          this.name = tableContent.groupName;
           this.formItem.groupType = tableContent.groupType;
           this.formItem.depFunction = tableContent.depFunction;
           this.formItem.status = tableContent.status;

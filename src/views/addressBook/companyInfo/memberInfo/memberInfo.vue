@@ -14,7 +14,7 @@
       </Table>
       <div style="margin: 10px;overflow: hidden">
         <div class="fr">
-          <Page :total="pageTotal" :current="memberCurrentPage" :page-size="pageSize" size="small" @on-change="pageChange" show-sizer show-elevator/>
+          <Page :total="pageTotal" @on-page-size-change="memberPageSizeChange" :current="memberCurrentPage" :page-size="memberPageSize" size="small" @on-change="pageChange" show-sizer show-elevator  show-total/>
         </div>
       </div>
     </div>
@@ -232,7 +232,7 @@ export default {
       pageTotal: 0,
       memberLoading: false,
       memberCurrentPage: 1,
-      pageSize: 10,
+      memberPageSize: 10,
       showModal: false,
       allMemberLoading: false,
       allMemberTotal: 0,
@@ -264,8 +264,8 @@ export default {
       this.memberLoading = true;
       getGroupUser(
         this.groupId,
-        this.allMemberCurrentPage,
-        this.allMemberPageSize
+        this.memberCurrentPage,
+        this.memberPageSize
       ).then(res => {
         this.memberData = res.tableContent;
         this.pageTotal = res.dataCount;
@@ -312,8 +312,9 @@ export default {
       });
     },
     //当前页改变
-    pageChange(memberCurrentPage) {
-      this.getCompanyMember(memberCurrentPage, this.pageSize);
+    pageChange(currentPage) {
+      this.memberCurrentPage = currentPage;
+      this.getCompanyMember(currentPage);
     },
     //弹出所有用户
     showAllMember() {
@@ -333,6 +334,10 @@ export default {
     onAllMemberPageSizeChange(pageSize) {
       this.allMemberPageSize = pageSize;
       this.getAllUser();
+    },
+    memberPageSizeChange(pageSize){
+      this.memberPageSize = pageSize;
+      this.getCompanyMember();
     },
     //新增公司成员
     addCompanyMember() {

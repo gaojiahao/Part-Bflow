@@ -19,7 +19,7 @@
         </TabPane>
         <TabPane label="互动" name="name2">
           <!-- 管理员自评 -->
-          <admintrstor-assessment :isAdmin="isAdmin" :listId="this.$route.params.listId"></admintrstor-assessment>
+          <admintrstor-assessment :isAdmin="isAdmin"></admintrstor-assessment>
         </TabPane>
         <TabPane label="资源" name="name3">
           <permission-source :appType="appType" :isAdmin="isAdmin" :enabledForbidden="enabledForbidden"></permission-source>
@@ -27,10 +27,9 @@
         <TabPane label="连接" name="name4">
           <!-- 应用科目 -->
           <div class="app-sub">
-            <app-subject :listId="this.$route.params.listId"></app-subject>
+            <app-subject :isAdmin="isAdmin"></app-subject>
           </div>
           <related-app></related-app>
-          
         </TabPane>
       </Tabs>
     </div>

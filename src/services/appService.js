@@ -250,6 +250,14 @@ export const getAppSubjectData = (listId) => request('/corebiz-api/calc/calcRel/
 
 /** 
  * @author XiaoYing
+ * 启用禁用应用科目
+ */
+export const openOrForbiddenSubject = (componentId) => request('/corebiz-api/calc/calcConfig/editStatus', {
+  componentId: componentId
+},'POST');
+
+/** 
+ * @author XiaoYing
  * 管理员自评数据获取
  */
 export const getAssessmentByListId = (listId) => request('/H_roleplay-si/ds/getAssessmentByListId', {

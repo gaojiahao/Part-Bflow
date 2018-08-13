@@ -16,18 +16,17 @@
 </template>
 
 <script>
-import { getAppSubjectData } from "@/services/appService.js";
+import { getAppSubjectData,openOrForbiddenSubject } from "@/services/appService.js";
 
 export default {
   name: "appSubject",
   components: {},
   props: {
-    listId: {
-      type: String
-    }
+    isAdmin: Boolean
   },
   data() {
     return {
+      listId: this.$route.params.listId,
       columns: [
         {
           title: "科目名称",
@@ -78,10 +77,66 @@ export default {
               }
             }
           }
-        }
+        },
       ],
       subjects: []
     };
+  },
+  watch: {
+    isAdmin: function(value) {
+      const lastColumn = {
+          title: "操作",
+          key: "key",
+          align: "center",
+          render: (h,params) => {
+            let isDisabled = false,isChecked = false;
+            if(params.row.classify === 1){
+              isDisabled = true;
+            }
+            if(params.row.calcRels[0].status === 1){
+              isChecked = true;
+            }
+            return h('Checkbox',{
+              props: {
+                disabled: isDisabled,
+                value: isChecked
+              },
+              on: {
+                'on-change': (status) => {
+                  let msgContent = '';
+                  if(status){
+                    msgContent = '确认启用该科目？'
+                  }else{
+                    msgContent = '确认禁用该科目？'
+                  }
+                  this.$Modal.confirm({
+                    title: '确认',
+                    content: msgContent,
+                    onOk: () => {
+                      params.row.calcRels.forEach(val => {
+                        openOrForbiddenSubject(val.componentId).then(res => {
+                          if(res.status === 200){
+                            this.$Message.success('更新成功！');
+                          }
+                        })
+                      });
+                    }
+                  });
+                }
+              }
+            })
+          }
+      };
+      if(value){
+        if(this.columns[this.columns.length-1].title !== '操作'){
+          this.columns.push(lastColumn);
+        }
+      }else{
+        if(this.columns[this.columns.length-1].title === '操作'){
+          this.columns.splice(this.columns.length-1,1);
+        }
+      }
+    }
   },
   methods: {},
   created() {

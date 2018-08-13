@@ -11,6 +11,15 @@
     color: rgb(122, 118, 118);
   }
 }
+.app-search {
+    margin-bottom: 5px;
+    .app-search-icon {
+      font-size: 1rem;
+      color: #39f;
+      display: inline-block;
+      cursor: pointer;
+    }
+  }
 </style>
 
 <template>
@@ -22,8 +31,14 @@
       </div>
     </custom-table>
 
-    <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionHighOrg">
+    <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择组织" @on-ok="saveSelectionHighOrg">
       <div style="margin-top:10px;">
+        <div class="app-search">
+          <Input @on-search="orgFilter" :search="true" v-model="searchValue" placeholder="搜索组织名称" style="width: 300px"></Input>
+          <a @click="orgFilter" class="app-search-icon">
+              <Button type="primary" size="small">查询</Button>
+          </a>
+        </div>
         <Table :loading="listUserLoading" :columns="highOrgColumnsModal" :data="listUserData" size='small' highlight-row ref="currentRowTable" @on-current-change="onSelectUserList"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
@@ -37,7 +52,7 @@
 
 <script>
 import MemberModal from "@/components/modal/Modal";
-import { saveHighOrg, getAllGroup } from "@/services/addressBookService.js";
+import { updateBaseinfo, getAllGroup } from "@/services/addressBookService.js";
 import CustomTable from "./CustomTable";
 export default {
   name: "higher-organization",
@@ -254,6 +269,7 @@ export default {
       listUserPageTotal: 0,
       listUserCurrentPage: 1,
       pageSize: 8,
+      searchValue: '',
 
       reload: false,
       onSelectionModal: []
@@ -262,7 +278,10 @@ export default {
 
   methods: {
     listUserChangePage(currentPage) {
-      this.getAllGroup(currentPage);
+      let filter = [
+        { operator: "like", value: this.searchValue, property: "groupName" }
+      ];
+      this.getAllGroup(currentPage,filter);
     },
 
     //监听模态框选中的用户
@@ -292,7 +311,10 @@ export default {
     saveSelectionHighOrg() {
       let parentId = "";
       parentId = this.onSelectionModal.groupId;
-      saveHighOrg(parentId, this.groupId).then(res => {
+      let params = {};
+      params.parentId = parentId;
+      params.groupId = this.groupId;
+      updateBaseinfo(params).then(res => {
         if (res.success) {
           this.$Message.success("保存成功");
           this.isShowMemberModal = false;
@@ -302,9 +324,9 @@ export default {
       });
     },
 
-    getAllGroup(currentPage) {
+    getAllGroup(currentPage,relfilter) {
       this.listUserLoading = true;
-      let filter = [];
+      let filter = relfilter ? relfilter : [];
       if (this.groupType) {
         switch (this.groupType) {
           case "小组":
@@ -368,6 +390,13 @@ export default {
           this.listUserLoading = false;
         }
       });
+    },
+    //过滤
+    orgFilter() {
+      let filter = [
+        { operator: "like", value: this.searchValue, property: "groupName" }
+      ];
+      this.getAllGroup(this.listUserCurrentPage,filter);
     }
   }
 };

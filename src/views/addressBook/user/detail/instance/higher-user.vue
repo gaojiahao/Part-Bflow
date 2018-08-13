@@ -104,12 +104,12 @@ export default {
         },
         {
           title: "部门",
-          key: "dept",
+          key: "dep",
           width: 200
         },
         {
           title: "小组",
-          key: "dept",
+          key: "group",
           width: 200
         },
         {
@@ -192,11 +192,11 @@ export default {
         },
         {
           title: "部门",
-          key: "dept"
+          key: "department"
         },
         {
           title: "小组",
-          key: "dept"
+          key: "group"
         },
         {
           title: "职位",

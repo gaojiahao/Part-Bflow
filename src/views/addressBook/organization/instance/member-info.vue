@@ -15,6 +15,15 @@
     color: rgb(122, 118, 118);
   }
 }
+.app-search {
+    margin-bottom: 5px;
+    .app-search-icon {
+      font-size: 1rem;
+      color: #39f;
+      display: inline-block;
+      cursor: pointer;
+    }
+  }
 </style>
 
 
@@ -40,6 +49,12 @@
 
     <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionUser">
       <div style="margin-top:10px;">
+        <div class="app-search">
+          <Input @on-search="userFilter" :search="true" v-model="searchValue" placeholder="搜索工号或名称" style="width: 300px"></Input>
+          <a @click="userFilter" class="app-search-icon">
+              <Button type="primary" size="small">查询</Button>
+          </a>
+        </div>
         <Table :loading="listUserLoading" :columns="memberInfoColumnsModel" :data="listUserData" size='small' ref="selection" @on-selection-change="onSelectUserList"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
@@ -56,7 +71,8 @@ import MemberModal from "@/components/modal/Modal";
 import {
   listUsers,
   addOrgMember,
-  deleteOrgMember
+  deleteOrgMember,
+  getAllUsers
 } from "@/services/addressBookService.js";
 import CustomTable from "./CustomTable";
 export default {
@@ -263,6 +279,7 @@ export default {
       ],
 
       //模态框参数
+      searchValue: '',
       isShowMemberModal: false,
       listUserLoading: false,
       listUserData: [],
@@ -331,11 +348,11 @@ export default {
     },
 
     //获取用户列表
-    getListUsers(currentPage, pageSize) {
+    getListUsers(currentPage, pageSize,filter) {
       this.listUserLoading = true;
-      listUsers(currentPage, pageSize).then(res => {
+      getAllUsers(pageSize,currentPage,filter).then(res => {
         if (res.tableContent[0]) {
-          this.listUserPageTotal = res.summary.total;
+          this.listUserPageTotal = res.dataCount;
           this.listUserData = res.tableContent;
           this.listUserLoading = false;
         }
@@ -343,7 +360,9 @@ export default {
     },
 
     listUserChangePage(currentPage) {
-      this.getListUsers(currentPage, this.pageSize);
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      ]);
+      this.getListUsers(currentPage, this.pageSize,filter);
     },
 
     //显示模态框-添加成员
@@ -356,6 +375,12 @@ export default {
       this.$refs.selection.exportCsv({
         filename: "成员信息"
       });
+    },
+    //过滤
+    userFilter() {
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      ]);
+      this.getListUsers(this.listUserCurrentPage,this.pageSize,filter);
     }
   }
 };

@@ -80,6 +80,8 @@ export default {
       },
       logo: "",
       visible: false,
+      cacheGroupName: "",
+      cacheShortName: "",
       baseInfoItem: {
         groupName: "",
         groupShortName: "",
@@ -180,9 +182,13 @@ export default {
     //获取公司基本信息
     getCompanyInfo(groupId) {
       getCompanyInfoByGroupId(groupId).then(res => {
-        this.baseInfoItem = res[0];
-        this.logo = res[0].groupPic;
-        this.baseInfoItem.status = String(this.baseInfoItem.status);
+        if (res.length > 0) {
+          this.baseInfoItem = res[0];
+          this.logo = res[0].groupPic;
+          this.cacheShortName = res[0].groupShortName;
+          this.cacheGroupName = res[0].groupName;
+          this.baseInfoItem.status = String(this.baseInfoItem.status);
+        }
       });
     },
     guid() {
@@ -275,12 +281,16 @@ export default {
     },
     groupNameValidator: function(rule, value, callback) {
       if (!value) {
-        return callback(new Error("请输入公司名"));
-      } else if (!this.$route.params.groupId) {
+        this.$Message.error("请输入公司名称");
+        return callback(new Error("请输入公司名称"));
+      } else if (this.cacheGroupName != value) {
         let test = { name: "groupName", value: value };
         checkValue(test).then(res => {
           if (!res.result == 0) {
-            return callback(new Error("公司名称已存在！"));
+            this.$Message.error("公司名称已存在！请重新输入");
+            return callback(new Error("公司名称已存在！请重新输入"));
+          } else {
+            return callback();
           }
         });
       } else {
@@ -289,12 +299,16 @@ export default {
     },
     groupShortNameValidator: function(rule, value, callback) {
       if (!value) {
+        this.$Message.error("请输入公司简称");
         return callback(new Error("请输入公司简称"));
-      } else if (!this.$route.params.groupId) {
+      } else if (this.cacheShortName != value) {
         let test = { name: "groupShortName", value: value };
         checkValue(test).then(res => {
           if (!res.result == 0) {
-            return callback(new Error("公司简称已存在！"));
+            this.$Message.error("公司简称已存在！请重新输入");
+            return callback(new Error("公司简称已存在！请重新输入"));
+          } else {
+            return callback();
           }
         });
       } else {

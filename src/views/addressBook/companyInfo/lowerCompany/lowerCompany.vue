@@ -286,7 +286,7 @@ export default {
       this.companyCurrentPage = currentPage;
       this.getAllCompanyList();
     },
-    //添加下级用户
+    //添加下级公司
     addlowerCompany() {
       let parentIds = [];
       if (this.selectCompanyData.length > 0) {
@@ -296,6 +296,7 @@ export default {
         addLowerCompany(parentIds, this.groupId).then(res => {
           if (res.success) {
             this.$Message.success("新增成功");
+            this.$emit("getInstanceCount");
             this.getlowerCompanyData();
           }
         });
@@ -317,6 +318,7 @@ export default {
             removeCompany(groupIds).then(res => {
               if (res.success) {
                 this.$Message.success("删除成功!");
+                this.$emit("getInstanceCount");
                 this.getlowerCompanyData();
               }
             });
@@ -336,6 +338,7 @@ export default {
           removeCompany(groupIds).then(res => {
             if (res.success) {
               this.$Message.success("删除成功!");
+              this.$emit("getInstanceCount");
               this.getlowerCompanyData();
             }
           });

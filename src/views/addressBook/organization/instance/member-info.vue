@@ -104,24 +104,12 @@ export default {
           align: "center"
         },
         {
-          type: "index",
-          width: 60,
-          align: "center"
-        },
-        {
-          title: "工号",
-          width: 100,
-          key: "userCode"
-        },
-        {
           title: "姓名",
-          width: 100,
           key: "nickname"
         },
         {
           title: "性别",
           key: "gender",
-          width: 60,
           render: (h, params) => {
             let gender = params.row.gender;
             return h(
@@ -136,7 +124,6 @@ export default {
         },
         {
           title: "状态",
-          width: 60,
           key: "status",
           render: (h, params) => {
             let status = params.row.status;
@@ -154,8 +141,7 @@ export default {
         },
         {
           title: "创建者",
-          key: "creator",
-          width: 100
+          key: "creator"
         },
         {
           title: "创建时间",
@@ -168,7 +154,7 @@ export default {
         {
           title: "操作",
           key: "action",
-          width: 120,
+          width: 100,
           align: "center",
           render: (h, params) => {
             return h(

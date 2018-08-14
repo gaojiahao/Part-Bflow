@@ -99,23 +99,19 @@ export default {
         },
         {
           title: "手机号",
-          key: "mobile",
-          width: 130
+          key: "mobile"
         },
         {
           title: "部门",
-          key: "dep",
-          width: 200
+          key: "dep"
         },
         {
           title: "小组",
-          key: "group",
-          width: 200
+          key: "group"
         },
         {
           title: "职位",
-          key: "role",
-          width: 150
+          key: "role"
         },
         {
           title: "状态",
@@ -139,7 +135,6 @@ export default {
         {
           title: '操作',
           key: 'action',
-          width: 80,
           align: 'center',
           render: (h,params) => {
             return h('Button',{
@@ -187,8 +182,7 @@ export default {
         },
         {
           title: "手机号",
-          key: "mobile",
-          width: 100
+          key: "mobile"
         },
         {
           title: "部门",
@@ -200,8 +194,7 @@ export default {
         },
         {
           title: "职位",
-          key: "role",
-          width: 150
+          key: "role"
         },
         {
           title: "状态",

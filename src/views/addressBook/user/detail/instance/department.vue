@@ -75,20 +75,17 @@ export default {
           render: (h,params) => {
               let type = '';
               switch(params.row.groupType){
-                case 'O': 
-                  type = '部门';
+                case 'M': 
+                  type = '管理部';
                   break;
                 case 'A': 
                   type = '事业部';
                   break;
-                case 'R': 
-                  type = '岗位';
+                case 'O': 
+                  type = '部门';
                   break;
-                case 'M': 
-                  type = '主体';
-                  break;
-                case 'C': 
-                  type = '公司';
+                case 'G': 
+                  type = '小组';
                   break;
               }
               return h('span',{},type);
@@ -96,24 +93,11 @@ export default {
         },
         {
           title: "名称",
-          key: "groupName",
-          width: 200
-        },
-        {
-          title: "标签",
-          key: "tag"
+          key: "groupName"
         },
         {
           title: "负责人",
           key: "principalName"
-        },
-        {
-          title: "加入时间",
-          key: "joinTime"
-        },
-        {
-          title: "离开时间",
-          key: "leaveTime"
         },
         {
           title: '操作',

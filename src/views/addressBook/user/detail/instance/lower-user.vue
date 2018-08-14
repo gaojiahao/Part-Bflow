@@ -89,18 +89,15 @@ export default {
       columns: [
         {
           type: "selection",
-          width: 60,
           align: "center"
         },
         {
           title: "工号",
-          key: "userCode",
-          width: 80
+          key: "userCode"
         },
         {
           title: "姓名",
-          key: "nickname",
-          width: 80
+          key: "nickname"
         },
         {
           title: "性别",
@@ -112,28 +109,23 @@ export default {
         },
         {
           title: "手机号",
-          key: "mobile",
-          width: 100
+          key: "mobile"
         },
         {
           title: "部门",
-          key: "dep",
-          width: 200
+          key: "dep"
         },
         {
           title: "小组",
-          key: "group",
-          width: 200
+          key: "group"
         },
         {
           title: "职位",
-          key: "role",
-          width: 140
+          key: "role"
         },
         {
           title: "状态",
           key: "status",
-          width: 70,
           render: (h, params) => {
             let userStatus = "";
             if (params.row.status === 1) {
@@ -153,7 +145,6 @@ export default {
         {
           title: '操作',
           key: 'action',
-          width: 70,
           align: 'center',
           render: (h,params) => {
             return h('Button',{

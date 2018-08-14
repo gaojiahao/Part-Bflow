@@ -26,7 +26,7 @@
       <div @click="onClickTab(index)" v-if="groupId?item.isShow:item.isShowAcive" :class="{'detail-tabs-child':true,'active':item.isShowAcive}" v-for="(item,index) of relativeInstance" :key="index">
         <img :src="item.imgUrl" />
         <div class="detail-tabs-child-right">
-          <span v-if="item.relativeNum">{{ item.relativeNum }}</span>
+          <span v-if="item.relativeNum==0||item.relativeNum">{{ item.relativeNum }}</span>
           <span v-else>&nbsp;</span>
           <p>{{ item.name }}</p>
         </div>

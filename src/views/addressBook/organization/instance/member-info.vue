@@ -126,16 +126,30 @@ export default {
           title: "状态",
           key: "status",
           render: (h, params) => {
-            let status = params.row.status;
+            let status = '';
+            switch (params.row.status) {
+                case 1:
+                    status = "使用中";
+                    break;
+                case 3:
+                    status = "草稿";
+                    break;
+                case 2:
+                    status = "未使用";
+                    break;
+                case 0:
+                    status = "停用";
+                    break;
+            }
             return h(
               "span",
               {
                 style: {
-                  color: status ? "#0279f6" : "#f03707",
+                  color: "#0279f6",
                   cursor: "default"
                 }
               },
-              status ? "在职" : "离职"
+              status
             );
           }
         },
@@ -149,7 +163,7 @@ export default {
         },
         {
           title: "修改时间",
-          key: "changeTime"
+          key: "modTime"
         },
         {
           title: "操作",
@@ -201,24 +215,16 @@ export default {
           align: "center"
         },
         {
-          type: "index",
-          width: 60,
-          align: "center"
-        },
-        {
           title: "工号",
-          width: 100,
           key: "userCode"
         },
         {
           title: "姓名",
-          width: 100,
           key: "nickname"
         },
         {
           title: "性别",
           key: "gender",
-          width: 60,
           render: (h, params) => {
             let gender = params.row.gender;
             return h(
@@ -233,26 +239,38 @@ export default {
         },
         {
           title: "状态",
-          width: 60,
           key: "status",
           render: (h, params) => {
-            let status = params.row.status;
+            let status = '';
+            switch (params.row.status) {
+                case 1:
+                    status = "使用中";
+                    break;
+                case 3:
+                    status = "草稿";
+                    break;
+                case 2:
+                    status = "未使用";
+                    break;
+                case 0:
+                    status = "停用";
+                    break;
+            }
             return h(
               "span",
               {
                 style: {
-                  color: status ? "#0279f6" : "#f03707",
+                  color: "#0279f6",
                   cursor: "default"
                 }
               },
-              status ? "在职" : "离职"
+              status
             );
           }
         },
         {
           title: "创建者",
-          key: "creator",
-          width: 100
+          key: "creator"
         },
         {
           title: "创建时间",
@@ -260,7 +278,7 @@ export default {
         },
         {
           title: "修改时间",
-          key: "changeTime"
+          key: "modTime"
         }
       ],
 

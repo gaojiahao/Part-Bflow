@@ -283,6 +283,7 @@ export default {
         addHigherCompany(this.groupId, parentId).then(res => {
           if (res.success) {
             this.$Message.success("新增成功!");
+            this.$emit("getInstanceCount");
             this.getHigherCompanyData();
           }
         });
@@ -299,6 +300,7 @@ export default {
           removeCompany([this.groupId]).then(res => {
             if (res.success) {
               this.$Message.success("删除成功!");
+              this.$emit("getInstanceCount");
               this.getHigherCompanyData();
             }
           });

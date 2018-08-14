@@ -14,7 +14,7 @@
       </Table>
       <div style="margin: 10px;overflow: hidden">
         <div class="fr">
-          <Page :total="pageTotal" @on-page-size-change="memberPageSizeChange" :current="memberCurrentPage" :page-size="memberPageSize" size="small" @on-change="pageChange" show-sizer show-elevator  show-total/>
+          <Page :total="pageTotal" @on-page-size-change="memberPageSizeChange" :current="memberCurrentPage" :page-size="memberPageSize" size="small" @on-change="pageChange" show-sizer show-elevator show-total/>
         </div>
       </div>
     </div>
@@ -286,6 +286,7 @@ export default {
             removeCompanyMember(userIds, this.groupId).then(res => {
               if (res.success) {
                 this.$Message.success("删除成功!");
+                this.$emit("getInstanceCount");
                 this.getCompanyMember();
               }
             });
@@ -305,6 +306,7 @@ export default {
           removeCompanyMember(userIds, this.groupId).then(res => {
             if (res.success) {
               this.$Message.success("删除成功!");
+              this.$emit("getInstanceCount");
               this.getCompanyMember();
             }
           });
@@ -335,7 +337,7 @@ export default {
       this.allMemberPageSize = pageSize;
       this.getAllUser();
     },
-    memberPageSizeChange(pageSize){
+    memberPageSizeChange(pageSize) {
       this.memberPageSize = pageSize;
       this.getCompanyMember();
     },
@@ -349,11 +351,12 @@ export default {
         addCompanyMember(userIds, this.groupId).then(res => {
           if (res.success) {
             this.$Message.success("新增成功!");
+            this.$emit("getInstanceCount");
             this.getCompanyMember();
           }
         });
       } else {
-        this.$Message.warning("请选择至少一个公司！");
+        this.$Message.warning("请选择至少一个成员！");
       }
     },
     search() {

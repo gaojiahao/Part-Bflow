@@ -26,7 +26,7 @@
       <div @click="onClickTab(index)" v-if="groupId?item.isShow:item.isShowAcive" :class="{'detail-tabs-child':true,'active':item.isShowAcive}" v-for="(item,index) of relativeInstance" :key="index">
         <img :src="item.imgUrl" />
         <div class="detail-tabs-child-right">
-          <span v-if="item.relativeNum">{{ item.relativeNum }}</span>
+          <span v-if="item.relativeNum==0||item.relativeNum">{{ item.relativeNum }}</span>
           <span v-else>&nbsp;</span>
           <p>{{ item.name }}</p>
         </div>
@@ -36,11 +36,11 @@
       <!-- 公司基本信息 -->
       <base-info v-if="whichShow.baseInfo"></base-info>
       <!-- 公司成员-->
-      <member-info v-if="whichShow.member"></member-info>
+      <member-info v-if="whichShow.member" @getInstanceCount="getInstanceCount"></member-info>
       <!--上级公司-->
-      <higher-company v-if="whichShow.higherCompany"></higher-company>
+      <higher-company v-if="whichShow.higherCompany" @getInstanceCount="getInstanceCount"></higher-company>
       <!--下级公司-->
-      <lower-company v-if="whichShow.lowerCompany"></lower-company>
+      <lower-company v-if="whichShow.lowerCompany" @getInstanceCount="getInstanceCount"></lower-company>
 
     </Row>
   </div>
@@ -82,6 +82,7 @@ export default {
           showName: "lowerCompany",
           isShow: true,
           isShowAcive: false,
+          relativeNum: 0,
           imgUrl: "resources/images/icon/company.png"
         },
         {
@@ -89,6 +90,7 @@ export default {
           showName: "higherCompany",
           isShow: true,
           isShowAcive: false,
+          relativeNum: 0,
           imgUrl: "resources/images/icon/company.png"
         },
         {
@@ -96,6 +98,7 @@ export default {
           showName: "member",
           isShow: true,
           isShowAcive: false,
+          relativeNum: 0,
           imgUrl: "resources/images/icon/user.png"
         },
         {
@@ -130,8 +133,9 @@ export default {
     //更新相关实例数量{}
     getInstanceCount() {
       getInstanceCountByGroupId(this.groupId).then(res => {
-        this.relativeInstance[2].relativeNum = res.groupUser;
         this.relativeInstance[0].relativeNum = res.subord;
+        this.relativeInstance[1].relativeNum = res.parent;
+        this.relativeInstance[2].relativeNum = res.groupUser;
       });
     }
   },

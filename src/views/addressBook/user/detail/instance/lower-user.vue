@@ -113,15 +113,18 @@ export default {
         },
         {
           title: "部门",
-          key: "dep"
+          key: "dep",
+          ellipsis: true
         },
         {
           title: "小组",
-          key: "group"
+          key: "group",
+          ellipsis: true
         },
         {
           title: "职位",
-          key: "role"
+          key: "role",
+          ellipsis: true
         },
         {
           title: "状态",
@@ -200,16 +203,19 @@ export default {
         },
         {
           title: "部门",
-          key: "department"
+          key: "department",
+          ellipsis: true
         },
         {
           title: "小组",
-          key: "group"
+          key: "group",
+          ellipsis: true
         },
         {
           title: "职位",
           key: "role",
-          width: 130
+          width: 130,
+          ellipsis: true
         },
         {
           title: "状态",

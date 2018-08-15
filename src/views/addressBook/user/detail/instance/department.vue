@@ -72,6 +72,7 @@ export default {
         {
           title: "类型",
           key: "groupType",
+          maxWidth: 150,
           render: (h,params) => {
               let type = '';
               switch(params.row.groupType){
@@ -93,16 +94,19 @@ export default {
         },
         {
           title: "名称",
-          key: "groupName"
+          key: "groupName",
+          maxWidth: 200,
+          ellipsis: true
         },
         {
           title: "负责人",
-          key: "principalName"
+          key: "principalName",
+          maxWidth: 150
         },
         {
           title: '操作',
           key: 'action',
-          width: 150,
+          maxWidth: 120,
           align: 'center',
           render: (h,params) => {
             return h('Button',{

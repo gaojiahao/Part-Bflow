@@ -109,7 +109,8 @@ export default {
         },
         {
           title: "部门",
-          key: "handlerUnitName"
+          key: "handlerUnitName",
+          ellipsis: true
         },
         {
           title: "创建时间",

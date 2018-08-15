@@ -1,0 +1,204 @@
+{
+    "dataItem": [
+        {
+            "procedureCode": "GX0713001",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "",
+            "photo":"resources/images/icon/tech.jpg"
+        },
+        {
+            "procedureCode": "GX0713002",
+            "processRouteCode": "123",
+            "spName": "电芯吸粉",
+            "upperProcedureCode": "GX0713001",
+            "photo":"resources/images/icon/tech.jpg"
+        },
+        {
+            "procedureCode": "GX0713003",
+            "processRouteCode": "123",
+            "spName": "测短路",
+            "upperProcedureCode": "GX0713002",
+            "photo":"resources/images/icon/tech.jpg"
+        },
+        {
+            "procedureCode": "GX0713004",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "GX0713003",
+            "photo":"resources/images/icon/tech.jpg"
+        },
+        {
+            "procedureCode": "GX0713005",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "GX0713004",
+            "photo":"resources/images/icon/tech.jpg"
+        },
+        {
+            "procedureCode": "GX0713006",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "GX0713005",
+            "photo":"resources/images/icon/tech.jpg"
+        },
+        {
+            "procedureCode": "GX0713007",
+            "processRouteCode": "123",
+            "spName": "贴高温胶带",
+            "upperProcedureCode": "GX0713006",
+            "photo":"resources/images/icon/tech.jpg"
+        },
+        {
+            "procedureCode": "GX0713008",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "GX0713007",
+            "photo":"resources/images/icon/people_1.jpg"
+        },
+        {
+            "procedureCode": "GX0713009",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "GX0713008",
+            "photo":"resources/images/icon/people_2.jpg"
+        },
+        {
+            "procedureCode": "GX07130010",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "GX0713009",
+            "photo":"resources/images/icon/people_3.jpg"
+        },
+        {
+            "procedureCode": "GX07130011",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "GX07130010",
+            "photo":"resources/images/icon/people_4.jpg"
+        },
+        {
+            "procedureCode": "GX07130012",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "GX07130011",
+            "photo":"resources/images/icon/people_5.jpg"
+        },
+        {
+            "procedureCode": "GX07130013",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "GX07130012",
+            "photo":"resources/images/icon/people_1.jpg"
+        },
+        {
+            "procedureCode": "GX07130014",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "GX07130013",
+            "photo":"resources/images/icon/people_6.png"
+        },
+        {
+            "procedureCode": "GX07130015",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "GX07130014",
+            "photo":"resources/images/icon/people_7.jpg"
+        },
+        {
+            "procedureCode": "GX07130016",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "GX07130015",
+            "photo":"resources/images/icon/people_8.jpg"
+        },
+        {
+            "procedureCode": "GX07130017",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "GX07130016",
+            "photo":"resources/images/icon/people_9.jpg"
+        },
+        {
+            "procedureCode": "GX07130018",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "GX07130017",
+            "photo":"resources/images/icon/people_1.jpg"
+        },
+        {
+            "procedureCode": "GX07130019",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "GX07130018",
+            "photo":"resources/images/icon/people_8.jpg"
+        },
+        {
+            "procedureCode": "GX07130020",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "GX07130019",
+            "photo":"resources/images/icon/people_3.jpg"
+        },
+        {
+            "procedureCode": "GX07130021",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "GX07130020",
+            "photo":"resources/images/icon/people_6.png"
+        }
+
+    ],
+
+    "dataItem_1":[
+        {
+            "procedureCode": "GX0713001",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "GX0713002,GX0713003,GX0713006",
+            "photo":"resources/images/icon/tech.jpg"
+        },
+        {
+            "procedureCode": "GX0713002",
+            "processRouteCode": "123",
+            "spName": "电芯吸粉",
+            "upperProcedureCode": "GX0713004",
+            "photo":"resources/images/icon/tech.jpg"
+        },
+        {
+            "procedureCode": "GX0713003",
+            "processRouteCode": "123",
+            "spName": "测短路",
+            "upperProcedureCode": "GX0713005",
+            "photo":"resources/images/icon/tech.jpg"
+        },  {
+            "procedureCode": "GX0713006",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "",
+            "photo":"resources/images/icon/tech.jpg"
+        },{
+            "procedureCode": "GX0713004",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "",
+            "photo":"resources/images/icon/tech.jpg"
+        },
+        {
+            "procedureCode": "GX0713005",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "",
+            "photo":"resources/images/icon/tech.jpg"
+        }, {
+            "procedureCode": "GX0713007",
+            "processRouteCode": "123",
+            "spName": "正极焊接/切极耳",
+            "upperProcedureCode": "",
+            "photo":"resources/images/icon/tech.jpg"
+        }
+    ]
+
+}
+
+  

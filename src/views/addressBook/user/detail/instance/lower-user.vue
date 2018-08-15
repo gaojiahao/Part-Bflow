@@ -2,7 +2,8 @@
     .lower-user{
       &-detail{
         background-color: #fff;
-        margin: 15px 93px;
+        width: 75%;
+        margin: 0 auto;
         padding: 26px 50px;
         box-shadow: 0px 1px 10px #ddd;
         position: relative;
@@ -89,18 +90,15 @@ export default {
       columns: [
         {
           type: "selection",
-          width: 60,
           align: "center"
         },
         {
           title: "工号",
-          key: "userCode",
-          width: 80
+          key: "userCode"
         },
         {
           title: "姓名",
-          key: "nickname",
-          width: 80
+          key: "nickname"
         },
         {
           title: "性别",
@@ -112,28 +110,26 @@ export default {
         },
         {
           title: "手机号",
-          key: "mobile",
-          width: 100
+          key: "mobile"
         },
         {
           title: "部门",
-          key: "dept",
-          width: 200
+          key: "dep",
+          ellipsis: true
         },
         {
           title: "小组",
-          key: "dept",
-          width: 200
+          key: "group",
+          ellipsis: true
         },
         {
           title: "职位",
           key: "role",
-          width: 140
+          ellipsis: true
         },
         {
           title: "状态",
           key: "status",
-          width: 70,
           render: (h, params) => {
             let userStatus = "";
             if (params.row.status === 1) {
@@ -153,7 +149,6 @@ export default {
         {
           title: '操作',
           key: 'action',
-          width: 70,
           align: 'center',
           render: (h,params) => {
             return h('Button',{
@@ -209,16 +204,19 @@ export default {
         },
         {
           title: "部门",
-          key: "dept"
+          key: "department",
+          ellipsis: true
         },
         {
           title: "小组",
-          key: "dept"
+          key: "group",
+          ellipsis: true
         },
         {
           title: "职位",
           key: "role",
-          width: 130
+          width: 130,
+          ellipsis: true
         },
         {
           title: "状态",

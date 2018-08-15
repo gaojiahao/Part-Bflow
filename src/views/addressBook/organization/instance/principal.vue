@@ -78,7 +78,7 @@ export default {
         },
         {
           title: "联系电话",
-          key: "phone"
+          key: "mobile"
         },
         {
           title: "操作",
@@ -155,16 +155,30 @@ export default {
           width: 60,
           key: "status",
           render: (h, params) => {
-            let status = params.row.status;
+            let status = '';
+            switch (params.row.status) {
+                case 1:
+                    status = "使用中";
+                    break;
+                case 3:
+                    status = "草稿";
+                    break;
+                case 2:
+                    status = "未使用";
+                    break;
+                case 0:
+                    status = "停用";
+                    break;
+            }
             return h(
               "span",
               {
                 style: {
-                  color: status ? "#0279f6" : "#f03707",
+                  color: "#0279f6",
                   cursor: "default"
                 }
               },
-              status ? "在职" : "离职"
+              status
             );
           }
         },
@@ -179,7 +193,7 @@ export default {
         },
         {
           title: "修改时间",
-          key: "changeTime"
+          key: "modTime"
         }
       ],
 

@@ -236,20 +236,18 @@ export default {
     //当职位名称失去焦点的是校验名称
     onGroupNameOutBlur() {
       //当groupId不存在时，校验名称是否唯一
-      if (!this.jobId) {
-        checkoutFieldIsOnly("sys_role", "name", this.formItem.name)
-          .then(res => {
-            if (res.result > 0) {
-              this.checkout = false;
-              this.$Message.error("名称已经存在!");
-            } else {
-              this.checkout = true;
-            }
-          })
-          .catch(error => {
-            this.$Message.error(error.data.message);
-          });
-      }
+      checkoutFieldIsOnly("sys_role", "name", this.formItem.name)
+        .then(res => {
+          if (res.result > 0) {
+            this.checkout = false;
+            this.$Message.error("名称已经存在!");
+          } else {
+            this.checkout = true;
+          }
+        })
+        .catch(error => {
+          this.$Message.error(error.data.message);
+        });
     }
   },
 

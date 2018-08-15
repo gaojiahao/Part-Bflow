@@ -23,7 +23,7 @@ export const flowRouter = {
 };
 
 export const technologyRouter = {
-  path: '/technology_graph',
+  path: '/technology_graph/:processRouteCode',
   name: 'technology_graph',
 
   meta: {

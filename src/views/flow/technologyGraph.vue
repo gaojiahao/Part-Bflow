@@ -2,13 +2,6 @@
     <div class="rfd-tetechnology-warp">
         <Spin size="large" fix v-if="spinShow"></Spin>
         <header class="rfd-tetechnology-warp-header">
-            <div style="display:inline-block;float:right">
-                <label style="color: #585858">工艺路线图</label>
-                <Select v-model="selectOption" class="input-select" @on-change="changeView">
-                    <Option v-for="item in pulseGraphLlistr" :value="item.technicsCode" :key="item.technicsCode">{{ item.technicsName }}</Option>
-                </Select>
-            </div>
-
         </header>
         <main class="rfd-tetechnology-warp-main">
             <div class="svg-container">
@@ -84,9 +77,8 @@ export default {
 
   data() {
     return {
+      processRouteCode: this.$route.params.processRouteCode,
       spinShow: false,
-      selectOption: "",
-      pulseGraphLlistr: [],
       screenWidth: document.body.clientWidth, // 这里是给到了一个默认值
       xAxion: 50,
       yAxion: 80,
@@ -210,11 +202,6 @@ export default {
       });
     },
 
-    changeView() {
-          this.pointList = [];
-      this.getProcessAndProcedure(this.selectOption);
-    },
-
     //查询工艺和工序关系
     getProcessAndProcedure(processRouteCode) {
       this.spinShow = true;
@@ -252,13 +239,7 @@ export default {
       })();
     };
 
-    getProcessRouteProcedureRel()
-      .then(res => {
-        this.pulseGraphLlistr = res.tableContent;
-      })
-      .catch(error => {
-        this.$Message.error(error);
-      });
+    this.getProcessAndProcedure(processRouteCode);
   }
 };
 </script>

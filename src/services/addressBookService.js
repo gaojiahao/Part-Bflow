@@ -309,15 +309,6 @@ export const getAllGroup = (currentPage, pageSize, filter) => request('/H_rolepl
 
 /**
  * @author GuoZheng
- * @description 添加上级组织
- */
-export const saveHighOrg = (parentId, groupId) => request('/H_roleplay-si/userInfo/saveGroup', {
-  parentId: parentId,
-  groupId: groupId,
-}, "POST");
-
-/**
- * @author GuoZheng
  * @description 添加下级组织
  */
 export const saveBatchChildGroup = (parentId, childrenId) => request('/H_roleplay-si/sysGroup/saveBatchChildGroup', {

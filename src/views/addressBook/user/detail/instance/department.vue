@@ -2,7 +2,8 @@
     .department{
       &-detail{
         background-color: #fff;
-        margin: 15px 93px;
+        width: 75%;
+        margin: 0 auto;
         padding: 26px 50px;
         box-shadow: 0px 1px 10px #ddd;
         position: relative;
@@ -72,23 +73,21 @@ export default {
         {
           title: "类型",
           key: "groupType",
+          maxWidth: 150,
           render: (h,params) => {
               let type = '';
               switch(params.row.groupType){
-                case 'O': 
-                  type = '部门';
+                case 'M': 
+                  type = '管理部';
                   break;
                 case 'A': 
                   type = '事业部';
                   break;
-                case 'R': 
-                  type = '岗位';
+                case 'O': 
+                  type = '部门';
                   break;
-                case 'M': 
-                  type = '主体';
-                  break;
-                case 'C': 
-                  type = '公司';
+                case 'G': 
+                  type = '小组';
                   break;
               }
               return h('span',{},type);
@@ -97,28 +96,18 @@ export default {
         {
           title: "名称",
           key: "groupName",
-          width: 200
-        },
-        {
-          title: "标签",
-          key: "tag"
+          maxWidth: 200,
+          ellipsis: true
         },
         {
           title: "负责人",
-          key: "principalName"
-        },
-        {
-          title: "加入时间",
-          key: "joinTime"
-        },
-        {
-          title: "离开时间",
-          key: "leaveTime"
+          key: "principalName",
+          maxWidth: 150
         },
         {
           title: '操作',
           key: 'action',
-          width: 150,
+          maxWidth: 120,
           align: 'center',
           render: (h,params) => {
             return h('Button',{

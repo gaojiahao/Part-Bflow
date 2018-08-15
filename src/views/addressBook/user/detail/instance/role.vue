@@ -2,7 +2,8 @@
     .role{
       &-detail{
         background-color: #fff;
-        margin: 15px 93px;
+        width: 75%;
+        margin: 0 auto;
         padding: 26px 50px;
         box-shadow: 0px 1px 10px #ddd;
         position: relative;
@@ -94,10 +95,12 @@ export default {
         },
         {
           title: "职位名称",
+          maxWidth: 200,
           key: "name"
         },
         {
           title: "职位类型",
+          maxWidth: 150,
           key: "type",
           render: (h,params) => {
               let type = '';
@@ -123,12 +126,13 @@ export default {
         },
         {
           title: "说明",
+          maxWidth: 200,
           key: "describe"
         },
         {
           title: '操作',
           key: 'action',
-          width: 150,
+          maxWidth: 150,
           align: 'center',
           render: (h,params) => {
             return h('Button',{
@@ -165,10 +169,12 @@ export default {
         },
         {
           title: "职位名称",
+          maxWidth: 200,
           key: "name"
         },
         {
           title: "职位类型",
+          maxWidth: 150,
           key: "type",
           render: (h,params) => {
               let type = '';
@@ -194,6 +200,7 @@ export default {
         },
         {
           title: "说明",
+          maxWidth: 200,
           key: "describe"
         }
       ],

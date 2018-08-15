@@ -15,6 +15,15 @@
     color: rgb(122, 118, 118);
   }
 }
+.app-search {
+    margin-bottom: 5px;
+    .app-search-icon {
+      font-size: 1rem;
+      color: #39f;
+      display: inline-block;
+      cursor: pointer;
+    }
+  }
 </style>
 
 
@@ -40,6 +49,12 @@
 
     <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionUser">
       <div style="margin-top:10px">
+        <div class="app-search">
+          <Input @on-search="userFilter" :search="true" v-model="searchValue" placeholder="搜索工号或名称" style="width: 300px"></Input>
+          <a @click="userFilter" class="app-search-icon">
+              <Button type="primary" size="small">查询</Button>
+          </a>
+        </div>
         <Table :loading="listUserLoading" :columns="memberInfoColumnsModel" :data="listUserData" size='small' ref="selection" @on-selection-change="onSelectUserList"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
@@ -56,7 +71,8 @@ import MemberModal from "@/components/modal/Modal";
 import {
   listUsers,
   deleteBatchRole,
-  saveBatchChildRole
+  saveBatchChildRole,
+  getAllUsers
 } from "@/services/addressBookService.js";
 import CustomTable from "@/views/addressBook/organization/instance/CustomTable";
 export default {
@@ -76,6 +92,7 @@ export default {
   data() {
     return {
       memberInfoLoading: false,
+      searchValue: '',
       memberInfoParams: {
         roleId: this.jobId,
         page: 1,
@@ -88,24 +105,16 @@ export default {
           align: "center"
         },
         {
-          type: "index",
-          width: 60,
-          align: "center"
-        },
-        {
           title: "工号",
-          width: 100,
           key: "userCode"
         },
         {
           title: "姓名",
-          width: 100,
           key: "nickname"
         },
         {
           title: "性别",
           key: "gender",
-          width: 60,
           render: (h, params) => {
             let gender = params.row.gender;
             return h(
@@ -120,26 +129,38 @@ export default {
         },
         {
           title: "状态",
-          width: 60,
           key: "status",
           render: (h, params) => {
-            let status = params.row.status;
+            let status = '';
+            switch (params.row.status) {
+                case 1:
+                    status = "使用中";
+                    break;
+                case 3:
+                    status = "草稿";
+                    break;
+                case 2:
+                    status = "未使用";
+                    break;
+                case 0:
+                    status = "停用";
+                    break;
+            }
             return h(
               "span",
               {
                 style: {
-                  color: status ? "#0279f6" : "#f03707",
+                  color: "#0279f6",
                   cursor: "default"
                 }
               },
-              status ? "在职" : "离职"
+              status
             );
           }
         },
         {
           title: "创建者",
-          key: "creator",
-          width: 100
+          key: "creator"
         },
         {
           title: "创建时间",
@@ -147,7 +168,7 @@ export default {
         },
         {
           title: "修改时间",
-          key: "changeTime"
+          key: "modTime"
         },
         {
           title: "操作",
@@ -198,24 +219,16 @@ export default {
           align: "center"
         },
         {
-          type: "index",
-          width: 60,
-          align: "center"
-        },
-        {
           title: "工号",
-          width: 100,
           key: "userCode"
         },
         {
           title: "姓名",
-          width: 100,
           key: "nickname"
         },
         {
           title: "性别",
           key: "gender",
-          width: 60,
           render: (h, params) => {
             let gender = params.row.gender;
             return h(
@@ -230,26 +243,38 @@ export default {
         },
         {
           title: "状态",
-          width: 60,
           key: "status",
           render: (h, params) => {
-            let status = params.row.status;
+            let status = '';
+            switch (params.row.status) {
+                case 1:
+                    status = "使用中";
+                    break;
+                case 3:
+                    status = "草稿";
+                    break;
+                case 2:
+                    status = "未使用";
+                    break;
+                case 0:
+                    status = "停用";
+                    break;
+            }
             return h(
               "span",
               {
                 style: {
-                  color: status ? "#0279f6" : "#f03707",
+                  color: "#0279f6",
                   cursor: "default"
                 }
               },
-              status ? "在职" : "离职"
+              status
             );
           }
         },
         {
           title: "创建者",
-          key: "creator",
-          width: 100
+          key: "creator"
         },
         {
           title: "创建时间",
@@ -257,7 +282,7 @@ export default {
         },
         {
           title: "修改时间",
-          key: "changeTime"
+          key: "modTime"
         }
       ],
 
@@ -330,11 +355,11 @@ export default {
     },
 
     //获取用户列表
-    getListUsers(currentPage, pageSize) {
+    getListUsers(currentPage, pageSize,filter) {
       this.listUserLoading = true;
-      listUsers(currentPage, pageSize).then(res => {
+      getAllUsers(pageSize, currentPage ,filter).then(res => {
         if (res.tableContent[0]) {
-          this.listUserPageTotal = res.summary.total;
+          this.listUserPageTotal = res.dataCount;
           this.listUserData = res.tableContent;
           this.listUserLoading = false;
         }
@@ -342,7 +367,9 @@ export default {
     },
 
     listUserChangePage(currentPage) {
-      this.getListUsers(currentPage, this.pageSize);
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      ]);
+      this.getListUsers(currentPage, this.pageSize,filter);
     },
 
     //显示模态框-添加成员
@@ -355,6 +382,12 @@ export default {
       this.$refs.selection.exportCsv({
         filename: "成员信息"
       });
+    },
+    //过滤
+    userFilter() {
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      ]);
+      this.getListUsers(this.listUserCurrentPage,this.pageSize,filter);
     }
   }
 };

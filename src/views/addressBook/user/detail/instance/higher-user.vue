@@ -2,9 +2,10 @@
     .higher-user{
       &-detail{
         background-color: #fff;
-        margin: 15px 93px;
         min-height: 500px;
         padding: 26px 50px;
+        width: 75%;
+        margin: 0 auto;
         box-shadow: 0px 1px 10px #ddd;
         position: relative;
         &-btn{
@@ -99,23 +100,22 @@ export default {
         },
         {
           title: "手机号",
-          key: "mobile",
-          width: 130
+          key: "mobile"
         },
         {
           title: "部门",
-          key: "dept",
-          width: 200
+          key: "dep",
+          ellipsis: true
         },
         {
           title: "小组",
-          key: "dept",
-          width: 200
+          key: "group",
+          ellipsis: true
         },
         {
           title: "职位",
           key: "role",
-          width: 150
+          ellipsis: true
         },
         {
           title: "状态",
@@ -139,7 +139,6 @@ export default {
         {
           title: '操作',
           key: 'action',
-          width: 80,
           align: 'center',
           render: (h,params) => {
             return h('Button',{
@@ -187,21 +186,22 @@ export default {
         },
         {
           title: "手机号",
-          key: "mobile",
-          width: 100
+          key: "mobile"
         },
         {
           title: "部门",
-          key: "dept"
+          key: "department",
+          ellipsis: true
         },
         {
           title: "小组",
-          key: "dept"
+          key: "group",
+          ellipsis: true
         },
         {
           title: "职位",
           key: "role",
-          width: 150
+          ellipsis: true,
         },
         {
           title: "状态",

@@ -65,15 +65,13 @@ export default {
     EditTable
   },
   props: {
-    listId: {
-      type: String
-    },
     isAdmin: {
       type: Boolean
     }
   },
   data() {
     return {
+      listId: this.$route.params.listId,
       showAssessModal: false,
       isAdminTrue: false,
       isEdit: "",

@@ -2,7 +2,8 @@
     .workflow{
       &-detail{
         background-color: #fff;
-        margin: 15px 93px;
+        width: 75%;
+        margin: 0 auto;
         padding: 26px 50px;
         box-shadow: 0px 1px 10px #ddd;
         position: relative;
@@ -109,7 +110,8 @@ export default {
         },
         {
           title: "部门",
-          key: "handlerUnitName"
+          key: "handlerUnitName",
+          ellipsis: true
         },
         {
           title: "创建时间",

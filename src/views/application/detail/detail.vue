@@ -29,8 +29,9 @@
           <div class="app-sub">
             <app-subject :listId="this.$route.params.listId"></app-subject>
           </div>
-          <related-app></related-app>
           
+          <related-app></related-app>
+          <app-api></app-api>
         </TabPane>
       </Tabs>
     </div>
@@ -43,6 +44,7 @@ import { getListData } from "@/services/appService.js";
 import LogInstance from "./tabs/base/log-instance";
 import AppInfo from "./information/information";
 import AppSubject from "./tabs/connection/subject";
+import AppApi from "./tabs/connection/api";
 import RelatedApp from  './tabs/connection/related-app';
 import AdmintrstorAssessment from "./tabs/exchange/admintrstor-assessment";
 import PermissionSource from "./tabs/permission/permission";
@@ -50,6 +52,7 @@ export default {
   name: "detail",
   components: {
     AppSubject,
+    AppApi,
     AdmintrstorAssessment,
     PermissionSource,
     AppInfo,

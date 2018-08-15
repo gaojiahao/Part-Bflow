@@ -44,4 +44,20 @@ export const getMyFavorite = () => request('/H_roleplay-si/ds/getMyFavorite')
  */
 export const getAppTaskCount = (params) => request('/H_roleplay-si/trans/getAppTaskCount',params)
 
-export const getMockData = () =>  request('../mock/flow/pulseGraph.json');
+export const getMockData = () =>  request('../mock/flow/technologyGraph.json');
+
+
+/** 
+ * 获取工艺与工序的关系
+ * 
+*/
+export const getProcedureAndProcess = (processRouteCode) => request('/H_roleplay-si/ds/getProcedureAndProcess',{
+    processRouteCode:processRouteCode
+})
+
+
+/** 
+ * 获取工艺与工序的关系
+ * 
+*/
+export const getProcessRouteProcedureRel = () => request('/H_roleplay-si/ds/getProcessRouteProcedureRel');

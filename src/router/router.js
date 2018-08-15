@@ -22,6 +22,17 @@ export const flowRouter = {
     import('@/views/flow/pulseGraph.vue')
 };
 
+export const technologyRouter = {
+  path: '/technology_graph',
+  name: 'technology_graph',
+
+  meta: {
+    title: 'technologyGraph - 工艺路线图'
+  },
+  component: () =>
+    import('@/views/flow/technologyGraph.vue')
+};
+
 export const dashboardRouter = {
   path: '/dashboard',
   name: 'dashboard',
@@ -260,6 +271,7 @@ export const routers = [
   loginRouter,
   flowRouter,
   homepageRouter,
+  technologyRouter,
   dashboardRouter,
   app,
   addressBook,

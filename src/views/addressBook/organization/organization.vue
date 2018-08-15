@@ -365,7 +365,7 @@ export default {
       this.$refs["formItem"].validate(valid => {
         if (valid && !this.groupId && this.checkout) {
           delete this.formItem.groupId;
-          if (this.formItem.groupType === "O") {
+          if (this.formItem.groupType !== "O") {
             this.formItem.depFunction = "";
           }
           saveBaseinfo(this.formItem).then(res => {
@@ -519,8 +519,6 @@ export default {
     },
     changeGroupType(value) {
       if(this.groupId){
-        // this.editHighOrg = this.formItem.highGroup;
-        // this.editHighOrgParentId = this.formItem.parentId;
         if(this.groupType === '小组'){
           if(value === 'M'){
             if(this.parentType === 'A'){

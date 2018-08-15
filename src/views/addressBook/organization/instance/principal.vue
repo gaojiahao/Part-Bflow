@@ -11,6 +11,15 @@
     color: rgb(122, 118, 118);
   }
 }
+.app-search {
+    margin-bottom: 5px;
+    .app-search-icon {
+      font-size: 1rem;
+      color: #39f;
+      display: inline-block;
+      cursor: pointer;
+    }
+  }
 </style>
 
 <template>
@@ -24,6 +33,12 @@
 
     <principal-modal v-model="isShowPrincipalModal" width="1000" footerBtnAlign="right" title="选择负责人" @on-ok="savaSelectUser">
       <div>
+        <div class="app-search">
+          <Input @on-search="userFilter" :search="true" v-model="searchValue" placeholder="搜索工号或者名称" style="width: 300px"></Input>
+          <a @click="userFilter" class="app-search-icon">
+              <Button type="primary" size="small">查询</Button>
+          </a>
+        </div>
         <Table :loading="listUserLoading" :columns="principalColumnsModel" :data="listUserData" size='small' highlight-row ref="currentRowTable" @on-row-dblclick="handleDblclick" @on-current-change="onSelectUserList"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
@@ -38,7 +53,7 @@
 <script>
 import PrincipalModal from "@/components/modal/Modal";
 import CustomTable from "./CustomTable";
-import { listUsers, savePrincipal } from "@/services/addressBookService.js";
+import { listUsers, savePrincipal,getAllUsers } from "@/services/addressBookService.js";
 export default {
   name: "principal",
 
@@ -60,6 +75,7 @@ export default {
         page: 1,
         limit: 8
       },
+      searchValue: '',
       principalColumns: [
         {
           title: "名称",
@@ -219,9 +235,9 @@ export default {
     },
 
     //获取用户列表
-    getListUsers(currentPage, pageSize) {
+    getListUsers(currentPage, pageSize,filter) {
       this.listUserLoading = true;
-      listUsers(currentPage, pageSize).then(res => {
+      getAllUsers(pageSize,currentPage,filter).then(res => {
         if (res.tableContent[0]) {
           this.listUserPageTotal = res.summary.total;
           this.listUserData = res.tableContent;
@@ -231,7 +247,9 @@ export default {
     },
 
     listUserChangePage(currentPage) {
-      this.getListUsers(currentPage, this.pageSize);
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      ]);
+      this.getListUsers(currentPage, this.pageSize,filter);
     },
 
     //监听自定义table传回来的状体值
@@ -277,6 +295,12 @@ export default {
         .catch(error => {
           this.$Message.error(error.data.message);
         });
+    },
+    //过滤
+    userFilter() {
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      ]);
+      this.getListUsers(this.listUserCurrentPage,this.pageSize,filter);
     }
   }
 };

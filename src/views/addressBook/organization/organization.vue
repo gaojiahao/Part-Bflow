@@ -47,7 +47,7 @@
             </Select>
           </FormItem>
           <FormItem label="组织类型" :labelWidth="100">
-            <RadioGroup v-model="formItem.groupType">
+            <RadioGroup @on-change="changeGroupType" v-model="formItem.groupType">
               <Radio label="M">管理层</Radio>
               <Radio label="A">事业部</Radio>
               <Radio label="O">部门</Radio>
@@ -61,6 +61,12 @@
               <Radio label="C">制造</Radio>
               <Radio label="R">研发</Radio>
             </RadioGroup>
+          </FormItem>
+          <FormItem label="上级组织" :labelWidth="100"  prop="highGroup">
+            <Input @on-click="selectHighOrgModal" v-model="formItem.highGroup" icon="md-arrow-dropdown"></Input>
+          </FormItem>
+          <FormItem v-if="hiddenInput" label="上级组织parentId" style="font-size:16px">
+            <Input v-model="formItem.parentId" />
           </FormItem>
           <FormItem label="组织说明" :labelWidth="100">
             <Input v-model="formItem.comment" type="textarea" :autosize="{minRows: 3,maxRows: 5}" />
@@ -93,7 +99,22 @@
         <permission :groupId="groupId" @on-permission-change='handleChangeObjDetailsCount'></permission>
       </section>
     </div>
-
+    <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择组织" @on-ok="saveSelectionHighOrg">
+      <div style="margin-top:10px;">
+        <div class="app-search">
+          <Input @on-search="orgFilter" :search="true" v-model="searchValue" placeholder="搜索组织名称" style="width: 300px"></Input>
+          <a @click="orgFilter" class="app-search-icon">
+              <Button type="primary" size="small">查询</Button>
+          </a>
+        </div>
+        <Table :loading="listUserLoading" :columns="highOrgColumnsModal" :data="listUserData" size='small' highlight-row ref="currentRowTable" @on-current-change="onSelectUserList"></Table>
+        <div style="margin: 10px;overflow: hidden">
+          <div style="float: right;">
+            <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" show-total show-elevator></Page>
+          </div>
+        </div>
+      </div>
+    </member-modal>
   </div>
 </template>
 
@@ -103,7 +124,8 @@ import {
   getObjDetailsCountByGroupId,
   saveBaseinfo,
   updateBaseinfo,
-  checkoutFieldIsOnly
+  checkoutFieldIsOnly,
+  getAllGroup
 } from "@/services/addressBookService.js";
 import MemberModal from "@/components/modal/Modal";
 import HighOrganization from "./instance/higher-organization";
@@ -130,10 +152,20 @@ export default {
         groupType: "",
         depFunction: "",
         comment: "",
-        status: 1
+        status: 1,
+        highGroup: '',
+        parentId: ''
       },
+      hiddenInput: false,
+      listUserLoading: true,
+      searchValue: '',
+      isShowMemberModal: false,
+      //存放编辑时的上级组织
+      editHighOrg: '',
+      editHighOrgParentId: '',
       name: "",
       groupType: "",
+      parentType: '',
 
       statusRadio: [
         {
@@ -198,12 +230,115 @@ export default {
         }
       ],
       actionIndex: 5,
+      listUserData: [],
+      highOrgColumnsModal: [
+        {
+          type: "index",
+          width: 60,
+          align: "center"
+        },
+        {
+          title: "组织名称",
+          key: "groupName"
+        },
+        {
+          title: "组织类型",
+          key: "groupType",
+           render: (h, params) => {
+            let groupType = params.row.groupType;
+            switch (groupType) {
+              case "M":
+                groupType = "管理层";
+                break;
+              case "A":
+                groupType = "事业部";
+                break;
+              case "O":
+                groupType = "部门";
+                break;
+              case "G":
+                groupType = "小组";
+                break;
+            }
+            return h("span", groupType);
+          }
+        },
+        {
+          title: "部门职能类型",
+          key: "depFunction",
+           render: (h, params) => {
+            let depFunction = params.row.depFunction;
+            switch (depFunction) {
+              case "M":
+                depFunction = "管理";
+                break;
+              case "S":
+                depFunction = "销售";
+                break;
+              case "C":
+                depFunction = "制造";
+                break;
+              case "R":
+                depFunction = "研发";
+                break;
+            }
+            return h("span", depFunction);
+          }
+        },
+        {
+          title: "组织状态",
+          key: "status",
+          render: (h, params) => {
+            let status = params.row.status,
+              value = "";
+            switch (status) {
+              case 0:
+                value = "停用";
+                break;
+              case 1:
+                value = "使用中";
+                break;
+              case 2:
+                value = "未使用";
+                break;
+              case 3:
+                value = "草稿";
+                break;
+            }
+            return h(
+              "span",
+              {
+                style: {
+                  color: status ? "#0279f6" : "#f03707",
+                  cursor: "default"
+                }
+              },
+              value
+            );
+          }
+        },
+        {
+          title: "组织说明",
+          key: "comment"
+        }
+      ],
+      listUserPageTotal: 0,
+      listUserCurrentPage: 1,
+      pageSize: 8,
+      onSelectionModal: [],
 
       ruleValidate: {
         groupName: [
           {
             required: true,
             message: "请输入组织名称",
+            trigger: "blur"
+          }
+        ],
+        highGroup: [
+          {
+            required: true,
+            message: "请选择上级组织",
             trigger: "blur"
           }
         ]
@@ -299,6 +434,19 @@ export default {
       });
     },
 
+    listUserChangePage(currentPage) {
+      let filter = [
+        { operator: "like", value: this.searchValue, property: "groupName" }
+      ];
+      this.getAllGroup(currentPage,filter);
+    },
+    //过滤
+    orgFilter() {},
+    //监听模态框选中的用户
+    onSelectUserList(currentRow, oldCurrentRow) {
+      this.onSelectionModal = currentRow;
+    },
+
     //当组织名称失去焦点的是校验名称
     onGroupNameOutBlur() {
       //当groupId不存在时，校验名称是否唯一
@@ -314,6 +462,123 @@ export default {
         .catch(error => {
           this.$Message.error(error.data.message);
         });
+    },
+    //获取所有组织
+    getAllGroup(currentPage,relfilter) {
+      this.listUserLoading = true;
+      let filter = relfilter ? relfilter : [];
+      if (this.formItem.groupType) {
+        switch (this.formItem.groupType) {
+          case "A":
+            filter.push({
+              operator: "eq",
+              value: "M",
+              property: "groupType"
+            }); 
+            break;
+          case "O":
+            filter.push({
+              operator: "ne",
+              value: "O",
+              property: "groupType"
+            }); //岗位
+            filter.push({
+              operator: "ne",
+              value: "G",
+              property: "groupType"
+            }); 
+            break;
+          case "G":
+            filter.push({
+              operator: "ne",
+              value: "G",
+              property: "groupType"
+            });
+            break;
+        }
+        filter = JSON.stringify(filter);
+      }
+      getAllGroup(currentPage, this.pageSize, filter).then(res => {
+        if (res.tableContent[0]) {
+          this.listUserPageTotal = res.summary.total;
+          this.listUserData = res.tableContent;
+          this.listUserLoading = false;
+        }
+      });
+    },
+    //展示上级组织选择器
+    selectHighOrgModal() {
+      this.isShowMemberModal = true;
+      this.getAllGroup(this.listUserCurrentPage);
+    },
+    //确认选择的上级组织
+    saveSelectionHighOrg() {
+      this.formItem.highGroup = this.onSelectionModal.groupName;
+      this.formItem.parentId = this.onSelectionModal.groupId;
+      this.isShowMemberModal = false;
+    },
+    changeGroupType(value) {
+      if(this.groupId){
+        // this.editHighOrg = this.formItem.highGroup;
+        // this.editHighOrgParentId = this.formItem.parentId;
+        if(this.groupType === '小组'){
+          if(value === 'M'){
+            if(this.parentType === 'A'){
+              this.formItem.highGroup = '';
+              this.formItem.parentId = '';
+            }else if(this.parentType === 'O'){
+              this.formItem.highGroup = '';
+              this.formItem.parentId = '';
+            }else{
+              this.formItem.highGroup = this.editHighOrg;
+              this.formItem.parentId = this.editHighOrgParentId;
+            }
+          }else if(value === 'A'){
+            if(this.parentType === 'A'){
+              this.formItem.highGroup = '';
+              this.formItem.parentId = '';
+            }else if(this.parentType === 'O'){
+              this.formItem.highGroup = '';
+              this.formItem.parentId = '';
+            }else{
+              this.formItem.highGroup = this.editHighOrg;
+              this.formItem.parentId = this.editHighOrgParentId;
+            }
+          }else if(value === 'O'){
+            if(this.parentType === 'O'){
+              this.formItem.highGroup = '';
+              this.formItem.parentId = '';
+            }else{
+              this.formItem.highGroup = this.editHighOrg;
+              this.formItem.parentId = this.editHighOrgParentId;
+            }
+          }else{
+              this.formItem.highGroup = this.editHighOrg;
+              this.formItem.parentId = this.editHighOrgParentId;
+            }
+        }else if(this.groupType === '部门'){
+          if(value === 'M'){
+            if(this.parentType === 'A'){
+              this.formItem.highGroup = '';
+              this.formItem.parentId = '';
+            }else{
+              this.formItem.highGroup = this.editHighOrg;
+              this.formItem.parentId = this.editHighOrgParentId;
+            }
+          }else if(value === 'A'){
+            if(this.parentType === 'A'){
+              this.formItem.highGroup = '';
+              this.formItem.parentId = '';
+            }else{
+              this.formItem.highGroup = this.editHighOrg;
+              this.formItem.parentId = this.editHighOrgParentId;
+            }
+          }else{
+              this.formItem.highGroup = this.editHighOrg;
+              this.formItem.parentId = this.editHighOrgParentId;
+            }
+        }
+      }
     }
   },
 
@@ -343,6 +608,11 @@ export default {
           this.formItem.depFunction = tableContent.depFunction;
           this.formItem.status = tableContent.status;
           this.formItem.comment = tableContent.comment;
+          this.formItem.highGroup = tableContent.parentName;
+          this.formItem.parentId = tableContent.parentId;
+          this.parentType = tableContent.parentType;
+          this.editHighOrg = this.formItem.highGroup;
+          this.editHighOrgParentId = this.formItem.parentId;
           switch (tableContent.groupType) {
             case "M":
               this.groupType = "管理层";

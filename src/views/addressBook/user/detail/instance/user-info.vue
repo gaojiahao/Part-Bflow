@@ -104,7 +104,7 @@ export default {
       httpHeaders: {
         Authorization: getToken()
       },
-      logo: "resources/images/icon/contactor.png",
+      logo: "",
       userId: this.$route.params.userId,
       visible: false,
       checkout: true,

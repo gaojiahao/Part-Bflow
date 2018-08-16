@@ -52,7 +52,7 @@
               <Option value="3">草稿</Option>
               <Option value="2">未使用</Option>
               <Option value="1">使用中</Option>
-              <Option value="0">停用</Option>
+              <Option value="-1">停用</Option>
             </Select>
           </FormItem>
         </Form>

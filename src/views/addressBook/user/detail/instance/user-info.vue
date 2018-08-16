@@ -68,12 +68,13 @@
                     <DatePicker :class="{'info-edit':isEdit}" :readonly="isEdit" type="date" placeholder="" v-model="formItem.termOfValidity"></DatePicker>
                 </FormItem>
                 <FormItem label="状态：">
-                    <Select :class="{'info-edit':isEdit}"  :disabled="isEdit" v-model="formItem.status" style="width:60%">
+                    <Select v-if="!isEdit" v-model="formItem.status" style="width:60%">
                         <Option value="1">使用中</Option>
                         <Option value="3">草稿</Option>
                         <Option value="0">停用</Option>
                         <Option value="2">未使用</Option>
                     </Select>
+                    <span v-else>{{ userInfo.statusText }}</span>
                 </FormItem>
             </Form>
         </Row>

@@ -11,6 +11,9 @@
   margin-bottom: 0;
   background: #fff;
 }
+.ivu-breadcrumb {
+  font-size: 18px;
+}
 </style>
 <template>
   <div class="content-wrap">
@@ -71,11 +74,7 @@ export default {
         lowerCompany: false,
         member: false
       },
-      companyInformation: {
-        nickname: "",
-        userCode: "",
-        status: 3
-      },
+      companyInformation: {},
       relativeInstance: [
         {
           name: "下级公司",

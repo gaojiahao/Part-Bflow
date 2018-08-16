@@ -1,65 +1,68 @@
-<style lang="less" scoped>
+<style lang="less">
 @import "./baseInfo.less";
 </style>
 <template>
   <div class="baseInfo">
     <div class="baseInfo-warp">
       <div class="baseInfo-body">
-        <div class="uploadImg">
-          <Upload ref="upload" :show-upload-list="false" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" multiple type="drag" action="/H_roleplay-si/ds/upload" :headers="httpHeaders" style="display: inline-block;width:128px;vertical-align: middle;">
-            <div style="width: 128px;height:128px;line-height: 128px;" v-if="!logo">
-              <img v-if="logo" :src="logo">
-              <i v-if="!logo" class="iconfont">&#xe63b;</i>
-            </div>
-            <div style="width: 128px;height:128px;line-height: 128px;" class="demo-upload-list" v-if="logo">
-              <img :src="logo">
-              <div class="demo-upload-list-cover">
-                <Icon type="ios-eye-outline" color="#fff" size="30" @click.stop="handleView"></Icon>
-                <Icon type="ios-trash-outline" color="#fff" size="30" @click.stop="handleRemove"></Icon>
-              </div>
-            </div>
-          </Upload>
-          <Modal title="查看头像" v-model="visible">
-            <img :src="logo" v-if="visible" style="width: 100%">
-          </Modal>
-        </div>
         <Form :model="baseInfoItem" ref="baseInfoItem" :label-width="80" :rules="ruleValidate">
-          <FormItem label="公司名称" prop="groupName">
-            <Input v-model="baseInfoItem.groupName"></Input>
+          <FormItem label="公司照片:">
+            <div class="uploadImg">
+              <Upload ref="upload" :show-upload-list="false" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" multiple type="drag" action="/H_roleplay-si/ds/upload" :headers="httpHeaders" style="display: inline-block;width:128px;vertical-align: middle;">
+                <div style="width: 128px;height:128px;line-height: 128px;" v-if="!logo">
+                  <img v-if="logo" :src="logo">
+                  <i v-if="!logo" class="iconfont">&#xe63b;</i>
+                </div>
+                <div style="width: 128px;height:128px;line-height: 128px;" class="demo-upload-list" v-if="logo">
+                  <img :src="logo">
+                  <div class="demo-upload-list-cover">
+                    <Icon type="ios-eye-outline" color="#fff" size="30" @click.stop="handleView"></Icon>
+                    <Icon type="ios-trash-outline" color="#fff" size="30" @click.stop="handleRemove"></Icon>
+                  </div>
+                </div>
+              </Upload>
+              <Modal title="查看头像" v-model="visible">
+                <img :src="logo" v-if="visible" style="width: 100%">
+              </Modal>
+            </div>
           </FormItem>
-          <FormItem label="公司简称" prop="groupShortName">
-            <Input v-model="baseInfoItem.groupShortName"></Input>
+          <FormItem label="公司名称:" prop="groupName">
+            <Input v-model="baseInfoItem.groupName" :class="{'info-edit':isEdit}" :disabled="isEdit"></Input>
           </FormItem>
-          <FormItem label="公司类型" prop="depFunction">
-            <RadioGroup v-model="baseInfoItem.depFunction">
-              <Radio label='有限责任公司'></Radio>
-              <Radio label='股份有限公司'></Radio>
-              <Radio label='集团公司'></Radio>
-              <Radio label='有限合伙'></Radio>
-              <Radio label='普通合伙'></Radio>
-              <Radio label='个人独资'></Radio>
-              <Radio label='子公司'></Radio>
-            </RadioGroup>
+          <FormItem label="公司简称:" prop="groupShortName">
+            <Input v-model="baseInfoItem.groupShortName" :class="{'info-edit':isEdit}" :disabled="isEdit"></Input>
           </FormItem>
-          <FormItem label="公司状态">
-            <Select v-model="baseInfoItem.status">
+          <FormItem label="公司类型:" prop="depFunction">
+            <Select v-model="baseInfoItem.depFunction" :class="{'info-edit':isEdit}" :disabled="isEdit">
+              <Option value='有限责任公司'>有限责任公司</Option>
+              <Option value='股份有限公司'>股份有限公司</Option>
+              <Option value='集团公司'>集团公司</Option>
+              <Option value='有限合伙'>有限合伙</Option>
+              <Option value='普通合伙'>普通合伙</Option>
+              <Option value='个人独资'>个人独资</Option>
+              <Option value='子公司'>子公司</Option>
+            </Select>
+          </FormItem>
+        </Form>
+      </div>
+      <div style="margin-top:5px; background: #fff; padding: 50px 100px 10px 100px;">
+        <Form :label-width="80">
+          <FormItem label="公司状态:">
+            <Select v-model="baseInfoItem.status" :class="{'info-edit':isEdit}" :disabled="isEdit">
               <Option value="3">草稿</Option>
               <Option value="2">未使用</Option>
               <Option value="1">使用中</Option>
               <Option value="0">停用</Option>
             </Select>
           </FormItem>
-          <FormItem label="公司说明">
-            <Input v-model="baseInfoItem.comment" type="textarea" :rows="3"></Input>
-          </FormItem>
         </Form>
       </div>
     </div>
     <Row class="info-btn">
-      <Button v-if="baseInfoItem.groupId" @click="updateCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">更新</Button>
-      <Button v-else @click="addCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存</Button>
-      <Button @click="goCompanyList" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">取消</Button>
-      <Button v-if="!baseInfoItem.groupId" @click="saveAndAddCompany" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存并继续添加</Button>
+      <Button v-if="baseInfoItem.groupId&&!isEdit" @click="updateCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">更新</Button>
+      <Button v-else-if="!isEdit&&!isAdd" @click="addCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存</Button>
+      <Button v-if="isAdd" @click="isEditCompanyInfo" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">{{isEdit?'编辑':'放弃编辑'}}</Button>
+      <Button v-if="!baseInfoItem.groupId&&!isEdit&&!isAdd" @click="saveAndAddCompany" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存并继续添加</Button>
     </Row>
   </div>
 </template>
@@ -80,14 +83,15 @@ export default {
       },
       logo: "",
       visible: false,
+      isEdit: true,
+      isAdd: true,
       cacheGroupName: "",
       cacheShortName: "",
       baseInfoItem: {
         groupName: "",
         groupShortName: "",
         depFunction: "",
-        status: "1",
-        comment: ""
+        status: "1"
       },
       ruleValidate: {
         groupName: [
@@ -155,7 +159,6 @@ export default {
         groupShortName: baseInfo.groupShortName,
         depFunction: baseInfo.depFunction,
         status: baseInfo.status,
-        comment: baseInfo.comment,
         groupCode: this.guid(),
         groupPic: this.logo
       };
@@ -210,8 +213,8 @@ export default {
         S4()
       );
     },
-    goCompanyList() {
-      this.$router.push({ path: "/addressBook/companyInfo/board" });
+    isEditCompanyInfo() {
+      this.isEdit = !this.isEdit;
     },
     //保存并新增
     saveAndAddCompany() {
@@ -221,7 +224,6 @@ export default {
         groupShortName: baseInfo.groupShortName,
         depFunction: baseInfo.depFunction,
         status: baseInfo.status,
-        comment: baseInfo.comment,
         groupCode: this.guid(),
         groupPic: this.logo
       };
@@ -240,7 +242,6 @@ export default {
               this.baseInfoItem.groupShortName = "";
               this.baseInfoItem.status = "1";
               this.baseInfoItem.depFunction = "";
-              this.baseInfoItem.comment = "";
               this.$refs["upload"].fileList.splice(
                 0,
                 this.$refs["upload"].fileList.length
@@ -263,7 +264,6 @@ export default {
         groupShortName: baseInfo.groupShortName,
         depFunction: baseInfo.depFunction,
         status: baseInfo.status,
-        comment: baseInfo.comment,
         groupId: groupId,
         groupPic: this.logo
       };
@@ -320,6 +320,8 @@ export default {
     let groupId =
       this.$route.name == "add" ? this.$route.name : this.$route.params.groupId;
     if ("add" == groupId) {
+      this.isEdit = false;
+      this.isAdd = false;
       return;
     }
     this.getCompanyInfo(groupId);

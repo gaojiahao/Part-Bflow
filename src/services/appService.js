@@ -346,3 +346,10 @@ export const getRelatedApp = (listId) => request('/H_roleplay-si/ds/getAppReleva
 export const getUserInfoByUserId = (userId) => request('/H_roleplay-si/ds/getUserInfoByUserId', { userId: userId });
 
 
+/**
+ * @author GuoZheng
+ * @description 获取查询应用json数据
+ */
+export const findList = (listId) => request('/H_roleplay-si/easy/list/findList', { listId: listId });
+
+

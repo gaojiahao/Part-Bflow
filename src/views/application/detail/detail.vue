@@ -29,13 +29,9 @@
           <div class="app-sub">
             <app-subject :isAdmin="isAdmin"></app-subject>
           </div>
-<<<<<<< HEAD
           
           <related-app></related-app>
           <app-api></app-api>
-=======
-          <related-app></related-app>
->>>>>>> 4be3c7974b56f0206bdde348894812866df9800c
         </TabPane>
       </Tabs>
     </div>

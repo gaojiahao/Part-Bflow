@@ -71,7 +71,7 @@
                     <Select v-if="!isEdit" v-model="formItem.status" style="width:60%">
                         <Option value="1">使用中</Option>
                         <Option value="3">草稿</Option>
-                        <Option value="0">停用</Option>
+                        <Option value="-1">停用</Option>
                         <Option value="2">未使用</Option>
                     </Select>
                     <span v-else>{{ userInfo.statusText }}</span>
@@ -104,7 +104,7 @@ export default {
       httpHeaders: {
         Authorization: getToken()
       },
-      logo: "",
+      logo: "resources/images/icon/contactor.png",
       userId: this.$route.params.userId,
       visible: false,
       checkout: true,

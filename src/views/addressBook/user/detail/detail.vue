@@ -119,7 +119,7 @@ export default {
           this.userInformation = res.tableContent[0];
           if(this.userInformation.status === 1){
             this.userInformation.statusText = '使用中';
-          }else if(this.userInformation.status === 0){
+          }else if(this.userInformation.status === -1){
             this.userInformation.statusText = '停用';
           }else if(this.userInformation.status === 3){
             this.userInformation.statusText = '草稿';

@@ -12,9 +12,6 @@
       </Breadcrumb>
       <Tag v-show="userInformation.status?showTag:!showTag"   class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:userInformation.status,color:'#eb2f96'}"></Tag>
     </Row>
-    <Row class="detail-header">
-      <Button @click="goBack" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">返回</Button>
-    </Row>
     <Row class="detail-tabs">
       <div 
         @click="onClickTab(index)"
@@ -120,12 +117,8 @@ export default {
       if(this.userId){
         getUserInfoById(this.userId).then(res => {
           this.userInformation = res.tableContent[0];
-          console.log(this.userInformation);
         });
       }
-    },
-    goBack() {
-      this.$router.push({path: '/addressBook/user/board'});
     },
 
     //更新相关实例数量{}

@@ -112,21 +112,21 @@ export default {
           title: "手机号",
           key: "mobile"
         },
-        {
-          title: "部门",
-          key: "dep",
-          ellipsis: true
-        },
-        {
-          title: "小组",
-          key: "group",
-          ellipsis: true
-        },
-        {
-          title: "职位",
-          key: "role",
-          ellipsis: true
-        },
+        // {
+        //   title: "部门",
+        //   key: "dep",
+        //   ellipsis: true
+        // },
+        // {
+        //   title: "小组",
+        //   key: "group",
+        //   ellipsis: true
+        // },
+        // {
+        //   title: "职位",
+        //   key: "role",
+        //   ellipsis: true
+        // },
         {
           title: "状态",
           key: "status",
@@ -201,22 +201,6 @@ export default {
           title: "手机号",
           key: "mobile",
           width: 130
-        },
-        {
-          title: "部门",
-          key: "department",
-          ellipsis: true
-        },
-        {
-          title: "小组",
-          key: "group",
-          ellipsis: true
-        },
-        {
-          title: "职位",
-          key: "role",
-          width: 130,
-          ellipsis: true
         },
         {
           title: "状态",

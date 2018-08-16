@@ -117,6 +117,7 @@ export default {
       if(this.userId){
         getUserInfoById(this.userId).then(res => {
           this.userInformation = res.tableContent[0];
+          console.log(this.userInformation);
         });
       }
     },

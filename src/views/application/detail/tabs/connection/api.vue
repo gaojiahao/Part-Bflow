@@ -3,39 +3,40 @@
 </style>
 
 <template>
-    <div class="bg_ff martop20">
+  <div class="bg_ff martop20">
 
-        <Row class="app-resource-group-title">
-            <h3>API</h3>
-        </Row>
-        <Row class="api-content">
-            <h2>创建销售订单</h2>
-            <p>
-                <strong>请求方式：POST（HTTPS）</strong>
-            </p>
-            <p>
-                <strong>请求地址：https://qyapi.weixin.qq.com/cgi-bin/user/update?access_token=ACCESS_TOKEN</strong>
-            </p>
-            <p>
-                <strong>请求包体：</strong>
-            </p>
-            <Row>
-                <pre class="api-code">
-                {{appContent}}
-                    <div style="position: absolute;top: 0px;right: 0px;cursor: pointer;"  class="tag-read"  :data-clipboard-text=appContent  @click="copy">
-                        <Tooltip placement="top" content="点击复制" :disabled="disabled">
-                            <Icon type="md-document" size='24' />
-                        </Tooltip>
-                    </div>
-                </pre>
-            </Row>
-        </Row>
+    <Row class="app-resource-group-title">
+      <h3>API</h3>
+    </Row>
+    <Row class="api-content">
+      <h2>创建销售订单</h2>
+      <p>
+        <strong>请求方式：POST（HTTPS）</strong>
+      </p>
+      <p>
+        <strong>请求地址：https://qyapi.weixin.qq.com/cgi-bin/user/update?access_token=ACCESS_TOKEN</strong>
+      </p>
+      <p>
+        <strong>请求包体：</strong>
+      </p>
+      <Row>
+        <pre class="api-code">
+          {{appContent}}
+        </pre>
+        <div style="position: absolute;top: 30px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=appContent @click="copy">
+          <Tooltip placement="top" content="点击复制" :disabled="disabled">
+            <Icon type="md-document" size='24' />
+          </Tooltip>
+        </div>
+      </Row>
+    </Row>
 
-    </div>
+  </div>
 </template>
 
 <script>
 import { findList } from "@/services/appService.js";
+import { ForamtJson } from "@/utils/utils";
 
 const Clipboard = require("clipboard");
 export default {
@@ -64,74 +65,12 @@ export default {
         // 释放内存
         clipboard.destroy();
       });
-    },
-    //格式话Json数据
-    formatJson(json, options) {
-      let reg = null,
-        formatted = "",
-        pad = 0,
-        PADDING = "    ";
-      options = options || {};
-      options.newlineAfterColonIfBeforeBraceOrBracket =
-        options.newlineAfterColonIfBeforeBraceOrBracket === true ? true : false;
-      options.spaceAfterColon =
-        options.spaceAfterColon === false ? false : true;
-      if (typeof json !== "string") {
-        json = JSON.stringify(json);
-      } else {
-        json = JSON.parse(json);
-        json = JSON.stringify(json);
-      }
-      reg = /([\{\}])/g;
-      json = json.replace(reg, "\r\n$1\r\n");
-      reg = /([\[\]])/g;
-      json = json.replace(reg, "\r\n$1\r\n");
-      reg = /(\,)/g;
-      json = json.replace(reg, "$1\r\n");
-      reg = /(\r\n\r\n)/g;
-      json = json.replace(reg, "\r\n");
-      reg = /\r\n\,/g;
-      json = json.replace(reg, ",");
-      if (!options.newlineAfterColonIfBeforeBraceOrBracket) {
-        reg = /\:\r\n\{/g;
-        json = json.replace(reg, ":{");
-        reg = /\:\r\n\[/g;
-        json = json.replace(reg, ":[");
-      }
-      if (options.spaceAfterColon) {
-        reg = /\:/g;
-        json = json.replace(reg, ":");
-      }
-      json.split("\r\n").forEach(function(node, index) {
-        //console.log(node);
-        let i = 0,
-          indent = 0,
-          padding = "";
-
-        if (node.match(/\{$/) || node.match(/\[$/)) {
-          indent = 1;
-        } else if (node.match(/\}/) || node.match(/\]/)) {
-          if (pad !== 0) {
-            pad -= 1;
-          }
-        } else {
-          indent = 0;
-        }
-
-        for (i = 0; i < pad; i++) {
-          padding += PADDING;
-        }
-
-        formatted += padding + node + "\r\n";
-        pad += indent;
-      });
-      return formatted;
     }
   },
   mounted() {
     findList(this.listId)
       .then(res => {
-        this.appContent = this.formatJson(res.commitApi);
+        this.appContent = ForamtJson(res.commitApi);
       })
       .catch(error => {
         this.$Message.error(error.message.data);

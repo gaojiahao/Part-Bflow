@@ -239,7 +239,7 @@ export default {
       })();
     };
 
-    this.getProcessAndProcedure(processRouteCode);
+    this.getProcessAndProcedure(this.processRouteCode);
   }
 };
 </script>

@@ -7,7 +7,7 @@ import {
  * @author GuoZheng
  * @description 获取组织成员信息
  */
-export const checkoutFieldIsOnly = (tn,fileName, value) => request('/H_roleplay-si/trans/cntvalue', {
+export const checkoutFieldIsOnly = (tn, fileName, value) => request('/H_roleplay-si/trans/cntvalue', {
   tn: tn,
   fn: fileName,
   value: value,
@@ -326,7 +326,7 @@ export const deleteBatchGroup = (data) => request('/H_roleplay-si/sysGroup/delet
  * @author GuoZheng
  * @description 添加负责人
  */
-export const savePrincipal = (data) => request('/H_roleplay-si/sysGroup/update', {},"POST",data);
+export const savePrincipal = (data) => request('/H_roleplay-si/sysGroup/update', {}, "POST", data);
 
 
 /**
@@ -480,7 +480,6 @@ export const saveCompanyInfo = (data) => {
     groupShortName,
     depFunction,
     status,
-    comment,
     groupCode,
     groupPic
   } = data;
@@ -489,7 +488,6 @@ export const saveCompanyInfo = (data) => {
     groupShortName: groupShortName,
     depFunction: depFunction,
     status: status,
-    comment: comment,
     list: 'sys_group',
     groupType: 'C',
     parentId: '1',
@@ -618,7 +616,6 @@ export const updateConpanyInfo = (data) => {
     groupShortName,
     depFunction,
     status,
-    comment,
     groupId,
     groupPic
   } = data
@@ -627,7 +624,6 @@ export const updateConpanyInfo = (data) => {
     groupShortName: groupShortName,
     depFunction: depFunction,
     status: status,
-    comment: comment,
     groupId: groupId,
     groupPic: groupPic
   }])

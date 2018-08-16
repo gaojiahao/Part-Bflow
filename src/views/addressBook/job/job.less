@@ -67,7 +67,7 @@
   }
 
   &-tabs{
-      background-color: #f0f0f0;
+      background-color: #ddd;
       padding: 30px 0;
       overflow: auto;
   }
@@ -79,13 +79,34 @@
   }
 
   .baseinfo-container {
-    padding: 20px 10%;
+    padding: 20px 20px 20px 0;
     position: relative;
+    width: 40%;
+    min-width: 400px;
     min-height: 450px;
     //form表单标签字体样式
     .ivu-form-item-label {
       font-size: 14px;
       color: #6e6e6e;
+    }
+
+    .input-status-isedit {
+      .ivu-icon{
+        display: none !important;
+      }
+      input{
+        border-bottom: none !important;
+
+      }
+      .ivu-select-selection{
+        border-bottom: none !important;
+      }
+    }
+
+    &-divider{
+      height: 5px;
+      width:105%;
+      background-color: #f0f0f0;
     }
 
     &-action {

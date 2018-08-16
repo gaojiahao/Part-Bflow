@@ -39,28 +39,28 @@
       <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===2">
         <Form :model="formItem" :labelWidth="100" ref="formItem" :rules="ruleValidate">
           <FormItem label="职位名称:" style="font-size:16px" prop="name">
-            <Input v-model="formItem.name" @on-blur="onGroupNameOutBlur" />
+            <Input v-model="formItem.name" @on-blur="onGroupNameOutBlur" :readonly="isEdit" :class="isEdit?'input-status-isedit':''" />
           </FormItem>
-          <FormItem label="职位状态" :labelWidth="100">
-            <Select v-model="formItem.status">
+          <FormItem label="职位类型" :labelWidth="100">
+            <Select v-model="formItem.type" placeholder="请选择职位类型" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
+              <Option value="M">管理类</Option>
+              <Option value="Y">营销类</Option>
+              <Option value="J">技术类</Option>
+              <Option value="Z">专业类</Option>
+              <Option value="C">操作类</Option>
+            </Select>
+          </FormItem>
+          <div class="baseinfo-container-divider"></div>
+          <FormItem label="职位状态" :labelWidth="100" style="margin-top:20px">
+            <Select v-model="formItem.status" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
               <Option v-for="(item,index) in statusRadio" :key="index" :value="item.value">{{item.name}}</Option>
             </Select>
           </FormItem>
-          <FormItem label="职位类型" :labelWidth="100">
-            <RadioGroup v-model="formItem.type">
-              <Radio label="M">管理类</Radio>
-              <Radio label="Y">营销类</Radio>
-              <Radio label="J">技术类</Radio>
-              <Radio label="Z">专业类</Radio>
-              <Radio label="C">操作类</Radio>
-            </RadioGroup>
-          </FormItem>
-          <FormItem label="职位说明" :labelWidth="100">
-            <Input v-model="formItem.describe" type="textarea" :autosize="{minRows: 3,maxRows: 5}" />
-          </FormItem>
+
         </Form>
         <div class="baseinfo-container-action">
           <input type='submit' value="取消" class="baseinfo-container-action-submit" @click="cancle" />
+           <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" @click="edit" v-if="jobId"/>
           <input type='submit' value="保存" class="baseinfo-container-action-submit" @click="save" />
           <input type='submit' value="保存并添加" class="baseinfo-container-action-submit" v-if="!jobId" @click="saveAndAdd" />
         </div>
@@ -106,7 +106,8 @@ export default {
         status: 1
       },
       name: "",
-
+      isEdit: false,
+      editBtnName:'编辑',
       statusRadio: [
         {
           name: "停用",
@@ -171,26 +172,33 @@ export default {
     },
 
     cancle() {
-      window.location.url = "/Site/index.html#page/jobs" ;
+      window.location.url = "/Site/index.html#page/jobs";
+    },
+
+       edit(){
+      this.isEdit =!this.isEdit;
+      this.editBtnName = this.isEdit?'编辑':'放弃编辑';
     },
 
     saveAndAdd() {
       if (!this.jobId && this.checkout) {
         delete this.formItem.id;
-        saveRoleBaseInfo(this.formItem).then(res => {
-          if (res) {
-            this.$Message.success("保存成功");
-            this.$refs["formItem"].resetFields();
-            this.formItem = {
-              name: "",
-              type: "",
-              describe: "",
-              status: 1
-            };
-          }
-        }).catch(errer=>{
-          this.$Message.errer(error.data.message)
-        });
+        saveRoleBaseInfo(this.formItem)
+          .then(res => {
+            if (res) {
+              this.$Message.success("保存成功");
+              this.$refs["formItem"].resetFields();
+              this.formItem = {
+                name: "",
+                type: "",
+                describe: "",
+                status: 1
+              };
+            }
+          })
+          .catch(errer => {
+            this.$Message.errer(error.data.message);
+          });
       }
     },
 
@@ -198,24 +206,28 @@ export default {
       //判断是编辑,还是新增保存
       if (this.jobId) {
         this.formItem.id = this.jobId;
-        saveRoleBaseInfo(this.formItem).then(res => {
-          if (res) {
-            this.$Message.success("保存成功");
-          }
-        }).catch(errer=>{
-          this.$Message.errer(error.data.message)
-        });
+        saveRoleBaseInfo(this.formItem)
+          .then(res => {
+            if (res) {
+              this.$Message.success("保存成功");
+            }
+          })
+          .catch(errer => {
+            this.$Message.errer(error.data.message);
+          });
       } else if (!this.jobId && this.checkout) {
         delete this.formItem.id;
-        saveRoleBaseInfo(this.formItem).then(res => {
-          if (res) {
-            this.$Message.success("保存成功");
-            this.$router.push({ path: "/addressBook/job/detail/" + res.id });
-            window.location.reload();
-          }
-        }).catch(errer=>{
-          this.$Message.errer(error.data.message)
-        });
+        saveRoleBaseInfo(this.formItem)
+          .then(res => {
+            if (res) {
+              this.$Message.success("保存成功");
+              this.$router.push({ path: "/addressBook/job/detail/" + res.id });
+              window.location.reload();
+            }
+          })
+          .catch(errer => {
+            this.$Message.errer(error.data.message);
+          });
       }
     },
 
@@ -273,6 +285,7 @@ export default {
       });
       this.getObjDetailsCountByRoleId(this.jobId);
     } else if (!this.jobId && this.$route.name == "add") {
+      this.isEdit = false;
       this.actionBtn.forEach(element => {
         if (element.id !== "baseinfo") {
           element.hidden = true;

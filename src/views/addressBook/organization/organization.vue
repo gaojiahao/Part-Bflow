@@ -42,7 +42,7 @@
             <Input v-model="formItem.groupName" @on-blur="onGroupNameOutBlur" :readonly="isEdit" :class="isEdit?'input-status-isedit':''"/>
           </FormItem>
 
-          <FormItem label="组织类型" :labelWidth="100" >
+          <FormItem label="组织类型" :labelWidth="100" prop="groupType">
             <Select @on-change="changeGroupType" v-model="formItem.groupType" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
               <Option value="M">管理层</Option>
               <Option value="A">事业部</Option>
@@ -50,7 +50,7 @@
               <Option value="G">小组</Option>
             </Select>
           </FormItem>
-          <FormItem label="部门职能类型" :labelWidth="100" v-if="formItem.groupType ==='O'">
+          <FormItem label="部门职能类型" :labelWidth="100" prop="depFunction" v-if="formItem.groupType ==='O'">
             <Select v-model="formItem.depFunction" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
               <Option value="M">管理</Option>
               <Option value="S">销售</Option>
@@ -190,7 +190,7 @@ export default {
       statusRadio: [
         {
           name: "停用",
-          value: 0
+          value: -1
         },
         {
           name: "使用中",
@@ -323,7 +323,7 @@ export default {
             let status = params.row.status,
               value = "";
             switch (status) {
-              case 0:
+              case -1:
                 value = "停用";
                 break;
               case 1:
@@ -363,7 +363,7 @@ export default {
       principalPageSize: 8,
       searchPrincipalValue:'',
       onSelectionPrincipal:[],
-        principalColumnsModel: [
+      principalColumnsModel: [
         {
           type: "index",
           width: 60,
@@ -411,7 +411,7 @@ export default {
                 case 2:
                     status = "未使用";
                     break;
-                case 0:
+                case -1:
                     status = "停用";
                     break;
             }
@@ -454,6 +454,20 @@ export default {
           {
             required: true,
             message: "请选择上级组织",
+            trigger: "blur"
+          }
+        ],
+        groupType: [
+          {
+            required: true,
+            message: "请选择组织类型",
+            trigger: "blur"
+          }
+        ],
+        depFunction: [
+          {
+            required: true,
+            message: "请选择部门职能类型",
             trigger: "blur"
           }
         ],

@@ -137,7 +137,7 @@ export default {
                 case 2:
                     status = "未使用";
                     break;
-                case 0:
+                case -1:
                     status = "停用";
                     break;
             }
@@ -252,7 +252,7 @@ export default {
                 case 2:
                     status = "未使用";
                     break;
-                case 0:
+                case -1:
                     status = "停用";
                     break;
             }

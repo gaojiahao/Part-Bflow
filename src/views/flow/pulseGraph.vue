@@ -220,18 +220,52 @@ export default {
                 tempPoint = nodePointXY[relevantNode.id].split(",");
                 tempX = Number(tempPoint[0]);
                 tempY = Number(tempPoint[1]);
-                that.transTypePointList.push({
-                  id: child.id + "_" + relevantNode.id,
-                  value:
-                    child.pointX +
-                    baseLength +
-                    "," +
-                    child.pointY +
-                    " " +
-                    (tempX - 4.3) +
-                    "," +
-                    tempY
-                });
+
+                //线条朝上
+                if (relevantNode.groupIndex < item.index) {
+                
+                  that.transTypePointList.push({
+                    id: child.id + "_" + relevantNode.id,
+                    value:
+                      child.pointX +
+                      baseLength / 2 +
+                      "," +
+                      (child.pointY - baseLength / 2) +
+                      " " +
+                      (tempX + baseLength / 2) +
+                      "," +
+                      (tempY + baseLength / 2 + 20)
+                  });
+                } else if (relevantNode.groupIndex > item.index) {
+                   //线条朝下
+                  
+                  that.transTypePointList.push({
+                    id: child.id + "_" + relevantNode.id,
+                    value:
+                      child.pointX +
+                      baseLength / 2 +
+                      "," +
+                      (child.pointY + baseLength / 2 + 20) +
+                      " " +
+                      (tempX + baseLength / 2) +
+                      "," +
+                      (tempY - baseLength / 2 - 4.3)
+                  });
+                } else {
+                 // if(child.pointX<)  //判断应用是否跨节点
+                  that.transTypePointList.push({
+                    id: child.id + "_" + relevantNode.id,
+                    value:
+                      child.pointX +
+                      baseLength +
+                      "," +
+                      child.pointY +
+                      " " +
+                      (tempX - 4.3) +
+                      "," +
+                      tempY
+                  });
+                }
               }
             });
           }
@@ -346,7 +380,7 @@ export default {
       if (item.target === "_blank") {
         window.open(item.url, "_blank");
       } else {
-        if(!nr){
+        if (!nr) {
           if (~url.indexOf("outlink")) {
             url = item.url;
           } else if (~url.indexOf("app")) {
@@ -486,9 +520,9 @@ export default {
             { name: "待计划", icon: "plan.png" },
             { name: "待下单", icon: "requirement.png" },
             { name: "待领料", icon: "collar-material.png" },
-             { name: "待验收", icon: "check.png" },
-             { name: "待交付", icon: "pay.png" },
-             { name: "往来余额", icon: "dealings.png" },
+            { name: "待验收", icon: "check.png" },
+            { name: "待交付", icon: "pay.png" },
+            { name: "往来余额", icon: "dealings.png" }
           ];
 
           subjectList.map(s => {

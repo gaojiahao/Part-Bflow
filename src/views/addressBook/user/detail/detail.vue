@@ -117,7 +117,15 @@ export default {
       if(this.userId){
         getUserInfoById(this.userId).then(res => {
           this.userInformation = res.tableContent[0];
-          console.log(this.userInformation);
+          if(this.userInformation.status === 1){
+            this.userInformation.statusText = '使用中';
+          }else if(this.userInformation.status === 0){
+            this.userInformation.statusText = '停用';
+          }else if(this.userInformation.status === 3){
+            this.userInformation.statusText = '草稿';
+          }else{
+            this.userInformation.statusText = '未使用';
+          }
         });
       }
     },

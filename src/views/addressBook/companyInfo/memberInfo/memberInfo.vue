@@ -115,7 +115,7 @@ export default {
             let userStatus = "";
             if (params.row.status === 1) {
               userStatus = "使用中";
-            } else if (params.row.status === 0) {
+            } else if (params.row.status === -1) {
               userStatus = "停用";
             } else {
               userStatus = "未使用";
@@ -210,7 +210,7 @@ export default {
             let userStatus = "";
             if (params.row.status === 1) {
               userStatus = "使用中";
-            } else if (params.row.status === 0) {
+            } else if (params.row.status === -1) {
               userStatus = "停用";
             } else {
               userStatus = "未使用";

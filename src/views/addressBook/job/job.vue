@@ -41,7 +41,7 @@
           <FormItem label="职位名称:" style="font-size:16px" prop="name">
             <Input v-model="formItem.name" @on-blur="onGroupNameOutBlur" :readonly="isEdit" :class="isEdit?'input-status-isedit':''" />
           </FormItem>
-          <FormItem label="职位类型" :labelWidth="100">
+          <FormItem label="职位类型" :labelWidth="100" prop="type">
             <Select v-model="formItem.type" placeholder="请选择职位类型" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
               <Option value="M">管理类</Option>
               <Option value="Y">营销类</Option>
@@ -111,7 +111,7 @@ export default {
       statusRadio: [
         {
           name: "停用",
-          value: 0
+          value: -1
         },
         {
           name: "使用中",
@@ -156,6 +156,13 @@ export default {
           {
             required: true,
             message: "请输入职位名称",
+            trigger: "blur"
+          }
+        ],
+        type: [
+          {
+            required: true,
+            message: "请选择职位类型",
             trigger: "blur"
           }
         ]

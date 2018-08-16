@@ -140,7 +140,7 @@ export default {
             let status = params.row.status,
               value = "";
             switch (status) {
-              case 0:
+              case -1:
                 value = "停用";
                 break;
               case 1:
@@ -232,7 +232,7 @@ export default {
             let status = params.row.status,
               value = "";
             switch (status) {
-              case 0:
+              case -1:
                 value = "停用";
                 break;
               case 1:

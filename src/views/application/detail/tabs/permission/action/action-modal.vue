@@ -59,7 +59,7 @@
       <!-- 用户modal -->
       <Modal v-model="showUserModal" title="用户选择" :mask-closable="false" @on-ok="confirmUser" @on-cancel="cancelSelectUser" :transfer="false">
         <div class="app-search">
-          <Input v-model="searchUserValue" placeholder="名称搜索" style="width: 300px"></Input>
+          <Input v-model="searchUserValue" @on-search="userFilter" :search="true" placeholder="名称搜索" style="width: 300px"></Input>
           <p @click="userFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </p>
@@ -75,7 +75,7 @@
       <!-- 组织modal -->
       <Modal v-model="showOrgModal" title="组织选择" :mask-closable="false" @on-ok="confirmOrg" @on-cancel="cancelSelectOrg" :transfer="false">
         <div class="app-search">
-          <Input v-model="searchOrgValue" placeholder="搜索" style="width: 300px"></Input>
+          <Input v-model="searchOrgValue" @on-search="orgFilter" :search="true" placeholder="搜索" style="width: 300px"></Input>
           <p @click="orgFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </p>
@@ -91,7 +91,7 @@
       <!-- 职位modal -->
       <Modal v-model="showDepartmentModal" title="职位选择" :mask-closable="false" @on-ok="confirmDepartment" @on-cancel="cancelSelectDep" :transfer="false">
         <div class="app-search">
-          <Input v-model="searchDepValue" placeholder="搜索" style="width: 300px"></Input>
+          <Input v-model="searchDepValue" @on-search="depFilter" :search="true" placeholder="搜索" style="width: 300px"></Input>
           <p @click="depFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </p>

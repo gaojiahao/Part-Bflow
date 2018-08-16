@@ -25,7 +25,7 @@
               <Input v-else v-model="appData.title" style="width: 120px"></Input>
               <b @click="editAppinfo">
                 <Tooltip v-if="showEditBtn" content="编辑" placement="top">
-                  <Icon class="app-edit-icon" type="ios-create"></Icon>
+                  <Icon class="app-edit-icon" type="ios-create-outline"></Icon>
                 </Tooltip>
                 <Tooltip v-else content="保存" placement="top">
                   <b class="app-save-icon">保存</b>
@@ -54,7 +54,7 @@
           <Dropdown @on-click="changeAppStatus" class="app-dropdown">
                 <a href="javascript:void(0)">
                     操作
-                    <Icon type="arrow-down-b"></Icon>
+                    <Icon type="ios-arrow-down"></Icon>
                 </a>
                 <DropdownMenu v-if="isAdminTrue" slot="list">
                     <DropdownItem name="enabled">启用</DropdownItem>

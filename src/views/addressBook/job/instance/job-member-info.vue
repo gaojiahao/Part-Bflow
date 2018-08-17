@@ -128,49 +128,6 @@ export default {
           key: "mobile"
         },
         {
-          title: "状态",
-          key: "status",
-          render: (h, params) => {
-            let status = '';
-            switch (params.row.status) {
-                case 1:
-                    status = "使用中";
-                    break;
-                case 3:
-                    status = "草稿";
-                    break;
-                case 2:
-                    status = "未使用";
-                    break;
-                case -1:
-                    status = "停用";
-                    break;
-            }
-            return h(
-              "span",
-              {
-                style: {
-                  color: "#0279f6",
-                  cursor: "default"
-                }
-              },
-              status
-            );
-          }
-        },
-        {
-          title: "创建者",
-          key: "creator"
-        },
-        {
-          title: "创建时间",
-          key: "crtTime"
-        },
-        {
-          title: "修改时间",
-          key: "modTime"
-        },
-        {
           title: "操作",
           key: "action",
           width: 120,
@@ -240,49 +197,6 @@ export default {
         {
           title: "手机号",
           key: "mobile"
-        },
-        {
-          title: "状态",
-          key: "status",
-          render: (h, params) => {
-            let status = '';
-            switch (params.row.status) {
-                case 1:
-                    status = "使用中";
-                    break;
-                case 3:
-                    status = "草稿";
-                    break;
-                case 2:
-                    status = "未使用";
-                    break;
-                case -1:
-                    status = "停用";
-                    break;
-            }
-            return h(
-              "span",
-              {
-                style: {
-                  color: "#0279f6",
-                  cursor: "default"
-                }
-              },
-              status
-            );
-          }
-        },
-        {
-          title: "创建者",
-          key: "creator"
-        },
-        {
-          title: "创建时间",
-          key: "crtTime"
-        },
-        {
-          title: "修改时间",
-          key: "modTime"
         }
       ],
 

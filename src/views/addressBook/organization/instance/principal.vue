@@ -77,6 +77,11 @@ export default {
       },
       searchValue: '',
       principalColumns: [
+         {
+          title: "工号",
+          width: 100,
+          key: "USER_CODE"
+        },
         {
           title: "名称",
           key: "nickname"
@@ -137,23 +142,19 @@ export default {
       principalColumnsModel: [
         {
           type: "index",
-          width: 60,
           align: "center"
         },
         {
           title: "工号",
-          width: 100,
           key: "userCode"
         },
         {
           title: "姓名",
-          width: 100,
           key: "nickname"
         },
         {
           title: "性别",
           key: "gender",
-          width: 60,
           render: (h, params) => {
             let gender = params.row.gender;
             return h(
@@ -165,51 +166,6 @@ export default {
         {
           title: "手机号",
           key: "mobile"
-        },
-        {
-          title: "状态",
-          width: 60,
-          key: "status",
-          render: (h, params) => {
-            let status = '';
-            switch (params.row.status) {
-                case 1:
-                    status = "使用中";
-                    break;
-                case 3:
-                    status = "草稿";
-                    break;
-                case 2:
-                    status = "未使用";
-                    break;
-                case -1:
-                    status = "停用";
-                    break;
-            }
-            return h(
-              "span",
-              {
-                style: {
-                  color: "#0279f6",
-                  cursor: "default"
-                }
-              },
-              status
-            );
-          }
-        },
-        {
-          title: "创建者",
-          key: "creator",
-          width: 100
-        },
-        {
-          title: "创建时间",
-          key: "crtTime"
-        },
-        {
-          title: "修改时间",
-          key: "modTime"
         }
       ],
 

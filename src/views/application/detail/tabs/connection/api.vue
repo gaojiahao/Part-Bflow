@@ -11,10 +11,10 @@
     <Row class="api-content">
       <h2>创建销售订单</h2>
       <p>
-        <strong>请求方式：POST（HTTPS）</strong>
+        <strong>请求方式：{{requestMethod}}</strong>
       </p>
       <p>
-        <strong>请求地址：https://qyapi.weixin.qq.com/cgi-bin/user/update?access_token=ACCESS_TOKEN</strong>
+        <strong>请求地址：{{requestAddress}}</strong>
       </p>
       <p>
         <strong>请求包体：</strong>
@@ -47,6 +47,9 @@ export default {
     return {
       listId: this.$route.params.listId,
       disabled: false,
+      requestMethod:'',
+      requestAddress:'',
+      requestBody:'',
       apiInfo: "HHHHHHHHHHHHHHHHHHHH",
       appContent: ""
     };
@@ -71,6 +74,9 @@ export default {
     findList(this.listId)
       .then(res => {
         this.appContent = ForamtJson(res.commitApi);
+        let viewUrl = JSON.parse(res.viewUrl);
+        this.requestMethod = viewUrl.method;
+        this.requestAddress = viewUrl.address;
       })
       .catch(error => {
         this.$Message.error(error.message.data);

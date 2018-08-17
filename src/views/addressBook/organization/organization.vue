@@ -76,7 +76,7 @@
           </FormItem>
         </Form>
         <div class="baseinfo-container-action">
-          <input type='submit' value="取消" class="baseinfo-container-action-submit" @click="cancle" />
+          <input type='submit' value="关闭" class="baseinfo-container-action-submit" @click="cancle" />
           <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" @click="edit" v-if="groupId"/>
           <input type='submit' value="保存" class="baseinfo-container-action-submit" @click="save" />
           <input type='submit' value="保存并继续添加" class="baseinfo-container-action-submit" v-if="!groupId" @click="saveAndAdd" />
@@ -244,7 +244,7 @@ export default {
         },
         {
           label: "基本信息",
-          imgPath: "resources/images/icon/organization.png",
+          imgPath: "resources/images/icon/essinformation.png",
           hidden: false,
           id: "baseinfo"
         }
@@ -394,51 +394,6 @@ export default {
         {
           title: "手机号",
           key: "mobile"
-        },
-        {
-          title: "状态",
-          width: 60,
-          key: "status",
-          render: (h, params) => {
-            let status = '';
-            switch (params.row.status) {
-                case 1:
-                    status = "使用中";
-                    break;
-                case 3:
-                    status = "草稿";
-                    break;
-                case 2:
-                    status = "未使用";
-                    break;
-                case -1:
-                    status = "停用";
-                    break;
-            }
-            return h(
-              "span",
-              {
-                style: {
-                  color: "#0279f6",
-                  cursor: "default"
-                }
-              },
-              status
-            );
-          }
-        },
-        {
-          title: "创建者",
-          key: "creator",
-          width: 100
-        },
-        {
-          title: "创建时间",
-          key: "crtTime"
-        },
-        {
-          title: "修改时间",
-          key: "modTime"
         }
       ],
 

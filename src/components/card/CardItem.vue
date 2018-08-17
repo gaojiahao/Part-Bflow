@@ -193,7 +193,7 @@ export default {
       });
     },
     goAppSetting(list) {
-      let url = '/Site/index.html#appSetting/'+list.id;
+      let url = 'appReport/'+list.id;
        window.top.postMessage(
           {
             type: "redirect",
@@ -211,7 +211,6 @@ export default {
 
 .card {
   height: 70px;
-  border-radius: 3px;
   padding: 10px 12px;
   margin: 10px 0;
 

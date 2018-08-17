@@ -59,7 +59,7 @@
 
         </Form>
         <div class="baseinfo-container-action">
-          <input type='submit' value="取消" class="baseinfo-container-action-submit" @click="cancle" />
+          <input type='submit' value="关闭" class="baseinfo-container-action-submit" @click="cancle" />
            <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" @click="edit" v-if="jobId"/>
           <input type='submit' value="保存" class="baseinfo-container-action-submit" @click="save" />
           <input type='submit' value="保存并添加" class="baseinfo-container-action-submit" v-if="!jobId" @click="saveAndAdd" />
@@ -130,21 +130,21 @@ export default {
       actionBtn: [
         {
           label: "权限",
-          imgPath: "resources/images/icon/0_0.png",
+          imgPath: "resources/images/icon/2_0.png",
           number: 0,
           hidden: false,
           id: "objectPermission"
         },
         {
           label: "成员信息",
-          imgPath: "resources/images/icon/0_1.png",
+          imgPath: "resources/images/icon/user.png",
           number: 0,
           hidden: false,
           id: "user"
         },
         {
           label: "基本信息",
-          imgPath: "resources/images/icon/0_5.png",
+          imgPath: "resources/images/icon/essinformation.png",
           hidden: false,
           id: "baseinfo"
         }

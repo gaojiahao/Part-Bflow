@@ -4,24 +4,20 @@
     <div id="flow-box">
       <RadioGroup class="taskbtn" v-model="radioGroupLabel" size="large" @on-change="radioGroupChange">
         <Radio label="mytask">
-          <i class="iconfont">&#xe636;</i>
           <span>我的任务</span>
         </Radio>
         <i class="vertical-divide"></i>
         <Radio label="teamtask">
-          <i class="iconfont">&#xe685;</i>
           <span>团队任务</span>
         </Radio>
       </RadioGroup>
       <RadioGroup class="taskbtn_1" v-model="rodioGroupDoOrNot" size="large" @on-change="radioGroupChangeDoneOrTodo">
         <i class="vertical-divide"></i>
         <Radio label="todo">
-          <i class="iconfont">&#xe6a9;</i>
           <span>未完成</span>
         </Radio>
         <i class="vertical-divide"></i>
         <Radio label="done">
-          <i class="iconfont">&#xe670;</i>
           <span>已完成</span>
         </Radio>
       </RadioGroup>

@@ -8,29 +8,79 @@
     <Row class="app-resource-group-title">
       <h3>API</h3>
     </Row>
-    <Row class="api-content">
-      <h2>创建销售订单</h2>
-      <p>
-        <strong>请求方式：{{requestMethod}}</strong>
-      </p>
-      <p>
-        <strong>请求地址：{{requestAddress}}</strong>
-      </p>
-      <p>
-        <strong>请求包体：</strong>
-      </p>
-      <Row>
-        <pre class="api-code">
-          {{appContent}}
-        </pre>
-        <div style="position: absolute;top: 30px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=appContent @click="copy">
-          <Tooltip placement="top" content="点击复制" :disabled="disabled">
-            <Icon type="md-document" size='24' />
-          </Tooltip>
-        </div>
-      </Row>
-    </Row>
-
+    <section>
+      <Collapse simple v-model="collapseValue">
+        <Panel name="commit">
+          <strong style="font-weight: 700;font-size: 14px;color: #333;">提交</strong>
+          <div slot="content">
+            <p style="font-size: 14px;color: #333;">
+              <strong style="font-weight: 700">请求方式:</strong>
+              {{commitApi.method}}
+            </p>
+            <p style="font-size: 14px;color: #333;">
+              <strong style="font-weight: 700">请求地址：</strong>
+              {{commitApi.address}}
+            </p>
+            <pre class="api-code">
+              {{commitApi.body}}
+            </pre>
+            <div style="position: absolute;top: 30px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=updateApi.body @click="copy">
+              <Tooltip placement="top" content="点击复制" :disabled="disabled">
+                <Icon type="md-document" size='24' />
+              </Tooltip>
+            </div>
+            <h3>请求参数：</h3>
+            <Table size="small" :columns="columns" :data="data"></Table>
+          </div>
+        </Panel>
+        <Panel name="look">
+          <strong style="font-weight: 700;font-size: 14px;color: #333;">查看</strong>
+          <div slot="content">
+            <p style="font-size: 14px;color: #333;">
+              <strong style="font-weight: 700">请求方式:</strong>
+              {{viewApi.method}}
+            </p>
+            <p style="font-size: 14px;color: #333;">
+              <strong style="font-weight: 700">请求地址：</strong>
+              {{viewApi.address}}
+            </p>
+            <pre class="api-code">
+              {{viewApi.body}}
+            </pre>
+            <div style="position: absolute;top: 30px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=updateApi.body @click="copy">
+              <Tooltip placement="top" content="点击复制" :disabled="disabled">
+                <Icon type="md-document" size='24' />
+              </Tooltip>
+            </div>
+            <h3>请求参数：</h3>
+            <Table size="small" :columns="columns" :data="ViewData"></Table>
+          </div>
+        </Panel>
+        <Panel name="update">
+          <strong style="font-weight: 700;font-size: 14px;color: #333;">更新</strong>
+          <div slot="content">
+            <p style="font-size: 14px;color: #333;">
+              <strong style="font-weight: 700">请求方式:</strong>
+              {{updateApi.method}}
+            </p>
+            <p style="font-size: 14px;color: #333;">
+              <strong style="font-weight: 700">请求地址：</strong>
+              {{updateApi.address}}
+            </p>
+            <pre class="api-code">
+              {{updateApi.body}}
+            </pre>
+            <div style="position: absolute;top: 30px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=updateApi.body @click="copy">
+              <Tooltip placement="top" content="点击复制" :disabled="disabled">
+                <Icon type="md-document" size='24' />
+              </Tooltip>
+            </div>
+            <h3>请求参数：</h3>
+            <Table size="small" :columns="columns" :data="data"></Table>
+          </div>
+        </Panel>
+      </Collapse>
+    </section>
   </div>
 </template>
 
@@ -47,11 +97,52 @@ export default {
     return {
       listId: this.$route.params.listId,
       disabled: false,
-      requestMethod:'',
-      requestAddress:'',
-      requestBody:'',
-      apiInfo: "HHHHHHHHHHHHHHHHHHHH",
-      appContent: ""
+      collapseValue: "commit",
+      commitApi: {},
+      updateApi: {},
+      viewApi: {},
+      columns: [
+        {
+          title: "参数",
+          key: "param",
+          width: 200,
+          align: "center"
+        },
+        {
+          title: "必须",
+          key: "required",
+          width: 160,
+          align: "center"
+        },
+        {
+          title: "说明",
+          key: "explain"
+        }
+      ],
+      data: [
+        {
+          param: "listId",
+          required: "是",
+          explain: "应用id"
+        },
+        {
+          param: "biComment",
+          required: "否",
+          explain: "备注"
+        },
+        {
+          param: "formData",
+          required: "是",
+          explain: "表单数据"
+        }
+      ],
+      ViewData: [
+        {
+          param: "listId",
+          required: "是",
+          explain: "应用id"
+        }
+      ]
     };
   },
   methods: {
@@ -73,10 +164,16 @@ export default {
   mounted() {
     findList(this.listId)
       .then(res => {
-        this.appContent = ForamtJson(res.commitApi);
-        let viewUrl = JSON.parse(res.viewUrl);
-        this.requestMethod = viewUrl.method;
-        this.requestAddress = viewUrl.address;
+        try {
+          this.commitApi = JSON.parse(res.commitUrl);
+          this.updateApi = JSON.parse(res.updateUrl);
+          this.viewApi = JSON.parse(res.viewUrl);
+        } catch (error) {
+          this.$$Message.error("后台返回格式有误！！！");
+        }
+        this.commitApi["body"] = ForamtJson(this.commitApi["body"]);
+        this.updateApi["body"] = ForamtJson(this.updateApi["body"]);
+        this.viewApi["body"] = ForamtJson(this.viewApi["body"]);
       })
       .catch(error => {
         this.$Message.error(error.message.data);

@@ -112,40 +112,6 @@ export default {
           title: "手机号",
           key: "mobile"
         },
-        // {
-        //   title: "部门",
-        //   key: "dep",
-        //   ellipsis: true
-        // },
-        // {
-        //   title: "小组",
-        //   key: "group",
-        //   ellipsis: true
-        // },
-        // {
-        //   title: "职位",
-        //   key: "role",
-        //   ellipsis: true
-        // },
-        {
-          title: "状态",
-          key: "status",
-          render: (h, params) => {
-            let userStatus = "";
-            if (params.row.status === 1) {
-              userStatus = "使用中";
-            } else if (params.row.status === 0) {
-              userStatus = "停用";
-            } else {
-              userStatus = "未使用";
-            }
-            return h('span',{
-              style: {
-                color: '#39f'
-              }
-            },userStatus);
-          }
-        },
         {
           title: '操作',
           key: 'action',
@@ -201,25 +167,6 @@ export default {
           title: "手机号",
           key: "mobile",
           width: 130
-        },
-        {
-          title: "状态",
-          key: "status",
-          render: (h, params) => {
-            let userStatus = "";
-            if (params.row.status === 1) {
-              userStatus = "使用中";
-            } else if (params.row.status === 0) {
-              userStatus = "停用";
-            } else {
-              userStatus = "未使用";
-            }
-            return h('span',{
-              style: {
-                color: '#39f'
-              }
-            },userStatus);
-          }
         }
       ],
       lowerUserData: [],

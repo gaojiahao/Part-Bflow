@@ -115,22 +115,22 @@ export default {
           title: "部门职能类型",
           key: "depFunction",
           render: (h, params) => {
-            let groupType = params.row.groupType;
-            switch (groupType) {
+            let depFunction = params.row.depFunction;
+            switch (depFunction) {
               case "M":
-                groupType = "管理";
+                depFunction = "管理";
                 break;
               case "S":
-                groupType = "销售";
+                depFunction = "销售";
                 break;
               case "C":
-                groupType = "制造";
+                depFunction = "制造";
                 break;
               case "R":
-                groupType = "研发";
+                depFunction = "研发";
                 break;
             }
-            return h("span", groupType);
+            return h("span", depFunction);
           }
         },
         {

@@ -8,7 +8,7 @@
       <Card class="app-card">
         <img class="card-img" :src="list.icon" />
         <b class="card-name">{{ list.title }}</b>
-        <span class="card-type">{{ list.transType }}
+        <span class="card-type">{{ list.transName }}
           <my-pop-tip :userInfo="userInfo" v-if="list.administrator">
             <span class="card-admintrstor" slot="userCard" @mouseenter="focusChange(list.administratorId)">
               <Icon type="person"></Icon>{{ list.administrator }}

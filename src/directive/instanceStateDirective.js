@@ -18,7 +18,7 @@ function render (el, bind) {
             el.style.backgroundColor = '#d3adf7';
             el.innerText = "未使用";
             break;
-        case 0:
+        case -1:
             el.style.backgroundColor = '#f90';
             el.innerText = "停用";
             break;

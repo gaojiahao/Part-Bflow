@@ -81,12 +81,13 @@ export default {
     //获取应用详情信息
     getAppInfoDatas() {
       let uniqueId = this.listId,
-          currentUser = this.$currentUser;
+          currentUser = this.$currentUser,
+          currentUserIds = [];
       //请求应用详情信息
       getListData(uniqueId).then(res => {
         this.appData = res[0];
         if(this.appData.type === 'business'){
-          this.appData.appType = '业务应用';
+          this.appData.appType = '业务应用'; 
         }else if(this.appData.type === 'subject'){
           this.appData.appType = '科目应用';
         }else{
@@ -94,7 +95,12 @@ export default {
         }
         this.appType = this.appData.type;
         
-        if(currentUser.userId == this.appData.administratorId){
+        //获取当前登录用户角色id
+        currentUser.isSysRoleList.forEach(val => {
+          currentUserIds.push(val.id);
+        });
+        //判断当前用户是否有当前应用权限
+        if(currentUser.userId == this.appData.administratorId || /1/.test(currentUserIds)){
           this.isAdmin = true;
         }else{
           this.isAdmin = false;

@@ -8,29 +8,55 @@
     <Row class="app-resource-group-title">
       <h3>API</h3>
     </Row>
-    <Row class="api-content">
-      <h2>创建销售订单</h2>
-      <p>
-        <strong>请求方式：{{requestMethod}}</strong>
-      </p>
-      <p>
-        <strong>请求地址：{{requestAddress}}</strong>
-      </p>
-      <p>
-        <strong>请求包体：</strong>
-      </p>
-      <Row>
-        <pre class="api-code">
-          {{appContent}}
-        </pre>
-        <div style="position: absolute;top: 30px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=appContent @click="copy">
-          <Tooltip placement="top" content="点击复制" :disabled="disabled">
-            <Icon type="md-document" size='24' />
-          </Tooltip>
-        </div>
-      </Row>
-    </Row>
-
+    <section>
+      <Collapse simple v-model="collapseValue">
+        <Panel name="commit" >
+          提交
+          <div slot="content">
+            <p>请求方式：{{commitApi.method}}</p>
+            <p>请求地址：{{commitApi.address}}</p>
+            <pre class="api-code">
+              {{commitApi.formData}}
+            </pre>
+            <div style="position: absolute;top: 30px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=appContent @click="copy">
+              <Tooltip placement="top" content="点击复制" :disabled="disabled">
+                <Icon type="md-document" size='24' />
+              </Tooltip>
+            </div>
+          </div>
+        </Panel>
+        <Panel name="look">
+          查看
+          <div slot="content">
+            <p>请求方式：{{viewApi.method}}</p>
+            <p>请求地址：{{viewApi.address}}</p>
+            <pre class="api-code">
+              {{viewApi.formData}}
+            </pre>
+            <div style="position: absolute;top: 30px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=appContent @click="copy">
+              <Tooltip placement="top" content="点击复制" :disabled="disabled">
+                <Icon type="md-document" size='24' />
+              </Tooltip>
+            </div>
+          </div>
+        </Panel>
+        <Panel name="update">
+          更新
+          <div slot="content">
+            <p>请求方式：{{updateApi.method}}</p>
+            <p>请求地址：{{updateApi.address}}</p>
+            <pre class="api-code">
+              {{updateApi.formData}}
+            </pre>
+            <div style="position: absolute;top: 30px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=appContent @click="copy">
+              <Tooltip placement="top" content="点击复制" :disabled="disabled">
+                <Icon type="md-document" size='24' />
+              </Tooltip>
+            </div>
+          </div>
+        </Panel>
+      </Collapse>
+    </section>
   </div>
 </template>
 
@@ -47,11 +73,10 @@ export default {
     return {
       listId: this.$route.params.listId,
       disabled: false,
-      requestMethod:'',
-      requestAddress:'',
-      requestBody:'',
-      apiInfo: "HHHHHHHHHHHHHHHHHHHH",
-      appContent: ""
+      collapseValue: "commit",
+      commitApi:{},
+      updateApi:{},
+      viewApi:{},
     };
   },
   methods: {
@@ -73,10 +98,17 @@ export default {
   mounted() {
     findList(this.listId)
       .then(res => {
-        this.appContent = ForamtJson(res.commitApi);
-        let viewUrl = JSON.parse(res.viewUrl);
-        this.requestMethod = viewUrl.method;
-        this.requestAddress = viewUrl.address;
+        debugger
+        try {
+          this.commitApi = JSON.parse(res.commitUrl);
+          this.updateApi = JSON.parse(res.updateUrl);
+          this.viewApi = JSON.parse(res.viewUrl);
+        } catch (error) {
+            this.$$Message.error('后台返回格式有误！！！')
+        }
+        this.commitApi['formData'] = ForamtJson(this.commitApi['formData']);
+        this.updateApi['formData'] = ForamtJson(this.updateApi['formData']);
+        this.viewApi['formData'] = ForamtJson(this.viewApi['formData']);
       })
       .catch(error => {
         this.$Message.error(error.message.data);

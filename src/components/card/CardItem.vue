@@ -16,8 +16,10 @@
     </Poptip>
     <img :src="appinfo.icon" />
     <div @click="redirectTo(appinfo)" class="content">
+      <a @click="goAppSetting(appinfo)">详情</a>
       <h5>{{appinfo.text}}</h5>
-      <span>{{appinfo.transName}}</span>
+      <span>{{appinfo.administrator?appinfo.transName+', ':appinfo.transName}}</span>
+      <span>{{appinfo.administrator}}</span>
     </div>
   </div>
 </template>
@@ -189,6 +191,16 @@ export default {
           this.loading = false;
         }
       });
+    },
+    goAppSetting(list) {
+      let url = '/Site/index.html#appSetting/'+list.id;
+       window.top.postMessage(
+          {
+            type: "redirect",
+            url: url
+          },
+          "*"
+        );
     }
   }
 };
@@ -228,6 +240,11 @@ export default {
     left: 80px;
     transform: translateY(-50%);
 
+    a{
+      display: inline-block;
+      float: right;
+    }
+
     h5 {
       position: relative;
       z-index: -99;
@@ -237,8 +254,8 @@ export default {
     }
 
     span {
-      font-size: 12px;
-      color: #918e8e;
+      font-size: 14px;
+      color: #5f5e5e;
     }
   }
 

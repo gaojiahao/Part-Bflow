@@ -278,7 +278,7 @@ export default {
                             this.formItem.photo = '';
                             this.formItem.gender = "1";
                             this.formItem.status = "1";
-                            this.formItem.status = "";
+                            this.formItem.userType = "";
                             this.$refs['upload'].fileList.splice(0,this.$refs['upload'].fileList.length);
                         }
                     }).catch(error => {

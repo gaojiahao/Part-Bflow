@@ -39,7 +39,7 @@
       <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===5">
         <Form :model="formItem" :labelWidth="100" ref="formItem" :rules="ruleValidate">
           <FormItem label="组织名称:" style="font-size:16px" prop="groupName">
-            <Input v-model="formItem.groupName" @on-blur="onGroupNameOutBlur" :readonly="isEdit" :class="isEdit?'input-status-isedit':''"/>
+            <Input v-model="formItem.groupName" @on-blur="onGroupNameOutBlur" :readonly="isEdit" :class="isEdit?'input-status-isedit':''" />
           </FormItem>
 
           <FormItem label="组织类型" :labelWidth="100" prop="groupType">
@@ -70,14 +70,14 @@
           </FormItem>
           <div class="baseinfo-container-divider"></div>
           <FormItem label="组织状态" :labelWidth="100" style="margin-top:20px">
-            <Select v-model="formItem.status"  :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
+            <Select v-model="formItem.status" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
               <Option v-for="(item,index) in statusRadio" :key="index" :value="item.value">{{item.name}}</Option>
             </Select>
           </FormItem>
         </Form>
         <div class="baseinfo-container-action">
           <input type='submit' value="关闭" class="baseinfo-container-action-submit" @click="cancle" />
-          <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" @click="edit" v-if="groupId"/>
+          <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" @click="edit" v-if="groupId" />
           <input type='submit' value="保存" class="baseinfo-container-action-submit" @click="save" />
           <input type='submit' value="保存并继续添加" class="baseinfo-container-action-submit" v-if="!groupId" @click="saveAndAdd" />
         </div>
@@ -176,13 +176,13 @@ export default {
         depFunction: "",
         status: 1,
         principal: "",
-        principalId:'',
+        principalId: "",
         highGroup: "",
         parentId: ""
       },
 
-      isEdit:true,
-      editBtnName:'编辑',
+      isEdit: true,
+      editBtnName: "编辑",
 
       hiddenInput: false,
 
@@ -361,8 +361,8 @@ export default {
       principalPageTotal: 0,
       principalCurrentPage: 1,
       principalPageSize: 8,
-      searchPrincipalValue:'',
-      onSelectionPrincipal:[],
+      searchPrincipalValue: "",
+      onSelectionPrincipal: [],
       principalColumnsModel: [
         {
           type: "index",
@@ -447,14 +447,23 @@ export default {
     },
 
     cancle() {
-      this.$router.push({
-        path: "addressBook/organization/board"
+      let that = this;
+      that.$Modal.confirm({
+        title: "提示",
+        content: "是否关闭当前页面",
+        closable: true,
+        onOk: function() {
+          that.$router.push({
+            path: "/addressBook/organization/board"
+          });
+        },
       });
+     
     },
 
-    edit(){
-      this.isEdit =!this.isEdit;
-      this.editBtnName = this.isEdit?'编辑':'放弃编辑';
+    edit() {
+      this.isEdit = !this.isEdit;
+      this.editBtnName = this.isEdit ? "编辑" : "放弃编辑";
     },
 
     saveAndAdd() {
@@ -715,14 +724,14 @@ export default {
 
     //双击选中
     handleDblclick(row, index) {
-      this.formItem.principal =row.nickname ;
+      this.formItem.principal = row.nickname;
       this.formItem.principalId = row.userId;
       this.isShowPrincipalModal = false;
     },
 
     //点击确定保存
     savaSelectPrincipal() {
-      this.formItem.principal =this.onSelectionPrincipal.nickname ;
+      this.formItem.principal = this.onSelectionPrincipal.nickname;
       this.formItem.principalId = this.onSelectionPrincipal.userId;
       this.isShowPrincipalModal = false;
     },
@@ -769,7 +778,7 @@ export default {
           this.formItem.groupType = tableContent.groupType;
           this.formItem.depFunction = tableContent.depFunction;
           this.formItem.status = tableContent.status;
-          this.formItem.principal =tableContent.principal;
+          this.formItem.principal = tableContent.principal;
           this.formItem.highGroup = tableContent.parentName;
           this.formItem.parentId = tableContent.parentId;
           this.parentType = tableContent.parentType;

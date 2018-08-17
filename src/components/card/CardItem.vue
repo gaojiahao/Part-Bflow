@@ -193,7 +193,7 @@ export default {
       });
     },
     goAppSetting(list) {
-      let url = '/Site/index.html#appSetting/'+list.id;
+      let url = 'appReport/'+list.id;
        window.top.postMessage(
           {
             type: "redirect",

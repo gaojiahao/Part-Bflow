@@ -223,7 +223,6 @@ export default {
 
                 //线条朝上
                 if (relevantNode.groupIndex < item.index) {
-                
                   that.transTypePointList.push({
                     id: child.id + "_" + relevantNode.id,
                     value:
@@ -237,8 +236,8 @@ export default {
                       (tempY + baseLength / 2 + 20)
                   });
                 } else if (relevantNode.groupIndex > item.index) {
-                   //线条朝下
-                  
+                  //线条朝下
+
                   that.transTypePointList.push({
                     id: child.id + "_" + relevantNode.id,
                     value:
@@ -252,19 +251,42 @@ export default {
                       (tempY - baseLength / 2 - 4.3)
                   });
                 } else {
-                 // if(child.pointX<)  //判断应用是否跨节点
-                  that.transTypePointList.push({
-                    id: child.id + "_" + relevantNode.id,
-                    value:
-                      child.pointX +
-                      baseLength +
-                      "," +
-                      child.pointY +
-                      " " +
-                      (tempX - 4.3) +
-                      "," +
-                      tempY
-                  });
+                  if (child.pointX < tempX - 40 - baseLength - graphSpace) {
+                    //判断应用是否跨节点
+                    that.transTypePointList.push({
+                      id: child.id + "_" + relevantNode.id,
+                      value:
+                        child.pointX +
+                        baseLength / 2 +
+                        "," +
+                        (child.pointY - baseLength / 2) +
+                        " " +
+                        (child.pointX + baseLength / 2) +
+                        "," +
+                        (child.pointY - baseLength / 2 - 20) +
+                        " " +
+                        (tempX + baseLength / 2) +
+                        "," +
+                        (tempY - baseLength / 2 - 20) +
+                        " " +
+                        (tempX + baseLength / 2) +
+                        "," +
+                        (tempY - baseLength / 2 - 4.3)
+                    });
+                  } else {
+                    that.transTypePointList.push({
+                      id: child.id + "_" + relevantNode.id,
+                      value:
+                        child.pointX +
+                        baseLength +
+                        "," +
+                        child.pointY +
+                        " " +
+                        (tempX - 4.3) +
+                        "," +
+                        tempY
+                    });
+                  }
                 }
               }
             });

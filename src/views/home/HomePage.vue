@@ -259,7 +259,7 @@ export default {
     font-size: 24px;
     font-weight: 400;
     margin-bottom: 10px;
-    text-align: center;
+    text-align: left;
   }
 
   .col-span {

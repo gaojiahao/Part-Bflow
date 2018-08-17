@@ -103,25 +103,7 @@ export default {
               },
               on: {
                 'on-change': (status) => {
-                  let msgContent = '';
-                  if(status){
-                    msgContent = '确认启用该科目？'
-                  }else{
-                    msgContent = '确认禁用该科目？'
-                  }
-                  this.$Modal.confirm({
-                    title: '确认',
-                    content: msgContent,
-                    onOk: () => {
-                      params.row.calcRels.forEach(val => {
-                        openOrForbiddenSubject(val.componentId).then(res => {
-                          if(res.status === 200){
-                            this.$Message.success('更新成功！');
-                          }
-                        })
-                      });
-                    }
-                  });
+                  this.renderMethod(status,params);
                 }
               }
             })
@@ -138,7 +120,56 @@ export default {
       }
     }
   },
-  methods: {},
+  methods: {
+    //重新渲染科目启用禁用columns
+    rerenderSubjectColumns() {
+      this.columns[this.columns.length-1].render = (h,params) => {
+          let isDisabled = false,isChecked = false;
+          if(params.row.classify === 1){
+            isDisabled = true;
+          }
+          if(params.row.calcRels[0].status === 1){
+            isChecked = true;
+          }
+          return h('Checkbox',{
+            props: {
+              disabled: isDisabled,
+              value: isChecked
+            },
+            on: {
+              'on-change': (status) => {
+                this.renderMethod(status,params);
+              }
+            }
+          })
+        }
+    },
+    //启用禁用方法
+    renderMethod(status,params) {
+      let msgContent = '';
+      if(status){
+        msgContent = '确认启用该科目？'
+      }else{
+        msgContent = '确认禁用该科目？'
+      }
+      this.$Modal.confirm({
+        title: '确认',
+        content: msgContent,
+        onOk: () => {
+          params.row.calcRels.forEach(val => {
+            openOrForbiddenSubject(val.componentId).then(res => {
+              if(res.status === 200){
+                this.$Message.success('更新成功！');
+              }
+            })
+          });
+        },
+        onCancel: () => {
+          this.rerenderSubjectColumns(); 
+        }
+      });
+    }
+  },
   created() {
     getAppSubjectData(this.listId).then(res => {
       if (res.status === 200) {

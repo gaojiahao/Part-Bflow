@@ -88,13 +88,13 @@ export default {
       userInformation: {},
       relativeInstance: [
         { name: "工作流任务", showName: 'workflow', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/2_5.png' },
-        { name: "间接权限", showName: 'indirper', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/1_4.png' },
-        { name: "直接权限", showName: 'dirper', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/1_4.png' },
-        { name: "用户职位", showName: 'role', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/job.png' },
-        { name: "用户部门", showName: 'dep',  isShow: true,isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/organization.png' },
+        { name: "间接权限", showName: 'indirper', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/thO4S6W4QO.jpg' },
+        { name: "直接权限", showName: 'dirper', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/thO4S6W4QO.jpg' },
+        { name: "职位", showName: 'role', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/job.png' },
+        { name: "部门", showName: 'dep',  isShow: true,isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/organization.png' },
         { name: "下级用户", showName: 'lowuser', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/user.png' },
         { name: "上级用户", showName: 'highuser', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/user.png' },
-        { name: "用户信息", showName: 'userinfo', isShow: true, isShowAcive: true, imgUrl: 'resources/images/icon/user.png' }
+        { name: "用户信息", showName: 'userinfo', isShow: true, isShowAcive: true, imgUrl: 'resources/images/icon/essinformation.png' }
       ]
     };
   },

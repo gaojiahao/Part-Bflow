@@ -79,7 +79,7 @@
             </Form>
         </Row>
         <Row class="info-btn">
-            <Button @click="goUserList"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">取消</Button>
+            <Button @click="goUserList"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">关闭</Button>
             <Button v-if="isAdd" @click="editUserInfo"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">{{ isEdit?'编辑':'放弃编辑'}}</Button>
             <Button v-if="!isEdit" @click="updateUserData"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存</Button>
             <Button v-if="!isEdit" @click="saveAndAddUser" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存并继续添加</Button>
@@ -278,7 +278,7 @@ export default {
                             this.formItem.photo = '';
                             this.formItem.gender = "1";
                             this.formItem.status = "1";
-                            this.formItem.status = "";
+                            this.formItem.userType = "";
                             this.$refs['upload'].fileList.splice(0,this.$refs['upload'].fileList.length);
                         }
                     }).catch(error => {
@@ -289,7 +289,13 @@ export default {
         })
     },
     goUserList() {
-        this.$router.push({ path: '/addressBook/user/board'});
+        this.$Modal.confirm({
+            title: '系统提示',
+            content: '确认要关闭当前页面吗？',
+            onOk: () => {
+                this.$router.push({ path: '/addressBook/user/board'});
+            }
+        });
     },
     //格式化日期方法
     formatDate(currentDate) {

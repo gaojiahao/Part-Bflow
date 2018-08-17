@@ -94,7 +94,7 @@ export default {
         { name: "部门", showName: 'dep',  isShow: true,isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/organization.png' },
         { name: "下级用户", showName: 'lowuser', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/user.png' },
         { name: "上级用户", showName: 'highuser', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/user.png' },
-        { name: "用户信息", showName: 'userinfo', isShow: true, isShowAcive: true, imgUrl: 'resources/images/icon/essinformation.png' }
+        { name: "基本信息", showName: 'userinfo', isShow: true, isShowAcive: true, imgUrl: 'resources/images/icon/essinformation.png' }
       ]
     };
   },

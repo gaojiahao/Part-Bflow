@@ -18,7 +18,7 @@
             <pre class="api-code">
               {{commitApi.formData}}
             </pre>
-            <div style="position: absolute;top: 30px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=appContent @click="copy">
+            <div style="position: absolute;top: 30px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=updateApi.formData @click="copy">
               <Tooltip placement="top" content="点击复制" :disabled="disabled">
                 <Icon type="md-document" size='24' />
               </Tooltip>
@@ -33,7 +33,7 @@
             <pre class="api-code">
               {{viewApi.formData}}
             </pre>
-            <div style="position: absolute;top: 30px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=appContent @click="copy">
+            <div style="position: absolute;top: 30px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=updateApi.formData @click="copy">
               <Tooltip placement="top" content="点击复制" :disabled="disabled">
                 <Icon type="md-document" size='24' />
               </Tooltip>
@@ -48,7 +48,7 @@
             <pre class="api-code">
               {{updateApi.formData}}
             </pre>
-            <div style="position: absolute;top: 30px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=appContent @click="copy">
+            <div style="position: absolute;top: 30px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=updateApi.formData @click="copy">
               <Tooltip placement="top" content="点击复制" :disabled="disabled">
                 <Icon type="md-document" size='24' />
               </Tooltip>
@@ -98,7 +98,6 @@ export default {
   mounted() {
     findList(this.listId)
       .then(res => {
-        debugger
         try {
           this.commitApi = JSON.parse(res.commitUrl);
           this.updateApi = JSON.parse(res.updateUrl);

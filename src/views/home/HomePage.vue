@@ -256,7 +256,7 @@ export default {
   //   background-color: #fff;
   padding: 5px 10px 20px;
   &-title {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 400;
     margin-bottom: 10px;
     text-align: left;

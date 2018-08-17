@@ -166,12 +166,10 @@ export default {
         },
         {
           title: "职位名称",
-          maxWidth: 200,
           key: "name"
         },
         {
           title: "职位类型",
-          maxWidth: 150,
           key: "type",
           render: (h,params) => {
               let type = '';
@@ -197,7 +195,6 @@ export default {
         },
         {
           title: "说明",
-          maxWidth: 200,
           key: "describe"
         }
       ],

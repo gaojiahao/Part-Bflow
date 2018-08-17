@@ -18,11 +18,11 @@
         </div>
       </div>
     </div>
-    <Modal v-model="showModal" title="选择公司成员" @on-ok="addCompanyMember" width="1200">
+    <Modal v-model="showModal" title="选择公司成员" @on-ok="addCompanyMember" width="630">
       <div class="serach">
         <!-- <Input placeholder="请输入工号" class="serach-btn" v-model="userCode" /> -->
-        <Input placeholder="请输入姓名" class="serach-btn" v-model="nikeName" />
-        <Button type="primary" shape="circle" icon="ios-search" @click="search">搜索</Button>
+        <Input @on-search="search" :search="true" placeholder="请输入姓名" class="serach-btn" v-model="nikeName" />
+        <Button type="primary" @click="search">搜索</Button>
       </div>
       <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" height="400" :loading="allMemberLoading" :columns="columns2" :data="allMemberData">
       </Table>
@@ -93,45 +93,6 @@ export default {
           key: "mobile"
         },
         {
-          title: "邮箱",
-          key: "email"
-        },
-        {
-          title: "修改时间",
-          key: "modTime"
-        },
-        {
-          title: "创建时间",
-          key: "crtTime"
-        },
-        {
-          title: "创建者",
-          key: "creator"
-        },
-        {
-          title: "状态",
-          key: "status",
-          render: (h, params) => {
-            let userStatus = "";
-            if (params.row.status === 1) {
-              userStatus = "使用中";
-            } else if (params.row.status === -1) {
-              userStatus = "停用";
-            } else {
-              userStatus = "未使用";
-            }
-            return h(
-              "span",
-              {
-                style: {
-                  color: "#39f"
-                }
-              },
-              userStatus
-            );
-          }
-        },
-        {
           title: "操作",
           key: "action",
           width: 150,
@@ -187,44 +148,6 @@ export default {
           title: "手机",
           width: 150,
           key: "mobile"
-        },
-        {
-          title: "邮箱",
-          width: 150,
-          key: "email"
-        },
-        {
-          title: "创建时间",
-          width: 150,
-          key: "crtTime"
-        },
-        {
-          title: "创建者",
-          width: 150,
-          key: "creator"
-        },
-        {
-          title: "状态",
-          key: "status",
-          render: (h, params) => {
-            let userStatus = "";
-            if (params.row.status === 1) {
-              userStatus = "使用中";
-            } else if (params.row.status === -1) {
-              userStatus = "停用";
-            } else {
-              userStatus = "未使用";
-            }
-            return h(
-              "span",
-              {
-                style: {
-                  color: "#39f"
-                }
-              },
-              userStatus
-            );
-          }
         }
       ],
       groupId: this.$route.params.groupId,

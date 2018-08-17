@@ -105,7 +105,7 @@ export default {
           showName: "baseInfo",
           isShow: true,
           isShowAcive: true,
-          imgUrl: "resources/images/icon/company.png"
+          imgUrl: "resources/images/icon/essinformation.png"
         }
       ]
     };

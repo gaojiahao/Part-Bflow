@@ -27,10 +27,10 @@
             </div>
           </FormItem>
           <FormItem label="公司名称:" prop="groupName">
-            <Input v-model="baseInfoItem.groupName" :class="{'info-edit':isEdit}" :disabled="isEdit"></Input>
+            <Input v-model="baseInfoItem.groupName" :class="{'info-edit':isEdit}" :readonly="isEdit"></Input>
           </FormItem>
           <FormItem label="公司简称:" prop="groupShortName">
-            <Input v-model="baseInfoItem.groupShortName" :class="{'info-edit':isEdit}" :disabled="isEdit"></Input>
+            <Input v-model="baseInfoItem.groupShortName" :class="{'info-edit':isEdit}" :readonly="isEdit"></Input>
           </FormItem>
           <FormItem label="公司类型:" prop="depFunction">
             <Select v-model="baseInfoItem.depFunction" :class="{'info-edit':isEdit}" :disabled="isEdit">

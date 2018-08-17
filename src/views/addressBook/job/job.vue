@@ -60,7 +60,7 @@
         </Form>
         <div class="baseinfo-container-action">
           <input type='submit' value="关闭" class="baseinfo-container-action-submit" @click="cancle" />
-           <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" @click="edit" v-if="jobId"/>
+          <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" @click="edit" v-if="jobId" />
           <input type='submit' value="保存" class="baseinfo-container-action-submit" @click="save" />
           <input type='submit' value="保存并添加" class="baseinfo-container-action-submit" v-if="!jobId" @click="saveAndAdd" />
         </div>
@@ -107,7 +107,7 @@ export default {
       },
       name: "",
       isEdit: false,
-      editBtnName:'编辑',
+      editBtnName: "编辑",
       statusRadio: [
         {
           name: "停用",
@@ -179,12 +179,20 @@ export default {
     },
 
     cancle() {
-      window.location.url = "/Site/index.html#page/jobs";
+      let that = this;
+      that.$Modal.confirm({
+        title: "提示",
+        content: "是否关闭当前页面",
+        closable: true,
+        onOk: function() {
+          window.location.url = "/Site/index.html#page/jobs";
+        }
+      });
     },
 
-       edit(){
-      this.isEdit =!this.isEdit;
-      this.editBtnName = this.isEdit?'编辑':'放弃编辑';
+    edit() {
+      this.isEdit = !this.isEdit;
+      this.editBtnName = this.isEdit ? "编辑" : "放弃编辑";
     },
 
     saveAndAdd() {

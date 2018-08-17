@@ -17,9 +17,7 @@
 .serach {
   margin-bottom: 5px;
   &-btn {
-    width: 150px;
-    border: 1px solid #ddd;
-    border-bottom: none;
+    width: 300px;
   }
 }
 </style>
@@ -40,8 +38,8 @@
     </div>
     <Modal v-model="showModal" title="选择下级公司" @on-ok="addlowerCompany" width="1000">
       <div class="serach">
-        <Input placeholder="请输入公司名称" class="serach-btn" v-model="groupName" />
-        <Button type="primary" shape="circle" icon="ios-search" @click="search">搜索</Button>
+        <Input placeholder="请输入公司名称" @on-search="search" :search="true" class="serach-btn" v-model="groupName" />
+        <Button type="primary" @click="search">搜索</Button>
       </div>
       <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" height="400" :loading="companyLoading" :columns="columns1" :data="companyData"></Table>
       <div style="margin: 10px;overflow: hidden">
@@ -110,29 +108,6 @@ export default {
           key: "creator"
         },
         {
-          title: "状态",
-          key: "status",
-          render: (h, params) => {
-            let userStatus = "";
-            if (params.row.status === 1) {
-              userStatus = "使用中";
-            } else if (params.row.status === -1) {
-              userStatus = "停用";
-            } else {
-              userStatus = "未使用";
-            }
-            return h(
-              "span",
-              {
-                style: {
-                  color: "#39f"
-                }
-              },
-              userStatus
-            );
-          }
-        },
-        {
           title: "操作",
           key: "action",
           width: 150,
@@ -196,29 +171,6 @@ export default {
         {
           title: "创建者",
           key: "creator"
-        },
-        {
-          title: "状态",
-          key: "status",
-          render: (h, params) => {
-            let userStatus = "";
-            if (params.row.status === 1) {
-              userStatus = "使用中";
-            } else if (params.row.status === -1) {
-              userStatus = "停用";
-            } else {
-              userStatus = "未使用";
-            }
-            return h(
-              "span",
-              {
-                style: {
-                  color: "#39f"
-                }
-              },
-              userStatus
-            );
-          }
         }
       ],
       selectCompanyData: {},

@@ -213,7 +213,7 @@ export default {
   height: 70px;
   padding: 10px 12px;
   margin: 10px 0;
-
+  border-radius:0px;
   img {
     height: 50px;
     width: 50px;

@@ -119,7 +119,7 @@ export default {
         status: "1",
         gender: "1",
         termOfValidity: "",
-        userType: ""
+        userType: "1"
       },
       ruleValidate: {
           userCode: [
@@ -278,7 +278,7 @@ export default {
                             this.formItem.photo = '';
                             this.formItem.gender = "1";
                             this.formItem.status = "1";
-                            this.formItem.userType = "";
+                            this.formItem.userType = "1";
                             this.$refs['upload'].fileList.splice(0,this.$refs['upload'].fileList.length);
                         }
                     }).catch(error => {

@@ -16,7 +16,7 @@
     </Poptip>
     <img :src="appinfo.icon" />
     <div @click="redirectTo(appinfo)" class="content">
-      <a @click="goAppSetting(appinfo)">详情</a>
+      <a @click="goAppSetting(appinfo)" class="content-detail">详情</a>
       <h5>{{appinfo.text}}</h5>
       <span>{{appinfo.administrator?appinfo.transName+', ':appinfo.transName}}</span>
       <span>{{appinfo.administrator}}</span>
@@ -36,6 +36,8 @@ export default {
           title: "交易号",
           key: "transCode",
           sortable: true,
+          width: 120,
+          align: "center",
           render: (h, params) => {
             return h(
               "a",
@@ -66,6 +68,8 @@ export default {
         {
           title: "任务创建时间",
           key: "crtTime",
+          width: 150,
+          align: "center",
           sortable: true,
           render: (h, params) => {
             //时间戳转换为日期格式
@@ -193,14 +197,14 @@ export default {
       });
     },
     goAppSetting(list) {
-      let url = 'appReport/'+list.id;
-       window.top.postMessage(
-          {
-            type: "redirect",
-            url: url
-          },
-          "*"
-        );
+      let url = "appReport/" + list.id;
+      window.top.postMessage(
+        {
+          type: "redirect",
+          url: url
+        },
+        "*"
+      );
     }
   }
 };
@@ -213,7 +217,7 @@ export default {
   height: 70px;
   padding: 10px 12px;
   margin: 10px 0;
-  border-radius:0px;
+  border-radius: 0px;
   img {
     height: 50px;
     width: 50px;
@@ -239,8 +243,8 @@ export default {
     left: 80px;
     transform: translateY(-50%);
 
-    a{
-      display: inline-block;
+    a {
+      display: none;
       float: right;
     }
 
@@ -258,7 +262,7 @@ export default {
     }
   }
 
-  .badge-custom {
+.badge-custom {
     top: -13px;
     cursor: pointer;
     left: -10px;
@@ -274,6 +278,9 @@ export default {
 }
 
 .card:hover {
+  .content-detail {
+    display: inline-block;
+  }
   -webkit-transition: box-shadow 0.3s cubic-bezier(0.55, 0, 0.1, 1) 0s;
   -moz-transition: box-shadow 0.3s cubic-bezier(0.55, 0, 0.1, 1) 0s;
   -o-transition: box-shadow 0.3s cubic-bezier(0.55, 0, 0.1, 1) 0s;

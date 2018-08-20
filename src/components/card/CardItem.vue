@@ -36,6 +36,8 @@ export default {
           title: "交易号",
           key: "transCode",
           sortable: true,
+          width: 120,
+          align: "center",
           render: (h, params) => {
             return h(
               "a",
@@ -66,6 +68,8 @@ export default {
         {
           title: "任务创建时间",
           key: "crtTime",
+          width: 150,
+          align: "center",
           sortable: true,
           render: (h, params) => {
             //时间戳转换为日期格式
@@ -193,14 +197,14 @@ export default {
       });
     },
     goAppSetting(list) {
-      let url = 'appReport/'+list.id;
-       window.top.postMessage(
-          {
-            type: "redirect",
-            url: url
-          },
-          "*"
-        );
+      let url = "appReport/" + list.id;
+      window.top.postMessage(
+        {
+          type: "redirect",
+          url: url
+        },
+        "*"
+      );
     }
   }
 };
@@ -213,7 +217,7 @@ export default {
   height: 70px;
   padding: 10px 12px;
   margin: 10px 0;
-  border-radius:0px;
+  border-radius: 0px;
   img {
     height: 50px;
     width: 50px;
@@ -239,7 +243,7 @@ export default {
     left: 80px;
     transform: translateY(-50%);
 
-    a{
+    a {
       display: inline-block;
       float: right;
     }

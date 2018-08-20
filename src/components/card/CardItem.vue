@@ -16,7 +16,7 @@
     </Poptip>
     <img :src="appinfo.icon" />
     <div @click="redirectTo(appinfo)" class="content">
-      <a @click="goAppSetting(appinfo)">详情</a>
+      <a @click="goAppSetting(appinfo)" class="content-detail">详情</a>
       <h5>{{appinfo.text}}</h5>
       <span>{{appinfo.administrator?appinfo.transName+', ':appinfo.transName}}</span>
       <span>{{appinfo.administrator}}</span>
@@ -244,7 +244,7 @@ export default {
     transform: translateY(-50%);
 
     a {
-      display: inline-block;
+      display: none;
       float: right;
     }
 
@@ -262,7 +262,7 @@ export default {
     }
   }
 
-  .badge-custom {
+.badge-custom {
     top: -13px;
     cursor: pointer;
     left: -10px;
@@ -278,6 +278,9 @@ export default {
 }
 
 .card:hover {
+  .content-detail {
+    display: inline-block;
+  }
   -webkit-transition: box-shadow 0.3s cubic-bezier(0.55, 0, 0.1, 1) 0s;
   -moz-transition: box-shadow 0.3s cubic-bezier(0.55, 0, 0.1, 1) 0s;
   -o-transition: box-shadow 0.3s cubic-bezier(0.55, 0, 0.1, 1) 0s;

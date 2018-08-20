@@ -23,8 +23,9 @@
     <div class="organization-wrap-action">
       <ul>
         <li v-for="(item,index) in actionBtn" :key="index" v-if="!item.hidden" class="organization-wrap-action-li" v-bind:class="index===actionIndex?'organization-wrap-action-li-active':''" @click="handlerViewChange(index)">
-          <div style="padding:5px 0">
-            <img :src="item.imgPath" class="organization-wrap-action-li-img"><img>
+          <div style="padding:9px 0">
+            <img v-if="!item.type" :src="item.imgPath" class="organization-wrap-action-li-img"/>
+            <Icon v-else :type="item.type" class="icon" />
             <div class="left-content">
               <span v-show="item.number!=='undefine'">{{item.number}}</span>
               <h3>{{item.label}}</h3>
@@ -209,7 +210,7 @@ export default {
       actionBtn: [
         {
           label: "权限",
-          imgPath: "resources/images/icon/2_0.png",
+          type:"md-person",
           number: 0,
           hidden: false,
           id: "objectPermission"
@@ -244,7 +245,7 @@ export default {
         },
         {
           label: "基本信息",
-          imgPath: "resources/images/icon/essinformation.png",
+          type:"ios-home",
           hidden: false,
           id: "baseinfo"
         }

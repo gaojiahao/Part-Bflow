@@ -27,7 +27,8 @@
     </Row>
     <Row class="detail-tabs">
       <div @click="onClickTab(index)" v-if="groupId?item.isShow:item.isShowAcive" :class="{'detail-tabs-child':true,'active':item.isShowAcive}" v-for="(item,index) of relativeInstance" :key="index">
-        <img :src="item.imgUrl" />
+        <img v-if="!item.type" :src="item.imgUrl" />
+        <Icon v-else :type="item.type" class="icon" />
         <div class="detail-tabs-child-right">
           <span v-if="item.relativeNum==0||item.relativeNum">{{ item.relativeNum }}</span>
           <span v-else>&nbsp;</span>
@@ -105,7 +106,7 @@ export default {
           showName: "baseInfo",
           isShow: true,
           isShowAcive: true,
-          imgUrl: "resources/images/icon/essinformation.png"
+           type:"ios-home"
         }
       ]
     };

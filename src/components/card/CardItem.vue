@@ -1,6 +1,6 @@
 <template>
   <div class="card ivu-card ivu-card-bordered">
-    <Poptip class="badge-custom" width="560" placement="right-end" @on-popper-show="popperShow">
+    <Poptip class="badge-custom" width="560" placement="right-end" @on-popper-show="popperShow" >
       <Badge :count="taskCount"></Badge>
       <div slot="title">
         <h3>{{appinfo.text+' - 待办任务'}}</h3>
@@ -56,7 +56,7 @@ export default {
           key: "nodeName"
         },
         {
-          title: "审批者",
+          title: "当前用户",
           key: "assigneeName",
           width: 90
         },
@@ -100,7 +100,6 @@ export default {
       pageSize: 5,
       currentPage: 1, //table当前页
       pageListId: "",
-      modal: false //弹出框是否显示
     };
   },
   created() {
@@ -161,21 +160,25 @@ export default {
     },
 
     popperShow(e) {
-      this.pageListId = this.appinfo.url.split("/")[1];
-      let params = {
-        type: "myToDo",
-        page: this.currentPage,
-        listId: this.pageListId,
-        limit: this.pageSize
-      };
-      this.modal = true;
-      getAppTaskCount(params).then(res => {
-        this.pageTotal = res.total;
-        if (res.tableContent.length > 0) {
-          this.columnData = res.tableContent;
-          this.loading = false;
-        }
-      });
+      let type = this.appinfo.url.split("/")[0];
+      if (type === "subject") {
+        this.redirectTo(this.appinfo);
+      } else {
+        this.pageListId = this.appinfo.url.split("/")[1];
+        let params = {
+          type: "myToDo",
+          page: this.currentPage,
+          listId: this.pageListId,
+          limit: this.pageSize
+        };
+        getAppTaskCount(params).then(res => {
+          this.pageTotal = res.total;
+          if (res.tableContent.length > 0) {
+            this.columnData = res.tableContent;
+            this.loading = false;
+          }
+        });
+      }
     },
 
     /**
@@ -262,7 +265,7 @@ export default {
     }
   }
 
-.badge-custom {
+  .badge-custom {
     top: -13px;
     cursor: pointer;
     left: -10px;

@@ -71,9 +71,9 @@
                 </text>
               </a>
               <!-- 所有待办 -->
-              <circle :cx="40+(baseLength+graphSpace)*item.sort" :cy="item.type==='list'?50+170*i:45+170*i" r="12" stroke-width="1" fill="red" v-if="item.type==='list' && item.listId in defaultDisplayTask" />
-              <text :x="40+(baseLength+graphSpace)*item.sort" :y="item.type==='list'?45+170*i:45+170*i" fill="#fff" class="svg-text-common-style" style="font-size:12px" :listId="item.listId" :taskValue="item.value" @click="opentask" v-if="item.type==='list'">
-                {{defaultDisplayTask[item.listId]}}
+              <circle :cx="40+(baseLength+graphSpace)*item.sort" :cy="50+170*i" r="12" stroke-width="1" fill="red" v-if="(item.listId?item.listId:item.id) in defaultDisplayTask" />
+              <text :x="40+(baseLength+graphSpace)*item.sort" :y="45+170*i" fill="#fff" class="svg-text-common-style" style="font-size:12px" :listId="item.type==='subject'?item.id:item.listId" :taskValue="item.value" @click="opentask" >
+                {{item.type==='subject'?defaultDisplayTask[item.id]:defaultDisplayTask[item.listId]}}
               </text>
 
               <!--  <circle :cx="40+baseLength+(baseLength+graphSpace)*j" :cy="item.type==='list'?25+170*i:45+170*i" r="13" stroke-width="1" fill="red" v-if="item.type==='list' && item.notToDo" />
@@ -142,6 +142,7 @@ export default {
       teamTodo: {}, //团队待办任务
       myDone: {}, //我的已完成任务
       myToDo: {}, //我的未完成任务
+      subjectTodo:{},  //科目待办数量
 
       modal: false, //弹出框是否显示
       taskValue: "",
@@ -201,6 +202,9 @@ export default {
             }
             if (childNode.myToDo > 0) {
               this.myToDo[childNode.listId] = childNode.myToDo;
+            }
+            if(childNode.subjectTodo>0){
+              this.subjectTodo[childNode.id] = childNode.subjectTodo;
             }
           }
         }
@@ -438,6 +442,7 @@ export default {
         this.type = "myToDo";
         this.defaultDisplayTask = this.myToDo;
       }
+      this.defaultDisplayTask = Object.assign(this.defaultDisplayTask,this.subjectTodo);
     },
 
     radioGroupChangeDoneOrTodo: function(e) {
@@ -455,6 +460,7 @@ export default {
         this.type = "myToDo";
         this.defaultDisplayTask = this.myToDo;
       }
+       this.defaultDisplayTask = Object.assign(this.defaultDisplayTask,this.subjectTodo);
     },
 
     /**
@@ -577,9 +583,8 @@ export default {
             calcSvgHeight + "px";
 
           that.draw();
-
-          this.defaultDisplayTask = this.myToDo;
-
+          this.defaultDisplayTask = Object.assign(this.myToDo,this.subjectTodo);
+          debugger
           that.spinShow = false;
         }
       })

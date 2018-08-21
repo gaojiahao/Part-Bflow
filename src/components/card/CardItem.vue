@@ -1,6 +1,6 @@
 <template>
   <div class="card ivu-card ivu-card-bordered">
-    <Poptip class="badge-custom" width="560" placement="right-end" @on-popper-show="popperShow">
+    <Poptip class="badge-custom" width="630" placement="right-end" @on-popper-show="popperShow" v-if="type!=='subject'">
       <Badge :count="taskCount"></Badge>
       <div slot="title">
         <h3>{{appinfo.text+' - 待办任务'}}</h3>
@@ -14,6 +14,10 @@
         </div>
       </div>
     </Poptip>
+    <div style="display:inline-block" @click="redirectTo(appinfo)">
+      <Badge class="badge-custom" :count="taskCount" v-if="type==='subject'"></Badge>
+    </div>
+
     <img :src="appinfo.icon" />
     <div @click="redirectTo(appinfo)" class="content">
       <a @click="goAppSetting(appinfo)" class="content-detail">详情</a>
@@ -31,12 +35,13 @@ export default {
   data() {
     return {
       taskCount: 0,
+      type: this.appinfo.url.split("/")[0],
       columns: [
         {
           title: "交易号",
           key: "transCode",
           sortable: true,
-          width: 120,
+          width: 160,
           align: "center",
           render: (h, params) => {
             return h(
@@ -56,7 +61,7 @@ export default {
           key: "nodeName"
         },
         {
-          title: "审批者",
+          title: "当前用户",
           key: "assigneeName",
           width: 90
         },
@@ -99,8 +104,7 @@ export default {
       pageTotal: 0, //table总数
       pageSize: 5,
       currentPage: 1, //table当前页
-      pageListId: "",
-      modal: false //弹出框是否显示
+      pageListId: ""
     };
   },
   created() {
@@ -168,7 +172,6 @@ export default {
         listId: this.pageListId,
         limit: this.pageSize
       };
-      this.modal = true;
       getAppTaskCount(params).then(res => {
         this.pageTotal = res.total;
         if (res.tableContent.length > 0) {
@@ -243,9 +246,10 @@ export default {
     left: 80px;
     transform: translateY(-50%);
 
-    a {
+    &-detail {
       display: none;
       float: right;
+      font-size: 14px;
     }
 
     h5 {
@@ -257,12 +261,12 @@ export default {
     }
 
     span {
-      font-size: 14px;
+      font-size: 12px;
       color: #5f5e5e;
     }
   }
 
-.badge-custom {
+  .badge-custom {
     top: -13px;
     cursor: pointer;
     left: -10px;

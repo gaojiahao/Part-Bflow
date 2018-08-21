@@ -61,7 +61,7 @@
           <g v-for="(business,i) in dataItem" :key="i">
             <g v-for="(item,j) in business.child" :key="j">
 
-              <image :x="40+(baseLength+graphSpace)*item.sort" :y="50+170*i" :width="baseLength" :height="baseLength" :xlink:href="item.icon" rx='10' v-on:click.stop="doAction(item)" v-bind:class="{ 'svg-image-style-opacity': !item.isPermitted, 'svg-image-style': true }">
+              <image :x="40+(baseLength+graphSpace)*item.sort" :y="50+170*i" :width="baseLength" :height="baseLength" :xlink:href="item.icon" rx='10' v-on:click.stop="doAction(item)">
               </image>
               <!-- 科目与业务节点title -->
 
@@ -72,7 +72,7 @@
               </a>
               <!-- 所有待办 -->
               <circle :cx="40+(baseLength+graphSpace)*item.sort" :cy="50+170*i" r="12" stroke-width="1" fill="red" v-if="(item.listId?item.listId:item.id) in defaultDisplayTask" />
-              <text :x="40+(baseLength+graphSpace)*item.sort" :y="45+170*i" fill="#fff" class="svg-text-common-style" style="font-size:12px" :listId="item.type==='subject'?item.id:item.listId" :taskValue="item.value" @click="opentask" >
+              <text :x="40+(baseLength+graphSpace)*item.sort" :y="45+170*i" fill="#fff" class="svg-text-common-style" style="font-size:12px" :listId="item.type==='subject'?item.id:item.listId" :taskValue="item.value" @click="opentask(item)">
                 {{item.type==='subject'?defaultDisplayTask[item.id]:defaultDisplayTask[item.listId]}}
               </text>
 
@@ -142,7 +142,7 @@ export default {
       teamTodo: {}, //团队待办任务
       myDone: {}, //我的已完成任务
       myToDo: {}, //我的未完成任务
-      subjectTodo:{},  //科目待办数量
+      subjectTodo: {}, //科目待办数量
 
       modal: false, //弹出框是否显示
       taskValue: "",
@@ -203,7 +203,7 @@ export default {
             if (childNode.myToDo > 0) {
               this.myToDo[childNode.listId] = childNode.myToDo;
             }
-            if(childNode.subjectTodo>0){
+            if (childNode.subjectTodo > 0) {
               this.subjectTodo[childNode.id] = childNode.subjectTodo;
             }
           }
@@ -398,7 +398,6 @@ export default {
     redirectTo: function(item, event) {
       let url = item.url;
       let nr = window.top.document.getElementById("frame1").getAttribute("nr");
-      if (item.type === "subject") return;
       if (item.target === "_blank") {
         window.open(item.url, "_blank");
       } else {
@@ -442,7 +441,10 @@ export default {
         this.type = "myToDo";
         this.defaultDisplayTask = this.myToDo;
       }
-      this.defaultDisplayTask = Object.assign(this.defaultDisplayTask,this.subjectTodo);
+      this.defaultDisplayTask = Object.assign(
+        this.defaultDisplayTask,
+        this.subjectTodo
+      );
     },
 
     radioGroupChangeDoneOrTodo: function(e) {
@@ -460,16 +462,24 @@ export default {
         this.type = "myToDo";
         this.defaultDisplayTask = this.myToDo;
       }
-       this.defaultDisplayTask = Object.assign(this.defaultDisplayTask,this.subjectTodo);
+      this.defaultDisplayTask = Object.assign(
+        this.defaultDisplayTask,
+        this.subjectTodo
+      );
     },
 
     /**
      * 查看待办任务
      */
-    opentask(e) {
-      this.modal = true;
-      this.pageListId = e.target.getAttribute("listId");
-      this.taskValue = e.target.getAttribute("taskValue");
+    opentask(item) {
+      if (item.type === "subject") {
+        this.redirectTo(item,event);
+      } else {
+        this.modal = true;
+
+        this.pageListId = event.target.getAttribute("listId");
+        this.taskValue = event.target.getAttribute("taskValue");
+      }
     },
 
     //监听弹出框返回得状态值
@@ -583,8 +593,10 @@ export default {
             calcSvgHeight + "px";
 
           that.draw();
-          this.defaultDisplayTask = Object.assign(this.myToDo,this.subjectTodo);
-          debugger
+          this.defaultDisplayTask = Object.assign(
+            this.myToDo,
+            this.subjectTodo
+          );
           that.spinShow = false;
         }
       })

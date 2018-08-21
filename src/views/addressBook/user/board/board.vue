@@ -38,8 +38,16 @@ export default {
   created() {},
   methods: {
     getUsers: function() {
-      let pageData = this.$route.query;
-      getAllUsers( pageData.limit,pageData.page,JSON.stringify(pageData.filter)).then(res => {
+      let pageData = this.$route.query,filter;
+      if(pageData.filterProperty === 'all'){
+        let value = pageData.filterValue.split(',');
+        filter = [{operator:"like",value:value[0],property:"nickname"},{operator:"like",value:value[1],property:"userCode"}];
+      }else if(pageData.filterProperty === 'nickname'){
+        filter = [{operator:"like",value:pageData.filterValue,property:"nickname"}];
+      }else if(pageData.filterProperty === 'userCode'){
+        filter = [{operator:"like",value:pageData.filterValue,property:"userCode"}];
+      }
+      getAllUsers( pageData.limit,pageData.page,JSON.stringify(filter)).then(res => {
         this.users = res.tableContent;
         window.top.getTotal = function () {
             return res.dataCount;

@@ -47,7 +47,7 @@ export default {
       }else if(pageData.filterProperty === 'userCode'){
         filter = [{operator:"like",value:pageData.filterValue,property:"userCode"}];
       }
-      getAllUsers( pageData.limit,pageData.page,JSON.stringify(pageData.filter)).then(res => {
+      getAllUsers( pageData.limit,pageData.page,JSON.stringify(filter)).then(res => {
         this.users = res.tableContent;
         window.top.getTotal = function () {
             return res.dataCount;

@@ -6,7 +6,7 @@
   <div class="organization-wrap">
     <header class="organization-wrap-header">
       <h2 v-if="groupId">
-        <span style="color:#4CAF50;cursor:pointer" @click="goBack">组织</span>
+        <span style="color:#4CAF50;cursor:pointer">组织</span>
         <span style="color:#808080;margin-left:10px">/</span>
         <span style="color:#808080;margin-left:10px">{{name}}</span>
         <span style="color:#808080;margin-left:10px">/</span>
@@ -454,9 +454,7 @@ export default {
         content: "是否关闭当前页面",
         closable: true,
         onOk: function() {
-          that.$router.push({
-            path: "/addressBook/organization/board"
-          });
+          location.href = '/Site/index.html#page/origanizations';
         },
       });
      
@@ -531,12 +529,6 @@ export default {
       if (val) {
         this.getObjDetailsCountByGroupId(this.groupId);
       }
-    },
-
-    goBack() {
-      this.$router.push({
-        path: "/addressBook/organization/board"
-      });
     },
 
     listUserChangePage(currentPage) {

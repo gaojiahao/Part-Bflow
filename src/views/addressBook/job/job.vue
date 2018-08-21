@@ -186,7 +186,7 @@ export default {
         content: "是否关闭当前页面",
         closable: true,
         onOk: function() {
-          window.location.url = "/Site/index.html#page/jobs";
+          location.href = "/Site/index.html#page/jobs";
         }
       });
     },

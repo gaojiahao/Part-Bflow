@@ -11,7 +11,7 @@
         <span v-if="userInformation.nickname?true:false" style="font-weight:bold;color:#808080;margin-left:10px;font-size:20px;">{{ userInformation.nickname }}</span>
         <span style="color:#808080;margin-left:10px;font-size:20px;font-weight:bold;">{{ userInformation.userCode?'':'创建' }}</span>
       </div>
-      <Tag v-show="userInformation.status?showTag:!showTag" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:userInformation.status,color:'#eb2f96'}"></Tag>
+      <Tag v-show="userInformation.status?showTag:!showTag" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:userInformation.status}"></Tag>
     </Row>
     <Row class="detail-tabs">
       <div 
@@ -150,7 +150,7 @@ export default {
   mounted() {
     this.getUserInfoData();
     this.getInstanceCount();
-    let tabsMaxHeight = document.body.clientHeight - 86;
+    let tabsMaxHeight = document.body.clientHeight - 85;
     window.document.getElementsByClassName('detail-content-tabs')[0].style.height = tabsMaxHeight + 'px';
     window.document.getElementsByClassName('detail-content-tabs')[0].style.maxHeight = tabsMaxHeight + 'px';
   }

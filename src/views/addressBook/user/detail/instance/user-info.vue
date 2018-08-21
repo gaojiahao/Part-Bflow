@@ -64,7 +64,7 @@
                         <Radio :disabled="isEdit" label="0">临时账户</Radio>
                     </RadioGroup>
                 </FormItem>
-                <FormItem v-if="formItem.userType === '0'" label="账户有效期：">
+                <FormItem v-if="formItem.userType === '0'" label="账户有效期：" prop="termOfValidity">
                     <DatePicker :class="{'info-edit':isEdit}" :readonly="isEdit" type="date" placeholder="" v-model="formItem.termOfValidity"></DatePicker>
                 </FormItem>
                 <FormItem label="状态：">
@@ -134,6 +134,12 @@ export default {
             required: true,
             message: "请输入用户名称",
             trigger: "blur"
+          }
+        ],
+        termOfValidity: [
+          {
+            required: true,
+            message: "请选择有效期"
           }
         ],
         mobile: [

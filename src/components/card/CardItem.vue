@@ -1,6 +1,6 @@
 <template>
   <div class="card ivu-card ivu-card-bordered">
-    <Poptip class="badge-custom" width="560" placement="right-end" @on-popper-show="popperShow" v-if="type!=='subject'">
+    <Poptip class="badge-custom" width="630" placement="right-end" @on-popper-show="popperShow" v-if="type!=='subject'">
       <Badge :count="taskCount"></Badge>
       <div slot="title">
         <h3>{{appinfo.text+' - 待办任务'}}</h3>
@@ -73,7 +73,7 @@ export default {
         {
           title: "任务创建时间",
           key: "crtTime",
-          width: 160,
+          width: 150,
           align: "center",
           sortable: true,
           render: (h, params) => {

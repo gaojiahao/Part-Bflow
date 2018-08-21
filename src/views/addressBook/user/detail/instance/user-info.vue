@@ -82,7 +82,7 @@
             <Button @click="goUserList"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">关闭</Button>
             <Button v-if="isAdd" @click="editUserInfo"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">{{ isEdit?'编辑':'放弃编辑'}}</Button>
             <Button v-if="!isEdit" @click="updateUserData"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存</Button>
-            <Button v-if="!isEdit" @click="saveAndAddUser" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存并继续添加</Button>
+            <Button v-if="!isEdit" @click="saveAndAddUser" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存并新建</Button>
         </Row>
     </div>
 </template>

@@ -7,19 +7,19 @@
 function render (el, bind) {
     switch (bind.value.status) {
         case 1:
-            el.style.backgroundColor = bind.value.color ? bind.value.color : '#39f';
+            el.style.backgroundColor = bind.value.color ? bind.value.color : 'green';
             el.innerText = "使用中";
             break;
         case 3:
-            el.style.backgroundColor = '#ddd';
+            el.style.backgroundColor = '#FFC107';
             el.innerText = "草稿";
             break;
         case 2:
-            el.style.backgroundColor = '#d3adf7';
+            el.style.backgroundColor = '#35baf6';
             el.innerText = "未使用";
             break;
         case -1:
-            el.style.backgroundColor = '#f90';
+            el.style.backgroundColor = '#E91E63';
             el.innerText = "停用";
             break;
     }

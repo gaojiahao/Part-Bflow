@@ -40,7 +40,7 @@
         <Input placeholder="请输入公司名称" @on-search="search" :search="true" class="serach-btn" v-model="groupName" />
         <Button type="primary" @click="search">搜索</Button>
       </div>
-      <Table ref="selection" :highlight-row="true" @on-row-click="onSelectionChange" height="400" :loading="companyLoading" :columns="columns" :data="companyData"></Table>
+      <Table ref="selection" :highlight-row="true" @on-row-click="onSelectionChange" @on-row-dblclick="onRowdbclick" height="400" :loading="companyLoading" :columns="columns" :data="companyData"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div class="fr">
           <Page @on-page-size-change="onAllCompanyPageSizeChange" :total="companyTotal" show-elevator show-sizer :current="companyCurrentPage" :page-size="companyPageSize" @on-change="onCompanyPageChange" size="small" show-total></Page>
@@ -264,6 +264,22 @@ export default {
         this.companyData = res.tableContent;
         this.companyTotal = res.dataCount;
       });
+    },
+    onRowdbclick(selection, index) {
+      let parentId;
+      if (Object.keys(selection).length > 0) {
+        parentId = selection.groupId;
+        addHigherCompany(this.groupId, parentId).then(res => {
+          if (res.success) {
+            this.showModal = false;
+            this.$Message.success("新增成功!");
+            this.$emit("getInstanceCount");
+            this.getHigherCompanyData();
+          }
+        });
+      } else {
+        this.$Message.warning("请选择至少一个公司！");
+      }
     }
   },
   mounted() {

@@ -59,10 +59,11 @@
       </div>
     </div>
     <Row class="info-btn">
+      <Button @click="toCompanyLst" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">关闭</Button>
       <Button v-if="baseInfoItem.groupId&&!isEdit" @click="updateCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">更新</Button>
       <Button v-else-if="!isEdit&&!isAdd" @click="addCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存</Button>
       <Button v-if="isAdd" @click="isEditCompanyInfo" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">{{isEdit?'编辑':'放弃编辑'}}</Button>
-      <Button v-if="!baseInfoItem.groupId&&!isEdit&&!isAdd" @click="saveAndAddCompany" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存并继续添加</Button>
+      <Button v-if="!baseInfoItem.groupId&&!isEdit&&!isAdd" @click="saveAndAddCompany" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存并新建</Button>
     </Row>
   </div>
 </template>
@@ -314,6 +315,15 @@ export default {
       } else {
         callback();
       }
+    },
+    toCompanyLst() {
+      this.$Modal.confirm({
+        title: "系统提示",
+        content: "确认要关闭当前页面吗？",
+        onOk: () => {
+          this.$router.push({ path: "/addressBook/companyInfo/board" });
+        }
+      });
     }
   },
   mounted() {

@@ -20,7 +20,7 @@
     <Row class="detail-header">
       <Breadcrumb class="detail-header-bread">
         <BreadcrumbItem to="/addressBook/companyInfo/board">公司</BreadcrumbItem>
-        <BreadcrumbItem>{{ companyInformation.groupName?companyInformation.groupShortName:'' }}</BreadcrumbItem>
+        <BreadcrumbItem v-show="companyInformation.groupName">{{ companyInformation.groupName}}</BreadcrumbItem>
         <BreadcrumbItem>{{ companyInformation.groupId?companyInformation.groupId:'创建' }}</BreadcrumbItem>
       </Breadcrumb>
       <Tag v-show="companyInformation.status" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:companyInformation.status,color:'#eb2f96'}"></Tag>

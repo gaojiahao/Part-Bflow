@@ -156,7 +156,7 @@ export default {
         };
         saveAppInformation(params).then(res => {
           if (res.success) {
-            this.$Message.success(res.message);
+            this.$Message.success('更新成功!');
             this.$emit('reloadData');
             this.$emit('changeAdmin');
           }

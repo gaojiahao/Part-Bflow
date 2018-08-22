@@ -359,7 +359,11 @@ export const getTableData = (url, params) => request('/H_roleplay-si' + url, par
  * @author snack.huang
  * @description 获取所有组织 [管理层、事业部、部门、小组]
  */
-export const getOrganizations = (pageInfo) => request('/H_roleplay-si/ds/getAllGroup', pageInfo);
+export const getOrganizations = (pageSize, currentPage, filter) => request('/H_roleplay-si/ds/getAllGroup', {
+  page: currentPage,
+  limit: pageSize,
+  filter: filter
+});
 
 
 
@@ -602,7 +606,11 @@ export const removeCompany = (groupIds) => {
  * 获取所有公司数据
  * 
  */
-export const getAllCompanys = () => request('/H_roleplay-si/sysGroup/getCompanyList');
+export const getAllCompanys = (pageSize, currentPage, filter) => request('/H_roleplay-si/sysGroup/getCompanyList',{
+  page: currentPage,
+  limit: pageSize,
+  filter: filter
+});
 
 /**
  * @author zhaohuai

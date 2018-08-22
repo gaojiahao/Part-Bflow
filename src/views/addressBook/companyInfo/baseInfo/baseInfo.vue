@@ -5,10 +5,10 @@
   <div class="baseInfo">
     <div class="baseInfo-warp">
       <div class="baseInfo-body">
-        <Form :model="baseInfoItem" ref="baseInfoItem" :label-width="80" :rules="ruleValidate">
+        <Form :model="baseInfoItem" ref="baseInfoItem" :label-width="80" :rules="ruleValidate" :class="{'is-required':isEdit}">
           <FormItem label="公司照片:">
             <div class="uploadImg">
-              <Upload ref="upload" :show-upload-list="false" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" multiple type="drag" action="/H_roleplay-si/ds/upload" :headers="httpHeaders" style="display: inline-block;width:128px;vertical-align: middle;">
+              <Upload v-if="!isEdit" ref="upload" :show-upload-list="false" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" multiple type="drag" action="/H_roleplay-si/ds/upload" :headers="httpHeaders" style="display: inline-block;width:128px;vertical-align: middle;">
                 <div style="width: 128px;height:128px;line-height: 128px;" v-if="!logo">
                   <img v-if="logo" :src="logo">
                   <i v-if="!logo" class="iconfont">&#xe63b;</i>
@@ -21,6 +21,7 @@
                   </div>
                 </div>
               </Upload>
+              <img v-else :src="logo" style="width: 128px;height:128px;line-height: 128px;">
               <Modal title="查看头像" v-model="visible">
                 <img :src="logo" v-if="visible" style="width: 100%">
               </Modal>
@@ -284,11 +285,16 @@ export default {
       if (!value) {
         return callback(new Error("请输入公司名称"));
       } else if (this.cacheGroupName != value) {
+        debugger;
         let test = { name: "groupName", value: value };
-        checkValue(test).then(res => {
+        let id =
+          this.$route.name == "add"
+            ? this.$route.name
+            : this.$route.params.groupId;
+        checkValue(test, id).then(res => {
           if (!res.result == 0) {
             this.$Message.error("公司名称已存在！请重新输入");
-            return callback();
+            return callback(new Error(" "));
           } else {
             return callback();
           }
@@ -303,10 +309,14 @@ export default {
         return callback(new Error("请输入公司简称"));
       } else if (this.cacheShortName != value) {
         let test = { name: "groupShortName", value: value };
-        checkValue(test).then(res => {
+        let id =
+          this.$route.name == "add"
+            ? this.$route.name
+            : this.$route.params.groupId;
+        checkValue(test, id).then(res => {
           if (!res.result == 0) {
             this.$Message.error("公司简称已存在！请重新输入");
-            return callback(new Error("公司简称已存在！请重新输入"));
+            return callback(new Error(" "));
           } else {
             return callback();
           }

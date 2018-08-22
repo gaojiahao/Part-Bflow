@@ -127,22 +127,22 @@ export default {
           }
         },
         {
-          title: "部门职能类型",
+          title: "部门职能",
           key: "depFunction",
           render: (h, params) => {
             let depFunction = params.row.depFunction;
             switch (depFunction) {
               case "M":
-                depFunction = "管理层";
+                depFunction = "管理";
                 break;
-              case "A":
-                depFunction = "事业部";
+              case "S":
+                depFunction = "销售";
                 break;
-              case "O":
-                depFunction = "部门";
+              case "C":
+                depFunction = "制造";
                 break;
-              case "G":
-                depFunction = "小组";
+              case "R":
+                depFunction = "研发";
                 break;
             }
             return h("span", depFunction);
@@ -263,22 +263,22 @@ export default {
           }
         },
         {
-          title: "部门职能类型",
+          title: "部门职能",
           key: "depFunction",
           render: (h, params) => {
             let depFunction = params.row.depFunction;
             switch (depFunction) {
               case "M":
-                depFunction = "管理层";
+                depFunction = "管理";
                 break;
-              case "A":
-                depFunction = "事业部";
+              case "S":
+                depFunction = "销售";
                 break;
-              case "O":
-                depFunction = "部门";
+              case "C":
+                depFunction = "制造";
                 break;
-              case "G":
-                depFunction = "小组";
+              case "R":
+                depFunction = "研发";
                 break;
             }
             return h("span", depFunction);

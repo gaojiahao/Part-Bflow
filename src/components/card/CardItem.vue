@@ -1,6 +1,6 @@
 <template>
   <div class="card ivu-card ivu-card-bordered">
-    <Poptip class="badge-custom" width="630" placement="right-end" @on-popper-show="popperShow" v-if="type!=='subject'">
+    <Poptip class="badge-custom" width="660" placement="right-end" @on-popper-show="popperShow" v-if="type!=='subject'">
       <Badge :count="taskCount"></Badge>
       <div slot="title">
         <h3>{{appinfo.text+' - 待办任务'}}</h3>
@@ -14,13 +14,13 @@
         </div>
       </div>
     </Poptip>
-    <div style="display:inline-block" @click="redirectTo(appinfo)">
-      <Badge class="badge-custom" :count="taskCount" v-if="type==='subject'" type="primary"></Badge>
+    <div class="badge-custom" @click="redirectTo(appinfo)">
+      <Badge :count="taskCount" v-if="type==='subject'" type="primary"></Badge>
     </div>
 
     <img :src="appinfo.icon" />
     <div @click="redirectTo(appinfo)" class="content">
-      <a @click="goAppSetting(appinfo)" class="content-detail">详情</a>
+      <a @click.stop="goAppSetting(appinfo)" class="content-detail">详情</a>
       <h5>{{appinfo.text}}</h5>
       <span>{{appinfo.administrator?appinfo.transName+', ':appinfo.transName}}</span>
       <span>{{appinfo.administrator}}</span>
@@ -73,7 +73,7 @@ export default {
         {
           title: "任务创建时间",
           key: "crtTime",
-          width: 150,
+          width: 160,
           align: "center",
           sortable: true,
           render: (h, params) => {
@@ -200,7 +200,7 @@ export default {
       });
     },
     goAppSetting(list) {
-      let url = "appReport/" + list.id;
+      let url = "/Site/index.html#appSetting/" + list.id;
       window.top.postMessage(
         {
           type: "redirect",

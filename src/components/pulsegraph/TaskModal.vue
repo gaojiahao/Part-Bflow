@@ -16,7 +16,7 @@
       <div class="input-crttime" v-show="expand">
         <div class="input-filter-box">
           <label class="input-filter-lebal">当前节点:</label>
-          <Input v-model="filterData.nodeName" placeholder="请输入审批者" style="width: 127px;margin-left:12px"></Input>
+          <Input v-model="filterData.nodeName" placeholder="请输入当前节点" style="width: 127px;margin-left:12px"></Input>
         </div>
         <div class="input-filter-box">
           <label class="input-filter-lebal">创建时间:</label>
@@ -90,6 +90,7 @@ export default {
           title: "创建时间",
           key: "crtTime",
           sortable: true,
+            width:160,
           render: (h, params) => {
             //时间戳转换为日期格式
             function formatDateTime(inputTime) {
@@ -196,6 +197,7 @@ export default {
         this.filterData.nodeName = "";
         this.expand = false;
         this.currentPage = 1;
+        this.expandValue = '展开';
       }
     },
 

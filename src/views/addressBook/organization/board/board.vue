@@ -34,8 +34,11 @@ export default {
   created() {},
   methods: {
     getOrgs: function() {
-      let pageData = this.$route.query;
-      getOrganizations(pageData).then(res => {
+      let pageData = this.$route.query,filter;
+      if(pageData.filterProperty === 'groupName'){
+        filter = [{operator:"like",value:pageData.filterValue,property:"groupName"}];
+      }
+      getOrganizations(pageData.limit,pageData.page,JSON.stringify(filter)).then(res => {
         this.orgs = res.tableContent;
         window.top.getTotal = function () {
             return res.dataCount;

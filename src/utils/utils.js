@@ -8,7 +8,6 @@ export const getToken = () => {
         }
     }
     return token;
-    // return token;
 }
 
 /**

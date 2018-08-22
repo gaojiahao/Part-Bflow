@@ -20,7 +20,7 @@
 
     <img :src="appinfo.icon" />
     <div @click="redirectTo(appinfo)" class="content">
-      <a @click="goAppSetting(appinfo)" class="content-detail">详情</a>
+      <a @click.stop="goAppSetting(appinfo)" class="content-detail">详情</a>
       <h5>{{appinfo.text}}</h5>
       <span>{{appinfo.administrator?appinfo.transName+', ':appinfo.transName}}</span>
       <span>{{appinfo.administrator}}</span>
@@ -200,7 +200,7 @@ export default {
       });
     },
     goAppSetting(list) {
-      let url = "appReport/" + list.id;
+      let url = "/Site/index.html#appSetting/" + list.id;
       window.top.postMessage(
         {
           type: "redirect",

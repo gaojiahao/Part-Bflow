@@ -41,6 +41,7 @@
           text-align: center;
           span{
               color: red;
+              font-size: 14px;
               font-weight: 700;
           }
           
@@ -64,17 +65,11 @@
       vertical-align: middle;
     }
   }
-    &-li:hover{
-      h3{
-          color: #3e76f6;
-      }
-    }
+ 
 
     &-li-active{
       background-color: #ddd;
-      h3{
-          color: #3e76f6;
-      }
+    
     }
   }
 
@@ -124,6 +119,12 @@
       background-color: #ddd;
     }
 
+    .is-required{
+      .ivu-form-item-required .ivu-form-item-label:before{
+        color:transparent !important;
+      }
+    }
+    
     &-action {
       position: fixed;
       height: 50px;

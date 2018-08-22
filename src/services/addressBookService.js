@@ -646,10 +646,29 @@ export const searchCompany = (groupName) => request('/H_roleplay-si/sysGroup/get
  * @author zhaohuai
  * 唯一校验
  */
-export const checkValue = (test) => request('/H_roleplay-si/trans/cntvalue', {
-  tn: "sys_group",
-  fn: test.name,
-  value: test.value
-})
+export const checkValue = (test, id) => {
+  let filter = [];
+  if (id == "add") {
+    filter = [{
+      filedName: test.name,
+      symbol: "=",
+      value: test.value
+    }]
+  } else {
+    filter = [{
+      filedName: test.name,
+      symbol: "=",
+      value: test.value
+    }, {
+      filedName: "groupId",
+      symbol: "<>",
+      value: id
+    }]
+  }
+  return request('/H_roleplay-si/trans/validate', {
+    tableName: "sys_group",
+    filter: JSON.stringify(filter)
+  })
+}
 
 /************  公司  **************/

@@ -5,7 +5,7 @@
 <template>
     <div class="info">
         <Row class="info-detail">
-            <Form :model="formItem" ref="formItem" :rules="ruleValidate" :label-width="98">
+            <Form :model="formItem" ref="formItem" :rules="ruleValidate" :label-width="98" :class="{'is-required':isEdit}">
                 <FormItem label="头像：">
                     <Upload v-if="!isEdit" ref="upload"  
                         :show-upload-list="false" 
@@ -29,7 +29,6 @@
                                 <Icon type="ios-trash-outline" color="#fff" size="30" @click.stop="handleRemove"></Icon>
                             </div>
                         </div>
-                        <!-- <div class="cover-upload"></div> -->
                     </Upload>
                     <img v-else :src="logo" style="width: 128px;height:128px;">
                     <Modal title="查看头像" v-model="visible">
@@ -179,14 +178,26 @@ export default {
   methods: {
     //工号失去焦点验证唯一
     userCodeBlur() {
+        let filter;
         if(this.userId){
             let value = this.formItem.userCode;
-            checkoutFieldIsOnly('sys_user','userCode',value).then(res => {
+            filter = JSON.stringify([{filedName:"userCode",symbol:"=",value:value},{filedName:"userId",symbol:"<>",value:this.userId}]);
+            checkoutFieldIsOnly('sys_user',filter).then(res => {
                 if(res.result === 1){
                     this.checkout = false;
                     this.$Message.error('工号已存在，请重新输入！');
                 }
             })
+        }else{
+            if(this.formItem.userCode){
+                filter = JSON.stringify([{filedName:"userCode",symbol:"=",value:this.formItem.userCode}]);
+                checkoutFieldIsOnly('sys_user',filter).then(res => {
+                    if(res.result === 1){
+                        this.checkout = false;
+                        this.$Message.error('工号已存在，请重新输入！');
+                    }
+                })
+            }
         }
     },
     handleSuccess(res, file) {
@@ -226,71 +237,78 @@ export default {
     updateUserData() {
         this.$refs["formItem"].validate(valid => {
             if(valid){
-                this.formItem.photo = this.logo;
-                if(this.formItem.termOfValidity){
-                    this.formItem.termOfValidity = this.formatDate(this.formItem.termOfValidity);
-                }
-                
-                if(this.userInfo.userId){
-                    this.formItem.userId = this.userInfo.userId;
-                    updateUser(this.formItem).then(res => {
-                        if(res.success){
-                            this.$Message.success(res.message);
+                if(this.checkout){
+                    this.formItem.photo = this.logo;
+                    if(this.formItem.termOfValidity){
+                        this.formItem.termOfValidity = this.formatDate(this.formItem.termOfValidity);
+                    }
+                    
+                    if(this.userInfo.userId){
+                        this.formItem.userId = this.userInfo.userId;
+                        updateUser(this.formItem).then(res => {
+                            if(res.success){
+                                this.$Message.success(res.message);
+                                window.location.reload();
+                            }
+                        }).catch(error => {
+                            this.$Message.error(error.data.message);
+                        })
+                    }else{
+                    addUser(this.formItem).then(res => {
+                        if(res){
+                            this.$Message.success('新增成功！');
+                            this.$router.push({ path: '/addressBook/user/detail/'+res.user_id});
                             window.location.reload();
                         }
                     }).catch(error => {
-                        this.$Message.error(error.data.message);
-                    })
+                            this.$Message.error(error.data.message);
+                        })
+                    }
                 }else{
-                   addUser(this.formItem).then(res => {
-                       if(res){
-                           this.$Message.success('新增成功！');
-                           this.$router.push({ path: '/addressBook/user/detail/'+res.user_id});
-                           window.location.reload();
-                       }
-                   }).catch(error => {
-                        this.$Message.error(error.data.message);
-                    })
+                    this.$Message.error('工号已存在，请重新输入！');
                 }
             }
         })
     },
     //保存并继续添加用户
     saveAndAddUser() {
+        this.userCodeBlur();
         this.$refs["formItem"].validate(valid => {
             if(valid){
-                this.formItem.photo = this.logo;
-                if(this.formItem.termOfValidity){
-                    this.formItem.termOfValidity = this.formatDate(this.formItem.termOfValidity);
-                }
-                
-                if(this.userInfo.userId){
-                   this.formItem.userId = this.userInfo.userId;
-                    updateUser(this.formItem).then(res => {
-                        if(res.success){
-                            this.$Message.success(res.message);
-                            this.$router.push({ path: '/addressBook/user/add'});
-                            window.location.reload();
-                        }
-                    }).catch(error => {
-                        this.$Message.error(error.data.message);
-                    }) 
-                }else{
-                    addUser(this.formItem).then(res => {
-                        if(res){
-                            this.$Message.success('新增成功！');
-                            this.$refs["formItem"].resetFields();
-                            this.formItem.termOfValidity = '';
-                            this.logo = '';
-                            this.formItem.photo = '';
-                            this.formItem.gender = "1";
-                            this.formItem.status = "1";
-                            this.formItem.userType = "1";
-                            this.$refs['upload'].fileList.splice(0,this.$refs['upload'].fileList.length);
-                        }
-                    }).catch(error => {
-                        this.$Message.error(error.data.message);
-                    })
+                if(this.checkout){
+                    this.formItem.photo = this.logo;
+                    if(this.formItem.termOfValidity){
+                        this.formItem.termOfValidity = this.formatDate(this.formItem.termOfValidity);
+                    }
+                    
+                    if(this.userInfo.userId){
+                    this.formItem.userId = this.userInfo.userId;
+                        updateUser(this.formItem).then(res => {
+                            if(res.success){
+                                this.$Message.success(res.message);
+                                this.$router.push({ path: '/addressBook/user/add'});
+                                window.location.reload();
+                            }
+                        }).catch(error => {
+                            this.$Message.error(error.data.message);
+                        }) 
+                    }else{
+                        addUser(this.formItem).then(res => {
+                            if(res){
+                                this.$Message.success('新增成功！');
+                                this.$refs["formItem"].resetFields();
+                                this.formItem.termOfValidity = '';
+                                this.logo = '';
+                                this.formItem.photo = '';
+                                this.formItem.gender = "1";
+                                this.formItem.status = "1";
+                                this.formItem.userType = "1";
+                                this.$refs['upload'].fileList.splice(0,this.$refs['upload'].fileList.length);
+                            }
+                        }).catch(error => {
+                            this.$Message.error(error.data.message);
+                        })
+                    }
                 }
             }
         })

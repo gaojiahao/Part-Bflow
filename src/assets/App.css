@@ -69,6 +69,10 @@
  color: #fff;
 }
 
+.ivu-modal-close .ivu-icon-ios-close{
+  color: #fff;
+}
+
 /* .ivu-icon-ios-close-empty{
   color: #fff !important;
 } */

@@ -36,7 +36,7 @@
             <Table ref="selection" @on-selection-change="onSelectionChange" :columns="columns" :loading="loading" :data="dirPermissionData"></Table>
             <div class="user-page">
                 <div style="float: right;">
-                  <Page @on-page-size-change="onPageSizeChange" :total="total" :current="currentPage" :page-size="pageSize" @on-change="onPageChange" show-total show-elevator show-sizer></Page>
+                  <Page size="small" @on-page-size-change="onPageSizeChange" :total="total" :current="currentPage" :page-size="pageSize" @on-change="onPageChange" show-total show-elevator show-sizer></Page>
                 </div>
             </div>
         </div>

@@ -6,7 +6,7 @@
     <div class="rfd-cs-table">
       <Table :loading="loading" :columns="columns" :data="columnsData" ref="selection" @on-selection-change='onSelectionChange'></Table>
     </div>
-    <div class="rfd-cs-table">
+    <div class="rfd-cs-table" v-if="!isHiddenPage">
       <div style="float: right;">
         <Page :total="pageTotal" :current="currentPage" :page-size="pageSize" size="small" @on-change="changeCurrentPage" @on-page-size-change="onPageSizeChange" show-total show-elevator show-sizer></Page>
       </div>
@@ -38,6 +38,11 @@ export default {
     value: {
       type: Boolean,
       default: false
+    },
+
+    isHiddenPage:{
+      type:Boolean,
+      default:false
     }
   },
 
@@ -45,7 +50,7 @@ export default {
     return {
       pageTotal: 0,
       currentPage: 1,
-      pageSize: 8,
+      pageSize: 10,
       loading: false,
       columnsData: []
     };

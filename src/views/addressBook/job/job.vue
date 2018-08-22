@@ -9,8 +9,6 @@
         <span style="color:#4CAF50;cursor:pointer">职位</span>
         <span style="color:#808080;margin-left:10px">/</span>
         <span style="color:#808080">{{name}}</span>
-        <span style="color:#808080;margin-left:10px">/</span>
-        <span style="color:#808080;margin-left:10px">{{jobId}}</span>
         <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status,color:'#eb2f96'}"></Tag>
       </h2>
       <h2 v-if="!jobId">
@@ -23,8 +21,8 @@
     <div class="job-wrap-action">
       <ul>
         <li v-for="(item,index) in actionBtn" :key="index" v-if="!item.hidden" class="job-wrap-action-li" v-bind:class="index===actionIndex?'job-wrap-action-li-active':''" @click="handlerViewChange(index)">
-          <div style="padding:5px 0">
-            <img v-if="!item.type" :src="item.imgPath" class="job-wrap-action-li-img"/>
+          <div>
+            <img v-if="!item.type" :src="item.imgPath" class="job-wrap-action-li-img" />
             <Icon v-else :type="item.type" class="icon" />
             <div class="left-content">
               <span v-show="item.number!=='undefine'">{{item.number}}</span>
@@ -38,11 +36,11 @@
     <div class="job-wrap-tabs">
       <!-- 基本信息 -->
       <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===2">
-        <Form :model="formItem" :labelWidth="100" ref="formItem" :rules="ruleValidate">
+        <Form :model="formItem" :labelWidth="120" ref="formItem" :rules="ruleValidate">
           <FormItem label="职位名称:" style="font-size:16px" prop="name">
             <Input v-model="formItem.name" @on-blur="onGroupNameOutBlur" :readonly="isEdit" :class="isEdit?'input-status-isedit':''" />
           </FormItem>
-          <FormItem label="职位类型" :labelWidth="100" prop="type">
+          <FormItem label="职位类型" :labelWidth="120" prop="type">
             <Select v-model="formItem.type" placeholder="请选择职位类型" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
               <Option value="M">管理类</Option>
               <Option value="Y">营销类</Option>
@@ -52,7 +50,7 @@
             </Select>
           </FormItem>
           <div class="baseinfo-container-divider"></div>
-          <FormItem label="职位状态" :labelWidth="100" style="margin-top:20px">
+          <FormItem label="职位状态" :labelWidth="120" style="margin-top:20px">
             <Select v-model="formItem.status" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
               <Option v-for="(item,index) in statusRadio" :key="index" :value="item.value">{{item.name}}</Option>
             </Select>
@@ -131,7 +129,7 @@ export default {
       actionBtn: [
         {
           label: "权限",
-          type:"md-person",
+          type: "md-person",
           number: 0,
           hidden: false,
           id: "objectPermission"
@@ -145,7 +143,7 @@ export default {
         },
         {
           label: "基本信息",
-          type:"ios-home",
+          type: "ios-home",
           hidden: false,
           id: "baseinfo"
         }
@@ -197,54 +195,68 @@ export default {
     },
 
     saveAndAdd() {
-      if (!this.jobId && this.checkout) {
-        delete this.formItem.id;
-        saveRoleBaseInfo(this.formItem)
-          .then(res => {
-            if (res) {
-              this.$Message.success("保存成功");
-              this.$refs["formItem"].resetFields();
-              this.formItem = {
-                name: "",
-                type: "",
-                describe: "",
-                status: 1
-              };
-            }
-          })
-          .catch(errer => {
-            this.$Message.errer(error.data.message);
-          });
-      }
+      this.onGroupNameOutBlur();
+      this.$refs["formItem"].validate(valid => {
+        if (valid) {
+          if (!this.jobId && this.checkout) {
+            delete this.formItem.id;
+            saveRoleBaseInfo(this.formItem)
+              .then(res => {
+                if (res) {
+                  this.$Message.success("保存成功");
+                  this.$refs["formItem"].resetFields();
+                  this.formItem = {
+                    name: "",
+                    type: "",
+                    describe: "",
+                    status: 1
+                  };
+                }
+              })
+              .catch(errer => {
+                this.$Message.errer(error.data.message);
+              });
+          }
+        }
+      });
     },
 
     save() {
-      //判断是编辑,还是新增保存
-      if (this.jobId) {
-        this.formItem.id = this.jobId;
-        saveRoleBaseInfo(this.formItem)
-          .then(res => {
-            if (res) {
-              this.$Message.success("保存成功");
-            }
-          })
-          .catch(errer => {
-            this.$Message.errer(error.data.message);
-          });
-      } else if (!this.jobId && this.checkout) {
-        delete this.formItem.id;
-        saveRoleBaseInfo(this.formItem)
-          .then(res => {
-            if (res) {
-              this.$Message.success("保存成功");
-              this.$router.push({ path: "/addressBook/job/detail/" + res.id });
-              window.location.reload();
-            }
-          })
-          .catch(errer => {
-            this.$Message.errer(error.data.message);
-          });
+      if(!this.jobId){
+        this.onGroupNameOutBlur();
       }
+      this.$refs["formItem"].validate(valid => {
+        if (valid) {
+          //判断是编辑,还是新增保存
+          if (this.jobId) {
+            this.formItem.id = this.jobId;
+            saveRoleBaseInfo(this.formItem)
+              .then(res => {
+                if (res) {
+                  this.$Message.success("保存成功");
+                }
+              })
+              .catch(errer => {
+                this.$Message.errer(error.data.message);
+              });
+          } else if (!this.jobId && this.checkout) {
+            delete this.formItem.id;
+            saveRoleBaseInfo(this.formItem)
+              .then(res => {
+                if (res) {
+                  this.$Message.success("保存成功");
+                  this.$router.push({
+                    path: "/addressBook/job/detail/" + res.id
+                  });
+                  window.location.reload();
+                }
+              })
+              .catch(errer => {
+                this.$Message.errer(error.data.message);
+              });
+          }
+        }
+      });
     },
 
     getObjDetailsCountByRoleId(jobId) {
@@ -263,19 +275,21 @@ export default {
 
     //当职位名称失去焦点的是校验名称
     onGroupNameOutBlur() {
-      //当groupId不存在时，校验名称是否唯一
-      checkoutFieldIsOnly("sys_role", "name", this.formItem.name)
-        .then(res => {
-          if (res.result > 0) {
-            this.checkout = false;
-            this.$Message.error("名称已经存在!");
-          } else {
-            this.checkout = true;
-          }
-        })
-        .catch(error => {
-          this.$Message.error(error.data.message);
-        });
+      if (!this.isEdit) {
+        //当groupId不存在时，校验名称是否唯一
+        checkoutFieldIsOnly("sys_role", "name", this.formItem.name)
+          .then(res => {
+            if (res.result > 0) {
+              this.checkout = false;
+              this.$Message.error("名称已经存在!");
+            } else {
+              this.checkout = true;
+            }
+          })
+          .catch(error => {
+            this.$Message.error(error.data.message);
+          });
+      }
     }
   },
 

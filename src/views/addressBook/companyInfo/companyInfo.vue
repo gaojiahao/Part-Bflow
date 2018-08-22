@@ -18,12 +18,17 @@
 <template>
   <div class="content-wrap">
     <Row class="detail-header">
-      <Breadcrumb class="detail-header-bread">
+      <!-- <Breadcrumb class="detail-header-bread">
         <BreadcrumbItem to="/addressBook/companyInfo/board">公司</BreadcrumbItem>
-        <BreadcrumbItem>{{ companyInformation.groupName?companyInformation.groupShortName:'' }}</BreadcrumbItem>
+        <BreadcrumbItem v-show="companyInformation.groupName">{{ companyInformation.groupName}}</BreadcrumbItem>
         <BreadcrumbItem>{{ companyInformation.groupId?companyInformation.groupId:'创建' }}</BreadcrumbItem>
-      </Breadcrumb>
-      <Tag v-show="companyInformation.status" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:companyInformation.status,color:'#eb2f96'}"></Tag>
+      </Breadcrumb> -->
+      <div class="detail-header-bread">
+        <span style="color:#4CAF50;font-weight:bold;font-size:20px;">公司</span>
+        <span style="color:#808080;margin-left:10px;font-size:20px;font-weight:bold;">/</span>
+        <span style="font-weight:bold;color:#808080;margin-left:10px;font-size:20px;">{{ (companyInformation&&companyInformation.groupName)?companyInformation.groupName:'创建'}}</span>
+      </div>
+      <Tag v-show="companyInformation.status" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:companyInformation.status}"></Tag>
     </Row>
     <Row class="detail-tabs">
       <div @click="onClickTab(index)" v-if="groupId?item.isShow:item.isShowAcive" :class="{'detail-tabs-child':true,'active':item.isShowAcive}" v-for="(item,index) of relativeInstance" :key="index">
@@ -106,7 +111,7 @@ export default {
           showName: "baseInfo",
           isShow: true,
           isShowAcive: true,
-           type:"ios-home"
+          type: "ios-home"
         }
       ]
     };

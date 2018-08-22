@@ -303,6 +303,7 @@ export default {
     //展示所有职位
     showRoleModal() {
       this.showModal = true;
+      this.searchValue = '';
       this.getAllRoleData();
     },
     //获取所有职位数据

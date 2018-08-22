@@ -270,6 +270,7 @@ export default {
     //展示所有用户
     showUserModal() {
       this.showModal = true;
+      this.searchValue = '';
       this.getAllUsersData();
     },
     //获取所有用户数据

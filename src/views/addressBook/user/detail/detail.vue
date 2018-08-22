@@ -5,12 +5,13 @@
 <template>
   <Row class="detail">
     <Row class="detail-header">
-      <Breadcrumb class="detail-header-bread">
-        <BreadcrumbItem to="/addressBook/user/board">用户</BreadcrumbItem>
-        <BreadcrumbItem v-if="userInformation.nickname?true:false">{{ userInformation.nickname }}</BreadcrumbItem>
-        <BreadcrumbItem>{{ userInformation.userCode?userInformation.userCode:'创建' }}</BreadcrumbItem>
-      </Breadcrumb>
-      <Tag v-show="userInformation.status?showTag:!showTag"   class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:userInformation.status,color:'#eb2f96'}"></Tag>
+      <div class="detail-header-bread">
+        <span style="color:#4CAF50;font-weight:bold;font-size:20px;">用户</span>
+        <span style="color:#808080;margin-left:10px;font-size:20px;font-weight:bold;">/</span>
+        <span v-if="userInformation.nickname?true:false" style="font-weight:bold;color:#808080;margin-left:10px;font-size:20px;">{{ userInformation.nickname }}</span>
+        <span style="color:#808080;margin-left:10px;font-size:20px;font-weight:bold;">{{ userInformation.userCode?'':'创建' }}</span>
+      </div>
+      <Tag v-show="userInformation.status?showTag:!showTag" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:userInformation.status}"></Tag>
     </Row>
     <Row class="detail-tabs">
       <div 
@@ -149,7 +150,7 @@ export default {
   mounted() {
     this.getUserInfoData();
     this.getInstanceCount();
-    let tabsMaxHeight = document.body.clientHeight - 125;
+    let tabsMaxHeight = document.body.clientHeight - 85;
     window.document.getElementsByClassName('detail-content-tabs')[0].style.height = tabsMaxHeight + 'px';
     window.document.getElementsByClassName('detail-content-tabs')[0].style.maxHeight = tabsMaxHeight + 'px';
   }

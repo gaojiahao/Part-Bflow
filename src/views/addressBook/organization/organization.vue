@@ -36,7 +36,7 @@
     <div class="organization-wrap-tabs">
       <!-- 基本信息 -->
       <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===5">
-        <Form :model="formItem" :labelWidth="120" ref="formItem" :rules="ruleValidate">
+        <Form :model="formItem" :labelWidth="120" ref="formItem" :rules="ruleValidate" :class="{'is-required':isEdit}">
           <FormItem label="组织名称:" style="font-size:16px" prop="groupName">
             <Input v-model="formItem.groupName" @on-blur="onGroupNameOutBlur" :readonly="isEdit" :class="isEdit?'input-status-isedit':''" />
           </FormItem>
@@ -292,7 +292,7 @@ export default {
           }
         },
         {
-          title: "部门职能类型",
+          title: "部门职能",
           key: "depFunction",
           render: (h, params) => {
             let depFunction = params.row.depFunction;
@@ -448,8 +448,8 @@ export default {
         content: "是否关闭当前页面",
         closable: true,
         onOk: function() {
-          location.href = '/Site/index.html#page/origanizations';
-        },
+          location.href = "/Site/index.html#page/origanizations";
+        }
       });
     },
 
@@ -459,7 +459,6 @@ export default {
     },
 
     saveAndAdd() {
-      this.onGroupNameOutBlur();
       this.$refs["formItem"].validate(valid => {
         if (valid && !this.groupId && this.checkout) {
           delete this.formItem.groupId;
@@ -477,13 +476,13 @@ export default {
             }
           });
         }
+        if (!this.checkout) {
+          this.$Message.error("名称已经存在!");
+        }
       });
     },
 
     save() {
-      if (!this.groupId) {
-        this.onGroupNameOutBlur();
-      }
       this.$refs["formItem"].validate(valid => {
         if (valid) {
           if (!this.groupId && this.checkout) {
@@ -504,6 +503,9 @@ export default {
                 this.$Message.success("保存成功");
               }
             });
+          }
+          if (!this.checkout) {
+            this.$Message.error("名称已经存在!");
           }
         }
       });
@@ -552,9 +554,32 @@ export default {
 
     //当组织名称失去焦点的是校验名称
     onGroupNameOutBlur() {
+      let filter = {};
       if (!this.isEdit) {
+        if (this.groupId) {
+          filter = [
+            {
+              filedName: "groupName",
+              value: this.formItem.groupName,
+              symbol: "="
+            },
+            {
+              filedName: "groupId",
+              symbol: "<>",
+              value: this.groupId
+            }
+          ];
+        } else {
+          filter = [
+            {
+              filedName: "groupName",
+              value: this.formItem.groupName
+            }
+          ];
+        }
+        filter = JSON.stringify(filter);
         //当groupId不存在时，校验名称是否唯一
-        checkoutFieldIsOnly("sys_group", "groupName", this.formItem.groupName)
+        checkoutFieldIsOnly("sys_group", filter)
           .then(res => {
             if (res.result > 0) {
               this.checkout = false;

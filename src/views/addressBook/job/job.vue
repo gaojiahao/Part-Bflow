@@ -36,7 +36,7 @@
     <div class="job-wrap-tabs">
       <!-- 基本信息 -->
       <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===2">
-        <Form :model="formItem" :labelWidth="120" ref="formItem" :rules="ruleValidate">
+        <Form :model="formItem" :labelWidth="120" ref="formItem" :rules="ruleValidate" :class="{'is-required':isEdit}">
           <FormItem label="职位名称:" style="font-size:16px" prop="name">
             <Input v-model="formItem.name" @on-blur="onGroupNameOutBlur" :readonly="isEdit" :class="isEdit?'input-status-isedit':''" />
           </FormItem>
@@ -105,7 +105,7 @@ export default {
         status: 1
       },
       name: "",
-      isEdit: false,
+      isEdit: true,
       editBtnName: "编辑",
       statusRadio: [
         {
@@ -195,7 +195,6 @@ export default {
     },
 
     saveAndAdd() {
-      this.onGroupNameOutBlur();
       this.$refs["formItem"].validate(valid => {
         if (valid) {
           if (!this.jobId && this.checkout) {
@@ -217,14 +216,14 @@ export default {
                 this.$Message.errer(error.data.message);
               });
           }
+          if (!this.checkout) {
+            this.$Message.error("名称已经存在!");
+          }
         }
       });
     },
 
     save() {
-      if(!this.jobId){
-        this.onGroupNameOutBlur();
-      }
       this.$refs["formItem"].validate(valid => {
         if (valid) {
           //判断是编辑,还是新增保存
@@ -255,6 +254,9 @@ export default {
                 this.$Message.errer(error.data.message);
               });
           }
+          if (!this.checkout) {
+            this.$Message.error("名称已经存在!");
+          }
         }
       });
     },
@@ -275,9 +277,32 @@ export default {
 
     //当职位名称失去焦点的是校验名称
     onGroupNameOutBlur() {
+      let filter ={}; 
       if (!this.isEdit) {
+        if (this.jobId) {
+          filter = [
+            {
+              filedName: "name",
+              value: this.formItem.name,
+              symbol: "="
+            },
+            {
+              filedName: "id",
+              symbol: "<>",
+              value: this.jobId
+            }
+          ];
+        } else {
+          filter = [
+            {
+              filedName: "name",
+              value: this.formItem.name
+            }
+          ];
+        }
+        filter = JSON.stringify(filter);
         //当groupId不存在时，校验名称是否唯一
-        checkoutFieldIsOnly("sys_role", "name", this.formItem.name)
+        checkoutFieldIsOnly("sys_role", filter)
           .then(res => {
             if (res.result > 0) {
               this.checkout = false;

@@ -42,41 +42,35 @@
             span{
                 color: red;
                 font-weight: 700;
+                font-size: 14px;
             }
             
             h3{
               color: #808080;
             }
         }
-    }
-
-    &-li:first-child {
-      border-right: 1px solid #ddd;
-      height: 41px;
-      .left-content{
-        vertical-align: middle;
       }
-    }
 
-    &-li:last-child {
-      line-height: 41px;
-      .left-content{
-        vertical-align: middle;
+      &-li:first-child {
+        border-right: 1px solid #ddd;
+        height: 41px;
+        .left-content{
+          vertical-align: middle;
+        }
       }
-    }
 
-    &-li:hover{
-      h3{
-          color: #3e76f6;
+      &-li:last-child {
+        line-height: 41px;
+        .left-content{
+          vertical-align: middle;
+        }
       }
-    }
 
-    &-li-active{
-      background-color: #ddd;
-      h3{
-          color: #3e76f6;
+
+      &-li-active{
+        background-color: #ddd;
+    
       }
-    }
     }
 
     &-tabs{
@@ -126,7 +120,11 @@
         background-color: #ddd;
       }
 
-    
+      .is-required{
+        .ivu-form-item-required .ivu-form-item-label:before{
+          color:transparent !important;
+        }
+      }
   
       &-action {
         position: fixed;

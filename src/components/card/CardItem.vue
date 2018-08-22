@@ -15,7 +15,7 @@
       </div>
     </Poptip>
     <div style="display:inline-block" @click="redirectTo(appinfo)">
-      <Badge class="badge-custom" :count="taskCount" v-if="type==='subject'"></Badge>
+      <Badge class="badge-custom" :count="taskCount" v-if="type==='subject'" type="primary"></Badge>
     </div>
 
     <img :src="appinfo.icon" />

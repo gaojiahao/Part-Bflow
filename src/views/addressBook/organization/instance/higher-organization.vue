@@ -12,19 +12,19 @@
   }
 }
 .app-search {
-    margin-bottom: 5px;
-    .app-search-icon {
-      font-size: 1rem;
-      color: #39f;
-      display: inline-block;
-      cursor: pointer;
-    }
+  margin-bottom: 5px;
+  .app-search-icon {
+    font-size: 1rem;
+    color: #39f;
+    display: inline-block;
+    cursor: pointer;
   }
+}
 </style>
 
 <template>
   <div>
-    <custom-table apiUrl="/ds/getParentGroupByGroupId" :columns="highOrgColumns" :apiParams="highOrganizationParams" v-model="reload" @on-refesh-change='onRefeshChange'>
+    <custom-table apiUrl="/ds/getParentGroupByGroupId" :columns="highOrgColumns" :apiParams="highOrganizationParams" v-model="reload" @on-refesh-change='onRefeshChange' :isHiddenPage="true">
       <div slot="header" class="header-action">
         <label @click="showHighOrgModal">上级组织</label>
         <span>-选择上级用户</span>
@@ -36,13 +36,13 @@
         <div class="app-search">
           <Input @on-search="orgFilter" :search="true" v-model="searchValue" placeholder="搜索组织名称" style="width: 300px"></Input>
           <a @click="orgFilter" class="app-search-icon">
-              <Button type="primary" size="small">查询</Button>
+            <Button type="primary" size="small">查询</Button>
           </a>
         </div>
-        <Table :loading="listUserLoading" :columns="highOrgColumnsModal" :data="listUserData" size='small' highlight-row ref="currentRowTable" @on-current-change="onSelectUserList"></Table>
+        <Table height="400" :loading="listUserLoading" :columns="highOrgColumnsModal" :data="listUserData" size='small' highlight-row ref="currentRowTable" @on-row-dblclick="handleDblclick" @on-current-change="onSelectUserList"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
-            <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" show-total show-elevator></Page>
+            <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" @on-page-size-change="onPageSizeChange" show-total show-elevator show-sizer></Page>
           </div>
         </div>
       </div>
@@ -184,7 +184,7 @@ export default {
         {
           title: "组织类型",
           key: "groupType",
-           render: (h, params) => {
+          render: (h, params) => {
             let groupType = params.row.groupType;
             switch (groupType) {
               case "M":
@@ -206,7 +206,7 @@ export default {
         {
           title: "部门职能类型",
           key: "depFunction",
-           render: (h, params) => {
+          render: (h, params) => {
             let depFunction = params.row.depFunction;
             switch (depFunction) {
               case "M":
@@ -268,8 +268,8 @@ export default {
       listUserData: [],
       listUserPageTotal: 0,
       listUserCurrentPage: 1,
-      pageSize: 8,
-      searchValue: '',
+      pageSize: 10,
+      searchValue: "",
 
       reload: false,
       onSelectionModal: []
@@ -281,12 +281,37 @@ export default {
       let filter = [
         { operator: "like", value: this.searchValue, property: "groupName" }
       ];
-      this.getAllGroup(currentPage,filter);
+      this.getAllGroup(currentPage, this.pageSize, filter);
+    },
+
+    //点击切换每页显示条数
+    onPageSizeChange(size) {
+      this.pageSize = size;
+      let filter = [
+        { operator: "like", value: this.searchValue, property: "groupName" }
+      ];
+      this.getAllGroup(1, size,filter);
     },
 
     //监听模态框选中的用户
     onSelectUserList(currentRow, oldCurrentRow) {
       this.onSelectionModal = currentRow;
+    },
+
+    //双击选中
+    handleDblclick(row, index) {
+      let params = {
+        groupId: this.groupId,
+        parentId: row.groupId
+      };
+      updateBaseinfo(params).then(res => {
+        if (res.success) {
+          this.$Message.success("保存成功");
+          this.isShowMemberModal = false;
+          this.reload = true;
+          this.$emit("on-high-organization-change", true);
+        }
+      });
     },
 
     //显示模态框-添加上级组织
@@ -304,7 +329,8 @@ export default {
     //显示上级组织模态框
     showHighOrgModal() {
       this.isShowMemberModal = true;
-      this.getAllGroup(this.listUserCurrentPage);
+      this.searchValue = '';
+      this.getAllGroup(this.listUserCurrentPage, this.pageSize);
     },
 
     //添加上级组织
@@ -324,7 +350,7 @@ export default {
       });
     },
 
-    getAllGroup(currentPage,relfilter) {
+    getAllGroup(currentPage, pageSize, relfilter) {
       this.listUserLoading = true;
       let filter = relfilter ? relfilter : [];
       if (this.groupType) {
@@ -383,7 +409,7 @@ export default {
         }
         filter = JSON.stringify(filter);
       }
-      getAllGroup(currentPage, this.pageSize, filter).then(res => {
+      getAllGroup(currentPage, pageSize, filter).then(res => {
         if (res.tableContent[0]) {
           this.listUserPageTotal = res.summary.total;
           this.listUserData = res.tableContent;
@@ -396,7 +422,7 @@ export default {
       let filter = [
         { operator: "like", value: this.searchValue, property: "groupName" }
       ];
-      this.getAllGroup(this.listUserCurrentPage,filter);
+      this.getAllGroup(this.listUserCurrentPage, this.pageSize, filter);
     }
   }
 };

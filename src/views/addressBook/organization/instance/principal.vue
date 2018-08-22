@@ -24,7 +24,7 @@
 
 <template>
   <div>
-    <custom-table apiUrl="/ds/getPrincipalByGroupId" :columns="principalColumns" :apiParams="principalParams" v-model="reload" @on-refesh-change='onRefeshChange'>
+    <custom-table apiUrl="/ds/getPrincipalByGroupId" :columns="principalColumns" :apiParams="principalParams" v-model="reload" @on-refesh-change='onRefeshChange' :isHiddenPage="true">
       <div slot="header" class="header-action">
         <label @click="addPrincipal">添加负责人</label>
         <span>-添加负责人</span>
@@ -39,10 +39,10 @@
               <Button type="primary" size="small">查询</Button>
           </a>
         </div>
-        <Table :loading="listUserLoading" :columns="principalColumnsModel" :data="listUserData" size='small' highlight-row ref="currentRowTable" @on-row-dblclick="handleDblclick" @on-current-change="onSelectUserList"></Table>
+        <Table height="400" :loading="listUserLoading" :columns="principalColumnsModel" :data="listUserData" size='small' highlight-row ref="currentRowTable" @on-row-dblclick="handleDblclick" @on-current-change="onSelectUserList"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
-            <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" show-total show-elevator></Page>
+            <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" @on-page-size-change="onPageSizeChange" show-total show-elevator show-sizer></Page>
           </div>
         </div>
       </div>
@@ -175,7 +175,7 @@ export default {
       listUserData: [],
       listUserPageTotal: 0,
       listUserCurrentPage: 1,
-      pageSize: 8,
+      pageSize: 10,
 
       //模态框参数
       onSelectionModal: [],
@@ -187,6 +187,7 @@ export default {
   methods: {
     addPrincipal() {
       this.isShowPrincipalModal = true;
+       this.searchValue = '';
       this.getListUsers(this.listUserCurrentPage, this.pageSize);
     },
 
@@ -206,6 +207,14 @@ export default {
       let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
       ]);
       this.getListUsers(currentPage, this.pageSize,filter);
+    },
+
+       //点击切换每页显示条数
+    onPageSizeChange(size) {
+      this.pageSize = size;
+       let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      ]);
+      this.getListUsers(1, size,filter);
     },
 
     //监听自定义table传回来的状体值

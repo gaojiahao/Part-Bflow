@@ -55,10 +55,10 @@
               <Button type="primary" size="small">查询</Button>
           </a>
         </div>
-        <Table :loading="listUserLoading" :columns="memberInfoColumnsModel" :data="listUserData" size='small' ref="selection" @on-selection-change="onSelectUserList"></Table>
+        <Table height="400" :loading="listUserLoading" :columns="memberInfoColumnsModel" :data="listUserData" size='small' ref="selection" @on-selection-change="onSelectUserList"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
-            <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" show-total show-elevator></Page>
+            <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-page-size-change="onPageSizeChange" @on-change="listUserChangePage" show-total show-elevator show-sizer></Page>
           </div>
         </div>
       </div>
@@ -206,7 +206,7 @@ export default {
       listUserData: [],
       listUserPageTotal: 0,
       listUserCurrentPage: 1,
-      pageSize: 8,
+      pageSize: 10,
 
       //模态框参数
       onSelectionModal: [],
@@ -284,6 +284,14 @@ export default {
       let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
       ]);
       this.getListUsers(currentPage, this.pageSize,filter);
+    },
+
+         //点击切换每页显示条数
+    onPageSizeChange(size) {
+      this.pageSize = size;
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      ]);
+      this.getListUsers(1, size, filter);
     },
 
     //显示模态框-添加成员

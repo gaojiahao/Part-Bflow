@@ -5,7 +5,6 @@
         width: 75%;
         margin: 0 auto;
         padding: 26px 50px;
-        min-height: 500px;
         box-shadow: 0px 1px 10px #ddd;
         position: relative;
         &-btn{

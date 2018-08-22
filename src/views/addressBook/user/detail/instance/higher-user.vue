@@ -2,7 +2,6 @@
     .higher-user{
       &-detail{
         background-color: #fff;
-        min-height: 500px;
         padding: 26px 50px;
         width: 75%;
         margin: 0 auto;

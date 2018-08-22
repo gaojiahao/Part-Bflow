@@ -2,7 +2,7 @@
     .workflow{
       &-detail{
         background-color: #fff;
-        width: 75%;
+        width: 90%;
         margin: 0 auto;
         padding: 26px 50px;
         box-shadow: 0px 1px 10px #ddd;

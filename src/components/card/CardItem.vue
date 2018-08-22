@@ -1,6 +1,6 @@
 <template>
   <div class="card ivu-card ivu-card-bordered">
-    <Poptip class="badge-custom" width="560" placement="right-end" @on-popper-show="popperShow">
+    <Poptip class="badge-custom" width="630" placement="right-end" @on-popper-show="popperShow" v-if="type!=='subject'">
       <Badge :count="taskCount"></Badge>
       <div slot="title">
         <h3>{{appinfo.text+' - 待办任务'}}</h3>
@@ -14,9 +14,13 @@
         </div>
       </div>
     </Poptip>
+    <div style="display:inline-block" @click="redirectTo(appinfo)">
+      <Badge class="badge-custom" :count="taskCount" v-if="type==='subject'"></Badge>
+    </div>
+
     <img :src="appinfo.icon" />
     <div @click="redirectTo(appinfo)" class="content">
-      <a @click="goAppSetting(appinfo)">详情</a>
+      <a @click="goAppSetting(appinfo)" class="content-detail">详情</a>
       <h5>{{appinfo.text}}</h5>
       <span>{{appinfo.administrator?appinfo.transName+', ':appinfo.transName}}</span>
       <span>{{appinfo.administrator}}</span>
@@ -31,11 +35,14 @@ export default {
   data() {
     return {
       taskCount: 0,
+      type: this.appinfo.url.split("/")[0],
       columns: [
         {
           title: "交易号",
           key: "transCode",
           sortable: true,
+          width: 160,
+          align: "center",
           render: (h, params) => {
             return h(
               "a",
@@ -54,7 +61,7 @@ export default {
           key: "nodeName"
         },
         {
-          title: "审批者",
+          title: "当前用户",
           key: "assigneeName",
           width: 90
         },
@@ -66,6 +73,8 @@ export default {
         {
           title: "任务创建时间",
           key: "crtTime",
+          width: 150,
+          align: "center",
           sortable: true,
           render: (h, params) => {
             //时间戳转换为日期格式
@@ -95,8 +104,7 @@ export default {
       pageTotal: 0, //table总数
       pageSize: 5,
       currentPage: 1, //table当前页
-      pageListId: "",
-      modal: false //弹出框是否显示
+      pageListId: ""
     };
   },
   created() {
@@ -164,7 +172,6 @@ export default {
         listId: this.pageListId,
         limit: this.pageSize
       };
-      this.modal = true;
       getAppTaskCount(params).then(res => {
         this.pageTotal = res.total;
         if (res.tableContent.length > 0) {
@@ -193,14 +200,14 @@ export default {
       });
     },
     goAppSetting(list) {
-      let url = 'appReport/'+list.id;
-       window.top.postMessage(
-          {
-            type: "redirect",
-            url: url
-          },
-          "*"
-        );
+      let url = "appReport/" + list.id;
+      window.top.postMessage(
+        {
+          type: "redirect",
+          url: url
+        },
+        "*"
+      );
     }
   }
 };
@@ -213,7 +220,7 @@ export default {
   height: 70px;
   padding: 10px 12px;
   margin: 10px 0;
-  border-radius:0px;
+  border-radius: 0px;
   img {
     height: 50px;
     width: 50px;
@@ -239,9 +246,10 @@ export default {
     left: 80px;
     transform: translateY(-50%);
 
-    a{
-      display: inline-block;
+    &-detail {
+      display: none;
       float: right;
+      font-size: 14px;
     }
 
     h5 {
@@ -253,7 +261,7 @@ export default {
     }
 
     span {
-      font-size: 14px;
+      font-size: 12px;
       color: #5f5e5e;
     }
   }
@@ -274,6 +282,9 @@ export default {
 }
 
 .card:hover {
+  .content-detail {
+    display: inline-block;
+  }
   -webkit-transition: box-shadow 0.3s cubic-bezier(0.55, 0, 0.1, 1) 0s;
   -moz-transition: box-shadow 0.3s cubic-bezier(0.55, 0, 0.1, 1) 0s;
   -o-transition: box-shadow 0.3s cubic-bezier(0.55, 0, 0.1, 1) 0s;

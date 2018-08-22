@@ -5,12 +5,13 @@
 <template>
   <Row class="detail">
     <Row class="detail-header">
-      <Breadcrumb class="detail-header-bread">
-        <BreadcrumbItem to="/addressBook/user/board">用户</BreadcrumbItem>
-        <BreadcrumbItem v-if="userInformation.nickname?true:false">{{ userInformation.nickname }}</BreadcrumbItem>
-        <BreadcrumbItem>{{ userInformation.userCode?userInformation.userCode:'创建' }}</BreadcrumbItem>
-      </Breadcrumb>
-      <Tag v-show="userInformation.status?showTag:!showTag"   class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:userInformation.status,color:'#eb2f96'}"></Tag>
+      <div class="detail-header-bread">
+        <span style="color:#4CAF50;font-weight:bold;font-size:20px;">用户</span>
+        <span style="color:#808080;margin-left:10px;font-size:20px;font-weight:bold;">/</span>
+        <span v-if="userInformation.nickname?true:false" style="font-weight:bold;color:#808080;margin-left:10px;font-size:20px;">{{ userInformation.nickname }}</span>
+        <span style="color:#808080;margin-left:10px;font-size:20px;font-weight:bold;">{{ userInformation.userCode?'':'创建' }}</span>
+      </div>
+      <Tag v-show="userInformation.status?showTag:!showTag" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:userInformation.status}"></Tag>
     </Row>
     <Row class="detail-tabs">
       <div 
@@ -19,7 +20,8 @@
         :class="{'detail-tabs-child':true,'active':item.isShowAcive}" 
         v-for="(item,index) of relativeInstance"
         :key="index">
-        <img :src="item.imgUrl"/>
+        <img v-if="!item.type" :src="item.imgUrl"/>
+        <Icon v-else :type="item.type" class="icon" />
         <div class="detail-tabs-child-right">
           <span>{{ item.relativeNum }}</span>
           <p>{{ item.name }}</p>
@@ -87,14 +89,14 @@ export default {
       },
       userInformation: {},
       relativeInstance: [
-        { name: "工作流任务", showName: 'workflow', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/2_5.png' },
-        { name: "间接权限", showName: 'indirper', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/thO4S6W4QO.jpg' },
-        { name: "直接权限", showName: 'dirper', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/thO4S6W4QO.jpg' },
+        { name: "工作流任务", showName: 'workflow', isShow: true, isShowAcive: false, relativeNum: 0, type:"md-menu" },
+        { name: "间接权限", showName: 'indirper', isShow: true, isShowAcive: false, relativeNum: 0, type:"ios-people" },
+        { name: "直接权限", showName: 'dirper', isShow: true, isShowAcive: false, relativeNum: 0, type:"md-person" },
         { name: "职位", showName: 'role', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/job.png' },
         { name: "部门", showName: 'dep',  isShow: true,isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/organization.png' },
         { name: "下级用户", showName: 'lowuser', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/user.png' },
         { name: "上级用户", showName: 'highuser', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/user.png' },
-        { name: "基本信息", showName: 'userinfo', isShow: true, isShowAcive: true, imgUrl: 'resources/images/icon/essinformation.png' }
+        { name: "基本信息", showName: 'userinfo', isShow: true, isShowAcive: true, type:"ios-home" }
       ]
     };
   },
@@ -148,7 +150,7 @@ export default {
   mounted() {
     this.getUserInfoData();
     this.getInstanceCount();
-    let tabsMaxHeight = document.body.clientHeight - 125;
+    let tabsMaxHeight = document.body.clientHeight - 85;
     window.document.getElementsByClassName('detail-content-tabs')[0].style.height = tabsMaxHeight + 'px';
     window.document.getElementsByClassName('detail-content-tabs')[0].style.maxHeight = tabsMaxHeight + 'px';
   }

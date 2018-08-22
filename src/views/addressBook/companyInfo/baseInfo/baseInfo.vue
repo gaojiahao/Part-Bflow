@@ -282,14 +282,13 @@ export default {
     },
     groupNameValidator: function(rule, value, callback) {
       if (!value) {
-        this.$Message.error("请输入公司名称");
         return callback(new Error("请输入公司名称"));
       } else if (this.cacheGroupName != value) {
         let test = { name: "groupName", value: value };
         checkValue(test).then(res => {
           if (!res.result == 0) {
             this.$Message.error("公司名称已存在！请重新输入");
-            return callback(new Error("公司名称已存在！请重新输入"));
+            return callback();
           } else {
             return callback();
           }

@@ -14,7 +14,7 @@
         <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status,color:'#eb2f96'}"></Tag>
       </h2>
       <h2 v-if="!jobId">
-        <span style="color:#4CAF50">添加职位</span>
+        <span style="color:#4CAF50">职位</span>
         <span style="color:#808080;margin-left:10px">/</span>
         <span style="color:#808080;margin-left:10px">创建</span>
       </h2>
@@ -24,7 +24,8 @@
       <ul>
         <li v-for="(item,index) in actionBtn" :key="index" v-if="!item.hidden" class="job-wrap-action-li" v-bind:class="index===actionIndex?'job-wrap-action-li-active':''" @click="handlerViewChange(index)">
           <div style="padding:5px 0">
-            <img :src="item.imgPath" class="job-wrap-action-li-img"><img>
+            <img v-if="!item.type" :src="item.imgPath" class="job-wrap-action-li-img"/>
+            <Icon v-else :type="item.type" class="icon" />
             <div class="left-content">
               <span v-show="item.number!=='undefine'">{{item.number}}</span>
               <h3>{{item.label}}</h3>
@@ -130,7 +131,7 @@ export default {
       actionBtn: [
         {
           label: "权限",
-          imgPath: "resources/images/icon/2_0.png",
+          type:"md-person",
           number: 0,
           hidden: false,
           id: "objectPermission"
@@ -144,7 +145,7 @@ export default {
         },
         {
           label: "基本信息",
-          imgPath: "resources/images/icon/essinformation.png",
+          type:"ios-home",
           hidden: false,
           id: "baseinfo"
         }
@@ -185,7 +186,7 @@ export default {
         content: "是否关闭当前页面",
         closable: true,
         onOk: function() {
-          window.location.url = "/Site/index.html#page/jobs";
+          location.href = "/Site/index.html#page/jobs";
         }
       });
     },

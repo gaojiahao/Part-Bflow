@@ -5,9 +5,9 @@
 <template>
     <div class="info">
         <Row class="info-detail">
-            <Form :model="formItem" ref="formItem" :rules="ruleValidate" :label-width="85">
+            <Form :model="formItem" ref="formItem" :rules="ruleValidate" :label-width="98">
                 <FormItem label="头像：">
-                    <Upload ref="upload"  
+                    <Upload v-if="!isEdit" ref="upload"  
                         :show-upload-list="false" 
                         :on-success="handleSuccess" 
                         :format="['jpg','jpeg','png']" 
@@ -31,6 +31,7 @@
                         </div>
                         <!-- <div class="cover-upload"></div> -->
                     </Upload>
+                    <img v-else :src="logo" style="width: 128px;height:128px;">
                     <Modal title="查看头像" v-model="visible">
                         <img :src="logo" v-if="visible" style="width: 100%">
                     </Modal>
@@ -178,7 +179,7 @@ export default {
   methods: {
     //工号失去焦点验证唯一
     userCodeBlur() {
-        if(this.formItem.userCode){
+        if(this.userId){
             let value = this.formItem.userCode;
             checkoutFieldIsOnly('sys_user','userCode',value).then(res => {
                 if(res.result === 1){

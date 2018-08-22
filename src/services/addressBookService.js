@@ -7,10 +7,9 @@ import {
  * @author GuoZheng
  * @description 获取组织成员信息
  */
-export const checkoutFieldIsOnly = (tn, fileName, value) => request('/H_roleplay-si/trans/cntvalue', {
-  tn: tn,
-  fn: fileName,
-  value: value,
+export const checkoutFieldIsOnly = (tn, filter) => request('/H_roleplay-si/trans/validate', {
+  tableName: tn,
+  filter: filter
 });
 
 /************  用户  **************/

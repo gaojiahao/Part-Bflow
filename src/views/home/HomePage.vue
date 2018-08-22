@@ -19,7 +19,7 @@
               <i class="iconfont">&#xe64c;</i>
               {{pulse.name}}
             </Button> -->
-            <Select v-model="model" class="input-select" @on-change="changeView">
+            <Select v-model="model" class="input-select" @on-change="changeView" placeholder="请选择业务单元">
               <Option v-for="item in pulseGraphLlistr" :value="item.id" :key="item.id">{{ item.name }}</Option>
             </Select>
           </ButtonGroup>

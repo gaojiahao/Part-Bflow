@@ -9,8 +9,6 @@
         <span style="color:#4CAF50;cursor:pointer">组织</span>
         <span style="color:#808080;margin-left:10px">/</span>
         <span style="color:#808080;margin-left:10px">{{name}}</span>
-        <span style="color:#808080;margin-left:10px">/</span>
-        <span style="color:#808080;margin-left:10px">{{groupId}}</span>
         <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status,color:'#eb2f96'}"></Tag>
       </h2>
       <h2 v-if="!groupId">
@@ -23,8 +21,8 @@
     <div class="organization-wrap-action">
       <ul>
         <li v-for="(item,index) in actionBtn" :key="index" v-if="!item.hidden" class="organization-wrap-action-li" v-bind:class="index===actionIndex?'organization-wrap-action-li-active':''" @click="handlerViewChange(index)">
-          <div style="padding:9px 0">
-            <img v-if="!item.type" :src="item.imgPath" class="organization-wrap-action-li-img"/>
+          <div>
+            <img v-if="!item.type" :src="item.imgPath" class="organization-wrap-action-li-img" />
             <Icon v-else :type="item.type" class="icon" />
             <div class="left-content">
               <span v-show="item.number!=='undefine'">{{item.number}}</span>
@@ -38,12 +36,12 @@
     <div class="organization-wrap-tabs">
       <!-- 基本信息 -->
       <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===5">
-        <Form :model="formItem" :labelWidth="100" ref="formItem" :rules="ruleValidate">
+        <Form :model="formItem" :labelWidth="120" ref="formItem" :rules="ruleValidate">
           <FormItem label="组织名称:" style="font-size:16px" prop="groupName">
             <Input v-model="formItem.groupName" @on-blur="onGroupNameOutBlur" :readonly="isEdit" :class="isEdit?'input-status-isedit':''" />
           </FormItem>
 
-          <FormItem label="组织类型" :labelWidth="100" prop="groupType">
+          <FormItem label="组织类型" :labelWidth="120" prop="groupType">
             <Select @on-change="changeGroupType" v-model="formItem.groupType" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
               <Option value="M">管理层</Option>
               <Option value="A">事业部</Option>
@@ -51,7 +49,7 @@
               <Option value="G">小组</Option>
             </Select>
           </FormItem>
-          <FormItem label="部门职能类型" :labelWidth="100" prop="depFunction" v-if="formItem.groupType ==='O'">
+          <FormItem label="部门职能" :labelWidth="120" prop="depFunction">
             <Select v-model="formItem.depFunction" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
               <Option value="M">管理</Option>
               <Option value="S">销售</Option>
@@ -60,17 +58,17 @@
             </Select>
           </FormItem>
           <div class="baseinfo-container-divider"></div>
-          <FormItem label="组织负责人" :labelWidth="100" prop="principal" style="margin-top:20px">
+          <FormItem label="组织负责人" :labelWidth="120" prop="principal" style="margin-top:20px">
             <Input @on-click="selectPrincipalModal" v-model="formItem.principal" icon="md-arrow-dropdown" placeholder="选择用户" :readonly="isEdit" :class="isEdit?'input-status-isedit':''"></Input>
           </FormItem>
-          <FormItem label="上级组织" :labelWidth="100" prop="highGroup" style="margin-top:20px">
+          <FormItem label="上级组织" :labelWidth="120" prop="highGroup" style="margin-top:20px">
             <Input @on-click="selectHighOrgModal" v-model="formItem.highGroup" icon="md-arrow-dropdown" placeholder="选择上级组织" :readonly="isEdit" :class="isEdit?'input-status-isedit':''"></Input>
           </FormItem>
           <FormItem v-if="hiddenInput" label="上级组织parentId" style="font-size:16px">
             <Input v-model="formItem.parentId" />
           </FormItem>
           <div class="baseinfo-container-divider"></div>
-          <FormItem label="组织状态" :labelWidth="100" style="margin-top:20px">
+          <FormItem label="组织状态" :labelWidth="120" style="margin-top:20px">
             <Select v-model="formItem.status" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
               <Option v-for="(item,index) in statusRadio" :key="index" :value="item.value">{{item.name}}</Option>
             </Select>
@@ -80,7 +78,7 @@
           <input type='submit' value="关闭" class="baseinfo-container-action-submit" @click="cancle" />
           <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" @click="edit" v-if="groupId" />
           <input type='submit' value="保存" class="baseinfo-container-action-submit" @click="save" />
-          <input type='submit' value="保存并继续添加" class="baseinfo-container-action-submit" v-if="!groupId" @click="saveAndAdd" />
+          <input type='submit' value="保存并新建" class="baseinfo-container-action-submit" v-if="!groupId" @click="saveAndAdd" />
         </div>
       </section>
       <!-- 上级组织 -->
@@ -104,34 +102,34 @@
         <permission :groupId="groupId" @on-permission-change='handleChangeObjDetailsCount'></permission>
       </section>
     </div>
-    <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择组织" @on-ok="saveSelectionHighOrg">
+    <member-modal v-model="isShowMemberModal" width="700" footerBtnAlign="right" title="选择组织" @on-ok="saveSelectionHighOrg">
       <div style="margin-top:10px;">
         <div class="app-search">
-          <Input @on-search="orgFilter" :search="true" v-model="searchValue" placeholder="搜索组织名称" style="width: 300px"></Input>
+          <Input @on-search="orgFilter" :search="true" v-model="searchHighOrgValue" placeholder="搜索组织名称" style="width: 300px"></Input>
           <a @click="orgFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </a>
         </div>
-        <Table :loading="highOrgModalLoading" :columns="highOrgColumnsModal" :data="listUserData" size='small' highlight-row ref="currentRowTable" @on-current-change="onSelectUserList"></Table>
+        <Table height="400" :loading="highOrgModalLoading" :columns="highOrgColumnsModal" :data="listUserData" size='small' highlight-row ref="currentRowTable" @on-row-dblclick="handleHighOrgDblclick" @on-current-change="onSelectUserList"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
-            <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" show-total show-elevator></Page>
+            <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-page-size-change="onHighOrgPageSizeChange" @on-change="listUserChangePage" show-total show-elevator show-sizer></Page>
           </div>
         </div>
       </div>
     </member-modal>
-    <principal-modal v-model="isShowPrincipalModal" width="1000" footerBtnAlign="right" title="选择负责人" @on-ok="savaSelectPrincipal">
+    <principal-modal v-model="isShowPrincipalModal" width="700" footerBtnAlign="right" title="选择负责人" @on-ok="savaSelectPrincipal">
       <div>
         <div class="app-search">
-          <Input @on-search="userFilter" :search="true" v-model="searchValue" placeholder="搜索工号或者名称" style="width: 300px"></Input>
+          <Input @on-search="userFilter" :search="true" v-model="searchPrincipalValue" placeholder="搜索工号或者名称" style="width: 300px"></Input>
           <a @click="userFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </a>
         </div>
-        <Table :loading="PrincipalModaLoading" :columns="principalColumnsModel" :data="principalData" size='small' highlight-row ref="currentRowTable" @on-row-dblclick="handleDblclick" @on-current-change="onSelectPrincipal"></Table>
+        <Table height="400" :loading="PrincipalModaLoading" :columns="principalColumnsModel" :data="principalData" size='small' highlight-row ref="currentRowTable" @on-row-dblclick="handlePrinciplDblclick" @on-current-change="onSelectPrincipal"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
-            <Page :total="principalPageTotal" :current="principalCurrentPage" :page-size="principalPageSize" size="small" @on-change="principalChangePage" show-total show-elevator></Page>
+            <Page :total="principalPageTotal" :current="principalCurrentPage" :page-size="principalPageSize" size="small" @on-page-size-change="onPrincipalPageSizeChange" @on-change="principalChangePage" show-total show-elevator show-sizer></Page>
           </div>
         </div>
       </div>
@@ -187,7 +185,6 @@ export default {
 
       hiddenInput: false,
 
-      searchValue: "",
       statusRadio: [
         {
           name: "停用",
@@ -210,7 +207,7 @@ export default {
       actionBtn: [
         {
           label: "权限",
-          type:"md-person",
+          type: "md-person",
           number: 0,
           hidden: false,
           id: "objectPermission"
@@ -245,7 +242,7 @@ export default {
         },
         {
           label: "基本信息",
-          type:"ios-home",
+          type: "ios-home",
           hidden: false,
           id: "baseinfo"
         }
@@ -266,7 +263,6 @@ export default {
       highOrgColumnsModal: [
         {
           type: "index",
-          width: 60,
           align: "center"
         },
         {
@@ -352,7 +348,8 @@ export default {
       ],
       listUserPageTotal: 0,
       listUserCurrentPage: 1,
-      pageSize: 8,
+      pageSize: 10,
+      searchHighOrgValue: "",
       onSelectionModal: [],
 
       //负责人模态框参数
@@ -361,29 +358,25 @@ export default {
       principalData: [],
       principalPageTotal: 0,
       principalCurrentPage: 1,
-      principalPageSize: 8,
+      principalPageSize: 10,
       searchPrincipalValue: "",
       onSelectionPrincipal: [],
       principalColumnsModel: [
         {
           type: "index",
-          width: 60,
           align: "center"
         },
         {
           title: "工号",
-          width: 100,
           key: "userCode"
         },
         {
           title: "姓名",
-          width: 100,
           key: "nickname"
         },
         {
           title: "性别",
           key: "gender",
-          width: 60,
           render: (h, params) => {
             let gender = params.row.gender;
             return h(
@@ -443,6 +436,7 @@ export default {
   },
 
   methods: {
+    //切换相关实例
     handlerViewChange(index) {
       this.actionIndex = index;
     },
@@ -457,7 +451,6 @@ export default {
           location.href = '/Site/index.html#page/origanizations';
         },
       });
-     
     },
 
     edit() {
@@ -466,12 +459,11 @@ export default {
     },
 
     saveAndAdd() {
+      this.onGroupNameOutBlur();
       this.$refs["formItem"].validate(valid => {
         if (valid && !this.groupId && this.checkout) {
           delete this.formItem.groupId;
-          if (this.formItem.groupType !== "O") {
-            this.formItem.depFunction = "";
-          }
+
           saveBaseinfo(this.formItem).then(res => {
             if (res) {
               this.$Message.success("保存成功");
@@ -489,11 +481,11 @@ export default {
     },
 
     save() {
+      if (!this.groupId) {
+        this.onGroupNameOutBlur();
+      }
       this.$refs["formItem"].validate(valid => {
         if (valid) {
-          if (this.formItem.groupType !== "O") {
-            this.formItem.depFunction = "";
-          }
           if (!this.groupId && this.checkout) {
             delete this.formItem.groupId;
             saveBaseinfo(this.formItem).then(res => {
@@ -533,12 +525,26 @@ export default {
 
     listUserChangePage(currentPage) {
       let filter = [
-        { operator: "like", value: this.searchValue, property: "groupName" }
+        {
+          operator: "like",
+          value: this.searchHighOrgValue,
+          property: "groupName"
+        }
       ];
-      this.getAllGroup(currentPage, filter);
+      this.getAllGroup(currentPage, this.pageSize, filter);
     },
     //过滤
-    orgFilter() {},
+    orgFilter() {
+      let filter = [
+        {
+          operator: "like",
+          value: this.searchHighOrgValue,
+          property: "groupName"
+        }
+      ];
+      this.getAllGroup(this.listUserCurrentPage, this.pageSize, filter);
+    },
+
     //监听模态框选中的用户
     onSelectUserList(currentRow, oldCurrentRow) {
       this.onSelectionModal = currentRow;
@@ -546,57 +552,84 @@ export default {
 
     //当组织名称失去焦点的是校验名称
     onGroupNameOutBlur() {
-      //当groupId不存在时，校验名称是否唯一
-      checkoutFieldIsOnly("sys_group", "groupName", this.formItem.groupName)
-        .then(res => {
-          if (res.result > 0) {
-            this.checkout = false;
-            this.$Message.error("名称已经存在!");
-          } else {
-            this.checkout = true;
-          }
-        })
-        .catch(error => {
-          this.$Message.error(error.data.message);
-        });
+      if (!this.isEdit) {
+        //当groupId不存在时，校验名称是否唯一
+        checkoutFieldIsOnly("sys_group", "groupName", this.formItem.groupName)
+          .then(res => {
+            if (res.result > 0) {
+              this.checkout = false;
+              this.$Message.error("名称已经存在!");
+            } else {
+              this.checkout = true;
+            }
+          })
+          .catch(error => {
+            this.$Message.error(error.data.message);
+          });
+      }
     },
 
     //获取所有组织
-    getAllGroup(currentPage, relfilter) {
+    getAllGroup(currentPage, pageSize, relfilter) {
       this.highOrgModalLoading = true;
       let filter = relfilter ? relfilter : [];
       if (this.formItem.groupType) {
         switch (this.formItem.groupType) {
-          case "A":
-            filter.push({
-              operator: "eq",
-              value: "M",
-              property: "groupType"
-            });
-            break;
-          case "O":
+          case "小组":
             filter.push({
               operator: "ne",
-              value: "O",
+              value: "岗位",
               property: "groupType"
             }); //岗位
             filter.push({
               operator: "ne",
-              value: "G",
+              value: "小组",
               property: "groupType"
-            });
+            }); //小组
             break;
-          case "G":
+          case "部门":
             filter.push({
               operator: "ne",
-              value: "G",
+              value: "岗位",
               property: "groupType"
-            });
+            }); //岗位
+            filter.push({
+              operator: "ne",
+              value: "小组",
+              property: "groupType"
+            }); //小组
+            filter.push({
+              operator: "ne",
+              value: "部门",
+              property: "groupType"
+            }); //部门
+            break;
+          case "事业部":
+            filter.push({
+              operator: "ne",
+              value: "岗位",
+              property: "groupType"
+            }); //岗位
+            filter.push({
+              operator: "ne",
+              value: "小组",
+              property: "groupType"
+            }); //小组
+            filter.push({
+              operator: "ne",
+              value: "部门",
+              property: "groupType"
+            }); //部门
+            filter.push({
+              operator: "ne",
+              value: "事业部",
+              property: "groupType"
+            }); //事业部
             break;
         }
-        filter = JSON.stringify(filter);
       }
-      getAllGroup(currentPage, this.pageSize, filter).then(res => {
+      filter = JSON.stringify(filter);
+      getAllGroup(currentPage, pageSize, filter).then(res => {
         if (res.tableContent[0]) {
           this.listUserPageTotal = res.summary.total;
           this.listUserData = res.tableContent;
@@ -604,10 +637,12 @@ export default {
         }
       });
     },
+
     //展示上级组织选择器
     selectHighOrgModal() {
       this.isShowMemberModal = true;
-      this.getAllGroup(this.listUserCurrentPage);
+      this.searchHighOrgValue = "";
+      this.getAllGroup(this.listUserCurrentPage, this.pageSize);
     },
     //确认选择的上级组织
     saveSelectionHighOrg() {
@@ -680,6 +715,7 @@ export default {
     //展示负责人选择器
     selectPrincipalModal() {
       this.isShowPrincipalModal = true;
+      this.searchPrincipalValue = "";
       this.getListUsers(this.principalCurrentPage, this.principalPageSize);
     },
 
@@ -707,7 +743,7 @@ export default {
           property_2: "userCode"
         }
       ]);
-      this.getListUsers(currentPage, this.pageSize, filter);
+      this.getListUsers(currentPage, this.principalPageSize, filter);
     },
 
     //监听模态框选中的用户
@@ -715,11 +751,48 @@ export default {
       this.onSelectionPrincipal = currentRow;
     },
 
-    //双击选中
-    handleDblclick(row, index) {
+    //双击负责人选中
+    handlePrinciplDblclick(row, index) {
       this.formItem.principal = row.nickname;
       this.formItem.principalId = row.userId;
       this.isShowPrincipalModal = false;
+    },
+
+    //负责人点击切换每页显示条数
+    onPrincipalPageSizeChange(size) {
+      let filter = JSON.stringify([
+        {
+          operator_1: "like",
+          value_1: this.searchPrincipalValue,
+          property_1: "nickname",
+          link: "or",
+          operator_2: "like",
+          value_2: this.searchPrincipalValue,
+          property_2: "userCode"
+        }
+      ]);
+      this.principalPageSize = size;
+      this.getListUsers(1, size, filter);
+    },
+
+    //双击上级组织选中
+    handleHighOrgDblclick(row, index) {
+      this.formItem.highGroup = row.groupName;
+      this.formItem.parentId = row.groupId;
+      this.isShowMemberModal = false;
+    },
+
+    //上级组织点击切换每页显示条数
+    onHighOrgPageSizeChange(size) {
+      this.pageSize = size;
+      let filter = [
+        {
+          operator: "like",
+          value: this.searchHighOrgValue,
+          property: "groupName"
+        }
+      ];
+      this.getAllGroup(1, size, filter);
     },
 
     //点击确定保存
@@ -734,11 +807,11 @@ export default {
       let filter = JSON.stringify([
         {
           operator_1: "like",
-          value_1: this.searchValue,
+          value_1: this.searchPrincipalValue,
           property_1: "nickname",
           link: "or",
           operator_2: "like",
-          value_2: this.searchValue,
+          value_2: this.searchPrincipalValue,
           property_2: "userCode"
         }
       ]);

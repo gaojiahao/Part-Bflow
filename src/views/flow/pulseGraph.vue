@@ -71,7 +71,7 @@
                 </text>
               </a>
               <!-- 所有待办 -->
-              <circle :cx="40+(baseLength+graphSpace)*item.sort" :cy="50+170*i" r="12" stroke-width="1" fill="red" v-if="(item.listId?item.listId:item.id) in defaultDisplayTask" />
+              <circle :cx="40+(baseLength+graphSpace)*item.sort" :cy="50+170*i" r="12" stroke-width="1" :fill="item.type==='list'?'red':'#2d8cf0'" v-if="(item.listId?item.listId:item.id) in defaultDisplayTask" />
               <text :x="40+(baseLength+graphSpace)*item.sort" :y="45+170*i" fill="#fff" class="svg-text-common-style" style="font-size:12px" :listId="item.type==='subject'?item.id:item.listId" :taskValue="item.value" @click="opentask(item)">
                 {{item.type==='subject'?defaultDisplayTask[item.id]:defaultDisplayTask[item.listId]}}
               </text>
@@ -192,19 +192,19 @@ export default {
 
             let childNode = data[i].child[i2];
             if (childNode.teamDone > 0) {
-              this.teamDone[childNode.listId] = childNode.teamDone;
+              this.teamDone[childNode.listId] = childNode.teamDone>99?'99+':childNode.teamDone;
             }
             if (childNode.teamTodo > 0) {
-              this.teamTodo[childNode.listId] = childNode.teamTodo;
+              this.teamTodo[childNode.listId] = childNode.teamTodo>99?'99+':childNode.teamTodo;
             }
             if (childNode.myDone > 0) {
-              this.myDone[childNode.listId] = childNode.myDone;
+              this.myDone[childNode.listId] = childNode.myDone>99?'99+':childNode.myDone;
             }
             if (childNode.myToDo > 0) {
-              this.myToDo[childNode.listId] = childNode.myToDo;
+              this.myToDo[childNode.listId] = childNode.myToDo>99?'99+':childNode.myToDo;
             }
             if (childNode.subjectTodo > 0) {
-              this.subjectTodo[childNode.id] = childNode.subjectTodo;
+              this.subjectTodo[childNode.id] = childNode.subjectTodo>99?'99+':childNode.subjectTodo;
             }
           }
         }
@@ -556,7 +556,8 @@ export default {
             { name: "待领料", icon: "collar-material.png" },
             { name: "待验收", icon: "check.png" },
             { name: "待交付", icon: "pay.png" },
-            { name: "往来余额", icon: "dealings.png" }
+            { name: "往来余额", icon: "dealings.png" },
+            { name: "货币资金", icon: "putmoney.png" }
           ];
 
           subjectList.map(s => {
@@ -681,7 +682,7 @@ export default {
 .taskbtn_1 {
   position: fixed;
   top: 10px;
-  left: 260px;
+  left: 220px;
   z-index: 999;
 }
 

@@ -297,6 +297,7 @@ export default {
     //显示模态框-添加成员
     showMemberModal() {
       this.isShowMemberModal = true;
+      this.searchValue = "";
       this.getListUsers(this.listUserCurrentPage, this.pageSize);
     },
     //成员信息导出xmls

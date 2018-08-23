@@ -5,7 +5,7 @@
   <div class="baseInfo">
     <div class="baseInfo-warp">
       <div class="baseInfo-body">
-        <Form :model="baseInfoItem" ref="baseInfoItem" :label-width="80" :rules="ruleValidate" :class="{'is-required':isEdit}">
+        <Form :model="baseInfoItem" ref="baseInfoItem" :label-width="100" :rules="ruleValidate" :class="{'is-required':isEdit}">
           <FormItem label="公司照片:">
             <div class="uploadImg">
               <Upload v-if="!isEdit" ref="upload" :show-upload-list="false" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" multiple type="drag" action="/H_roleplay-si/ds/upload" :headers="httpHeaders" style="display: inline-block;width:128px;vertical-align: middle;">
@@ -34,7 +34,7 @@
             <Input v-model="baseInfoItem.groupShortName" :class="{'info-edit':isEdit}" :readonly="isEdit"></Input>
           </FormItem>
           <FormItem label="公司类型:" prop="depFunction">
-            <Select v-model="baseInfoItem.depFunction" :class="{'info-edit':isEdit}" :disabled="isEdit">
+            <Select v-model="baseInfoItem.depFunction" v-if="!isEdit" :disabled="isEdit">
               <Option value='有限责任公司'>有限责任公司</Option>
               <Option value='股份有限公司'>股份有限公司</Option>
               <Option value='集团公司'>集团公司</Option>
@@ -43,28 +43,30 @@
               <Option value='个人独资'>个人独资</Option>
               <Option value='子公司'>子公司</Option>
             </Select>
+            <span v-else style="margin-left:5px;">{{baseInfoItem.depFunction}}</span>
           </FormItem>
         </Form>
       </div>
-      <div style="margin-top:5px; background: #fff; padding: 50px 100px 10px 100px;">
+      <div style="margin-top:5px; background: #fff; padding: 50px 110px 10px 118px;">
         <Form :label-width="80">
           <FormItem label="公司状态:">
-            <Select v-model="baseInfoItem.status" :class="{'info-edit':isEdit}" :disabled="isEdit">
+            <Select v-model="baseInfoItem.status" v-if="!isEdit" :disabled="isEdit">
               <Option value="3">草稿</Option>
               <Option value="2">未使用</Option>
               <Option value="1">使用中</Option>
               <Option value="-1">停用</Option>
             </Select>
+            <span v-else style="margin-left:5px;">{{baseInfoItem.statusText}}</span>
           </FormItem>
         </Form>
       </div>
     </div>
     <Row class="info-btn">
-      <Button @click="toCompanyLst" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">关闭</Button>
-      <Button v-if="baseInfoItem.groupId&&!isEdit" @click="updateCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">更新</Button>
-      <Button v-else-if="!isEdit&&!isAdd" @click="addCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存</Button>
-      <Button v-if="isAdd" @click="isEditCompanyInfo" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">{{isEdit?'编辑':'放弃编辑'}}</Button>
-      <Button v-if="!baseInfoItem.groupId&&!isEdit&&!isAdd" @click="saveAndAddCompany" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存并新建</Button>
+      <Button @click="toCompanyLst" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;font-size:14px;">关闭</Button>
+      <Button v-if="isAdd" @click="isEditCompanyInfo" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;">{{isEdit?'编辑':'放弃编辑'}}</Button>
+      <Button v-if="baseInfoItem.groupId&&!isEdit" @click="updateCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;">保存</Button>
+      <Button v-else-if="!isEdit&&!isAdd" @click="addCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;">保存</Button>
+      <Button v-if="!baseInfoItem.groupId&&!isEdit&&!isAdd" @click="saveAndAddCompany" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;">保存并新建</Button>
     </Row>
   </div>
 </template>
@@ -193,6 +195,19 @@ export default {
           this.cacheShortName = res[0].groupShortName;
           this.cacheGroupName = res[0].groupName;
           this.baseInfoItem.status = String(this.baseInfoItem.status);
+          switch (this.baseInfoItem.status) {
+            case "1":
+              this.baseInfoItem.statusText = "使用中";
+              break;
+            case "-1":
+              this.baseInfoItem.statusText = "停用";
+              break;
+            case "2":
+              this.baseInfoItem.statusText = "未使用";
+              break;
+            default:
+              this.baseInfoItem.statusText = "草稿";
+          }
         }
       });
     },

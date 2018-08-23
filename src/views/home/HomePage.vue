@@ -20,40 +20,42 @@
               {{pulse.name}}
             </Button> -->
             <Select v-model="model" class="input-select" @on-change="changeView" placeholder="请选择业务单元">
-              <Option value="app">
-               <Icon type="ios-apps" size="16"/>
-                所有应用看板
-                </Option>
+              <Option value="apps">
+                <Icon type="ios-apps" size="16" /> 所有应用看板
+              </Option>
               <Option v-for="item in pulseGraphLlistr" :value="item.id" :key="item.id">
-                <Icon type="md-share" size="16"/>
-                {{ item.name }}
-                </Option>
+                <Icon type="md-share" size="16" /> {{ item.name }}
+              </Option>
             </Select>
           </ButtonGroup>
           </Col>
         </Row>
       </div>
     </div>
-    <div v-if="cutView">
-      <section v-for="(menuList,i) in menuList" :key="i" class="bg-gray-lighter">
+    <keep-alive>
+      <div v-if="cutView&&caseId==='apps'">
+        <section v-for="(menuList,i) in menuList" :key="i" class="bg-gray-lighter">
 
-        <row class="menu-group">
-          <row>
-            <h3 class="menu-group-title">{{menuList.text}}</h3>
-          </row>
+          <row class="menu-group">
+            <row>
+              <h3 class="menu-group-title">{{menuList.text}}</h3>
+            </row>
 
-          <row :gutter="16">
-            <Col v-if="item.leaf" v-for="(item,j) in menuList.children" :key="j" span="4">
-            <card-item v-if="item.leaf" :appinfo="item" :allTaskCount="allTaskCount"></card-item>
-            </Col>
-            <card-list v-else :menuItem="item" :index='j' :allTaskCount="allTaskCount"></card-list>
+            <row :gutter="16">
+              <Col v-if="item.leaf" v-for="(item,j) in menuList.children" :key="j" span="4">
+              <card-item v-if="item.leaf" :appinfo="item" :allTaskCount="allTaskCount"></card-item>
+              </Col>
+              <card-list v-else :menuItem="item" :index='j' :allTaskCount="allTaskCount"></card-list>
+            </row>
           </row>
-        </row>
-      </section>
-    </div>
-    <div v-for="(pulseGraph,index) in pulseGraphLlistr" :key="index" v-if="!cutView && pulseGraph.id === caseId">
-      <pulse-graph :caseId="pulseGraph.id"></pulse-graph>
-    </div>
+        </section>
+      </div>
+    </keep-alive>
+    <keep-alive>
+      <div v-for="(pulseGraph,index) in pulseGraphLlistr" :key="index" v-if="!cutView && pulseGraph.id === caseId">
+        <pulse-graph :caseId="pulseGraph.id"></pulse-graph>
+      </div>
+    </keep-alive>
   </div>
 </template>
 
@@ -87,13 +89,13 @@ export default {
         text: "常用应用",
         children: []
       },
-      caseId: "",
+      caseId: "apps",
       pulseGraphLlistr: [],
       allTaskCount: [],
       ds: ds("wss://sunwingfood.roletask.com:6021/deepstream"),
       books$$: null,
       isAdmin: this.$currentUser.isAdmin,
-      model: "app"
+      model: "apps"
     };
   },
   mounted() {
@@ -127,18 +129,11 @@ export default {
   },
 
   methods: {
-    changeView(event) {
-      if (!event) return;
-      let caseId;
-      if (event.currentTarget) {
-        caseId = event.currentTarget.getAttribute("caseid");
-      } else if (event > 0) {
-        caseId = event;
-      }
+    changeView(caseId) {
+      if (!caseId) return;
       if (caseId === "apps") {
         this.cutView = true;
-        this.caseId = "apps";
-        this.model = 0; //清空下拉选择框值，默认值为0
+        this.caseId = caseId;
       } else {
         this.cutView = false;
         this.caseId = Number(caseId);

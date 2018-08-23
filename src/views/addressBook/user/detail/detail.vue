@@ -150,7 +150,7 @@ export default {
   mounted() {
     this.getUserInfoData();
     this.getInstanceCount();
-    let tabsMaxHeight = document.body.clientHeight - 85;
+    let tabsMaxHeight = document.body.clientHeight - 120;
     window.document.getElementsByClassName('detail-content-tabs')[0].style.height = tabsMaxHeight + 'px';
     window.document.getElementsByClassName('detail-content-tabs')[0].style.maxHeight = tabsMaxHeight + 'px';
   }

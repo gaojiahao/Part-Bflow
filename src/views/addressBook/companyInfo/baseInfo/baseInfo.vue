@@ -346,7 +346,7 @@ export default {
         title: "系统提示",
         content: "确认要关闭当前页面吗？",
         onOk: () => {
-          this.$router.push({ path: "/addressBook/companyInfo/board" });
+          location.href = '/Site/index.html#page/companys';
         }
       });
     }

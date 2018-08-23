@@ -6,7 +6,6 @@
         <Radio label="mytask">
           <span>我的任务</span>
         </Radio>
-        <i class="vertical-divide"></i>
         <Radio label="teamtask">
           <span>团队任务</span>
         </Radio>
@@ -16,12 +15,29 @@
         <Radio label="todo">
           <span>未完成</span>
         </Radio>
-        <i class="vertical-divide"></i>
         <Radio label="done">
           <span>已完成</span>
         </Radio>
       </RadioGroup>
-      <div class="divide"></div>
+      <RadioGroup class="taskbtn_2" :v-model="overdue" size="large" >
+        <i class="vertical-divide"></i>
+        <Radio label="no-overdue">
+          <span>未逾期</span>
+        </Radio>
+        <Radio label="overdue ">
+          <span>逾期</span>
+        </Radio>
+      </RadioGroup>
+      <Dropdown style="position: fixed;top: 10px;left: 600px;z-index: 999; font-size:14px">
+         <span >
+           项目立项
+            <Icon type="ios-arrow-down"></Icon>
+        </span>
+        <DropdownMenu slot="list">
+            <DropdownItem>销售订单</DropdownItem>
+        </DropdownMenu>
+    </Dropdown>
+      <!-- <div class="divide"></div> -->
       <div class="business_item" style="width:50px">
         <div class="left-name" v-for="(item,index) in dataItem" :key="index">
           <span></span>
@@ -65,7 +81,7 @@
               </image>
               <!-- 科目与业务节点title -->
 
-              <a @click="redirectTo(item)" :class="item.type==='list'?'svg-title-style':'svg-title-style-default'">
+              <a @click="redirectTo(item)" class="svg-title-style">
                 <text :x="40+baseLength/2+(baseLength+graphSpace)*item.sort" :y="65+baseLength+170*i">
                   {{item.value}}
                 </text>
@@ -192,19 +208,24 @@ export default {
 
             let childNode = data[i].child[i2];
             if (childNode.teamDone > 0) {
-              this.teamDone[childNode.listId] = childNode.teamDone>99?'99+':childNode.teamDone;
+              this.teamDone[childNode.listId] =
+                childNode.teamDone > 99 ? "99+" : childNode.teamDone;
             }
             if (childNode.teamTodo > 0) {
-              this.teamTodo[childNode.listId] = childNode.teamTodo>99?'99+':childNode.teamTodo;
+              this.teamTodo[childNode.listId] =
+                childNode.teamTodo > 99 ? "99+" : childNode.teamTodo;
             }
             if (childNode.myDone > 0) {
-              this.myDone[childNode.listId] = childNode.myDone>99?'99+':childNode.myDone;
+              this.myDone[childNode.listId] =
+                childNode.myDone > 99 ? "99+" : childNode.myDone;
             }
             if (childNode.myToDo > 0) {
-              this.myToDo[childNode.listId] = childNode.myToDo>99?'99+':childNode.myToDo;
+              this.myToDo[childNode.listId] =
+                childNode.myToDo > 99 ? "99+" : childNode.myToDo;
             }
             if (childNode.subjectTodo > 0) {
-              this.subjectTodo[childNode.id] = childNode.subjectTodo>99?'99+':childNode.subjectTodo;
+              this.subjectTodo[childNode.id] =
+                childNode.subjectTodo > 99 ? "99+" : childNode.subjectTodo;
             }
           }
         }
@@ -473,7 +494,7 @@ export default {
      */
     opentask(item) {
       if (item.type === "subject") {
-        this.redirectTo(item,event);
+        this.redirectTo(item, event);
       } else {
         this.modal = true;
 
@@ -686,6 +707,20 @@ export default {
   z-index: 999;
 }
 
+.taskbtn_2 {
+  position: fixed;
+  top: 10px;
+  left: 420px;
+  z-index: 999;
+}
+
+.taskbtn_3 {
+  position: fixed;
+  top: 10px;
+  left: 600px;
+  z-index: 999;
+}
+
 .main-flow {
   display: table;
   width: 100%;
@@ -749,7 +784,7 @@ export default {
   baseline-shift: sub;
   font-size: 12px;
   font-family: sans-serif;
-  fill: #2d8cf0;
+  fill: #000;
   font-size: 13px;
   cursor: pointer;
   font-weight: bold;
@@ -760,7 +795,7 @@ export default {
   baseline-shift: sub;
   font-size: 12px;
   font-family: sans-serif;
-  fill: #000;
+  fill: #2d8cf0;
   font-size: 13px;
   cursor: default;
   font-weight: bold;

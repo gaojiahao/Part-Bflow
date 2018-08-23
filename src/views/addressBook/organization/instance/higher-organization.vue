@@ -81,7 +81,7 @@ export default {
       highOrganizationParams: {
         groupId: this.groupId,
         page: 1,
-        limit: 8
+        limit: 10
       },
       highOrgColumns: [
         {

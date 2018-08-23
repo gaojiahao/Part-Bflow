@@ -162,7 +162,7 @@ export default {
           {
             required: true,
             message: "请选择职位类型",
-            trigger: "blur"
+            trigger: "change"
           }
         ]
       },
@@ -233,6 +233,7 @@ export default {
               .then(res => {
                 if (res) {
                   this.$Message.success("保存成功");
+                  window.location.reload();
                 }
               })
               .catch(errer => {

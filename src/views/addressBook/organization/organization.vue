@@ -403,28 +403,28 @@ export default {
           {
             required: true,
             message: "请选择上级组织",
-            trigger: "blur"
+            trigger: "change"
           }
         ],
         groupType: [
           {
             required: true,
             message: "请选择组织类型",
-            trigger: "blur"
+            trigger: "change"
           }
         ],
         depFunction: [
           {
             required: true,
             message: "请选择组织职能",
-            trigger: "blur"
+            trigger: "change"
           }
         ],
         principal: [
           {
             required: true,
             message: "请选择负责人",
-            trigger: "blur"
+            trigger: "change"
           }
         ]
       },
@@ -501,6 +501,7 @@ export default {
             updateBaseinfo(this.formItem).then(res => {
               if (res) {
                 this.$Message.success("保存成功");
+                window.location.reload();
               }
             });
           }

@@ -87,7 +87,7 @@ export default {
           { operator: "eq", value: this.groupId, property: "parentId" }
         ]),
         page: 1,
-        limit: 8
+        limit: 10
       },
       lowerOrgColumns: [
         {

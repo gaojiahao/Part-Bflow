@@ -5,48 +5,49 @@
 <template>
   <div class="bg_ff">
     <div>
-    <Row class="app-resource-group-title">
-      <h3>管理员自评
-        <a v-if="isAdminTrue" @click="addAssess">添加自评</a>
-      </h3>
-    </Row>
-        <div v-for="(assess, index) of assessments" :key="index" class="pad10 bg_ff">
-          <img :src="assess.photo?assess.photo:'resources/images/icon/contactor.png'"  class="user-icon">
-          <div class="font14 content" >
-            <div >
-              <h4>{{ assess.creator }} <span class="fr">{{ formatDate(assess.date) }}</span></h4>
-              </div>
-            <div class="assessment-info">
-              <div>
-                <span style="color: #a06970">改进成果:</span>
-                <span class="assessment-info-text">{{assess.achievement}}</span>
-              </div>
-              <div>
-                <span style="color: #a06970">改进机会:</span>
-                <span class="assessment-info-text">{{assess.chance}}</span>
-              </div>
+      <Row class="app-resource-group-title">
+        <h3>管理员自评
+        </h3>
+      </Row>
+      <Row style="border-bottom: 1px solid #ddd;" v-show="isAdminTrue">
+        <div style="width:85%;">
+          <Form ref="formValidate" :label-width="150" :model="adminAssessData" :rules="ruleValidate">
+            <FormItem label="期间（月份）:" prop="duringDate">
+              <DatePicker format="yyyy-MM" type="month" placeholder="选择日期" style="width: 200px" v-model="adminAssessData.duringDate"></DatePicker>
+            </FormItem>
+            <FormItem label="效率与成本改进成果:" prop="result">
+              <Input type="textarea" v-model="adminAssessData.result"></Input>
+            </FormItem>
+            <FormItem label="效率与成本改进机会:" prop="opportunity">
+              <Input type="textarea" v-model="adminAssessData.opportunity"></Input>
+            </FormItem>
+          </Form>
+          <div style="text-align:center;">
+            <Button @click="submitAdminAssess" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存</Button>
+          </div>
+        </div>
+      </Row>
+      <div v-for="(assess, index) of assessments" :key="index" class="pad10 bg_ff">
+        <img :src="assess.photo?assess.photo:'resources/images/icon/contactor.png'" class="user-icon">
+        <div class="font14 content">
+          <div>
+            <h4>{{ assess.creator }}
+              <span class="fr">{{ formatDate(assess.date) }}</span>
+            </h4>
+          </div>
+          <div class="assessment-info">
+            <div>
+              <span style="color: #a06970">改进成果:</span>
+              <span class="assessment-info-text">{{assess.achievement}}</span>
+            </div>
+            <div>
+              <span style="color: #a06970">改进机会:</span>
+              <span class="assessment-info-text">{{assess.chance}}</span>
             </div>
           </div>
         </div>
-    </div>
-
-   
-    <assess-modal title="管理员自评" v-model="showAssessModal" width="650" @on-ok="submitAdminAssess">
-      <div style="margin:20px auto;width:85%;">
-        <Form ref="formValidate" :label-width="150" :model="adminAssessData" :rules="ruleValidate">
-          <FormItem label="期间（月份）:" prop="duringDate">
-            <DatePicker format="yyyy-MM" type="month" placeholder="选择日期" style="width: 200px" v-model="adminAssessData.duringDate"></DatePicker>
-          </FormItem>
-          <FormItem label="效率与成本改进成果:" prop="result">
-            <Input type="textarea" v-model="adminAssessData.result"></Input>
-          </FormItem>
-          <FormItem label="效率与成本改进机会:" prop="opportunity">
-            <Input type="textarea" v-model="adminAssessData.opportunity"></Input>
-          </FormItem>
-        </Form>
       </div>
-    </assess-modal>
-
+    </div>
   </div>
 </template>
 
@@ -110,7 +111,7 @@ export default {
   },
   watch: {
     isAdmin: function(value) {
-      (value) && (this.isAdminTrue=true);
+      value && (this.isAdminTrue = true);
     }
   },
   methods: {
@@ -141,6 +142,7 @@ export default {
             this.$Message.success(res.message);
             this.getAssessmentData();
             this.showAssessModal = false;
+            this.$refs["formValidate"].resetFields();
             this.isEdit = "";
           } else {
             this.$Message.error(res.message);

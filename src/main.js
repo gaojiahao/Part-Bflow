@@ -1,18 +1,20 @@
-import Vue from 'vue'
-import App from './App'
-import router from './router'
-import iView from 'iview'
-import 'iview/dist/styles/iview.css'
-import fontIcon from './assets/App.css'
-import { getCurrentUserInfo } from "@/services/flowService"
+import Vue from 'vue';
+import App from './App';
+import router from './router';
+import iView from 'iview';
+import 'iview/dist/styles/iview.css';
+import fontIcon from './assets/App.css';
+import { getCurrentUserInfo } from "@/services/flowService";
 import instanceStateDirective from  '@/directive/instanceStateDirective';
+import VueWechatTitle from 'vue-wechat-title';
 
 Vue.directive('instanceStateDirective',instanceStateDirective);
-require('./assets/App.css')
+require('./assets/App.css');
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
-Vue.use(iView)
+Vue.use(iView);
+Vue.use(VueWechatTitle);
 
 let Hub = new Vue();
 

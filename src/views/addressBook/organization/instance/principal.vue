@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="less" >
 .header-action {
   label {
     color: #009688;
@@ -20,6 +20,10 @@
       cursor: pointer;
     }
   }
+
+  .rfd-principal-table .ivu-table-row-highlight td{
+  background-color: #81b2e59c !important;
+}
 </style>
 
 <template>
@@ -39,7 +43,7 @@
               <Button type="primary" size="small">查询</Button>
           </a>
         </div>
-        <Table height="400" :loading="listUserLoading" :columns="principalColumnsModel" :data="listUserData" size='small' highlight-row ref="currentRowTable" @on-row-dblclick="handleDblclick" @on-current-change="onSelectUserList"></Table>
+        <Table class="rfd-principal-table" height="400" :loading="listUserLoading" :columns="principalColumnsModel" :data="listUserData" size='small' highlight-row ref="currentRowTable" @on-row-dblclick="handleDblclick" @on-current-change="onSelectUserList"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
             <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" @on-page-size-change="onPageSizeChange" show-total show-elevator show-sizer></Page>

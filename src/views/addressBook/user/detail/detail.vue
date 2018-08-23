@@ -6,10 +6,10 @@
   <Row class="detail">
     <Row class="detail-header">
       <div class="detail-header-bread">
-        <span style="color:#4CAF50;font-weight:bold;font-size:20px;">用户</span>
-        <span style="color:#808080;margin-left:10px;font-size:20px;font-weight:bold;">/</span>
-        <span v-if="userInformation.nickname?true:false" style="font-weight:bold;color:#808080;margin-left:10px;font-size:20px;">{{ userInformation.nickname }}</span>
-        <span style="color:#808080;margin-left:10px;font-size:20px;font-weight:bold;">{{ userInformation.userCode?'':'创建' }}</span>
+        <span class="detail-header-bread-user">用户</span>
+        <span class="detail-header-bread-others">/</span>
+        <span v-if="userInformation.nickname?true:false" class="detail-header-bread-others">{{ userInformation.nickname }}</span>
+        <span class="detail-header-bread-others">{{ userInformation.userCode?'':'创建' }}</span>
       </div>
       <Tag v-show="userInformation.status?showTag:!showTag" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:userInformation.status}"></Tag>
     </Row>

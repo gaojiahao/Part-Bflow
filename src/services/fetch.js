@@ -1,4 +1,5 @@
 import axios from 'axios'
+import qs from 'qs'
 import {
   getToken
 } from '@/utils/utils'
@@ -64,6 +65,8 @@ axios.interceptors.response.use(response => {
   return Promise.reject(err.message)
 })
 
+axios.interceptors
+
 
 /**
  * 
@@ -73,11 +76,15 @@ axios.interceptors.response.use(response => {
  */
 export const request = (url, params = {}, method = 'get', data) => {
 
+
   let options = Object.assign({}, {
     url,
     method,
     params,
-    data
+    data,
+    paramsSerializer: function (params) {
+      return qs.stringify(params, { arrayFormat: 'brackets' })
+    },
   })
 
   return new Promise((resolve, reject) => {

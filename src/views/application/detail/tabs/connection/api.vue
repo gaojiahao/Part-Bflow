@@ -1,7 +1,6 @@
-<style lang="less" scoped>
+<style lang="less">
 @import "./api.less";
 </style>
-
 <template>
   <div class="bg_ff martop20">
 
@@ -24,13 +23,13 @@
             <pre class="api-code">
               {{commitApi.body}}
             </pre>
-            <div style="position: absolute;top: 30px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=updateApi.body @click="copy">
-              <Tooltip placement="top" content="点击复制" :disabled="disabled">
+            <div style="position: absolute;top: 70px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=commitApi.body @click="copy">
+              <Tooltip placement="top" content="点击复制" :disabled="!disabled">
                 <Icon type="md-document" size='24' />
               </Tooltip>
             </div>
             <h3>请求参数：</h3>
-            <Table size="small" :columns="columns" :data="data"></Table>
+            <Table size="small" :columns="columns" :data="commitData"></Table>
           </div>
         </Panel>
         <Panel name="look">
@@ -47,13 +46,13 @@
             <pre class="api-code">
               {{viewApi.body}}
             </pre>
-            <div style="position: absolute;top: 30px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=updateApi.body @click="copy">
+            <div style="position: absolute;top: 70px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=viewApi.body @click="copy">
               <Tooltip placement="top" content="点击复制" :disabled="disabled">
                 <Icon type="md-document" size='24' />
               </Tooltip>
             </div>
             <h3>请求参数：</h3>
-            <Table size="small" :columns="columns" :data="ViewData"></Table>
+            <Table size="small" :columns="columns" :data="viewData"></Table>
           </div>
         </Panel>
         <Panel name="update">
@@ -70,13 +69,13 @@
             <pre class="api-code">
               {{updateApi.body}}
             </pre>
-            <div style="position: absolute;top: 30px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=updateApi.body @click="copy">
+            <div style="position: absolute;top: 70px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=updateApi.body @click="copy">
               <Tooltip placement="top" content="点击复制" :disabled="disabled">
                 <Icon type="md-document" size='24' />
               </Tooltip>
             </div>
             <h3>请求参数：</h3>
-            <Table size="small" :columns="columns" :data="data"></Table>
+            <Table size="small" :columns="columns" :data="updateData"></Table>
           </div>
         </Panel>
       </Collapse>
@@ -119,30 +118,9 @@ export default {
           key: "explain"
         }
       ],
-      data: [
-        {
-          param: "listId",
-          required: "是",
-          explain: "应用id"
-        },
-        {
-          param: "biComment",
-          required: "否",
-          explain: "备注"
-        },
-        {
-          param: "formData",
-          required: "是",
-          explain: "表单数据"
-        }
-      ],
-      ViewData: [
-        {
-          param: "listId",
-          required: "是",
-          explain: "应用id"
-        }
-      ]
+      commitData: [],
+      viewData: [],
+      updateData: []
     };
   },
   methods: {
@@ -159,6 +137,72 @@ export default {
         // 释放内存
         clipboard.destroy();
       });
+    },
+    formatData(body) {
+      let data;
+      let nelData;
+      let datas = [];
+      let dataSet;
+      let formData = body.formData;
+      let requires = formData.isRequired;
+      datas.push({
+        explain: "备注",
+        param: "biComment",
+        required: "否"
+      });
+      datas.push({
+        explain: "应用Id",
+        param: "listId",
+        required: "否"
+      });
+      for (var index in formData) {
+        data = {};
+        if (index == "order" || index == "inPut" || index == "outPut") {
+          nelData = formData[index];
+          for (var n in nelData) {
+            data = {};
+            if (n !== "dataSet") {
+              data["explain"] = nelData[n];
+              data["param"] = n;
+              for (var r in requires) {
+                if (r == n) {
+                  data["required"] = "是";
+                } else {
+                  data["required"] = "否";
+                }
+              }
+              datas.push(data);
+            } else {
+              dataSet = nelData[n][0];
+              for (var s in dataSet) {
+                data = {};
+                data["explain"] = dataSet[s];
+                data["param"] = s;
+                for (var r in requires) {
+                  if (r == s) {
+                    data["required"] = "是";
+                  } else {
+                    data["required"] = "否";
+                  }
+                }
+                datas.push(data);
+              }
+            }
+          }
+        } else if (index !== "isRequired") {
+          data["explain"] = formData[index];
+          data["param"] = index;
+          for (var r in requires) {
+            if (r == index) {
+              data["required"] = "是";
+            } else {
+              data["required"] = "否";
+            }
+          }
+          datas.push(data);
+        }
+      }
+      return datas;
     }
   },
   mounted() {
@@ -169,8 +213,11 @@ export default {
           this.updateApi = JSON.parse(res.updateUrl);
           this.viewApi = JSON.parse(res.viewUrl);
         } catch (error) {
-          this.$$Message.error("后台返回格式有误！！！");
+          this.$Message.error("后台返回格式有误！！！");
         }
+        this.commitData = this.formatData(this.commitApi.body);
+        this.updateData = this.formatData(this.updateApi.body);
+        this.viewData = this.formatData(this.viewApi.body);
         this.commitApi["body"] = ForamtJson(this.commitApi["body"]);
         this.updateApi["body"] = ForamtJson(this.updateApi["body"]);
         this.viewApi["body"] = ForamtJson(this.viewApi["body"]);

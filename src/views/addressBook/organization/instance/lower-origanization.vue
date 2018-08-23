@@ -181,10 +181,6 @@ export default {
           }
         },
         {
-          title: "组织说明",
-          key: "comment"
-        },
-        {
           title: "操作",
           key: "action",
           width: 120,
@@ -315,10 +311,6 @@ export default {
               value
             );
           }
-        },
-        {
-          title: "组织说明",
-          key: "comment"
         }
       ],
 

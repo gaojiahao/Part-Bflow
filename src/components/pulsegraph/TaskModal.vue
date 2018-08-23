@@ -10,7 +10,7 @@
         <Input v-model="filterData.creatorName" placeholder="请输入创建者" style="width: 127px;margin-left:12px"></Input>
       </div>
       <div class="input-filter-box">
-        <label class="input-filter-lebal">审批者:</label>
+        <label class="input-filter-lebal">当前用户:</label>
         <Input v-model="filterData.assigneeName" placeholder="请输入审批者" style="width: 127px;margin-left:12px"></Input>
       </div>
       <div class="input-crttime" v-show="expand">
@@ -34,7 +34,7 @@
     </div>
 
     <!-- <Scroll :on-reach-edge="handleReachBottom" height='233'> -->
-    <Table :loading="loading" :data="columnData" :columns="columns" size="small" stripe></Table>
+    <Table :loading="loading" :data="columnData" :columns="columns" size="small" @on-sort-change="handleSort" stripe></Table>
     <!-- </Scroll> -->
     <div style="margin: 10px;overflow: hidden">
       <div style="float: right;">
@@ -77,7 +77,7 @@ export default {
           key: "nodeName"
         },
         {
-          title: "审批者",
+          title: "当前用户",
           key: "assigneeName",
           width: 90
         },
@@ -172,7 +172,6 @@ export default {
           crtTime: crtTime
         }
       };
-
       for (let f in params.filter) {
         if (!params.filter[f]) {
           delete params.filter[f];
@@ -186,6 +185,14 @@ export default {
         this.loading = false;
       });
     },
+
+     /** 
+       * column：当前列数据
+          key：排序依据的指标
+          order：排序的顺序，值为 asc 或 desc
+      */
+      handleSort(column,key,order){
+      },
 
     modalVisibleChange(state) {
       if (!state) {

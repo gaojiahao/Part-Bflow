@@ -19,7 +19,8 @@
               <i class="iconfont">&#xe64c;</i>
               {{pulse.name}}
             </Button> -->
-            <Select v-model="model" class="input-select" @on-change="changeView" placeholder="请选择业务单元">
+             <Icon :type="model==='apps'?'ios-apps':'md-share'" size="16" /> 
+            <Select v-model="model" class="input-select" @on-change="changeView" placeholder="请选择业务单元" style="width:230px">
               <Option value="apps">
                 <Icon type="ios-apps" size="16" /> 所有应用看板
               </Option>
@@ -308,10 +309,10 @@ export default {
   border-color: #2d8cf0;
 }
 
-.input-select {
-  width: 160px !important;
-  margin: 0 5px !important;
-}
+// .input-select {
+//   width: 160px !important;
+//   margin: 0 5px !important;
+// }
 
 //下拉选择器修改自带样式
 .ivu-select-selection {

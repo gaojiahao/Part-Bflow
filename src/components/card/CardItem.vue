@@ -102,7 +102,7 @@ export default {
       columnData: [],
       loading: true,
       pageTotal: 0, //table总数
-      pageSize: 5,
+      pageSize: 10,
       currentPage: 1, //table当前页
       pageListId: ""
     };

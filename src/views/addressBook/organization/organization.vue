@@ -49,7 +49,7 @@
               <Option value="G">小组</Option>
             </Select>
           </FormItem>
-          <FormItem label="部门职能" :labelWidth="120" prop="depFunction">
+          <FormItem label="组织职能" :labelWidth="120" prop="depFunction">
             <Select v-model="formItem.depFunction" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
               <Option value="M">管理</Option>
               <Option value="S">销售</Option>
@@ -292,7 +292,7 @@ export default {
           }
         },
         {
-          title: "部门职能",
+          title: "组织职能",
           key: "depFunction",
           render: (h, params) => {
             let depFunction = params.row.depFunction;
@@ -416,7 +416,7 @@ export default {
         depFunction: [
           {
             required: true,
-            message: "请选择部门职能类型",
+            message: "请选择组织职能",
             trigger: "blur"
           }
         ],
@@ -573,7 +573,8 @@ export default {
           filter = [
             {
               filedName: "groupName",
-              value: this.formItem.groupName
+              value: this.formItem.groupName,
+              symbol:"="
             }
           ];
         }

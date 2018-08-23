@@ -11,16 +11,23 @@
               <i class="iconfont">&#xe6cf;</i>
               应用管理
             </Button> -->
-            <Button size="small" @click="changeView" caseId='apps' v-bind:class="caseId==='apps'?'ivu-btn-active':''">
+            <!-- <Button size="small" @click="changeView" caseId='apps' v-bind:class="caseId==='apps'?'ivu-btn-active':''">
               <i class="iconfont">&#xe608;</i>
               全部应用
-            </Button>
+            </Button> -->
             <!-- <Button size="small" v-for="(pulse,i) in  pulseGraphLlistr" :key="i" type="ghost" @click="changeView" :caseId="pulse.id" v-bind:class="caseId===pulse.id?'ivu-btn-active':''">
               <i class="iconfont">&#xe64c;</i>
               {{pulse.name}}
             </Button> -->
             <Select v-model="model" class="input-select" @on-change="changeView" placeholder="请选择业务单元">
-              <Option v-for="item in pulseGraphLlistr" :value="item.id" :key="item.id">{{ item.name }}</Option>
+              <Option value="app">
+               <Icon type="ios-apps" size="16"/>
+                所有应用看板
+                </Option>
+              <Option v-for="item in pulseGraphLlistr" :value="item.id" :key="item.id">
+                <Icon type="md-share" size="16"/>
+                {{ item.name }}
+                </Option>
             </Select>
           </ButtonGroup>
           </Col>
@@ -85,8 +92,8 @@ export default {
       allTaskCount: [],
       ds: ds("wss://sunwingfood.roletask.com:6021/deepstream"),
       books$$: null,
-      isAdmin:this.$currentUser.isAdmin,
-      model: 0
+      isAdmin: this.$currentUser.isAdmin,
+      model: "app"
     };
   },
   mounted() {
@@ -103,7 +110,7 @@ export default {
       this.allTaskCount = res.tableContent;
       //获取菜单信息
       getMenu().then(res => {
-       this.urlMd5(res);
+        this.urlMd5(res);
 
         if (this.favoriteMenu.children.length > 0) {
           this.menuList = [this.favoriteMenu, ...res];
@@ -208,7 +215,7 @@ export default {
 @media screen and (min-width: 522px) and (max-width: 780px) {
   .ivu-col-span-4 {
     display: block !important;
-     width: 50% !important;
+    width: 50% !important;
   }
 }
 

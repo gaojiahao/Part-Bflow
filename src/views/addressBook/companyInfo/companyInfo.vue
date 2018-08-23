@@ -35,8 +35,7 @@
         <img v-if="!item.type" :src="item.imgUrl" />
         <Icon v-else :type="item.type" class="icon" />
         <div class="detail-tabs-child-right">
-          <span v-if="item.relativeNum==0||item.relativeNum">{{ item.relativeNum }}</span>
-          <span v-else>&nbsp;</span>
+          <span>{{ item.relativeNum }}</span>
           <p>{{ item.name }}</p>
         </div>
       </div>

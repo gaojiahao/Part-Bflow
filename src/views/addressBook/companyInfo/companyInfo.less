@@ -47,9 +47,8 @@
             }
         }
         img{
-            width: 42px;
+            width: 30px;
             vertical-align: middle;
-            padding: 0px 5px;
         }
         .icon{
             font-size: 1.9rem;
@@ -59,11 +58,15 @@
         border-right: 1px solid #ddd;
         margin-right: 10px;
     }
+    &-child:last-child{
+        height: 43px;
+        line-height: 43px;
+        img{
+            border-radius: 30px;
+            padding-bottom: 4px;
+        }
+    }
     .active{
         background-color: #ddd;
-        border-radius: 2px;
-        p{
-            color: #39f;
-        }
     }
 }

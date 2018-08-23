@@ -5,7 +5,7 @@
 <template>
     <div class="info">
         <Row class="info-detail">
-            <Form :model="formItem" ref="formItem" :rules="ruleValidate" :label-width="98" :class="{'is-required':isEdit}">
+            <Form :model="formItem" ref="formItem" :rules="ruleValidate" :label-width="107" :class="{'is-required':isEdit}">
                 <FormItem label="头像：">
                     <Upload v-if="!isEdit" ref="upload"  
                         :show-upload-list="false" 
@@ -79,10 +79,10 @@
             </Form>
         </Row>
         <Row class="info-btn">
-            <Button @click="goUserList"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">关闭</Button>
-            <Button v-if="isAdd" @click="editUserInfo"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">{{ isEdit?'编辑':'放弃编辑'}}</Button>
-            <Button v-if="!isEdit" @click="updateUserData"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存</Button>
-            <Button v-if="!isEdit" @click="saveAndAddUser" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存并新建</Button>
+            <Button @click="goUserList"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold">关闭</Button>
+            <Button v-if="isAdd" @click="editUserInfo"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold">{{ isEdit?'编辑':'放弃编辑'}}</Button>
+            <Button v-if="!isEdit" @click="updateUserData"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold">保存</Button>
+            <Button v-if="!isEdit" @click="saveAndAddUser" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold">保存并新建</Button>
         </Row>
     </div>
 </template>

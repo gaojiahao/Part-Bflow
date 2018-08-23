@@ -296,7 +296,8 @@ export default {
           filter = [
             {
               filedName: "name",
-              value: this.formItem.name
+              value: this.formItem.name,
+               symbol: "="
             }
           ];
         }

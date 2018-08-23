@@ -11,42 +11,51 @@
               <i class="iconfont">&#xe6cf;</i>
               应用管理
             </Button> -->
-            <Button size="small" @click="changeView" caseId='apps' v-bind:class="caseId==='apps'?'ivu-btn-active':''">
+            <!-- <Button size="small" @click="changeView" caseId='apps' v-bind:class="caseId==='apps'?'ivu-btn-active':''">
               <i class="iconfont">&#xe608;</i>
               全部应用
-            </Button>
+            </Button> -->
             <!-- <Button size="small" v-for="(pulse,i) in  pulseGraphLlistr" :key="i" type="ghost" @click="changeView" :caseId="pulse.id" v-bind:class="caseId===pulse.id?'ivu-btn-active':''">
               <i class="iconfont">&#xe64c;</i>
               {{pulse.name}}
             </Button> -->
             <Select v-model="model" class="input-select" @on-change="changeView" placeholder="请选择业务单元">
-              <Option v-for="item in pulseGraphLlistr" :value="item.id" :key="item.id">{{ item.name }}</Option>
+              <Option value="apps">
+                <Icon type="ios-apps" size="16" /> 所有应用看板
+              </Option>
+              <Option v-for="item in pulseGraphLlistr" :value="item.id" :key="item.id">
+                <Icon type="md-share" size="16" /> {{ item.name }}
+              </Option>
             </Select>
           </ButtonGroup>
           </Col>
         </Row>
       </div>
     </div>
-    <div v-if="cutView">
-      <section v-for="(menuList,i) in menuList" :key="i" class="bg-gray-lighter">
+    <keep-alive>
+      <div v-if="cutView&&caseId==='apps'">
+        <section v-for="(menuList,i) in menuList" :key="i" class="bg-gray-lighter">
 
-        <row class="menu-group">
-          <row>
-            <h3 class="menu-group-title">{{menuList.text}}</h3>
-          </row>
+          <row class="menu-group">
+            <row>
+              <h3 class="menu-group-title">{{menuList.text}}</h3>
+            </row>
 
-          <row :gutter="16">
-            <Col v-if="item.leaf" v-for="(item,j) in menuList.children" :key="j" span="4">
-            <card-item v-if="item.leaf" :appinfo="item" :allTaskCount="allTaskCount"></card-item>
-            </Col>
-            <card-list v-else :menuItem="item" :index='j' :allTaskCount="allTaskCount"></card-list>
+            <row :gutter="16">
+              <Col v-if="item.leaf" v-for="(item,j) in menuList.children" :key="j" span="4">
+              <card-item v-if="item.leaf" :appinfo="item" :allTaskCount="allTaskCount"></card-item>
+              </Col>
+              <card-list v-else :menuItem="item" :index='j' :allTaskCount="allTaskCount"></card-list>
+            </row>
           </row>
-        </row>
-      </section>
-    </div>
-    <div v-for="(pulseGraph,index) in pulseGraphLlistr" :key="index" v-if="!cutView && pulseGraph.id === caseId">
-      <pulse-graph :caseId="pulseGraph.id"></pulse-graph>
-    </div>
+        </section>
+      </div>
+    </keep-alive>
+    <keep-alive>
+      <div v-for="(pulseGraph,index) in pulseGraphLlistr" :key="index" v-if="!cutView && pulseGraph.id === caseId">
+        <pulse-graph :caseId="pulseGraph.id"></pulse-graph>
+      </div>
+    </keep-alive>
   </div>
 </template>
 
@@ -80,13 +89,13 @@ export default {
         text: "常用应用",
         children: []
       },
-      caseId: "",
+      caseId: "apps",
       pulseGraphLlistr: [],
       allTaskCount: [],
       ds: ds("wss://sunwingfood.roletask.com:6021/deepstream"),
       books$$: null,
-      isAdmin:this.$currentUser.isAdmin,
-      model: 0
+      isAdmin: this.$currentUser.isAdmin,
+      model: "apps"
     };
   },
   mounted() {
@@ -103,7 +112,7 @@ export default {
       this.allTaskCount = res.tableContent;
       //获取菜单信息
       getMenu().then(res => {
-       this.urlMd5(res);
+        this.urlMd5(res);
 
         if (this.favoriteMenu.children.length > 0) {
           this.menuList = [this.favoriteMenu, ...res];
@@ -120,18 +129,11 @@ export default {
   },
 
   methods: {
-    changeView(event) {
-      if (!event) return;
-      let caseId;
-      if (event.currentTarget) {
-        caseId = event.currentTarget.getAttribute("caseid");
-      } else if (event > 0) {
-        caseId = event;
-      }
+    changeView(caseId) {
+      if (!caseId) return;
       if (caseId === "apps") {
         this.cutView = true;
-        this.caseId = "apps";
-        this.model = 0; //清空下拉选择框值，默认值为0
+        this.caseId = caseId;
       } else {
         this.cutView = false;
         this.caseId = Number(caseId);
@@ -208,7 +210,7 @@ export default {
 @media screen and (min-width: 522px) and (max-width: 780px) {
   .ivu-col-span-4 {
     display: block !important;
-     width: 50% !important;
+    width: 50% !important;
   }
 }
 

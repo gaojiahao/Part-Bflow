@@ -127,7 +127,7 @@ export default {
           }
         },
         {
-          title: "部门职能",
+          title: "组织职能",
           key: "depFunction",
           render: (h, params) => {
             let depFunction = params.row.depFunction;
@@ -259,7 +259,7 @@ export default {
           }
         },
         {
-          title: "部门职能",
+          title: "组织职能",
           key: "depFunction",
           render: (h, params) => {
             let depFunction = params.row.depFunction;

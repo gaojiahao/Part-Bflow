@@ -86,13 +86,6 @@ export default {
       //请求应用详情信息
       getListData(uniqueId).then(res => {
         this.appData = res[0];
-        if(this.appData.type === 'business'){
-          this.appData.appType = '业务应用'; 
-        }else if(this.appData.type === 'subject'){
-          this.appData.appType = '科目应用';
-        }else{
-          this.appData.appType = '对象应用';
-        }
         this.appType = this.appData.type;
         
         //获取当前登录用户角色id

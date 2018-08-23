@@ -288,7 +288,8 @@ export default {
         if (valid) {
           updateConpanyInfo(data).then(res => {
             if (res.success) {
-              this.$Message.info("更新成功");
+              this.$Message.success("保存成功");
+              window.location.reload();
             } else {
               this.$Message.error(res.message);
             }
@@ -345,7 +346,7 @@ export default {
         title: "系统提示",
         content: "确认要关闭当前页面吗？",
         onOk: () => {
-          this.$router.push({ path: "/addressBook/companyInfo/board" });
+          location.href = '/Site/index.html#page/companys';
         }
       });
     }

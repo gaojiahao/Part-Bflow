@@ -39,12 +39,12 @@
           </defs>
           <defs>
             <marker id="arrow" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" viewBox="0 0 15 15" refX="6" refY="6" orient="auto">
-              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: #00ae9d;" />
+              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: gray;" />
             </marker>
           </defs>
           <defs>
             <marker id="arrow1" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" viewBox="0 0 15 15" refX="6" refY="6" orient="auto">
-              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: #f38113;" />
+              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: gray;" />
             </marker>
           </defs>
           <defs>
@@ -85,7 +85,7 @@
           </g>
 
           <g v-for="(point) in pointList" :key="point.id">
-            <polyline :points="point.value" :marker-end="waterFlow[point.id]!==undefined?'url(#arrow_hight_color)':'url(#arrow1)'" v-bind:class="waterFlow[point.id]!==undefined?'path':''" style="fill:none;stroke:#f38113;stroke-width:0.8" />
+            <polyline :points="point.value" :marker-end="waterFlow[point.id]!==undefined?'url(#arrow_hight_color)':'url(#arrow1)'" v-bind:class="waterFlow[point.id]!==undefined?'path':''" style="fill:none;stroke:#ddd;stroke-width:1" />
           </g>
           <!-- 应用与应用之间的关系 -->
           <g v-for="(point) in transTypePointList" :key="point.id">
@@ -796,8 +796,8 @@ export default {
 
 .transTypeRel_style {
   fill: none;
-  stroke: #00ae9d;
-  stroke-width: 1.5;
+  stroke: #ddd;
+  stroke-width: 1;
   // stroke-dasharray: 2;
 }
 

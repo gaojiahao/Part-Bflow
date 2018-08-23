@@ -32,7 +32,7 @@
                 </Tooltip>
               </b>
             </Col>
-            <Col span="6">应用类型: <span>{{ appData.appType }}</span></Col>
+            <Col span="6">应用类型: <span>{{ appData.TRANS_NAME }}</span></Col>
             <Col span="6">应用管理员: <span v-if="showEditAppInfo">
               <Icon type="person"></Icon>{{ appData.administrator }}</span>
               <Input v-else @on-click="selectAdminModal" v-model="appData.administrator" icon="md-arrow-dropdown" style="width: 100px">

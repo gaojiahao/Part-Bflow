@@ -6,7 +6,7 @@
         <h3>{{appinfo.text+' - 待办任务'}}</h3>
       </div>
       <div slot="content" class="api">
-        <Table :columns="columns" :data="columnData"></Table>
+        <Table :columns="columns" :data="columnData" size="small"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
             <Page :total="pageTotal" :current="currentPage" size="small" :page-size="pageSize" @on-change="changeCurrentPage" show-total></Page>
@@ -200,7 +200,7 @@ export default {
       });
     },
     goAppSetting(list) {
-      let url = "/Site/index.html#appSetting/" + list.id;
+      let url = "appSetting/" + list.listId;
       window.top.postMessage(
         {
           type: "redirect",

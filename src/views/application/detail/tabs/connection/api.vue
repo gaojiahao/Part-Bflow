@@ -24,7 +24,7 @@
               {{commitApi.body}}
             </pre>
             <div style="position: absolute;top: 70px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=commitApi.body @click="copy">
-              <Tooltip placement="top" content="点击复制" :disabled="!disabled">
+              <Tooltip placement="top" content="点击复制" :disabled="disabled">
                 <Icon type="md-document" size='24' />
               </Tooltip>
             </div>

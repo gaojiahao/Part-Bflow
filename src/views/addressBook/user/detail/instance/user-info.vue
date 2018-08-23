@@ -30,7 +30,7 @@
                             </div>
                         </div>
                     </Upload>
-                    <img v-else :src="logo" style="width: 128px;height:128px;">
+                    <img v-else :src="logo?logo:false" style="width: 128px;height:128px;">
                     <Modal title="查看头像" v-model="visible">
                         <img :src="logo" v-if="visible" style="width: 100%">
                     </Modal>

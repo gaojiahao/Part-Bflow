@@ -67,7 +67,7 @@ export default {
         objectName: "group",
         objectId: this.groupId,
         page: 1,
-        limit: 8,
+        limit: 10,
         start: 0
       },
       permissionColumns: [

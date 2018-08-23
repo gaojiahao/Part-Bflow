@@ -96,7 +96,7 @@ export default {
       memberInfoParams: {
         roleId: this.jobId,
         page: 1,
-        limit: 8
+        limit: 10
       },
       memberInfoColumns: [
         {

@@ -116,7 +116,7 @@ export default {
           {
             required: true,
             message: "请选择公司类型",
-            trigger: "blur"
+            trigger: "change"
           }
         ]
       }
@@ -301,7 +301,6 @@ export default {
       if (!value) {
         return callback(new Error("请输入公司名称"));
       } else if (this.cacheGroupName != value) {
-        debugger;
         let test = { name: "groupName", value: value };
         let id =
           this.$route.name == "add"

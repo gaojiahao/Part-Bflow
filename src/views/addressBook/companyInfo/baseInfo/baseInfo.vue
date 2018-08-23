@@ -21,7 +21,7 @@
                   </div>
                 </div>
               </Upload>
-              <img v-else :src="logo" style="width: 128px;height:128px;line-height: 128px;">
+              <img v-else :src="logo?logo:false" style="width: 128px;height:128px;line-height: 128px;">
               <Modal title="查看头像" v-model="visible">
                 <img :src="logo" v-if="visible" style="width: 100%">
               </Modal>
@@ -62,7 +62,7 @@
       </div>
     </div>
     <Row class="info-btn">
-      <Button @click="toCompanyLst" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;font-size:14px;">关闭</Button>
+      <Button @click="toCompanyLst" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;">关闭</Button>
       <Button v-if="isAdd" @click="isEditCompanyInfo" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;">{{isEdit?'编辑':'放弃编辑'}}</Button>
       <Button v-if="baseInfoItem.groupId&&!isEdit" @click="updateCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;">保存</Button>
       <Button v-else-if="!isEdit&&!isAdd" @click="addCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;">保存</Button>
@@ -346,7 +346,7 @@ export default {
         title: "系统提示",
         content: "确认要关闭当前页面吗？",
         onOk: () => {
-          location.href = '/Site/index.html#page/companys';
+          location.href = "/Site/index.html#page/companys";
         }
       });
     }

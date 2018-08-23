@@ -14,7 +14,7 @@
     }
   }
 }
-.serach {
+.search {
   margin-bottom: 5px;
   &-btn {
     width: 300px;
@@ -38,7 +38,7 @@
     </div>
     <Modal v-model="showModal" title="选择下级公司" @on-ok="addlowerCompany" width="1000">
       <div class="serach">
-        <Input placeholder="请输入公司名称" @on-search="search" :search="true" class="serach-btn" v-model="groupName" />
+        <Input placeholder="请输入公司名称" @on-search="search" :search="true" class="search-btn" v-model="groupName" />
         <Button type="primary" @click="search">搜索</Button>
       </div>
       <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" height="400" :loading="companyLoading" :columns="columns1" :data="companyData"></Table>

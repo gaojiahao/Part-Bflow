@@ -14,7 +14,7 @@
 </style>
 
 <template>
-    <Poptip trigger="hover" placement="top" style="position:fixed;z-index:99999;">
+    <Poptip trigger="hover" placement="top" style="position:fixed;z-index:99999;cursor:pointer;">
         <slot name="userCard"></slot>
         <div slot="content">
             <div class="userInfo">

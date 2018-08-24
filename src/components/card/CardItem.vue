@@ -286,6 +286,7 @@ export default {
     }
 
     &-admin{
+      color: #4b8cf0 !important;
       cursor: pointer;
     }
   }

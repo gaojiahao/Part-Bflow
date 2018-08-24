@@ -125,6 +125,7 @@ export default {
   },
   methods: {
     copy() {
+      debugger;
       let clipboard = new Clipboard(".tag-read");
       clipboard.on("success", e => {
         console.log("复制成功");
@@ -209,18 +210,23 @@ export default {
     findList(this.listId)
       .then(res => {
         try {
-          this.commitApi = res.commitUrl?JSON.parse(res.commitUrl):res.commitUrl;
-          this.updateApi = res.updateUrl?JSON.parse(res.updateUrl):res.updateUrl;
-          this.viewApi = res.viewUrl?JSON.parse(res.viewUrl):res.viewUrl;
+          this.commitApi = res.commitUrl
+            ? JSON.parse(res.commitUrl)
+            : res.commitUrl;
+          this.updateApi = res.updateUrl
+            ? JSON.parse(res.updateUrl)
+            : res.updateUrl;
+          this.viewApi = res.viewUrl ? JSON.parse(res.viewUrl) : res.viewUrl;
         } catch (error) {
           this.$Message.error("后台返回格式有误！！！");
         }
-        this.commitData = this.formatData(this.commitApi.body);
-        this.updateData = this.formatData(this.updateApi.body);
-        this.viewData = this.formatData(this.viewApi.body);
+        debugger;
         this.commitApi["body"] = ForamtJson(this.commitApi["body"]);
         this.updateApi["body"] = ForamtJson(this.updateApi["body"]);
         this.viewApi["body"] = ForamtJson(this.viewApi["body"]);
+        this.commitData = this.formatData(this.commitApi.body);
+        this.updateData = this.formatData(this.updateApi.body);
+        this.viewData = this.formatData(this.viewApi.body);
       })
       .catch(error => {
         this.$Message.error(error.message.data);

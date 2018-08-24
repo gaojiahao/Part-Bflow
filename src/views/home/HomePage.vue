@@ -286,6 +286,11 @@ export default {
       text-align: center;
       border-radius: 0px;
     }
+
+    .ivu-select-selected-value{
+      font-size: 14px !important;
+      font-weight: bold;
+    }
   }
 }
 &-container {

@@ -58,8 +58,8 @@
             </Select>
           </FormItem>
           <div class="baseinfo-container-divider"></div>
-          <FormItem label="组织负责人" :labelWidth="120" prop="principal" style="margin-top:20px">
-            <Input @on-click="selectPrincipalModal" v-model="formItem.principal" icon="md-arrow-dropdown" placeholder="选择用户" :readonly="isEdit" :class="isEdit?'input-status-isedit':''"></Input>
+          <FormItem label="组织负责人" :labelWidth="120" prop="principalName" style="margin-top:20px">
+            <Input @on-click="selectPrincipalModal" v-model="formItem.principalName" icon="md-arrow-dropdown" placeholder="选择用户" :readonly="isEdit" :class="isEdit?'input-status-isedit':''"></Input>
           </FormItem>
           <FormItem label="上级组织" :labelWidth="120" prop="highGroup" style="margin-top:20px">
             <Input @on-click="selectHighOrgModal" v-model="formItem.highGroup" icon="md-arrow-dropdown" placeholder="选择上级组织" :readonly="isEdit" :class="isEdit?'input-status-isedit':''"></Input>
@@ -175,7 +175,7 @@ export default {
         depFunction: "",
         status: 1,
         principal: "",
-        principalId: "",
+        principalName: "",
         highGroup: "",
         parentId: ""
       },
@@ -780,8 +780,8 @@ export default {
 
     //双击负责人选中
     handlePrinciplDblclick(row, index) {
-      this.formItem.principal = row.nickname;
-      this.formItem.principalId = row.userId;
+      this.formItem.principalName = row.nickname;
+      this.formItem.principal = row.userId;
       this.isShowPrincipalModal = false;
     },
 
@@ -824,8 +824,8 @@ export default {
 
     //点击确定保存
     savaSelectPrincipal() {
-      this.formItem.principal = this.onSelectionPrincipal.nickname;
-      this.formItem.principalId = this.onSelectionPrincipal.userId;
+      this.formItem.principalName = this.onSelectionPrincipal.nickname;
+      this.formItem.principal = this.onSelectionPrincipal.userId;
       this.isShowPrincipalModal = false;
     },
 
@@ -871,7 +871,8 @@ export default {
           this.formItem.groupType = tableContent.groupType;
           this.formItem.depFunction = tableContent.depFunction;
           this.formItem.status = tableContent.status;
-          this.formItem.principal = tableContent.principal;
+          this.formItem.principal = tableContent.principal; //负责人id
+          this.formItem.principalName = tableContent.principalName; //负责人名称
           this.formItem.highGroup = tableContent.parentName;
           this.formItem.parentId = tableContent.parentId;
           this.parentType = tableContent.parentType;

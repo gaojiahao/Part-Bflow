@@ -59,7 +59,7 @@
       <!-- 用户modal -->
       <Modal v-model="showUserModal" title="用户选择" :mask-closable="false" @on-ok="confirmUser" @on-cancel="cancelSelectUser" :transfer="false">
         <div class="app-search">
-          <Input v-model="searchUserValue" @on-search="userFilter" :search="true" placeholder="名称搜索" style="width: 300px"></Input>
+          <Input v-model="searchUserValue" @on-search="userFilter" :search="true" placeholder="名称或工号搜索" style="width: 300px"></Input>
           <p @click="userFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </p>
@@ -284,7 +284,7 @@ export default {
     //用户过滤
     userFilter() {
       let filter = JSON.stringify([
-        { operator: "like", value: this.searchUserValue, property: "nickname" }
+        {operator_1:"like",value_1:this.searchUserValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchUserValue,property_2:"userCode"}
       ]);
       this.selectUserModal(filter);
     },
@@ -562,7 +562,7 @@ export default {
     //用户page点击
     onUserPageChange(currentPage) {
       let filter = JSON.stringify([
-        { operator: "like", value: this.searchUserValue, property: "nickname" }
+        {operator_1:"like",value_1:this.searchUserValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchUserValue,property_2:"userCode"}
       ]);
       this.userCurrentPage = currentPage;
       this.selectUserModal(filter);

@@ -19,7 +19,7 @@
           <span>已完成</span>
         </Radio>
       </RadioGroup>
-      <RadioGroup class="taskbtn_2" :v-model="overdue" size="large" >
+      <RadioGroup class="taskbtn_2"  size="large">
         <i class="vertical-divide"></i>
         <Radio label="no-overdue">
           <span>未逾期</span>
@@ -29,15 +29,28 @@
         </Radio>
       </RadioGroup>
       <Dropdown style="position: fixed;top: 10px;left: 600px;z-index: 999; font-size:14px">
-         <span >
-           项目立项
-            <Icon type="ios-arrow-down"></Icon>
+        <span>
+          项目立项
+          <Icon type="ios-arrow-down"></Icon>
         </span>
         <DropdownMenu slot="list">
-            <DropdownItem>销售订单</DropdownItem>
+          <DropdownItem>项目立项1</DropdownItem>
+          <DropdownItem>项目立项1</DropdownItem>
+          <DropdownItem>项目立项1</DropdownItem>
         </DropdownMenu>
-    </Dropdown>
-      <!-- <div class="divide"></div> -->
+      </Dropdown>
+      <Dropdown style="position: fixed;top: 10px;left: 700px;z-index: 999; font-size:14px">
+        <span>
+          销售订单
+          <Icon type="ios-arrow-down"></Icon>
+        </span>
+        <DropdownMenu slot="list">
+          <DropdownItem>销售订单</DropdownItem>
+          <DropdownItem>销售订单</DropdownItem>
+          <DropdownItem>销售订单</DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+      <div class="divide"></div>
       <div class="business_item" style="width:50px">
         <div class="left-name" v-for="(item,index) in dataItem" :key="index">
           <span></span>

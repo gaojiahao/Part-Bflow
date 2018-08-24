@@ -181,7 +181,7 @@ export default {
         let filter;
         if(this.userId){
             let value = this.formItem.userCode;
-            filter = encodeURIComponent('[{"filedName":"userCode","symbol":"=","value":'+value+'},{"filedName":"userId","symbol":"<>","value":'+this.userId+'}]');
+            filter = JSON.stringify([{filedName:"userCode",symbol:"=",value:value},{filedName:"userId",symbol:"<>",value:this.userId}]);
             checkoutFieldIsOnly('sys_user',filter).then(res => {
                 if(res.result === 1){
                     this.checkout = false;
@@ -190,7 +190,7 @@ export default {
             })
         }else{
             if(this.formItem.userCode){
-                filter = encodeURIComponent('[{"filedName":"userCode","symbol":"=","value":'+this.formItem.userCode+'}]');
+                filter = JSON.stringify([{filedName:"userCode",symbol:"=",value:this.formItem.userCode}]);
                 checkoutFieldIsOnly('sys_user',filter).then(res => {
                     if(res.result === 1){
                         this.checkout = false;

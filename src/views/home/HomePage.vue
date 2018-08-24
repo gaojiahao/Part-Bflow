@@ -20,7 +20,7 @@
               {{pulse.name}}
             </Button> -->
              <Icon :type="model==='apps'?'ios-apps':'md-share'" size="16" /> 
-            <Select v-model="model" class="input-select" @on-change="changeView" placeholder="请选择业务单元" style="width:230px">
+            <Select v-model="model" class="input-select" @on-change="changeView" placeholder="请选择业务单元" style="width:230px;font-size:16px">
               <Option value="apps">
                 <Icon type="ios-apps" size="16" /> 所有应用看板
               </Option>
@@ -33,7 +33,6 @@
         </Row>
       </div>
     </div>
-    <keep-alive>
       <div v-if="cutView&&caseId==='apps'">
         <section v-for="(menuList,i) in menuList" :key="i" class="bg-gray-lighter">
 
@@ -51,12 +50,9 @@
           </row>
         </section>
       </div>
-    </keep-alive>
-    <keep-alive>
       <div v-for="(pulseGraph,index) in pulseGraphLlistr" :key="index" v-if="!cutView && pulseGraph.id === caseId">
         <pulse-graph :caseId="pulseGraph.id"></pulse-graph>
       </div>
-    </keep-alive>
   </div>
 </template>
 

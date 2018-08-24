@@ -209,9 +209,9 @@ export default {
     findList(this.listId)
       .then(res => {
         try {
-          this.commitApi = JSON.parse(res.commitUrl);
-          this.updateApi = JSON.parse(res.updateUrl);
-          this.viewApi = JSON.parse(res.viewUrl);
+          this.commitApi = res.commitUrl?JSON.parse(res.commitUrl):res.commitUrl;
+          this.updateApi = res.updateUrl?JSON.parse(res.updateUrl):res.updateUrl;
+          this.viewApi = res.viewUrl?JSON.parse(res.viewUrl):res.viewUrl;
         } catch (error) {
           this.$Message.error("后台返回格式有误！！！");
         }

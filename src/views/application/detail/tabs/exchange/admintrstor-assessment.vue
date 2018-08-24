@@ -9,8 +9,8 @@
         <h3>管理员自评
         </h3>
       </Row>
-      <Row style="border-bottom: 1px solid #ddd;" v-show="isAdminTrue">
-        <div style="width:85%;">
+      <Row v-show="isAdminTrue">
+        <div style="width:80%;padding:5px;">
           <Form ref="formValidate" :label-width="150" :model="adminAssessData" :rules="ruleValidate">
             <FormItem label="期间（月份）:" prop="duringDate">
               <DatePicker format="yyyy-MM" type="month" placeholder="选择日期" style="width: 200px" v-model="adminAssessData.duringDate"></DatePicker>
@@ -22,11 +22,12 @@
               <Input type="textarea" v-model="adminAssessData.opportunity"></Input>
             </FormItem>
           </Form>
-          <div style="text-align:center;">
+          <div style="text-align:right;margin-bottom:5px;">
             <Button @click="submitAdminAssess" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存</Button>
           </div>
         </div>
       </Row>
+      <div v-show="isAdminTrue" style="height:30px;background:#f0f0f0;"></div>
       <div v-for="(assess, index) of assessments" :key="index" class="pad10 bg_ff">
         <img :src="assess.photo?assess.photo:'resources/images/icon/contactor.png'" class="user-icon">
         <div class="font14 content">

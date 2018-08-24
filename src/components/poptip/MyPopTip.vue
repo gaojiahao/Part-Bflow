@@ -2,24 +2,24 @@
 @import "./MyPopTip.less";
 </style>
 <style>
- .ivu-poptip-inner {
-     border: 1px solid #39f;
- }
-.ivu-poptip-popper[x-placement^=bottom] .ivu-poptip-arrow {
-     border-bottom-color: #39f;
- }
-.ivu-poptip-popper[x-placement^=top] .ivu-poptip-arrow {
-     border-top-color: #39f;
- }
+.ivu-poptip-inner {
+  border: 1px solid #39f;
+}
+.ivu-poptip-popper[x-placement^="bottom"] .ivu-poptip-arrow {
+  border-bottom-color: #39f;
+}
+.ivu-poptip-popper[x-placement^="top"] .ivu-poptip-arrow {
+  border-top-color: #39f;
+}
 </style>
 
 <template>
-    <Poptip trigger="hover" placement="bottom">
+    <Poptip trigger="hover" placement="top" style="position:fixed;z-index:99999;">
         <slot name="userCard"></slot>
         <div slot="content">
             <div class="userInfo">
                 <div class="userInfo-top">
-                    <img class="userInfo-img" src="userInfo.photo" :onerror="errorImg01"> 
+                    <img class="userInfo-img" src="userInfo.photo" :onerror="errorImg01">
                     <div class="userInfo-right">
                         <b class="font14">{{userInfo.nickname}}</b>&nbsp;
                         <Icon type="person" class="colorI"></Icon>
@@ -53,10 +53,9 @@ export default {
   },
   data() {
     return {
-         errorImg01: 'this.src="' + require('@/styles/login_bg.jpg') + '"'
+      errorImg01: 'this.src="' + require("@/styles/login_bg.jpg") + '"'
     };
   },
-  methods: {
-  }
+  methods: {}
 };
 </script>

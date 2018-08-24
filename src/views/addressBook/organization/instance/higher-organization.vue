@@ -31,7 +31,7 @@
     <custom-table apiUrl="/ds/getParentGroupByGroupId" :columns="highOrgColumns" :apiParams="highOrganizationParams" v-model="reload" @on-refesh-change='onRefeshChange' :isHiddenPage="true">
       <div slot="header" class="header-action">
         <label @click="showHighOrgModal">上级组织</label>
-        <span>-选择上级用户</span>
+        <span>-选择上级组织</span>
       </div>
     </custom-table>
 

@@ -6,9 +6,9 @@
   <div class="member-wrap">
     <div class="member-wrap-table">
       <b @click="showAllMember" class="member-wrap-table-btn">添加成员</b>
-      <span style="color: #7a7676;">-选择成员</span>
-      <b @click="delCompanyMember" class="member-wrap-table-btn">删除</b>
-      <span style="color: #7a7676;">-批量删除成员</span>
+      <span style="color: #7a7676;">-添加成员</span>
+      <b @click="delCompanyMember" class="member-wrap-table-btn">移除成员</b>
+      <span style="color: #7a7676;">-移除成员</span>
       <br>
       <Table :loading="memberLoading" :columns="columns1" :data="memberData" @on-selection-change="onMemberSelectionChange">
       </Table>

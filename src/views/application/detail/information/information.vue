@@ -67,7 +67,7 @@
    
     <Modal v-model="showAdminModal" title="请选择" @on-ok="confirmModal">
       <div class="app-search">
-        <Input @on-search="adminFilter" :search="true" v-model="searchValue" placeholder="搜索" style="width: 300px"></Input>
+        <Input @on-search="adminFilter" :search="true" v-model="searchValue" placeholder="搜索名称或工号" style="width: 300px"></Input>
         <p @click="adminFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
         </p>
@@ -226,14 +226,14 @@ export default {
     onPageChange(currentPage) {
       this.currentPage = currentPage;
       let filter = JSON.stringify([
-        { operator: "like", value: this.searchValue, property: "nickname" }
+        {operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
       ]);
       this.getAdmintrstorData(filter);
     },
     //查询管理员
     adminFilter() {
       let filter = JSON.stringify([
-        { operator: "like", value: this.searchValue, property: "nickname" }
+        {operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
       ]);
       this.getAdmintrstorData(filter);
     }

@@ -306,6 +306,8 @@ export default {
           this.isShowMemberModal = false;
           this.reload = true;
           this.$emit("on-high-organization-change", true);
+        }else{
+          this.$Message.error(res.message);
         }
       });
     },
@@ -342,6 +344,8 @@ export default {
           this.isShowMemberModal = false;
           this.reload = true;
           this.$emit("on-high-organization-change", true);
+        }else{
+          this.$Message.error(res.message);
         }
       });
     },

@@ -146,16 +146,8 @@ export default {
           title: "已过时间",
           key: "orig",
           render: (h,params) => {
-              let outDate = '',
-                  outYear,outMonth,outDay,outH,outM,outS;
-              outYear = new Date().getFullYear() - new Date(params.row.startTime).getFullYear();
-              outMonth = new Date().getMonth() - new Date(params.row.startTime).getMonth();
-              outDay = new Date().getDate() - new Date(params.row.startTime).getDate();
-              outH = new Date().getHours() - new Date(params.row.startTime).getHours();
-              outM = new Date().getMinutes() - new Date(params.row.startTime).getMinutes();
-              outS = new Date().getSeconds() - new Date(params.row.startTime).getSeconds();
-              outDate = (outYear*365+outMonth*30+outDay)+'天'+outH+'时'+outM+'分'+outS+'秒';
-              return h('span',{},outDate);
+            let outTime = this.calcLeadTime(params.row.startTime);
+            return h('span',{},outTime);
           }
         }
       ],
@@ -185,6 +177,22 @@ export default {
     onPageSizeChange(size) {
       this.pageSize = size;
       this.getWorkflowTaskData();
+    },
+    //计算时间差
+    calcLeadTime(date) {
+      let startDate = new Date(date.replace(/-/g,"/")),
+          currentDate = new Date(),
+          dateDiff = currentDate.getTime() - startDate.getTime(),//时间差的毫秒数
+          dayDiff = Math.floor(dateDiff/(24*3600*1000)),//相差天数
+          restMilliSeconds1 = dateDiff%(24*3600*1000),//计算天数后剩余的毫秒数
+          hourDiff = Math.floor(restMilliSeconds1/(3600*1000)),//计算出小时数
+          restMilliSeconds2 = restMilliSeconds1%(3600*1000),//计算小时数后剩余的毫秒数
+          minuteDiff = Math.floor(restMilliSeconds2/(60*1000)),//计算相差分钟数
+          restMilliSeconds3 = restMilliSeconds2%(60*1000),//计算分钟数后剩余的毫秒数
+          secondDiff = Math.round(restMilliSeconds3/1000),//计算出相差秒数
+          outdateTime;
+      outdateTime = dayDiff + '天' + hourDiff + '时' + minuteDiff + '分' + secondDiff + '秒';
+      return outdateTime;
     }
   },
   mounted() {

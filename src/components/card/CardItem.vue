@@ -1,6 +1,6 @@
 <template>
   <div class="card ivu-card ivu-card-bordered">
-    <Poptip class="badge-custom" width="660" placement="right-end" @on-popper-show="popperShow" v-if="type!=='subject'">
+    <Poptip class="badge-custom" width="660" placement="right-end" @on-popper-show="popperShow" v-if="type!=='subject'" :transfer="true">
       <Badge :count="taskCount"></Badge>
       <div slot="title">
         <h3>{{appinfo.text+' - 待办任务'}}</h3>
@@ -19,19 +19,26 @@
     </div>
 
     <img :src="appinfo.icon" />
-    <div @click="redirectTo(appinfo)" class="content">
+    <div class="content">
       <a @click.stop="goAppSetting(appinfo)" class="content-detail">详情</a>
-      <h5>{{appinfo.text}}</h5>
+      <h5 @click="redirectTo(appinfo)">{{appinfo.text}}</h5>
       <span>{{appinfo.administrator?appinfo.transName+', ':appinfo.transName}}</span>
-      <span>{{appinfo.administrator}}</span>
+        <my-pop-tip :userInfo="userInfo"  trigger="click">
+          <span @click="showUserInfo" slot="userCard" class="content-admin">{{appinfo.administrator}}</span>
+        </my-pop-tip>
     </div>
   </div>
 </template>
 
 <script>
 import { getAppTaskCount } from "@/services/flowService";
+import { getUserInfoByUserId } from "@/services/appService.js";
+import MyPopTip from "@/components/poptip/MyPopTip";
 export default {
   props: ["appinfo", "allTaskCount"],
+  components:{
+    MyPopTip
+  },
   data() {
     return {
       taskCount: 0,
@@ -104,7 +111,9 @@ export default {
       pageTotal: 0, //table总数
       pageSize: 10,
       currentPage: 1, //table当前页
-      pageListId: ""
+      pageListId: "",
+
+      userInfo:{},
     };
   },
   created() {
@@ -162,6 +171,16 @@ export default {
           "*"
         );
       }
+    },
+
+    showUserInfo(){
+     
+      let userId = this.appinfo.adminId;
+      getUserInfoByUserId(userId).then(res=>{
+        if(res.dataCount){
+          this.userInfo= res.tableContent[0];
+        }
+      })
     },
 
     popperShow(e) {
@@ -233,7 +252,7 @@ export default {
     cursor: auto;
   }
   .content {
-    cursor: pointer;
+    cursor: default;
     font-size: @card-text-font-size;
     width: 60%;
     text-overflow: ellipsis;
@@ -253,6 +272,7 @@ export default {
     }
 
     h5 {
+      cursor: pointer;
       position: relative;
       z-index: -99;
       font-size: 16px;
@@ -263,6 +283,10 @@ export default {
     span {
       font-size: 12px;
       color: #5f5e5e;
+    }
+
+    &-admin{
+      cursor: pointer;
     }
   }
 

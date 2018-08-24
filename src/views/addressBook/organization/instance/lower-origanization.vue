@@ -202,7 +202,7 @@ export default {
                       title: "确认",
                       content: "确认删除此组织？",
                       onOk: () => {
-                        let del = { groupId: params.row.groupId, parentId: "" };
+                        let del = [{ groupId: params.row.groupId, parentId: "" }];
                         deleteBatchGroup(del).then(res => {
                           if (res.success) {
                             this.$Message.success(res.message);
@@ -385,6 +385,8 @@ export default {
           this.isShowMemberModal = false;
           this.reload = true;
           this.$emit("on-lower-organization-change", true);
+        }else{
+          this.$Message.error(res.message);
         }
       });
     },

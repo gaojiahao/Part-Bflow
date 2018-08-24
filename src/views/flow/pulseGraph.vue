@@ -9,26 +9,27 @@
         <Radio label="teamtask">
           <span>团队任务</span>
         </Radio>
+        <i class="vertical-divide"></i>
       </RadioGroup>
       <RadioGroup class="taskbtn_1" v-model="rodioGroupDoOrNot" size="large" @on-change="radioGroupChangeDoneOrTodo">
-        <i class="vertical-divide"></i>
         <Radio label="todo">
           <span>未完成</span>
         </Radio>
         <Radio label="done">
           <span>已完成</span>
         </Radio>
-      </RadioGroup>
-      <RadioGroup class="taskbtn_2"  size="large">
         <i class="vertical-divide"></i>
+      </RadioGroup>
+      <RadioGroup class="taskbtn_2" size="large">
         <Radio label="no-overdue">
           <span>未逾期</span>
         </Radio>
         <Radio label="overdue ">
           <span>逾期</span>
         </Radio>
+        <i class="vertical-divide"></i>
       </RadioGroup>
-      <Dropdown style="position: fixed;top: 10px;left: 600px;z-index: 999; font-size:14px">
+      <Dropdown style="position: fixed;top: 10px;left: 540px;z-index: 999; font-size:14px">
         <span>
           项目立项
           <Icon type="ios-arrow-down"></Icon>
@@ -39,7 +40,7 @@
           <DropdownItem>项目立项1</DropdownItem>
         </DropdownMenu>
       </Dropdown>
-      <Dropdown style="position: fixed;top: 10px;left: 700px;z-index: 999; font-size:14px">
+      <Dropdown style="position: fixed;top: 10px;left: 630px;z-index: 999; font-size:14px">
         <span>
           销售订单
           <Icon type="ios-arrow-down"></Icon>
@@ -716,21 +717,21 @@ export default {
 .taskbtn_1 {
   position: fixed;
   top: 10px;
-  left: 220px;
+  left: 200px;
   z-index: 999;
 }
 
 .taskbtn_2 {
   position: fixed;
   top: 10px;
-  left: 420px;
+  left: 380px;
   z-index: 999;
 }
 
 .taskbtn_3 {
   position: fixed;
   top: 10px;
-  left: 600px;
+  left: 480px;
   z-index: 999;
 }
 

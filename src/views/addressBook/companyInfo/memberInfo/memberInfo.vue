@@ -18,7 +18,7 @@
         </div>
       </div>
     </div>
-    <Modal v-model="showModal" title="选择公司成员" @on-ok="addCompanyMember" width="630">
+    <Modal v-model="showModal" title="选择公司成员" @on-ok="addCompanyMember" width="870">
       <div class="serach">
         <!-- <Input placeholder="请输入工号" class="serach-btn" v-model="userCode" /> -->
         <Input @on-search="search" :search="true" placeholder="请输入姓名" class="serach-btn" v-model="nikeName" />
@@ -58,6 +58,20 @@ export default {
           align: "center"
         },
         {
+          title: "头像",
+          key: "photo",
+          width: 80,
+          render: (h, params) => {
+            return h("div", [
+              h("Avatar", {
+                props: {
+                  src: params.row.photo
+                }
+              })
+            ]);
+          }
+        },
+        {
           title: "工号",
           key: "userCode"
         },
@@ -91,6 +105,11 @@ export default {
         {
           title: "手机",
           key: "mobile"
+        },
+        {
+          title: "邮箱",
+          width: 150,
+          key: "email"
         },
         {
           title: "操作",
@@ -130,6 +149,20 @@ export default {
           align: "center"
         },
         {
+          title: "头像",
+          key: "photo",
+          width: 80,
+          render: (h, params) => {
+            return h("div", [
+              h("Avatar", {
+                props: {
+                  src: params.row.photo
+                }
+              })
+            ]);
+          }
+        },
+        {
           title: "工号",
           width: 100,
           key: "userCode"
@@ -148,6 +181,11 @@ export default {
           title: "手机",
           width: 150,
           key: "mobile"
+        },
+        {
+          title: "邮箱",
+          width: 150,
+          key: "email"
         }
       ],
       groupId: this.$route.params.groupId,

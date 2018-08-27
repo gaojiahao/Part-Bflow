@@ -145,10 +145,6 @@ export default {
         {
           title: "邮箱",
           key: "email"
-        },
-        {
-          title: "职位",
-          key: "role"
         }
       ],
       adminData: [],

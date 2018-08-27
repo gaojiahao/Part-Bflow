@@ -606,10 +606,10 @@ export const removeCompany = (groupIds) => {
  * 获取所有公司数据
  * 
  */
-export const getAllCompanys = (pageSize, currentPage, filter) => request('/H_roleplay-si/sysGroup/getCompanyList',{
+export const getAllCompanys = (pageSize, currentPage, searchValue) => request('/H_roleplay-si/sysGroup/getCompanyList',{
   page: currentPage,
   limit: pageSize,
-  filter: filter
+  search: searchValue
 });
 
 /**

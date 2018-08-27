@@ -42,6 +42,7 @@
               <Option value='普通合伙'>普通合伙</Option>
               <Option value='个人独资'>个人独资</Option>
               <Option value='子公司'>子公司</Option>
+              <Option value='其他'>其他</Option>
             </Select>
             <span v-else style="margin-left:5px;">{{baseInfoItem.companyType}}</span>
           </FormItem>

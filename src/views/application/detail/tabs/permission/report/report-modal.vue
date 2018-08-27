@@ -23,7 +23,7 @@
           <b class="permission-title">用户</b>
           </Col>
           <Col span="21" class="member-body">
-          <Tag @on-close="deleteUser" v-for="(userData, index) of userSelectData" :key="index" :userId="userData.userId" type="border" closable color="yellow">
+          <Tag @on-close="deleteUser" v-for="(userData, index) of userSelectData" :key="index" :userId="userData.userId" closable color="warning">
             {{ userData.nickname }}
           </Tag>
           </Col>
@@ -34,7 +34,7 @@
           <b class="permission-title">组织</b>
           </Col>
           <Col span="21" class="member-body">
-          <Tag @on-close="deleteOrg" v-for="(orgData, index) of orgSelectData" :key="index" :orgId="orgData.id" type="border" closable color="green">
+          <Tag @on-close="deleteOrg" v-for="(orgData, index) of orgSelectData" :key="index" :orgId="orgData.id" closable color="success">
             {{ orgData.name }}
           </Tag>
           </Col>
@@ -45,7 +45,7 @@
           <b class="permission-title">职位</b>
           </Col>
           <Col span="21" class="member-body">
-          <Tag @on-close="deleteDepartment" v-for="(departmentData, index) of departmentSelectData" :key="index" :depId="departmentData.id" type="border" closable color="blue">
+          <Tag @on-close="deleteDepartment" v-for="(departmentData, index) of departmentSelectData" :key="index" :depId="departmentData.id" closable color="primary">
             {{ departmentData.name }}
           </Tag>
           </Col>
@@ -53,7 +53,7 @@
         </Col>
       </Row>
       <!-- 用户modal -->
-      <Modal v-model="showUserModal" title="用户选择" :mask-closable="false" @on-ok="confirmUser" :transfer="false">
+      <Modal v-model="showUserModal" width="800" title="用户选择" :mask-closable="false" @on-ok="confirmUser" :transfer="false">
         <div class="app-search">
           <Input v-model="searchUserValue" @on-search="userFilter" :search="true" placeholder="名称或工号搜索" style="width: 300px"></Input>
           <p @click="userFilter" class="app-search-icon">
@@ -232,8 +232,25 @@ export default {
     selectUserModal(filter) {
       let userColumn = [
         { type: "selection", width: 60, align: "center" },
+        {
+          title: "头像",
+          key: "photo",
+          width: 80,
+          render: (h, params) => {
+            return h("div", [
+              h("Avatar", {
+                props: {
+                  src: params.row.photo
+                }
+              })
+            ]);
+          }
+        },
         { title: "姓名", key: "nickname" },
-        { title: "工号", key: "userCode" }
+        { title: "工号", key: "userCode" },
+        { title: "手机",key: "mobile" },
+        { title: "邮箱",key: "email" },
+        { title: "职位",key: "role",width: 150 }
       ];
       this.showUserModal = true;
       this.userColumns = userColumn;

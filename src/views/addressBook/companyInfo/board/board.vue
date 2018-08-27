@@ -34,11 +34,8 @@ export default {
   created() {},
   methods: {
     getCompanys: function() {
-      let pageData = this.$route.query,filter;
-      if(pageData.filterProperty === 'groupName'){
-        filter = [{operator:"like",value:pageData.filterValue,property:"groupName"}];
-      }
-      getAllCompanys(pageData.limit,pageData.page,JSON.stringify(filter)).then(res => {
+      let pageData = this.$route.query;
+      getAllCompanys(pageData.limit,pageData.page,pageData.filterValue).then(res => {
         this.companys = res.tableContent;
         window.top.getTotal = function () {
             return res.dataCount;

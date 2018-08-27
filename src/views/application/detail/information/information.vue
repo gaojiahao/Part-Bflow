@@ -65,14 +65,14 @@
     </Row>
 
    
-    <Modal v-model="showAdminModal" title="请选择" @on-ok="confirmModal">
+    <Modal v-model="showAdminModal" title="请选择管理员" @on-ok="confirmModal" width="800">
       <div class="app-search">
         <Input @on-search="adminFilter" :search="true" v-model="searchValue" placeholder="搜索名称或工号" style="width: 300px"></Input>
         <p @click="adminFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
         </p>
       </div>
-      <Table :highlight-row="true" @on-row-click="selectAdmin" :loading="adminLoading" height="300" stripe :columns="adminColumns" size="small" :data="adminData"></Table>
+      <Table :highlight-row="true" @on-row-dblclick="dbclickConfirmModal" @on-row-click="selectAdmin" :loading="adminLoading" height="300" stripe :columns="adminColumns" size="small" :data="adminData"></Table>
       <div class="user-page">
           <div style="float: right;">
             <Page :total="total" :current="currentPage" :page-size="pageSize" @on-change="onPageChange" size="small" show-total></Page>
@@ -117,12 +117,38 @@ export default {
       pageSize: 10,
       adminColumns: [
         {
+          title: "头像",
+          key: "photo",
+          width: 80,
+          render: (h,params) => {
+            return h('div',[
+              h('Avatar',{
+                props: {
+                  src: params.row.photo
+                }
+              })
+            ])
+          }
+        },
+        {
           title: "工号",
           key: "userCode"
         },
         {
           title: "姓名",
           key: "nickname"
+        },
+        {
+          title: "手机",
+          key: "mobile"
+        },
+        {
+          title: "邮箱",
+          key: "email"
+        },
+        {
+          title: "职位",
+          key: "role"
         }
       ],
       adminData: [],
@@ -171,6 +197,12 @@ export default {
     confirmModal() {
       this.appData.administrator = this.selectAdminData.nickname;
       this.appData.userId = this.selectAdminData.userId;
+    },
+    //双击选择
+    dbclickConfirmModal(selection) {
+      this.appData.administrator = selection.nickname;
+      this.appData.userId = selection.userId;
+      this.showAdminModal = false;
     },
     //存储选择的管理员
     selectAdmin(selection, row) {

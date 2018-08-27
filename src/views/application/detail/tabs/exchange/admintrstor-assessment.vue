@@ -10,7 +10,7 @@
         </h3>
       </Row>
       <Row v-show="isAdminTrue">
-        <div style="width:80%;padding:5px;">
+        <div style="width:95%;padding:5px;">
           <Form ref="formValidate" :label-width="150" :model="adminAssessData" :rules="ruleValidate">
             <FormItem label="期间（月份）:" prop="duringDate">
               <DatePicker format="yyyy-MM" type="month" placeholder="选择日期" style="width: 200px" v-model="adminAssessData.duringDate"></DatePicker>

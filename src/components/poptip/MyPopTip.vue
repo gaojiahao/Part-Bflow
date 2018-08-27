@@ -14,15 +14,15 @@
 </style>
 
 <template>
-    <Poptip trigger="hover" placement="bottom" :transfer="true">
+    <Poptip :trigger="trigger" placement="bottom" :transfer="true" >
         <slot name="userCard"></slot>
         <div slot="content">
             <div class="userInfo">
                 <div class="userInfo-top">
-                    <img class="userInfo-img" src="userInfo.photo" :onerror="errorImg01">
+                    <img class="userInfo-img" :src="userInfo.photo" :onerror="errorImg01">
                     <div class="userInfo-right">
-                        <b class="font14">{{userInfo.nickname}}</b>&nbsp;
-                        <Icon type="person" class="colorI"></Icon>
+                        <b class="font14">{{userInfo.nickname}}</b>
+                        <i class="iconfont" style="color:#2d8cf0">&#xe601;</i>
                         <p>
                             <span class="user-font">{{userInfo.groupName}}</span>
                         </p>
@@ -49,7 +49,12 @@
 <script>
 export default {
   props: {
-    userInfo: Object
+    userInfo: Object,
+
+    trigger:{
+        type:String,
+        default:'hover'
+    }
   },
   data() {
     return {

@@ -3,7 +3,7 @@
     <header>
       <slot name="header"></slot>
     </header>
-    <div class="rfd-line-chart" id="lineChart"></div>
+    <div class="rfd-line-chart" :id="id"></div>
   </div>
 </template>
 
@@ -12,6 +12,10 @@ const echarts = require("echarts");
 export default {
   name: "LineChart",
   props: {
+    id: {
+      type: String
+    },
+
     title: {
       type: String
     },
@@ -25,6 +29,18 @@ export default {
     //展示数据
     seriesData: {
       type: Array
+    },
+
+    //主色调
+    primaryColor:{
+      type:String,
+      default:'#26bba0'
+    },
+
+    //曲线面积区域颜色
+    areaColor:{
+      type:String,
+      default:'#38cdb27d'
     }
   },
 
@@ -34,7 +50,7 @@ export default {
 
   methods: {
     draw(seriesData, xAxisData) {
-      let lineChart = echarts.init(document.getElementById("lineChart"));
+      let lineChart = echarts.init(document.getElementById(this.id));
       let option = {
         title: {
           text: this.title,
@@ -45,9 +61,11 @@ export default {
         tooltip: {
           trigger: "axis"
         },
-        color: ["#26bba0"],
+        color: [this.primaryColor],
         legend: {
           selectedMode: false,
+          x: 30,
+          y: 8,
           data: [
             {
               name: this.legendName
@@ -83,21 +101,21 @@ export default {
               normal: {
                 show: true,
                 position: "top",
-                color: "#26bba0"
+                color: this.primaryColor
               }
             },
             itemStyle: {
               normal: {
-                color: "#26bba0",
+                color: this.primaryColor,
                 borderWidth: 2
               }
             },
             lineStyle: {
-              color: "#26bba0"
+              color: this.primaryColor
             },
             areaStyle: {
               normal: {
-                color: "#38cdb27d",
+                color: this.areaColor,
                 show: true,
                 position: "top"
               }

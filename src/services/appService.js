@@ -287,6 +287,16 @@ export const getInstanceData = (listId, type, date) => request('/H_roleplay-si/t
 });
 
 /** 
+ * @author GuoZheng
+ * 获取工作流耗用时间
+ */
+export const getWorkFlowTime = (listId, type, date) => request('/H_roleplay-si/trans/getWorkFlowTime', {
+  listId: listId,
+  type: type,
+  date: date
+});
+
+/** 
  * @author XiaoYing
  * 动作权限启用禁用
  */

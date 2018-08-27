@@ -38,7 +38,7 @@ export const getAllProcessData = (page,limit) => request('/H_roleplay-si/ds/getD
  * @author XiaoYing
  * @description 获取应用流程数据
  */
-export const getProcessDataByListId = (listId,currentPage,pageSize) => request('/H_roleplay-si/ds/list/getProcessByListId', {
+export const getProcessDataByListId = (listId, currentPage, pageSize) => request('/H_roleplay-si/ds/list/getProcessRelConfigByListId', {
     listId: listId,
     page: currentPage,
     limit: pageSize

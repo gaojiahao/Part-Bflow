@@ -266,6 +266,14 @@ export const enterpriseInfo = {
 }
 
 
+export const bigProcess = {
+  path: '/bigProcess',
+  name: 'bigProcess',
+  component: () =>
+    import('@/components/bigProcess.vue')
+}
+
+
 
 export const routers = [
   loginRouter,
@@ -273,6 +281,7 @@ export const routers = [
   homepageRouter,
   technologyRouter,
   dashboardRouter,
+  bigProcess,
   app,
   addressBook,
   sujectformRouter,

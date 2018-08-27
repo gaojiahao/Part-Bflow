@@ -85,6 +85,20 @@ export default {
       showModal: false,
       columns: [
         {
+          title: "头像",
+          key: "photo",
+          width: 80,
+          render: (h,params) => {
+            return h('div',[
+              h('Avatar',{
+                props: {
+                  src: params.row.photo
+                }
+              })
+            ])
+          }
+        },
+        {
           title: "工号",
           key: "userCode"
         },
@@ -103,6 +117,10 @@ export default {
         {
           title: "手机号",
           key: "mobile"
+        },
+        {
+          title: "邮箱",
+          key: "email"
         },
         {
           title: '操作',
@@ -137,6 +155,20 @@ export default {
       ],
       userColumns: [
         {
+          title: "头像",
+          key: "photo",
+          width: 80,
+          render: (h,params) => {
+            return h('div',[
+              h('Avatar',{
+                props: {
+                  src: params.row.photo
+                }
+              })
+            ])
+          }
+        },
+        {
           title: "工号",
           key: "userCode"
         },
@@ -155,7 +187,11 @@ export default {
         {
           title: "手机号",
           key: "mobile"
-        }
+        },
+        {
+          title: "邮箱",
+          key: "email"
+        },
       ],
       higherUserData: [],
       userData: [],

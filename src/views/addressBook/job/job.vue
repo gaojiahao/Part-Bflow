@@ -60,7 +60,7 @@
         <div class="baseinfo-container-action">
           <input type='submit' value="关闭" class="baseinfo-container-action-submit" @click="cancle" />
           <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" @click="edit" v-if="jobId" />
-          <input type='submit' value="保存" class="baseinfo-container-action-submit" @click="save" />
+          <input type='submit' value="保存" class="baseinfo-container-action-submit" @click="save" v-show="!isEdit"/>
           <input type='submit' value="保存并新建" class="baseinfo-container-action-submit" v-if="!jobId" @click="saveAndAdd" />
         </div>
       </section>

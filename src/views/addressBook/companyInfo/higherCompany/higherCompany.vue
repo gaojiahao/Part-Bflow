@@ -2,9 +2,11 @@
 .higher-company {
   &-detail {
     background-color: #fff;
-    margin: 5px 93px;
     padding: 26px 50px;
+    width: 75%;
+    margin: 0 auto;
     box-shadow: 0px 1px 10px #ddd;
+    position: relative;
     &-btn {
       margin-bottom: 5px;
       color: rgb(0, 150, 136);

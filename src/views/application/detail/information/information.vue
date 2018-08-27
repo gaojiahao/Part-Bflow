@@ -20,7 +20,7 @@
         <Col span="21" class="pad15">
           <h3> {{ appData.title?appData.title:'待加载' }}  - 应用详情</h3>
           <Row class="pad5">
-            <Col span="6">应用名称: 
+            <Col span="6">应用名称： 
               <span v-if="showEditAppInfo">{{ appData.title }}</span>
               <Input v-else v-model="appData.title" style="width: 120px"></Input>
               <b @click="editAppinfo">
@@ -32,21 +32,21 @@
                 </Tooltip>
               </b>
             </Col>
-            <Col span="6">应用类型: <span>{{ appData.TRANS_NAME }}</span></Col>
-            <Col span="6">应用管理员: <span v-if="showEditAppInfo">
+            <Col span="6">应用类型： <span>{{ appData.TRANS_NAME }}</span></Col>
+            <Col span="6">应用管理员： <span v-if="showEditAppInfo">
               <Icon type="person"></Icon>{{ appData.administrator }}</span>
               <Input v-else @on-click="selectAdminModal" v-model="appData.administrator" icon="md-arrow-dropdown" style="width: 100px">
               </Input>
             </Col>
           </Row>
           <Row class="pad5">
-            <Col span="6">创建者: <span>{{ appData.creator }}</span></Col>
-            <Col span="6">创建时间: <span>{{ appData.crtTime }}</span></Col>
-            <Col span="6">修改者:{{appData.modifer}}</Col>
-            <Col span="6">修改时间: <span>{{ appData.modTime }}</span></Col>
+            <Col span="6">创建者： <span>{{ appData.creator }}</span></Col>
+            <Col span="6">创建时间： <span>{{ appData.crtTime }}</span></Col>
+            <Col span="6">修改者：{{appData.modifer}}</Col>
+            <Col span="6">修改时间： <span>{{ appData.modTime }}</span></Col>
           </Row>
           <Row class="pad5">
-            <Col span="24">说明:<span v-if="showEditAppInfo">{{ appData.comment }}</span>
+            <Col span="24">说明：<span v-if="showEditAppInfo">{{ appData.comment }}</span>
             <Input v-else v-model="appData.comment" style="width: 1000px"></Input></Col>
           </Row>
         </Col>
@@ -65,14 +65,14 @@
     </Row>
 
    
-    <Modal v-model="showAdminModal" title="请选择" @on-ok="confirmModal">
+    <Modal v-model="showAdminModal" title="请选择管理员" @on-ok="confirmModal" width="800">
       <div class="app-search">
         <Input @on-search="adminFilter" :search="true" v-model="searchValue" placeholder="搜索名称或工号" style="width: 300px"></Input>
         <p @click="adminFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
         </p>
       </div>
-      <Table :highlight-row="true" @on-row-click="selectAdmin" :loading="adminLoading" height="300" stripe :columns="adminColumns" size="small" :data="adminData"></Table>
+      <Table :highlight-row="true" @on-row-dblclick="dbclickConfirmModal" @on-row-click="selectAdmin" :loading="adminLoading" height="300" stripe :columns="adminColumns" size="small" :data="adminData"></Table>
       <div class="user-page">
           <div style="float: right;">
             <Page :total="total" :current="currentPage" :page-size="pageSize" @on-change="onPageChange" size="small" show-total></Page>
@@ -117,12 +117,38 @@ export default {
       pageSize: 10,
       adminColumns: [
         {
+          title: "头像",
+          key: "photo",
+          width: 80,
+          render: (h,params) => {
+            return h('div',[
+              h('Avatar',{
+                props: {
+                  src: params.row.photo
+                }
+              })
+            ])
+          }
+        },
+        {
           title: "工号",
           key: "userCode"
         },
         {
           title: "姓名",
           key: "nickname"
+        },
+        {
+          title: "手机",
+          key: "mobile"
+        },
+        {
+          title: "邮箱",
+          key: "email"
+        },
+        {
+          title: "职位",
+          key: "role"
         }
       ],
       adminData: [],
@@ -171,6 +197,12 @@ export default {
     confirmModal() {
       this.appData.administrator = this.selectAdminData.nickname;
       this.appData.userId = this.selectAdminData.userId;
+    },
+    //双击选择
+    dbclickConfirmModal(selection) {
+      this.appData.administrator = selection.nickname;
+      this.appData.userId = selection.userId;
+      this.showAdminModal = false;
     },
     //存储选择的管理员
     selectAdmin(selection, row) {

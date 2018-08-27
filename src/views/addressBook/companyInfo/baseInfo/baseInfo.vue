@@ -33,8 +33,8 @@
           <FormItem label="公司简称:" prop="groupShortName">
             <Input v-model="baseInfoItem.groupShortName" :class="{'info-edit':isEdit}" :readonly="isEdit"></Input>
           </FormItem>
-          <FormItem label="公司类型:" prop="depFunction">
-            <Select v-model="baseInfoItem.depFunction" v-if="!isEdit" :disabled="isEdit">
+          <FormItem label="公司类型:" prop="companyType">
+            <Select v-model="baseInfoItem.companyType" v-if="!isEdit" :disabled="isEdit">
               <Option value='有限责任公司'>有限责任公司</Option>
               <Option value='股份有限公司'>股份有限公司</Option>
               <Option value='集团公司'>集团公司</Option>
@@ -42,8 +42,9 @@
               <Option value='普通合伙'>普通合伙</Option>
               <Option value='个人独资'>个人独资</Option>
               <Option value='子公司'>子公司</Option>
+              <Option value='其他'>其他</Option>
             </Select>
-            <span v-else style="margin-left:5px;">{{baseInfoItem.depFunction}}</span>
+            <span v-else style="margin-left:5px;">{{baseInfoItem.companyType}}</span>
           </FormItem>
         </Form>
       </div>
@@ -94,7 +95,7 @@ export default {
       baseInfoItem: {
         groupName: "",
         groupShortName: "",
-        depFunction: "",
+        companyType: "",
         status: "1"
       },
       ruleValidate: {
@@ -112,7 +113,7 @@ export default {
             trigger: "blur"
           }
         ],
-        depFunction: [
+        companyType: [
           {
             required: true,
             message: "请选择公司类型",
@@ -161,7 +162,7 @@ export default {
       let data = {
         groupName: baseInfo.groupName,
         groupShortName: baseInfo.groupShortName,
-        depFunction: baseInfo.depFunction,
+        companyType: baseInfo.companyType,
         status: baseInfo.status,
         groupCode: this.guid(),
         groupPic: this.logo
@@ -239,7 +240,7 @@ export default {
       let data = {
         groupName: baseInfo.groupName,
         groupShortName: baseInfo.groupShortName,
-        depFunction: baseInfo.depFunction,
+        companyType: baseInfo.companyType,
         status: baseInfo.status,
         groupCode: this.guid(),
         groupPic: this.logo
@@ -258,7 +259,7 @@ export default {
               this.baseInfoItem.groupName = "";
               this.baseInfoItem.groupShortName = "";
               this.baseInfoItem.status = "1";
-              this.baseInfoItem.depFunction = "";
+              this.baseInfoItem.companyType = "";
               this.$refs["upload"].fileList.splice(
                 0,
                 this.$refs["upload"].fileList.length
@@ -279,7 +280,7 @@ export default {
       let data = {
         groupName: baseInfo.groupName,
         groupShortName: baseInfo.groupShortName,
-        depFunction: baseInfo.depFunction,
+        companyType: baseInfo.companyType,
         status: baseInfo.status,
         groupId: groupId,
         groupPic: this.logo

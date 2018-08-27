@@ -481,7 +481,7 @@ export const saveCompanyInfo = (data) => {
   let {
     groupName,
     groupShortName,
-    depFunction,
+    companyType,
     status,
     groupCode,
     groupPic
@@ -489,7 +489,7 @@ export const saveCompanyInfo = (data) => {
   return request('/H_roleplay-si/sysGroup/saveBatch', {}, 'POST', [{
     groupName: groupName,
     groupShortName: groupShortName,
-    depFunction: depFunction,
+    companyType: companyType,
     status: status,
     list: 'sys_group',
     groupType: 'C',
@@ -606,7 +606,7 @@ export const removeCompany = (groupIds) => {
  * 获取所有公司数据
  * 
  */
-export const getAllCompanys = (pageSize, currentPage, searchValue) => request('/H_roleplay-si/sysGroup/getCompanyList',{
+export const getAllCompanys = (pageSize, currentPage, searchValue) => request('/H_roleplay-si/sysGroup/getCompanyList', {
   page: currentPage,
   limit: pageSize,
   search: searchValue
@@ -621,7 +621,7 @@ export const updateConpanyInfo = (data) => {
   let {
     groupName,
     groupShortName,
-    depFunction,
+    companyType,
     status,
     groupId,
     groupPic
@@ -629,7 +629,7 @@ export const updateConpanyInfo = (data) => {
   return request('/H_roleplay-si/sysGroup/updateBatch', {}, 'POST', [{
     groupName: groupName,
     groupShortName: groupShortName,
-    depFunction: depFunction,
+    companyType: companyType,
     status: status,
     groupId: groupId,
     groupPic: groupPic

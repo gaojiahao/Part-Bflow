@@ -220,7 +220,6 @@ export default {
         } catch (error) {
           this.$Message.error("后台返回格式有误！！！");
         }
-        debugger;
         this.commitApi["body"] = ForamtJson(this.commitApi["body"]);
         this.updateApi["body"] = ForamtJson(this.updateApi["body"]);
         this.viewApi["body"] = ForamtJson(this.viewApi["body"]);

@@ -16,14 +16,23 @@
   }
 }
 .app-search {
-    margin-bottom: 5px;
-    .app-search-icon {
-      font-size: 1rem;
-      color: #39f;
-      display: inline-block;
-      cursor: pointer;
-    }
+  margin-bottom: 5px;
+  .app-search-icon {
+    font-size: 1rem;
+    color: #39f;
+    display: inline-block;
+    cursor: pointer;
   }
+}
+
+.page-selection-warp {
+  width: 100%;
+  height: 100%;
+  min-height: 30px;
+  background-color: #e6e6e6;
+  margin-bottom: 10px;
+  padding: 1px 5px;
+}
 </style>
 
 
@@ -52,15 +61,20 @@
         <div class="app-search">
           <Input @on-search="userFilter" :search="true" v-model="searchValue" placeholder="搜索工号或名称" style="width: 300px"></Input>
           <a @click="userFilter" class="app-search-icon">
-              <Button type="primary" size="small">查询</Button>
+            <Button type="primary" size="small">查询</Button>
           </a>
         </div>
-        <Table height="400" :loading="listUserLoading" :columns="memberInfoColumnsModel" :data="listUserData" size='small' ref="selection" @on-selection-change="onSelectUserList"></Table>
+        <Table height="400" :loading="listUserLoading" :columns="memberInfoColumnsModel" :data="listUserData" size='small' ref="selection" @on-select-all="onSelectAll" @on-selection-change="handerSelectionChange" @on-select="onSelect" @on-select-cancel="onSelectCancel"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
             <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-page-size-change="onPageSizeChange" @on-change="listUserChangePage" show-total show-elevator show-sizer></Page>
           </div>
         </div>
+      </div>
+      <div class="page-selection-warp" v-show="onPageSelection[0] ">
+        <Tag v-for="item in onPageSelection" :key="item.userId" :userId="item.userId" type="border" color="primary" size="small">
+          {{item.nickname}}
+        </Tag>
       </div>
     </member-modal>
   </div>
@@ -140,7 +154,7 @@ export default {
                   size: "small"
                 },
                 style: {
-                  cursor: "pointer",
+                  cursor: "pointer"
                 },
                 on: {
                   click: () => {
@@ -201,16 +215,17 @@ export default {
       ],
 
       //模态框参数
-      searchValue: '',
+      searchValue: "",
       isShowMemberModal: false,
       listUserLoading: false,
       listUserData: [],
       listUserPageTotal: 0,
       listUserCurrentPage: 1,
       pageSize: 10,
+      selectAll: false,
 
       //模态框参数
-      onSelectionModal: [],
+      onPageSelection: [],
       selectDeleteMemberInfo: [],
       reload: false
     };
@@ -230,15 +245,54 @@ export default {
       }
     },
 
-    //监听模态框选中的用户
-    onSelectUserList(selection) {
-      this.onSelectionModal = selection;
+    onSelect(selection, row) {
+      let obj = {};
+      this.onPageSelection.push(...selection);
+      //数组去重
+      this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+        obj[next.userId] ? "" : (obj[next.userId] = true && cur.push(next));
+        return cur;
+      }, []);
+    },
+
+    onSelectAll(selection) {
+      let obj = {};
+      //触发全选事件
+        //全选
+        this.onPageSelection.push(...selection);
+        //数组去重
+        this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+          obj[next.userId] ? "" : (obj[next.userId] = true && cur.push(next));
+          return cur;
+        }, []);
+        this.selectAll = !this.selectAll;
+    },
+
+    handerSelectionChange(selection){
+      if(selection.length === 0 && this.selectAll){
+        //取消全选
+        let s = this.$refs.selection.data;
+        let p = this.onPageSelection;
+        s.map(item => {
+          p = p.filter(f => {
+            return f.userId !== item.userId;
+          });
+        });
+        this.onPageSelection = p;
+        this.selectAll = !this.selectAll;
+      }
+    },
+
+    onSelectCancel(selection, row) {
+      this.onPageSelection = this.onPageSelection.filter(f => {
+        return f.userId !== row.userId;
+      });
     },
 
     //保存选中的用户
     saveSelectionUser() {
       let multiId = [];
-      this.onSelectionModal.forEach(val => {
+      this.onPageSelection.forEach(val => {
         multiId.push(val.userId);
       });
       if (multiId) {
@@ -270,27 +324,55 @@ export default {
     },
 
     //获取用户列表
-    getListUsers(currentPage, pageSize,filter) {
+    getListUsers(currentPage, pageSize, filter) {
       this.listUserLoading = true;
-      getAllUsers(pageSize,currentPage,filter).then(res => {
+      getAllUsers(pageSize, currentPage, filter).then(res => {
         if (res.tableContent[0]) {
           this.listUserPageTotal = res.dataCount;
           this.listUserData = res.tableContent;
           this.listUserLoading = false;
+
+          if (this.onPageSelection.length > 0) {
+            this.listUserData.map(item => {
+              this.onPageSelection.map(sel => {
+                if (item.userId === sel.userId) {
+                  item._checked = true;
+                }
+              });
+            });
+          }
         }
       });
     },
 
     listUserChangePage(currentPage) {
-      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      let filter = JSON.stringify([
+        {
+          operator_1: "like",
+          value_1: this.searchValue,
+          property_1: "nickname",
+          link: "or",
+          operator_2: "like",
+          value_2: this.searchValue,
+          property_2: "userCode"
+        }
       ]);
-      this.getListUsers(currentPage, this.pageSize,filter);
+      this.getListUsers(currentPage, this.pageSize, filter);
     },
 
-     //点击切换每页显示条数
+    //点击切换每页显示条数
     onPageSizeChange(size) {
       this.pageSize = size;
-      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      let filter = JSON.stringify([
+        {
+          operator_1: "like",
+          value_1: this.searchValue,
+          property_1: "nickname",
+          link: "or",
+          operator_2: "like",
+          value_2: this.searchValue,
+          property_2: "userCode"
+        }
       ]);
       this.getListUsers(1, size, filter);
     },
@@ -298,7 +380,8 @@ export default {
     //显示模态框-添加成员
     showMemberModal() {
       this.isShowMemberModal = true;
-       this.searchValue = '';
+      this.searchValue = "";
+      this.onPageSelection = []; //清空选中的用户
       this.getListUsers(this.listUserCurrentPage, this.pageSize);
     },
     //成员信息导出xmls
@@ -309,9 +392,18 @@ export default {
     },
     //过滤
     userFilter() {
-      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      let filter = JSON.stringify([
+        {
+          operator_1: "like",
+          value_1: this.searchValue,
+          property_1: "nickname",
+          link: "or",
+          operator_2: "like",
+          value_2: this.searchValue,
+          property_2: "userCode"
+        }
       ]);
-      this.getListUsers(this.listUserCurrentPage,this.pageSize,filter);
+      this.getListUsers(this.listUserCurrentPage, this.pageSize, filter);
     }
   }
 };

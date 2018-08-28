@@ -280,7 +280,7 @@ export const saveAssessment = (params) => request('/H_roleplay-si/app/saveAssess
  * @author GuoZheng
  * 获取实例数据
  */
-export const getInstanceData = (listId, type, date) => request('/H_roleplay-si/trans/getDetails', {
+export const getInstanceStatistics = (listId, type, date) => request('/H_roleplay-si/trans/getInstanceStatistics', {
   listId: listId,
   type: type,
   date: date

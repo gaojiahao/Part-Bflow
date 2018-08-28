@@ -85,11 +85,6 @@ export default {
       },
       highOrgColumns: [
         {
-          type: "index",
-          width: 60,
-          align: "center"
-        },
-        {
           title: "组织名称",
           key: "groupName"
         },
@@ -172,11 +167,6 @@ export default {
       ],
 
       highOrgColumnsModal: [
-        {
-          type: "index",
-          width: 60,
-          align: "center"
-        },
         {
           title: "组织名称",
           key: "groupName"

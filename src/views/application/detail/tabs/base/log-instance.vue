@@ -81,7 +81,7 @@
 import LineChart from "@/components/Charts/LineChart";
 import LineChartTime from "@/components/Charts/LineChart";
 import ChangeLog from "./change-log";
-import { getInstanceData, getWorkFlowTime } from "@/services/appService.js";
+import { getInstanceStatistics, getWorkFlowTime } from "@/services/appService.js";
 import { FormatDate } from "@/utils/utils";
 export default {
   name: "LogInstance",

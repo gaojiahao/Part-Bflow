@@ -331,8 +331,7 @@ export default {
         { title: "姓名", key: "nickname" },
         { title: "工号", key: "userCode" },
         { title: "手机",key: "mobile" },
-        { title: "邮箱",key: "email" },
-        { title: "职位",key: "role",width: 150 }
+        { title: "邮箱",key: "email" }
       ];
       this.showUserModal = true;
       this.userColumns = userColumn;

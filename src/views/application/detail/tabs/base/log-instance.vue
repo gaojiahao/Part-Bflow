@@ -4,6 +4,7 @@
   position: relative;
   display: inline-block;
   width: 49.8%;
+  margin-top: 5px;
 }
 
 .line-chart-header {

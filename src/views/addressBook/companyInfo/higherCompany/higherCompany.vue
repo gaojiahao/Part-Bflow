@@ -75,11 +75,6 @@ export default {
       companyData: [],
       columns: [
         {
-          type: "index",
-          width: 60,
-          align: "center"
-        },
-        {
           title: "公司名称",
           key: "groupName"
         },
@@ -97,11 +92,6 @@ export default {
         }
       ],
       columns1: [
-        {
-          type: "index",
-          width: 60,
-          align: "center"
-        },
         {
           title: "公司名称",
           key: "groupName"

@@ -5,17 +5,11 @@
 <template>
   <div class="job-wrap">
     <header class="job-wrap-header">
-      <h2 v-if="jobId">
-        <span style="color:#4CAF50;cursor:pointer">职位</span>
-        <span style="color:#808080;margin-left:10px">/</span>
-        <span style="color:#808080">{{name}}</span>
-        <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status}"></Tag>
-      </h2>
-      <h2 v-if="!jobId">
-        <span style="color:#4CAF50">职位</span>
-        <span style="color:#808080;margin-left:10px">/</span>
-        <span style="color:#808080;margin-left:10px">创建</span>
-      </h2>
+      <span class="job-wrap-header-job">职位</span>
+      <span class="job-wrap-header-others">/</span>
+      <span v-show="jobId" class="job-wrap-header-others">{{name}}</span>
+      <span v-show="!jobId" class="job-wrap-header-others">创建</span>
+      <Tag v-show="jobId" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status}" style="margin-bottom: 7px;"></Tag>
     </header>
 
     <div class="job-wrap-action">

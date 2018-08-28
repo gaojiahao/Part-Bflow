@@ -43,7 +43,6 @@
         <label @click="deleteMemberInfo">移除成员</label>
         <span>-移除成员</span>
 
-        <label @click="exportData" class="permission-container-btn-export">导出</label>
       </div>
     </custom-table>
 
@@ -334,12 +333,7 @@ export default {
       this.searchValue = "";
       this.getListUsers(this.listUserCurrentPage, this.pageSize);
     },
-    //成员信息导出xmls
-    exportData() {
-      this.$refs.selection.exportCsv({
-        filename: "成员信息"
-      });
-    },
+   
     //过滤
     userFilter() {
       let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}

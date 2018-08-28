@@ -64,7 +64,7 @@
             <Button type="primary" size="small">查询</Button>
           </a>
         </div>
-        <Table height="400" :loading="listUserLoading" :columns="memberInfoColumnsModel" :data="listUserData" size='small' ref="selection" @on-select-all="onSelectAll" @on-selection-change="handerSelectionChange" @on-select="onSelect" @on-select-cancel="onSelectCancel"></Table>
+        <Table height="400" :loading="listUserLoading" :columns="memberInfoColumnsModel" :data="listUserData" size='small' ref="selection" @on-select-all="onSelectAll" @on-selection-change="handerSelectionChange" @on-select-cancel="onSelectCancel"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
             <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-page-size-change="onPageSizeChange" @on-change="listUserChangePage" show-total show-elevator show-sizer></Page>
@@ -121,14 +121,14 @@ export default {
           title: "头像",
           key: "photo",
           width: 80,
-          render: (h,params) => {
-            return h('div',[
-              h('Avatar',{
+          render: (h, params) => {
+            return h("div", [
+              h("Avatar", {
                 props: {
                   src: params.row.photo
                 }
               })
-            ])
+            ]);
           }
         },
         {
@@ -211,14 +211,14 @@ export default {
           title: "头像",
           key: "photo",
           width: 80,
-          render: (h,params) => {
-            return h('div',[
-              h('Avatar',{
+          render: (h, params) => {
+            return h("div", [
+              h("Avatar", {
                 props: {
                   src: params.row.photo
                 }
               })
-            ])
+            ]);
           }
         },
         {
@@ -279,8 +279,11 @@ export default {
       }
     },
 
-    onSelect(selection, row) {
+    //全选
+    onSelectAll(selection) {
       let obj = {};
+      //触发全选事件
+      //全选
       this.onPageSelection.push(...selection);
       //数组去重
       this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
@@ -289,22 +292,9 @@ export default {
       }, []);
     },
 
-    onSelectAll(selection) {
-      let obj = {};
-      //触发全选事件
-        //全选
-        this.onPageSelection.push(...selection);
-        //数组去重
-        this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
-          obj[next.userId] ? "" : (obj[next.userId] = true && cur.push(next));
-          return cur;
-        }, []);
-      
-    },
-
-    handerSelectionChange(selection){
-      if(selection.length === 0 ){
-        //取消全选
+    handerSelectionChange(selection) {
+      //取消全选
+      if (selection.length === 0) {
         let s = this.$refs.selection.data;
         let p = this.onPageSelection;
         s.map(item => {
@@ -313,9 +303,18 @@ export default {
           });
         });
         this.onPageSelection = p;
+      } else {
+        let obj = {};
+        this.onPageSelection.push(...selection);
+        //数组去重
+        this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+          obj[next.userId] ? "" : (obj[next.userId] = true && cur.push(next));
+          return cur;
+        }, []);
       }
     },
 
+    //单选取消
     onSelectCancel(selection, row) {
       this.onPageSelection = this.onPageSelection.filter(f => {
         return f.userId !== row.userId;
@@ -342,17 +341,21 @@ export default {
 
     deleteMemberInfo() {
       let multiId = [];
-      this.selectDeleteMemberInfo.forEach(val => {
-        multiId.push(val.userId);
-      });
-      if (multiId) {
-        deleteOrgMember(this.groupId, multiId.join(","), 0).then(res => {
-          if (res.success) {
-            this.$Message.success(res.message);
-            this.reload = true;
-            this.$emit("on-member-info-change", true);
-          }
+      if(this.selectDeleteMemberInfo.length>0){
+        this.selectDeleteMemberInfo.forEach(val => {
+          multiId.push(val.userId);
         });
+        if (multiId) {
+          deleteOrgMember(this.groupId, multiId.join(","), 0).then(res => {
+            if (res.success) {
+              this.$Message.success(res.message);
+              this.reload = true;
+              this.$emit("on-member-info-change", true);
+            }
+          });
+        }
+      }else{
+        this.$Message.info('请选择要删除的成员');
       }
     },
 

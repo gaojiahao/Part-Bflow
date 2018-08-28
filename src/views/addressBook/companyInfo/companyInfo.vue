@@ -101,7 +101,7 @@ export default {
           imgUrl: "resources/images/icon/user.png"
         },
         {
-          name: "公司信息",
+          name: "基本信息",
           showName: "baseInfo",
           isShow: true,
           isShowAcive: true,

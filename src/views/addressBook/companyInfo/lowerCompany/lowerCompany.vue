@@ -17,8 +17,11 @@
 }
 .search {
   margin-bottom: 5px;
-  &-btn {
+  &-inp {
     width: 300px;
+  }
+  &-btn {
+    display: inline-block;
   }
 }
 </style>
@@ -39,8 +42,8 @@
     </div>
     <Modal v-model="showModal" title="选择下级公司" @on-ok="addlowerCompany" width="1200">
       <div class="search">
-        <Input placeholder="请输入公司名称" @on-search="search" :search="true" class="search-btn" v-model="groupName" />
-        <Button type="primary" @click="search">搜索</Button>
+        <Input placeholder="请输入公司名称" @on-search="search" :search="true" class="search-inp" v-model="groupName" />
+        <Button type="primary" @click="search" class="search-btn">搜索</Button>
       </div>
       <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" height="400" :loading="companyLoading" :columns="columns1" :data="companyData"></Table>
       <div style="margin: 10px;overflow: hidden">

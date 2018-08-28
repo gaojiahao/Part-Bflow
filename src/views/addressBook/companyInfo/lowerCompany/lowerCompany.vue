@@ -38,7 +38,7 @@
       </div>
     </div>
     <Modal v-model="showModal" title="选择下级公司" @on-ok="addlowerCompany" width="1200">
-      <div class="serach">
+      <div class="search">
         <Input placeholder="请输入公司名称" @on-search="search" :search="true" class="search-btn" v-model="groupName" />
         <Button type="primary" @click="search">搜索</Button>
       </div>

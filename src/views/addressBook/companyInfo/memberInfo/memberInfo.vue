@@ -19,9 +19,9 @@
       </div>
     </div>
     <Modal v-model="showModal" title="选择公司成员" @on-ok="addCompanyMember" width="870">
-      <div class="serach">
+      <div class="search">
         <!-- <Input placeholder="请输入工号" class="serach-btn" v-model="userCode" /> -->
-        <Input @on-search="search" :search="true" placeholder="请输入姓名" class="serach-btn" v-model="nikeName" />
+        <Input @on-search="search" :search="true" placeholder="请输入姓名" class="search-btn" v-model="nikeName" />
         <Button type="primary" @click="search">搜索</Button>
       </div>
       <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" height="400" :loading="allMemberLoading" :columns="columns2" :data="allMemberData">

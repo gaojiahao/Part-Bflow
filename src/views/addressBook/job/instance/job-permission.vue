@@ -77,11 +77,6 @@ export default {
           align: "center"
         },
         {
-          type: "index",
-          width: 60,
-          align: "center"
-        },
-        {
           title: "id",
           key: "id",
           hidden: true

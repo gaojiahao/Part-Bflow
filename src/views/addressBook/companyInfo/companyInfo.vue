@@ -18,15 +18,10 @@
 <template>
   <div class="content-wrap">
     <Row class="detail-header">
-      <!-- <Breadcrumb class="detail-header-bread">
-        <BreadcrumbItem to="/addressBook/companyInfo/board">公司</BreadcrumbItem>
-        <BreadcrumbItem v-show="companyInformation.groupName">{{ companyInformation.groupName}}</BreadcrumbItem>
-        <BreadcrumbItem>{{ companyInformation.groupId?companyInformation.groupId:'创建' }}</BreadcrumbItem>
-      </Breadcrumb> -->
       <div class="detail-header-bread">
-        <span style="color:#4CAF50;font-weight:bold;font-size:20px;">公司</span>
-        <span style="color:#808080;margin-left:10px;font-size:20px;font-weight:bold;">/</span>
-        <span style="font-weight:bold;color:#808080;margin-left:10px;font-size:20px;">{{ (companyInformation&&companyInformation.groupName)?companyInformation.groupName:'创建'}}</span>
+        <span class="detail-header-bread-user">公司</span>
+        <span class="detail-header-bread-others">/</span>
+        <span class="detail-header-bread-others">{{ (companyInformation&&companyInformation.groupName)?companyInformation.groupName:'创建'}}</span>
       </div>
       <Tag v-show="companyInformation.status" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:companyInformation.status}"></Tag>
     </Row>
@@ -106,7 +101,7 @@ export default {
           imgUrl: "resources/images/icon/user.png"
         },
         {
-          name: "公司信息",
+          name: "基本信息",
           showName: "baseInfo",
           isShow: true,
           isShowAcive: true,

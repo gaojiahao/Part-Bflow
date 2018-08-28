@@ -393,17 +393,21 @@ export default {
     //删除下级组织
     deleteLoverOrg() {
       let delData = [];
-      this.selectDeleteLowerOrg.forEach(val => {
-        delData.push({ groupId: val.groupId, parentId: "" });
-      });
-      if (delData) {
-        deleteBatchGroup(delData).then(res => {
-          if (res.success) {
-            this.$Message.success(res.message);
-            this.reload = true;
-            this.$emit("on-lower-organization-change", true);
-          }
+      if(this.selectDeleteLowerOrg.length>0){
+        this.selectDeleteLowerOrg.forEach(val => {
+          delData.push({ groupId: val.groupId, parentId: "" });
         });
+        if (delData) {
+          deleteBatchGroup(delData).then(res => {
+            if (res.success) {
+              this.$Message.success(res.message);
+              this.reload = true;
+              this.$emit("on-lower-organization-change", true);
+            }
+          });
+        }
+      }else{
+        this.$Message.info('请选择要删除的下级组织');
       }
     },
 

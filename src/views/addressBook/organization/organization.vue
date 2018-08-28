@@ -9,7 +9,7 @@
         <span style="color:#4CAF50;cursor:pointer">组织</span>
         <span style="color:#808080;margin-left:10px">/</span>
         <span style="color:#808080;margin-left:10px">{{name}}</span>
-        <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status,color:'#eb2f96'}"></Tag>
+        <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status}"></Tag>
       </h2>
       <h2 v-if="!groupId">
         <span style="color:#4CAF50">组织</span>

@@ -258,8 +258,6 @@ export default {
       listUserPageTotal: 0,
       listUserCurrentPage: 1,
       pageSize: 10,
-      selectAll: false,
-
       //模态框参数
       onPageSelection: [],
       selectDeleteMemberInfo: [],
@@ -301,11 +299,11 @@ export default {
           obj[next.userId] ? "" : (obj[next.userId] = true && cur.push(next));
           return cur;
         }, []);
-        this.selectAll = !this.selectAll;
+      
     },
 
     handerSelectionChange(selection){
-      if(selection.length === 0 && this.selectAll){
+      if(selection.length === 0 ){
         //取消全选
         let s = this.$refs.selection.data;
         let p = this.onPageSelection;
@@ -315,7 +313,6 @@ export default {
           });
         });
         this.onPageSelection = p;
-        this.selectAll = !this.selectAll;
       }
     },
 

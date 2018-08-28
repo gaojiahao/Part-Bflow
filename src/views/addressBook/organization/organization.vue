@@ -256,10 +256,6 @@ export default {
       listUserData: [],
       highOrgColumnsModal: [
         {
-          type: "index",
-          align: "center"
-        },
-        {
           title: "组织名称",
           key: "groupName"
         },
@@ -356,10 +352,6 @@ export default {
       searchPrincipalValue: "",
       onSelectionPrincipal: [],
       principalColumnsModel: [
-        {
-          type: "index",
-          align: "center"
-        },
         {
           title: "工号",
           key: "userCode"

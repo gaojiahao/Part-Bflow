@@ -162,10 +162,6 @@ export default {
       ],
 
       principalColumnsModel: [
-        {
-          type: "index",
-          align: "center"
-        },
          {
           title: "头像",
           key: "photo",

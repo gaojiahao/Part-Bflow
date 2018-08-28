@@ -75,15 +75,6 @@ export default {
       companyData: [],
       columns: [
         {
-          type: "index",
-          width: 60,
-          align: "center"
-        },
-        {
-          title: "公司ID",
-          key: "groupId"
-        },
-        {
           title: "公司名称",
           key: "groupName"
         },
@@ -94,14 +85,6 @@ export default {
         {
           title: "公司类型",
           key: "companyType"
-        },
-        {
-          title: "修改时间",
-          key: "modTime"
-        },
-        {
-          title: "创建时间",
-          key: "crtTime"
         },
         {
           title: "创建者",
@@ -110,11 +93,6 @@ export default {
       ],
       columns1: [
         {
-          type: "index",
-          width: 60,
-          align: "center"
-        },
-        {
           title: "公司名称",
           key: "groupName"
         },
@@ -125,14 +103,6 @@ export default {
         {
           title: "公司类型",
           key: "companyType"
-        },
-        {
-          title: "修改时间",
-          key: "modTime"
-        },
-        {
-          title: "创建时间",
-          key: "crtTime"
         },
         {
           title: "创建者",

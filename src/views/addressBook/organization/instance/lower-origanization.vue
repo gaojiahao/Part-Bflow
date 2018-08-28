@@ -91,11 +91,6 @@ export default {
       },
       lowerOrgColumns: [
         {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
           type: "index",
           width: 60,
           align: "center"
@@ -224,11 +219,6 @@ export default {
       lowerOrgColumnsModel: [
         {
           type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
-          type: "index",
           width: 60,
           align: "center"
         },

@@ -21,7 +21,7 @@ export const ICON_LIST = [
     { name: "毛利", icon: "gross-profit.png" },
     { name: "开票", icon: "open-ticket.png" },
     { name: "收票", icon: "put-ticket.png" },
-    { name: "资金", icon: "fund.png" },
+    { name: "资金", icon: "fund-account.png" },
     { name: "往来", icon: "dealings.png" },
     { name: "设施", icon: "facilities.png" },
     { name: "费用", icon: "cost-sub.png" },
@@ -36,7 +36,7 @@ export const ICON_LIST = [
     { name: "待验收", icon: "check.png" },
     { name: "待交付", icon: "pay.png" },
     { name: "往来余额", icon: "dealings.png" },
-    { name: "货币资金", icon: "putmoney.png" },
+    { name: "货币资金", icon: "fund.png" },
     { name: "项目毛利", icon: "project-margin.png" },
     { name: "项目费用", icon: "project-cost.png" },
     { name: "项目利润", icon: "project-profit.png" },
@@ -49,6 +49,8 @@ export const ICON_LIST = [
     { name: "制造费用", icon: "manufacturing-expenses.png" },
     { name: "其他资产", icon: "other-asset.png" },
     { name: "其他负债", icon: "other-liabilities.png" },
+    { name: "其他损益", icon: "other-gains-and-losses.png" },
     { name: "税金及附加", icon: "taxes-and-addition.png" },
+   
 ]
 

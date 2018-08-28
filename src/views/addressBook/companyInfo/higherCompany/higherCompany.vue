@@ -96,7 +96,7 @@ export default {
         },
         {
           title: "公司类型",
-          key: "depFunction"
+          key: "companyType"
         },
         {
           title: "修改时间",
@@ -127,7 +127,7 @@ export default {
         },
         {
           title: "公司类型",
-          key: "depFunction"
+          key: "companyType"
         },
         {
           title: "修改时间",

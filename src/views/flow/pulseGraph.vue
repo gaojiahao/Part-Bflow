@@ -140,6 +140,7 @@ import {
   getMockData
 } from "@/services/flowService";
 import { getToken } from "@/utils/utils";
+import { ICON_LIST } from "@/assets/const";
 export default {
   data() {
     return {
@@ -177,7 +178,9 @@ export default {
       modal: false, //弹出框是否显示
       taskValue: "",
       pageListId: "",
-      type: "myToDo"
+      type: "myToDo",
+
+      subjectList: ICON_LIST
     };
   },
 
@@ -564,38 +567,9 @@ export default {
     var that = this;
     getPulseGraph(this.caseId)
       .then(res => {
-        var getSubjectIicon = function(subjectName) {
+        var getSubjectIicon =(subjectName) =>{
           var icon = "";
-          var subjectList = [
-            { name: "计划", icon: "plan.png" },
-            { name: "需求", icon: "requirement.png" },
-            { name: "领料", icon: "collar-material.png" },
-            { name: "结项", icon: "check.png" },
-            { name: "验收", icon: "check.png" },
-            { name: "交付", icon: "pay.png" },
-            { name: "存货", icon: "stock.png" },
-            { name: "毛利", icon: "gross-profit.png" },
-            { name: "开票", icon: "open-ticket.png" },
-            { name: "收票", icon: "put-ticket.png" },
-            { name: "资金", icon: "fund.png" },
-            { name: "往来", icon: "dealings.png" },
-            { name: "设施", icon: "facilities.png" },
-            { name: "费用", icon: "cost-sub.png" },
-            { name: "税支", icon: "taxexpenditure.png" },
-            { name: "待收票", icon: "put-ticket.png" },
-            { name: "待开票", icon: "open-ticket.png" },
-            { name: "期间费用", icon: "cost-sub.png" },
-            { name: "企业利润", icon: "business-profit.png" },
-            { name: "待计划", icon: "plan.png" },
-            { name: "待下单", icon: "requirement.png" },
-            { name: "待领料", icon: "collar-material.png" },
-            { name: "待验收", icon: "check.png" },
-            { name: "待交付", icon: "pay.png" },
-            { name: "往来余额", icon: "dealings.png" },
-            { name: "货币资金", icon: "putmoney.png" }
-          ];
-
-          subjectList.map(s => {
+          this.subjectList.map(s => {
             if (s.name === subjectName) {
               icon = s.icon;
             }

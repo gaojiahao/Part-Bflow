@@ -18,8 +18,11 @@
 .search {
   margin-bottom: 5px;
   &-btn {
-    width: 300px;
+    display: inline-block;
   }
+}
+.ivu-input-wrapper {
+  width: 300px;
 }
 </style>
 <template>
@@ -37,10 +40,10 @@
         </div>
       </div>
     </div>
-    <Modal v-model="showModal" title="选择用户" @on-ok="addHigherCompany" width="1000">
+    <Modal v-model="showModal" title="选择上级公司" @on-ok="addHigherCompany" width="1200">
       <div class="serach">
-        <Input placeholder="请输入公司名称" @on-search="search" :search="true" class="search-btn" v-model="groupName" />
-        <Button type="primary" @click="search">搜索</Button>
+        <Input placeholder="请输入公司名称" @on-search="search" :search="true" v-model="groupName" />
+        <Button type="primary" @click="search" class="search-btn">搜索</Button>
       </div>
       <Table ref="selection" :highlight-row="true" @on-row-click="onSelectionChange" @on-row-dblclick="onRowdbclick" height="400" :loading="companyLoading" :columns="columns" :data="companyData"></Table>
       <div style="margin: 10px;overflow: hidden">
@@ -93,7 +96,7 @@ export default {
         },
         {
           title: "公司类型",
-          key: "depFunction"
+          key: "companyType"
         },
         {
           title: "修改时间",
@@ -124,7 +127,7 @@ export default {
         },
         {
           title: "公司类型",
-          key: "depFunction"
+          key: "companyType"
         },
         {
           title: "修改时间",

@@ -5,17 +5,11 @@
 <template>
   <div class="organization-wrap">
     <header class="organization-wrap-header">
-      <h2 v-if="groupId">
-        <span style="color:#4CAF50;cursor:pointer">组织</span>
-        <span style="color:#808080;margin-left:10px">/</span>
-        <span style="color:#808080;margin-left:10px">{{name}}</span>
-        <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status}"></Tag>
-      </h2>
-      <h2 v-if="!groupId">
-        <span style="color:#4CAF50">组织</span>
-        <span style="color:#808080;margin-left:10px">/</span>
-        <span style="color:#808080;margin-left:10px">创建</span>
-      </h2>
+      <span class="organization-wrap-header-org">组织</span>
+      <span class="organization-wrap-header-others">/</span>
+      <span v-show="groupId" class="organization-wrap-header-others">{{name}}</span>
+      <span v-show="!groupId" class="organization-wrap-header-others">创建</span>
+      <Tag v-show="groupId" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status}" style="margin-bottom: 7px;"></Tag>
     </header>
 
     <div class="organization-wrap-action">
@@ -77,7 +71,7 @@
         <div class="baseinfo-container-action">
           <input type='submit' value="关闭" class="baseinfo-container-action-submit" @click="cancle" />
           <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" @click="edit" v-if="groupId" />
-          <input type='submit' value="保存" class="baseinfo-container-action-submit" @click="save" v-show="!isEdit"/>
+          <input type='submit' value="保存" class="baseinfo-container-action-submit" @click="save" v-show="!isEdit" />
           <input type='submit' value="保存并新建" class="baseinfo-container-action-submit" v-if="!groupId" @click="saveAndAdd" />
         </div>
       </section>
@@ -575,7 +569,7 @@ export default {
             {
               filedName: "groupName",
               value: this.formItem.groupName,
-              symbol:"="
+              symbol: "="
             }
           ];
         }

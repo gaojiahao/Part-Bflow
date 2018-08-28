@@ -17,12 +17,12 @@
 }
 .search {
   margin-bottom: 5px;
-  &-inp {
-    width: 300px;
-  }
   &-btn {
     display: inline-block;
   }
+}
+.ivu-input-wrapper {
+  width: 300px;
 }
 </style>
 <template>
@@ -42,7 +42,7 @@
     </div>
     <Modal v-model="showModal" title="选择下级公司" @on-ok="addlowerCompany" width="1200">
       <div class="search">
-        <Input placeholder="请输入公司名称" @on-search="search" :search="true" class="search-inp" v-model="groupName" />
+        <Input placeholder="请输入公司名称" @on-search="search" :search="true" v-model="groupName" />
         <Button type="primary" @click="search" class="search-btn">搜索</Button>
       </div>
       <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" height="400" :loading="companyLoading" :columns="columns1" :data="companyData"></Table>
@@ -97,7 +97,7 @@ export default {
         },
         {
           title: "公司类型",
-          key: "depFunction"
+          key: "companyType"
         },
         {
           title: "修改时间",
@@ -162,7 +162,7 @@ export default {
         },
         {
           title: "公司类型",
-          key: "depFunction"
+          key: "companyType"
         },
         {
           title: "修改时间",

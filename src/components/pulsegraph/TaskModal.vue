@@ -57,7 +57,7 @@ export default {
         {
           title: "交易号",
           key: "transCode",
-          sortable: true,
+          sortable: 'custom',
           width: 160,
           render: (h, params) => {
             return h(
@@ -89,8 +89,8 @@ export default {
         {
           title: "创建时间",
           key: "crtTime",
-          sortable: true,
-            width:160,
+          sortable: 'custom',
+          width: 160,
           render: (h, params) => {
             //时间戳转换为日期格式
             function formatDateTime(inputTime) {
@@ -128,6 +128,7 @@ export default {
         assigneeName: "",
         nodeName: ""
       },
+      sort:"",
       expand: false,
       expandValue: "展开",
       expandIcon: "&#xe617;"
@@ -152,47 +153,20 @@ export default {
      */
     changeCurrentPage(currentPage) {
       this.currentPage = currentPage;
-      let crtTime = "";
-      if (this.filterData.crtTime.length > 0 && this.filterData.crtTime[0]) {
-        crtTime =
-          FormatDate(this.filterData.crtTime[0], "yyyy-MM-dd") +
-          "/" +
-          FormatDate(this.filterData.crtTime[1], "yyyy-MM-dd");
-      }
-      let params = {
-        type: this.type,
-        page: this.currentPage,
-        listId: this.listId,
-        limit: this.pageSize,
-        filter: {
-          transCode: this.filterData.transCode,
-          creatorName: this.filterData.creatorName,
-          assigneeName: this.filterData.assigneeName,
-          nodeName: this.filterData.nodeName,
-          crtTime: crtTime
-        }
-      };
-      for (let f in params.filter) {
-        if (!params.filter[f]) {
-          delete params.filter[f];
-        }
-      }
-
-      this.loading = true;
-      getAppTaskCount(params).then(res => {
-        this.pageTotal = res.total;
-        this.columnData = res.tableContent;
-        this.loading = false;
-      });
+      this.getAppTaskCount(this.sort, currentPage);
     },
 
-     /** 
-       * column：当前列数据
-          key：排序依据的指标
+    /** 
+       column：当前列数据
+        key：排序依据的指标
           order：排序的顺序，值为 asc 或 desc
       */
-      handleSort(column,key,order){
-      },
+    handleSort(column, key, order) {
+      let sort = {};
+      sort[column.key] = column.order;
+      this.sort = sort;
+      this.getAppTaskCount(sort,this.currentPage);
+    },
 
     modalVisibleChange(state) {
       if (!state) {
@@ -203,8 +177,9 @@ export default {
         this.filterData.assigneeName = "";
         this.filterData.nodeName = "";
         this.expand = false;
+        this.sort="";
         this.currentPage = 1;
-        this.expandValue = '展开';
+        this.expandValue = "展开";
       }
     },
 
@@ -235,6 +210,11 @@ export default {
 
     //查询过滤
     filterTaskBtn: function(e) {
+      this.currentPage = 1;
+      this.getAppTaskCount("", 1);
+    },
+
+    getAppTaskCount(sort, page) {
       let crtTime = "";
       if (this.filterData.crtTime.length > 0 && this.filterData.crtTime[0]) {
         crtTime =
@@ -242,34 +222,22 @@ export default {
           "/" +
           FormatDate(this.filterData.crtTime[1], "yyyy-MM-dd");
       }
+      this.filterData.crtTime = crtTime;
       let params = {
         type: this.type,
-        page: 1,
+        page: page,
         listId: this.listId,
         limit: this.pageSize,
-        filter: {
-          transCode: this.filterData.transCode,
-          creatorName: this.filterData.creatorName,
-          assigneeName: this.filterData.assigneeName,
-          nodeName: this.filterData.nodeName,
-          crtTime: crtTime
-        }
+        filter: JSON.stringify(this.filterData)
       };
-
-      for (let f in params.filter) {
-        if (!params.filter[f]) {
-          delete params.filter[f];
-        }
+      if (sort) {
+        params.sort = JSON.stringify(sort);
       }
-
-      this.currentPage = 1;
       this.loading = true;
       getAppTaskCount(params).then(res => {
         this.pageTotal = res.total;
-        // if (res.tableContent.length > 0) {
         this.columnData = res.tableContent;
         this.loading = false;
-        // }
       });
     },
 

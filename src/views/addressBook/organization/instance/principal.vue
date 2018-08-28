@@ -81,6 +81,20 @@ export default {
       },
       searchValue: '',
       principalColumns: [
+        {
+          title: "头像",
+          key: "photo",
+          width: 80,
+          render: (h, params) => {
+            return h("div", [
+              h("Avatar", {
+                props: {
+                  src: params.row.photo
+                }
+              })
+            ]);
+          }
+        },
          {
           title: "工号",
           width: 100,
@@ -104,6 +118,10 @@ export default {
         {
           title: "联系电话",
           key: "mobile"
+        },
+        {
+          title: "邮箱",
+          key: "email"
         },
         {
           title: "操作",
@@ -148,6 +166,20 @@ export default {
           type: "index",
           align: "center"
         },
+         {
+          title: "头像",
+          key: "photo",
+          width: 80,
+          render: (h, params) => {
+            return h("div", [
+              h("Avatar", {
+                props: {
+                  src: params.row.photo
+                }
+              })
+            ]);
+          }
+        },
         {
           title: "工号",
           key: "userCode"
@@ -170,6 +202,10 @@ export default {
         {
           title: "手机号",
           key: "mobile"
+        },
+        {
+          title: "邮箱",
+          key: "email"
         }
       ],
 

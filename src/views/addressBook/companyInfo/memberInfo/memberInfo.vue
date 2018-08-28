@@ -108,7 +108,6 @@ export default {
         },
         {
           title: "邮箱",
-          width: 150,
           key: "email"
         },
         {
@@ -184,7 +183,6 @@ export default {
         },
         {
           title: "邮箱",
-          width: 150,
           key: "email"
         }
       ],

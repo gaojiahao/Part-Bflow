@@ -111,7 +111,7 @@ export default {
   watch: {
     //监听实例数据日期变化
     month(val) {
-      this.getInstanceData();
+      this.getInstanceStatistics();
     },
 
     workFlowMonth(val) {
@@ -120,14 +120,14 @@ export default {
   },
   methods: {
     //获取去实例数据
-    getInstanceData(t) {
+    getInstanceStatistics(t) {
       let that = this,
         listId = that.listId,
         date = that.month,
         type = t ? t : this.active ? "week" : "day";
       date = FormatDate(date, "yyyy/MM/dd");
 
-      getInstanceData(listId, type, date).then(res => {
+      getInstanceStatistics(listId, type, date).then(res => {
         if (res.list[0]) {
           let xAxis = [],
             series = [];
@@ -176,7 +176,7 @@ export default {
       } else {
         this.active = false;
       }
-      this.getInstanceData(val);
+      this.getInstanceStatistics(val);
     },
 
     selectSpendTimeRange(val) {
@@ -190,7 +190,7 @@ export default {
   },
 
   mounted() {
-    this.getInstanceData();
+    this.getInstanceStatistics();
     this.getWorkFlowTime();
   }
 };

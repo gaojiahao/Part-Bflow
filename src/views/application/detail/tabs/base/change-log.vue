@@ -45,6 +45,45 @@
       margin-top: 5px;
       padding: 15px 20px;
       background-color: #ffffff;
+
+      .timeline-item-content-header {
+        .circle {
+          border: 1px solid #2c9383;
+          height: 14px;
+          width: 14px;
+          border-radius: 50%;
+          display: inline-block;
+        }
+
+        .time {
+          font-size: 20px;
+          font-weight: 400;
+          margin-left: 6px;
+        }
+      }
+
+      .timeline-item-content-ul {
+        margin-left: 40px;
+        font-size: 13px;
+        list-style: disc;
+        span {
+          padding: 0 20px 0 0;
+        }
+
+        .customs-tag {
+          margin: 0 8px;
+          background-color: #2c9383;
+          padding: 2px 8px;
+          border: 1px solid #2c9383;
+          border-radius: 3px;
+          color: #ffffff;
+          font-size: 13px;
+          vertical-align: middle;
+          opacity: 1;
+          overflow: hidden;
+          cursor: pointer;
+        }
+      }
     }
   }
 
@@ -61,46 +100,15 @@
 .ivu-timeline-item-content {
   top: -11px !important;
 }
-
-.time {
-  font-size: 20px;
-  font-weight: 400;
-}
-
-.timeline-item-content-ul {
-  margin-left: 20px;
-  font-size: 13px;
-  list-style: disc;
-  span {
-    padding: 0 20px 0 0;
-  }
-
-  .customs-tag {
-    margin: 0 8px;
-    background-color: #2c9383;
-    padding: 2px 8px;
-    border: 1px solid #2c9383;
-    border-radius: 3px;
-    color: #ffffff;
-    font-size: 13px;
-    vertical-align: middle;
-    opacity: 1;
-    overflow: hidden;
-    cursor: pointer;
-  }
-}
 </style>
 
 <template>
   <div fix class="timeline-box">
     <div class="app-resource-group-title">
-      <h3>更新日志
-        <a v-if="isAdminTrue">新增</a>
-      </h3>
-
+      <h3>更新日志</h3>
     </div>
 
-    <div class="timeline-box-form">
+    <div class="timeline-box-form"  v-if="isAdminTrue">
       <Form ref="formValidate" :label-width="120" :model="modalFormData" :rules="ruleValidate" style="margin:5px ;width:60%;">
         <FormItem label="更新范围:" prop="scope" width="300">
           <Select multiple v-model="modalFormData.scope">
@@ -126,7 +134,10 @@
 
     <div v-show="logData.length===0?false:true">
       <div class="timeline-box-log-item" v-for="(item,index) in logData" :key="index">
-        <p class="time">{{item.VERSION}}</p>
+        <div class="timeline-item-content-header">
+          <div class="circle"></div>
+          <span class="time">{{item.VERSION}}</span>
+        </div>
         <ul class="timeline-item-content-ul">
           <li>
             <span>{{item.CREATOR_NAME}}</span>
@@ -143,9 +154,7 @@
         </ul>
       </div>
     </div>
-    <div v-show="logData.length===0?true:false" class="show-no-log">
-      暂无日志...
-    </div>
+
     <!-- <div class="timeline-box-log" v-show="logData.length===0?false:true">
       <Timeline class="timeline-list" pending>
         <TimelineItem v-for="(item,index) in logData" :key="index">

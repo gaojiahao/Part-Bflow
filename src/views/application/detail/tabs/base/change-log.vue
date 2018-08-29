@@ -42,7 +42,7 @@
 
   &-log {
     &-item {
-      margin-top: 5px;
+      margin-top: 2px;
       padding: 15px 20px;
       background-color: #ffffff;
 
@@ -109,7 +109,7 @@
     </div>
 
     <div class="timeline-box-form"  v-if="isAdminTrue">
-      <Form ref="formValidate" :label-width="120" :model="modalFormData" :rules="ruleValidate" style="margin:5px ;width:60%;">
+      <Form ref="formValidate" :label-width="120" :model="modalFormData" :rules="ruleValidate" style="margin:5px ;width:95%;">
         <FormItem label="更新范围:" prop="scope" width="300">
           <Select multiple v-model="modalFormData.scope">
             <Option value="表单">表单</Option>

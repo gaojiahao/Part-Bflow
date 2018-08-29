@@ -24,6 +24,16 @@
       cursor: pointer;
     }
   }
+
+  
+.page-selection-warp {
+  width: 100%;
+  height: 100%;
+  min-height: 30px;
+  background-color: #e6e6e6;
+  margin-bottom: 10px;
+  padding: 1px 5px;
+}
 </style>
 
 
@@ -54,12 +64,27 @@
               <Button type="primary" size="small">查询</Button>
           </a>
         </div>
-        <Table height="400" :loading="listUserLoading" :columns="memberInfoColumnsModel" :data="listUserData" size='small' ref="selection" @on-selection-change="onSelectUserList"></Table>
+        <Table 
+          height="400" 
+          size='small'
+          ref="selection"
+          :loading="listUserLoading" 
+          :columns="memberInfoColumnsModel" 
+          :data="listUserData"   
+          @on-select-all="onSelectAll" 
+          @on-selection-change="handerSelectionChange" 
+          @on-select-cancel="onSelectCancel">
+        </Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
             <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-page-size-change="onPageSizeChange" @on-change="listUserChangePage" show-total show-elevator show-sizer></Page>
           </div>
         </div>
+      </div>
+      <div class="page-selection-warp" v-show="onPageSelection[0] ">
+        <Tag v-for="item in onPageSelection" :key="item.userId" :userId="item.userId" :closable="true" @on-close="deletePageSelection" type="border" color="primary" size="small">
+          {{item.nickname}}
+        </Tag>
       </div>
     </member-modal>
   </div>
@@ -242,7 +267,7 @@ export default {
       pageSize: 10,
 
       //模态框参数
-      onSelectionModal: [],
+      onPageSelection: [],
       selectDeleteMemberInfo: [],
       reload: false
     };
@@ -262,15 +287,65 @@ export default {
       }
     },
 
-    //监听模态框选中的用户
-    onSelectUserList(selection) {
-      this.onSelectionModal = selection;
+    //全选
+    onSelectAll(selection) {
+      let obj = {};
+      //触发全选事件
+      //全选
+      this.onPageSelection.push(...selection);
+      //数组去重
+      this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+        obj[next.userId] ? "" : (obj[next.userId] = true && cur.push(next));
+        return cur;
+      }, []);
+    },
+
+    handerSelectionChange(selection) {
+      //取消全选
+      if (selection.length === 0) {
+        let s = this.$refs.selection.data;
+        let p = this.onPageSelection;
+        s.map(item => {
+          p = p.filter(f => {
+            return f.userId !== item.userId;
+          });
+        });
+        this.onPageSelection = p;
+      } else {
+        let obj = {};
+        this.onPageSelection.push(...selection);
+        //数组去重
+        this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+          obj[next.userId] ? "" : (obj[next.userId] = true && cur.push(next));
+          return cur;
+        }, []);
+      }
+    },
+    //删除分页选中
+    deletePageSelection(event) {
+      let id = Number(event.target.parentElement.getAttribute("userId"));
+      this.onPageSelection = this.onPageSelection.filter(f => {
+        return f.userId !== id;
+      });
+
+      this.$refs.selection.data.forEach((item,index) => {
+        if (id === item.userId) {
+          this.$refs.selection.toggleSelect(index)
+        }
+      });
+    },
+
+    //单选取消
+    onSelectCancel(selection, row) {
+      this.onPageSelection = this.onPageSelection.filter(f => {
+        return f.userId !== row.userId;
+      });
     },
 
     //保存选中的用户
     saveSelectionUser() {
       let multiId = [];
-      this.onSelectionModal.forEach(val => {
+      this.onPageSelection.forEach(val => {
         multiId.push(val.userId);
       });
       if (multiId) {
@@ -308,6 +383,16 @@ export default {
         if (res.tableContent[0]) {
           this.listUserPageTotal = res.dataCount;
           this.listUserData = res.tableContent;
+
+          if (this.onPageSelection.length > 0) {
+            this.listUserData.map(item => {
+              this.onPageSelection.map(sel => {
+                if (item.userId === sel.userId) {
+                  item._checked = true;
+                }
+              });
+            });
+          }
           this.listUserLoading = false;
         }
       });
@@ -331,6 +416,7 @@ export default {
     showMemberModal() {
       this.isShowMemberModal = true;
       this.searchValue = "";
+      this.onPageSelection = [];
       this.getListUsers(this.listUserCurrentPage, this.pageSize);
     },
    

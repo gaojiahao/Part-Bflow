@@ -378,7 +378,6 @@ export default {
         if (res.tableContent[0]) {
           this.listUserPageTotal = res.dataCount;
           this.listUserData = res.tableContent;
-          this.listUserLoading = false;
 
           if (this.onPageSelection.length > 0) {
             this.listUserData.map(item => {
@@ -389,6 +388,7 @@ export default {
               });
             });
           }
+          this.listUserLoading = false;
         }
       });
     },

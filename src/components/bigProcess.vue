@@ -1,34 +1,30 @@
 <template>
-<div class="order">
-	<div v-for="(node,index) in bigProcessNodes" :key="index" class="n">
-        <div class="lines" v-if="node.durationTime">
-                <span class="dian_l" >&bull;</span>
-                <span class="line"></span>
-                <span class="txt">{{node.durationTime}}</span>
-                <span class="line"></span>
-                <span class="dian_r">&bull;</span>
-            </div>
-        <div class="nodePro">
-            
-            <div class="appName"><strong>{{node.appName}}</strong></div>
-            <div class="schedule "  v-bind:style="{ backgroundColor: node.color }"><b>{{node.schedule}}</b></div>
-            <div class="verticalbar" v-if="node.appInstances.length>0"></div>
-            <div class="trans" v-if="node.appInstances.length>0">
-                <div class="trans-kuan"></div>
-                <div class="transitem" v-for="(instance,index) in node.appInstances" :key="index">
-                    <p ><b style="color:#1e88e5;">{{instance.transCode}}</b></p>
-                    <p>{{instance.crtTime}}</p>
+<div>
+    <div class="order">
+        <div v-for="(node,index) in bigProcessNodes" :key="index" class="n">
+            <div class="lines" v-if="node.durationTime">
+                    <span class="dian_l" >&bull;</span>
+                    <span class="line"></span>
+                    <span class="txt">{{node.durationTime}}</span>
+                    <span class="line"></span>
+                    <span class="dian_r">&bull;</span>
                 </div>
-                <!-- <div class="transitem">
-                    <p ><b style="color:#1e88e5;">PLAN-1808-121</b></p>
-                    <p>2018-08-9 12:12:21</p>
-                </div> -->
+            <div class="nodePro">
+                
+                <div class="appName"><strong>{{node.appName}}</strong></div>
+                <div class="schedule "  v-bind:style="{ backgroundColor: node.color }"><span>{{node.schedule}}</span></div>
+                <div class="verticalbar" v-if="node.appInstances.length>0"></div>
+                <div class="trans" v-if="node.appInstances.length>0">
+                    <div class="trans-kuan"></div>
+                    <div class="transitem" v-for="(instance,index) in node.appInstances" :key="index">
+                        <p ><b style="color:#1e88e5;">{{instance.transCode}}</b></p>
+                        <p>{{instance.crtTime}}</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-
-	
-</div> 
+    </div> 
+</div>
 </template>
 
 <script>
@@ -119,7 +115,7 @@ export default {
                 appName:'交付',
                 durationTime:'3天5小时',
                 schedule:'100%',
-                color:'#red',
+                color:'#e8630a',
                 appInstances:[
                     {
                         transCode:"PLAN-1808-001",
@@ -139,7 +135,7 @@ export default {
                 appName:'收款',
                 durationTime:'2天0小时',
                 schedule:'100%',
-                color:'#red',
+                color:'#235784',
                 appInstances:[
                     {
                         transCode:"PLAN-1808-001",
@@ -156,7 +152,7 @@ export default {
                 ]
             },
             {
-                appName:'收款',
+                appName:'开票',
                 durationTime:'',
                 schedule:'100%',
                 color:'#red',
@@ -184,10 +180,11 @@ export default {
 <style>
 .n{
     float: left;
+    margin-bottom: 50px;
 }
 .nodePro{
 
-	width: 200px;
+	width: 180px;
     /* display: inline-block; */
     text-align: center;
     /* margin-left: -30px; */
@@ -195,12 +192,13 @@ export default {
     float: left;
 }
 .order {
- line-height: 50px;
+    line-height: 50px;
     text-align: center;
+    padding-top: 10%;
 }
 .order .line {
   display: inline-block;
-  width: 40px;
+  width: 35px;
   border-top: 2px solid #1e88e5;
 }
 .order .txt {
@@ -230,9 +228,9 @@ export default {
 }
 
 .lines{
-   position: relative;
-    right: -100px;
-    top: 45px;
+    position: relative;
+    right: -89px;
+    top: 42px;
     height: 1px;
 }
 .transitem{
@@ -272,7 +270,7 @@ export default {
     left: -25px;
     width: 50%;
     height: 80px; */
-    width: 60%;
+    width: 70%;
     height: 80px;
     margin: 0 auto;
 }

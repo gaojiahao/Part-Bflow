@@ -104,7 +104,7 @@
             <Button type="primary" size="small">查询</Button>
           </a>
         </div>
-        <Table height="400" :loading="highOrgModalLoading" :columns="highOrgColumnsModal" :data="listUserData" size='small' highlight-row ref="currentRowTable" @on-row-dblclick="handleHighOrgDblclick" @on-current-change="onSelectUserList"></Table>
+        <Table class="rfd-table" height="400" :loading="highOrgModalLoading" :columns="highOrgColumnsModal" :data="listUserData" size='small' highlight-row ref="currentRowTable" @on-row-dblclick="handleHighOrgDblclick" @on-current-change="onSelectUserList"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
             <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-page-size-change="onHighOrgPageSizeChange" @on-change="listUserChangePage" show-total show-elevator show-sizer></Page>
@@ -120,7 +120,7 @@
             <Button type="primary" size="small">查询</Button>
           </a>
         </div>
-        <Table height="400" :loading="PrincipalModaLoading" :columns="principalColumnsModel" :data="principalData" size='small' highlight-row ref="currentRowTable" @on-row-dblclick="handlePrinciplDblclick" @on-current-change="onSelectPrincipal"></Table>
+        <Table class="rfd-table" height="400" :loading="PrincipalModaLoading" :columns="principalColumnsModel" :data="principalData" size='small' highlight-row ref="currentRowTable" @on-row-dblclick="handlePrinciplDblclick" @on-current-change="onSelectPrincipal"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
             <Page :total="principalPageTotal" :current="principalCurrentPage" :page-size="principalPageSize" size="small" @on-page-size-change="onPrincipalPageSizeChange" @on-change="principalChangePage" show-total show-elevator show-sizer></Page>

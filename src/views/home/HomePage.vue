@@ -19,7 +19,7 @@
               <i class="iconfont">&#xe64c;</i>
               {{pulse.name}}
             </Button> -->
-             <Icon :type="model==='apps'?'ios-apps':'md-share'" size="16" /> 
+            <Icon :type="model==='apps'?'ios-apps':'md-share'" size="16" />
             <Select v-model="model" class="input-select" @on-change="changeView" placeholder="请选择业务单元" style="width:230px;font-size:16px">
               <Option value="apps">
                 <Icon type="ios-apps" size="16" /> 所有应用看板
@@ -33,26 +33,26 @@
         </Row>
       </div>
     </div>
-      <div v-if="cutView&&caseId==='apps'">
-        <section v-for="(menuList,i) in menuList" :key="i" class="bg-gray-lighter">
+    <div v-if="cutView&&caseId==='apps'">
+      <section v-for="(menuList,i) in menuList" :key="i" class="bg-gray-lighter">
 
-          <row class="menu-group">
-            <row>
-              <h3 class="menu-group-title">{{menuList.text}}</h3>
-            </row>
-
-            <row :gutter="16">
-              <Col v-if="item.leaf" v-for="(item,j) in menuList.children" :key="j" span="4">
-              <card-item v-if="item.leaf" :appinfo="item" :allTaskCount="allTaskCount"></card-item>
-              </Col>
-              <card-list v-else :menuItem="item" :index='j' :allTaskCount="allTaskCount"></card-list>
-            </row>
+        <row class="menu-group">
+          <row>
+            <h3 class="menu-group-title">{{menuList.text}}</h3>
           </row>
-        </section>
-      </div>
-      <div v-for="(pulseGraph,index) in pulseGraphLlistr" :key="index" v-if="!cutView && pulseGraph.id === caseId">
-        <pulse-graph :caseId="pulseGraph.id"></pulse-graph>
-      </div>
+
+          <row :gutter="16">
+            <Col v-if="item.leaf" v-for="(item,j) in menuList.children" :key="j" span="4">
+            <card-item v-if="item.leaf" :appinfo="item" :allTaskCount="allTaskCount"></card-item>
+            </Col>
+            <card-list v-else :menuItem="item" :index='j' :allTaskCount="allTaskCount"></card-list>
+          </row>
+        </row>
+      </section>
+    </div>
+    <div v-for="(pulseGraph,index) in pulseGraphLlistr" :key="index" v-if="!cutView && pulseGraph.id === caseId">
+      <pulse-graph :caseId="pulseGraph.id"></pulse-graph>
+    </div>
   </div>
 </template>
 
@@ -238,6 +238,8 @@ export default {
   height: 100%;
   width: 100%;
   background-color: #ddd;
+  -webkit-overflow-scrolling: touch;
+  overflow-y: scroll;
 }
 
 .bg-gray-lighter {
@@ -287,7 +289,7 @@ export default {
       border-radius: 0px;
     }
 
-    .ivu-select-selected-value{
+    .ivu-select-selected-value {
       font-size: 14px !important;
       font-weight: bold;
     }

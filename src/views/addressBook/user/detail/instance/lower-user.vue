@@ -28,6 +28,14 @@
       cursor: pointer;
     }
   }
+  .page-selection-warp {
+    width: 100%;
+    height: 100%;
+    min-height: 30px;
+    background-color: #e6e6e6;
+    margin-bottom: 10px;
+    padding: 1px 5px;
+  }
 </style>
 
 <template>
@@ -55,11 +63,16 @@
                   <Button type="primary" size="small">查询</Button>
               </p>
             </div>
-            <Table ref="selection" @on-selection-change="onSelectionChange" height="400" :loading="userLoading" :columns="userColumns" :data="userData"></Table>
+            <Table ref="selection" @on-selection-change="onSelectionChange" @on-select-all="onSelectAll" @on-select-cancel="onSelectCancel" height="400" :loading="userLoading" :columns="userColumns" :data="userData"></Table>
             <div class="user-page">
                 <div style="float: right;">
                   <Page @on-page-size-change="onAllUserPageSizeChange" :total="lowUser.usertotal" show-elevator show-sizer :current="lowUser.usercurrentPage" :page-size="lowUser.allUserpageSize" @on-change="onUserPageChange" size="small" show-total></Page>
                 </div>
+            </div>
+            <div class="page-selection-warp" v-show="onPageSelection[0] ">
+              <Tag v-for="(item,index) in onPageSelection" :key="item.userId" @on-close="deleteSelectUser(item,index)" :userId="item.userId" closable type="border" color="primary" size="small">
+                {{item.nickname}}
+              </Tag>
             </div>
         </Modal>
     </div>
@@ -87,6 +100,7 @@ export default {
       loading: true,
       userLoading: true,
       showModal: false,
+      onPageSelection: [],
       columns: [
         {
           type: "selection",
@@ -254,11 +268,20 @@ export default {
     selectLowUser(selection) {
       this.selectLowUserData = selection;
     },
+    //删除选择的用户
+    deleteSelectUser(item,index) {
+      this.onPageSelection.splice(index,1);
+      this.$refs.selection.data.forEach((data,i) => {
+        if(item.userId === data.userId){
+          this.$refs.selection.toggleSelect(i);
+        }
+      })
+    },
     //添加下级用户
     addLowUser() {
       let parentId = [];
-      if(this.selectUserData.length > 0){
-        this.selectUserData.forEach(val => {
+      if(this.onPageSelection.length > 0){
+        this.onPageSelection.forEach(val => {
           parentId.push(val.userId);
         });
       }else{
@@ -301,12 +324,50 @@ export default {
     },
     //选择下级用户
     onSelectionChange(selection) {
-      this.selectUserData = selection;
+      // this.selectUserData = selection;
+      //取消全选
+      if (selection.length === 0) {
+        let s = this.$refs.selection.data;
+        let p = this.onPageSelection;
+        s.map(item => {
+          p = p.filter(f => {
+            return f.userId !== item.userId;
+          });
+        });
+        this.onPageSelection = p;
+      } else {
+        let obj = {};
+        this.onPageSelection.push(...selection);
+        //数组去重
+        this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+          obj[next.userId] ? "" : (obj[next.userId] = true && cur.push(next));
+          return cur;
+        }, []);
+      }
+    },
+    //全选
+    onSelectAll(selection) {
+      let obj = {};
+      //触发全选事件
+      //全选
+      this.onPageSelection.push(...selection);
+      //数组去重
+      this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+        obj[next.userId] ? "" : (obj[next.userId] = true && cur.push(next));
+        return cur;
+      }, []);
+    },
+    //单选取消
+    onSelectCancel(selection, row) {
+      this.onPageSelection = this.onPageSelection.filter(f => {
+        return f.userId !== row.userId;
+      });
     },
     //展示所有用户
     showUserModal() {
       this.showModal = true;
       this.searchValue = '';
+      this.onPageSelection = []; //清空选中的用户
       this.getAllUsersData();
     },
     //获取所有用户数据
@@ -317,6 +378,16 @@ export default {
         this.userData = res.tableContent;
         this.lowUser.usertotal = res.dataCount;
         this.userLoading = false;
+
+        if (this.onPageSelection.length > 0) {
+            this.userData.map(item => {
+              this.onPageSelection.map(sel => {
+                if (item.userId === sel.userId) {
+                  item._checked = true;
+                }
+              });
+            });
+          }
       })
     },
     //查询用户

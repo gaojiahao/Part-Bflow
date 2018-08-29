@@ -1,5 +1,25 @@
 <template>
-<div>
+<div style="width:100%;height:100%">
+   <!-- <Row type="flex" justify="center" class="code-row-bg" style="text-align: center;">
+        <Col span="2" >
+            <div ><b>销售订单</b></div>
+            <div><div style="width: 30px;height: 30px;background-color:red;margin:0 auto;border-radius:30px;"><span>100%</span></div></div>
+            <div>
+                <div style="background-color: rgb(30, 136, 229);width:2px;height:30px;margin:0 auto;"></div>
+                <div style="height: 5px;margin: 0px auto;border-top: 1px solid;border-left: 1px solid;border-right: 1px solid;border-color: rgb(30, 136, 229);">
+                    <a>PLAN-1808-001</a>
+                    <p>2018-08-09 12:1221</p>
+                </div>
+            </div>
+        </Col>
+        <Col span="2">col-4</Col>
+        <Col span="2">col-4</Col>
+        <Col span="2">col-4</Col>
+        <Col span="2">col-4</Col>
+        <Col span="2">col-4</Col>
+        <Col span="2">col-4</Col>
+        <Col span="2">col-4</Col>
+    </Row> -->
     <div class="order">
         <div v-for="(node,index) in bigProcessNodes" :key="index" class="n">
             <div class="lines" v-if="node.durationTime">
@@ -151,6 +171,7 @@ export default {
                     }
                 ]
             },
+           
             {
                 appName:'开票',
                 durationTime:'',
@@ -184,7 +205,7 @@ export default {
 }
 .nodePro{
 
-	width: 180px;
+	width: 150px;
     /* display: inline-block; */
     text-align: center;
     /* margin-left: -30px; */
@@ -192,13 +213,15 @@ export default {
     float: left;
 }
 .order {
-    line-height: 50px;
+    line-height: 40px;
     text-align: center;
-    padding-top: 10%;
+    padding-top: 5%;
+    width: 95%;
+    margin: 0 auto;
 }
 .order .line {
   display: inline-block;
-  width: 35px;
+  width: 20px;
   border-top: 2px solid #1e88e5;
 }
 .order .txt {
@@ -228,9 +251,9 @@ export default {
 }
 
 .lines{
-    position: relative;
-    right: -89px;
-    top: 42px;
+   position: relative;
+    right: -75px;
+    top: 32px;
     height: 1px;
 }
 .transitem{
@@ -239,13 +262,13 @@ export default {
 }
 
 .schedule{
-   width: 50px;
-    height: 50px;
+   width: 40px;
+    height: 40px;
     text-align: center;
     background-color: red;
-    border-radius: 60px;
+    border-radius: 40px;
     color: white;
-    font-size: 16px;
+    font-size: 14px;
     margin: 0 auto;
 }
 
@@ -270,7 +293,7 @@ export default {
     left: -25px;
     width: 50%;
     height: 80px; */
-    width: 70%;
+    width: 80%;
     height: 80px;
     margin: 0 auto;
 }

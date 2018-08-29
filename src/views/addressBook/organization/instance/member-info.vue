@@ -71,7 +71,7 @@
         </div>
       </div>
       <div class="page-selection-warp" v-show="onPageSelection[0] ">
-        <Tag v-for="item in onPageSelection" :key="item.userId" :userId="item.userId" :closable="true"  @on-close="deletePageSelection" type="border" color="primary" size="small">
+        <Tag v-for="item in onPageSelection" :key="item.userId" :userId="item.userId" :closable="true" @on-close="deletePageSelection" type="border" color="primary" size="small">
           {{item.nickname}}
         </Tag>
       </div>
@@ -313,11 +313,17 @@ export default {
       }
     },
     //删除分页选中
-    deletePageSelection(event){
-       let id = Number(event.target.parentElement.getAttribute('userId'));
-      this.onPageSelection = this.onPageSelection.filter(f=>{
-         return f.userId !==id;
-       })
+    deletePageSelection(event) {
+      let id = Number(event.target.parentElement.getAttribute("userId"));
+      this.onPageSelection = this.onPageSelection.filter(f => {
+        return f.userId !== id;
+      });
+
+      this.$refs.selection.data.forEach((item,index) => {
+        if (id === item.userId) {
+          this.$refs.selection.toggleSelect(index)
+        }
+      });
     },
 
     //单选取消
@@ -347,7 +353,7 @@ export default {
 
     deleteMemberInfo() {
       let multiId = [];
-      if(this.selectDeleteMemberInfo.length>0){
+      if (this.selectDeleteMemberInfo.length > 0) {
         this.selectDeleteMemberInfo.forEach(val => {
           multiId.push(val.userId);
         });
@@ -360,8 +366,8 @@ export default {
             }
           });
         }
-      }else{
-        this.$Message.info('请选择要删除的成员');
+      } else {
+        this.$Message.info("请选择要删除的成员");
       }
     },
 
@@ -426,7 +432,7 @@ export default {
       this.onPageSelection = []; //清空选中的用户
       this.getListUsers(this.listUserCurrentPage, this.pageSize);
     },
-  
+
     //过滤
     userFilter() {
       let filter = JSON.stringify([

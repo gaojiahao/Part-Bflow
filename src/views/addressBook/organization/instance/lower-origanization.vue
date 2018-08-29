@@ -20,6 +20,14 @@
     cursor: pointer;
   }
 }
+.page-selection-warp {
+  width: 100%;
+  height: 100%;
+  min-height: 30px;
+  background-color: #e6e6e6;
+  margin-bottom: 10px;
+  padding: 1px 5px;
+}
 </style>
 
 <template>
@@ -43,12 +51,17 @@
             <Button type="primary" size="small">查询</Button>
           </a>
         </div>
-        <Table height="400" :loading="listUserLoading" :columns="lowerOrgColumnsModel" :data="listUserData" size='small' ref="selection" @on-selection-change="onSelectLowerUser"></Table>
+        <Table height="400" :loading="listUserLoading" :columns="lowerOrgColumnsModel" :data="listUserData" size='small' ref="selection" @on-select-all="onSelectAll" @on-selection-change="handerSelectionChange" @on-select-cancel="onSelectCancel"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
             <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-page-size-change="onPageSizeChange" @on-change="listUserChangePage" show-total show-elevator show-sizer></Page>
           </div>
         </div>
+      </div>
+      <div class="page-selection-warp" v-show="onPageSelection[0] ">
+        <Tag v-for="item in onPageSelection" :key="item.groupId" :groupId="item.groupId" :closable="true" @on-close="deletePageSelection" type="border" color="primary" size="small">
+          {{item.groupName}}
+        </Tag>
       </div>
     </member-modal>
   </div>
@@ -91,7 +104,7 @@ export default {
       },
       lowerOrgColumns: [
         {
-          type: "index",
+          type: "selection",
           width: 60,
           align: "center"
         },
@@ -312,7 +325,7 @@ export default {
       pageSize: 10,
       deleteBtnDisable: true,
       reload: false,
-      onSelectionModal: [],
+      onPageSelection: [],
       selectDeleteLowerOrg: [],
       searchValue: ""
     };
@@ -334,10 +347,61 @@ export default {
       ];
       this.getAllGroup(1, size, filter);
     },
+  
+      //全选
+    onSelectAll(selection) {
+      let obj = {};
+      //触发全选事件
+      //全选
+      this.onPageSelection.push(...selection);
+      //数组去重
+      this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+        obj[next.groupId] ? "" : (obj[next.groupId] = true && cur.push(next));
+        return cur;
+      }, []);
+    },
 
-    //监听模态框选中的用户
-    onSelectLowerUser(currentRow) {
-      this.onSelectionModal = currentRow;
+    //保存分页选中
+    handerSelectionChange(selection) {
+      //取消全选
+      if (selection.length === 0) {
+        let s = this.$refs.selection.data;
+        let p = this.onPageSelection;
+        s.map(item => {
+          p = p.filter(f => {
+            return f.groupId !== item.groupId;
+          });
+        });
+        this.onPageSelection = p;
+      } else {
+        let obj = {};
+        this.onPageSelection.push(...selection);
+        //数组去重
+        this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+          obj[next.groupId] ? "" : (obj[next.groupId] = true && cur.push(next));
+          return cur;
+        }, []);
+      }
+    },
+    //删除分页选中
+    deletePageSelection(event) {
+      let id = Number(event.target.parentElement.getAttribute("groupId"));
+      this.onPageSelection = this.onPageSelection.filter(f => {
+        return f.groupId !== id;
+      });
+
+      this.$refs.selection.data.forEach((item,index) => {
+        if (id === item.groupId) {
+          this.$refs.selection.toggleSelect(index)
+        }
+      });
+    },
+
+    //单选取消
+    onSelectCancel(selection, row) {
+      this.onPageSelection = this.onPageSelection.filter(f => {
+        return f.groupId !== row.groupId;
+      });
     },
 
     //选中的下级组织信息
@@ -360,13 +424,14 @@ export default {
     showLoverOrgModal() {
       this.isShowMemberModal = true;
        this.searchValue = '';
+       this.onPageSelection = [];
       this.getAllGroup(this.listUserCurrentPage);
     },
 
     //添加组织
     saveSelectionLowerOrg() {
       let childrenId = [];
-      this.onSelectionModal.forEach(val => {
+      this.onPageSelection.forEach(val => {
         childrenId.push(val.groupId);
       });
       saveBatchChildGroup(this.groupId, childrenId.join(",")).then(res => {
@@ -464,6 +529,16 @@ export default {
         if (res.tableContent[0]) {
           this.listUserPageTotal = res.summary.total;
           this.listUserData = res.tableContent;
+
+          if (this.onPageSelection.length > 0) {
+            this.listUserData.map(item => {
+              this.onPageSelection.map(sel => {
+                if (item.groupId === sel.groupId) {
+                  item._checked = true;
+                }
+              });
+            });
+          }
         }
         this.listUserLoading = false;
       });

@@ -21,6 +21,10 @@
     display: inline-block;
   }
 }
+
+  .rfd-principal-table .ivu-table-row-highlight td {
+    background-color: #81b2e59c !important;
+  }
 </style>
 <template>
   <div class="higher-company">
@@ -42,7 +46,7 @@
         <Input placeholder="请输入公司名称" @on-search="search" :search="true" v-model="groupName" style="width:300px;" />
         <Button type="primary" @click="search" class="search-btn" size="small">查询</Button>
       </div>
-      <Table ref="selection" :highlight-row="true" @on-row-click="onSelectionChange" @on-row-dblclick="onRowdbclick" height="400" :loading="companyLoading" :columns="columns" :data="companyData"></Table>
+      <Table class="rfd-principal-table" ref="selection" :highlight-row="true" @on-row-click="onSelectionChange" @on-row-dblclick="onRowdbclick" height="400" :loading="companyLoading" :columns="columns" :data="companyData"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div class="fr">
           <Page @on-page-size-change="onAllCompanyPageSizeChange" :total="companyTotal" show-elevator show-sizer :current="companyCurrentPage" :page-size="companyPageSize" @on-change="onCompanyPageChange" size="small" show-total></Page>

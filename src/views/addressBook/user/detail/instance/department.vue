@@ -167,7 +167,7 @@ export default {
     showGroupModal() {
       this.showModal = true;
       this.groupData = [];
-      this.getAllGroupData(6);
+      this.getAllGroupData(7);
     },
     //删除选择的用户部门
     deleteGroup() {

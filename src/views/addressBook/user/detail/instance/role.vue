@@ -300,7 +300,7 @@ export default {
       if(multiId && this.userId){
         addMember('sys_user_role',this.userId,multiId.join(',')).then(res => {
           if(res.success){
-            this.$Message.success(res.message);
+            this.$Message.success('更新成功');
             this.getRoleData();
             this.$emit('changeInstance');
           }

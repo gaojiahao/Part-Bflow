@@ -289,7 +289,7 @@ export default {
         if (valid) {
           updateConpanyInfo(data).then(res => {
             if (res.success) {
-              this.$Message.success("保存成功");
+              this.$Message.success("更新成功");
               window.location.reload();
             } else {
               this.$Message.error(res.message);

@@ -278,7 +278,7 @@ export default {
         });
         addLowerCompany(parentIds, this.groupId).then(res => {
           if (res.success) {
-            this.$Message.success("新增成功");
+            this.$Message.success("更新成功");
             this.$emit("getInstanceCount");
             this.getlowerCompanyData();
           }

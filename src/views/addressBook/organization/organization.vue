@@ -486,7 +486,7 @@ export default {
             this.formItem.groupId = this.groupId;
             updateBaseinfo(this.formItem).then(res => {
               if (res) {
-                this.$Message.success("保存成功");
+                this.$Message.success("更新成功");
                 window.location.reload();
               }
             });

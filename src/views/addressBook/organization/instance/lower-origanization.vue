@@ -436,7 +436,7 @@ export default {
       });
       saveBatchChildGroup(this.groupId, childrenId.join(",")).then(res => {
         if (res.success) {
-          this.$Message.success("保存成功");
+          this.$Message.success("更新成功");
           this.isShowMemberModal = false;
           this.reload = true;
           this.$emit("on-lower-organization-change", true);

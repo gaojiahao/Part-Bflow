@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="less">
 .permission-container-btn-export {
   float: right;
 }
@@ -71,7 +71,7 @@
         </div>
       </div>
       <div class="page-selection-warp" v-show="onPageSelection[0] ">
-        <Tag v-for="item in onPageSelection" :key="item.userId" :userId="item.userId" type="border" color="primary" size="small">
+        <Tag v-for="item in onPageSelection" :key="item.userId" :userId="item.userId" :closable="true"  @on-close="deletePageSelection" type="border" color="primary" size="small">
           {{item.nickname}}
         </Tag>
       </div>
@@ -311,6 +311,13 @@ export default {
           return cur;
         }, []);
       }
+    },
+    //删除分页选中
+    deletePageSelection(event){
+       let id = Number(event.target.parentElement.getAttribute('userId'));
+      this.onPageSelection = this.onPageSelection.filter(f=>{
+         return f.userId !==id;
+       })
     },
 
     //单选取消

@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="page-selection-warp" v-show="onPageSelection[0] ">
-        <Tag v-for="item in onPageSelection" :key="item.userId" @on-close="deleteSelectUser(item,index)" :userId="item.userId" type="border" color="primary" size="small">
+        <Tag v-for="item in onPageSelection" :key="item.userId" @on-close="deleteSelectUser(item,index)" :userId="item.userId" closable type="border" color="primary" size="small">
           {{item.nickname}}
         </Tag>
       </div>

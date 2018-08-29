@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="page-selection-warp" v-show="onPageSelection[0] ">
-        <Tag v-for="item in onPageSelection" :key="item.userId" :userId="item.userId" type="border" color="primary" size="small">
+        <Tag v-for="item in onPageSelection" :key="item.userId" @on-close="deleteSelectUser(item,index)" :userId="item.userId" closable type="border" color="primary" size="small">
           {{item.nickname}}
         </Tag>
       </div>
@@ -54,11 +54,6 @@ export default {
       columns1: [
         {
           type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
-          type: "index",
           width: 60,
           align: "center"
         },
@@ -145,11 +140,6 @@ export default {
       columns2: [
         {
           type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
-          type: "index",
           width: 60,
           align: "center"
         },
@@ -286,6 +276,15 @@ export default {
               this.getCompanyMember();
             }
           });
+        }
+      });
+    },
+    //删除选择的用户
+    deleteSelectUser(item, index) {
+      this.onPageSelection.splice(index, 1);
+      this.$refs.selection.data.forEach((data, i) => {
+        if (item.userId === data.userId) {
+          this.$refs.selection.toggleSelect(i);
         }
       });
     },

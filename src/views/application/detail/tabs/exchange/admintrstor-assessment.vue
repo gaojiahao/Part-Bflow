@@ -9,7 +9,7 @@
         <h3>管理员自评
         </h3>
       </Row>
-      <Row v-show="isAdminTrue">
+      <Row v-show="isAdminTrue" style="border-bottom: 10px solid #f0f0f0;" >
         <div style="width:95%;padding:5px;">
           <Form ref="formValidate" :label-width="150" :model="adminAssessData" :rules="ruleValidate">
             <FormItem label="期间（月份）:" prop="duringDate">
@@ -27,8 +27,8 @@
           </div>
         </div>
       </Row>
-      <div v-show="isAdminTrue" style="height:30px;background:#f0f0f0;"></div>
-      <div v-for="(assess, index) of assessments" :key="index" class="pad10 bg_ff">
+     
+      <div v-for="(assess, index) of assessments" :key="index" class="pad10 bg_ff assessmentItem">
         <img :src="assess.photo?assess.photo:'resources/images/icon/contactor.png'" class="user-icon">
         <div class="font14 content">
           <div>

@@ -108,7 +108,8 @@ export default {
         },
         {
           title: "邮箱",
-          key: "email"
+          key: "email",
+          width: 180
         },
         {
           title: "操作",
@@ -183,7 +184,8 @@ export default {
         },
         {
           title: "邮箱",
-          key: "email"
+          key: "email",
+          width: 180
         }
       ],
       groupId: this.$route.params.groupId,

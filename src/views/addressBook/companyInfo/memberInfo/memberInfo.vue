@@ -24,12 +24,17 @@
         <Input @on-search="search" :search="true" placeholder="请输入姓名" class="search-btn" v-model="nikeName" />
         <Button type="primary" @click="search">搜索</Button>
       </div>
-      <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" height="400" :loading="allMemberLoading" :columns="columns2" :data="allMemberData">
+      <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" @on-select-all="onSelectAll" @on-select-cancel="onSelectCancel" height="400" :loading="allMemberLoading" :columns="columns2" :data="allMemberData">
       </Table>
       <div style="margin: 10px;overflow: hidden">
         <div class="fr">
           <Page @on-page-size-change="onAllMemberPageSizeChange" :total="allMemberTotal" show-elevator show-sizer :current="allMemberCurrentPage" :page-size="allMemberPageSize" @on-change="onMemberPageChange" size="small" show-total></Page>
         </div>
+      </div>
+      <div class="page-selection-warp" v-show="onPageSelection[0] ">
+        <Tag v-for="item in onPageSelection" :key="item.userId" :userId="item.userId" type="border" color="primary" size="small">
+          {{item.nickname}}
+        </Tag>
       </div>
     </Modal>
   </div>
@@ -201,7 +206,8 @@ export default {
       target: 4,
       memberSelectionData: [],
       nowMemberselectionData: [],
-      nikeName: ""
+      nikeName: "",
+      onPageSelection: []
     };
   },
   methods: {
@@ -214,6 +220,15 @@ export default {
             this.allMemberData = res.tableContent;
             this.allMemberTotal = res.summary.total;
             this.allMemberLoading = false;
+            if (this.onPageSelection.length > 0) {
+              this.allMemberData.map(item => {
+                this.onPageSelection.map(sel => {
+                  if (item.userId === sel.userId) {
+                    item._checked = true;
+                  }
+                });
+              });
+            }
           }
         }
       );
@@ -280,10 +295,48 @@ export default {
     //弹出所有用户
     showAllMember() {
       this.showModal = true;
+      this.onPageSelection = [];
       this.getAllUser();
     },
+    //全选
+    onSelectAll(selection) {
+      let obj = {};
+      //触发全选事件
+      //全选
+      this.onPageSelection.push(...selection);
+      //数组去重
+      this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+        obj[next.userId] ? "" : (obj[next.userId] = true && cur.push(next));
+        return cur;
+      }, []);
+    },
+    //取消单选
+    onSelectCancel(selection, row) {
+      this.onPageSelection = this.onPageSelection.filter(f => {
+        return f.userId !== row.userId;
+      });
+    },
     onSelectionChange(selection) {
-      this.memberSelectionData = selection;
+      //取消全选
+      if (selection.length === 0) {
+        let s = this.$refs.selection.data;
+        let p = this.onPageSelection;
+        s.map(item => {
+          p = p.filter(f => {
+            return f.userId !== item.userId;
+          });
+        });
+        this.onPageSelection = p;
+      } else {
+        let obj = {};
+        this.onPageSelection.push(...selection);
+        //数组去重
+        this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+          obj[next.userId] ? "" : (obj[next.userId] = true && cur.push(next));
+          return cur;
+        }, []);
+      }
+      this.memberSelectionData = this.onPageSelection;
     },
     onMemberSelectionChange(selection) {
       this.nowMemberselectionData = selection;

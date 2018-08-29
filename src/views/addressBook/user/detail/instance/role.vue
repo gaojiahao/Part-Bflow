@@ -28,6 +28,14 @@
       cursor: pointer;
     }
   }
+  .page-selection-warp {
+    width: 100%;
+    height: 100%;
+    min-height: 30px;
+    background-color: #e6e6e6;
+    margin-bottom: 10px;
+    padding: 1px 5px;
+  }
 </style>
 
 <template>
@@ -37,7 +45,7 @@
             <span style="color: #7a7676;">-添加职位</span>
             <b @click="deleteUserRole"  class="role-detail-btn">删除</b>
             <span style="color: #7a7676;">-批量删除职位</span>
-            <Table ref="selection" @on-selection-change="selectDeleteRole" :columns="columns" :loading="loading" :data="roleData"></Table>
+            <Table @on-selection-change="selectDeleteRole" :columns="columns" :loading="loading" :data="roleData"></Table>
             <div class="user-page">
                 <div style="float: right;">
                   <Page @on-page-size-change="onPageSizeChange" :total="rolePage.total" show-elevator show-sizer :current="rolePage.currentPage" :page-size="rolePage.pageSize" @on-change="onPageChange" size="small" show-total></Page>
@@ -55,11 +63,16 @@
                   <Button type="primary" size="small">查询</Button>
               </p>
             </div>
-            <Table ref="selection" @on-selection-change="onSelectionChange" height="400" :loading="roleLoading" :columns="RoleColumns" :data="allRoleData"></Table>
+            <Table ref="selection" @on-selection-change="onSelectionChange" @on-select-all="onSelectAll" @on-select-cancel="onSelectCancel" height="400" :loading="roleLoading" :columns="RoleColumns" :data="allRoleData"></Table>
             <div class="user-page">
                 <div style="float: right;">
                   <Page @on-page-size-change="onAllRolePageSizeChange" :total="rolePage.roletotal" show-elevator show-sizer :current="rolePage.rolecurrentPage" :page-size="rolePage.allRolepageSize" @on-change="onRolePageChange" size="small" show-total></Page>
                 </div>
+            </div>
+            <div class="page-selection-warp" v-show="selectRoleData[0] ">
+              <Tag v-for="(item,index) in selectRoleData" :key="item.id" @on-close="deleteSelectUser(item,index)" :userId="item.id" closable type="border" color="primary" size="small">
+                {{item.name}}
+              </Tag>
             </div>
         </Modal>
     </div>
@@ -296,14 +309,61 @@ export default {
         this.$Message.warning('无用户ID，请先保存用户再进行编辑！');
       }
     },
+    //删除选择的用户
+    deleteSelectUser(item,index) {
+      this.selectRoleData.splice(index,1);
+      this.$refs.selection.data.forEach((data,i) => {
+        if(item.id === data.id){
+          this.$refs.selection.toggleSelect(i);
+        }
+      })
+    },
     //选择职位
     onSelectionChange(selection) {
-      this.selectRoleData = selection;
+      // this.selectRoleData = selection;
+      //取消全选
+      if (selection.length === 0) {
+        let s = this.$refs.selection.data;
+        let p = this.selectRoleData;
+        s.map(item => {
+          p = p.filter(f => {
+            return f.id !== item.id;
+          });
+        });
+        this.selectRoleData = p;
+      } else {
+        let obj = {};
+        this.selectRoleData.push(...selection);
+        //数组去重
+        this.selectRoleData = this.selectRoleData.reduce((cur, next) => {
+          obj[next.id] ? "" : (obj[next.id] = true && cur.push(next));
+          return cur;
+        }, []);
+      }
+    },
+    //全选
+    onSelectAll(selection) {
+      let obj = {};
+      //触发全选事件
+      //全选
+      this.selectRoleData.push(...selection);
+      //数组去重
+      this.selectRoleData = this.selectRoleData.reduce((cur, next) => {
+        obj[next.id] ? "" : (obj[next.id] = true && cur.push(next));
+        return cur;
+      }, []);
+    },
+    //单选取消
+    onSelectCancel(selection, row) {
+      this.selectRoleData = this.selectRoleData.filter(f => {
+        return f.id !== row.id;
+      });
     },
     //展示所有职位
     showRoleModal() {
       this.showModal = true;
       this.searchValue = '';
+      this.selectRoleData = [];
       this.getAllRoleData();
     },
     //获取所有职位数据
@@ -316,6 +376,16 @@ export default {
         this.allRoleData = res.tableContent;
         this.rolePage.roletotal = res.dataCount;
         this.roleLoading = false;
+
+        if (this.selectRoleData.length > 0) {
+            this.allRoleData.map(item => {
+              this.selectRoleData.map(sel => {
+                if (item.id === sel.id) {
+                  item._checked = true;
+                }
+              });
+            });
+          }
       })
     },
     roleFilter() {

@@ -21,6 +21,14 @@
     display: inline-block;
   }
 }
+.page-selection-warp {
+  width: 100%;
+  height: 100%;
+  min-height: 30px;
+  background-color: #e6e6e6;
+  margin-bottom: 10px;
+  padding: 1px 5px;
+}
 </style>
 <template>
   <div class="lower-company">
@@ -42,11 +50,16 @@
         <Input placeholder="请输入公司名称" @on-search="search" :search="true" v-model="groupName" style="width:300px;" />
         <Button type="primary" @click="search" class="search-btn" size="small">查询</Button>
       </div>
-      <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" height="400" :loading="companyLoading" :columns="columns1" :data="companyData"></Table>
+      <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" @on-select-all="onSelectAll" @on-select-cancel="onSelectCancel" height="400" :loading="companyLoading" :columns="columns1" :data="companyData"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div class="fr">
           <Page @on-page-size-change="onAllCompanyPageSizeChange" :total="companyTotal" show-elevator show-sizer :current="companyCurrentPage" :page-size="companyPageSize" @on-change="onCompanyPageChange" size="small" show-total></Page>
         </div>
+      </div>
+      <div class="page-selection-warp" v-show="onPageSelection[0] ">
+        <Tag v-for="item in onPageSelection" :key="item.groupId" @on-close="deleteSelectUser(item,index)" :groupId="item.groupId" closable type="border" color="primary" size="small">
+          {{item.groupName}}
+        </Tag>
       </div>
     </Modal>
   </div>
@@ -147,7 +160,8 @@ export default {
       selectCompanyData: {},
       deleteCompanyData: [],
       showModal: false,
-      groupName: ""
+      groupName: "",
+      onPageSelection: []
     };
   },
   methods: {
@@ -183,7 +197,52 @@ export default {
     },
     //选择上级公司
     onSelectionChange(selection) {
-      this.selectCompanyData = selection;
+      //取消全选
+      if (selection.length === 0) {
+        let s = this.$refs.selection.data;
+        let p = this.onPageSelection;
+        s.map(item => {
+          p = p.filter(f => {
+            return f.groupId !== item.groupId;
+          });
+        });
+        this.onPageSelection = p;
+      } else {
+        let obj = {};
+        this.onPageSelection.push(...selection);
+        //数组去重
+        this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+          obj[next.groupId] ? "" : (obj[next.groupId] = true && cur.push(next));
+          return cur;
+        }, []);
+      }
+      this.selectCompanyData = this.onPageSelection;
+    },
+    //全选
+    onSelectAll(selection) {
+      let obj = {};
+      //触发全选事件
+      this.onPageSelection.push(...selection);
+      //数组去重
+      this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+        obj[next.groupId] ? "" : (obj[next.groupId] = true && cur.push(next));
+        return cur;
+      }, []);
+    },
+    //取消单选
+    onSelectCancel(selection, row) {
+      this.onPageSelection = this.onPageSelection.filter(f => {
+        return f.groupId !== row.groupId;
+      });
+    },
+    //删除选择的用户
+    deleteSelectUser(item, index) {
+      this.onPageSelection.splice(index, 1);
+      this.$refs.selection.data.forEach((data, i) => {
+        if (item.groupId === data.groupId) {
+          this.$refs.selection.toggleSelect(i);
+        }
+      });
     },
     //显示所有公司列表
     showCompanyModal() {

@@ -45,7 +45,7 @@
             <span style="color: #7a7676;">-添加下级用户</span>
             <b @click="deleteLowUser" class="lower-user-detail-btn">删除</b>
             <span style="color: #7a7676;">-批量删除下级用户</span>
-            <Table ref="selection" @on-selection-change="selectLowUser" :columns="columns" :loading="loading" :data="lowerUserData"></Table>
+            <Table @on-selection-change="selectLowUser" :columns="columns" :loading="loading" :data="lowerUserData"></Table>
             <div class="user-page">
                 <div style="float: right;">
                   <Page @on-page-size-change="onPageSizeChange" :total="lowUser.total" show-elevator show-sizer :current="lowUser.currentPage" :page-size="lowUser.pageSize" @on-change="onPageChange" size="small" show-total></Page>

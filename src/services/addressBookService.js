@@ -594,7 +594,7 @@ export const removeCompany = (groupIds) => {
     groupIds.forEach(function (g) {
       data.push({
         "groupId": Number(g),
-        "parentId": ""
+        "parentId": "1"
       })
     });
   }

@@ -7,6 +7,7 @@ export const getToken = () => {
             token = false;
         }
     }
+    // return 'ed0b689ba2ef40d18b5f2b590c6b54b6';
     return token;
 }
 

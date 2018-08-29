@@ -58,11 +58,6 @@ export default {
           align: "center"
         },
         {
-          type: "index",
-          width: 60,
-          align: "center"
-        },
-        {
           title: "头像",
           key: "photo",
           width: 80,
@@ -145,11 +140,6 @@ export default {
       columns2: [
         {
           type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
-          type: "index",
           width: 60,
           align: "center"
         },

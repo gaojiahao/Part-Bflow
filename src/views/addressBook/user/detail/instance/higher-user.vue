@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="less">
     .higher-user{
       &-detail{
         background-color: #fff;
@@ -31,6 +31,10 @@
   .ivu-modal-close .ivu-icon-ios-close{
     color: #fff;
   }
+
+  .rfd-principal-table .ivu-table-row-highlight td{
+  background-color: #81b2e59c !important;
+}
 </style>
 
 <template>
@@ -51,7 +55,7 @@
                   <Button type="primary" size="small">查询</Button>
               </p>
             </div>
-            <Table @on-row-dblclick="onDbClick" @on-row-click="onRowClick" ref="selection" :highlight-row="true" height="400" :loading="userLoading" :columns="userColumns" :data="userData"></Table>
+            <Table class="rfd-principal-table" @on-row-dblclick="onDbClick" @on-row-click="onRowClick" ref="selection" :highlight-row="true" height="400" :loading="userLoading" :columns="userColumns" :data="userData"></Table>
             <div class="user-page">
                 <div class="fr">
                   <Page @on-page-size-change="onAllUserPageSizeChange" :total="highUser.usertotal" show-elevator show-sizer :current="highUser.usercurrentPage" :page-size="highUser.allUserpageSize" @on-change="onUserPageChange" size="small" show-total></Page>

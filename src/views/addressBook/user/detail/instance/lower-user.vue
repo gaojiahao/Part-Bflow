@@ -292,7 +292,7 @@ export default {
       if(parentId && this.userId){
         updateHighUser(parentId.join(','),this.userId).then(res => {
           if(res.success){
-            this.$Message.success(res.message);
+            this.$Message.success('更新成功');
             this.getLowerUserData();
             this.$emit('changeInstance');
           }

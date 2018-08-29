@@ -210,7 +210,7 @@ export default {
         parentId = this.selectCompanyData.groupId;
         addHigherCompany(this.groupId, parentId).then(res => {
           if (res.success) {
-            this.$Message.success("新增成功!");
+            this.$Message.success("更新成功!");
             this.$emit("getInstanceCount");
             this.getHigherCompanyData();
           }
@@ -248,7 +248,7 @@ export default {
         addHigherCompany(this.groupId, parentId).then(res => {
           if (res.success) {
             this.showModal = false;
-            this.$Message.success("新增成功!");
+            this.$Message.success("更新成功!");
             this.$emit("getInstanceCount");
             this.getHigherCompanyData();
           }

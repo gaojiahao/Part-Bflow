@@ -247,7 +247,7 @@ export default {
                         this.formItem.userId = this.userInfo.userId;
                         updateUser(this.formItem).then(res => {
                             if(res.success){
-                                this.$Message.success(res.message);
+                                this.$Message.success('更新成功');
                                 window.location.reload();
                             }
                         }).catch(error => {
@@ -256,7 +256,7 @@ export default {
                     }else{
                     addUser(this.formItem).then(res => {
                         if(res){
-                            this.$Message.success('新增成功！');
+                            this.$Message.success('保存成功');
                             this.$router.push({ path: '/addressBook/user/detail/'+res.user_id});
                             window.location.reload();
                         }

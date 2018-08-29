@@ -292,7 +292,7 @@ export default {
       };
       updateBaseinfo(params).then(res => {
         if (res.success) {
-          this.$Message.success("保存成功");
+          this.$Message.success("更新成功");
           this.isShowMemberModal = false;
           this.reload = true;
           this.$emit("on-high-organization-change", true);
@@ -330,7 +330,7 @@ export default {
       params.groupId = this.groupId;
       updateBaseinfo(params).then(res => {
         if (res.success) {
-          this.$Message.success("保存成功");
+          this.$Message.success("更新成功");
           this.isShowMemberModal = false;
           this.reload = true;
           this.$emit("on-high-organization-change", true);

@@ -160,7 +160,7 @@ export default {
         addIndirPermission(this.userId,multiId.join(',')).then(res => {
           if(res.success){
             this.selectPermissionNode = [];
-            this.$Message.success(res.message);
+            this.$Message.success('更新成功');
             this.getDirPermissionData();
             this.$emit('changeInstance');
           }

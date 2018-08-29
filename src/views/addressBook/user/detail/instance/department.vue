@@ -208,7 +208,7 @@ export default {
         addMember('sys_group_user',groupIds.join(','),this.userId).then(res => {
           if(res.success){
             this.selectGroup = [];
-            this.$Message.success(res.message);
+            this.$Message.success('更新成功');
             this.getDepartmentData();
             this.$emit('changeInstance');
           }

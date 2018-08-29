@@ -251,7 +251,7 @@ export default {
         updateHighUser(this.userId,parentId).then(res => {
           if(res.success){
             this.showModal = false;
-            this.$Message.success(res.message);
+            this.$Message.success('更新成功');
             this.getHigherUserData();
             this.$emit('changeInstance');
           }
@@ -264,7 +264,7 @@ export default {
       if(parentId && this.userId){
         updateHighUser(this.userId,parentId).then(res => {
           if(res.success){
-            this.$Message.success(res.message);
+            this.$Message.success('更新成功');
             this.getHigherUserData();
             this.$emit('changeInstance');
           }

@@ -342,7 +342,7 @@ export default {
       if (multiId) {
         addOrgMember(this.groupId, multiId.join(","), 1).then(res => {
           if (res.success) {
-            this.$Message.success(res.message);
+            this.$Message.success('更新成功');
             this.reload = true;
             this.isShowMemberModal = false;
             this.$emit("on-member-info-change", true);

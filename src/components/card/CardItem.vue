@@ -12,6 +12,7 @@
             <Page :total="pageTotal" :current="currentPage" size="small" :page-size="pageSize" @on-change="changeCurrentPage" show-total></Page>
           </div>
         </div>
+
       </div>
     </Poptip>
     <div class="badge-custom" @click="redirectTo(appinfo)">
@@ -22,21 +23,24 @@
     <div class="content">
       <a @click.stop="goAppSetting(appinfo)" class="content-detail">详情</a>
       <h5 @click="redirectTo(appinfo)">{{appinfo.text}}</h5>
-      <span>{{appinfo.administrator?appinfo.transName+'  ':appinfo.transName}}</span>
-        <my-pop-tip :userInfo="userInfo"  trigger="click">
-          <span @click="showUserInfo" slot="userCard" class="content-admin">{{appinfo.administrator}}</span>
-        </my-pop-tip>
+      <span>{{appinfo.administrator?appinfo.transName+' ':appinfo.transName}}</span>
+      <my-pop-tip :userInfo="userInfo" trigger="click">
+        <span @click="showUserInfo" slot="userCard" class="content-admin">{{appinfo.administrator}}</span>
+      </my-pop-tip>
+      <Tooltip content="创建实例" :transfer="true" style="margin-right: 5px;float: right;">
+        <i class="iconfont content-add-instance" @click="handlerAddInstance" v-show="this.appinfo.type === 'obj'||this.appinfo.type === 'business'">&#xe620;</i>
+      </Tooltip>
     </div>
   </div>
 </template>
 
 <script>
-import { getAppTaskCount } from "@/services/flowService";
+import { getAppTaskCount, getFormViews } from "@/services/flowService";
 import { getUserInfoByUserId } from "@/services/appService.js";
 import MyPopTip from "@/components/poptip/MyPopTip";
 export default {
   props: ["appinfo", "allTaskCount"],
-  components:{
+  components: {
     MyPopTip
   },
   data() {
@@ -113,7 +117,7 @@ export default {
       currentPage: 1, //table当前页
       pageListId: "",
 
-      userInfo:{},
+      userInfo: {}
     };
   },
   created() {
@@ -173,14 +177,13 @@ export default {
       }
     },
 
-    showUserInfo(){
-     
+    showUserInfo() {
       let userId = this.appinfo.adminId;
-      getUserInfoByUserId(userId).then(res=>{
-        if(res.dataCount){
-          this.userInfo= res.tableContent[0];
+      getUserInfoByUserId(userId).then(res => {
+        if (res.dataCount) {
+          this.userInfo = res.tableContent[0];
         }
-      })
+      });
     },
 
     popperShow(e) {
@@ -227,6 +230,26 @@ export default {
         },
         "*"
       );
+    },
+
+    //创建应用实例
+    handlerAddInstance() {
+      let uniqueId = "";
+      getFormViews(this.appinfo.listId).then(res => {
+        if (res.length > 0) {
+          uniqueId = res.filter(f => {
+            return f.viewType === "submit";
+          })[0].uniqueId;
+          window.open(
+            "/Form/index.html?model=new&view=" +
+              uniqueId +
+              "&list=" +
+              this.appinfo.listId
+          );
+        } else {
+          this.$Message.info("表单模板为空");
+        }
+      });
     }
   }
 };
@@ -268,7 +291,13 @@ export default {
     &-detail {
       display: none;
       float: right;
-      font-size: 14px;
+      font-size: 12px;
+    }
+
+    &-add-instance {
+      display: none;
+      color: #0cc348;
+      cursor: pointer;
     }
 
     h5 {
@@ -285,7 +314,7 @@ export default {
       color: #5f5e5e;
     }
 
-    &-admin{
+    &-admin {
       color: #4b8cf0 !important;
       cursor: pointer;
     }
@@ -308,6 +337,10 @@ export default {
 
 .card:hover {
   .content-detail {
+    display: inline-block;
+  }
+
+  .content-add-instance {
     display: inline-block;
   }
   -webkit-transition: box-shadow 0.3s cubic-bezier(0.55, 0, 0.1, 1) 0s;

@@ -158,7 +158,7 @@ export default {
                     onOk: () => {
                       deleteMember('sys_user_role',this.userId,params.row.id).then(res => {
                         if(res.success){
-                          this.$Message.success(res.message);
+                          this.$Message.success('删除成功！');
                           this.getRoleData();
                           this.$emit('changeInstance');
                         }
@@ -278,7 +278,7 @@ export default {
             deleteMember('sys_user_role',this.userId,roleIds.join(',')).then(res => {
               if(res.success){
                 this.selectDeleteRoleData = [];
-                this.$Message.success(res.message);
+                this.$Message.success('删除成功！');
                 this.getRoleData();
                 this.$emit('changeInstance');
               }

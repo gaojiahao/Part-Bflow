@@ -145,7 +145,7 @@ export default {
                     onOk: () => {
                       deleteUser(this.userId).then(res => {
                         if(res.success){
-                          this.$Message.success(res.message);
+                          this.$Message.success('删除成功！');
                           this.getHigherUserData();
                           this.$emit('changeInstance');
                         }

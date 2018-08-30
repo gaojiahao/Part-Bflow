@@ -185,7 +185,7 @@ export default {
                           0
                         ).then(res => {
                           if (res.success) {
-                            this.$Message.success(res.message);
+                            this.$Message.success("删除成功!");
                             this.reload = true;
                             this.$emit("on-member-info-change", true);
                           }
@@ -360,7 +360,7 @@ export default {
         if (multiId) {
           deleteOrgMember(this.groupId, multiId.join(","), 0).then(res => {
             if (res.success) {
-              this.$Message.success(res.message);
+              this.$Message.success("删除成功!");
               this.reload = true;
               this.$emit("on-member-info-change", true);
             }

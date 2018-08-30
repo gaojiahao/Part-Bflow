@@ -1,5 +1,6 @@
 <style lang="less">
 .lower-company {
+  margin-top: 5px;
   &-detail {
     background-color: #fff;
     padding: 26px 50px;

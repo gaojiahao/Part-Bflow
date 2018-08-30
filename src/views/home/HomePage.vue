@@ -238,8 +238,6 @@ export default {
   height: 100%;
   width: 100%;
   background-color: #ddd;
-  -webkit-overflow-scrolling: touch;
-  overflow-y: scroll;
 }
 
 .bg-gray-lighter {

@@ -36,7 +36,7 @@
                     </Modal>
                 </FormItem>
                 <FormItem label="工号：" prop="userCode">
-                    <Input :class="{'info-edit':isEdit}" :readonly="isEdit" @on-blur="userCodeBlur" v-model="formItem.userCode" style="width:60%"></Input>
+                    <Input :class="{'info-edit':isAdd}" :readonly="isAdd" @on-blur="userCodeBlur" v-model="formItem.userCode" style="width:60%"></Input>
                 </FormItem>
                 <FormItem label="姓名：" prop="nickname">
                     <Input :class="{'info-edit':isEdit}" :readonly="isEdit" v-model="formItem.nickname" style="width:60%"></Input>
@@ -76,6 +76,12 @@
                     </Select>
                     <span v-else>{{ userInfo.statusText }}</span>
                 </FormItem>
+                <FormItem label="公司：" prop="entityName">
+                    <Input @on-click="selectCompanyModal" v-model="formItem.entityName" :icon="isEdit?'':'md-arrow-dropdown'" :class="{'info-edit':isEdit}" :readonly="isEdit" style="width:60%"></Input>
+                </FormItem>
+                <FormItem v-if="hiddenInput" label="公司主体id" style="width:60%">
+                    <Input v-model="formItem.entityId" />
+                </FormItem>
             </Form>
         </Row>
         <Row class="info-btn">
@@ -84,12 +90,30 @@
             <Button v-if="!isEdit" @click="updateUserData"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold">保存</Button>
             <Button v-if="!isAdd" @click="saveAndAddUser" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold">保存并新建</Button>
         </Row>
+        <Modal
+            v-model="showCompanyModal"
+            @on-ok="selectCompany"
+            title="选择公司"
+            width="800">
+            <div class="app-search">
+              <Input @on-search="companyFilter" :search="true" v-model="searchValue" placeholder="搜索公司名称" style="width: 300px"></Input>
+              <p @click="companyFilter" class="app-search-icon">
+                  <Button type="primary" size="small">查询</Button>
+              </p>
+            </div>
+            <Table class="rfd-principal-table" @on-row-dblclick="onDbClick" @on-row-click="onRowClick" ref="selection" :highlight-row="true" height="400" :loading="loading" :columns="companyColumns" :data="companyData"></Table>
+            <div class="user-page">
+                <div class="fr">
+                  <Page @on-page-size-change="pageSizeChange" :total="companyTable.total" show-elevator show-sizer :current="companyTable.currentPage" :page-size="companyTable.pageSize" @on-change="onPageChange" size="small" show-total></Page>
+                </div>
+            </div>
+        </Modal>
     </div>
 </template>
 
 <script>
 import { getToken } from "@/utils/utils";
-import { updateUser,addUser,checkoutFieldIsOnly } from "@/services/addressBookService.js";
+import { updateUser,addUser,checkoutFieldIsOnly,getAllCompanys } from "@/services/addressBookService.js";
 
 export default {
   name: "userInfo",
@@ -105,11 +129,40 @@ export default {
         Authorization: getToken()
       },
       logo: "",
+      searchValue: '',
       userId: this.$route.params.userId,
+      hiddenInput: false,
+      showCompanyModal: false,
       visible: false,
       checkout: true,
       isEdit: true,
       isAdd: true,
+      loading: false,
+      companyTable: {
+          total: 0,
+          currentPage: 1,
+          pageSize: 10
+      },
+      companyColumns: [
+          {
+          title: "公司名称",
+          key: "groupName"
+        },
+        {
+          title: "公司简称",
+          key: "groupShortName"
+        },
+        {
+          title: "公司类型",
+          key: "companyType"
+        },
+        {
+          title: "创建者",
+          key: "creator"
+        }
+      ],
+      companyData: [],
+      selectedCompanyData: {},
       formItem: {
         userCode: "",
         nickname: "",
@@ -119,7 +172,9 @@ export default {
         status: "1",
         gender: "1",
         termOfValidity: "",
-        userType: "1"
+        userType: "1",
+        entityId: '',
+        entityName: ''
       },
       ruleValidate: {
           userCode: [
@@ -133,6 +188,13 @@ export default {
           {
             required: true,
             message: "请输入用户名称",
+            trigger: "blur"
+          }
+        ],
+        entityName: [
+          {
+            required: true,
+            message: "请选择公司主体",
             trigger: "blur"
           }
         ],
@@ -162,6 +224,7 @@ export default {
   watch: {
       userInfo: function(){
           if(Object.keys(this.userInfo).length > 0){
+              console.log(this.userInfo);
                 this.formItem.userCode = this.userInfo.userCode;
                 this.formItem.nickname = this.userInfo.nickname;
                 this.formItem.mobile = this.userInfo.mobile;
@@ -172,6 +235,8 @@ export default {
                 this.formItem.status = String(this.userInfo.status);
                 this.formItem.userType = String(this.userInfo.userType);
                 this.logo = this.userInfo.photo;
+                this.formItem.entityId = this.userInfo.entityId;
+                this.formItem.entityName = this.userInfo.entityName;
           }
       }
   },
@@ -270,6 +335,48 @@ export default {
             }
         })
     },
+    //展示公司modal
+    selectCompanyModal() {
+        this.showCompanyModal = true;
+    },
+    //双击选择公司
+    onDbClick(selection,index) {
+        this.formItem.entityId = selection.groupCode;
+        this.formItem.entityName = selection.groupName;
+        this.showCompanyModal = false;
+    },
+    //单击选择公司
+    onRowClick(selection,index) {
+        this.selectedCompanyData = selection;
+    },
+    //分页点击
+    onPageChange(currentPage) {
+        this.companyTable.currentPage = currentPage;
+        this.getAllCompanysData(this.searchValue);
+    },
+    //每页条数改变
+    pageSizeChange(size) {
+        this.companyTable.pageSize = size;
+        this.getAllCompanysData(this.searchValue);
+    },
+    //公司筛选
+    companyFilter() {
+        this.getAllCompanysData(this.searchValue);
+    },
+    //获取所有公司数据
+    getAllCompanysData(searchText) {
+        this.loading = true;
+        getAllCompanys(this.companyTable.pageSize,this.companyTable.currentPage,searchText).then(res => {
+            this.companyData = res.tableContent;
+            this.companyTable.total = res.dataCount;
+            this.loading = false;
+        })
+    },
+    //确定选择的公司
+    selectCompany() {
+        this.formItem.entityId = this.selectedCompanyData.groupCode;
+        this.formItem.entityName = this.selectedCompanyData.groupName;
+    },
     //保存并继续添加用户
     saveAndAddUser() {
         this.userCodeBlur();
@@ -338,6 +445,7 @@ export default {
     }
   },
   mounted() {
+      this.getAllCompanysData();
       if(!this.userId){
           this.isAdd = false;
           this.isEdit = false;

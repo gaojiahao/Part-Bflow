@@ -61,3 +61,11 @@ export const getProcedureAndProcess = (processRouteCode) => request('/H_roleplay
  * 
 */
 export const getProcessRouteProcedureRel = () => request('/H_roleplay-si/ds/getProcessRouteProcedureRel');
+
+/** 
+ * 获取表单视图
+ * 
+*/
+export const getFormViews = (listId) => request('/H_roleplay-si/ds/list/getFormViews',{
+    listId:listId
+});

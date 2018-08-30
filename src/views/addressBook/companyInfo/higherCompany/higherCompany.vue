@@ -1,5 +1,6 @@
 <style lang="less">
 .higher-company {
+  margin-top: 5px;
   &-detail {
     background-color: #fff;
     padding: 26px 50px;
@@ -22,9 +23,9 @@
   }
 }
 
-  .rfd-principal-table .ivu-table-row-highlight td {
-    background-color: #81b2e59c !important;
-  }
+.rfd-principal-table .ivu-table-row-highlight td {
+  background-color: #81b2e59c !important;
+}
 </style>
 <template>
   <div class="higher-company">

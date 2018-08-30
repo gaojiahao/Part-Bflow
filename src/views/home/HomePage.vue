@@ -273,8 +273,7 @@ export default {
   height: 40px;
   width: 100%;
   padding: 0 10%;
-  background-color: #ffffff;
-  border-bottom: 1px solid #9e9e9e57;
+  background-color: #f0f0f0;
   z-index: 997;
   padding: 5px;
   &-nav {
@@ -319,6 +318,7 @@ export default {
 .ivu-select-selection {
   height: 30px !important;
   border-radius: 0px !important;
+  background-color: #f0f0f0;
 }
 </style>
 

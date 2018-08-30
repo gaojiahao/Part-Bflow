@@ -19,7 +19,7 @@
       <Badge :count="taskCount" v-if="type==='subject'" type="primary"></Badge>
     </div>
 
-    <img :src="appinfo.icon" />
+    <img :src="appinfo.icon" :class="'img-radius-'+this.appinfo.type" />
     <div class="content">
       <a @click.stop="goAppSetting(appinfo)" class="content-detail">详情</a>
       <h5 @click="redirectTo(appinfo)">{{appinfo.text}}</h5>
@@ -121,7 +121,7 @@ export default {
     };
   },
   created() {
-    if (!~this.appinfo.icon.indexOf("/dist/")) {
+    if (~this.appinfo.icon.indexOf("/dist/")) {
       this.appinfo.icon = "/dist/" + this.appinfo.icon;
     }
     let listId = this.appinfo.url.split("/")[1];
@@ -274,6 +274,19 @@ export default {
   img:hover {
     cursor: auto;
   }
+
+  .img-radius-hr {
+    border-radius: 50%;
+  }
+
+  .img-radius-obj {
+    border-radius: 50%;
+  }
+
+  .img-radius-subject {
+    border-radius: 8px;
+  }
+
   .content {
     cursor: default;
     font-size: @card-text-font-size;

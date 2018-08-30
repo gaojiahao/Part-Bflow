@@ -267,7 +267,7 @@ export default {
     },
     handleSuccess(res, file) {
       this.logo =
-        "/H_roleplay-si/ds/download?width=128&height=128&specify=true&url=" +
+        "/H_roleplay-si/ds/download?width=128&height=128&url=" +
         res.data[0].attacthment;
     },
 

@@ -267,7 +267,7 @@ export const enterpriseInfo = {
 
 
 export const bigProcess = {
-  path: '/bigProcess',
+  path: '/bigProcess/:orderCode',
   name: 'bigProcess',
   component: () =>
     import('@/components/bigProcess.vue')

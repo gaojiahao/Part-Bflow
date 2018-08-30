@@ -1,25 +1,5 @@
 <template>
 <div style="width:100%;height:100%">
-   <!-- <Row type="flex" justify="center" class="code-row-bg" style="text-align: center;">
-        <Col span="2" >
-            <div ><b>销售订单</b></div>
-            <div><div style="width: 30px;height: 30px;background-color:red;margin:0 auto;border-radius:30px;"><span>100%</span></div></div>
-            <div>
-                <div style="background-color: rgb(30, 136, 229);width:2px;height:30px;margin:0 auto;"></div>
-                <div style="height: 5px;margin: 0px auto;border-top: 1px solid;border-left: 1px solid;border-right: 1px solid;border-color: rgb(30, 136, 229);">
-                    <a>PLAN-1808-001</a>
-                    <p>2018-08-09 12:1221</p>
-                </div>
-            </div>
-        </Col>
-        <Col span="2">col-4</Col>
-        <Col span="2">col-4</Col>
-        <Col span="2">col-4</Col>
-        <Col span="2">col-4</Col>
-        <Col span="2">col-4</Col>
-        <Col span="2">col-4</Col>
-        <Col span="2">col-4</Col>
-    </Row> -->
     <div class="order">
         <div v-for="(node,index) in bigProcessNodes" :key="index" class="n">
             <div class="lines" v-if="node.durationTime">
@@ -31,14 +11,14 @@
                 </div>
             <div class="nodePro">
                 
-                <div class="appName"><strong>{{node.appName}}</strong></div>
-                <div class="schedule "  v-bind:style="{ backgroundColor: node.color }"><span>{{node.schedule}}</span></div>
+                <div class="appName"><strong>{{node.procedure}}</strong></div>
+                <div class="schedule "  v-bind:style="{ backgroundColor: node.color }"><span>{{node.schedule}}%</span></div>
                 <div class="verticalbar" v-if="node.appInstances.length>0"></div>
                 <div class="trans" v-if="node.appInstances.length>0">
                     <div class="trans-kuan"></div>
                     <div class="transitem" v-for="(instance,index) in node.appInstances" :key="index">
-                        <p ><b style="color:#1e88e5;">{{instance.transCode}}</b></p>
-                        <p>{{instance.crtTime}}</p>
+                        <p ><a style="color:#1e88e5;" @click="viewDetail(instance.transCode)">{{instance.transCode}}</a></p>
+                        <p >{{instance.crtTime }}</p>
                     </div>
                 </div>
             </div>
@@ -48,152 +28,92 @@
 </template>
 
 <script>
+import { getBigProcessByOrderCode } from "@/services/appService.js";
+import { FormatDate } from '@/utils/utils'
 export default {
   name: "BigProcessa",
   data() {
     return {
         bigProcessNodes:[
-            {
-                appName:'销售订单',
-                durationTime:'2天6小时',
-                schedule:'100%',
-                color:'black',
-                appInstances:[
-                   
-                ]
-            },
-            {
-                appName:'需求计划',
-                durationTime:'2天6小时',
-                schedule:'100%',
-                color:'#9C27B0',
-                appInstances:[
-                    {
-                        transCode:"PLAN-1808-001",
-                        crtTime:'2018-08-09 12:1221'
-                    },
-                    {
-                        transCode:"PLAN-1808-001",
-                        crtTime:'2018-08-09 12:1221'
-                    }
-                ]
-            },
-            {
-                appName:'下单',
-                durationTime:'3天5小时',
-                schedule:'100%',
-                color:'#03A9F4',
-                appInstances:[
-                    {
-                        transCode:"PLAN-1808-001",
-                        crtTime:'2018-08-09 12:1221'
-                    },
-                    {
-                        transCode:"PLAN-1808-001",
-                        crtTime:'2018-08-09 12:1221'
-                    },
-                     {
-                        transCode:"PLAN-1808-001",
-                        crtTime:'2018-08-09 12:1221'
-                    }
-                ]
-            },
-             {
-                appName:'工单任务',
-                durationTime:'3天5小时',
-                schedule:'100%',
-                color:'#FF9800',
-                appInstances:[
-                    {
-                        transCode:"PLAN-1808-001",
-                        crtTime:'2018-08-09 12:1221'
-                   }
-                ]
-            },
-             {
-                appName:'验收',
-                durationTime:'',
-                schedule:'100%',
-                durationTime:'3天5小时',
-                color:'#4CAF50',
-                appInstances:[
-                    {
-                        transCode:"PLAN-1808-001",
-                        crtTime:'2018-08-09 12:1221'
-                    },
-                    {
-                        transCode:"PLAN-1808-001",
-                        crtTime:'2018-08-09 12:1221'
-                    },
-                     {
-                        transCode:"PLAN-1808-001",
-                        crtTime:'2018-08-09 12:1221'
-                    }
-                ]
-            },
-             {
-                appName:'交付',
-                durationTime:'3天5小时',
-                schedule:'100%',
-                color:'#e8630a',
-                appInstances:[
-                    {
-                        transCode:"PLAN-1808-001",
-                        crtTime:'2018-08-09 12:1221'
-                    },
-                    {
-                        transCode:"PLAN-1808-001",
-                        crtTime:'2018-08-09 12:1221'
-                    },
-                     {
-                        transCode:"PLAN-1808-001",
-                        crtTime:'2018-08-09 12:1221'
-                    }
-                ]
-            },
-             {
-                appName:'收款',
-                durationTime:'2天0小时',
-                schedule:'100%',
-                color:'#235784',
-                appInstances:[
-                    {
-                        transCode:"PLAN-1808-001",
-                        crtTime:'2018-08-09 12:1221'
-                    },
-                    {
-                        transCode:"PLAN-1808-001",
-                        crtTime:'2018-08-09 12:1221'
-                    },
-                     {
-                        transCode:"PLAN-1808-001",
-                        crtTime:'2018-08-09 12:1221'
-                    }
-                ]
-            },
-           
-            {
-                appName:'开票',
-                durationTime:'',
-                schedule:'100%',
-                color:'#red',
-                appInstances:[
-                    {
-                        transCode:"PLAN-1808-001",
-                        crtTime:'2018-08-09 12:1221'
-                    },
-                    {
-                        transCode:"PLAN-1808-001",
-                        crtTime:'2018-08-09 12:1221'
-                    },
-                     {
-                        transCode:"PLAN-1808-001",
-                        crtTime:'2018-08-09 12:1221'
-                    }
-                ]
-            }
         ]
     };
+  },
+  methods:{
+      getBigProcessInfo:function () {
+          var me = this;
+          getBigProcessByOrderCode(this.$route.params.orderCode).then(res=>{
+            var nodes = res;
+           
+            nodes.map(function(n,index) {
+                switch (n.procedure) {
+                    case '销售订单':
+                        n.color = 'black';
+                        n.schedule = 100;
+                        n.appInstances = [];
+                        break;
+                    case '需求计划':
+                        n.color = '#9C27B0';
+                        break;
+                     case '下单':
+                        n.color = '#03A9F4';
+                        break;
+                    case '验收':
+                        n.color = '#4CAF50';
+                        break;
+                    case '交付':
+                        n.color = '#e8630a';
+                        break;
+                    case '收款':
+                        n.color = '#235784';
+                        break;
+                    case '开票':
+                        n.color = '#red';
+                        n.durationTime = '';
+                        break;
+                }
+
+                if(n.appInstances.length===0){
+                    n.durationTime = '';
+                }else{
+                    nodes[index-1].durationTime = me.calcTimeDiff(new Date(n.startTime),new Date(n.endTime));
+                }
+                n.appInstances.map(function (inst) {
+                    inst.crtTime = FormatDate(new Date(inst.crtTime),'yyyy/MM/dd  hh:mm:ss');
+                });
+            });
+            this.bigProcessNodes = nodes;
+          });
+      },
+      calcTimeDiff:function (startDate,endDate) {
+        
+           //结束时间
+        var date3=endDate.getTime()-startDate.getTime();  //时间差的毫秒数
+          //计算出相差天数
+        var days=Math.floor(date3/(24*3600*1000));
+        
+        //计算出小时数
+        var leave1=date3%(24*3600*1000);  //计算天数后剩余的毫秒数
+        var hours=Math.floor(leave1/(3600*1000));
+        //计算相差分钟数
+        var leave2=leave1%(3600*1000);        //计算小时数后剩余的毫秒数
+        var minutes=Math.floor(leave2/(60*1000));
+        //计算相差秒数
+        var leave3=leave2%(60*1000);      //计算分钟数后剩余的毫秒数
+        var seconds=Math.round(leave3/1000);
+
+        if(days>0){
+            return days+"天"+hours+"小时";
+        }else{
+            return hours+"小时" +minutes+"分";
+        }
+        
+      },
+      viewDetail:function (transCode) {
+          window.open('/Form/index.html?data='+ transCode);
+      }
+  },
+   created() {
+    this.getBigProcessInfo();
   }
 };
 </script>
@@ -206,10 +126,7 @@ export default {
 .nodePro{
 
 	width: 150px;
-    /* display: inline-block; */
     text-align: center;
-    /* margin-left: -30px; */
-    /* background-color: #ddd; */
     float: left;
 }
 .order {
@@ -273,14 +190,6 @@ export default {
 }
 
 .verticalbar{
-   /* -webkit-transform: rotate(90deg);
-    transform: rotate(90deg);
-    border-bottom: 1px solid #1e88e5;
-    width: 50px;
-    position: relative;
-    left: 7px;
-    top: 22px; */
-
     width: 2px;
     background-color: #1e88e5;
     height: 30px;
@@ -288,11 +197,6 @@ export default {
 }
 
 .trans{
-    /* position: relative;
-    top: 47px;
-    left: -25px;
-    width: 50%;
-    height: 80px; */
     width: 80%;
     height: 80px;
     margin: 0 auto;

@@ -362,4 +362,11 @@ export const getUserInfoByUserId = (userId) => request('/H_roleplay-si/ds/getUse
  */
 export const findList = (listId) => request('/H_roleplay-si/easy/list/findList', { listId: listId });
 
+/**
+ * @author snack.huang
+ * @description 获取订单大流程图信息
+ * @param {String} treansCode 
+ */
+export const getBigProcessByOrderCode = (treansCode) => request('/corebiz-api/largeProcess', { order_code: treansCode})
+
 

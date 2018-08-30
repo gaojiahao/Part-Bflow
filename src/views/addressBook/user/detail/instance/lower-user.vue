@@ -162,7 +162,7 @@ export default {
                     content: '确认删除此用户？',
                     onOk: () => {
                       deleteUser(params.row.userId).then(res => {
-                        this.$Message.success(res.message);
+                        this.$Message.success('删除成功！');
                         this.getLowerUserData();
                         this.$emit('changeInstance');
                       })
@@ -316,7 +316,7 @@ export default {
           onOk: () => {
             deleteUser(userIds.join(',')).then(res => {
               this.selectLowUserData = [];
-              this.$Message.success(res.message);
+              this.$Message.success('删除成功！');
               this.getLowerUserData();
               this.$emit('changeInstance');
             })

@@ -112,7 +112,7 @@ export default {
                           params.row.id
                         ).then(res => {
                           if (res.success) {
-                            this.$Message.success(res.message);
+                            this.$Message.success("删除成功!");
                             this.reload = true;
                             this.isShowModal = false;
                             this.$emit("on-permission-change", true);
@@ -157,7 +157,7 @@ export default {
       if (multiId) {
         deleteOrgPermission(this.groupId, multiId.join(",")).then(res => {
           if (res.success) {
-            that.$Message.success(res.message);
+            that.$Message.success("删除成功!");
             that.reload = true;
             that.isShowModal = false;
             this.$emit("on-permission-change", true);

@@ -110,7 +110,7 @@ export default {
                         deleteRolePermission(this.jobId, params.row.id).then(
                           res => {
                             if (res.success) {
-                              this.$Message.success(res.message);
+                              this.$Message.success("删除成功!");
                               this.reload = true;
                               this.$emit("on-permission-change", true);
                             }
@@ -160,7 +160,7 @@ export default {
       if (multiId) {
         deleteRolePermission(this.jobId, multiId.join(",")).then(res => {
           if (res.success) {
-            this.$Message.success(res.message);
+            this.$Message.success("删除成功!");
             this.selectPermissionNode = [];
             this.reload = true;
             this.$emit("on-permission-change", true);

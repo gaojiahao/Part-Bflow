@@ -193,7 +193,7 @@ export default {
                         deleteBatchRole(this.jobId, params.row.userId).then(
                           res => {
                             if (res.success) {
-                              this.$Message.success(res.message);
+                              this.$Message.success("删除成功!");
                               this.reload = true;
                               this.$emit("on-member-info-change", true);
                             }
@@ -368,7 +368,7 @@ export default {
       if (multiId) {
         deleteBatchRole(this.jobId, multiId.join(","), 0).then(res => {
           if (res.success) {
-            this.$Message.success(res.message);
+            this.$Message.success("删除成功!");
             this.reload = true;
             this.$emit("on-member-info-change", true);
           }

@@ -12,7 +12,7 @@
             <div class="nodePro">
                 
                 <div class="appName"><strong>{{node.procedure}}</strong></div>
-                <div class="schedule "  v-bind:style="{ backgroundColor: node.color }"><span>{{node.schedule}}%</span></div>
+                <div class="schedule "  v-bind:style="{ backgroundColor: node.color }"><span>{{node.schedule}}</span></div>
                 <div class="verticalbar" v-if="node.appInstances.length>0"></div>
                 <div class="trans" v-if="node.appInstances.length>0">
                     <div class="trans-kuan"></div>
@@ -45,10 +45,11 @@ export default {
             var nodes = res;
            
             nodes.map(function(n,index) {
+                n.schedule = n.schedule + '%';
                 switch (n.procedure) {
                     case '销售订单':
                         n.color = 'black';
-                        n.schedule = 100;
+                        n.schedule = '';
                         n.appInstances = [];
                         break;
                     case '需求计划':
@@ -124,16 +125,15 @@ export default {
     margin-bottom: 50px;
 }
 .nodePro{
-
-	width: 150px;
+	width: 155px;
     text-align: center;
     float: left;
 }
 .order {
-    line-height: 40px;
+    line-height: 45px;
     text-align: center;
     padding-top: 5%;
-    width: 95%;
+    width: 89%;
     margin: 0 auto;
 }
 .order .line {
@@ -147,7 +147,6 @@ export default {
 }
 .appName{
     font-size: 18px;
-    font-family: cursive;
 }
 .dian_r {
   position: relative;
@@ -169,8 +168,8 @@ export default {
 
 .lines{
    position: relative;
-    right: -75px;
-    top: 32px;
+    right: -77px;
+    top: 37px;
     height: 1px;
 }
 .transitem{
@@ -179,13 +178,13 @@ export default {
 }
 
 .schedule{
-   width: 40px;
-    height: 40px;
+   width: 45px;
+    height: 45px;
     text-align: center;
     background-color: red;
-    border-radius: 40px;
+    border-radius: 45px;
     color: white;
-    font-size: 14px;
+    font-size: 15px;
     margin: 0 auto;
 }
 

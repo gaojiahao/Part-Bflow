@@ -149,7 +149,7 @@ export default {
                           groupId:this.groupId,
                           principal:''
                         }
-                        this.savePrincipal(data)
+                        this.savePrincipal(data,'删除成功！')
                       }
                     });
                   }
@@ -283,11 +283,11 @@ export default {
       this.savePrincipal(data);
     },
 
-    savePrincipal(data) {
+    savePrincipal(data,message) {
       savePrincipal(data)
         .then(res => {
           if (res.success) {
-            this.$Message.success("更新成功");
+            this.$Message.success(message?message:'更新成功');
             this.isShowPrincipalModal = false;
             this.reload = true;
             this.$emit("on-principal-change", true);

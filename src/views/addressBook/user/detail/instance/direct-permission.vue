@@ -93,7 +93,7 @@ export default {
                     onOk: () => {
                       deleteIndirPermission(this.userId,params.row.id).then(res => {
                         if(res.success){
-                          this.$Message.success(res.message);
+                          this.$Message.success('删除成功！');
                           this.getDirPermissionData();
                           this.$emit('changeInstance');
                         }
@@ -184,7 +184,7 @@ export default {
               deleteIndirPermission(this.userId,multiId.join(',')).then(res => {
                 if(res.success){
                   this.selectDeletePermission = [];
-                  this.$Message.success(res.message);
+                  this.$Message.success('删除成功！');
                   this.getDirPermissionData();
                   this.$emit('changeInstance');
                 }

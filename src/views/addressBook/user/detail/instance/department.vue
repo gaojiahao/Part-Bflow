@@ -120,7 +120,7 @@ export default {
                     onOk: () => {
                       deleteMember('sys_group_user',params.row.groupId,this.userId).then(res => {
                         if(res.success){
-                          this.$Message.success(res.message);
+                          this.$Message.success('删除成功！');
                           this.getDepartmentData();
                           this.$emit('changeInstance');
                         }
@@ -185,7 +185,7 @@ export default {
             deleteMember('sys_group_user',groupIds.join(','),this.userId).then(res => {
               if(res.success){
                 this.selectDeleteGroupData = [];
-                this.$Message.success(res.message);
+                this.$Message.success('删除成功！');
                 this.getDepartmentData();
                 this.$emit('changeInstance');
               }

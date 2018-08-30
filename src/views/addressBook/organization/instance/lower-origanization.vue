@@ -213,7 +213,7 @@ export default {
                         let del = [{ groupId: params.row.groupId, parentId: "" }];
                         deleteBatchGroup(del).then(res => {
                           if (res.success) {
-                            this.$Message.success(res.message);
+                            this.$Message.success("删除成功!");
                             this.reload = true;
                             this.$emit("on-lower-organization-change", true);
                           }
@@ -455,7 +455,7 @@ export default {
         if (delData) {
           deleteBatchGroup(delData).then(res => {
             if (res.success) {
-              this.$Message.success(res.message);
+              this.$Message.success("删除成功!");
               this.reload = true;
               this.$emit("on-lower-organization-change", true);
             }

@@ -607,8 +607,8 @@ export const removeCompany = (groupIds) => {
  * 
  */
 export const getAllCompanys = (pageSize, currentPage, searchValue) => request('/H_roleplay-si/sysGroup/getCompanyList', {
-  page: currentPage,
-  limit: pageSize,
+  currentPage: currentPage,
+  pageSize: pageSize,
   search: searchValue
 });
 

@@ -315,10 +315,12 @@ export default {
 // }
 
 //下拉选择器修改自带样式
-.ivu-select-selection {
-  height: 30px !important;
-  border-radius: 0px !important;
-  background-color: #f0f0f0 !important;
+.main-header-nav {
+  .ivu-select-selection {
+    height: 30px !important;
+    border-radius: 0px !important;
+    background-color: #f0f0f0 !important;
+  }
 }
 </style>
 

@@ -47,12 +47,12 @@ export default {
             nodes.map(function(n,index) {
                 n.schedule = n.schedule + '%';
                 switch (n.procedure) {
-                    case '销售订单':
+                    case '下单':
                         n.color = 'black';
                         n.schedule = '';
                         n.appInstances = [];
                         break;
-                    case '需求计划':
+                    case '计划':
                         n.color = '#9C27B0';
                         break;
                      case '下单':

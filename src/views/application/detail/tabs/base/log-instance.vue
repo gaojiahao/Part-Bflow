@@ -7,6 +7,10 @@
   margin-top: 5px;
 }
 
+.line-chart-screen{
+  width: 100%;
+}
+
 .line-chart-header {
   position: absolute;
   top: 0px;
@@ -46,7 +50,7 @@
     </div>
     <!-- 实例图 -->
     <div>
-      <div class="line-chart">
+      <div :class="{'line-chart-screen':isAddress,'line-chart':true}" >
         <line-chart legendName="新增实例数" :xAxisData="xAxisData" :seriesData="seriesData" id="instanceLineChart" primaryColor="#1890ff" areaColor="#1890ff8c">
           <div slot="header" class="line-chart-header">
             查看范围:
@@ -58,7 +62,7 @@
           </div>
         </line-chart>
       </div>
-      <div class="line-chart">
+      <div v-if="!isAddress" class="line-chart">
         <line-chart-time legendName="实例平均工作流耗用时间周期(小时)" :xAxisData="xAxisTimeData" :seriesData="seriesTimeData" id="spendTimeChart" primaryColor="#f9499e" areaColor="#f9499e8c">
           <div slot="header" class="line-chart-header">
             查看范围:
@@ -91,7 +95,8 @@ export default {
     LineChartTime
   },
   props: {
-    isAdmin: Boolean
+    isAdmin: Boolean,
+    isAddress: Boolean
   },
   data() {
     return {

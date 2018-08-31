@@ -9,9 +9,9 @@
     <!-- 报表视图 -->
     <report-view :appType="appType" :isAdmin="isAdmin"></report-view>
     <!-- 表单 -->
-    <app-form :isAdmin="isAdmin"></app-form>
+    <app-form v-if="!isAddress" :isAdmin="isAdmin"></app-form>
     <!-- 工作流 -->
-    <work-flow :isAdmin="isAdmin"></work-flow>
+    <work-flow v-if="!isAddress" :isAdmin="isAdmin"></work-flow>
   </div>
 </template>
 
@@ -33,7 +33,8 @@ export default {
     listId: String,
     appType: String,
     enabledForbidden: Number,
-    isAdmin: Boolean
+    isAdmin: Boolean,
+    isAddress: Boolean
   },
   data() {
     return {

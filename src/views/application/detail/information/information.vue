@@ -23,7 +23,7 @@
             <Col span="6">应用名称： 
               <span v-if="showEditAppInfo">{{ appData.title }}</span>
               <Input v-else v-model="appData.title" style="width: 120px"></Input>
-              <b @click="editAppinfo">
+              <b @click="editAppinfo" v-if="isAdminTrue">
                 <Tooltip v-if="showEditBtn" content="编辑" placement="top">
                   <Icon class="app-edit-icon" type="ios-create-outline"></Icon>
                 </Tooltip>
@@ -33,8 +33,10 @@
               </b>
             </Col>
             <Col span="6">应用类型： <span>{{ appData.TRANS_NAME }}</span></Col>
-            <Col span="6">应用管理员： <span v-if="showEditAppInfo">
-              <Icon type="person"></Icon>{{ appData.administrator }}</span>
+            <Col span="6">应用管理员： 
+              <span v-if="showAppEditAdmin">
+                <Icon type="person"></Icon>{{ appData.administrator }}
+              </span>
               <Input v-else @on-click="selectAdminModal" v-model="appData.administrator" icon="md-arrow-dropdown" style="width: 100px">
               </Input>
             </Col>
@@ -96,11 +98,13 @@ export default {
   props: {
     listId: String,
     appData: Object,
-    isAdmin: Boolean
+    isAdmin: Boolean,
+    isCompanyAdmin: Boolean
   },
   data() {
     return {
       showEditAppInfo: true,
+      showAppEditAdmin: true,
       isAdminTrue: false,
       showEditBtn: true,
       adminLoading: true,
@@ -168,6 +172,10 @@ export default {
     //修改应用信息
     editAppinfo() {
       this.showEditAppInfo = !this.showEditAppInfo;
+      //只有企业管理员可编辑应用管理员
+      if(this.isCompanyAdmin){
+        this.showAppEditAdmin = false;
+      }
       this.showEditBtn = !this.showEditBtn;
       if (this.showEditAppInfo) {
         let params = {

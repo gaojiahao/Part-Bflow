@@ -8,29 +8,29 @@
     
 
     <!-- 应用详情信息 -->
-    <app-info :listId="this.$route.params.listId" :enforData="enforData" :isAdmin="isAdmin" :appData="appData" @reloadData="reloadData" @changeAdmin="changeAdmin" @enabledForbiddenAppPermission="enabledForbiddenAppPermission"></app-info>
+    <app-info :listId="this.$route.params.listId" :enforData="enforData" :isAdmin="isAdmin" :isCompanyAdmin="isCompanyAdmin" :appData="appData" @reloadData="reloadData" @changeAdmin="changeAdmin" @enabledForbiddenAppPermission="enabledForbiddenAppPermission"></app-info>
 
 
     <!-- 应用tabs -->
     <div class="rfd-tab">
       <Tabs value="name1" class="rfd-tab-warp">
         <TabPane label="一般" name="name1">
-          <log-instance :isAdmin="isAdmin"></log-instance>
+          <log-instance :isAdmin="isAdmin" :isAddress="isAddress"></log-instance>
         </TabPane>
         <TabPane label="互动" name="name2">
           <!-- 管理员自评 -->
           <admintrstor-assessment :isAdmin="isAdmin"></admintrstor-assessment>
         </TabPane>
         <TabPane label="资源" name="name3">
-          <permission-source :appType="appType" :isAdmin="isAdmin" :enabledForbidden="enabledForbidden"></permission-source>
+          <permission-source :appType="appType" :isAdmin="isAdmin" :isAddress="isAddress" :enabledForbidden="enabledForbidden"></permission-source>
         </TabPane>
         <TabPane label="连接" name="name4">
           <!-- 应用科目 -->
           <div class="app-sub">
-            <app-subject :isAdmin="isAdmin"></app-subject>
+            <app-subject v-if="!isAddress" :isAdmin="isAdmin"></app-subject>
           </div>
           
-          <related-app></related-app>
+          <related-app v-if="!isAddress"></related-app>
           <app-api></app-api>
         </TabPane>
       </Tabs>
@@ -66,6 +66,8 @@ export default {
       appData: {},
       enforData: [],
       isAdmin: false,
+      isCompanyAdmin: false,
+      isAddress: false,
       appType: '',
       enabledForbidden: -1
     };
@@ -93,10 +95,21 @@ export default {
           currentUserIds.push(val.id);
         });
         //判断当前用户是否有当前应用权限
-        if(currentUser.userId == this.appData.administratorId || /1/.test(currentUserIds)){
+        if(currentUser.userId == this.appData.administratorId && /1/.test(currentUserIds)){
           this.isAdmin = true;
+          this.isCompanyAdmin = true;
+        }else if(currentUser.userId == this.appData.administratorId){
+          this.isAdmin = true;
+        }else if(/1/.test(currentUserIds)){
+          this.isAdmin = true;
+          this.isCompanyAdmin = true;
         }else{
           this.isAdmin = false;
+          this.isCompanyAdmin = false;
+        }
+        //判断是否是通讯录并控制其相关应用权限
+        if(this.appData.type === 'hr'){
+          this.isAddress = true;
         }
       });
     },

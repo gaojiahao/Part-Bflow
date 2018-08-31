@@ -47,7 +47,7 @@ export default {
             nodes.map(function(n,index) {
                 n.schedule = n.schedule + '%';
                 switch (n.procedure) {
-                    case '下单':
+                    case '接单':
                         n.color = 'black';
                         n.schedule = '';
                         n.appInstances = [];

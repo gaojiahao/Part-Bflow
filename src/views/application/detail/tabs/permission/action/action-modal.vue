@@ -455,9 +455,13 @@ export default {
     },
     //删除用户
     deleteUser(event) {
-      let userId = event.target.parentElement.getAttribute("userid");
+      let userId = event.target.parentElement.getAttribute("userid"),
+          permissionIds = [];
+      this.permissionSelectDatas.forEach(val => {
+        permissionIds.push(val.id);
+      });
 
-      clearAppPermission(this.appListId, userId).then(res => {
+      clearAppPermission('sys_user_permission',userId,permissionIds.join(',')).then(res => {
         if (res.success) {
           this.userSelectData = this.userSelectData.filter(f => {
             return f.userId != userId;
@@ -470,8 +474,12 @@ export default {
     },
     //删除组织
     deleteOrg(event) {
-      let orgId = event.target.parentElement.getAttribute("orgid");
-      clearAppPermission(this.appListId, null, null, orgId).then(res => {
+      let orgId = event.target.parentElement.getAttribute("orgid"),
+          permissionIds = [];
+      this.permissionSelectDatas.forEach(val => {
+        permissionIds.push(val.id);
+      });
+      clearAppPermission('sys_group_permission',orgId,userId,permissionIds.join(',')).then(res => {
         if (res.success) {
           this.orgSelectData = this.orgSelectData.filter(f => {
             return f.id != orgId;
@@ -484,8 +492,12 @@ export default {
     },
     //删除职位
     deleteDepartment(data, index) {
-      let depId = event.target.parentElement.getAttribute("depid");
-      clearAppPermission(this.appListId, null, depId).then(res => {
+      let depId = event.target.parentElement.getAttribute("depid"),
+          permissionIds = [];
+      this.permissionSelectDatas.forEach(val => {
+        permissionIds.push(val.id);
+      });
+      clearAppPermission('sys_role_permission',depId,permissionIds.join(',')).then(res => {
         if (res.success) {
           this.departmentSelectData = this.departmentSelectData.filter(f => {
             return f.id != depId;

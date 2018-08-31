@@ -321,11 +321,10 @@ export const updateMemberPermission = (userId, roleId, groupId, permissionId,lis
  * @author XiaoYing
  * 删除某一用户或组织或职位全部权限
  */
-export const clearAppPermission = (listId,userId, roleId, groupId) => request('/H_roleplay-si/app/clearAppActionPermission', {
-  listId: listId,
-  user: userId,
-  role: roleId,
-  group: groupId
+export const clearAppPermission = (list,singleId,multiId) => request('/H_roleplay-si/ps/deleteRelation', {
+  list: list,
+  single: singleId,
+  multi: multiId
 }, 'POST');
 
 export const downloadImage = (url) => request('/H_roleplay-si/ds/download', {

@@ -237,15 +237,7 @@ export const addressBook = {
     }]
 }
 
-export const sujectformRouter = {
-  path: '/subjectform',
-  name: 'subjectform',
-  meta: {
-    title: 'subjectform - 科目分录'
-  },
-  component: () =>
-    import('@/views/form/SubjectForm.vue')
-}
+
 
 export const appRouter = [{
   path: '/',
@@ -284,7 +276,6 @@ export const routers = [
   bigProcess,
   app,
   addressBook,
-  sujectformRouter,
   enterpriseInfo,
   ...appRouter
 ];

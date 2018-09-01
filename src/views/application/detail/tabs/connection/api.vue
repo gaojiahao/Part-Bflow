@@ -125,7 +125,6 @@ export default {
   },
   methods: {
     copy() {
-      debugger;
       let clipboard = new Clipboard(".tag-read");
       clipboard.on("success", e => {
         console.log("复制成功");

@@ -6,21 +6,19 @@
 <div class="bg_ff martop20">
 
     <Row class="app-resource-group-title">
-      <h3>相关应用
-        <a v-show="isAdminTrue" @click="saveAppData">保存</a>
-      </h3>
+      <h3>相关应用</h3>
     </Row>
     <Row class="related-app-content" :gutter="8">
       <draggable v-model="relatedApps" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="isDragging=false">
         <transition-group type="transition" :name="'flip-list'">
-        <Col :xs="24" :sm="12" :md="6" :lg="4" v-for="(app,index) of relatedApps" :key="index" style="margin-bottom:5px">
+        <Col :xs="24" :sm="12" :md="8" :lg="4" v-for="(app,index) of relatedApps" :key="index" style="margin-bottom:5px">
           <Card class="app-card">
             <img class="card-img" :src="app.icon" />
-            <span class="card-right">
-              <b class="card-name">{{ app.listName }}</b>
-              <span class="card-type">{{ app.appName }}</span>
+            <div class="card-right">
               <Checkbox @on-change="changeAppStatus(app,index)" class="card-check" :disabled="!isAdminTrue" :value="app.STATUS===1?true:false"></Checkbox>
-            </span>
+              <p class="card-name">{{ app.listName }}</p>
+              <p class="card-type">{{ app.appName }}</p>
+            </div>
           </Card>
         </Col>
         </transition-group>
@@ -75,6 +73,7 @@ export default {
       //执行在dom更新之后
       this.$nextTick(() => {
         this.delayedDragging = false;
+        this.saveAppData();
       });
     }
   },

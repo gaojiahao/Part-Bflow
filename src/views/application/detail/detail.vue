@@ -30,7 +30,7 @@
             <app-subject v-if="!isAddress" :isAdmin="isAdmin"></app-subject>
           </div>
           
-          <related-app v-if="!isAddress"></related-app>
+          <related-app v-if="!isAddress" :isAdmin="isAdmin"></related-app>
           <app-api></app-api>
         </TabPane>
       </Tabs>

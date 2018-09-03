@@ -6,9 +6,7 @@
 <div class="bg_ff martop20">
 
     <Row class="app-resource-group-title">
-      <h3>相关应用
-        <a v-show="isAdminTrue" @click="saveAppData">保存</a>
-      </h3>
+      <h3>相关应用</h3>
     </Row>
     <Row class="related-app-content" :gutter="8">
       <draggable v-model="relatedApps" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="isDragging=false">

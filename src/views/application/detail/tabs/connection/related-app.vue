@@ -16,11 +16,11 @@
         <Col :xs="24" :sm="12" :md="6" :lg="4" v-for="(app,index) of relatedApps" :key="index" style="margin-bottom:5px">
           <Card class="app-card">
             <img class="card-img" :src="app.icon" />
-            <span class="card-right">
-              <b class="card-name">{{ app.listName }}</b>
-              <span class="card-type">{{ app.appName }}</span>
+            <div class="card-right">
               <Checkbox @on-change="changeAppStatus(app,index)" class="card-check" :disabled="!isAdminTrue" :value="app.STATUS===1?true:false"></Checkbox>
-            </span>
+              <p class="card-name">{{ app.listName }}</p>
+              <p class="card-type">{{ app.appName }}</p>
+            </div>
           </Card>
         </Col>
         </transition-group>
@@ -75,6 +75,7 @@ export default {
       //执行在dom更新之后
       this.$nextTick(() => {
         this.delayedDragging = false;
+        this.saveAppData();
       });
     }
   },

@@ -96,12 +96,14 @@ export default {
         ],
         result: [
           {
-            required: true
+            required: true,
+            message: ""
           }
         ],
         opportunity: [
           {
-            required: true
+            required: true,
+            message: ""
           }
         ]
       },

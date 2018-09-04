@@ -49,7 +49,7 @@
           </Row>
           <Row class="pad5">
             <Col span="24">说明：<span v-if="showEditAppInfo">{{ appData.comment }}</span>
-            <Input v-else v-model="appData.comment" style="width: 1000px"></Input></Col>
+            <Input v-else type="textarea" v-model="appData.comment" style="width: 1000px"></Input></Col>
           </Row>
         </Col>
         <Col span="1">

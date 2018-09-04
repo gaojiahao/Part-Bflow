@@ -109,7 +109,7 @@
     </div>
 
     <div class="timeline-box-form"  v-if="isAdminTrue">
-      <Form ref="formValidate" :label-width="120" :model="modalFormData" :rules="ruleValidate" style="margin:5px ;width:95%;">
+      <Form ref="formValidate" :label-width="120" :model="modalFormData" :rules="ruleValidate" style="margin:5px ;width:95%;padding-top:12px;">
         <FormItem label="更新范围:" prop="scope" width="300">
           <Select multiple v-model="modalFormData.scope">
             <Option value="表单">表单</Option>
@@ -256,10 +256,6 @@ export default {
         'unlink',	// 取消链接
         'table',	// 表格
         'emotion',	// 表情
-        '|',
-        'img',	// 图片
-        'video',	// 视频
-        'insertcode',	// 插入代码
         '|',
         'undo',	// 撤销
         'redo'	// 重做

@@ -82,6 +82,19 @@
                 <FormItem v-if="hiddenInput" label="公司主体id" style="width:60%">
                     <Input v-model="formItem.entityId" />
                 </FormItem>
+                <div class="info-line"></div>
+                <FormItem v-if="isAdd && isEdit" label="创建者：">
+                    <span>{{ userInfo.creatorName }}</span>
+                </FormItem>
+                <FormItem v-if="isAdd && isEdit" label="创建时间：">
+                    <span>{{ userInfo.crtTime }}</span>
+                </FormItem>
+                <FormItem v-if="isAdd && isEdit" label="修改者：">
+                    <span>{{ userInfo.modifierName }}</span>
+                </FormItem>
+                <FormItem v-if="isAdd && isEdit" label="修改时间：">
+                    <span>{{ userInfo.modTime }}</span>
+                </FormItem>
             </Form>
         </Row>
         <Row class="info-btn">

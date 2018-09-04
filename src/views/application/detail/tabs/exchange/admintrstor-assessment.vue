@@ -15,15 +15,15 @@
             <FormItem label="期间（月份）:" prop="duringDate">
               <DatePicker format="yyyy-MM" type="month" placeholder="选择日期" style="width: 200px" v-model="adminAssessData.duringDate"></DatePicker>
             </FormItem>
-            <FormItem label="效率与成本改进成果:" prop="result">
-              <Input type="textarea" v-model="adminAssessData.result"></Input>
+            <FormItem label="效率与成本改进成果:" prop="result" style="margin-bottom: 65px;">
+              <vue-wangeditor ref="result" id="editorResult" :menus="menu" height="143" width="100%" class="editor-result"></vue-wangeditor>
             </FormItem>
-            <FormItem label="效率与成本改进机会:" prop="opportunity">
-              <Input type="textarea" v-model="adminAssessData.opportunity"></Input>
+            <FormItem label="效率与成本改进机会:" prop="opportunity" style="margin-bottom: 40px;">
+              <vue-wangeditor ref="oppor" id="editorOppor" :menus="menu" height="143" width="100%"></vue-wangeditor>
             </FormItem>
           </Form>
           <div style="text-align:right;margin-bottom:5px;">
-            <Button @click="submitAdminAssess" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff">保存</Button>
+            <Button @click="submitAdminAssess" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;margin-top:5px">保存</Button>
           </div>
         </div>
       </Row>
@@ -39,11 +39,11 @@
           <div class="assessment-info">
             <div>
               <span style="color: #a06970">改进成果:</span>
-              <span class="assessment-info-text">{{assess.achievement}}</span>
+              <span class="assessment-info-text" v-html="assess.achievement"></span>
             </div>
             <div>
               <span style="color: #a06970">改进机会:</span>
-              <span class="assessment-info-text">{{assess.chance}}</span>
+              <span class="assessment-info-text" v-html="assess.chance"></span>
             </div>
           </div>
         </div>
@@ -57,6 +57,7 @@ import {
   getAssessmentByListId,
   saveAssessment
 } from "@/services/appService.js";
+import vueWangeditor from 'vue-wangeditor';
 import EditTable from "@/components/table/edit-table";
 import AssessModal from "@/components/modal/Modal";
 
@@ -64,7 +65,8 @@ export default {
   name: "admintrstorAssessment",
   components: {
     AssessModal,
-    EditTable
+    EditTable,
+    vueWangeditor
   },
   props: {
     isAdmin: {
@@ -94,20 +96,49 @@ export default {
         ],
         result: [
           {
-            required: true,
-            message: "不允许为空",
-            type: "string"
+            required: true
           }
         ],
         opportunity: [
           {
-            required: true,
-            message: "不允许为空",
-            type: "string"
+            required: true
           }
         ]
       },
-      assessments: []
+      assessments: [],
+      menu: [
+        'source',	// 源码模式
+        '|',
+        'bold',	// 粗体
+        'underline',	// 下划线
+        'italic',	// 斜体
+        'strikethrough',	// 中线
+        'eraser',	// 清空格式
+        'forecolor',	// 文字颜色
+        'bgcolor',	// 背景颜色
+        '|',
+        'quote',	// 引用
+        'fontfamily',	// 字体
+        'fontsize',	// 字号
+        'head',	// 标题
+        'unorderlist',	// 无序列表
+        'orderlist',	// 有序列表
+        'alignleft',	// 左对齐
+        'aligncenter',	// 居中
+        'alignright',	// 右对齐
+        '|',
+        'link',	// 链接
+        'unlink',	// 取消链接
+        'table',	// 表格
+        'emotion',	// 表情
+        '|',
+        'img',	// 图片
+        'video',	// 视频
+        'insertcode',	// 插入代码
+        '|',
+        'undo',	// 撤销
+        'redo'	// 重做
+      ]
     };
   },
   watch: {
@@ -123,13 +154,20 @@ export default {
     },
     //添加管理员自评
     submitAdminAssess() {
+      if(this.$refs.result.getText() === ''){
+        this.$Message.error('必填项请输入！');
+      }else if(this.$refs.oppor.getText() === ''){
+        this.$Message.error('必填项请输入！');
+      }else{
+        this.adminAssessData.opportunity = document.getElementById('editorOppor').innerHTML;
+        this.adminAssessData.result = document.getElementById('editorResult').innerHTML;
+      }
       let params = {
         listId: this.listId,
         opportunity: this.adminAssessData.opportunity,
         result: this.adminAssessData.result,
         date: this.formatDate(this.adminAssessData.duringDate)
       };
-
       if (this.isEdit === "edit") {
         params.id = this.IsEditId;
       }
@@ -144,6 +182,8 @@ export default {
             this.getAssessmentData();
             this.showAssessModal = false;
             this.$refs["formValidate"].resetFields();
+            document.getElementById('editorOppor').innerHTML = '';
+            document.getElementById('editorResult').innerHTML = '';
             this.isEdit = "";
           } else {
             this.$Message.error(res.message);

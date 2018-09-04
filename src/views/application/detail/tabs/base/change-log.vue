@@ -124,7 +124,8 @@
           <span style="color:#ddd;margin-left:10px;">单位/时</span>
         </FormItem>
         <FormItem label="更新内容:" prop="content">
-          <Input type="textarea" v-model="modalFormData.content" :autosize="{minRows: 2,maxRows: 4}" />
+          <!-- <Input type="textarea" v-model="modalFormData.content" :autosize="{minRows: 2,maxRows: 4}" /> -->
+          <vue-wangeditor id="editor" v-model="modalFormData.content" :menus="menu" height="143" width="100%"></vue-wangeditor>
         </FormItem>
         <FormItem>
           <input type='submit' value="提交" class="timeline-box-form-submit" @click="submitLog" />
@@ -149,7 +150,7 @@
             <span class="customs-tag" v-for="(scope,index) in item.CHANGE_RANGE" :key="index">{{scope}}</span>
           </li>
           <li>
-            <span>备注:{{item.CONTENT}}</span>
+            备注:<span v-html="item.CONTENT"></span>
           </li>
         </ul>
       </div>
@@ -182,9 +183,13 @@
 
 <script>
 import { getChangeLog, saveAppLog } from "@/services/appService.js";
+import vueWangeditor from 'vue-wangeditor';
+
 export default {
   name: "ChangeLog",
-
+  components: {
+    vueWangeditor
+  },
   props: {
     listId: {
       type: String
@@ -227,7 +232,40 @@ export default {
             trigger: "blur"
           }
         ]
-      }
+      },
+      menu: [
+        'source',	// 源码模式
+        '|',
+        'bold',	// 粗体
+        'underline',	// 下划线
+        'italic',	// 斜体
+        'strikethrough',	// 中线
+        'eraser',	// 清空格式
+        'forecolor',	// 文字颜色
+        'bgcolor',	// 背景颜色
+        '|',
+        'quote',	// 引用
+        'fontfamily',	// 字体
+        'fontsize',	// 字号
+        'head',	// 标题
+        'unorderlist',	// 无序列表
+        'orderlist',	// 有序列表
+        'alignleft',	// 左对齐
+        'aligncenter',	// 居中
+        'alignright',	// 右对齐
+        '|',
+        'link',	// 链接
+        'unlink',	// 取消链接
+        'table',	// 表格
+        'emotion',	// 表情
+        '|',
+        'img',	// 图片
+        'video',	// 视频
+        'insertcode',	// 插入代码
+        '|',
+        'undo',	// 撤销
+        'redo'	// 重做
+      ]
     };
   },
 
@@ -252,6 +290,7 @@ export default {
     submitLog(event) {
       //校验提交的数据是否为空
       let valid;
+      this.modalFormData.content = document.getElementById('editor').innerHTML;
       this.$refs["formValidate"].validate(v => {
         valid = v;
       });
@@ -264,6 +303,7 @@ export default {
         saveAppLog(listId, scope, spendTime, content).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
+            document.getElementById('editor').innerHTML = '';
             this.getChangeLog();
           } else {
             //faild todo

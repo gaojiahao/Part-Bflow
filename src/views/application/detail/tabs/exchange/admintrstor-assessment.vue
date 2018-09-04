@@ -134,10 +134,6 @@ export default {
         'table',	// 表格
         'emotion',	// 表情
         '|',
-        'img',	// 图片
-        'video',	// 视频
-        'insertcode',	// 插入代码
-        '|',
         'undo',	// 撤销
         'redo'	// 重做
       ]

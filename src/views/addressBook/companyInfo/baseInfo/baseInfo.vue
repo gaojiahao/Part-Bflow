@@ -59,6 +59,18 @@
             </Select>
             <span v-else style="margin-left:5px;">{{baseInfoItem.statusText}}</span>
           </FormItem>
+          <FormItem label="创建者:" v-if="isAdd&&isEdit">
+            <span style="margin-left:5px;">{{baseInfoItem.creator}}</span>
+          </FormItem>
+          <FormItem label="创建时间:" v-if="isAdd&&isEdit">
+            <span style="margin-left:5px;">{{baseInfoItem.crtTime}}</span>
+          </FormItem>
+          <FormItem label="修改者:" v-if="isAdd&&isEdit">
+            <span style="margin-left:5px;">{{baseInfoItem.modifier}}</span>
+          </FormItem>
+          <FormItem label="修改时间:" v-if="isAdd&&isEdit">
+            <span style="margin-left:5px;">{{baseInfoItem.modTime}}</span>
+          </FormItem>
         </Form>
       </div>
     </div>

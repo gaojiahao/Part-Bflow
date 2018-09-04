@@ -124,8 +124,7 @@
           <span style="color:#ddd;margin-left:10px;">单位/时</span>
         </FormItem>
         <FormItem label="更新内容:" prop="content">
-          <!-- <Input type="textarea" v-model="modalFormData.content" :autosize="{minRows: 2,maxRows: 4}" /> -->
-          <vue-wangeditor id="editor" v-model="modalFormData.content" :menus="menu" height="143" width="100%"></vue-wangeditor>
+          <vue-wangeditor ref="editor" id="editor" v-model="modalFormData.content" :menus="menu" height="143" width="100%"></vue-wangeditor>
         </FormItem>
         <FormItem>
           <input type='submit' value="提交" class="timeline-box-form-submit" @click="submitLog" />
@@ -228,8 +227,7 @@ export default {
         content: [
           {
             required: true,
-            message: "不允许为空",
-            trigger: "blur"
+            message: ""
           }
         ]
       },
@@ -290,7 +288,12 @@ export default {
     submitLog(event) {
       //校验提交的数据是否为空
       let valid;
-      this.modalFormData.content = document.getElementById('editor').innerHTML;
+      if(this.$refs.editor.getText() === ''){
+        this.$Message.error('必填项请输入！');
+      }else{
+        this.modalFormData.content = document.getElementById('editor').innerHTML;
+      }
+      
       this.$refs["formValidate"].validate(v => {
         valid = v;
       });

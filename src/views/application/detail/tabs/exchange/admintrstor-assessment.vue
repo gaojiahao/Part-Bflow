@@ -39,11 +39,11 @@
           <div class="assessment-info">
             <div>
               <span style="color: #a06970">改进成果:</span>
-              <span class="assessment-info-text" v-html="assess.achievement"></span>
+              <div class="assessment-info-text" v-html="assess.achievement"></div>
             </div>
             <div>
               <span style="color: #a06970">改进机会:</span>
-              <span class="assessment-info-text" v-html="assess.chance"></span>
+              <div class="assessment-info-text" v-html="assess.chance"></div>
             </div>
           </div>
         </div>

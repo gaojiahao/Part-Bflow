@@ -18,7 +18,7 @@
           <img :src="appData.icon" class="appIcon" />
         </Col>
         <Col span="21" class="pad15">
-          <h3> {{ appData.title?appData.title:'待加载' }}  - 应用详情</h3>
+          <h3> <span @click="goList" class="app-detail-title">{{ appData.title?appData.title:'待加载' }}</span>  - 应用详情</h3>
           <Row class="pad5">
             <Col span="6">应用名称： 
               <span v-if="showEditAppInfo">{{ appData.title }}</span>
@@ -165,6 +165,19 @@ export default {
     }
   },
   methods: {
+    goList() {
+      if(this.appData.uniqueId === '000001'){
+        location.href = '/Site/index.html#page/users';
+      }else if(this.appData.uniqueId === '000002'){
+        location.href = '/Site/index.html#page/origanizations';
+      }else if(this.appData.uniqueId === '000003'){
+        location.href = '/Site/index.html#page/jobs';
+      }else if(this.appData.uniqueId === '000004'){
+        location.href = '/Site/index.html#page/companys';
+      }else{
+        location.href = '/Site/index.html#list/'+this.appData.uniqueId;
+      }
+    },
     //修改应用状态
     childHasPublished(data) {
       this.appData.publish = 1;

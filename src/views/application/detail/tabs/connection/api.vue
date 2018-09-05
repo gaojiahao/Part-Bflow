@@ -210,7 +210,7 @@ export default {
       let datas = [];
       let dataSet;
       let formData = JSON.parse(body).formData;
-      let requires = formData.isRequired;
+      let requires = formData.disallowBlank;
       datas.push({
         explain: "备注",
         param: "biComment",
@@ -257,7 +257,7 @@ export default {
               }
             }
           }
-        } else if (index !== "isRequired") {
+        } else if (index !== "disallowBlank") {
           data["explain"] = formData[index];
           data["param"] = index;
           for (var r in requires) {

@@ -384,3 +384,67 @@ export const findList = (listId) => request('/H_roleplay-si/easy/list/findList',
 export const getBigProcessByOrderCode = (treansCode) => request('/corebiz-api/largeProcess', { order_code: treansCode})
 
 
+/**
+ * @author snack.huang
+ * @description 保存评论信息
+ * @param {Object} comment 评论信息
+ * {
+ *   type:xx,           评论类型：应用评论：list,实例评论：instance
+ *   content:xx,        评论内容
+ *   relationKey:xx,    应用ID || 实例交易号
+ *   parentId:xx        父级id  默认-1  对于某一条评论的回复
+ *   commentAttachments:xx 附件 
+ * }
+ */
+export const saveComment = (comment) => request('/H_roleplay-si/comment/saveComment', {}, 'POST', comment)
+
+/**
+ * @author snack.huang
+ * @description 获取评论信息
+ * @param {Object} param 评论信息
+ * {
+ *   relationKey=xx  关联ID: 应用ID || 实例交易号
+ *   limit=xx 条数
+ *   page=xx 页数
+ *   sort=[{property:xx,direction:xx}]  排序规则
+ * }
+ */
+export const getComments = (param) => request('/H_roleplay-si/comment/getCommentByRelationKey', param)
+
+
+/**
+ * @author snack.huang
+ * @description 获取评论信息
+ * @param {Object} param 评论信息
+ * {
+ *   parentId=xx  上级评论ID
+ *   limit=xx 条数
+ *   page=xx 页数
+ *   sort=[{property:xx,direction:xx}]  排序规则
+ * }
+ */
+export const getCommentsByParentId = (param) => request('/H_roleplay-si/comment/getCommentByParentId', param)
+
+
+/**
+ * @author snack.huang
+ * @description 对评论点赞
+ * @param {Object} data  
+ * {
+ *  commtenId:xxx 评论ID
+ * }
+ */
+export const commentThumbsUp = (data) => request('/H_roleplay-si/comment/savePraise', {},"POST",data)
+
+
+/**
+ * @author snack.huang
+ * @description 获取评论信息
+ * @param {Object} param 评论信息
+ * {
+ *   commentId=xx  评论ID
+ *   limit=xx 条数
+ *   page=xx 页数
+ * }
+ */
+export const getCommentThumbaUps = (param) => request('/H_roleplay-si/comment/getPraiseByCommentId', param) 

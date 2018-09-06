@@ -20,6 +20,8 @@
         <TabPane label="互动" name="name2">
           <!-- 管理员自评 -->
           <admintrstor-assessment :isAdmin="isAdmin"></admintrstor-assessment>
+          <!-- 用户评论 -->
+          <user-comments></user-comments>
         </TabPane>
         <TabPane label="资源" name="name3">
           <permission-source :appType="appType" :isAdmin="isAdmin" :isAddress="isAddress" :enabledForbidden="enabledForbidden"></permission-source>
@@ -47,6 +49,7 @@ import AppSubject from "./tabs/connection/subject";
 import AppApi from "./tabs/connection/api";
 import RelatedApp from  './tabs/connection/related-app';
 import AdmintrstorAssessment from "./tabs/exchange/admintrstor-assessment";
+import UserComments from "./tabs/exchange/user-comments";
 import PermissionSource from "./tabs/permission/permission";
 export default {
   name: "detail",
@@ -54,6 +57,7 @@ export default {
     AppSubject,
     AppApi,
     AdmintrstorAssessment,
+    UserComments,
     PermissionSource,
     AppInfo,
     LogInstance,

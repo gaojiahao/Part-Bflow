@@ -4,11 +4,16 @@ import router from './router';
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 import fontIcon from './assets/App.css';
+
 import { getCurrentUserInfo } from "@/services/flowService";
 import instanceStateDirective from  '@/directive/instanceStateDirective';
+import overTimeDirective from '@/directive/overTimeDirective';
+
 import VueWechatTitle from 'vue-wechat-title';
 
 Vue.directive('instanceStateDirective',instanceStateDirective);
+Vue.directive('overTimeDirective',overTimeDirective);
+
 require('./assets/App.css');
 
 Vue.config.productionTip = false;

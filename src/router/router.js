@@ -247,6 +247,16 @@ export const sujectformRouter = {
     import('@/views/form/SubjectForm.vue')
 }
 
+export const fieldChangeHistoryRouter = {
+  path: '/fieldChangeHistory',
+  name: 'subjectform',
+  meta: {
+    title: 'RoleTask - 变更历史'
+  },
+  component: () =>
+    import('@/views/form/field-change-history.vue')
+}
+
 export const appRouter = [{
   path: '/',
   name: 'home_index',
@@ -285,6 +295,7 @@ export const routers = [
   app,
   addressBook,
   sujectformRouter,
+  fieldChangeHistoryRouter,
   enterpriseInfo,
   ...appRouter
 ];

@@ -29,28 +29,45 @@
         </Radio>
         <i class="vertical-divide"></i>
       </RadioGroup>
-      <Dropdown style="position: fixed;top: 10px;left: 540px;z-index: 999; font-size:14px">
-        <span>
-          项目立项
-          <Icon type="ios-arrow-down"></Icon>
-        </span>
-        <DropdownMenu slot="list">
-          <DropdownItem>项目立项1</DropdownItem>
-          <DropdownItem>项目立项1</DropdownItem>
-          <DropdownItem>项目立项1</DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
-      <Dropdown style="position: fixed;top: 10px;left: 630px;z-index: 999; font-size:14px">
-        <span>
-          销售订单
-          <Icon type="ios-arrow-down"></Icon>
-        </span>
-        <DropdownMenu slot="list">
-          <DropdownItem>销售订单</DropdownItem>
-          <DropdownItem>销售订单</DropdownItem>
-          <DropdownItem>销售订单</DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
+      <div class="app-dropdown-select">
+        <Poptip title="项目立项" width="660" content="content" v-model="projectPopTipVisible">
+          <span class="app-dropdown-select-item" @click="getProjectList">
+            <Tag closable color="primary" @on-close="onHandleClearProjectTag">{{projectName?projectName:'项目立项'}}</Tag>
+            <Icon type="ios-arrow-down"></Icon>
+          </span>
+           <div slot="content" class="api">
+            <div class="app-search">
+              <Input v-model="projectSearchValue" placeholder="请输入项目名称" style="width: 300px" @on-enter="onHandleFilterByProjectName" @on-click="getProjectList" icon="ios-close-circle" />
+              <Button type="primary" size="small" @click="onHandleFilterByProjectName">查询</Button>
+            </div>
+            <Table :columns="projectColumns" :data="projectColumnData" :loading="projectLoading" size="small" @on-row-dblclick="handleDbSelectProject"></Table>
+            <div style="margin: 10px;overflow: hidden">
+              <div style="float: right;">
+                <Page :total="projectPageTotal" :current="projectCurrentPage" size="small" :page-size="projectPageSize" @on-change="projectPageChange" show-total show-elevator></Page>
+              </div>
+            </div>
+          </div>
+        </Poptip>
+        <Poptip title="销售订单" content="content" width="560" v-model="visible">
+          <span style="margin-left:10px" class="app-dropdown-select-item" @click="getSaleOrderList">
+            <Tag closable color="primary" @on-close='onHandleClearOrderTag'>{{orderCode?orderCode:'销售订单'}}</Tag>
+            <Icon type="ios-arrow-down"></Icon>
+          </span>
+          <div slot="content" class="api">
+            <div class="app-search">
+              <Input v-model="searchValue" placeholder="请输入交易号" style="width: 300px" @on-enter="onHandleFilterByCode" @on-click="getSaleOrderList" icon="ios-close-circle" />
+              <Button type="primary" size="small" @click="onHandleFilterByCode">查询</Button>
+            </div>
+            <Table :columns="columns" :data="columnData" :loading="ordersLoading" size="small" @on-row-dblclick="handleDblclick"></Table>
+            <div style="margin: 10px;overflow: hidden">
+              <div style="float: right;">
+                <Page :total="pageTotal" :current="currentPage" size="small" :page-size="ordersPageSize" @on-change="orderPageChange" show-total show-elevator></Page>
+              </div>
+            </div>
+          </div>
+        </Poptip>
+      </div>
+
       <div class="divide"></div>
       <div class="business_item" style="width:50px">
         <div class="left-name" v-for="(item,index) in dataItem" :key="index">
@@ -69,12 +86,12 @@
           </defs>
           <defs>
             <marker id="arrow" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" viewBox="0 0 15 15" refX="6" refY="6" orient="auto">
-              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: gray;" />
+              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: #fff;" />
             </marker>
           </defs>
           <defs>
             <marker id="arrow1" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" viewBox="0 0 15 15" refX="6" refY="6" orient="auto">
-              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: gray;" />
+              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: #fff;" />
             </marker>
           </defs>
           <defs>
@@ -115,7 +132,7 @@
           </g>
 
           <g v-for="(point) in pointList" :key="point.id">
-            <polyline :points="point.value" :marker-end="waterFlow[point.id]!==undefined?'url(#arrow_hight_color)':'url(#arrow1)'" v-bind:class="waterFlow[point.id]!==undefined?'path':''" style="fill:none;stroke:#ddd;stroke-width:1" />
+            <polyline :points="point.value" :marker-end="waterFlow[point.id]!==undefined?'url(#arrow_hight_color)':'url(#arrow1)'" v-bind:class="waterFlow[point.id]!==undefined?'path':''" style="fill:none;stroke:#fff;stroke-width:1" />
           </g>
           <!-- 应用与应用之间的关系 -->
           <g v-for="(point) in transTypePointList" :key="point.id">
@@ -125,7 +142,7 @@
         </svg>
       </div>
     </div>
-    <task-modal :modal='modal' :listId="pageListId" @emitModal="emitModal" :taskValue="taskValue" :type="type"></task-modal>
+    <task-modal :modal='modal' :listId="pageListId" @emitModal="emitModal" :taskValue="taskValue" :type="type" :orderCode="orderCode"></task-modal>
   </div>
 </template>
 
@@ -137,7 +154,10 @@ import {
   getPulseGraph,
   getCurrentUserInfo,
   getAppTaskCount,
-  getMockData
+  getMockData,
+  getOrders,
+  getProject,
+  getMyTaskCountAll
 } from "@/services/flowService";
 import { getToken } from "@/utils/utils";
 import { ICON_LIST } from "@/assets/const";
@@ -180,7 +200,73 @@ export default {
       pageListId: "",
       type: "myToDo",
 
-      subjectList: ICON_LIST
+      subjectList: ICON_LIST,
+      //订单列表配置项
+      visible: false,
+      ordersLoading: false,
+      searchValue: "",
+      orderCode: "",
+      columnData: [],
+      columns: [
+        {
+          title: "交易号",
+          key: "transCode",
+
+          align: "center"
+        },
+        {
+          title: "创建者",
+          key: "creatorName",
+          align: "center",
+          width: 80
+        },
+        {
+          title: "创建时间",
+          key: "crtTime",
+          align: "center"
+        },
+        {
+          title: "生效时间",
+          key: "effectiveTime",
+          align: "center"
+        }
+      ],
+      pageTotal: 0,
+      currentPage: 1,
+      ordersPageSize: 6,
+
+      //项目立项配置项
+      projectPopTipVisible: false,
+      projectLoading: false,
+      projectSearchValue: "",
+      projectName:'',
+      projectColumnData: [],
+      projectColumns: [
+        {
+          title:'项目名称',
+          key:'projectName',
+          align: "center"
+        },
+        {
+          title: "创建者",
+          key: "creatorName",
+          align: "center",
+          width: 80
+        },
+        {
+          title: "创建时间",
+          key: "crtTime",
+          align: "center"
+        },
+        {
+          title: "生效时间",
+          key: "effectiveTime",
+          align: "center"
+        }
+      ],
+      projectPageTotal: 0,
+      projectCurrentPage: 1,
+      projectPageSize: 6,
     };
   },
 
@@ -377,7 +463,6 @@ export default {
     },
 
     //计算svg宽度
-
     calcSvgWidth: function(dataItem) {
       let nodeNumber = 0;
       if (dataItem.length > 0) {
@@ -399,7 +484,6 @@ export default {
     },
 
     //计算svg宽度
-
     calcSvgHeight: function(dataItem) {
       let h = dataItem.length > 0 ? dataItem.length * 171 + 79 : 215;
       if (document.body.clientHeight > h) {
@@ -409,6 +493,7 @@ export default {
       }
     },
 
+    //高亮应用与科目的关系
     doAction: function(item, event) {
       this.waterFlow = {};
 
@@ -468,42 +553,78 @@ export default {
       this.taskType = e;
       if (this.taskType === "teamtask" && this.doneortodo === "done") {
         this.type = "teamDone";
-        this.defaultDisplayTask = this.teamDone;
       } else if (this.taskType === "teamtask" && this.doneortodo === "todo") {
         this.type = "teamTodo";
-        this.defaultDisplayTask = this.teamTodo;
       } else if (this.taskType === "mytask" && this.doneortodo === "done") {
         this.type = "myDone";
-        this.defaultDisplayTask = this.myDone;
       } else if (this.taskType === "mytask" && this.doneortodo === "todo") {
         this.type = "myToDo";
-        this.defaultDisplayTask = this.myToDo;
       }
-      this.defaultDisplayTask = Object.assign(
-        this.defaultDisplayTask,
-        this.subjectTodo
-      );
+      if (!this.orderCode && !this.projectName) {
+        switch (this.type) {
+          case "teamDone":
+            this.defaultDisplayTask = this.teamDone;
+            break;
+          case "teamTodo":
+            this.defaultDisplayTask = this.teamTodo;
+            break;
+          case "myDone":
+            this.defaultDisplayTask = this.myDone;
+            break;
+          case "myToDo":
+            this.defaultDisplayTask = this.myToDo;
+            break;
+        }
+        this.defaultDisplayTask = Object.assign(
+          this.defaultDisplayTask,
+          this.subjectTodo
+        );
+      } else {
+        let type = this.type;
+        getMyTaskCountAll(type,this.projectName, this.orderCode).then(res => {
+          this.defaultDisplayTask = {};
+          this.defaultDisplayTask = res;
+        });
+      }
     },
 
     radioGroupChangeDoneOrTodo: function(e) {
       this.doneortodo = e;
       if (this.taskType === "teamtask" && this.doneortodo === "done") {
         this.type = "teamDone";
-        this.defaultDisplayTask = this.teamDone;
       } else if (this.taskType === "teamtask" && this.doneortodo === "todo") {
         this.type = "teamTodo";
-        this.defaultDisplayTask = this.teamTodo;
       } else if (this.taskType === "mytask" && this.doneortodo === "done") {
         this.type = "myDone";
-        this.defaultDisplayTask = this.myDone;
       } else if (this.taskType === "mytask" && this.doneortodo === "todo") {
         this.type = "myToDo";
-        this.defaultDisplayTask = this.myToDo;
       }
-      this.defaultDisplayTask = Object.assign(
-        this.defaultDisplayTask,
-        this.subjectTodo
-      );
+      if (!this.orderCode && !this.projectName) {
+        switch (this.type) {
+          case "teamDone":
+            this.defaultDisplayTask = this.teamDone;
+            break;
+          case "teamTodo":
+            this.defaultDisplayTask = this.teamTodo;
+            break;
+          case "myDone":
+            this.defaultDisplayTask = this.myDone;
+            break;
+          case "myToDo":
+            this.defaultDisplayTask = this.myToDo;
+            break;
+        }
+        this.defaultDisplayTask = Object.assign(
+          this.defaultDisplayTask,
+          this.subjectTodo
+        );
+      } else {
+        let type = this.type;
+        getMyTaskCountAll(type,this.projectName, this.orderCode).then(res => {
+          this.defaultDisplayTask = {};
+          this.defaultDisplayTask = res;
+        });
+      }
     },
 
     /**
@@ -543,7 +664,148 @@ export default {
           this.loading = false;
         }
       });
-    }
+    },
+
+    //清空销售订单选中项
+    onHandleClearOrderTag() {
+      this.orderCode = "";
+      getMyTaskCountAll(this.type,this.projectName).then(res => {
+        this.defaultDisplayTask = {};
+        this.defaultDisplayTask = res;
+      });
+    },
+
+    //根据交易号过滤销售订单列表
+    onHandleFilterByCode() {
+      let filter = [];
+      if (this.searchValue) {
+        filter = JSON.stringify([
+          { operator: "like", value: this.searchValue, property: "transCode" }
+        ]);
+      }
+      this.currentPage = 1;
+      this.ordersLoading = true;
+      getOrders(this.currentPage, filter).then(res => {
+        this.pageTotal = res.dataCount;
+        this.columnData = res.tableContent;
+        this.ordersLoading = false;
+      });
+    },
+
+    //获取销售订单列表
+    getSaleOrderList() {
+      this.searchValue = "";
+      this.currentPage = 1;
+      this.ordersLoading = true;
+      getOrders(this.currentPage).then(res => {
+        this.pageTotal = res.dataCount;
+        this.columnData = res.tableContent;
+        this.ordersLoading = false;
+      });
+    },
+
+    /**
+     * 销售订单分页加载
+     */
+    orderPageChange(currentPage) {
+      let filter = [];
+      if (this.searchValue) {
+        filter = JSON.stringify([
+          { operator: "like", value: this.searchValue, property: "transCode" }
+        ]);
+      }
+      this.currentPage = currentPage;
+      this.ordersLoading = true;
+      getOrders(this.currentPage, filter).then(res => {
+        this.pageTotal = res.dataCount;
+        this.columnData = res.tableContent;
+        this.ordersLoading = false;
+      });
+    },
+
+   /**
+     * 双击选中订单
+     */
+    handleDblclick(row, index) {
+      let type = this.type;
+      this.orderCode = row.transCode;
+      getMyTaskCountAll(type, this.projectName,this.orderCode).then(res => {
+        this.defaultDisplayTask = {};
+        this.visible = false;
+        this.defaultDisplayTask = res;
+      });
+    },
+
+
+
+    //清空项目立项选中项
+    onHandleClearProjectTag() {
+      this.projectName = "";
+      getMyTaskCountAll(this.type,'',this.orderCode).then(res => {
+        this.defaultDisplayTask = {};
+        this.defaultDisplayTask = res;
+      });
+    },
+
+    // //根据项目名称过滤项目立项列表
+    onHandleFilterByProjectName() {
+      let filter = [];
+      if (this.projectSearchValue) {
+        filter = JSON.stringify([
+          { operator: "like", value: this.projectSearchValue, property: "projectName" }
+        ]);
+      }
+       this.projectCurrentPage = 1;
+      this.projectLoading = true;
+      getProject(this.currentPage, filter).then(res => {
+         this.projectPageTotal = res.dataCount;
+        this.projectColumnData = res.tableContent;
+        this.projectLoading = false;
+      });
+    },
+    //获取项目立项类别
+    getProjectList(){
+      this.projectSearchValue = '';
+      this.projectCurrentPage = 1;
+      this.projectLoading = true;
+      getProject(this.projectCurrentPage).then(res => {
+        this.projectPageTotal = res.dataCount;
+        this.projectColumnData = res.tableContent;
+        this.projectLoading = false;
+      });
+    },
+
+    /**
+     * 项目立项分页加载
+     */
+    projectPageChange(currentPage) {
+      let filter = [];
+      if (this.projectSearchValue) {
+        filter = JSON.stringify([
+            { operator: "like", value: this.projectSearchValue, property: "projectName" }
+        ]);
+      }
+      this.projectCurrentPage = currentPage;
+       this.projectLoading = true;
+      getProject(this.projectCurrentPage, filter).then(res => {
+       this.projectPageTotal = res.dataCount;
+        this.projectColumnData = res.tableContent;
+        this.projectLoading = false;
+      });
+    },
+
+   /**
+     * 双击选中项目立项
+     */
+    handleDbSelectProject(row, index) {
+      let type = this.type;
+      this.projectName = row.projectName;
+      getMyTaskCountAll(type, this.projectName,this.orderCode).then(res => {
+        this.defaultDisplayTask = {};
+        this.projectPopTipVisible = false;
+        this.defaultDisplayTask = res;
+      });
+    },
   },
 
   created() {
@@ -567,7 +829,7 @@ export default {
     var that = this;
     getPulseGraph(this.caseId)
       .then(res => {
-        var getSubjectIicon =(subjectName) =>{
+        var getSubjectIicon = subjectName => {
           var icon = "";
           this.subjectList.map(s => {
             if (s.name === subjectName) {
@@ -709,6 +971,30 @@ export default {
   z-index: 999;
 }
 
+.app-dropdown-select {
+  display: inline-block;
+  position: fixed;
+  top: 8px;
+  left: 540px;
+  z-index: 999;
+  font-size: 14px;
+
+  &-item:hover {
+    color: #2d8cf0;
+    cursor: pointer;
+  }
+}
+
+.app-search {
+  margin-bottom: 5px;
+  .app-search-icon {
+    font-size: 1rem;
+    color: #39f;
+    display: inline-block;
+    cursor: pointer;
+  }
+}
+
 .main-flow {
   display: table;
   width: 100%;
@@ -819,7 +1105,7 @@ export default {
 
 .transTypeRel_style {
   fill: none;
-  stroke: #ddd;
+  stroke: #fff;
   stroke-width: 1;
   // stroke-dasharray: 2;
 }

@@ -268,7 +268,7 @@ export default {
 
 .main-header {
   position: fixed;
-
+  margin-top: 5px;
   top: 0px;
   height: 40px;
   width: 100%;

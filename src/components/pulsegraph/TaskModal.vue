@@ -57,7 +57,7 @@ export default {
         {
           title: "交易号",
           key: "transCode",
-          sortable: 'custom',
+          sortable: "custom",
           width: 160,
           render: (h, params) => {
             return h(
@@ -89,7 +89,7 @@ export default {
         {
           title: "创建时间",
           key: "crtTime",
-          sortable: 'custom',
+          sortable: "custom",
           width: 160,
           render: (h, params) => {
             //时间戳转换为日期格式
@@ -128,13 +128,29 @@ export default {
         assigneeName: "",
         nodeName: ""
       },
-      sort:"",
+      sort: "",
       expand: false,
       expandValue: "展开",
       expandIcon: "&#xe617;"
     };
   },
-  props: ["listId", "modal", "taskValue", "type"],
+  props: {
+    listId: {
+      type: String
+    },
+    modal: {
+      type: Boolean
+    },
+    taskValue: {
+      type: String
+    },
+    type: {
+      type: String
+    },
+    orderCode: {
+      type: String
+    }
+  },
 
   watch: {
     listId: {
@@ -165,7 +181,7 @@ export default {
       let sort = {};
       sort[column.key] = column.order;
       this.sort = sort;
-      this.getAppTaskCount(sort,this.currentPage);
+      this.getAppTaskCount(sort, this.currentPage);
     },
 
     modalVisibleChange(state) {
@@ -177,7 +193,7 @@ export default {
         this.filterData.assigneeName = "";
         this.filterData.nodeName = "";
         this.expand = false;
-        this.sort="";
+        this.sort = "";
         this.currentPage = 1;
         this.expandValue = "展开";
       }
@@ -200,6 +216,9 @@ export default {
         listId: this.listId,
         limit: this.pageSize
       };
+      if (this.orderCode) {
+        params.filter = JSON.stringify({ orderCode: this.orderCode });
+      }
       this.loading = true;
       getAppTaskCount(params).then(res => {
         this.pageTotal = res.total;
@@ -222,6 +241,9 @@ export default {
           "/" +
           FormatDate(this.filterData.crtTime[1], "yyyy-MM-dd");
       }
+      if (this.orderCode) {
+        this.filterData.orderCode = this.orderCode;
+      }
       this.filterData.crtTime = crtTime;
       let params = {
         type: this.type,
@@ -230,9 +252,11 @@ export default {
         limit: this.pageSize,
         filter: JSON.stringify(this.filterData)
       };
+
       if (sort) {
         params.sort = JSON.stringify(sort);
       }
+
       this.loading = true;
       getAppTaskCount(params).then(res => {
         this.pageTotal = res.total;

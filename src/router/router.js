@@ -239,6 +239,16 @@ export const addressBook = {
 
 
 
+export const fieldChangeHistoryRouter = {
+  path: '/fieldChangeHistory',
+  name: 'subjectform',
+  meta: {
+    title: 'RoleTask - 变更历史'
+  },
+  component: () =>
+    import('@/views/form/field-change-history.vue')
+}
+
 export const appRouter = [{
   path: '/',
   name: 'home_index',
@@ -276,6 +286,8 @@ export const routers = [
   bigProcess,
   app,
   addressBook,
+  sujectformRouter,
+  fieldChangeHistoryRouter,
   enterpriseInfo,
   ...appRouter
 ];

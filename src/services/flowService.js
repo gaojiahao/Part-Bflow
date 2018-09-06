@@ -1,11 +1,11 @@
-import {request} from './fetch'
+import { request } from './fetch'
 
 /**
  * @author snack.haugng
  * @description 通过业务单元获取业务单元信息
  * @param {String} caseId 业务单元ID 
  */
-export const getPulseGraph = (caseId) => request('/H_roleplay-si/trans/getPulsationDiagramByCaseId', {caseId: caseId})
+export const getPulseGraph = (caseId) => request('/H_roleplay-si/trans/getPulsationDiagramByCaseId', { caseId: caseId })
 
 /**
  * @author snack.haugng
@@ -42,17 +42,51 @@ export const getMyFavorite = () => request('/H_roleplay-si/ds/getMyFavorite')
  * 查询待办数量明细
  * @param {Object} 参数
  */
-export const getAppTaskCount = (params) => request('/H_roleplay-si/trans/getAppTaskCount',params)
+export const getAppTaskCount = (params) => request('/H_roleplay-si/trans/getAppTaskInfo', params)
 
-export const getMockData = () =>  request('../mock/flow/technologyGraph.json');
+export const getMockData = () => request('../mock/flow/technologyGraph.json');
+
+/** 
+ * 获取订单列表
+ * 
+*/
+export const getOrders = (currentPage,filter) => request('/H_roleplay-si/ds/getOrders',{
+    page: currentPage,
+    start: 0,
+    limit: 6,
+    filter:filter
+});
+
+/** 
+ * 获取项目立项信息
+ * 
+*/
+export const getProject = (currentPage,filter) => request('/H_roleplay-si/ds/getProject',{
+    page: currentPage,
+    start: 0,
+    limit: 6,
+    filter:filter
+});
+
+/**
+ * @author TanGuoZheng
+ * @description 获取当前用户所有待办消息
+ */
+export const getMyTaskCountAll = (type,projectName="",orderCode="") => request('/H_roleplay-si/trans/getAppTaskCount',{
+    type:type,
+    projectName:projectName,
+    orderCode:orderCode
+})
+
+
 
 
 /** 
  * 获取工艺与工序的关系
  * 
 */
-export const getProcedureAndProcess = (processRouteCode) => request('/H_roleplay-si/ds/getProcedureAndProcess',{
-    processRouteCode:processRouteCode
+export const getProcedureAndProcess = (processRouteCode) => request('/H_roleplay-si/ds/getProcedureAndProcess', {
+    processRouteCode: processRouteCode
 })
 
 
@@ -66,6 +100,13 @@ export const getProcessRouteProcedureRel = () => request('/H_roleplay-si/ds/getP
  * 获取表单视图
  * 
 */
-export const getFormViews = (listId) => request('/H_roleplay-si/ds/list/getFormViews',{
-    listId:listId
+export const getFormViews = (listId) => request('/H_roleplay-si/ds/list/getFormViews', {
+    listId: listId
 });
+
+export const getFeildChangeHistory = (transCode) => request('/H_roleplay-si/history/records', {
+    transCode: 'WL1535355135349 ',
+    page: 1,
+    start: 0,
+    limit: 25,
+})

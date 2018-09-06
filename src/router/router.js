@@ -286,7 +286,6 @@ export const routers = [
   bigProcess,
   app,
   addressBook,
-  sujectformRouter,
   fieldChangeHistoryRouter,
   enterpriseInfo,
   ...appRouter

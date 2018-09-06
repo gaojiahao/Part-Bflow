@@ -167,20 +167,15 @@ export default {
   methods: {
     goList() {
       if(this.appData.uniqueId === '000001'){
-        location.href = '/Site/index.html#page/users';
-        window.location.reload();
+        window.top.location.href = '/Site/index.html#page/users';
       }else if(this.appData.uniqueId === '000002'){
-        location.href = '/Site/index.html#page/origanizations';
-        window.location.reload();
+        window.top.location.href = '/Site/index.html#page/origanizations';
       }else if(this.appData.uniqueId === '000003'){
-        location.href = '/Site/index.html#page/jobs';
-        window.location.reload();
+        window.top.location.href = '/Site/index.html#page/jobs';
       }else if(this.appData.uniqueId === '000004'){
-        location.href = '/Site/index.html#page/companys';
-        window.location.reload();
+        window.top.location.href = '/Site/index.html#page/companys';
       }else{
-        location.href = '/Site/index.html#list/'+this.appData.uniqueId;
-        window.location.reload();
+        window.top.location.href = '/Site/index.html#list/'+this.appData.uniqueId;
       }
     },
     //修改应用状态

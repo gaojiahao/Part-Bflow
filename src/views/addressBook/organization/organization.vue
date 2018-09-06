@@ -9,7 +9,7 @@
       <span class="organization-wrap-header-others">/</span>
       <span v-show="groupId" class="organization-wrap-header-others">{{name}}</span>
       <span v-show="!groupId" class="organization-wrap-header-others">创建</span>
-      <Tag v-show="groupId" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status}" style="margin-bottom: 7px;"></Tag>
+      <Tag v-show="groupId" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status}" style="margin-bottom: 7px; padding-right: 20px;"></Tag>
     </header>
 
     <div class="organization-wrap-action">
@@ -30,7 +30,7 @@
     <div class="organization-wrap-tabs">
       <!-- 基本信息 -->
       <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===5">
-        <Form :model="formItem" :labelWidth="120" ref="formItem" :rules="ruleValidate" :class="{'is-required':isEdit}">
+        <Form :model="formItem" :labelWidth="120" ref="formItem" :rules="ruleValidate" :class="{'is-required':isEdit}" style="background-color: #fff">
           <FormItem label="组织名称:" style="font-size:16px" prop="groupName">
             <Input v-model="formItem.groupName" @on-blur="onGroupNameOutBlur" :readonly="isEdit" :class="isEdit?'input-status-isedit':''" />
           </FormItem>
@@ -61,6 +61,20 @@
           <FormItem v-if="hiddenInput" label="上级组织parentId" style="font-size:16px">
             <Input v-model="formItem.parentId" />
           </FormItem>
+          <div class="baseinfo-container-divider"></div>
+          <FormItem label="创建者：" v-if="groupId && isEdit">
+            <span>{{ tableContent.creatorName}}</span>
+          </FormItem>
+          <FormItem label="创建时间："  v-if="groupId && isEdit">
+            <span>{{ tableContent.crtTime }}</span>
+          </FormItem>
+          <FormItem label="修改者："  v-if="groupId && isEdit">
+            <span>{{ tableContent.modifier}}</span>
+          </FormItem>
+          <FormItem label="修改时间：" v-if="groupId && isEdit" >
+            <span>{{ tableContent.modTime }}</span>
+          </FormItem>
+
           <div class="baseinfo-container-divider"></div>
           <FormItem label="组织状态" :labelWidth="120" style="margin-top:20px">
             <Select v-model="formItem.status" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
@@ -173,6 +187,7 @@ export default {
         highGroup: "",
         parentId: ""
       },
+      tableContent:{},
 
       isEdit: true,
       editBtnName: "编辑",
@@ -861,6 +876,7 @@ export default {
           this.formItem.principalName = tableContent.principalName; //负责人名称
           this.formItem.highGroup = tableContent.parentName;
           this.formItem.parentId = tableContent.parentId;
+          this.tableContent = tableContent;
           this.parentType = tableContent.parentType;
           this.editHighOrg = this.formItem.highGroup;
           this.editHighOrgParentId = this.formItem.parentId;

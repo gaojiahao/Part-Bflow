@@ -44,6 +44,19 @@
             </Select>
           </FormItem>
           <div class="baseinfo-container-divider"></div>
+          <FormItem label="创建者：" v-if="jobId && isEdit">
+            <span>{{ tableContent.creatorName }}</span>
+          </FormItem>
+          <FormItem label="创建时间：" v-if="jobId && isEdit">
+            <span>{{ tableContent.crtTime }}</span>
+          </FormItem>
+          <FormItem label="修改者：" v-if="jobId && isEdit">
+            <span>{{ tableContent.modifier}}</span>
+          </FormItem>
+          <FormItem label="修改时间：" v-if="jobId && isEdit">
+            <span>{{ tableContent.modTime }}</span>
+          </FormItem>
+          <div class="baseinfo-container-divider"></div>
           <FormItem label="职位状态" :labelWidth="120" style="margin-top:20px">
             <Select v-model="formItem.status" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
               <Option v-for="(item,index) in statusRadio" :key="index" :value="item.value">{{item.name}}</Option>
@@ -54,7 +67,7 @@
         <div class="baseinfo-container-action">
           <input type='submit' value="关闭" class="baseinfo-container-action-submit" @click="cancle" />
           <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" @click="edit" v-if="jobId" />
-          <input type='submit' value="保存" class="baseinfo-container-action-submit" @click="save" v-show="!isEdit"/>
+          <input type='submit' value="保存" class="baseinfo-container-action-submit" @click="save" v-show="!isEdit" />
           <input type='submit' value="保存并新建" class="baseinfo-container-action-submit" v-if="!jobId" @click="saveAndAdd" />
         </div>
       </section>
@@ -98,6 +111,7 @@ export default {
         describe: "",
         status: 1
       },
+      tableContent:{},
       name: "",
       isEdit: true,
       editBtnName: "编辑",
@@ -272,7 +286,7 @@ export default {
 
     //当职位名称失去焦点的是校验名称
     onGroupNameOutBlur() {
-      let filter ={}; 
+      let filter = {};
       if (!this.isEdit) {
         if (this.jobId) {
           filter = [
@@ -292,7 +306,7 @@ export default {
             {
               filedName: "name",
               value: this.formItem.name,
-               symbol: "="
+              symbol: "="
             }
           ];
         }
@@ -327,11 +341,12 @@ export default {
       getAllRole(filter).then(res => {
         if (res.tableContent[0]) {
           let tableContent = res.tableContent[0];
-          that.formItem.name = tableContent.name;
           this.name = tableContent.name;
+           that.formItem.name = tableContent.name;
           that.formItem.type = tableContent.type;
           that.formItem.status = tableContent.status;
           that.formItem.describe = tableContent.describe;
+          this.tableContent = tableContent;
         }
       });
       this.getObjDetailsCountByRoleId(this.jobId);

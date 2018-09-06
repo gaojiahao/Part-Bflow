@@ -30,6 +30,19 @@
             </div>
             <h3>请求参数：</h3>
             <Table size="small" :columns="columns" :data="commitData"></Table>
+            <div style="position:relative;">
+              <p style="font-size: 14px;color: #333;">
+                <strong style="font-weight: 700">返回结果：</strong>
+              </p>
+              <pre class="api-code">{{returnMsg}}</pre>
+              <div style="position: absolute;top: 40px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=msgText @click="copy">
+                <Tooltip placement="top" content="点击复制" :disabled="disabled">
+                  <Icon type="md-document" size='24' />
+                </Tooltip>
+              </div>
+              <h3 style="color: #333;">参数说明：</h3>
+              <Table size="small" :columns="columns1" :data="msgData"></Table>
+            </div>
           </div>
         </Panel>
         <Panel name="look">
@@ -52,7 +65,20 @@
               </Tooltip>
             </div>
             <h3>请求参数：</h3>
-            <Table size="small" :columns="columns" :data="viewData"></Table>
+            <Table size="small" :columns="viewColumns" :data="viewData"></Table>
+            <div style="position:relative;">
+              <p style="font-size: 14px;color: #333;">
+                <strong style="font-weight: 700">返回结果：</strong>
+              </p>
+              <pre class="api-code">{{returnMsg}}</pre>
+              <div style="position: absolute;top: 40px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=msgText @click="copy">
+                <Tooltip placement="top" content="点击复制" :disabled="disabled">
+                  <Icon type="md-document" size='24' />
+                </Tooltip>
+              </div>
+              <h3 style="color: #333;">参数说明：</h3>
+              <Table size="small" :columns="columns1" :data="msgData"></Table>
+            </div>
           </div>
         </Panel>
         <Panel name="update">
@@ -74,8 +100,21 @@
                 <Icon type="md-document" size='24' />
               </Tooltip>
             </div>
-            <h3>请求参数：</h3>
+            <h3 style="color: #333;">请求参数：</h3>
             <Table size="small" :columns="columns" :data="updateData"></Table>
+            <div style="position:relative;">
+              <p style="font-size: 14px;color: #333;">
+                <strong style="font-weight: 700">返回结果：</strong>
+              </p>
+              <pre class="api-code">{{returnMsg}}</pre>
+              <div style="position: absolute;top: 40px;right: 20px;cursor: pointer;" class="tag-read" :data-clipboard-text=msgText @click="copy">
+                <Tooltip placement="top" content="点击复制" :disabled="disabled">
+                  <Icon type="md-document" size='24' />
+                </Tooltip>
+              </div>
+              <h3 style="color: #333;">参数说明：</h3>
+              <Table size="small" :columns="columns1" :data="msgData"></Table>
+            </div>
           </div>
         </Panel>
       </Collapse>
@@ -100,6 +139,7 @@ export default {
       commitApi: {},
       updateApi: {},
       viewApi: {},
+      returnMsg: "",
       columns: [
         {
           title: "参数",
@@ -118,14 +158,39 @@ export default {
           key: "explain"
         }
       ],
+      viewColumns: [
+        {
+          title: "参数",
+          key: "param",
+          width: 200,
+          align: "center"
+        },
+        {
+          title: "说明",
+          key: "explain"
+        }
+      ],
+      columns1: [
+        {
+          title: "参数",
+          key: "param1",
+          width: 160,
+          align: "center"
+        },
+        {
+          title: "说明",
+          key: "explain1"
+        }
+      ],
       commitData: [],
       viewData: [],
-      updateData: []
+      updateData: [],
+      msgData: [],
+      msgText: ""
     };
   },
   methods: {
     copy() {
-      debugger;
       let clipboard = new Clipboard(".tag-read");
       clipboard.on("success", e => {
         console.log("复制成功");
@@ -144,8 +209,8 @@ export default {
       let nelData;
       let datas = [];
       let dataSet;
-      let formData = body.formData;
-      let requires = formData.isRequired;
+      let formData = JSON.parse(body).formData;
+      let requires = formData.disallowBlank;
       datas.push({
         explain: "备注",
         param: "biComment",
@@ -168,9 +233,10 @@ export default {
               for (var r in requires) {
                 if (r == n) {
                   data["required"] = "是";
-                } else {
-                  data["required"] = "否";
                 }
+              }
+              if (!data.hasOwnProperty("required")) {
+                data["required"] = "否";
               }
               datas.push(data);
             } else {
@@ -182,23 +248,25 @@ export default {
                 for (var r in requires) {
                   if (r == s) {
                     data["required"] = "是";
-                  } else {
-                    data["required"] = "否";
                   }
+                }
+                if (!data.hasOwnProperty("required")) {
+                  data["required"] = "否";
                 }
                 datas.push(data);
               }
             }
           }
-        } else if (index !== "isRequired") {
+        } else if (index !== "disallowBlank") {
           data["explain"] = formData[index];
           data["param"] = index;
           for (var r in requires) {
             if (r == index) {
               data["required"] = "是";
-            } else {
-              data["required"] = "否";
             }
+          }
+          if (!data.hasOwnProperty("required")) {
+            data["required"] = "否";
           }
           datas.push(data);
         }
@@ -220,16 +288,31 @@ export default {
         } catch (error) {
           this.$Message.error("后台返回格式有误！！！");
         }
-        this.commitApi["body"] = ForamtJson(this.commitApi["body"]);
-        this.updateApi["body"] = ForamtJson(this.updateApi["body"]);
-        this.viewApi["body"] = ForamtJson(this.viewApi["body"]);
-        this.commitData = this.formatData(this.commitApi.body);
-        this.updateData = this.formatData(this.updateApi.body);
-        this.viewData = this.formatData(this.viewApi.body);
+        if (this.commitApi) {
+          this.commitApi["body"] = ForamtJson(this.commitApi["body"]);
+          this.commitData = this.formatData(this.commitApi.body);
+        }
+        if (this.updateApi) {
+          this.updateApi["body"] = ForamtJson(this.updateApi["body"]);
+          this.updateData = this.formatData(this.updateApi.body);
+        }
+        if (this.viewApi) {
+          this.viewApi["body"] = ForamtJson(this.viewApi["body"]);
+          this.viewData = this.formatData(this.viewApi.body);
+        }
       })
       .catch(error => {
         this.$Message.error(error.message.data);
       });
+    this.returnMsg = {
+      sucess: true,
+      error: false
+    };
+    this.msgText = JSON.stringify(this.returnMsg);
+    this.msgData = [
+      { param1: "sucess", explain1: "请求成功" },
+      { param1: "error", explain1: "请求失败" }
+    ];
   }
 };
 </script>

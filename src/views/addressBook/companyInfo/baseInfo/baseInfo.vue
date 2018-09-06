@@ -21,7 +21,7 @@
                   </div>
                 </div>
               </Upload>
-              <img v-else :src="logo?logo:false" style="width: 128px;height:128px;line-height: 128px;">
+              <img v-else :src="logo?logo:false">
               <Modal title="查看头像" v-model="visible">
                 <img :src="logo" v-if="visible" style="width: 100%">
               </Modal>
@@ -58,6 +58,18 @@
               <Option value="-1">停用</Option>
             </Select>
             <span v-else style="margin-left:5px;">{{baseInfoItem.statusText}}</span>
+          </FormItem>
+          <FormItem label="创建者:" v-if="isAdd&&isEdit">
+            <span style="margin-left:5px;">{{baseInfoItem.creator}}</span>
+          </FormItem>
+          <FormItem label="创建时间:" v-if="isAdd&&isEdit">
+            <span style="margin-left:5px;">{{baseInfoItem.crtTime}}</span>
+          </FormItem>
+          <FormItem label="修改者:" v-if="isAdd&&isEdit">
+            <span style="margin-left:5px;">{{baseInfoItem.modifier}}</span>
+          </FormItem>
+          <FormItem label="修改时间:" v-if="isAdd&&isEdit">
+            <span style="margin-left:5px;">{{baseInfoItem.modTime}}</span>
           </FormItem>
         </Form>
       </div>

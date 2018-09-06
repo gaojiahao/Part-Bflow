@@ -340,13 +340,28 @@ export const enabledForbiddenApp = (enabledIds,forbiddenIds) => request('/H_role
     close: forbiddenIds
   }, 'POST');
 
+/** 
+ * @author XiaoYing
+ * 启用禁用相关应用
+ */
+export const prohibitExampleDetails = (exampleId) => request('/H_roleplay-si/trans/prohibitExampleDetails', {
+  exampleId: exampleId
+}, 'POST');
+
+/** 
+ * @author XiaoYing
+ * 保存相关应用排序
+ */
+export const sortExampleDetails = (examples) => request('/H_roleplay-si/trans/sortExampleDetails', {
+  examples: examples
+}, 'POST');
+
 /**
  * 
  * @param {String} listId  应用ID
  * @description 获取应用相关应用信息
  */
-// export const getRelatedApp = (listId) => request('./mock/appList/related-app.json', {listId: listId});
-export const getRelatedApp = (listId) => request('/H_roleplay-si/ds/getAppRelevantExamples', { listId: listId });
+export const getRelatedApp = (listId) => request('/H_roleplay-si/trans/getAllExampleDetailsByAppId', { appId: listId });
 
 /**
  * @author zhaohuai

@@ -60,19 +60,19 @@ export default {
 
             //区分科目类型 【会计类、非会计类】
             if (subject.classify === 1) {
-              if (/1/.test(collectionStatus) && /-1/.test(collectionStatus)) {
+              if (collectionStatus.indexOf(1)>-1 && collectionStatus.indexOf(-1)>-1) {
                 return h("span", {}, "借方，贷方");
-              } else if (/1/.test(collectionStatus)) {
+              } else if (collectionStatus.indexOf(1)>-1) {
                 return h("span", {}, "借方");
-              } else if (/-1/.test(collectionStatus)) {
+              } else if (collectionStatus.indexOf(-1)>-1) {
                 return h("span", {}, "贷方");
               }
             } else {
-              if (/1/.test(collectionStatus) && /-1/.test(collectionStatus)) {
+              if (collectionStatus.indexOf(1)>-1 && collectionStatus.indexOf(-1)>-1) {
                 return h("span", {}, "增加，减少");
-              } else if (/1/.test(collectionStatus)) {
+              } else if (collectionStatus.indexOf(1)>-1) {
                 return h("span", {}, "增加");
-              } else if (/-1/.test(collectionStatus)) {
+              } else if (collectionStatus.indexOf(-1)>-1) {
                 return h("span", {}, "减少");
               }
             }

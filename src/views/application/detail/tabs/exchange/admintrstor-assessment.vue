@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <div class="bg_ff">
+  <div class="bg_ff" style="margin-bottom: 10px;">
     <div>
       <Row class="app-resource-group-title">
         <h3>管理员自评

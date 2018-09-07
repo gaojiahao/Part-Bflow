@@ -86,7 +86,7 @@
           </defs>
           <defs>
             <marker id="arrow" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" viewBox="0 0 15 15" refX="6" refY="6" orient="auto">
-              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: #fff;" />
+              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: gray;" />
             </marker>
           </defs>
           <defs>
@@ -1105,7 +1105,7 @@ export default {
 
 .transTypeRel_style {
   fill: none;
-  stroke: #fff;
+  stroke: gray;
   stroke-width: 1;
   // stroke-dasharray: 2;
 }

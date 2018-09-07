@@ -1,9 +1,7 @@
 <template>
   <div class="wrapper">
     <div class="wrapper-body">
-      <Table :columns="columns1" :data="data1"></Table>
-       <Input width='100px' v-model="value"/>
-       <p>{{value|capitalize}}</p>
+      <Table :columns="fieldDetailColumns" :data="fieldDetail"></Table>
     </div>
    
     <change-detail v-model="showChangeDetailsModal" title="变更详情" width="1000">
@@ -49,7 +47,7 @@
 </template>
 
 <script>
-import { getFeildChangeHistory } from "@/services/flowService";
+import { getListFeildChangeHistory} from "@/services/flowService";
 import ChangeDetail from "@/components/modal/Modal";
 export default {
   components: {
@@ -57,8 +55,7 @@ export default {
   },
   data() {
     return {
-      value:'',
-      columns1: [
+      fieldDetailColumns: [
         {
           title: "版本",
           key: "version",
@@ -76,12 +73,13 @@ export default {
           align: "center"
         },
         {
-          title: "变更字段",
+          title: "变更字段",  
           key: "mainTable",
           align: "center",
           render: (h, params) => {
-            let mainTable = params.row.mainTable;
-            let renderData = [];
+            let mainTable = params.row.mainTable,
+              detailTable = params.row.detailTable,
+              renderData = [];
             if (mainTable.length > 0) {
               mainTable.forEach(item => {
                 renderData.push(
@@ -89,7 +87,7 @@ export default {
                     "p",
                     {
                       style: {
-                        height: "16px"
+                        minHeight: "16px",
                       }
                     },
                     item.fieldName
@@ -97,6 +95,7 @@ export default {
                 );
               });
             }
+            
             if (params.row.detailTable.length > 0) {
               params.row.detailTable.forEach((item, index) => {
                 renderData.push(
@@ -121,6 +120,7 @@ export default {
           align: "center",
           render: (h, params) => {
             let mainTable = params.row.mainTable,
+              detailTable = params.row.detailTable,
               renderData = [],
               reg = /jpg|jpeg|png/g;
             if (mainTable.length > 0) {
@@ -142,7 +142,7 @@ export default {
                       "p",
                       {
                         style: {
-                          height: "16px",
+                          minHeight: "16px",
                           color: "#ee0000"
                         }
                       },
@@ -152,8 +152,7 @@ export default {
                 }
               });
             }
-            let detailTable = params.row.detailTable;
-            if (detailTable.length > 0) {
+            if (detailTable && detailTable.length > 0) {
               detailTable.forEach((item, index) => {
                 renderData.push(
                   h(
@@ -255,6 +254,7 @@ export default {
           align: "center",
           render: (h, params) => {
             let mainTable = params.row.mainTable,
+                detailTable = params.row.detailTable,
               renderData = [],
               reg = /jpg|jpeg|png/g;
             if (mainTable.length > 0) {
@@ -276,7 +276,7 @@ export default {
                       "p",
                       {
                         style: {
-                          height: "16px",
+                          minHeight: "16px",
                           color: "#008000"
                         }
                       },
@@ -286,8 +286,7 @@ export default {
                 }
               });
             }
-            let detailTable = params.row.detailTable;
-            if (detailTable.length > 0) {
+            if (detailTable && detailTable.length > 0) {
               detailTable.forEach((item, index) => {
                 renderData.push(
                   h(
@@ -384,7 +383,7 @@ export default {
           }
         }
       ],
-      data1: [],
+      fieldDetail: [],
 
       showChangeDetailsModal: false,
       beforeChangeData: [], //变更前数据
@@ -425,8 +424,9 @@ export default {
   },
 
   mounted() {
-    getFeildChangeHistory().then(res => {
-      this.data1 = res;
+    let transCode = this.$route.params.transCode;
+    getListFeildChangeHistory(transCode).then(res => {
+      this.fieldDetail = res;
     });
   }
 };
@@ -440,7 +440,7 @@ export default {
   background-color: #e0e0e0;
 
   &-body {
-    width: 80%;
+    width: 100%;
     height: 100%;
     margin: 0px auto;
     background-color: #fff;

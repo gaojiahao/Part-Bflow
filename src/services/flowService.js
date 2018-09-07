@@ -104,9 +104,10 @@ export const getFormViews = (listId) => request('/H_roleplay-si/ds/list/getFormV
     listId: listId
 });
 
-export const getFeildChangeHistory = (transCode) => request('/H_roleplay-si/history/records', {
-    transCode: 'WL1535355135349 ',
-    page: 1,
-    start: 0,
-    limit: 25,
+export const getObjFeildChangeHistory = (transCode) => request('/H_roleplay-si/easy/transTypeHistoryApi/findData', {
+    transCode: transCode,
+})
+
+export const getListFeildChangeHistory = (transCode) => request('/H_roleplay-si/easy/transTypeHistoryApi/findData', {
+    transCode: transCode,
 })

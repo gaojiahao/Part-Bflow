@@ -240,7 +240,7 @@ export const addressBook = {
 
 
 export const fieldChangeHistoryRouter = {
-  path: '/fieldChangeHistory',
+  path: '/fieldChangeHistory/:transCode',
   name: 'subjectform',
   meta: {
     title: 'RoleTask - 变更历史'

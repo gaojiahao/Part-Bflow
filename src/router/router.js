@@ -249,6 +249,18 @@ export const fieldChangeHistoryRouter = {
     import('@/views/form/field-change-history.vue')
 }
 
+export const instanceCommetns = {
+  path: '/instcommetns/:transCode',
+  name: 'instcommetns',
+  meta: {
+    title: 'RoleTask - 实例评论'
+  },
+  component: () =>
+    import('@/views/form/instance-comments.vue')
+}
+
+
+
 export const appRouter = [{
   path: '/',
   name: 'home_index',
@@ -287,6 +299,7 @@ export const routers = [
   app,
   addressBook,
   fieldChangeHistoryRouter,
+  instanceCommetns,
   enterpriseInfo,
   ...appRouter
 ];

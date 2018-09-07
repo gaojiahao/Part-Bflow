@@ -48,8 +48,17 @@
             <Col span="6">修改时间： <span>{{ appData.modTime }}</span></Col>
           </Row>
           <Row class="pad5">
-            <Col span="24">说明：<span v-if="showEditAppInfo">{{ appData.comment }}</span>
-            <Input v-else type="textarea" v-model="appData.comment" style="width: 1000px"></Input></Col>
+            <Col span="24">说明：<span v-if="showEditAppInfo" v-html="appData.comment"></span>
+            <!-- <Input v-else type="textarea" v-model="appData.comment" style="width: 1000px"></Input> -->
+              <vue-wangeditor
+              v-else 
+              ref="editorInfo" 
+              id="editorInfo"
+              :menus="menu"
+              v-model="appData.comment"
+              height="100" 
+              width="100%"></vue-wangeditor>
+            </Col>
           </Row>
         </Col>
         <Col span="1">
@@ -92,9 +101,13 @@ import {
   getAllPermissionData,
   enabledForbiddenApp
 } from "@/services/appService.js";
+import vueWangeditor from 'vue-wangeditor';
+
 export default {
   name: "appInfo",
-  components: {},
+  components: {
+    vueWangeditor
+  },
   props: {
     listId: String,
     appData: Object,
@@ -119,6 +132,9 @@ export default {
       total: 0,
       currentPage: 1,
       pageSize: 10,
+      menu: [
+        '|',
+      ],
       adminColumns: [
         {
           title: "头像",
@@ -195,7 +211,7 @@ export default {
           uniqueId: this.appData.uniqueId,
           title: this.appData.title,
           administrator: this.appData.userId,
-          comment: this.appData.comment
+          comment: this.$refs.editorInfo.getHtml()
         };
         saveAppInformation(params).then(res => {
           if (res.success) {

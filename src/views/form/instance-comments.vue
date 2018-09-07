@@ -4,9 +4,6 @@
 
 <template>
   <div class="bg_ff ">
-        <Row class="app-resource-group-title">
-            <h3>评论 </h3>
-        </Row>
         <Row class="comments">
             <commentPublish :handlePublish="handlePublish" ></commentPublish>
 

@@ -9,23 +9,46 @@
         <h3>管理员自评
         </h3>
       </Row>
-      <Row v-show="isAdminTrue" style="border-bottom: 10px solid #f0f0f0;" >
-        <div style="width:95%;padding:5px;">
-          <Form ref="formValidate" :label-width="150" :model="adminAssessData" :rules="ruleValidate">
+      <Row v-show="isAdminTrue" class="assessmentForm pad15" >
+          <Form 
+            ref="formValidate" 
+            :label-width="150" 
+            :model="adminAssessData" 
+            :rules="ruleValidate">
             <FormItem label="期间（月份）:" prop="duringDate">
-              <DatePicker format="yyyy-MM" type="month" placeholder="选择日期" style="width: 200px" v-model="adminAssessData.duringDate"></DatePicker>
+              <DatePicker 
+                format="yyyy-MM" 
+                type="month" 
+                placeholder="选择日期" 
+                style="width: 200px" 
+                v-model="adminAssessData.duringDate">
+              </DatePicker>
             </FormItem>
             <FormItem label="效率与成本改进成果:" prop="result" style="margin-bottom: 65px;">
-              <vue-wangeditor ref="result" id="editorResult" :menus="menu" height="143" width="100%" class="editor-result"></vue-wangeditor>
+              <vue-wangeditor 
+                ref="result" 
+                id="editorResult" 
+                :menus="menu" 
+                height="143" 
+                width="100%"
+                 class="editor-result">
+                 </vue-wangeditor>
             </FormItem>
             <FormItem label="效率与成本改进机会:" prop="opportunity" style="margin-bottom: 40px;">
-              <vue-wangeditor ref="oppor" id="editorOppor" :menus="menu" height="143" width="100%"></vue-wangeditor>
+              <vue-wangeditor 
+                ref="oppor" id="editorOppor" 
+                :menus="menu" 
+                height="143" 
+                width="100%">
+                </vue-wangeditor>
             </FormItem>
           </Form>
           <div style="text-align:right;margin-bottom:5px;">
-            <Button @click="submitAdminAssess" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;margin-top:5px">保存</Button>
+            <Button 
+              @click="submitAdminAssess" 
+              class="radius0" 
+              style="background-color: rgb(0, 150, 136) !important;color:#fff;margin-top:5px">保存</Button>
           </div>
-        </div>
       </Row>
      
       <div v-for="(assess, index) of assessments" :key="index" class="pad10 bg_ff assessmentItem">
@@ -129,9 +152,6 @@ export default {
         'aligncenter',	// 居中
         'alignright',	// 右对齐
         '|',
-        'link',	// 链接
-        'unlink',	// 取消链接
-        'table',	// 表格
         'emotion',	// 表情
         '|',
         'undo',	// 撤销

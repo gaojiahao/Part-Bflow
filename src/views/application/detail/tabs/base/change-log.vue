@@ -21,6 +21,7 @@
   &-form {
     height: 100%;
     background-color: #ffffff;
+    padding: 15px;
 
     //form表单标签字体样式
     .ivu-form-item-label {
@@ -109,7 +110,11 @@
     </div>
 
     <div class="timeline-box-form"  v-if="isAdminTrue">
-      <Form ref="formValidate" :label-width="120" :model="modalFormData" :rules="ruleValidate" style="margin:5px ;width:95%;padding-top:12px;">
+      <Form 
+      ref="formValidate" 
+      :label-width="120" 
+      :model="modalFormData" 
+      :rules="ruleValidate" >
         <FormItem label="更新范围:" prop="scope" width="300">
           <Select multiple v-model="modalFormData.scope">
             <Option value="表单">表单</Option>
@@ -119,15 +124,25 @@
             <Option value="权限">权限</Option>
           </Select>
         </FormItem>
-        <FormItem label="耗用小时数:" prop="spendTime">
+        <FormItem label="耗用时间:" prop="spendTime">
           <InputNumber v-model="modalFormData.spendTime" />
-          <span style="color:#ddd;margin-left:10px;">单位/时</span>
+          <span style="margin-left:10px;">单位/时</span>
         </FormItem>
         <FormItem label="更新内容:" prop="content">
-          <vue-wangeditor ref="editor" id="editor" v-model="modalFormData.content" :menus="menu" height="143" width="100%"></vue-wangeditor>
+          <vue-wangeditor 
+            ref="editor" 
+            id="editor" 
+            v-model="modalFormData.content" 
+            :menus="menu" 
+            height="143" 
+            width="100%"></vue-wangeditor>
         </FormItem>
         <FormItem>
-          <input type='submit' value="提交" class="timeline-box-form-submit" @click="submitLog" />
+          <input 
+            type='submit' 
+            value="提交" 
+            class="timeline-box-form-submit" 
+            @click="submitLog" />
         </FormItem>
       </Form>
     </div>
@@ -154,29 +169,6 @@
         </ul>
       </div>
     </div>
-
-    <!-- <div class="timeline-box-log" v-show="logData.length===0?false:true">
-      <Timeline class="timeline-list" pending>
-        <TimelineItem v-for="(item,index) in logData" :key="index">
-          <p class="time">{{item.VERSION}}</p>
-          <ul class="timeline-item-content-ul">
-            <li>
-              <span>{{item.CREATOR_NAME}}</span>
-              <span>{{item.CRT_TIME}}</span>
-              <span>耗用时间:{{item.TIME_CONSUMING}}</span>
-            </li>
-            <li>
-              <span>更新范围:</span>
-              <span class="customs-tag" v-for="(scope,index) in item.CHANGE_RANGE" :key="index">{{scope}}</span>
-            </li>
-            <li>
-              <span>备注:{{item.CONTENT}}</span>
-            </li>
-          </ul>
-        </TimelineItem>
-      </Timeline>
-    </div> -->
-
   </div>
 </template>
 
@@ -197,7 +189,6 @@ export default {
       type: Boolean
     }
   },
-
   data() {
     return {
       isAdminTrue: false,
@@ -252,9 +243,6 @@ export default {
         'aligncenter',	// 居中
         'alignright',	// 右对齐
         '|',
-        'link',	// 链接
-        'unlink',	// 取消链接
-        'table',	// 表格
         'emotion',	// 表情
         '|',
         'undo',	// 撤销

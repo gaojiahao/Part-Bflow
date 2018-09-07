@@ -5,13 +5,19 @@
 <template>
   <div class="app-details">
 
-    
 
     <!-- 应用详情信息 -->
-    <app-info :listId="this.$route.params.listId" :enforData="enforData" :isAdmin="isAdmin" :isCompanyAdmin="isCompanyAdmin" :appData="appData" @reloadData="reloadData" @changeAdmin="changeAdmin" @enabledForbiddenAppPermission="enabledForbiddenAppPermission"></app-info>
+    <app-info 
+      :listId="this.$route.params.listId" 
+      :enforData="enforData" 
+      :isAdmin="isAdmin" 
+      :isCompanyAdmin="isCompanyAdmin" 
+      :appData="appData" 
+      @reloadData="reloadData" 
+      @changeAdmin="changeAdmin" 
+      @enabledForbiddenAppPermission="enabledForbiddenAppPermission">
+      </app-info>
 
-
-    <!-- 应用tabs -->
     <div class="rfd-tab">
       <Tabs value="name1" class="rfd-tab-warp">
         <TabPane label="一般" name="name1">

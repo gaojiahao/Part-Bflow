@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/H_roleplay-si':{
-        target:'http://192.168.3.173:8080',
+        target:'http://cpacn2012.3322.org:5858',
         changeOrigin: true
       },
       '/corebiz-api': {

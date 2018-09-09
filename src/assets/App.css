@@ -321,3 +321,16 @@ margin-top: 0;
   text-overflow:ellipsis;
   white-space: nowrap;
 }
+
+.info-color{
+  color: #2db7f5;
+}
+.success-color{
+  color: #19be6b;
+}
+.warning-color{
+  color: #ff9900;
+}
+.error-color{
+  color: #ed4014;
+}

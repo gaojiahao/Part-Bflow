@@ -33,7 +33,11 @@ function render(el, bind) {
 
         if (diffMinutes>0){
             return diffMinutes + '分钟' + diffSeconds + '秒前'; 
-        }        
+        } 
+
+        return  diffSeconds + '秒前'; 
+        
+        
 
     }
     el.innerText = calcTimeDiff(new Date(bind.value.time),new Date());

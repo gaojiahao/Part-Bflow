@@ -76,7 +76,8 @@
                 </div>
 
                 
-                <div  v-if="comment.showReply || comment.showChilds" style="background-color: rgb(240, 240, 240);padding: 10px;border: 1px solid #ddd;">
+                <div  v-if="comment.showReply || comment.showChilds" 
+                    class="comments-content-item-content-reply">
                     <commentPublish 
                         v-if="comment.showReply" 
                         :handlePublish="handleReplyPublish" 
@@ -85,6 +86,7 @@
                         :allowFile="false"></commentPublish>
 
                     <child-comments 
+                        class="martop5"
                         v-if="comment.showChilds" 
                         :superComment ="comment"
                         :comments="comment.childComment"></child-comments>
@@ -216,7 +218,7 @@ export default {
 
              var params = {
                 parentId:comment.id,  
-                limit:50, 
+                limit:1, 
                 page:1, 
                 sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
             };

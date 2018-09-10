@@ -7,7 +7,7 @@ export const getToken = () => {
             token = false;
         }
     }
-    return 'wYmlHtOaCn4ZcSfkkIX9MJUEVDe0vXyz4Gn/QECl1ioLohFADWuJ1WgAMuwQBKK/VifKYQKtU0dp/+sJwpSMa2F/cov5VrBV';
+    return token;
 }
 
 /**

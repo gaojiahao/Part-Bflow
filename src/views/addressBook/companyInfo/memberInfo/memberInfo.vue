@@ -21,7 +21,7 @@
     <Modal v-model="showModal" title="选择公司成员" @on-ok="addCompanyMember" width="870">
       <div class="search">
         <!-- <Input placeholder="请输入工号" class="serach-btn" v-model="userCode" /> -->
-        <Input @on-search="search" :search="true" placeholder="请输入姓名" class="search-btn" v-model="nikeName" />
+        <Input @on-search="search" :search="true" placeholder="请输入姓名" class="search-btn" v-model="searchValue" />
         <Button type="primary" @click="search">搜索</Button>
       </div>
       <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" @on-select-all="onSelectAll" @on-select-cancel="onSelectCancel" height="400" :loading="allMemberLoading" :columns="columns2" :data="allMemberData">
@@ -198,7 +198,7 @@ export default {
       target: 4,
       memberSelectionData: [],
       nowMemberselectionData: [],
-      nikeName: "",
+      searchValue: "",
       onPageSelection: []
     };
   },
@@ -373,10 +373,10 @@ export default {
       }
     },
     search() {
-      filterUser(this.nikeName).then(res => {
-        if (res.tableContent[0]) {
-          this.allMemberData = res.tableContent;
-          this.allMemberTotal = res.summary.total;
+      filterUser(this.searchValue).then(res => {
+        if (res) {
+          this.allMemberData = res;
+          this.allMemberTotal = res.length;
         }
       });
     }

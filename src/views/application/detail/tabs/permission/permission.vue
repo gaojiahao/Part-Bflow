@@ -4,8 +4,10 @@
 
 <template>
   <div class="app-permission">
+    <!-- 操作管理 -->
+    <operation-manage :enabledForbidden="enabledForbidden" :isAdmin="isAdmin"></operation-manage>
     <!-- 动作管理 -->
-    <action-manage :enabledForbidden="enabledForbidden" :isAdmin="isAdmin"></action-manage>
+    <action-manage :isAdmin="isAdmin"></action-manage>
     <!-- 报表视图 -->
     <report-view :appType="appType" :isAdmin="isAdmin"></report-view>
     <!-- 表单 -->
@@ -16,18 +18,20 @@
 </template>
 
 <script>
-import ActionManage from './action/action';
+import OperationManage from './operation/operation';
 import ReportView from './report/report';
 import AppForm from './form/form';
 import WorkFlow from './workflow/workflow';
+import ActionManage from './action/action';
 
 export default {
   name: "permissionSource",
   components: {
-    ActionManage,
+    OperationManage,
     ReportView,
     AppForm,
-    WorkFlow
+    WorkFlow,
+    ActionManage
   },
   props: {
     listId: String,

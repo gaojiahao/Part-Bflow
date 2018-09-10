@@ -1,30 +1,14 @@
 <style lang="less" scoped>
-@import "./action.less";
+@import "../operation/operation.less";
 </style>
 
 <template>
-    <div class="app">
-        
+    <div class="app" style="margin-top:15px;">
         <Row class="app-action">
             <Row class="app-action-title">
-                <h3>操作</h3><span class="warning-color marlr">勾选以启用或停用应用的操作</span>
-                <a v-if="isAdminTrue" @click="showModal">授权</a>
+                <h3>动作<a v-if="isAdminTrue" @click="showModal" class="app-action-title-add">授权</a></h3>
             </Row>
             <div class="app-action-source">
-                <Row class="app-action-source-list">
-                    <Col span="6" class="app-action-source-item" v-for="(list,index) of actionData" :key="index">
-
-                        <Col span="2" class="app-action-source-item-check">
-                            <Checkbox @on-change="isForbidden(list,index)" :disabled="!isAdminTrue" :value="list.permType===0?true:false"></Checkbox>
-                        </Col>
-
-                        <Col span="21" class="app-action-source-item-content">
-                            <h3>{{ list.name }}</h3>
-                            <div class="app-action-source-item-desc">{{ list.desc }}</div>
-                        </Col>
-                    </Col>
-                </Row>
-
                 <Row>
                     <Table :columns="columns" :data="userSources" size="small"></Table>
                 </Row>
@@ -38,11 +22,8 @@
 <script>
 import {
   getAppResourcesAndAuthoritys,
-  getAllPermissionData,
-  ProhibitApp,
   deleteRelationPermission
 } from "@/services/appService.js";
-import {APP_ACTION} from "@/assets/const";
 import ActionModal from "./action-modal";
 
 export default {
@@ -51,7 +32,6 @@ export default {
     ActionModal
   },
   props: {
-    enabledForbidden: Number,
     isAdmin: Boolean
   },
   data() {
@@ -62,7 +42,6 @@ export default {
       isEdit: "",
       editActionData: {},
       memberType: "",
-      actionData: [],
       //监听modal是否添加权限
       isModalConfirm: 1000,
       columns: [
@@ -127,9 +106,6 @@ export default {
   watch: {
     isModalConfirm: function() {
       this.getActionData();
-    },
-    enabledForbidden: function() {
-      this.getData();
     },
     isAdmin: function(value) {
       const lastColumn = {
@@ -216,22 +192,6 @@ export default {
         this.userSources = res.tableContent;
       });
     },
-    //启用禁用动作权限
-    isForbidden(list, index) {
-      let actionStatus = list.atype === 0 ? true : false,
-        relStatus;
-      if (actionStatus) {
-        relStatus = -2;
-      } else {
-        relStatus = 0;
-      }
-      ProhibitApp(list.id, relStatus).then(res => {
-        if (res.success) {
-          this.$Message.success(res.message);
-          this.actionData[index].atype = relStatus;
-        }
-      });
-    },
     //删除用户、组织、职位全部权限公共方法
     deleteAllPermission(params, type) {
       let that = this;
@@ -275,22 +235,10 @@ export default {
         }
       });
     },
-    getData() {
-      let listId = this.listId;
-      //获取应用权限数据
-      getAllPermissionData(listId).then(res => {
-        this.actionData = res.tableContent;
-
-        this.actionData.map(ac=>{
-          ac.desc = APP_ACTION[ac.resourceName];
-        });
-      });
-    }
   },
   created() {},
   mounted() {
     this.getActionData();
-    this.getData();
   }
 };
 </script>

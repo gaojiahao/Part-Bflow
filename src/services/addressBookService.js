@@ -455,14 +455,9 @@ export const getAllUser = (currentPage, pageSize) => request('/H_roleplay-si/ds/
  * @author zhaohuai
  * 过滤成员信息
  */
-export const filterUser = (nikeName) => {
-  let filter = JSON.stringify([{
-    operator: "like",
-    value: nikeName,
-    property: "nickname"
-  }]);
-  return request('/H_roleplay-si/ds/listUsers', {
-    filter: filter
+export const filterUser = (searchValue) => {
+  return request('/H_roleplay-si/userInfo/listUsers', {
+    search: searchValue
   })
 };
 /**

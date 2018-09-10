@@ -1,20 +1,16 @@
-import Vue from 'vue';
+import Vue from '../node_modules/.2.5.16@vue';
 import App from './App';
 import router from './router';
-import iView from 'iview';
+import iView from '../node_modules/.3.0.0@iview';
 import 'iview/dist/styles/iview.css';
 import fontIcon from './assets/App.css';
 
-import { getCurrentUserInfo } from "@/services/flowService";
-import instanceStateDirective from  '@/directive/instanceStateDirective';
-import overTimeDirective from '@/directive/overTimeDirective';
-
-import VueWechatTitle from 'vue-wechat-title';
-
-Vue.directive('instanceStateDirective',instanceStateDirective);
-Vue.directive('overTimeDirective',overTimeDirective);
-
+require('@/directive/index');
+require('@/filter/index');
 require('./assets/App.css');
+
+import { getCurrentUserInfo } from "@/services/flowService";
+import VueWechatTitle from 'vue-wechat-title';
 
 Vue.config.productionTip = false;
 

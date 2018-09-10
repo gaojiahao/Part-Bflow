@@ -1,7 +1,7 @@
-import Vue from '../node_modules/.2.5.16@vue';
+import Vue from 'vue'
 import App from './App';
 import router from './router';
-import iView from '../node_modules/.3.0.0@iview';
+import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 import fontIcon from './assets/App.css';
 

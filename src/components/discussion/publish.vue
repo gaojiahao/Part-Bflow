@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="less" scoped>
 @import "./publish.less";
 </style>
 
@@ -46,27 +46,27 @@
                             <span class="fr">共{{uploadList.length}}张,还能上传{{9-uploadList.length}}张</span>
                         </p>
                         <div 
-                        class="comment-upload-list" 
-                        v-for="(item,index) in uploadList" 
-                        :key="index" >
-                            <template v-if="item.status === 'finished'">
-                                <img :src="item.url">
-                                <div class="comment-upload-list-cover">
-                                    <Icon 
-                                    type="ios-eye-outline" 
-                                    @click.native="handleView(item.name)">
-                                    </Icon>
-                                    <Icon 
-                                    type="ios-trash-outline" 
-                                    @click.native="handleRemove(item)"></Icon>
-                                </div>
-                            </template>
-                            <template v-else>
-                                <Progress 
-                                v-if="item.showProgress" 
-                                :percent="item.percentage" 
-                                hide-info></Progress>
-                            </template>
+                            class="comment-upload-list" 
+                            v-for="(item,index) in uploadList" 
+                            :key="index" >
+                                <template v-if="item.status === 'finished'">
+                                    <img :src="item.url">
+                                    <div class="comment-upload-list-cover">
+                                        <Icon 
+                                        type="ios-eye-outline" 
+                                        @click.native="handleView(item.name)">
+                                        </Icon>
+                                        <Icon 
+                                        type="ios-trash-outline" 
+                                        @click.native="handleRemove(item)"></Icon>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <Progress 
+                                    v-if="item.showProgress" 
+                                    :percent="item.percentage" 
+                                    hide-info></Progress>
+                                </template>
                         </div>
                         <Upload
                             v-show="uploadList.length<9"
@@ -89,7 +89,9 @@
                             </div>
                         </Upload>
                         <Modal title="查看图片" v-model="visible">
-                            <img :src="'/H_roleplay-si/ds/download?url=' + imgName + ''" v-if="visible" style="width: 100%">
+                            <img 
+                                :src="'/H_roleplay-si/ds/download?url=' + imgName + ''" 
+                                v-if="visible" style="width: 100%">
                         </Modal>
                     </div>
             </Poptip>

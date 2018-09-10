@@ -97,7 +97,7 @@ export const addressBook = {
   },
   redirect: 'addressBook/user',
   component: () =>
-    import('@/views/addressBook/index.vue'),
+import('@/views/addressBook/index.vue'),
   children: [
     {
       path: 'user',
@@ -109,7 +109,7 @@ export const addressBook = {
         import('@/views/addressBook/user/index.vue'),
       children: [{
         path: 'detail/:userId',
-        name: 'detail',
+        name: 'user-detail',
         meta: {
           title: '用户详情'
         },
@@ -117,7 +117,7 @@ export const addressBook = {
           import('@/views/addressBook/user/detail/detail.vue')
       }, {
         path: 'board',
-        name: 'board',
+        name: 'user-board',
         meta: {
           title: '用户看板'
         },
@@ -125,7 +125,7 @@ export const addressBook = {
           import('@/views/addressBook/user/board/board.vue')
       }, {
         path: 'add',
-        name: 'add',
+        name: 'user-add',
         meta: {
           title: '新增用户'
         },
@@ -143,7 +143,7 @@ export const addressBook = {
         import('@/views/addressBook/organization/index.vue'),
       children: [{
         path: 'board',
-        name: 'board',
+        name: 'org-board',
         meta: {
           title: '组织看板'
         },
@@ -151,7 +151,7 @@ export const addressBook = {
           import('@/views/addressBook/organization/board/board.vue')
       }, {
         path: 'detail/:groupId',
-        name: 'detail',
+        name: 'org-detail',
         meta: {
           title: '组织详情'
         },
@@ -159,7 +159,7 @@ export const addressBook = {
           import('@/views/addressBook/organization/organization.vue')
       }, {
         path: 'add',
-        name: 'add',
+        name: 'org-add',
         meta: {
           title: '添加组织'
         },
@@ -178,7 +178,7 @@ export const addressBook = {
         import('@/views/addressBook/job/index.vue'),
       children: [{
         path: 'board',
-        name: 'board',
+        name: 'job-board',
         meta: {
           title: '职位看板'
         },
@@ -186,7 +186,7 @@ export const addressBook = {
           import('@/views/addressBook/job/board/board.vue')
       }, {
         path: 'detail/:jobId',
-        name: 'detail',
+        name: 'job-detail',
         meta: {
           title: '职位详情'
         },
@@ -194,7 +194,7 @@ export const addressBook = {
           import('@/views/addressBook/job/job.vue')
       }, {
         path: 'add',
-        name: 'add',
+        name: 'job-add',
         meta: {
           title: '添加职位'
         },
@@ -212,7 +212,7 @@ export const addressBook = {
         import('@/views/addressBook/companyInfo/index.vue'),
       children: [{
         path: 'board',
-        name: 'board',
+        name: 'company-board',
         meta: {
           title: '公司看板'
         },
@@ -220,7 +220,7 @@ export const addressBook = {
           import('@/views/addressBook/companyInfo/board/board.vue')
       }, {
         path: 'baseInfo/:groupId',
-        name: 'companyInfo',
+        name: 'companyInfo-detail',
         meta: {
           title: '基本信息'
         },
@@ -228,7 +228,7 @@ export const addressBook = {
           import('@/views/addressBook/companyInfo/companyInfo.vue'),
       }, {
         path: 'add',
-        name: 'add',
+        name: 'company-add',
         meta: {
           title: '新增'
         },

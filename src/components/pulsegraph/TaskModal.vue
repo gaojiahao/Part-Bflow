@@ -149,6 +149,9 @@ export default {
     },
     orderCode: {
       type: String
+    },
+    projectName:{
+      type:String
     }
   },
 
@@ -217,8 +220,14 @@ export default {
         limit: this.pageSize
       };
       if (this.orderCode) {
-        params.filter = JSON.stringify({ orderCode: this.orderCode });
+        params.filter = { orderCode: this.orderCode };
       }
+      if('filter' in params.filter && this.projectName){
+        params.filter.projectName = this.projectName
+      }else{
+        params.filter = {projectName:this.projectName};
+      }
+      params.filter = JSON.stringify(params.filter);
       this.loading = true;
       getAppTaskCount(params).then(res => {
         this.pageTotal = res.total;
@@ -243,6 +252,9 @@ export default {
       }
       if (this.orderCode) {
         this.filterData.orderCode = this.orderCode;
+      }
+      if(this.projectName){
+        this.filterData.projectName=this.projectName;
       }
       this.filterData.crtTime = crtTime;
       let params = {

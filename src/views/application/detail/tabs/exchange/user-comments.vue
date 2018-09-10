@@ -4,19 +4,22 @@
 
 <template>
   <div class="bg_ff ">
-        <Row class="app-resource-group-title">
-            <h3>评论 </h3>
-        </Row>
-        <Row class="comments">
-            <commentPublish :handlePublish="handlePublish" ></commentPublish>
+    <Row class="app-resource-group-title">
+        <h3>评论 </h3>
+    </Row>
 
-            <div class="comments-header martop10" v-if="comments.length>0">
-                <strong>最新评论({{pageInfo.total}})</strong>
-            </div>
+    <Row class="user-comment">
+        <commentPublish :handlePublish="handlePublish" ></commentPublish>
 
-            <comments :comments="comments" :refreshRootComments="refreshComments"></comments>
+        <div class="user-comment-header" v-if="comments.length>0">
+            <strong>最新评论({{pageInfo.total}})</strong>
+        </div>
 
-            <Page 
+        <comments 
+            :comments="comments" 
+            :refreshRootComments="refreshComments"></comments>
+
+        <Page 
             class="pad20"
             v-if="pageInfo.total>0"
             :total="pageInfo.total" 
@@ -25,7 +28,7 @@
             prev-text="上一页" 
             next-text="下一页" 
             @on-change="handlePageChange"/>
-       </Row>
+    </Row>
   </div>
 </template>
 
@@ -41,7 +44,6 @@ export default {
     commentPublish
   },
   props: {
-
   },
   data() {
     return {
@@ -56,7 +58,6 @@ export default {
         }
     };
   },
- 
   methods: {
     handlePublish:function (content,uploadList) {
         let comment ={
@@ -80,10 +81,10 @@ export default {
     },
     refreshComments:function () {
         var params = {
-                relationKey:this.listId,
-                sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
-        }
-        params = Object.assign(params,this.pageInfo)
+            relationKey:this.listId,
+            sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
+        };
+        params = Object.assign(params,this.pageInfo);
 
         getComments(params).then(res=>{
             this.comments = res.tableContent;
@@ -91,7 +92,6 @@ export default {
             this.pageInfo.total = res.dataCount;
         });
     },
-
     handlePageChange:function (page) {
         this.pageInfo.page = page;
         this.refreshComments();

@@ -142,7 +142,7 @@
         </svg>
       </div>
     </div>
-    <task-modal :modal='modal' :listId="pageListId" @emitModal="emitModal" :taskValue="taskValue" :type="type" :orderCode="orderCode"></task-modal>
+    <task-modal :modal='modal' :listId="pageListId" @emitModal="emitModal" :taskValue="taskValue" :type="type" :orderCode="orderCode" :projectName="projectName"></task-modal>
   </div>
 </template>
 

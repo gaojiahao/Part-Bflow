@@ -1,119 +1,113 @@
-<style lang="less">
+<style lang="less" scoped >
 @import "./comments.less";
 </style>
 <template>
-<div class="discussion">
-    <div class="discussion-content">
-        <Row class="list">
-            <div class="list-content">
-                <Row class="list-content-item" 
-                    v-for="(comment,index) in comments" 
-                    :key="index">
+<div class="comments">
+    <div class="commnets-content">
+        <Row class="comments-content-item" 
+            v-for="(comment,index) in comments" 
+            :key="index">
 
-                    <Col span="2" class="list-content-item-user" >
-                     <my-pop-tip 
-                        :userInfo="userInfo" 
-                        trigger="click">
-                            <img   
-                            @click="showUserInfo(comment.creator)" 
-                            onerror="src='resources/images/icon/defaultUserPhoto.jpg'"
-                            slot="userCard" :src="comment.photo?comment.photo:'resources/images/icon/contactor.png'">
-                    </my-pop-tip>
-                    </Col>
+            <Col span="2" class="comments-content-item-user" >
+                <my-pop-tip 
+                :userInfo="userInfo" 
+                trigger="click">
+                    <img   
+                    @click="showUserInfo(comment.creator)" 
+                    onerror="src='resources/images/icon/defaultUserPhoto.jpg'"
+                    slot="userCard" :src="comment.photo?comment.photo:'resources/images/icon/contactor.png'">
+                </my-pop-tip>
+            </Col>
 
-                    <Col span="22" class="list-content-item-content">
+            <Col span="22" class="comments-content-item-content">
 
-                        <p><b>{{comment.creatorName}}</b></p>
+                <p><b>{{comment.creatorName}}</b></p>
 
-                        <div class="list-content-item-content-text" 
-                            v-html="comment.content">
-                        </div>
+                <div class="comments-content-item-content-text" 
+                    v-html="comment.content">
+                </div>
 
-                        <div class="list-content-item-img" v-if="comment.commentAttachments.length>0">
+                <div class="comments-content-item-img" v-if="comment.commentAttachments.length>0">
+                    <img 
+                    v-for="(c,index) in comment.commentAttachments" 
+                    :key="index" 
+                    v-if="c.type==='image'"
+                    :src="c.attachment?c.attachment:'resources/images/icon/defaultUserPhoto.png'" 
+                    width=100 
+                    height=100>
+                    
+                </div>
+
+                <div class="comments-content-item-file" v-if="comment.commentAttachments.length>0">
+                    <p  v-for="(f,index) in comment.commentAttachments" 
+                        :key="index"   
+                        v-if="f.type==='file'" >
+                        <a @click="handleViewFile(f)">{{f.name}}
+                        </a>
+                    </p>
+                </div>
+
+                <div class="comments-content-item-content-bar" >
+                    <span  class="comments-content-item-content-bar-left">
+                        <span>
+                            <span v-overTimeDirective="{time:comment.crtTime}"></span>发布
+                        </span>
+                        <span 
+                            class="cursor-pointer"
+                            @click="handleShowChilds(comment)" 
+                            v-if="comment.childCommentNum>0">|&nbsp;查看{{comment.childCommentNum}}条回复
+                            </span>
+                    </span>
+
+                    <span  class="comments-content-item-content-bar-right" >
+                        <span class="cursor-pointer" @click="handleShowReply(comment)"> 回复</span>
+                        
+                        <span v-bind:class="{ 'comment-isPraise': comment.isPraise }">
+                            <Icon type="md-thumbs-up" size=18  
+                            @click.native="handleThumbsUp(comment)"/>
+                            {{comment.praiseNum}}
+                        </span>
+
+                            <span v-if="comment.praises.length>0" >
+                            <Icon type="ios-arrow-down" size=18 
+                            @click.native="handlerShowThumbsUpInfo(comment)"  />
+                        </span>
+                    </span>
+                </div>
+
+                
+                <div  v-if="comment.showReply || comment.showChilds" style="background-color: rgb(240, 240, 240);padding: 10px;border: 1px solid #ddd;">
+                    <commentPublish 
+                        v-if="comment.showReply" 
+                        :handlePublish="handleReplyPublish" 
+                        :superComment="comment" 
+                        :ischild="true"
+                        :allowFile="false"></commentPublish>
+
+                    <child-comments 
+                        v-if="comment.showChilds" 
+                        :superComment ="comment"
+                        :comments="comment.childComment"></child-comments>
+                </div>
+
+                <div class="comments-content-item-praises" v-if="comment.showPraises">
+                    <p>共<b>{{comment.praiseNum}}</b>人点赞</p>
+                    <div class="comments-content-item-praises-content">
+                        <my-pop-tip :userInfo="userInfo" trigger="click">
                             <img 
-                            v-for="(c,index) in comment.commentAttachments" 
-                            :key="index" 
-                            v-if="c.type==='image'"
-                            :src="c.attachment?c.attachment:'resources/images/icon/defaultUserPhoto.png'" 
-                            width=100 
-                            height=100>
-                        </div>
+                                @click="showUserInfo(p.creator)"
+                                slot="userCard"
+                                onerror="src='resources/images/icon/defaultUserPhoto.jpg'"
+                                v-for="(p,index) in comment.praises" 
+                                :key="index" 
+                                :src="p.photo?p.photo:'resources/images/icon/defaultUserPhoto.jpg'" 
+                                width=40>
+                        </my-pop-tip>
+                    </div>
+                </div>
 
-                         <div class="list-content-item-file" v-if="comment.commentAttachments.length>0">
-                            <p  v-for="(f,index) in comment.commentAttachments" 
-                                :key="index"   
-                                v-if="f.type==='file'" >
-                                <a @click="handleViewFile(f)">{{f.name}}
-                                </a>
-                            </p>
-                        </div>
-
-                        <div class="list-content-item-content-bar" >
-                            <span  class="list-content-item-content-bar-left">
-                                <span>
-                                    <span v-overTimeDirective="{time:comment.crtTime}"></span>发布
-                                </span>
-                                <span 
-                                    class="cursor-pointer"
-                                    @click="handleShowChilds(comment)" 
-                                    v-if="comment.childCommentNum>0">|&nbsp;查看{{comment.childCommentNum}}条回复
-                                    </span>
-                            </span>
-
-                            <span  class="list-content-item-content-bar-right" >
-                                <span class="cursor-pointer" @click="handleShowReply(comment)"> 回复</span>
-                               
-                                <span v-bind:class="{ 'comment-isPraise': comment.isPraise }">
-                                    <Icon type="md-thumbs-up" size=18  
-                                    @click.native="handleThumbsUp(comment)"/>
-                                    {{comment.praiseNum}}
-                                </span>
-
-                                 <span v-if="comment.praises.length>0" >
-                                    <Icon type="ios-arrow-down" size=18 
-                                    @click.native="handlerShowThumbsUpInfo(comment)"  />
-                                </span>
-                            </span>
-                        </div>
-
-                      
-                        <div  v-if="comment.showReply || comment.showChilds" style="background-color: rgb(240, 240, 240);padding: 10px;border: 1px solid #ddd;">
-                            <commentPublish 
-                                v-if="comment.showReply" 
-                                :handlePublish="handleReplyPublish" 
-                                :superComment="comment" 
-                                :ischild="true"
-                                :allowFile="false"></commentPublish>
-
-                            <child-comments 
-                                v-if="comment.showChilds" 
-                                :superComment ="comment"
-                                :comments="comment.childComment"></child-comments>
-                        </div>
-
-                        
-                        
-                        <div class="list-content-item-praises" v-if="comment.showPraises">
-                            <p>共<b>{{comment.praiseNum}}</b>人点赞</p>
-                            <div class="list-content-item-praises-content">
-                                <my-pop-tip :userInfo="userInfo" trigger="click">
-                                    <img 
-                                        @click="showUserInfo(p.creator)"
-                                        slot="userCard"
-                                        onerror="src='resources/images/icon/defaultUserPhoto.jpg'"
-                                        v-for="(p,index) in comment.praises" 
-                                        :key="index" 
-                                        :src="p.photo?p.photo:'resources/images/icon/defaultUserPhoto.jpg'" 
-                                        width=40>
-                                </my-pop-tip>
-                            </div>
-                        </div>
-
-                        
-                    </Col>
-                </Row>
-            </div>
-            
+                
+            </Col>
         </Row>
     </div>
  </div>

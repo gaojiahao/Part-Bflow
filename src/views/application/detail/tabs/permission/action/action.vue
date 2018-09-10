@@ -4,12 +4,11 @@
 
 <template>
     <div class="app">
-        <!-- <Row class="app-des">
-            <span>说明：黑、白名单，只能设置其一，如果都空着，表示所有用户都有权限</span>
-        </Row> -->
+        
         <Row class="app-action">
             <Row class="app-action-title">
-                <h3>动作  <a v-if="isAdminTrue" @click="showModal">授权</a></h3>
+                <h3>操作</h3><span class="warning-color marlr">勾选以启用或停用应用的操作</span>
+                <a v-if="isAdminTrue" @click="showModal">授权</a>
             </Row>
             <div class="app-action-source">
                 <Row class="app-action-source-list">

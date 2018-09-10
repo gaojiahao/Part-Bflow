@@ -5,7 +5,7 @@
  * @param fmt	格式
  * @param return  FUNCTION
  */
-export default dateFormatFilter = (date, fmt) => {
+const dateFormatFilter = (date, fmt) => {
 
     let padLeftZero = function (str) {
         return ('00' + str).substr(str.length);
@@ -29,5 +29,7 @@ export default dateFormatFilter = (date, fmt) => {
         }
         return fmt;
     };
-    return formatDate(date, fmt);
+    return formatDate(date, fmt); 
 }
+
+export default dateFormatFilter;

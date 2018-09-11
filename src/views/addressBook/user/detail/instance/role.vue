@@ -33,7 +33,6 @@
     height: 100%;
     min-height: 30px;
     background-color: #e6e6e6;
-    margin-bottom: 10px;
     padding: 1px 5px;
   }
 </style>
@@ -56,6 +55,7 @@
             v-model="showModal"
             title="选择职位"
             @on-ok="addRole"
+            :styles="{top: '15px'}"
             width="1000">
             <div class="app-search">
               <Input @on-search="roleFilter" :search="true" v-model="searchValue" placeholder="搜索职位名称" style="width: 300px"></Input>
@@ -79,7 +79,13 @@
 </template>
 
 <script>
-import { getRoleData,getAllRoleData,addMember,deleteMember } from "@/services/addressBookService.js";
+import { 
+  getRoleData,
+  getAllRoleData,
+  addMember,
+  deleteMember,
+  setUserDefaultDepOrRole
+   } from "@/services/addressBookService.js";
 
 export default {
   name: "roleMember",
@@ -138,6 +144,27 @@ export default {
         {
           title: "说明",
           key: "describe"
+        },
+        {
+          title: "默认职位",
+          key: "isDefault",
+          align: "center",
+          render: (h, params) => {
+            let defaultView = false;
+            if (params.row.isDefault === 1) {
+              defaultView = true;
+            }
+            return h("Radio", {
+              props: {
+                value: defaultView
+              },
+              on: {
+                "on-change": e => {
+                  this.onClickDefaultView(params);
+                }
+              }
+            });
+          }
         },
         {
           title: '操作',
@@ -218,6 +245,47 @@ export default {
     };
   },
   methods: {
+     //点击默认职位方法
+    onClickDefaultView(params) {
+      this.$Modal.confirm({
+        title: "确认",
+        content: "确认设置此部门为默认部门？",
+        onOk: () => {
+          this.setDefaultViews(params);
+        },
+        onCancel: () => {
+          this.reRenderDefaultView();
+        }
+      });
+    },
+    //设置默认职位并重新渲染columns
+    setDefaultViews(params) {
+      setUserDefaultDepOrRole(this.userId,'role',params.row.id).then(res => {
+        if (res.success) {
+          this.$Message.success(res.message);
+          this.getRoleData();
+        }
+      });
+    },
+    //重新渲染默认职位columns方法
+    reRenderDefaultView() {
+      this.columns[4].render = (h, params) => {
+        let defaultView = false;
+        if (params.row.isDefault === 1) {
+          defaultView = true;
+        }
+        return h("Radio", {
+          props: {
+            value: defaultView
+          },
+          on: {
+            "on-change": () => {
+              this.onClickDefaultView(params);
+            }
+          }
+        });
+      };
+    },
     //获取部门数据
     getRoleData() {
       if(this.userId){

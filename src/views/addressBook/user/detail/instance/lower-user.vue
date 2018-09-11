@@ -33,7 +33,6 @@
     height: 100%;
     min-height: 30px;
     background-color: #e6e6e6;
-    margin-bottom: 10px;
     padding: 1px 5px;
   }
 </style>
@@ -56,6 +55,7 @@
             v-model="showModal"
             title="选择用户"
             @on-ok="addLowUser"
+            :styles="{top: '15px'}"
             width="1000">
             <div class="app-search">
               <Input @on-search="userFilter" :search="true" v-model="searchValue" placeholder="搜索工号或姓名" style="width: 300px"></Input>

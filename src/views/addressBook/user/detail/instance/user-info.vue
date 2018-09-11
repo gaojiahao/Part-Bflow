@@ -107,6 +107,7 @@
             v-model="showCompanyModal"
             @on-ok="selectCompany"
             title="选择公司"
+            :styles="{top: '20px'}"
             width="800">
             <div class="app-search">
               <Input @on-search="companyFilter" :search="true" v-model="searchValue" placeholder="搜索公司名称" style="width: 300px"></Input>

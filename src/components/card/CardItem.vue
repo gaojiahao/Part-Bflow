@@ -23,7 +23,7 @@
     <div class="content">
       <a @click.stop="goAppSetting(appinfo)" class="content-detail">详情</a>
       <h5 @click="redirectTo(appinfo)">{{appinfo.text}}</h5>
-      <span>{{appinfo.administrator?appinfo.transName+' ':appinfo.transName}}</span>
+      <span style=" width: 80px;overflow: hidden;text-overflow: ellipsis;display: inline-block;vertical-align: middle;">{{appinfo.administrator?appinfo.transName+' ':appinfo.transName}}</span>
       <my-pop-tip :userInfo="userInfo" trigger="click">
         <span @click="showUserInfo" slot="userCard" class="content-admin">{{appinfo.administrator}}</span>
       </my-pop-tip>

@@ -217,16 +217,16 @@ export default {
         type: this.type,
         page: this.currentPage,
         listId: this.listId,
-        limit: this.pageSize
+        limit: this.pageSize,
+        filter:{}
       };
       if (this.orderCode) {
-        params.filter = { orderCode: this.orderCode };
+        params.filter.orderCode=  this.orderCode;
       }
-      if('filter' in params.filter && this.projectName){
+      if( this.projectName){
         params.filter.projectName = this.projectName
-      }else{
-        params.filter = {projectName:this.projectName};
       }
+      
       params.filter = JSON.stringify(params.filter);
       this.loading = true;
       getAppTaskCount(params).then(res => {

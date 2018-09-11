@@ -91,7 +91,7 @@
           </defs>
           <defs>
             <marker id="arrow1" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" viewBox="0 0 15 15" refX="6" refY="6" orient="auto">
-              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: #fff;" />
+              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: #fff;opacity: 0;" />
             </marker>
           </defs>
           <defs>
@@ -132,7 +132,7 @@
           </g>
 
           <g v-for="(point) in pointList" :key="point.id">
-            <polyline :points="point.value" :marker-end="waterFlow[point.id]!==undefined?'url(#arrow_hight_color)':'url(#arrow1)'" v-bind:class="waterFlow[point.id]!==undefined?'path':''" style="fill:none;stroke:#fff;stroke-width:1" />
+            <polyline :points="point.value" :marker-end="waterFlow[point.id]!==undefined?'url(#arrow_hight_color)':'url(#arrow1)'" v-bind:class="waterFlow[point.id]!==undefined?'path':''" style="fill:none;stroke:#fff;opacity: 0;stroke-width:1" />
           </g>
           <!-- 应用与应用之间的关系 -->
           <g v-for="(point) in transTypePointList" :key="point.id">

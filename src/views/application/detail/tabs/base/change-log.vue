@@ -88,13 +88,12 @@
     }
   }
 
-  .show-no-log {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    font-size: 16px;
+  .loading-more {
+    line-height: 30px;
+    font-size: 14px;
+    text-align: center;
     color: darkgray;
-    transform: translateY(-50%);
+    height: 30px;
   }
 }
 
@@ -109,12 +108,8 @@
       <h3>更新日志</h3>
     </div>
 
-    <div class="timeline-box-form"  v-if="isAdminTrue">
-      <Form 
-      ref="formValidate" 
-      :label-width="120" 
-      :model="modalFormData" 
-      :rules="ruleValidate" >
+    <div class="timeline-box-form" v-if="isAdminTrue">
+      <Form ref="formValidate" :label-width="120" :model="modalFormData" :rules="ruleValidate">
         <FormItem label="更新范围:" prop="scope" width="300">
           <Select multiple v-model="modalFormData.scope">
             <Option value="表单">表单</Option>
@@ -129,20 +124,10 @@
           <span style="margin-left:10px;">单位/时</span>
         </FormItem>
         <FormItem label="更新内容:" prop="content">
-          <vue-wangeditor 
-            ref="editor" 
-            id="editor" 
-            v-model="modalFormData.content" 
-            :menus="menu" 
-            height="143" 
-            width="100%"></vue-wangeditor>
+          <vue-wangeditor ref="editor" id="editor" v-model="modalFormData.content" :menus="menu" height="143" width="100%"></vue-wangeditor>
         </FormItem>
         <FormItem>
-          <input 
-            type='submit' 
-            value="提交" 
-            class="timeline-box-form-submit" 
-            @click="submitLog" />
+          <input type='submit' value="提交" class="timeline-box-form-submit" @click="submitLog" />
         </FormItem>
       </Form>
     </div>
@@ -164,9 +149,19 @@
             <span class="customs-tag" v-for="(scope,index) in item.CHANGE_RANGE" :key="index">{{scope}}</span>
           </li>
           <li>
-            备注:<span v-html="item.CONTENT"></span>
+            备注:
+            <span v-html="item.CONTENT"></span>
           </li>
         </ul>
+      </div>
+      <div class="loading-more" v-if="currentPage*10<dataCount">
+        <a @click="handleLoadingMore">
+          <i class="iconfont">&#xe63d;</i>
+          点击加载更多
+        </a>
+      </div>
+      <div v-else class="loading-more">
+          没有更多数据了...x
       </div>
     </div>
   </div>
@@ -174,7 +169,7 @@
 
 <script>
 import { getChangeLog, saveAppLog } from "@/services/appService.js";
-import vueWangeditor from 'vue-wangeditor';
+import vueWangeditor from "vue-wangeditor";
 
 export default {
   name: "ChangeLog",
@@ -223,31 +218,34 @@ export default {
         ]
       },
       menu: [
-        'source',	// 源码模式
-        '|',
-        'bold',	// 粗体
-        'underline',	// 下划线
-        'italic',	// 斜体
-        'strikethrough',	// 中线
-        'eraser',	// 清空格式
-        'forecolor',	// 文字颜色
-        'bgcolor',	// 背景颜色
-        '|',
-        'quote',	// 引用
-        'fontfamily',	// 字体
-        'fontsize',	// 字号
-        'head',	// 标题
-        'unorderlist',	// 无序列表
-        'orderlist',	// 有序列表
-        'alignleft',	// 左对齐
-        'aligncenter',	// 居中
-        'alignright',	// 右对齐
-        '|',
-        'emotion',	// 表情
-        '|',
-        'undo',	// 撤销
-        'redo'	// 重做
-      ]
+        "source", // 源码模式
+        "|",
+        "bold", // 粗体
+        "underline", // 下划线
+        "italic", // 斜体
+        "strikethrough", // 中线
+        "eraser", // 清空格式
+        "forecolor", // 文字颜色
+        "bgcolor", // 背景颜色
+        "|",
+        "quote", // 引用
+        "fontfamily", // 字体
+        "fontsize", // 字号
+        "head", // 标题
+        "unorderlist", // 无序列表
+        "orderlist", // 有序列表
+        "alignleft", // 左对齐
+        "aligncenter", // 居中
+        "alignright", // 右对齐
+        "|",
+        "emotion", // 表情
+        "|",
+        "undo", // 撤销
+        "redo" // 重做
+      ],
+
+      dataCount:0,
+      currentPage: 1
     };
   },
 
@@ -272,12 +270,14 @@ export default {
     submitLog(event) {
       //校验提交的数据是否为空
       let valid;
-      if(this.$refs.editor.getText() === ''){
-        this.$Message.error('必填项请输入！');
-      }else{
-        this.modalFormData.content = document.getElementById('editor').innerHTML;
+      if (this.$refs.editor.getText() === "") {
+        this.$Message.error("必填项请输入！");
+      } else {
+        this.modalFormData.content = document.getElementById(
+          "editor"
+        ).innerHTML;
       }
-      
+
       this.$refs["formValidate"].validate(v => {
         valid = v;
       });
@@ -290,7 +290,7 @@ export default {
         saveAppLog(listId, scope, spendTime, content).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
-            document.getElementById('editor').innerHTML = '';
+            document.getElementById("editor").innerHTML = "";
             this.getChangeLog();
           } else {
             //faild todo
@@ -313,14 +313,30 @@ export default {
             }
           });
           this.logData = res.tableContent;
+          this.dataCount = res.dataCount;
         }
       });
-    }
+    },
+
+    handleLoadingMore(event) {
+      this.currentPage++;
+      getChangeLog(this.listId, this.currentPage).then(res => {
+        if (res.tableContent) {
+          res.tableContent.map(item => {
+            if (item["CHANGE_RANGE"]) {
+              item["CHANGE_RANGE"] = item["CHANGE_RANGE"].split(",");
+            }
+            this.logData.push(item);
+          });
+        }
+      });
+    },
+  
   },
 
   created() {
     this.getChangeLog();
-  }
+  },
 };
 </script>
 

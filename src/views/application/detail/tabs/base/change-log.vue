@@ -161,7 +161,7 @@
         </a>
       </div>
       <div v-else class="loading-more">
-          没有更多数据了...x
+          没有更多数据了...
       </div>
     </div>
   </div>
@@ -213,7 +213,7 @@ export default {
         content: [
           {
             required: true,
-            message: ""
+            message: "不允许为空"
           }
         ]
       },

@@ -11,17 +11,20 @@
                 <strong>最新评论({{pageInfo.total}})</strong>
             </div>
 
-            <comments :comments="comments" :refreshRootComments="refreshComments"></comments>
+            <comments 
+                :isInIframe="true" 
+                :comments="comments" 
+                :refreshRootComments="refreshComments"></comments>
 
             <Page 
-            class="pad20"
-            v-if="pageInfo.total>0"
-            :total="pageInfo.total" 
-            :page-size="pageInfo.limit"
-            :current="pageInfo.page"
-            prev-text="上一页" 
-            next-text="下一页" 
-            @on-change="handlePageChange"/>
+                class="pad20"
+                v-if="pageInfo.total>0"
+                :total="pageInfo.total" 
+                :page-size="pageInfo.limit"
+                :current="pageInfo.page"
+                prev-text="上一页" 
+                next-text="下一页" 
+                @on-change="handlePageChange"/>
        </Row>
   </div>
 </template>
@@ -84,8 +87,9 @@ export default {
 
         getComments(params).then(res=>{
             this.comments = res.tableContent;
-          
             this.pageInfo.total = res.dataCount;
+        }).then(res=>{
+            window.top.setInstaceCommentsIframeHeight();
         });
     },
 

@@ -8,6 +8,7 @@
         <div 
             class="publish-container-content" 
             contenteditable="true" 
+            ref="publishContent"
             v-html="innerText"
             @input="changeTxt" 
             @focus="lock=true" 
@@ -117,7 +118,7 @@
             </span>
         </Col>
         <Col class="publish-bar-right" span="12">
-            <Button  @click.native="send" >发送</Button>
+            <Button  @click.native="handleSend" >发送</Button>
         </Col>
     </Row>
 </div>
@@ -173,7 +174,6 @@ export default {
             imgName: '',
             visible: false,
             uploadList: [],
-            disabledSendBtn:true,
             commentAndReply:false
         };
     },
@@ -182,9 +182,6 @@ export default {
             handler(newValue, oldValue) {
                 if(!this.lock) {
                     this.innerText=this.discContent.txt;
-                };
-                if(newValue.txt){
-                    this.disabledSendBtn = false;
                 }
         　　　},
         　　　deep:true
@@ -197,7 +194,7 @@ export default {
         changeTxt:function(e){
             this.discContent.txt=  e.target.innerHTML
         },
-        send: function() {
+        handleSend: function() {
             let  imgs= this.uploadList.map(img=>{
                     return {
                         attachment:img.url,
@@ -212,12 +209,11 @@ export default {
 
             files = files.concat(imgs);
 
-
             this.handlePublish(this.discContent.txt,files,this.superComment,this.commentAndReply);
 
             this.innerText = '';
             this.discContent.txt = '';
-
+            this.$refs.publishContent.innerText = '';
             this.$refs.upload.clearFiles();
             this.$refs.uploadFile.clearFiles()
             this.uploadList = [];

@@ -143,7 +143,7 @@ export default {
     window.document.getElementsByClassName("detail-content")[0].style.height =
       tabsMaxHeight + "px";
     let groupId =
-      this.$route.name == "add" ? this.$route.name : this.$route.params.groupId;
+      this.$route.name == "company-add" ? "add" : this.$route.params.groupId;
     if ("add" == groupId) {
       return;
     }

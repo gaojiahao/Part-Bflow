@@ -183,8 +183,8 @@ export default {
         if (valid) {
           saveCompanyInfo(data).then(res => {
             let groupId =
-              this.$route.name == "add"
-                ? this.$route.name
+              this.$route.name == "company-add"
+                ? "add"
                 : this.$route.params.groupId;
             if (res[0].groupId) {
               this.$Message.info("保存成功");
@@ -261,8 +261,8 @@ export default {
         if (valid) {
           saveCompanyInfo(data).then(res => {
             let groupId =
-              this.$route.name == "add"
-                ? this.$route.name
+              this.$route.name == "company-add"
+                ? "add"
                 : this.$route.params.groupId;
             if (res[0].groupId) {
               this.$Message.info("保存成功");
@@ -286,9 +286,7 @@ export default {
     updateCompanyData() {
       let baseInfo = this.baseInfoItem;
       let groupId =
-        this.$route.name == "add"
-          ? this.$route.name
-          : this.$route.params.groupId;
+        this.$route.name == "company-add" ? "add" : this.$route.params.groupId;
       let data = {
         groupName: baseInfo.groupName,
         groupShortName: baseInfo.groupShortName,
@@ -316,8 +314,8 @@ export default {
       } else if (this.cacheGroupName != value) {
         let test = { name: "groupName", value: value };
         let id =
-          this.$route.name == "add"
-            ? this.$route.name
+          this.$route.name == "company-add"
+            ? "add"
             : this.$route.params.groupId;
         checkValue(test, id).then(res => {
           if (!res.result == 0) {
@@ -338,8 +336,8 @@ export default {
       } else if (this.cacheShortName != value) {
         let test = { name: "groupShortName", value: value };
         let id =
-          this.$route.name == "add"
-            ? this.$route.name
+          this.$route.name == "company-add"
+            ? "add"
             : this.$route.params.groupId;
         checkValue(test, id).then(res => {
           if (!res.result == 0) {
@@ -365,7 +363,7 @@ export default {
   },
   mounted() {
     let groupId =
-      this.$route.name == "add" ? this.$route.name : this.$route.params.groupId;
+      this.$route.name == "company-add" ? "add" : this.$route.params.groupId;
     if ("add" == groupId) {
       this.isEdit = false;
       this.isAdd = false;

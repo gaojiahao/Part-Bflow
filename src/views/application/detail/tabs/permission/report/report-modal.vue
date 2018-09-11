@@ -424,18 +424,20 @@ export default {
             return item.id;
           })
           .join(",");
-
-      saveViewPermission(this.permissionId, userId, groupId, roleId).then(
-        res => {
-          if (res.success) {
-            this.$Message.success(res.message);
-            let Num = this.emitChange++;
-            this.$emit("reGetData", Num);
-          } else {
-            this.$Message.error(res.message);
-          }
-        }
-      );
+      
+      if(userId || groupId || roleId){
+        saveViewPermission(this.permissionId, userId, groupId, roleId).then(
+            res => {
+              if (res.success) {
+                this.$Message.success(res.message);
+                let Num = this.emitChange++;
+                this.$emit("reGetData", Num);
+              } else {
+                this.$Message.error(res.message);
+              }
+            }
+          );
+      }
     },
 
     //通知父组件modal的状态

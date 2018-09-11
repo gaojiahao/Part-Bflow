@@ -71,6 +71,9 @@
           </div>
         </div>
       </div>
+      <div class="pad20 bg_ff assessmentItem">
+        <Page @on-change="onPageChange" :total="page.total" :current="page.current" :page-size="page.pageSize" prev-text="上一页" next-text="下一页" />
+      </div>
     </div>
   </div>
 </template>
@@ -104,6 +107,11 @@ export default {
       isEdit: "",
       IsEditId: "",
       changeResult: "",
+      page: {
+        total: 0,
+        current: 1,
+        pageSize: 10
+      },
       adminAssessData: {
         duringDate: "",
         result: "",
@@ -210,10 +218,15 @@ export default {
       }
     },
     //获取管理员自评数据
-    getAssessmentData() {
-      getAssessmentByListId(this.listId).then(res => {
+    getAssessmentData(currentPage) {
+      getAssessmentByListId(this.listId,this.page.pageSize,currentPage).then(res => {
         this.assessments = res.tableContent;
+        this.page.total = res.dataCount;
       });
+    },
+    //切换页码
+    onPageChange(currentPage) {
+      this.getAssessmentData(currentPage);
     },
     //格式化日期方法
     formatDate(currentDate) {
@@ -230,7 +243,7 @@ export default {
     }
   },
   created() {
-    this.getAssessmentData();
+    this.getAssessmentData(this.page.current);
   }
 };
 </script>

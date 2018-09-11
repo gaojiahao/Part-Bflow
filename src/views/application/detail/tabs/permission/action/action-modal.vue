@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <Modal v-model="showPermissionModal" title="应用权限" width="1000" :mask-closable="false" @on-ok="submitPermission" @on-visible-change="modalVisibleChange">
+  <Modal v-model="showPermissionModal" title="应用权限" :loading="visibleLoading" width="1000" :mask-closable="false" @on-ok="submitPermission" @on-visible-change="modalVisibleChange">
     <div>
       <Row :gutter="8" style="margin-bottom:10px;">
         <Col span="4">
@@ -155,6 +155,7 @@ export default {
       showOrgModal: false,
       showDepartmentModal: false,
       showPermissionModal: false,
+      visibleLoading: false,
       sameUserData: [],
       userSelectData: [],
       orgSelectData: [],
@@ -270,7 +271,9 @@ export default {
         }
       } else {
         //新增状态清空缓存数据
-        this.getData();
+        if(this.showPermissionModal){
+          this.getData();
+        }
         this.userSelectData = [];
         this.orgSelectData = [];
         this.departmentSelectData = [];
@@ -560,31 +563,38 @@ export default {
           groupId: groupId.join(","),
           permissionId: permissionId.join(",")
         };
-      if (this.isEdit === "edit") {
-        updateMemberPermission(
-          userId.join(","),
-          roleId.join(","),
-          groupId.join(","),
-          permissionId.join(","),
-          this.appListId
-        ).then(res => {
-          if (res.success) {
-            this.$Message.success(res.message);
-            let Num = this.emitChange++;
-            this.$emit("reGetData", Num);
-          }
-        });
-      } else {
-        if (params) {
-          addPermission(params).then(res => {
-            if (res.success) {
-              this.$Message.success(res.message);
-              let Num = this.emitChange++;
-              this.$emit("reGetData", Num);
+        if(userId.length === 0 && roleId.length === 0 && groupId === 0){
+          this.showPermissionModal = true;
+        }else if(permissionId.length === 0){
+          this.showPermissionModal = true;
+        }else{
+          this.showPermissionModal = false;
+          if (this.isEdit === "edit") {
+            updateMemberPermission(
+              userId.join(","),
+              roleId.join(","),
+              groupId.join(","),
+              permissionId.join(","),
+              this.appListId
+            ).then(res => {
+              if (res.success) {
+                this.$Message.success(res.message);
+                let Num = this.emitChange++;
+                this.$emit("reGetData", Num);
+              }
+            });
+          } else {
+            if (params) {
+              addPermission(params).then(res => {
+                if (res.success) {
+                  this.$Message.success(res.message);
+                  let Num = this.emitChange++;
+                  this.$emit("reGetData", Num);
+                }
+              });
             }
-          });
+          }
         }
-      }
     },
     getData() {
       let listId = this.appListId;

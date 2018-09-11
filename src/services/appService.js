@@ -262,8 +262,10 @@ export const openOrForbiddenSubject = (componentId) => request('/corebiz-api/cal
  * @author XiaoYing
  * 管理员自评数据获取
  */
-export const getAssessmentByListId = (listId) => request('/H_roleplay-si/ds/getAssessmentByListId', {
-  listId: listId
+export const getAssessmentByListId = (listId,pageSize,currentPage) => request('/H_roleplay-si/ds/getAssessmentByListId', {
+  listId: listId,
+  limit: pageSize,
+  page: currentPage
 });
 
 /** 

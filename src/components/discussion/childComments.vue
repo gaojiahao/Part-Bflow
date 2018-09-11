@@ -2,30 +2,28 @@
 @import "./childComments.less";
 </style>
 <template>
-    <div class="child-comments">
+    <div class="child-comments font14">
         <div class="child-comments-item" v-for="(comment,index) in  comments" :key="index">
             <p>
                 <my-pop-tip 
-                :userInfo="userInfo" 
-                trigger="click">
+                    :userInfo="userInfo" 
+                    trigger="click">
                     <span 
-                    class="child-comments-user"
-                    @click="showUserInfo(comment.creator)"
-                    slot="userCard">{{comment.creatorName}}
-                </span>
-                </my-pop-tip>
-                
-                <span >:回复</span>
-                <span class="child-comments-user">@</span>
-
-                <my-pop-tip 
-                :userInfo="userInfo" 
-                trigger="click">
-                    <span 
-                    class="child-comments-user"
-                    @click="showUserInfo(comment.replyUserId)"
-                    slot="userCard">{{comment.replyUserName}}
+                        class="child-comments-user"
+                        @click="showUserInfo(comment.creator)"
+                        slot="userCard">{{comment.creatorName}}
                     </span>
+                </my-pop-tip>
+                <span  v-if="comment.parentId!=superComment.id">:回复</span>
+                <my-pop-tip 
+                    v-if="comment.parentId!=superComment.id"
+                    :userInfo="userInfo" 
+                    trigger="click">
+                    <span 
+                        class="child-comments-user"
+                        @click="showUserInfo(comment.replyUserId)"
+                        slot="userCard"><span class="child-comments-user">@</span>{{comment.replyUserName}}
+                        </span>
                 </my-pop-tip>
 
                 <span>:</span>
@@ -53,16 +51,16 @@
                 </span>
             </p>
             <commentPublish 
+                class="reply"
                 v-if="comment.showReply" 
                 :handlePublish="handleReplyPublish" 
                 :superComment="comment" 
                 :allowFile="false"
                 :ischild="true"></commentPublish>
 
-
-            <div class="list-content-item-praises" v-if="comment.showPraises">
+            <div class="praises" v-if="comment.showPraises">
                 <p>共<b>{{comment.praises.length}}</b>人点赞</p>
-                <div class="list-content-item-praises-content">
+                <div class="praises-content">
                     <my-pop-tip :userInfo="userInfo" trigger="click">
                         <img 
                             @click="showUserInfo(p.creator)"
@@ -152,7 +150,7 @@ export default {
                 
             });
         },
-         handleShowReply:function (comment) {
+        handleShowReply:function (comment) {
             this.$forceUpdate();
             this.comments.map(c=>{
                 (c.id != comment.id) && (c.showReply = false);

@@ -38,11 +38,21 @@ export const getLowUserData = (userId, pageSize, currentPage) => request('/H_rol
  * @author XiaoYing
  * @description 获取user部门数据
  */
-export const getDepartmentData = (userId, pageSize, currentPage) => request('/H_roleplay-si/ds/getUserGroupByUserId2', {
+export const getDepartmentData = (userId, pageSize, currentPage) => request('/H_roleplay-si/ds/getOrgByUserId', {
   userId: userId,
   page: currentPage,
   limit: pageSize
 });
+
+/**
+ * @author XiaoYing
+ * @description 设置user默认部门或默认职位
+ */
+export const setUserDefaultDepOrRole = (userId, type, colId) => request('/H_roleplay-si/app/setDefaultRelation', {
+  userId: userId,
+  type: type,
+  colId: colId
+},'POST');
 
 /**
  * @author XiaoYing

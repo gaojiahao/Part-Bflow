@@ -48,6 +48,7 @@
             v-model="showModal"
             @on-ok="addHighUser"
             title="选择用户"
+            :styles="{top: '20px'}"
             width="1000">
             <div class="app-search">
               <Input @on-search="userFilter" :search="true" v-model="searchValue" placeholder="搜索工号或名称" style="width: 300px"></Input>

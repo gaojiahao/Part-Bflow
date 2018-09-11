@@ -71,7 +71,7 @@
           </div>
         </div>
       </div>
-      <div class="pad20 bg_ff assessmentItem">
+      <div v-if="isPage" class="pad20 bg_ff assessmentItem">
         <Page @on-change="onPageChange" :total="page.total" :current="page.current" :page-size="page.pageSize" prev-text="上一页" next-text="下一页" />
       </div>
     </div>
@@ -104,6 +104,7 @@ export default {
       listId: this.$route.params.listId,
       showAssessModal: false,
       isAdminTrue: false,
+      isPage: true,
       isEdit: "",
       IsEditId: "",
       changeResult: "",
@@ -222,6 +223,11 @@ export default {
       getAssessmentByListId(this.listId,this.page.pageSize,currentPage).then(res => {
         this.assessments = res.tableContent;
         this.page.total = res.dataCount;
+        if(res.tableContent.length === 0){
+          this.isPage = false;
+        }else{
+          this.isPage = true;
+        }
       });
     },
     //切换页码

@@ -18,7 +18,7 @@
         </div>
       </div>
     </div>
-    <Modal v-model="showModal" title="选择公司成员" @on-ok="addCompanyMember" width="870">
+    <Modal v-model="showModal" title="选择公司成员" @on-ok="addCompanyMember" :styles="{top: '15px'}" width="870">
       <div class="search">
         <!-- <Input placeholder="请输入工号" class="serach-btn" v-model="userCode" /> -->
         <Input @on-search="search" :search="true" placeholder="请输入姓名" class="search-btn" v-model="searchValue" />

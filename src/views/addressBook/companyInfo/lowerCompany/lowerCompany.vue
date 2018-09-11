@@ -46,7 +46,7 @@
         </div>
       </div>
     </div>
-    <Modal v-model="showModal" title="选择下级公司" @on-ok="addlowerCompany" width="1200">
+    <Modal v-model="showModal" title="选择下级公司" @on-ok="addlowerCompany" :styles="{top: '15px'}" width="1200">
       <div class="search">
         <Input placeholder="请输入公司名称" @on-search="search" :search="true" v-model="groupName" style="width:300px;" />
         <Button type="primary" @click="search" class="search-btn" size="small">查询</Button>

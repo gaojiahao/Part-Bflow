@@ -50,7 +50,13 @@
 </template>
 
 <script>
-import { getDepartmentData,getGroupData,addMember,deleteMember } from "@/services/addressBookService.js";
+import { 
+  getDepartmentData,
+  getGroupData,
+  addMember,
+  deleteMember,
+  setUserDefaultDepOrRole
+ } from "@/services/addressBookService.js";
 
 export default {
   name: "departmentMember",
@@ -102,6 +108,27 @@ export default {
           key: "principalName"
         },
         {
+          title: "默认部门",
+          key: "isDefault",
+          align: "center",
+          render: (h, params) => {
+            let defaultView = false;
+            if (params.row.isDefault === 1) {
+              defaultView = true;
+            }
+            return h("Radio", {
+              props: {
+                value: defaultView
+              },
+              on: {
+                "on-change": e => {
+                  this.onClickDefaultView(params);
+                }
+              }
+            });
+          }
+        },
+        {
           title: '操作',
           key: 'action',
           maxWidth: 120,
@@ -140,6 +167,47 @@ export default {
     };
   },
   methods: {
+    //点击默认部门方法
+    onClickDefaultView(params) {
+      this.$Modal.confirm({
+        title: "确认",
+        content: "确认设置此部门为默认部门？",
+        onOk: () => {
+          this.setDefaultViews(params);
+        },
+        onCancel: () => {
+          this.reRenderDefaultView();
+        }
+      });
+    },
+    //设置默认部门并重新渲染columns
+    setDefaultViews(params) {
+      setUserDefaultDepOrRole(this.userId,'group',params.row.groupId).then(res => {
+        if (res.success) {
+          this.$Message.success(res.message);
+          this.getDepartmentData();
+        }
+      });
+    },
+    //重新渲染默认部门columns方法
+    reRenderDefaultView() {
+      this.columns[4].render = (h, params) => {
+        let defaultView = false;
+        if (params.row.isDefault === 1) {
+          defaultView = true;
+        }
+        return h("Radio", {
+          props: {
+            value: defaultView
+          },
+          on: {
+            "on-change": () => {
+              this.onClickDefaultView(params);
+            }
+          }
+        });
+      };
+    },
     //获取部门数据
     getDepartmentData() {
       if(this.userId){

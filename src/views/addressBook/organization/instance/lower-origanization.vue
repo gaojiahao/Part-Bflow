@@ -127,6 +127,12 @@ export default {
               case "O":
                 groupType = "部门";
                 break;
+              case "D":
+                groupType = "直营店";
+                break;
+              case "J":
+                groupType = "加盟店";
+                break;
               case "G":
                 groupType = "小组";
                 break;
@@ -210,7 +216,9 @@ export default {
                       title: "确认",
                       content: "确认删除此组织？",
                       onOk: () => {
-                        let del = [{ groupId: params.row.groupId, parentId: "" }];
+                        let del = [
+                          { groupId: params.row.groupId, parentId: "" }
+                        ];
                         deleteBatchGroup(del).then(res => {
                           if (res.success) {
                             this.$Message.success("删除成功!");
@@ -253,6 +261,12 @@ export default {
                 break;
               case "O":
                 groupType = "部门";
+                break;
+              case "D":
+                groupType = "直营店";
+                break;
+              case "J":
+                groupType = "加盟店";
                 break;
               case "G":
                 groupType = "小组";
@@ -347,8 +361,8 @@ export default {
       ];
       this.getAllGroup(1, size, filter);
     },
-  
-      //全选
+
+    //全选
     onSelectAll(selection) {
       let obj = {};
       //触发全选事件
@@ -390,9 +404,9 @@ export default {
         return f.groupId !== id;
       });
 
-      this.$refs.selection.data.forEach((item,index) => {
+      this.$refs.selection.data.forEach((item, index) => {
         if (id === item.groupId) {
-          this.$refs.selection.toggleSelect(index)
+          this.$refs.selection.toggleSelect(index);
         }
       });
     },
@@ -423,8 +437,8 @@ export default {
     //显示上级组织模态框
     showLoverOrgModal() {
       this.isShowMemberModal = true;
-       this.searchValue = '';
-       this.onPageSelection = [];
+      this.searchValue = "";
+      this.onPageSelection = [];
       this.getAllGroup(this.listUserCurrentPage);
     },
 
@@ -440,7 +454,7 @@ export default {
           this.isShowMemberModal = false;
           this.reload = true;
           this.$emit("on-lower-organization-change", true);
-        }else{
+        } else {
           this.$Message.error(res.message);
         }
       });
@@ -448,7 +462,7 @@ export default {
     //删除下级组织
     deleteLoverOrg() {
       let delData = [];
-      if(this.selectDeleteLowerOrg.length>0){
+      if (this.selectDeleteLowerOrg.length > 0) {
         this.selectDeleteLowerOrg.forEach(val => {
           delData.push({ groupId: val.groupId, parentId: "" });
         });
@@ -461,8 +475,8 @@ export default {
             }
           });
         }
-      }else{
-        this.$Message.info('请选择要删除的下级组织');
+      } else {
+        this.$Message.info("请选择要删除的下级组织");
       }
     },
 

@@ -177,8 +177,10 @@ export default {
               gender = "女";
             } else if (params.row.gender === 1) {
               gender = "男";
-            } else {
+            } else if (params.row.gender === -1) {
               gender = "未知";
+            } else {
+              gender = params.row.gender;
             }
             return h(
               "span",
@@ -316,6 +318,7 @@ export default {
     showAllMember() {
       this.showModal = true;
       this.onPageSelection = [];
+      this.searchValue = "";
       this.getAllUser();
     },
     //全选

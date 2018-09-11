@@ -291,13 +291,14 @@ export default {
           if (res.success) {
             this.$Message.success(res.message);
             document.getElementById("editor").innerHTML = "";
+            this.modalFormData.scope = [];
             this.getChangeLog();
           } else {
             //faild todo
           }
         });
       }
-    },
+    }, 
 
     /**
      * 获取变更日志

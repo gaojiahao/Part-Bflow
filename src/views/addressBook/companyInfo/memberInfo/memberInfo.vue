@@ -170,7 +170,26 @@ export default {
         {
           title: "性别",
           width: 100,
-          key: "gender"
+          key: "gender",
+          render: (h, params) => {
+            let gender = "";
+            if (params.row.gender === 0) {
+              gender = "女";
+            } else if (params.row.gender === 1) {
+              gender = "男";
+            } else {
+              gender = "未知";
+            }
+            return h(
+              "span",
+              {
+                style: {
+                  color: "#39f"
+                }
+              },
+              gender
+            );
+          }
         },
         {
           title: "手机",

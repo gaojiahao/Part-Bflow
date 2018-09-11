@@ -40,6 +40,8 @@
               <Option value="M">管理层</Option>
               <Option value="A">事业部</Option>
               <Option value="O">部门</Option>
+              <Option value="D">直营店</Option>
+              <Option value="J">加盟店</Option>
               <Option value="G">小组</Option>
             </Select>
           </FormItem>
@@ -65,13 +67,13 @@
           <FormItem label="创建者：" v-if="groupId && isEdit">
             <span>{{ tableContent.creatorName}}</span>
           </FormItem>
-          <FormItem label="创建时间："  v-if="groupId && isEdit">
+          <FormItem label="创建时间：" v-if="groupId && isEdit">
             <span>{{ tableContent.crtTime }}</span>
           </FormItem>
-          <FormItem label="修改者："  v-if="groupId && isEdit">
+          <FormItem label="修改者：" v-if="groupId && isEdit">
             <span>{{ tableContent.modifier}}</span>
           </FormItem>
-          <FormItem label="修改时间：" v-if="groupId && isEdit" >
+          <FormItem label="修改时间：" v-if="groupId && isEdit">
             <span>{{ tableContent.modTime }}</span>
           </FormItem>
 
@@ -187,7 +189,7 @@ export default {
         highGroup: "",
         parentId: ""
       },
-      tableContent:{},
+      tableContent: {},
 
       isEdit: true,
       editBtnName: "编辑",
@@ -288,6 +290,12 @@ export default {
                 break;
               case "O":
                 groupType = "部门";
+                break;
+              case "D":
+                groupType = "直营店";
+                break;
+              case "J":
+                groupType = "加盟店";
                 break;
               case "G":
                 groupType = "小组";

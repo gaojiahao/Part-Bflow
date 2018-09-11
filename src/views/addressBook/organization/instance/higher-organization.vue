@@ -21,7 +21,7 @@
   }
 }
 
-.rfd-table .ivu-table-row-highlight td{
+.rfd-table .ivu-table-row-highlight td {
   background-color: #81b2e59c !important;
 }
 </style>
@@ -102,6 +102,12 @@ export default {
                 break;
               case "O":
                 groupType = "部门";
+                break;
+              case "D":
+                groupType = "直营店";
+                break;
+              case "J":
+                groupType = "加盟店";
                 break;
               case "G":
                 groupType = "小组";
@@ -185,6 +191,12 @@ export default {
                 break;
               case "O":
                 groupType = "部门";
+                break;
+              case "D":
+                groupType = "直营店";
+                break;
+              case "J":
+                groupType = "加盟店";
                 break;
               case "G":
                 groupType = "小组";
@@ -276,7 +288,7 @@ export default {
       let filter = [
         { operator: "like", value: this.searchValue, property: "groupName" }
       ];
-      this.getAllGroup(1, size,filter);
+      this.getAllGroup(1, size, filter);
     },
 
     //监听模态框选中的用户
@@ -296,7 +308,7 @@ export default {
           this.isShowMemberModal = false;
           this.reload = true;
           this.$emit("on-high-organization-change", true);
-        }else{
+        } else {
           this.$Message.error(res.message);
         }
       });
@@ -317,7 +329,7 @@ export default {
     //显示上级组织模态框
     showHighOrgModal() {
       this.isShowMemberModal = true;
-      this.searchValue = '';
+      this.searchValue = "";
       this.getAllGroup(this.listUserCurrentPage, this.pageSize);
     },
 
@@ -334,7 +346,7 @@ export default {
           this.isShowMemberModal = false;
           this.reload = true;
           this.$emit("on-high-organization-change", true);
-        }else{
+        } else {
           this.$Message.error(res.message);
         }
       });

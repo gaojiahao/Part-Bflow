@@ -236,8 +236,10 @@ export const saveAppLog = (listId, scope, spendTime, content) => request('/H_rol
  * @author GUOZHENG
  * 更新日志
  */
-export const getChangeLog = (listId) => request('/H_roleplay-si/ds/getChangeLog', {
-  listId: listId
+export const getChangeLog = (listId,currentPage=1) => request('/H_roleplay-si/ds/getChangeLog', {
+  listId: listId,
+  limit:10,
+  page:currentPage
 });
 
 /** 

@@ -9,7 +9,6 @@ export const getToken = () => {
     }
     return token;
 }
-
 /**
  * @param  {Date} date 日期
  * @param  {} fmt   

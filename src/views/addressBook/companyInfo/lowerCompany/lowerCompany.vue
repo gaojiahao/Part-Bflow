@@ -27,7 +27,7 @@
   height: 100%;
   min-height: 30px;
   background-color: #e6e6e6;
-  // margin-bottom: 10px;
+  margin-bottom: -8px;
   padding: 1px 5px;
 }
 </style>

@@ -70,7 +70,7 @@
                             {{comment.praiseNum}}
                         </span>
 
-                        <span v-if="comment.praises.length>0" >
+                        <span v-if="comment.praiseNum>0" >
                             <Icon 
                                 type="ios-arrow-down" 
                                 size=18 
@@ -120,6 +120,7 @@ import MyPopTip from "@/components/poptip/MyPopTip";
 import commentPublish from "@/components/discussion/publish";
 import childComments from "@/components/discussion/childComments";
 import praises from "@/components/discussion/praises";
+import comments from "./comments";
 export default {
     name:'comments',
     components:{
@@ -163,6 +164,7 @@ export default {
             comment.showPraises = !comment.showPraises;
         },
         handleThumbsUp:function (comment) {
+             this.$forceUpdate();
             commentThumbsUp({commentId:comment.id}).then(res=>{
                 if(!res.success){
                     this.$Notice.warning({
@@ -171,8 +173,12 @@ export default {
                     });
                     return;
                 }
-                this.$refs.praises[0].refreshPraises();
+                
+                if(this.$refs.praises.length>0){
+                     this.$refs.praises[0].refreshPraises();
+                }
                 comment.isPraise = true;
+                comment.praiseNum++;
             });
         },
         handleShowChilds:function (comment) {

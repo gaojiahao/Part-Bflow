@@ -905,7 +905,7 @@ export default {
         }
       });
       this.getObjDetailsCountByGroupId(this.groupId);
-    } else if (!this.groupId && this.$route.name == "add") {
+    } else if (!this.groupId && this.$route.name == "org-add") {
       this.isEdit = false;
       this.actionBtn.forEach(element => {
         if (element.id !== "baseinfo") {

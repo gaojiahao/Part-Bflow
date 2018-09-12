@@ -21,15 +21,21 @@
 
     <img :src="appinfo.icon" :class="'img-radius-'+this.appinfo.type" />
     <div class="content">
-      <a @click.stop="goAppSetting(appinfo)" class="content-detail">详情</a>
-      <h5 @click="redirectTo(appinfo)">{{appinfo.text}}</h5>
-      <span style=" width: 80px;overflow: hidden;text-overflow: ellipsis;display: inline-block;vertical-align: middle;">{{appinfo.administrator?appinfo.transName+' ':appinfo.transName}}</span>
-      <my-pop-tip :userInfo="userInfo" trigger="click">
-        <span @click="showUserInfo" slot="userCard" class="content-admin">{{appinfo.administrator}}</span>
-      </my-pop-tip>
-      <Tooltip content="创建实例" :transfer="true" style="margin-right: 5px;float: right;">
-        <i class="iconfont content-add-instance" @click="handlerAddInstance" v-show="this.appinfo.type === 'obj'||this.appinfo.type === 'business'">&#xe620;</i>
-      </Tooltip>
+      <div class="content-title">
+        <h5 @click="redirectTo(appinfo)">{{appinfo.text}}</h5>
+        <a @click.stop="goAppSetting(appinfo)" class="content-title-detail">详情</a>
+      </div>
+      <div class="content-instance">
+        <span class="content-instance-name">{{appinfo.administrator?appinfo.transName:appinfo.transName}}</span>
+        <Tooltip content="创建实例" :transfer="true" style="margin-right: 5px;float: right;">
+          <i class="iconfont content-instance-add" @click="handlerAddInstance" v-show="this.appinfo.type === 'obj'||this.appinfo.type === 'business'">&#xe620;</i>
+        </Tooltip>
+      </div>
+      <div>
+        <my-pop-tip :userInfo="userInfo" trigger="click">
+          <div @click="showUserInfo" slot="userCard" class="content-admin">{{appinfo.administrator}}</div>
+        </my-pop-tip>
+      </div>
     </div>
   </div>
 </template>
@@ -288,48 +294,57 @@ export default {
   }
 
   .content {
-    cursor: default;
-    font-size: @card-text-font-size;
-    width: 60%;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    z-index: 1;
-    white-space: nowrap;
-    color: #000;
     position: absolute;
     top: 50%;
     left: 80px;
     transform: translateY(-50%);
+    cursor: default;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #000;
 
-    &-detail {
-      display: none;
-      float: right;
-      font-size: 12px;
-    }
-
-    &-add-instance {
-      display: none;
-      color: #0cc348;
-      cursor: pointer;
-    }
-
-    h5 {
-      cursor: pointer;
-      position: relative;
-      z-index: -99;
-      font-size: 16px;
-      text-overflow: ellipsis;
+    &-title {
       overflow: hidden;
+      line-height: 18px;
+      &-detail {
+        float: right;
+        font-size: 12px;
+        display: none;
+      }
+      h5 {
+        display: inline-block;
+        position: relative;
+        width: 100px;
+        cursor: pointer;
+        font-size: 14px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
     }
 
-    span {
-      font-size: 12px;
-      color: #5f5e5e;
+    &-instance {
+      line-height: 14px;
+      &-name {
+        width: 110px;
+        font-size: 12px;
+        color: #5f5e5e;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      &-add {
+        color: #0cc348;
+        cursor: pointer;
+        display: none;
+      }
     }
 
     &-admin {
       color: #4b8cf0 !important;
       cursor: pointer;
+      font-size: 12px;
     }
   }
 
@@ -349,11 +364,11 @@ export default {
 }
 
 .card:hover {
-  .content-detail {
+  .content-title-detail {
     display: inline-block;
   }
 
-  .content-add-instance {
+  .content-instance-add {
     display: inline-block;
   }
   -webkit-transition: box-shadow 0.3s cubic-bezier(0.55, 0, 0.1, 1) 0s;

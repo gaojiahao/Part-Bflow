@@ -350,7 +350,7 @@ export default {
         }
       });
       this.getObjDetailsCountByRoleId(this.jobId);
-    } else if (!this.jobId && this.$route.name == "add") {
+    } else if (!this.jobId && this.$route.name == "job-add") {
       this.isEdit = false;
       this.actionBtn.forEach(element => {
         if (element.id !== "baseinfo") {

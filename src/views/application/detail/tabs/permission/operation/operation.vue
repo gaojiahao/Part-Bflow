@@ -67,7 +67,7 @@ export default {
   methods: {
     //启用禁用动作权限
     isForbidden(list, index) {
-      let actionStatus = list.atype === 0 ? true : false,
+      let actionStatus = list.permType === 0 ? true : false,
         relStatus;
       if (actionStatus) {
         relStatus = -2;
@@ -77,7 +77,7 @@ export default {
       ProhibitApp(list.id, relStatus).then(res => {
         if (res.success) {
           this.$Message.success(res.message);
-          this.actionData[index].atype = relStatus;
+          this.getData();
         }
       });
     },

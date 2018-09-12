@@ -265,6 +265,8 @@ export default {
                 if(res.result === 1){
                     this.checkout = false;
                     this.$Message.error('工号已存在，请重新输入！');
+                }else{
+                    this.checkout = true;
                 }
             })
         }else{
@@ -274,6 +276,8 @@ export default {
                     if(res.result === 1){
                         this.checkout = false;
                         this.$Message.error('工号已存在，请重新输入！');
+                    }else{
+                        this.checkout = true;
                     }
                 })
             }

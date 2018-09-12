@@ -1,5 +1,5 @@
 <template>
-  <div class="card ivu-card ivu-card-bordered">
+  <div class="card ">
     <Poptip class="badge-custom" width="660" placement="right-end" @on-popper-show="popperShow" v-if="type!=='subject'" :transfer="true">
       <Badge :count="taskCount"></Badge>
       <div slot="title">
@@ -269,6 +269,8 @@ export default {
   padding: 10px 12px;
   margin: 10px 0;
   border-radius: 0px;
+  background-color: #fbfbfb !important;
+  box-shadow: 4px 4px 10px #bbb8b8;
   img {
     height: 50px;
     width: 50px;
@@ -316,7 +318,7 @@ export default {
         position: relative;
         width: 100px;
         cursor: pointer;
-        font-size: 14px;
+        font-size: 16px;
         text-overflow: ellipsis;
         overflow: hidden;
       }
@@ -378,15 +380,15 @@ export default {
   box-shadow: 0 15px 10px 0 rgba(0, 0, 0, 0.1), 0 2px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
-.ivu-card {
-  background: #fff;
-  font-size: 16px;
-  position: relative;
-  transition: all 0.2s ease-in-out;
-}
-.ivu-card-bordered {
-  border: 1px solid #dddee1;
-  border-color: #e9eaec;
-  box-shadow: 4px 4px 10px #bbb8b8;
-}
+// .ivu-card {
+//   background: #fff;
+//   font-size: 16px;
+//   position: relative;
+//   transition: all 0.2s ease-in-out;
+// }
+// .ivu-card-bordered {
+//   border: 1px solid #dddee1;
+//   border-color: #e9eaec;
+//   box-shadow: 4px 4px 10px #bbb8b8;
+// }
 </style>

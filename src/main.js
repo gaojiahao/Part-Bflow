@@ -14,10 +14,11 @@ import VueWechatTitle from 'vue-wechat-title';
 
 Vue.config.productionTip = false;
 
-Vue.use(iView);
+Vue.use(iView,{
+  size: 'small'
+});
 Vue.use(VueWechatTitle);
 
-let Hub = new Vue();
 
 if(window.top.r2){
   Vue.prototype.$currentUser = window.top.r2.global.WebContext.currentUser;

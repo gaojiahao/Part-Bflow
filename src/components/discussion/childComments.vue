@@ -56,24 +56,13 @@
                 :handlePublish="handleReplyPublish" 
                 :superComment="comment" 
                 :allowFile="false"
-                :ischild="true"></commentPublish>
-
-            <div class="praises" v-if="comment.showPraises">
-                <p>共<b>{{comment.praises.length}}</b>人点赞</p>
-                <div class="praises-content">
-                    <my-pop-tip :userInfo="userInfo" trigger="click">
-                        <img 
-                            @click="showUserInfo(p.creator)"
-                            slot="userCard"
-                            onerror="src='resources/images/icon/defaultUserPhoto.jpg'"
-                            v-for="(p,index) in comment.praises" 
-                            :key="index" 
-                            :src="p.photo?p.photo:'resources/images/icon/defaultUserPhoto.jpg'" 
-                            width=40>
-                    </my-pop-tip>
-                </div>
-            </div>
-
+                :ischild="true">
+            </commentPublish>
+           
+            <praises :comment="comment" v-if="comment.showPraises"></praises>
+        </div>
+        <div  class="load-more" @click="handleLoadMore" v-if="comments.length !== superComment.childCommentNum"> 
+           查看更多 <Icon type="ios-arrow-down" size=18 />
         </div>
     </div>
 </template>
@@ -91,34 +80,43 @@ import {
 
 import MyPopTip from "@/components/poptip/MyPopTip";
 import commentPublish from "@/components/discussion/publish";
+import praises from "@/components/discussion/praises";
 export default {
     name:'childComments',
     components:{
         MyPopTip,
-        commentPublish
+        commentPublish,
+        praises
     },
     props:{
-        comments:{
-            type:Array,
-            default:function () {
-                return []
-            }
-        },
         superComment:{
             type:Object,
             default:function () {
                 return {}
             }
         },
+        isInIframe:{
+            type:Boolean,
+            default:false
+        }
     },
      data() {
         return {
            userInfo:{},
-           cmtsMap:{}
+           comments:[],
+           childPage:{
+            limit:10, 
+            page:1, 
+            sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
+           }
         };
     },
     methods:{
-         handlerShowThumbsUpInfo:function (comment) {
+        handleLoadMore:function () {
+            this.childPage.limit = (this.childPage.page+1)*this.childPage.limit
+            this.refreshComments();
+        },
+        handlerShowThumbsUpInfo:function (comment) {
             this.$forceUpdate();
             this.comments.map(c=>{
                 (c.id != comment.id) && (c.showPraises = false);
@@ -168,7 +166,6 @@ export default {
                 commentAttachments:uploadList,
                 commentAndReply:commentAndReply
             };
-
             saveComment(comment).then(res=>{
                 if(!res.success){
                     this.$Notice.warning({
@@ -177,16 +174,8 @@ export default {
                     });
                     return;
                 }
-                var params = {
-                    parentId:this.superComment.id,  
-                    limit:50, 
-                    page:1, 
-                    sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
-                };
-                this.getLowerComments(params,this.superComment);
+                this.refreshComments();
             });
-            
-           
         },
         showUserInfo(userId) {
             getUserInfoByUserId(userId).then(res => {
@@ -195,16 +184,23 @@ export default {
                 }
             });
         },
-         getLowerComments:function (params,comment) {
+        refreshComments:function () {
+            var params = {
+                parentId: this.superComment.id
+            };
+            params = Object.assign(params,this.childPage);
+
             getCommentsByParentId(params).then(res=>{
-                comment.childComment = res.tableContent;
-                comment.childCommentNum = res.dataCount;
+                this.comments = res.tableContent;
+                this.superComment.childCommentNum = res.dataCount;
+            }).then(res=>{
+                if(this.isInIframe)  window.top.setInstaceCommentsIframeHeight();
             });
         }
         
     },
     mounted(){
-       
+        this.refreshComments();
     }
 }
 </script>

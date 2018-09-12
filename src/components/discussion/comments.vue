@@ -4,7 +4,8 @@
 <template>
 <div class="comments">
     <div class="commnets-content">
-        <Row class="comments-content-item" 
+        <Row 
+            class="comments-content-item" 
             v-for="(comment,index) in comments" 
             :key="index">
 
@@ -23,8 +24,7 @@
 
                 <p><b>{{comment.creatorName}}</b></p>
 
-                <div class="comments-content-item-content-text" 
-                    v-html="comment.content">
+                <div class="comments-content-item-content-text" v-html="comment.content">
                 </div>
 
                 <div class="comments-content-item-img" v-if="comment.commentAttachments.length>0">
@@ -63,19 +63,22 @@
                         <span class="cursor-pointer" @click="handleShowReply(comment)"> 回复</span>
                         
                         <span v-bind:class="{ 'comment-isPraise': comment.isPraise }">
-                            <Icon type="md-thumbs-up" size=18  
-                            @click.native="handleThumbsUp(comment)"/>
+                            <Icon 
+                                type="md-thumbs-up" 
+                                size=18  
+                                @click.native="handleThumbsUp(comment)"/>
                             {{comment.praiseNum}}
                         </span>
 
-                            <span v-if="comment.praises.length>0" >
-                            <Icon type="ios-arrow-down" size=18 
-                            @click.native="handlerShowThumbsUpInfo(comment)"  />
+                        <span v-if="comment.praises.length>0" >
+                            <Icon 
+                                type="ios-arrow-down" 
+                                size=18 
+                                @click.native="handlerShowThumbsUpInfo(comment)"  />
                         </span>
                     </span>
                 </div>
 
-                
                 <div  v-if="comment.showReply || comment.showChilds" 
                     class="comments-content-item-content-reply">
                     <commentPublish 
@@ -83,32 +86,20 @@
                         :handlePublish="handleReplyPublish" 
                         :superComment="comment" 
                         :ischild="true"
-                        :allowFile="false"></commentPublish>
+                        :allowFile="false">
+                    </commentPublish>
 
                     <child-comments 
                         class="martop5"
+                        ref="childComments"
                         v-if="comment.showChilds" 
                         :superComment ="comment"
-                        :comments="comment.childComment"></child-comments>
+                        :isInIframe="isInIframe"
+                        >
+                    </child-comments>
                 </div>
 
-                <div class="comments-content-item-praises" v-if="comment.showPraises">
-                    <p>共<b>{{comment.praiseNum}}</b>人点赞</p>
-                    <div class="comments-content-item-praises-content">
-                        <my-pop-tip :userInfo="userInfo" trigger="click">
-                            <img 
-                                @click="showUserInfo(p.creator)"
-                                slot="userCard"
-                                onerror="src='resources/images/icon/defaultUserPhoto.jpg'"
-                                v-for="(p,index) in comment.praises" 
-                                :key="index" 
-                                :src="p.photo?p.photo:'resources/images/icon/defaultUserPhoto.jpg'" 
-                                width=40>
-                        </my-pop-tip>
-                    </div>
-                </div>
-
-                
+                <praises  ref="praises" :comment="comment" v-if="comment.showPraises"></praises>
             </Col>
         </Row>
     </div>
@@ -120,27 +111,22 @@
 
 import { 
     commentThumbsUp,
-    getCommentThumbaUps,
     saveComment,
     getComments,
-    getCommentsByParentId,
     getUserInfoByUserId
     } from "@/services/appService.js";
 
 import MyPopTip from "@/components/poptip/MyPopTip";
 import commentPublish from "@/components/discussion/publish";
 import childComments from "@/components/discussion/childComments";
-import thumbsup from "@/components/discussion/thumbsup";
-
-import comments from "./comments";
+import praises from "@/components/discussion/praises";
 export default {
     name:'comments',
     components:{
         commentPublish,
-        comments,
         MyPopTip,
         childComments,
-        thumbsup
+        praises
     },
     props:{
         comments:{
@@ -152,6 +138,10 @@ export default {
         allowReply:{
             type: Boolean,
             default: true
+        },
+        isInIframe:{
+            type:Boolean,
+            default:false
         }
     },
     data() {
@@ -171,17 +161,6 @@ export default {
                 comment.showChilds = false;
             });
             comment.showPraises = !comment.showPraises;
-            var params = {
-                    commentId:comment.id,  
-                    limit:50, 
-                    page:1, 
-                    sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
-            }
-            comment.isPraise = true;
-            getCommentThumbaUps(params).then(res=>{
-                comment.praises = res.tableContent;
-                comment.praiseNum = res.dataCount;
-            });
         },
         handleThumbsUp:function (comment) {
             commentThumbsUp({commentId:comment.id}).then(res=>{
@@ -192,52 +171,28 @@ export default {
                     });
                     return;
                 }
-
-                var params = {
-                        commentId:comment.id,  
-                        limit:50, 
-                        page:1, 
-                        sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
-                }
+                this.$refs.praises[0].refreshPraises();
                 comment.isPraise = true;
-                getCommentThumbaUps(params).then(res=>{
-                    comment.praises = res.tableContent;
-                    comment.praiseNum = res.dataCount;
-                });
-                
             });
         },
         handleShowChilds:function (comment) {
             this.$forceUpdate();
             this.comments.map(c=>{
-                (c.id != comment.id) && (c.showReply = false);
-                comment.showPraises = false;
+                if(c.id != comment.id){
+                    c.showReply = false;
+                    c.showChilds = false;
+                }
+                c.showPraises = false;
             });
-
             comment.showChilds = !comment.showChilds;
-
-             var params = {
-                parentId:comment.id,  
-                limit:1, 
-                page:1, 
-                sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
-            };
-           this.getLowerComments(params,comment);
-
         },
         handleShowReply:function (comment) {
             this.$forceUpdate();
             this.comments.map(c=>{
                 (c.id != comment.id) && (c.showReply = false);
                 c.showPraises = false;
-                c.showChilds = false;
             });
-
             comment.showReply = !comment.showReply;
-            
-            if(!comment.showReply || comment.childCommentNum===0) return;
-
-           
         },
         handleReplyPublish:function (content,uploadList,superComment,commentAndReply) {
             this.$forceUpdate();
@@ -260,17 +215,8 @@ export default {
                     });
                     return;
                 }
-
-                var params = {
-                    parentId:superComment.id,  
-                    limit:50, 
-                    page:1, 
-                    sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
-                };
-                this.getLowerComments(params,superComment);
+                this.$refs.childComments[0].handleLoadMore();
             });
-            
-           
         },
         handleViewFile:function (file) {
           window.open(file.attachment)  
@@ -280,12 +226,6 @@ export default {
                 if (res.dataCount) {
                 this.userInfo = res.tableContent[0];
                 }
-            });
-        },
-        getLowerComments:function (params,comment) {
-            getCommentsByParentId(params).then(res=>{
-                comment.childComment = res.tableContent;
-                comment.childCommentNum = res.dataCount;
             });
         }
     },

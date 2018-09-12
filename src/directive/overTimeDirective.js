@@ -43,7 +43,8 @@ function render(el, bind) {
         } 
         return  diffSeconds + '秒前'; 
     }
-    el.innerText = calcTimeDiff(new Date(bind.value.time),new Date());
+   
+    el.innerText = calcTimeDiff(new Date(Date.parse(bind.value.time.replace(/-/g, "/"))),new Date());
 }
 const overTimeDirective = {
     componentUpdated: function (el, binding) {

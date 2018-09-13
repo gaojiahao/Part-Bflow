@@ -39,9 +39,9 @@
                         type="md-thumbs-up" 
                         size=18  
                         @click="handleThumbsUp(comment)"/>
-                        {{comment.praises.length}}
+                        {{comment.praiseNum}}
                     </span>
-                    <span  class="cursor-pointer" v-if="comment.praises.length>0" >
+                    <span  class="cursor-pointer" v-if="comment.praiseNum>0" >
                         <Icon 
                         type="ios-arrow-down" 
                         size=18 
@@ -59,10 +59,13 @@
                 :ischild="true">
             </commentPublish>
            
-            <praises :comment="comment" v-if="comment.showPraises"></praises>
+            <praises ref="praises" :comment="comment" v-if="comment.showPraises"></praises>
         </div>
-        <div  class="load-more" @click="handleLoadMore" v-if="comments.length !== superComment.childCommentNum"> 
-           查看更多 <Icon type="ios-arrow-down" size=18 />
+        <div  
+            class="load-more" 
+            @click="handleLoadMore" 
+            v-if="showloadMore"> 查看更多 
+            <Icon type="ios-arrow-down" size=18 />
         </div>
     </div>
 </template>
@@ -71,9 +74,7 @@
 
 import { 
     commentThumbsUp,
-    getCommentThumbaUps,
     saveComment,
-    getComments,
     getCommentsByParentId,
     getUserInfoByUserId
     } from "@/services/appService.js";
@@ -107,8 +108,9 @@ export default {
            childPage:{
             limit:10, 
             page:1, 
-            sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
-           }
+            sort:JSON.stringify([{property:"crtTime",direction:"ASC"}])
+           },
+           showloadMore:false
         };
     },
     methods:{
@@ -125,6 +127,7 @@ export default {
             comment.showPraises = !comment.showPraises;
         },
         handleThumbsUp:function (comment) {
+            this.$forceUpdate();
             let commentId = comment.id;
             commentThumbsUp({commentId:commentId}).then(res=>{
                 if(!res.success){
@@ -135,16 +138,11 @@ export default {
                     return;
                 }
 
-                var params = {
-                        commentId:commentId,  
-                        limit:50, 
-                        page:1, 
-                        sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
+               if(this.$refs.praises){
+                    (this.$refs.praises.length>0) && (this.$refs.praises[0].refreshPraises());
                 }
                 comment.isPraise = true;
-                getCommentThumbaUps(params).then(res=>{
-                    comment.praises = res.tableContent;
-                });
+                comment.praiseNum++;
                 
             });
         },
@@ -158,6 +156,7 @@ export default {
             comment.showReply = !comment.showReply;
         },
         handleReplyPublish:function (content,uploadList,superComment,commentAndReply) {
+             this.$forceUpdate();
             let comment ={
                 type:superComment.type,       
                 content:content, 
@@ -174,17 +173,19 @@ export default {
                     });
                     return;
                 }
+                comment.showReply = false;
                 this.refreshComments();
             });
         },
         showUserInfo(userId) {
             getUserInfoByUserId(userId).then(res => {
                 if (res.dataCount) {
-                this.userInfo = res.tableContent[0];
+                    this.userInfo = res.tableContent[0];
                 }
             });
         },
         refreshComments:function () {
+             this.$forceUpdate();
             var params = {
                 parentId: this.superComment.id
             };
@@ -193,6 +194,9 @@ export default {
             getCommentsByParentId(params).then(res=>{
                 this.comments = res.tableContent;
                 this.superComment.childCommentNum = res.dataCount;
+                if(this.comments.length<res.dataCount){
+                    this.showloadMore = true;
+                }
             }).then(res=>{
                 if(this.isInIframe)  window.top.setInstaceCommentsIframeHeight();
             });

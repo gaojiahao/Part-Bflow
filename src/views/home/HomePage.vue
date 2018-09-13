@@ -189,6 +189,7 @@ export default {
   .ivu-col-span-4 {
     display: block !important;
     width: 90% !important;
+    padding: unset !important;
   }
 }
 
@@ -196,6 +197,7 @@ export default {
   .ivu-col-span-4 {
     display: block !important;
     width: 50% !important;
+    padding: unset !important;
   }
 }
 
@@ -203,6 +205,7 @@ export default {
   .ivu-col-span-4 {
     display: block !important;
     width: 33.333333% !important;
+     padding: unset !important;
   }
 }
 
@@ -210,6 +213,7 @@ export default {
   .ivu-col-span-4 {
     display: block !important;
     width: 25% !important;
+     padding: unset !important;
   }
 }
 
@@ -217,6 +221,7 @@ export default {
   .ivu-col-span-4 {
     display: block !important;
     width: 20% !important;
+     padding: unset !important;
   }
 }
 
@@ -229,7 +234,7 @@ export default {
 
 .bg-gray-lighter {
   background-color: #f0f0f0;
-  padding: 0 10%;
+  padding: 0 8%;
 }
 
 .bg-white-lighter {

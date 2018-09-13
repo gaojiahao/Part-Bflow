@@ -1,18 +1,30 @@
 <template>
   <div class="card ">
-    <Poptip class="badge-custom" width="660" placement="right-end" @on-popper-show="popperShow" v-if="type!=='subject'" :transfer="true">
+    <Poptip 
+      class="badge-custom" 
+      width="660" 
+      placement="right-end" 
+      @on-popper-show="popperShow" 
+      v-if="type!=='subject'" 
+      :transfer="true">
       <Badge :count="taskCount"></Badge>
       <div slot="title">
         <h3>{{appinfo.text+' - 待办任务'}}</h3>
       </div>
+
       <div slot="content" class="api">
         <Table :columns="columns" :data="columnData" size="small"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
-            <Page :total="pageTotal" :current="currentPage" size="small" :page-size="pageSize" @on-change="changeCurrentPage" show-total></Page>
-          </div>
+            <Page 
+              :total="pageTotal" 
+              :current="currentPage" 
+              size="small" 
+              :page-size="pageSize" 
+              @on-change="changeCurrentPage" show-total>
+            </Page>
+          </div>  
         </div>
-
       </div>
     </Poptip>
     <div class="badge-custom" @click="redirectTo(appinfo)">
@@ -21,21 +33,26 @@
 
     <img :src="appinfo.icon" :class="'img-radius-'+this.appinfo.type" />
     <div class="content">
+
       <div class="content-title">
         <h5 @click="redirectTo(appinfo)">{{appinfo.text}}</h5>
         <a @click.stop="goAppSetting(appinfo)" class="content-title-detail">详情</a>
       </div>
+
       <div class="content-instance">
-        <span class="content-instance-name">{{appinfo.administrator?appinfo.transName:appinfo.transName}}</span>
-        <Tooltip content="创建实例" :transfer="true" style="margin-right: 5px;float: right;">
-          <i class="iconfont content-instance-add" @click="handlerAddInstance" v-show="this.appinfo.type === 'obj'||this.appinfo.type === 'business'">&#xe620;</i>
-        </Tooltip>
-      </div>
-      <div>
-        <my-pop-tip :userInfo="userInfo" trigger="click">
+
+        <span class="content-instance-name fl marright10" >{{appinfo.administrator?appinfo.transName:appinfo.transName}}</span>
+
+        <my-pop-tip :userInfo="userInfo" class="fl marright10" trigger="click" v-if="appinfo.administrator">
           <div @click="showUserInfo" slot="userCard" class="content-admin">{{appinfo.administrator}}</div>
         </my-pop-tip>
+
+        <Tooltip content="创建实例"  class="fl" :transfer="true" >
+          <i class="iconfont content-instance-add"  @click="handlerAddInstance" v-show="this.appinfo.type === 'obj'||this.appinfo.type === 'business'">&#xe620;</i>
+        </Tooltip>
+
       </div>
+     
     </div>
   </div>
 </template>
@@ -327,18 +344,19 @@ export default {
     &-instance {
       line-height: 14px;
       &-name {
-        width: 110px;
-        font-size: 12px;
+        // width: 110px;
+        // font-size: 12px;
         color: #5f5e5e;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: inline-block;
-        vertical-align: middle;
+        // overflow: hidden;
+        // text-overflow: ellipsis;
+        // display: inline-block;
+        // vertical-align: middle;
       }
 
       &-add {
         color: #0cc348;
         cursor: pointer;
+        font-size: 14px;
         display: none;
       }
     }

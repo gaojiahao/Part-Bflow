@@ -19,6 +19,7 @@
         <Col class="publish-bar-left" span="12">
             <Poptip 
             placement="bottom-start" 
+            v-model="faceVisible"
             width="400">
                 <Icon 
                     class="choice-face" 
@@ -41,6 +42,7 @@
                     type="md-images" 
                     class="choice-img"  
                     size=24 />图片
+                    <span v-if="uploadList.length>0">({{uploadList.length}})</span>
                     <div class="api" slot="content" >
                         <p class="lh25">
                             <span><b>本地上传</b></span>
@@ -174,7 +176,8 @@ export default {
             imgName: '',
             visible: false,
             uploadList: [],
-            commentAndReply:false
+            commentAndReply:false,
+            faceVisible:false
         };
     },
     watch:{
@@ -190,6 +193,7 @@ export default {
     methods: {
         choice_face: function(n) {
             this.discContent.txt  =   this.discContent.txt + '<img src="'+ n+'" width="20">';
+            this.faceVisible = false;
         },
         changeTxt:function(e){
             this.discContent.txt=  e.target.innerHTML

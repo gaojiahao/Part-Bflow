@@ -164,7 +164,7 @@ export default {
             comment.showPraises = !comment.showPraises;
         },
         handleThumbsUp:function (comment) {
-             this.$forceUpdate();
+            this.$forceUpdate();
             commentThumbsUp({commentId:comment.id}).then(res=>{
                 if(!res.success){
                     this.$Notice.warning({
@@ -174,8 +174,8 @@ export default {
                     return;
                 }
                 
-                if(this.$refs.praises.length>0){
-                     this.$refs.praises[0].refreshPraises();
+                if(this.$refs.praises){
+                    (this.$refs.praises.length>0) && (this.$refs.praises[0].refreshPraises());
                 }
                 comment.isPraise = true;
                 comment.praiseNum++;
@@ -197,6 +197,7 @@ export default {
             this.comments.map(c=>{
                 (c.id != comment.id) && (c.showReply = false);
                 c.showPraises = false;
+                c.showChilds = false;
             });
             comment.showReply = !comment.showReply;
         },
@@ -212,7 +213,7 @@ export default {
             };
 
             superComment.showChilds = true;
-
+        
             saveComment(comment).then(res=>{
                 if(!res.success){
                     this.$Notice.warning({
@@ -221,6 +222,8 @@ export default {
                     });
                     return;
                 }
+                superComment.showReply = false;
+                
                 this.$refs.childComments[0].handleLoadMore();
             });
         },

@@ -127,7 +127,7 @@
           <vue-wangeditor ref="editor" id="editor" v-model="modalFormData.content" :menus="menu" height="143" width="100%"></vue-wangeditor>
         </FormItem>
         <FormItem>
-          <input type='submit' value="提交" class="timeline-box-form-submit" @click="submitLog" />
+          <input type='button' value="提交" class="timeline-box-form-submit" @click="submitLog" />
         </FormItem>
       </Form>
     </div>

@@ -1,9 +1,9 @@
-<style lang="less">
+<style lang="less" scoped>
     @import "./praises.less";
 </style>
 <template>
    <div class="praises" >
-        <p>共<b>{{praises.length}}</b>人点赞</p>
+        <p>共<b>{{comment.praiseNum}}</b>人点赞</p>
         <div class="praises-content">
             <span>
             <my-pop-tip 
@@ -19,6 +19,10 @@
                     width=40>
             </my-pop-tip>
         </span>
+        </div>
+        <div class="pageBar">
+            <Button  @click="handlePre" v-if="pageInfo.page>1">上一页</Button>
+            <Button @click="handleNext" v-if="pageInfo.page<Math.ceil(comment.praiseNum/20)">下一页</Button>
         </div>
     </div>
 </template>
@@ -42,27 +46,36 @@ export default {
     data(){
         return {
             praises:[],
-            userInfo:{}
+            userInfo:{},
+            pageInfo:{
+                commentId:this.comment.id,  
+                limit:20, 
+                page:1, 
+                sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
+            }
         };
     },
     methods: {
         refreshPraises:function () {
-            var params = {
-                commentId:this.comment.id,  
-                limit:50, 
-                page:1, 
-                sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
-            }
-            getCommentThumbaUps(params).then(res=>{
+            getCommentThumbaUps(this.pageInfo).then(res=>{
                 this.praises = res.tableContent;
+                this.comment.praiseNum = res.dataCount;
             });
         },
         showUserInfo(userId) {
             getUserInfoByUserId(userId).then(res => {
                 if (res.dataCount) {
-                this.userInfo = res.tableContent[0];
+                    this.userInfo = res.tableContent[0];
                 }
             });
+        },
+        handlePre:function () {
+            this.pageInfo.page--;
+            this.refreshPraises();
+        },
+        handleNext:function () {
+            this.pageInfo.page++;
+            this.refreshPraises();
         }
     },
     mounted(){

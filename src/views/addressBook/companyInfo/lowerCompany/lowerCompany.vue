@@ -181,7 +181,7 @@ export default {
         this.companyLoading = false;
       });
     },
-    //获取上级公司信息
+    //获取下级公司信息
     getlowerCompanyData() {
       let target = 2;
       this.lowerLoading = true;
@@ -196,7 +196,7 @@ export default {
         this.lowerLoading = false;
       });
     },
-    //选择上级公司
+    //选择下级公司
     onSelectionChange(selection) {
       //取消全选
       if (selection.length === 0) {
@@ -249,13 +249,14 @@ export default {
     showCompanyModal() {
       this.showModal = true;
       this.getAllCompanyList();
+      this.onPageSelection = [];
     },
-    //上级公司页数改变
+    //下级公司页数改变
     onPageSizeChange(size) {
       this.highCompanyPageSize = size;
       this.getlowerCompanyData();
     },
-    //上级公司页码改变
+    //下级公司页码改变
     onPageChange(currentPage) {
       this.highCompanyCurrentPage = currentPage;
       this.getlowerCompanyData();

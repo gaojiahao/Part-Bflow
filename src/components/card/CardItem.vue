@@ -351,9 +351,9 @@ export default {
   }
 
   .badge-custom {
-    top: -13px;
+    top: 0px;
     cursor: pointer;
-    left: -10px;
+    left: 0px;
     z-index: 10;
     position: absolute;
     transform: translateX(0);

@@ -64,11 +64,11 @@
           </FormItem>
 
         </Form>
-        <div class="baseinfo-container-action">
-          <input type='submit' value="关闭" style="background-color:rgb(81, 90, 110)" class="baseinfo-container-action-submit" @click="cancle" />
-          <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" @click="edit" v-if="jobId" />
-          <input type='submit' value="保存" class="baseinfo-container-action-submit" @click="save" v-show="!isEdit" />
-          <input type='submit' value="保存并新建" class="baseinfo-container-action-submit" v-if="!jobId" @click="saveAndAdd" />
+        <div class="baseinfo-container-action" @click="handleSubmitBoxs">
+          <input type='submit' value="关闭" style="background-color:rgb(81, 90, 110)" class="baseinfo-container-action-submit" id="close" />
+          <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" id="edit" v-if="jobId" />
+          <input type='submit' value="保存" class="baseinfo-container-action-submit" id="save" v-show="!isEdit" />
+          <input type='submit' value="保存并新建" class="baseinfo-container-action-submit" id="saveAndAdd" v-if="!jobId"/>
         </div>
       </section>
       <!-- 成员信息 -->
@@ -185,21 +185,33 @@ export default {
       this.actionIndex = index;
     },
 
-    cancle() {
-      let that = this;
-      that.$Modal.confirm({
-        title: "提示",
-        content: "是否关闭当前页面",
-        closable: true,
-        onOk: function() {
-          location.href = "/Site/index.html#page/jobs";
+    //按钮事件委托给父元素处理
+    handleSubmitBoxs(event) {
+      let target = event.target || event.srcElement;
+      if (target.nodeName.toLocaleLowerCase() === "input") {
+        switch (target.id) {
+          case "close":
+            this.$Modal.confirm({
+              title: "提示",
+              content: "是否关闭当前页面",
+              closable: true,
+              onOk: function() {
+                location.href = "/Site/index.html#page/jobs";
+              }
+            });
+            break;
+          case "edit":
+            this.isEdit = !this.isEdit;
+            this.editBtnName = this.isEdit ? "编辑" : "放弃编辑";
+            break;
+          case "save":
+            this.save();
+            break;
+          case "saveAndAdd":
+            this.saveAndAdd();
+            break;
         }
-      });
-    },
-
-    edit() {
-      this.isEdit = !this.isEdit;
-      this.editBtnName = this.isEdit ? "编辑" : "放弃编辑";
+      }
     },
 
     saveAndAdd() {

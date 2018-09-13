@@ -9,7 +9,7 @@
             <Row  class="rfd-card-container">
                 <Col span="3" class="rfd-card-left">
                 <!--  -->
-                    <img :src="user.photo || 'resources/images/icon/default_profile_bigger.png'" class="rfd-card-img" @click="goDetail(user)">
+                    <img :src="user.photo || 'resources/images/icon/defaultUserPhoto.jpg'" class="rfd-card-img" @click="goDetail(user)">
                 </Col>
                 <Col span="17" class="rfd-card-content">
                     <h5 class="text-nowrap font14">{{ user.nickname }}

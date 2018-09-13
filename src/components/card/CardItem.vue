@@ -283,6 +283,7 @@ export default {
 
 .card {
   height: 70px;
+  width: 230px;
   padding: 10px 12px;
   margin: 10px 0;
   border-radius: 0px;

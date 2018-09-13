@@ -129,13 +129,13 @@ export default {
         result: [
           {
             required: true,
-            message: ""
+            message: " "
           }
         ],
         opportunity: [
           {
             required: true,
-            message: ""
+            message: " "
           }
         ]
       },

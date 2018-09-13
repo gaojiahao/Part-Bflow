@@ -25,7 +25,7 @@
   }
 }
 
-.page-selection-warp {
+.page-selection-box {
   width: 100%;
   height: 100%;
   min-height: 30px;
@@ -70,7 +70,7 @@
           </div>
         </div>
       </div>
-      <div class="page-selection-warp" v-show="onPageSelection[0] ">
+      <div class="page-selection-box" v-show="onPageSelection[0] ">
         <Tag v-for="item in onPageSelection" :key="item.userId" :userId="item.userId" :closable="true" @on-close="deletePageSelection" type="border" color="primary" size="small">
           {{item.nickname}}
         </Tag>

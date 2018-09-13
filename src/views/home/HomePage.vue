@@ -1,24 +1,12 @@
 <template>
 
-  <div class="wrap">
+  <div class="wrap bg_ff">
     <Spin size="large" fix v-if="spinShow"></Spin>
-    <div class="main-header">
+    <div class="main-header bg_ff">
       <div class="main-header-nav">
         <Row>
           <Col span="24">
           <ButtonGroup class="fr">
-            <!-- <Button size="small" @click="goAppManage" type="ghost" caseId='apps' v-if="isAdmin">
-              <i class="iconfont">&#xe6cf;</i>
-              应用管理
-            </Button> -->
-            <!-- <Button size="small" @click="changeView" caseId='apps' v-bind:class="caseId==='apps'?'ivu-btn-active':''">
-              <i class="iconfont">&#xe608;</i>
-              全部应用
-            </Button> -->
-            <!-- <Button size="small" v-for="(pulse,i) in  pulseGraphLlistr" :key="i" type="ghost" @click="changeView" :caseId="pulse.id" v-bind:class="caseId===pulse.id?'ivu-btn-active':''">
-              <i class="iconfont">&#xe64c;</i>
-              {{pulse.name}}
-            </Button> -->
             <Icon :type="model==='apps'?'ios-apps':'md-share'" size="16" />
             <Select v-model="model" class="input-select" @on-change="changeView" placeholder="请选择业务单元" style="width:230px;font-size:16px">
               <Option value="apps">
@@ -34,7 +22,7 @@
       </div>
     </div>
     <div v-if="cutView&&caseId==='apps'">
-      <section v-for="(menuList,i) in menuList" :key="i" class="bg-gray-lighter">
+      <section v-for="(menuList,i) in menuList" :key="i" class="bg-white-lighter">
 
         <row class="menu-group">
           <row>
@@ -237,7 +225,6 @@ export default {
   position: relative;
   height: 100%;
   width: 100%;
-  background-color: #ddd;
 }
 
 .bg-gray-lighter {
@@ -272,7 +259,6 @@ export default {
   height: 40px;
   width: 100%;
   padding: 0 10%;
-  background-color: #f0f0f0;
   z-index: 997;
   padding: 5px;
   &-nav {
@@ -318,7 +304,6 @@ export default {
   .ivu-select-selection {
     height: 30px !important;
     border-radius: 0px !important;
-    background-color: #f0f0f0 !important;
   }
 }
 </style>

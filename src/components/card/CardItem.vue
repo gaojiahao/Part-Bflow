@@ -47,7 +47,7 @@
           <div @click="showUserInfo" slot="userCard" class="content-admin">{{appinfo.administrator}}</div>
         </my-pop-tip>
 
-        <Tooltip content="创建实例"  class="fl" :transfer="true" >
+        <Tooltip content="创建实例"  class="fr" :transfer="true" >
           <i class="iconfont content-instance-add"  @click="handlerAddInstance" v-show="this.appinfo.type === 'obj'||this.appinfo.type === 'business'">&#xe620;</i>
         </Tooltip>
 
@@ -287,6 +287,7 @@ export default {
   padding: 10px 12px;
   margin: 10px 0;
   border-radius: 0px;
+  border: 1px solid #f0f0f0;
   background-color: #fbfbfb !important;
   box-shadow: 4px 4px 10px #bbb8b8;
   img {
@@ -329,7 +330,7 @@ export default {
       &-detail {
         float: right;
         font-size: 12px;
-        display: none;
+        // display: none;
       }
       h5 {
         display: inline-block;
@@ -358,7 +359,7 @@ export default {
         color: #0cc348;
         cursor: pointer;
         font-size: 14px;
-        display: none;
+        // display: none;
       }
     }
 

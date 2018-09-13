@@ -17,7 +17,7 @@
               <slot></slot>
             </div>
           </main>
-          <footer class="modal-content-footer" :class="inputAlign">
+          <footer class="modal-content-footer" :class="inputAlign" v-show="!footerHide">
             <slot name="footer">
               <input type="submit" value="取消" class="input-submit-cancel" @click.prevent="cancel" />
               <input type="submit" value="确定" class="input-submit-ok" @click.prevent="ok" />
@@ -67,12 +67,17 @@ export default {
     transfer: {
       type: Boolean,
       default: true
-    }
+    },
+
+    footerHide: {
+      type: Boolean,
+      default: false
+    },
   },
 
   data() {
     return {
-      visible: this.value
+      visible: this.value,
     };
   },
 
@@ -198,7 +203,7 @@ export default {
 
     .modal-content-body {
       position: relative;
-      padding: @padding-modal;
+      padding: 1px 15px;
     }
 
     .modal-content-footer {

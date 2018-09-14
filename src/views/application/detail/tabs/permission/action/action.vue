@@ -6,7 +6,9 @@
     <div class="app" style="margin-top:15px;">
         <Row class="app-action">
             <Row class="app-action-title">
-                <h3>动作<a v-if="isAdminTrue" @click="showModal" class="app-action-title-add">授权</a></h3>
+                <h3>动作<a v-if="isAdminTrue" @click="showModal" class="app-action-title-add">授权</a>
+                </h3>
+                <span class="warning-color marlr">授予用户、组织或职位当前应用动作的权限</span>
             </Row>
             <div class="app-action-source">
                 <Row>

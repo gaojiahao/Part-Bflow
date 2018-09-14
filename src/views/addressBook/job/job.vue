@@ -43,7 +43,7 @@
               <Option value="C">操作类</Option>
             </Select>
           </FormItem>
-          <div class="baseinfo-container-divider"></div>
+          <div class="baseinfo-container-divider" v-if="jobId && isEdit"></div>
           <FormItem label="创建者：" v-if="jobId && isEdit">
             <span>{{ tableContent.creatorName }}</span>
           </FormItem>

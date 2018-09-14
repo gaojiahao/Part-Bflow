@@ -20,10 +20,31 @@
 }
 
 
+
 .reply{
+    position: relative;
     background-color: rgb(240, 240, 240);
     padding: 10px;
     border: 1px solid #ddd;
+    margin-top: 10px;
+}
+.reply:before,.reply:after{ 
+    content: ""; 
+    width: 0; 
+    height: 0; 
+    position: absolute;
+    display: block; 
+    border-width: 10px; 
+    border-style: solid;  }
+.reply:before{
+    right: 60px;
+    top: -20px;
+    border-color: transparent transparent #ddd;
+}
+.reply:after{
+    right: 60px; 
+    top: -19px;
+    border-color: transparent transparent  #f0f0f0;
 }
 
 .load-more{

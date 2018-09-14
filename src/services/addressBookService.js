@@ -307,13 +307,26 @@ export const deleteOrgMember = (single, multi) => request('/H_roleplay-si/ps/del
 
 /**
  * @author GuoZheng
- * @description 删除组织成员
+ * @description 获取上级组织列表
  */
-export const getAllGroup = (currentPage, pageSize, filter) => request('/H_roleplay-si/ds/getAllGroup', {
+export const getAllHigherGroupByGroupType = (currentPage, pageSize,groupType, filter) => request('/H_roleplay-si/ds/getAllHigherGroupByGroupType', {
+  start:0,
   page: currentPage,
   limit: pageSize,
+  groupType:groupType,
   filter: filter,
-  start: 0,
+});
+
+/**
+ * @author GuoZheng
+ * @description 获取下级组织列表
+ */
+export const getAllLowerGroupByGroupType = (currentPage, pageSize,groupType, filter) => request('/H_roleplay-si/ds/getAllLowerGroupByGroupType', {
+  start:0,
+  page: currentPage,
+  limit: pageSize,
+  groupType:groupType,
+  filter: filter,
 });
 
 /**

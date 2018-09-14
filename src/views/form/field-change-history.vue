@@ -4,7 +4,7 @@
       <Table :columns="fieldDetailColumns" :data="fieldDetail"></Table>
     </div>
    
-    <change-detail v-model="showChangeDetailsModal" title="变更详情" width="1000">
+    <change-detail v-model="showChangeDetailsModal" title="变更详情" width="900" :footerHide="true">
       <div class="detail">
         <div class="detail-header">
           <p>
@@ -41,7 +41,6 @@
           </div>
         </div>
       </div>
-      <div slot="footer"></div>
     </change-detail>
   </div>
 </template>
@@ -437,10 +436,10 @@ export default {
   width: 100%;
   height: 100%;
   position: relative;
-  background-color: #e0e0e0;
+  background-color: #dcddde;
 
   &-body {
-    width: 100%;
+    width: 80%;
     height: 100%;
     margin: 0px auto;
     background-color: #fff;
@@ -449,7 +448,7 @@ export default {
 }
 
 .detail-header {
-  margin-top: 5px;
+  margin: 5px 0;
   p {
     font-size: 14px;
   }
@@ -477,8 +476,6 @@ export default {
 }
 
 .detail-table {
-  margin-top: 10px;
-
   &-before {
     &-title {
       height: 30px;

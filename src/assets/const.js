@@ -7,7 +7,8 @@ export const APP_ACTION = {
     'import': '通过Excel导入本应用的数据',
     'printer': '批量打印选中的实例的表单',
     'revocation': '从已生效状态变成未生效，如果有工作流退回到草稿状态。',
-    'abate': '从未生效状态变成已失效'
+    'abate': '从未生效状态变成已失效',
+    'view':'首页导航菜单,查询当前用户享有本应用权限范围内的数据'
 }
 
 export const ICON_LIST = [

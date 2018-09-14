@@ -73,7 +73,7 @@ import CustomTable from "./CustomTable";
 import {
   saveBatchChildGroup,
   deleteBatchGroup,
-  getAllGroup
+  getAllLowerGroupByGroupType
 } from "@/services/addressBookService.js";
 export default {
   name: "lower-organization",
@@ -350,7 +350,7 @@ export default {
       let filter = [
         { operator: "like", value: this.searchValue, property: "groupName" }
       ];
-      this.getAllGroup(currentPage, filter);
+      this.getAllLowerGroupByGroupType(currentPage, filter);
     },
 
     //点击切换每页显示条数
@@ -359,7 +359,7 @@ export default {
       let filter = [
         { operator: "like", value: this.searchValue, property: "groupName" }
       ];
-      this.getAllGroup(1, size, filter);
+      this.getAllLowerGroupByGroupType(1, size, filter);
     },
 
     //全选
@@ -439,7 +439,7 @@ export default {
       this.isShowMemberModal = true;
       this.searchValue = "";
       this.onPageSelection = [];
-      this.getAllGroup(this.listUserCurrentPage);
+      this.getAllLowerGroupByGroupType(this.listUserCurrentPage);
     },
 
     //添加组织
@@ -480,66 +480,11 @@ export default {
       }
     },
 
-    getAllGroup(currentPage, relfilter) {
+    getAllLowerGroupByGroupType(currentPage, relfilter) {
       this.listUserLoading = true;
       let filter = relfilter ? relfilter : [];
-      if (this.groupType) {
-        switch (this.groupType) {
-          case "小组":
-            filter.push({
-              operator: "ne",
-              value: "小组",
-              property: "groupType"
-            }); //小组
-            filter.push({
-              operator: "ne",
-              value: "部门",
-              property: "groupType"
-            }); //部门
-            filter.push({
-              operator: "ne",
-              value: "事业部",
-              property: "groupType"
-            }); //事业部
-            filter.push({
-              operator: "ne",
-              value: "管理层",
-              property: "groupType"
-            }); //小组
-            break;
-          case "部门":
-            filter.push({
-              operator: "ne",
-              value: "部门",
-              property: "groupType"
-            }); //部门
-            filter.push({
-              operator: "ne",
-              value: "事业部",
-              property: "groupType"
-            }); //事业部
-            filter.push({
-              operator: "ne",
-              value: "管理层",
-              property: "groupType"
-            }); //小组
-            break;
-          case "事业部":
-            filter.push({
-              operator: "ne",
-              value: "事业部",
-              property: "groupType"
-            }); //事业部
-            filter.push({
-              operator: "ne",
-              value: "管理层",
-              property: "groupType"
-            }); //小组
-            break;
-        }
-        filter = JSON.stringify(filter);
-      }
-      getAllGroup(currentPage, this.pageSize, filter).then(res => {
+     
+      getAllLowerGroupByGroupType(currentPage, this.pageSize,this.groupType, JSON.stringify(filter)).then(res => {
         if (res.tableContent[0]) {
           this.listUserPageTotal = res.summary.total;
           this.listUserData = res.tableContent;
@@ -562,7 +507,7 @@ export default {
       let filter = [
         { operator: "like", value: this.searchValue, property: "groupName" }
       ];
-      this.getAllGroup(this.listUserCurrentPage, filter);
+      this.getAllLowerGroupByGroupType(this.listUserCurrentPage, filter);
     }
   }
 };

@@ -15,7 +15,7 @@
             </span>
           </my-pop-tip>
         </span>
-        <span class="card-desc">{{ list.comment }}</span>
+        <span class="card-desc" v-html="list.comment"></span>
         <a class="card-setting" type="text" @click="goAppSetting(list)">详情</a>
         <p @click="deleteApplication(index, list)" class="card-delete">
           <Tooltip content="删除应用" placement="top">

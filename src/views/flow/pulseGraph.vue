@@ -108,7 +108,14 @@
           <g v-for="(business,i) in dataItem" :key="i">
             <g v-for="(item,j) in business.child" :key="j">
 
-              <image :x="40+(baseLength+graphSpace)*item.sort" :y="50+170*i" :width="baseLength" :height="baseLength" :xlink:href="item.icon" rx='10' v-on:click.stop="doAction(item)">
+              <image 
+                :x="40+(baseLength+graphSpace)*item.sort" 
+                :y="50+170*i" :width="baseLength" 
+                :height="baseLength" 
+                :xlink:href="item.icon" 
+                rx='10' 
+                class="svg-image-style"
+                @mouseenter="doAction(item)">
               </image>
               <!-- 科目与业务节点title -->
 
@@ -132,7 +139,7 @@
           </g>
 
           <g v-for="(point) in pointList" :key="point.id">
-            <polyline :points="point.value" :marker-end="waterFlow[point.id]!==undefined?'url(#arrow_hight_color)':'url(#arrow1)'" v-bind:class="waterFlow[point.id]!==undefined?'path':''" style="fill:none;stroke:#fff;opacity: 0;stroke-width:1" />
+            <polyline :points="point.value" :marker-end="waterFlow[point.id]!==undefined?'url(#arrow_hight_color)':'url(#arrow1)'" v-bind:class="waterFlow[point.id]!==undefined?'path':''" style="fill:none;stroke:#fff;stroke-width:1" />
           </g>
           <!-- 应用与应用之间的关系 -->
           <g v-for="(point) in transTypePointList" :key="point.id">

@@ -98,10 +98,10 @@
             </Form>
         </Row>
         <Row class="info-btn">
-            <Button @click="goUserList"  class="radius0" style="background-color: rgb(81, 90, 110) !important;color:#fff;font-weight:bold">关闭</Button>
-            <Button v-if="isAdd" @click="editUserInfo"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold">{{ isEdit?'编辑':'放弃编辑'}}</Button>
-            <Button v-if="!isEdit" @click="updateUserData"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold">保存</Button>
-            <Button v-if="!isAdd" @click="saveAndAddUser" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold">保存并新建</Button>
+            <Button @click="goUserList" class="radius0" style="background-color: rgb(81, 90, 110) !important;color:#fff;font-weight:bold;padding: 6px 15px;">关闭</Button>
+            <Button v-if="isAdd" @click="editUserInfo"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">{{ isEdit?'编辑':'放弃编辑'}}</Button>
+            <Button v-if="!isEdit" @click="updateUserData"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">保存</Button>
+            <Button v-if="!isAdd" @click="saveAndAddUser" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">保存并新建</Button>
         </Row>
         <Modal
             v-model="showCompanyModal"
@@ -230,7 +230,7 @@ export default {
           { type: "email", message: "邮箱输入不合法", trigger: "blur" }
         ],
         officePhone: [
-          { message: "电话输入不合法", trigger: "blur",pattern: /^((0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/ }
+          { message: "座机输入不合法", trigger: "blur",pattern: /^((0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/ }
         ]
       }
     };

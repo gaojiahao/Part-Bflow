@@ -75,11 +75,11 @@
       </div>
     </div>
     <Row class="info-btn">
-      <Button @click="toCompanyLst" class="radius0" style="background-color: rgb(81, 90, 110) !important;color:#fff;font-weight:bold;">关闭</Button>
-      <Button v-if="isAdd" @click="isEditCompanyInfo" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;">{{isEdit?'编辑':'放弃编辑'}}</Button>
-      <Button v-if="baseInfoItem.groupId&&!isEdit" @click="updateCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;">保存</Button>
-      <Button v-else-if="!isEdit&&!isAdd" @click="addCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;">保存</Button>
-      <Button v-if="!baseInfoItem.groupId&&!isEdit&&!isAdd" @click="saveAndAddCompany" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;">保存并新建</Button>
+      <Button @click="toCompanyLst" class="radius0" style="background-color: rgb(81, 90, 110) !important;color:#fff;font-weight:bold;padding: 6px 15px;">关闭</Button>
+      <Button v-if="isAdd" @click="isEditCompanyInfo" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">{{isEdit?'编辑':'放弃编辑'}}</Button>
+      <Button v-if="baseInfoItem.groupId&&!isEdit" @click="updateCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">保存</Button>
+      <Button v-else-if="!isEdit&&!isAdd" @click="addCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">保存</Button>
+      <Button v-if="!baseInfoItem.groupId&&!isEdit&&!isAdd" @click="saveAndAddCompany" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">保存并新建</Button>
     </Row>
   </div>
 </template>

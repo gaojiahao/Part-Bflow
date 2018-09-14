@@ -82,7 +82,7 @@
     <user-modal v-model="showAdminModal" title="添加用户" @on-ok="confirmModal" width="600">
       <div>
         <div class="app-search">
-          <Input v-model="searchValue" placeholder="搜索" style="width: 300px" clearable @on-enter="adminFilter" @on-change="handleInputValueChange"></Input>
+          <Input v-model="searchValue" placeholder="请输入用户名" style="width: 300px" clearable @on-enter="adminFilter" @on-change="handleInputValueChange"></Input>
           <p class="app-search-icon">
             <Button @click="adminFilter" type="primary" size="small">查询</Button>
           </p>
@@ -295,7 +295,7 @@ export default {
       let filter = JSON.stringify([
         { operator: "like", value: this.searchValue, property: "nickname" }
       ]);
-      this.getListUsers(this.currentPage,this.pageSize,filter);
+      this.getListUsers(1,this.pageSize,filter);
     },
 
     //清空输入框

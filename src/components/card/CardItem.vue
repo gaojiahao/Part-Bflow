@@ -330,7 +330,7 @@ export default {
       &-detail {
         float: right;
         font-size: 12px;
-        // display: none;
+        display: none;
       }
       h5 {
         display: inline-block;
@@ -359,7 +359,7 @@ export default {
         color: #0cc348;
         cursor: pointer;
         font-size: 14px;
-        // display: none;
+        display: none;
       }
     }
 

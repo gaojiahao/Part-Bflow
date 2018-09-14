@@ -676,10 +676,14 @@ export default {
     //清空销售订单选中项
     onHandleClearOrderTag() {
       this.orderCode = "";
-      getMyTaskCountAll(this.type,this.projectName).then(res => {
-        this.defaultDisplayTask = {};
-        this.defaultDisplayTask = res;
-      });
+      if(this.projectName){
+        getMyTaskCountAll(this.type,this.projectName).then(res => {
+          this.defaultDisplayTask = {};
+          this.defaultDisplayTask = res;
+        });
+      }else{
+        this.defaultDisplayTask = Object.assign(this[this.type],this.subjectTodo)
+      }
     },
 
     //根据交易号过滤销售订单列表
@@ -748,10 +752,14 @@ export default {
     //清空项目立项选中项
     onHandleClearProjectTag() {
       this.projectName = "";
-      getMyTaskCountAll(this.type,'',this.orderCode).then(res => {
-        this.defaultDisplayTask = {};
-        this.defaultDisplayTask = res;
-      });
+      if(this.orderCode){
+        getMyTaskCountAll(this.type,'',this.orderCode).then(res => {
+          this.defaultDisplayTask = {};
+          this.defaultDisplayTask = res;
+        });
+      }else{
+        this.defaultDisplayTask = Object.assign(this[this.type],this.subjectTodo)
+      }
     },
 
     // //根据项目名称过滤项目立项列表

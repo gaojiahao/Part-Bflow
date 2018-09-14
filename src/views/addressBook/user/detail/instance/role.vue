@@ -250,7 +250,7 @@ export default {
     onClickDefaultView(params) {
       this.$Modal.confirm({
         title: "确认",
-        content: "确认设置此部门为默认部门？",
+        content: "确认设置此职位为默认职位？",
         onOk: () => {
           this.setDefaultViews(params);
         },

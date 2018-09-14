@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <Modal v-model="showPermissionModal" title="视图权限" width="600" :mask-closable="false" @on-ok="submitPermission" @on-visible-change="modalVisibleChange">
+  <Modal v-model="showPermissionModal" title="视图权限" width="600" :mask-closable="false" :loading="visibleLoading" @on-ok="submitPermission" @on-visible-change="modalVisibleChange">
     <div>
       <Row :gutter="8" style="margin-bottom:10px;">
         <Col span="8">
@@ -160,6 +160,7 @@ export default {
       pageSize: 10,
       //监听数据变化刷新权限table
       emitChange: 0,
+      visibleLoading: true,
       userLoading: true,
       orgLoading: true,
       depLoading: true,
@@ -565,9 +566,26 @@ export default {
             return item.id;
           })
           .join(",");
-      
-      if(userId || groupId || roleId){
-        saveViewPermission(this.permissionId, userId, groupId, roleId).then(
+      if(!userId && !roleId && !groupId){
+          this.$Message.warning('请选择授权的人员或组织或职位和权限！');
+          this.visibleLoading = true;
+          setTimeout(() => {
+            this.visibleLoading = false;
+            this.$nextTick(() => {
+                this.visibleLoading = true;
+            });
+          },1000);
+        }else if(!this.permissionId){
+          this.$Message.warning('请选择授权的人员或组织或职位和权限！');
+          this.visibleLoading = true;
+          setTimeout(() => {
+            this.visibleLoading = false;
+            this.$nextTick(() => {
+                this.visibleLoading = true;
+            });
+          },1000);
+        }else{
+          saveViewPermission(this.permissionId, userId, groupId, roleId).then(
             res => {
               if (res.success) {
                 this.$Message.success(res.message);
@@ -578,7 +596,7 @@ export default {
               }
             }
           );
-      }
+        }
     },
 
     //通知父组件modal的状态

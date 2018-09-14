@@ -170,7 +170,7 @@ export default {
       showOrgModal: false,
       showDepartmentModal: false,
       showPermissionModal: false,
-      visibleLoading: false,
+      visibleLoading: true,
 
       userColumns: [],
       userData: [],
@@ -696,10 +696,25 @@ export default {
           permissionId: permissionId.join(",")
         };
         if(userId.length === 0 && roleId.length === 0 && groupId === 0){
-          this.showPermissionModal = true;
+          this.$Message.warning('请选择授权的人员或组织或职位和权限！');
+          this.visibleLoading = true;
+          setTimeout(() => {
+            this.visibleLoading = false;
+            this.$nextTick(() => {
+                this.visibleLoading = true;
+            });
+          },1000);
         }else if(permissionId.length === 0){
-          this.showPermissionModal = true;
+          this.$Message.warning('请选择授权的人员或组织或职位和权限！');
+          this.visibleLoading = true;
+          setTimeout(() => {
+            this.visibleLoading = false;
+            this.$nextTick(() => {
+                this.visibleLoading = true;
+            });
+          },1000);
         }else{
+          this.visibleLoading = false;
           this.showPermissionModal = false;
           if (this.isEdit === "edit") {
             updateMemberPermission(

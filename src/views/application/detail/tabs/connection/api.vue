@@ -2,7 +2,7 @@
 @import "./api.less";
 </style>
 <template>
-  <div class="bg_ff martop20">
+  <div class="bg_ff">
 
     <Row class="app-resource-group-title">
       <h3>API</h3>

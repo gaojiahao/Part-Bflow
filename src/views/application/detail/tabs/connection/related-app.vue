@@ -3,7 +3,7 @@
 </style>
 
 <template>
-<div class="bg_ff martop20">
+<div class="bg_ff" style="margin-bottom:20px;">
 
     <Row class="app-resource-group-title">
       <h3>相关应用</h3>

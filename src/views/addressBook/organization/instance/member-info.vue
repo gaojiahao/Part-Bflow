@@ -63,7 +63,17 @@
             <Button type="primary" size="small">查询</Button>
           </a>
         </div>
-        <Table height="400" :loading="listUserLoading" :columns="memberInfoColumnsModel" :data="listUserData" size='small' ref="selection" @on-select-all="onSelectAll" @on-selection-change="handerSelectionChange" @on-select-cancel="onSelectCancel"></Table>
+        <Table 
+          height="400" 
+          size='small' 
+          ref="selection" 
+          :loading="listUserLoading" 
+          :columns="memberInfoColumnsModel" 
+          :data="listUserData" 
+          @on-select-all="onSelectAll" 
+          @on-selection-change="handerSelectionChange" 
+          @on-select-cancel="onSelectCancel">
+        </Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
             <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-page-size-change="onPageSizeChange" @on-change="listUserChangePage" show-total show-elevator show-sizer></Page>

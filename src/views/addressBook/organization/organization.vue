@@ -65,7 +65,7 @@
           </FormItem>
           <div class="baseinfo-container-divider" v-if="groupId && isEdit"></div>
           <FormItem label="创建者：" v-if="groupId && isEdit">
-            <span>{{ tableContent.creatorName}}</span>
+            <span>{{ tableContent.creator}}</span>
           </FormItem>
           <FormItem label="创建时间：" v-if="groupId && isEdit">
             <span>{{ tableContent.crtTime }}</span>

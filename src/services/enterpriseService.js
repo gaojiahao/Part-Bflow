@@ -56,12 +56,11 @@ export const updateRelation = (single) => request('/H_roleplay-si/ps/updateRelat
 export const deleteRelation = (single) => request('/H_roleplay-si/ps/deleteRelation', { list: 'sys_user_role', single: single, multi: 1 }, "POST")
 
 /**
- * @author XiaoYing
+ * @author GuoZheng
  * @description 获取管理员数据
  */
-export const getAdminData = (groupId,filter,page,limit) => request('/H_roleplay-si/ds/getAllUsersByGroupId', {
-    groupId: groupId,
-    filter: filter,
-    page: page,
-    limit: limit
+export const getAllUsers = (pageSize, currentPage, filter) => request('/H_roleplay-si/ds/getAllUsers', {
+    page: currentPage,
+    limit: pageSize,
+    filter: filter
   });

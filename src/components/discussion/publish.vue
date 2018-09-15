@@ -44,9 +44,9 @@
                     size=24 />图片
                     <span v-if="uploadList.length>0">({{uploadList.length}})</span>
                     <div class="api" slot="content" >
-                        <p class="lh25">
-                            <span><b>本地上传</b></span>
-                            <span class="fr">共{{uploadList.length}}张,还能上传{{9-uploadList.length}}张</span>
+                        <p class="lh25 marbottom10">
+                            <span>共{{uploadList.length}}张,您还能上传{{9-uploadList.length}}张</span>
+                            <Button class="fr" type="warning" v-if="uploadList.length>0" @click="handleClearImg">清空全部</Button>
                         </p>
                         <div 
                             class="comment-upload-list" 
@@ -82,7 +82,7 @@
                             :headers="httpHeaders"
                             :on-format-error="handleFormatError"
                             :on-exceeded-size="handleMaxSize"
-                            :before-upload="handleBeforeUpload"
+                            :before-upload="handleBeforeImgUpload"
                             multiple
                             type="drag"
                             action="/H_roleplay-si/ds/upload"
@@ -100,19 +100,31 @@
             </Poptip>
 
             <Poptip 
+                
                 v-show="allowFile"
                 placement="bottom-start" >
                 <Icon type="md-attach" size=24  class="choice-file" />文件
+                 <span v-if="uploadFileList.length>0">({{uploadFileList.length}})</span>
                 <div slot="content">
+                    <p class="lh25 marbottom10" style="min-width:230px;">
+                        <span>共{{uploadFileList.length}}份,您还能上传{{9-uploadFileList.length}}份</span>
+                        <Button 
+                            class="fr" 
+                            v-if="uploadFileList.length>0"
+                            type="warning" 
+                            @click="handleClearFile">清空全部</Button>
+                    </p>
                     <Upload
-                        multiple
-                        ref="uploadFile"
-                        :headers="httpHeaders"
-                        :on-success="handleFileSuccess"
-                        :default-file-list="defaultFileList"
-                        action="/H_roleplay-si/ds/upload">
-                        <Button icon="ios-cloud-upload-outline">上传文件</Button>
+                    multiple
+                    ref="uploadFile"
+                    :headers="httpHeaders"
+                    :on-success="handleFileSuccess"
+                    :default-file-list="defaultFileList"
+                    :before-upload="handleBeforeFileUpload"
+                    action="/H_roleplay-si/ds/upload">
+                    <Button icon="ios-cloud-upload-outline">上传文件</Button>
                     </Upload>
+                   
                 </div>
             </Poptip>
             <span v-if="ischild">
@@ -176,6 +188,7 @@ export default {
             imgName: '',
             visible: false,
             uploadList: [],
+            uploadFileList:[],
             commentAndReply:false,
             faceVisible:false
         };
@@ -219,9 +232,10 @@ export default {
             this.discContent.txt = '';
             this.$refs.publishContent.innerText = '';
             this.$refs.upload.clearFiles();
-            this.$refs.uploadFile.clearFiles()
-            this.uploadList = [];
-            this.uploadFileList = [];
+            this.$refs.uploadFile.clearFiles();
+           
+            this.uploadList = this.$refs.upload.fileList;
+            this.uploadFileList = this.$refs.uploadFile.fileList;
         },
         handleView (name) {
             this.imgName = name;
@@ -250,14 +264,31 @@ export default {
                 desc: '文件  ' + file.name + '太大,最多支持2M.'
             });
         },
-        handleBeforeUpload () {
+        handleBeforeImgUpload () {
             const check = this.uploadList.length < 9;
             if (!check) {
                 this.$Notice.warning({
-                    title: '最多可以上传九张图片。 '
+                    title: '您最多可以上传九张图片。 '
                 });
             }
             return check;
+        },
+        handleBeforeFileUpload () {
+            const check = this.uploadFileList.length < 9;
+            if (!check) {
+                this.$Notice.warning({
+                    title: '您最多可以上传九分文件。 '
+                });
+            }
+            return check;
+        },
+        handleClearImg(){
+            this.$refs.upload.clearFiles();
+            this.uploadList = this.$refs.upload.fileList;
+        },
+        handleClearFile(){
+            this.$refs.uploadFile.clearFiles();
+            this.uploadFileList = this.$refs.uploadFile.fileList;
         }
     },
     created(){

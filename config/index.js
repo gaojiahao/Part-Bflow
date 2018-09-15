@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/H_roleplay-si':{
-        target:'https://refordom.roletask.com',
+        target:'http://192.168.3.172:8080',
         changeOrigin: true
       },
       '/corebiz-api': {

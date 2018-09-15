@@ -28,14 +28,21 @@
                 </div>
 
                 <div class="comments-content-item-img" v-if="comment.commentAttachments.length>0">
-                    <img 
-                    v-for="(c,index) in comment.commentAttachments" 
-                    :key="index" 
-                    v-if="c.type==='image'"
-                    :src="c.attachment?c.attachment:'resources/images/icon/defaultUserPhoto.png'" 
-                    width=100 
-                    height=100>
-                    
+                    <div 
+                        class="comimg"
+                        v-for="(c,index) in comment.commentAttachments" 
+                        :key="index" 
+                        v-if="c.type==='image'">
+                        <img 
+                        :src="c.attachment?c.attachment:'resources/images/icon/defaultUserPhoto.png'" 
+                        >
+                        <div class="comimg-cover">
+                            <Icon 
+                            type="ios-eye-outline" 
+                            @click.native="handleViewImg(c.attachment)">
+                            </Icon>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="comments-content-item-file" v-if="comment.commentAttachments.length>0">
@@ -103,6 +110,11 @@
             </Col>
         </Row>
     </div>
+     <Modal title="查看图片" v-model="imgModalVisible">
+        <img 
+            :src="imgName" 
+            v-if="imgModalVisible" style="width: 100%">
+    </Modal>
  </div>
 
 </template>
@@ -147,7 +159,9 @@ export default {
     },
     data() {
         return {
-           userInfo:{}
+           userInfo:{},
+           imgName:'',
+           imgModalVisible:false
         };
     },
     watch:{
@@ -226,6 +240,10 @@ export default {
                 
                 this.$refs.childComments[0].handleLoadMore();
             });
+        },
+        handleViewImg:function (img) {
+            this.imgName = img;
+            this.imgModalVisible = true;
         },
         handleViewFile:function (file) {
           window.open(file.attachment)  

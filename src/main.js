@@ -14,9 +14,7 @@ import VueWechatTitle from 'vue-wechat-title';
 
 Vue.config.productionTip = false;
 
-Vue.use(iView,{
-  size: 'small'
-});
+Vue.use(iView);
 Vue.use(VueWechatTitle);
 
 

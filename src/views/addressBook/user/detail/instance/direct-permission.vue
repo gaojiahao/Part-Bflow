@@ -41,7 +41,7 @@
         </div>
         <Modal
             v-model="showModal"
-            title="选择权限"
+            title="权限列表"
             @on-ok="addPermission"
             width="400">
             <Tree class="app-tree" :data="allPermissionData" :multiple="true" @on-select-change="onCheckChange" :load-data="loadData"></Tree>

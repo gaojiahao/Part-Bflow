@@ -77,11 +77,6 @@ export default {
           align: "center"
         },
         {
-          title: "id",
-          key: "id",
-          hidden: true
-        },
-        {
           title: "名称",
           key: "name"
         },

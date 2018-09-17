@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <Modal v-model="showPermissionModal" title="视图权限" width="600" :mask-closable="false" :loading="visibleLoading" @on-ok="submitPermission" @on-visible-change="modalVisibleChange">
+  <Modal v-model="showPermissionModal" title="视图权限" width="600" :mask-closable="false" @on-ok="submitPermission" @on-visible-change="modalVisibleChange">
     <div>
       <Row :gutter="8" style="margin-bottom:10px;">
         <Col span="8">
@@ -566,37 +566,37 @@ export default {
             return item.id;
           })
           .join(",");
-      if(!userId && !roleId && !groupId){
-          this.$Message.warning('请选择授权的人员或组织或职位和权限！');
-          this.visibleLoading = true;
-          setTimeout(() => {
-            this.visibleLoading = false;
-            this.$nextTick(() => {
-                this.visibleLoading = true;
-            });
-          },1000);
-        }else if(!this.permissionId){
-          this.$Message.warning('请选择授权的人员或组织或职位和权限！');
-          this.visibleLoading = true;
-          setTimeout(() => {
-            this.visibleLoading = false;
-            this.$nextTick(() => {
-                this.visibleLoading = true;
-            });
-          },1000);
-        }else{
-          saveViewPermission(this.permissionId, userId, groupId, roleId).then(
-            res => {
-              if (res.success) {
-                this.$Message.success(res.message);
-                let Num = this.emitChange++;
-                this.$emit("reGetData", Num);
-              } else {
-                this.$Message.error(res.message);
-              }
-            }
-          );
+      // if(!userId && !roleId && !groupId){
+      //     this.$Message.warning('请选择授权的人员或组织或职位和权限！');
+      //     this.visibleLoading = true;
+      //     setTimeout(() => {
+      //       this.visibleLoading = false;
+      //       this.$nextTick(() => {
+      //           this.visibleLoading = true;
+      //       });
+      //     },1000);
+      //   }else if(!this.permissionId){
+      //     this.$Message.warning('请选择授权的人员或组织或职位和权限！');
+      //     this.visibleLoading = true;
+      //     setTimeout(() => {
+      //       this.visibleLoading = false;
+      //       this.$nextTick(() => {
+      //           this.visibleLoading = true;
+      //       });
+      //     },1000);
+      //   }else
+      saveViewPermission(this.permissionId, userId, groupId, roleId).then(
+        res => {
+          if (res.success) {
+            this.showPermissionModal = false;
+            this.$Message.success(res.message);
+            let Num = this.emitChange++;
+            this.$emit("reGetData", Num);
+          } else {
+            this.$Message.error(res.message);
+          }
         }
+      );
     },
 
     //通知父组件modal的状态

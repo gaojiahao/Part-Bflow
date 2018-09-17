@@ -48,7 +48,7 @@ export default {
       isModalConfirm: 1000,
       columns: [
         {
-          title: "已授权用户",
+          title: "已授权用户、组织或职位",
           key: "objNames",
           render: (h, params) => {
             let objNames = params.row.objNames

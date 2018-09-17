@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <Modal v-model="showPermissionModal" title="应用权限" :loading="visibleLoading" width="1000" :mask-closable="false" @on-ok="submitPermission" @on-visible-change="modalVisibleChange">
+  <Modal v-model="showPermissionModal" title="应用权限" width="1000" :mask-closable="false" @on-ok="submitPermission" @on-visible-change="modalVisibleChange">
     <div>
       <Row :gutter="8" style="margin-bottom:10px;">
         <Col span="4">
@@ -614,7 +614,7 @@ export default {
       this.permissionSelectDatas.forEach(val => {
         permissionIds.push(val.id);
       });
-      clearAppPermission('sys_group_permission',orgId,userId,permissionIds.join(',')).then(res => {
+      clearAppPermission('sys_group_permission',orgId,permissionIds.join(',')).then(res => {
         if (res.success) {
           this.orgSelectData = this.orgSelectData.filter(f => {
             return f.id != orgId;
@@ -695,27 +695,27 @@ export default {
           groupId: groupId.join(","),
           permissionId: permissionId.join(",")
         };
-        if(userId.length === 0 && roleId.length === 0 && groupId === 0){
-          this.$Message.warning('请选择授权的人员或组织或职位和权限！');
-          this.visibleLoading = true;
-          setTimeout(() => {
-            this.visibleLoading = false;
-            this.$nextTick(() => {
-                this.visibleLoading = true;
-            });
-          },1000);
-        }else if(permissionId.length === 0){
-          this.$Message.warning('请选择授权的人员或组织或职位和权限！');
-          this.visibleLoading = true;
-          setTimeout(() => {
-            this.visibleLoading = false;
-            this.$nextTick(() => {
-                this.visibleLoading = true;
-            });
-          },1000);
-        }else{
-          this.visibleLoading = false;
-          this.showPermissionModal = false;
+        // if(userId.length === 0 && roleId.length === 0 && groupId.length === 0){
+        //   this.$Message.warning('请选择授权的人员或组织或职位和权限！');
+        //   this.visibleLoading = true;
+        //   this.showPermissionModal = true;
+        //   setTimeout(() => {
+        //     this.visibleLoading = false;
+        //     this.showPermissionModal = true;
+        //     this.$nextTick(() => {
+        //         this.visibleLoading = true;
+        //     });
+        //   },1000);
+        // }else if(permissionId.length === 0){
+        //   this.$Message.warning('请选择授权的人员或组织或职位和权限！');
+        //   this.visibleLoading = true;
+        //   setTimeout(() => {
+        //     this.visibleLoading = false;
+        //     this.$nextTick(() => {
+        //         this.visibleLoading = true;
+        //     });
+        //   },1000);
+        // }else{
           if (this.isEdit === "edit") {
             updateMemberPermission(
               userId.join(","),
@@ -741,7 +741,6 @@ export default {
               });
             }
           }
-        }
     },
     getData() {
       let listId = this.appListId;

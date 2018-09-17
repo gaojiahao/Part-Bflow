@@ -53,7 +53,7 @@ export default {
           }
         },
         {
-          title: "已授权用户",
+          title: "已授权用户、组织或职位",
           key: "permissionList",
           render:(h,params) =>{
             let permissionList = params.row.permissionList,

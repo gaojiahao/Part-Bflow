@@ -695,52 +695,31 @@ export default {
           groupId: groupId.join(","),
           permissionId: permissionId.join(",")
         };
-        // if(userId.length === 0 && roleId.length === 0 && groupId.length === 0){
-        //   this.$Message.warning('请选择授权的人员或组织或职位和权限！');
-        //   this.visibleLoading = true;
-        //   this.showPermissionModal = true;
-        //   setTimeout(() => {
-        //     this.visibleLoading = false;
-        //     this.showPermissionModal = true;
-        //     this.$nextTick(() => {
-        //         this.visibleLoading = true;
-        //     });
-        //   },1000);
-        // }else if(permissionId.length === 0){
-        //   this.$Message.warning('请选择授权的人员或组织或职位和权限！');
-        //   this.visibleLoading = true;
-        //   setTimeout(() => {
-        //     this.visibleLoading = false;
-        //     this.$nextTick(() => {
-        //         this.visibleLoading = true;
-        //     });
-        //   },1000);
-        // }else{
-          if (this.isEdit === "edit") {
-            updateMemberPermission(
-              userId.join(","),
-              roleId.join(","),
-              groupId.join(","),
-              permissionId.join(","),
-              this.appListId
-            ).then(res => {
+        if (this.isEdit === "edit") {
+          updateMemberPermission(
+            userId.join(","),
+            roleId.join(","),
+            groupId.join(","),
+            permissionId.join(","),
+            this.appListId
+          ).then(res => {
+            if (res.success) {
+              this.$Message.success(res.message);
+              let Num = this.emitChange++;
+              this.$emit("reGetData", Num);
+            }
+          });
+        } else {
+          if (params) {
+            addPermission(params).then(res => {
               if (res.success) {
                 this.$Message.success(res.message);
                 let Num = this.emitChange++;
                 this.$emit("reGetData", Num);
               }
             });
-          } else {
-            if (params) {
-              addPermission(params).then(res => {
-                if (res.success) {
-                  this.$Message.success(res.message);
-                  let Num = this.emitChange++;
-                  this.$emit("reGetData", Num);
-                }
-              });
-            }
           }
+        }
     },
     getData() {
       let listId = this.appListId;

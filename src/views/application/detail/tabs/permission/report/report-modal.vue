@@ -566,25 +566,6 @@ export default {
             return item.id;
           })
           .join(",");
-      // if(!userId && !roleId && !groupId){
-      //     this.$Message.warning('请选择授权的人员或组织或职位和权限！');
-      //     this.visibleLoading = true;
-      //     setTimeout(() => {
-      //       this.visibleLoading = false;
-      //       this.$nextTick(() => {
-      //           this.visibleLoading = true;
-      //       });
-      //     },1000);
-      //   }else if(!this.permissionId){
-      //     this.$Message.warning('请选择授权的人员或组织或职位和权限！');
-      //     this.visibleLoading = true;
-      //     setTimeout(() => {
-      //       this.visibleLoading = false;
-      //       this.$nextTick(() => {
-      //           this.visibleLoading = true;
-      //       });
-      //     },1000);
-      //   }else
       saveViewPermission(this.permissionId, userId, groupId, roleId).then(
         res => {
           if (res.success) {

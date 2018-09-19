@@ -287,6 +287,14 @@ export const bigProcess = {
     import('@/components/bigProcess.vue')
 }
 
+//消息通知页面
+export const notifications = {
+  path: '/notifications',
+  name: 'notifications',
+  component: () =>
+    import('@/views/notifications/notifications.vue')
+}
+
 
 
 export const routers = [
@@ -301,5 +309,6 @@ export const routers = [
   fieldChangeHistoryRouter,
   instanceCommetns,
   enterpriseInfo,
+  notifications,
   ...appRouter
 ];

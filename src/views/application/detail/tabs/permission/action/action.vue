@@ -66,7 +66,6 @@ export default {
         {
           title: "动作",
           key: "source",
-          align: 'center',
           width: 600,
           render: (h, params) => {
             let actionSource = params.row.action,

@@ -129,9 +129,9 @@ export const saveViewPermission = (permissionId, userId, groupId, roleId) => req
  * @author XiaoYing
  * @description 获取对应应用用户、组织、职位所有权限数据
  */
-export const getAppResourcesAndAuthoritys = (listId, filter) => request('/H_roleplay-si/ds/getAppResourcesAndAuthoritys', {
+export const getAppResourcesAndAuthoritys = (type,listId) => request('/H_roleplay-si/ds/getAppResourcesAndAuthoritys', {
   listId: listId,
-  filter: filter
+  type: type
 })
 
 /**

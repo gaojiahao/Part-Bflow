@@ -52,19 +52,11 @@ export default {
           key: "objNames",
           render: (h, params) => {
             let objNames = params.row.objNames,
-              renderData = [];
+                renderData = [];
             if (objNames.length > 0) {
               objNames.forEach((val, index) => {
                 let pushData;
-                pushData = h(
-                  "span",
-                  {
-                    style: {
-                      // margin: "0px 5px"
-                    }
-                  },
-                  val.name+'; '
-                );
+                pushData = h("span",{},val.name+'; ');
                 renderData.push(pushData);
               });
               return h("div", renderData);
@@ -117,14 +109,16 @@ export default {
                        }
 
                        if(/_/.test(permissionId)){
-                         status = false;
+                         status = 0;
                          permissionId = permissionId.split('_')[0];
                        }else{
-                         status = true;
+                         status = 1;
                        }
 
                       updateMemberPermission(userId,roleId,groupId,permissionId,this.listId,status).then(res => {
-                          console.log(res);
+                          if(res.success){
+                            this.$Message.success(res.message);
+                          }
                       });
                      } 
                     }
@@ -191,7 +185,7 @@ export default {
       this.showActionModal = false;
     },
     getActionData() {
-      getAppResourcesAndAuthoritys(this.listId).then(res => {
+      getAppResourcesAndAuthoritys('action',this.listId).then(res => {
         this.userSources = res.tableContent;
       });
     },
@@ -208,13 +202,13 @@ export default {
               groupId = [],
               roleId = [];
           //获取permissionIds的集合
-          JSON.parse(params.row.action).forEach(val => {
+          params.row.action.forEach(val => {
             for (let k in val) {
               permissionIds.push(k);
             }
           });
           //获取用户组织职位ids集合
-          JSON.parse(params.row.objNames).forEach(val => {
+          params.row.objNames.forEach(val => {
             if(val.type === 'user'){
               userId.push(val.id);
             }else if(val.type === 'group'){

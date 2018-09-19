@@ -45,7 +45,6 @@
 </template>
 
 <script>
-import * as ds from "deepstream.io-client-js";
 import CardList from "@/components/card/CardList";
 import CardItem from "@/components/card/CardItem";
 import { getToken } from "@/utils/utils";
@@ -77,7 +76,6 @@ export default {
       caseId: "apps",
       pulseGraphLlistr: [],
       allTaskCount: [],
-      ds: ds("wss://sunwingfood.roletask.com:6021/deepstream"),
       books$$: null,
       isAdmin: this.$currentUser.isAdmin,
       model: "apps"
@@ -131,25 +129,12 @@ export default {
 
     //订阅消息
     subscribeMessage: function() {
-      let currentUser = this.$currentUser;
-      if (currentUser.name && currentUser.Id) {
-        let username = [currentUser.name, currentUser.userId].join("|");
-        let token = getToken();
-        //注册deepStream
-        this.ds.login(
-          {
-            token: token,
-            username: username
-          },
-          data => {
-            console.log("connect success!");
-          }
-        );
-        //消息订阅
-        this.ds.event.subscribe("taskChange/" + token, msg => {
-          this.allTaskCount = msg.tableContent;
-        });
-      }
+      let deepstream = this.$deepstream;
+      let token = getToken();
+      //消息订阅
+      deepstream.event.subscribe("taskChange/" + token, msg => {
+        this.allTaskCount = msg.tableContent;
+      });
     },
 
     //处理链接过长时
@@ -214,7 +199,7 @@ export default {
 @media screen and (min-width: 1024px) and (max-width: 1466px) {
   .ivu-col-span-4 {
     display: block !important;
-        width: 250px !important;
+    width: 250px !important;
     margin-right: 10px;
     padding: unset !important;
   }

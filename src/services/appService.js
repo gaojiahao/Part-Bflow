@@ -313,12 +313,13 @@ export const ProhibitApp = (id, permType) => request('/H_roleplay-si/app/Prohibi
  * @author XiaoYing
  * 修改权限确认
  */
-export const updateMemberPermission = (userId, roleId, groupId, permissionId,listId) => request('/H_roleplay-si/app/updateAppActionPermission', {
+export const updateMemberPermission = (userId, roleId, groupId, permissionId,listId,status) => request('/H_roleplay-si/app/updateAppActionPermission', {
   user: userId,
   role: roleId,
   group: groupId,
   multi: permissionId,
-  listId: listId
+  listId: listId,
+  status: status
 }, 'POST');
 
 /** 

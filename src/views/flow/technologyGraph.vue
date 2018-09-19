@@ -1,64 +1,73 @@
 <template>
-    <div class="rfd-tetechnology-warp">
-        <Spin size="large" fix v-if="spinShow"></Spin>
-        <header class="rfd-tetechnology-warp-header">
-        </header>
-        <main class="rfd-tetechnology-warp-main">
-            <div class="svg-container">
-                <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
-                    <defs>
-                        <filter id="f1" x="0" y="0" width="200%" height="200%">
-                            <feOffset result="offOut" in="SourceGraphic" dx="0" dy="0" />
-                            <feColorMatrix result="matrixOut" in="offOut" type="matrix" values="0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0" />
-                            <feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="5" />
-                            <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
-                        </filter>
-                    </defs>
-                    <defs>
-                        <marker id="arrow" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" viewBox="0 0 15 15" refX="6" refY="6" orient="auto">
-                            <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: #00ae9d;" />
-                        </marker>
-                    </defs>
-                    <defs>
-                        <marker id="arrow1" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" viewBox="0 0 15 15" refX="6" refY="6" orient="auto">
-                            <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: #808695;" />
-                        </marker>
-                    </defs>
-                    <defs>
-                        <marker id="arrow_hight_color" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" viewBox="0 0 15 15" refX="6" refY="6" orient="auto">
-                            <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: red;" />
-                        </marker>
-                    </defs>
-                    <defs>
-                        <linearGradient id="orange_red" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" style="stop-color:#ffdfd9;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#ff8069 stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
+  <div :class="[prefixCls+'-wrap']">
+    <Spin size="large" fix v-if="spinShow"></Spin>
+    <header :class="[prefixCls+'-wrap-header']">
+      <label style="font-size:14px">任务过滤：</label>
 
-                    <g v-for="(item) in ProcessAndProcedureData" :key="item.procedureCode">
-                        <!-- <shape :xAxion="item.pointX" :yAxion="item.pointY" color="#b9d3ef" borderColor="#739cc3" :width="defaultShapeWidth" :height="defaultShapeWidth"></shape> -->
+      <Cascader 
+        v-model="cascaderValue" 
+        :data="cascaderData" 
+        :class="[prefixCls+'-cascader']"
+        filterable>
+      </Cascader>
+      
+    </header>
+    <main  :class="[prefixCls+'-wrap-main']">
+      <div class="svg-container">
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+          <defs>
+            <filter id="f1" x="0" y="0" width="200%" height="200%">
+              <feOffset result="offOut" in="SourceGraphic" dx="0" dy="0" />
+              <feColorMatrix result="matrixOut" in="offOut" type="matrix" values="0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0" />
+              <feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="5" />
+              <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+            </filter>
+          </defs>
+          <defs>
+            <marker id="arrow" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" viewBox="0 0 15 15" refX="6" refY="6" orient="auto">
+              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: #00ae9d;" />
+            </marker>
+          </defs>
+          <defs>
+            <marker id="arrow1" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" viewBox="0 0 15 15" refX="6" refY="6" orient="auto">
+              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: #808695;" />
+            </marker>
+          </defs>
+          <defs>
+            <marker id="arrow_hight_color" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" viewBox="0 0 15 15" refX="6" refY="6" orient="auto">
+              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: red;" />
+            </marker>
+          </defs>
+          <defs>
+            <linearGradient id="orange_red" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#ffdfd9;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#ff8069 stop-opacity:1" />
+            </linearGradient>
+          </defs>
 
-                        <image :x="item.pointX" :y="item.pointY" :width="defaultShapeWidth" :height="defaultShapeWidth" :xlink:href="item.photo" rx="25"></image>
+          <g v-for="(item) in ProcessAndProcedureData" :key="item.procedureCode">
+            <!-- <shape :xAxion="item.pointX" :yAxion="item.pointY" color="#b9d3ef" borderColor="#739cc3" :width="defaultShapeWidth" :height="defaultShapeWidth"></shape> -->
 
-                        <text :x="item.pointX+defaultShapeWidth/2" :y="item.pointY+defaultShapeWidth+5" fill="#000" style="font-size:14px" class="svg-text-common-style">
-                            {{item.spName}}
-                        </text>
+            <image :x="item.pointX" :y="item.pointY" :width="defaultShapeWidth" :height="defaultShapeWidth" :xlink:href="item.photo" rx="25"></image>
 
-                        <!-- 所有待办 -->
-                        <circle :cx="item.pointX" :cy="item.pointY" r="12" stroke-width="1" fill="red" />
-                        <text :x="item.pointX" :y="item.pointY-4" fill="#fff" class="svg-text-common-style" style="font-size:10px;font-weight:bold">
-                            12
-                        </text>
+            <text :x="item.pointX+defaultShapeWidth/2" :y="item.pointY+defaultShapeWidth+5" fill="#000" style="font-size:14px" class="svg-text-common-style">
+              {{item.procedureName}}
+            </text>
 
-                    </g>
-                    <g v-for="(line,index) in pointList" :key="index">
-                        <polyline :points="line.value" marker-end='url(#arrow1)' style="fill:none;stroke:#808695;stroke-width:2" />
-                    </g>
-                </svg>
-            </div>
-        </main>
-    </div>
+            <!-- 所有待办 -->
+            <circle :cx="item.pointX" :cy="item.pointY" r="12" stroke-width="1" fill="red" />
+            <text :x="item.pointX" :y="item.pointY-4" fill="#fff" class="svg-text-common-style" style="font-size:10px;font-weight:bold">
+              {{item.num>99?'99+':item.num}}
+            </text>
+
+          </g>
+          <g v-for="(line,index) in pointList" :key="index">
+            <polyline :points="line.value" marker-end='url(#arrow1)' style="fill:none;stroke:#808695;stroke-width:2" />
+          </g>
+        </svg>
+      </div>
+    </main>
+  </div>
 </template>
 
 <script>
@@ -68,6 +77,9 @@ import {
   getMockData,
   getProcessRouteProcedureRel
 } from "@/services/flowService";
+
+const prefixCls = 'rfd-technology';
+
 export default {
   name: "TechnologyGraph",
 
@@ -77,6 +89,7 @@ export default {
 
   data() {
     return {
+      prefixCls: prefixCls,
       processRouteCode: this.$route.params.processRouteCode,
       spinShow: false,
       screenWidth: document.body.clientWidth, // 这里是给到了一个默认值
@@ -89,7 +102,79 @@ export default {
       defaultyAxion: 80,
       graphSpace: 100,
       defaultShapeWidth: 50,
-      showNumber: 9 //一行显示多少个
+      showNumber: 9, //一行显示多少个
+
+      cascaderData: [
+        {
+          value: "my",
+          label: "我的任务",
+          children: [
+            {
+              value: "done",
+              label: "已完成",
+              children: [
+                {
+                  value: "overdue",
+                  label: "逾期"
+                },
+                {
+                  value: "no-overdue",
+                  label: "未逾期"
+                }
+              ]
+            },
+            {
+              value: "todo",
+              label: "未完成",
+              children: [
+                {
+                  value: "overdue",
+                  label: "逾期"
+                },
+                {
+                  value: "no-overdue",
+                  label: "未逾期"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          value: "team",
+          label: "团队任务",
+          children: [
+            {
+              value: "done",
+              label: "已完成",
+              children: [
+                {
+                  value: "overdue",
+                  label: "逾期"
+                },
+                {
+                  value: "no-overdue",
+                  label: "未逾期"
+                }
+              ]
+            },
+            {
+              value: "todo",
+              label: "未完成",
+              children: [
+                {
+                  value: "overdue",
+                  label: "逾期"
+                },
+                {
+                  value: "no-overdue",
+                  label: "未逾期"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      cascaderValue:['my','done','overdue']
     };
   },
 
@@ -148,9 +233,9 @@ export default {
       }
 
       data.forEach((item, itemIndex) => {
-        if (item.underProcedureCode) {
-          if (item.underProcedureCode in nodePointXY) {
-            nextPoint = nodePointXY[item.underProcedureCode].split(",");
+        if (item.underProcedure) {
+          if (item.underProcedure in nodePointXY) {
+            nextPoint = nodePointXY[item.underProcedure].split(",");
             nextPointX = Number(nextPoint[0]);
             nextPointY = Number(nextPoint[1]);
             //线条从上指下
@@ -220,12 +305,12 @@ export default {
   mounted() {
     let mainMaxHeight = document.body.clientHeight - 45;
     window.document.getElementsByClassName(
-      "rfd-tetechnology-warp-main"
+      "rfd-technology-wrap-main"
     )[0].style.height =
       mainMaxHeight + "px";
 
     window.document.getElementsByClassName(
-      "rfd-tetechnology-warp-main"
+      "rfd-technology-wrap-main"
     )[0].style.maxHeight =
       mainMaxHeight + "px";
 
@@ -245,7 +330,7 @@ export default {
 </script>
 
 <style lang="less" >
-.rfd-tetechnology-warp {
+.rfd-technology-wrap {
   background-color: #fff;
 
   &-header {
@@ -256,6 +341,15 @@ export default {
     .input-select {
       width: 160px;
       margin: 0 5px;
+    }
+
+    .rfd-technology-cascader{
+      width:300px;
+      display: inline-block;
+
+      .ivu-cascader-label{
+        font-size: 14px;
+      }
     }
   }
 

@@ -4,6 +4,7 @@ import router from './router';
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 import fontIcon from './assets/App.css';
+import { deepstream } from './plugin/deepstream';
 
 require('@/directive/index');
 require('@/filter/index');
@@ -20,6 +21,7 @@ Vue.use(VueWechatTitle);
 
 if(window.top.r2){
   Vue.prototype.$currentUser = window.top.r2.global.WebContext.currentUser;
+  Vue.prototype.$deepstream = deepstream(window.top.r2.global.WebContext.currentUser)
   new Vue({
     el: '#app',
     router,
@@ -30,6 +32,7 @@ if(window.top.r2){
   getCurrentUserInfo().then(res => {
     if (res) {
       Vue.prototype.$currentUser = res;
+      Vue.prototype.$deepstream = deepstream(res)
       /* eslint-disable no-new */
       new Vue({
         el: '#app',

@@ -85,8 +85,8 @@ export const getMyTaskCountAll = (type,projectName="",orderCode="") => request('
  * 获取工艺与工序的关系
  * 
 */
-export const getProcedureAndProcess = (processRouteCode) => request('/H_roleplay-si/ds/getProcedureAndProcess', {
-    processRouteCode: processRouteCode
+export const getProcedureAndProcess = (technicsCode) => request('/H_roleplay-si/objTechnicsProcessRel/getProcedureProcess', {
+    technicsCode: technicsCode
 })
 
 

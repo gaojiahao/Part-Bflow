@@ -7,8 +7,8 @@
     
     <header class="app-header">
       <Breadcrumb>
-        <BreadcrumbItem >首页</BreadcrumbItem>
-        <BreadcrumbItem to="/application/list">应用列表</BreadcrumbItem>
+        <BreadcrumbItem>首页</BreadcrumbItem>
+        <BreadcrumbItem>应用列表</BreadcrumbItem>
         <BreadcrumbItem>{{ appData.title }}</BreadcrumbItem>
       </Breadcrumb>
     </header>
@@ -51,13 +51,14 @@
             <Col span="24">说明：<span v-if="showEditAppInfo" v-html="appData.comment"></span>
             <!-- <Input v-else type="textarea" v-model="appData.comment" style="width: 1000px"></Input> -->
               <vue-wangeditor
-              v-else 
-              ref="editorInfo" 
-              id="editorInfo"
-              :menus="menu"
-              v-model="appData.comment"
-              height="100" 
-              width="100%"></vue-wangeditor>
+                v-else 
+                ref="editorInfo" 
+                id="editorInfo"
+                :menus="menu"
+                v-model="appData.comment"
+                height="100" 
+                width="100%">
+              </vue-wangeditor>
             </Col>
           </Row>
         </Col>

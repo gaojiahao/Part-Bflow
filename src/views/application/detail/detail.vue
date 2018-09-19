@@ -16,12 +16,15 @@
       @reloadData="reloadData" 
       @changeAdmin="changeAdmin" 
       @enabledForbiddenAppPermission="enabledForbiddenAppPermission">
-      </app-info>
+    </app-info>
 
     <div class="rfd-tab">
       <Tabs value="name1" class="rfd-tab-warp">
         <TabPane label="一般" name="name1">
-          <log-instance :isAdmin="isAdmin" :isAddress="isAddress"></log-instance>
+          <log-instance 
+            :isAdmin="isAdmin" 
+            :isAddress="isAddress">
+          </log-instance>
         </TabPane>
         <TabPane label="互动" name="name2">
           <!-- 管理员自评 -->
@@ -30,15 +33,27 @@
           <user-comments></user-comments>
         </TabPane>
         <TabPane label="资源" name="name3">
-          <permission-source :appType="appType" :isAdmin="isAdmin" :isAddress="isAddress" :enabledForbidden="enabledForbidden"></permission-source>
+          <permission-source 
+            :appType="appType" 
+            :isAdmin="isAdmin" 
+            :isAddress="isAddress" 
+            :enabledForbidden="enabledForbidden">
+          </permission-source>
         </TabPane>
         <TabPane label="连接" name="name4">
           <!-- 应用科目 -->
           <div class="app-sub">
-            <app-subject v-if="!isAddress" :isAdmin="isAdmin"></app-subject>
+            <app-subject 
+              v-if="!isAddress" 
+              :isAdmin="isAdmin">
+            </app-subject>
           </div>
-          
-          <related-app v-if="!isAddress" :isAdmin="isAdmin"></related-app>
+          <!-- 相关应用 -->
+          <related-app 
+            v-if="!isAddress" 
+            :isAdmin="isAdmin">
+          </related-app>
+          <!-- API -->
           <app-api></app-api>
         </TabPane>
       </Tabs>

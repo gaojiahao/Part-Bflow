@@ -17,7 +17,11 @@
             </div>
         </Row>
         <!-- 授权modal -->
-        <action-modal @reGetData="reGetData" :modalStatis="showActionModal" @emitPermissionModal="emitPermissionModal"></action-modal>
+        <action-modal
+          @reGetData="reGetData" 
+          :modalStatis="showActionModal" 
+          @emitPermissionModal="emitPermissionModal">
+        </action-modal>
     </div>
 </template>
 

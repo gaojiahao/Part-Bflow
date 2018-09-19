@@ -43,8 +43,16 @@ function render(el, bind) {
         } 
         return  diffSeconds + '秒前'; 
     }
+
+    let time = bind.value.time;
+
+    if(typeof(time) === 'number'){
+        time = new Date(parseInt(time) * 1000);
+    }else{
+        time = new Date(Date.parse(bind.value.time.replace(/-/g, "/")));
+    }
    
-    el.innerText = calcTimeDiff(new Date(Date.parse(bind.value.time.replace(/-/g, "/"))),new Date());
+    el.innerText = calcTimeDiff(time,new Date());
 }
 const overTimeDirective = {
     componentUpdated: function (el, binding) {

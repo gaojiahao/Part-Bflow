@@ -1,7 +1,7 @@
 import * as ds from "deepstream.io-client-js";
 import { getToken } from "@/utils/utils";
 
-const deeps = ds("wss://192.168.3.160:6021/deepstream")
+const deeps = ds("wss://sunwingfood.roletask.com:6021/deepstream")
 
 export function deepstream(currentUser) {
     if (currentUser.nickname && currentUser.userId) {

@@ -231,11 +231,9 @@ export default {
     getListUsers(currentPage, pageSize,filter) {
       this.listUserLoading = true;
       getAllUsers(pageSize,currentPage,filter).then(res => {
-        if (res.tableContent[0]) {
-          this.listUserPageTotal = res.summary.total;
-          this.listUserData = res.tableContent;
-          this.listUserLoading = false;
-        }
+        this.listUserPageTotal = res.summary.total;
+        this.listUserData = res.tableContent;
+        this.listUserLoading = false;
       });
     },
 

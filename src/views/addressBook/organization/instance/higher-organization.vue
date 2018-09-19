@@ -134,6 +134,9 @@ export default {
               case "R":
                 depFunction = "研发";
                 break;
+              case "O":
+                depFunction = "运营";
+                break;
             }
             return h("span", depFunction);
           }
@@ -222,6 +225,9 @@ export default {
                 break;
               case "R":
                 depFunction = "研发";
+                break;
+              case "O":
+                depFunction = "运营";
                 break;
             }
             return h("span", depFunction);
@@ -356,12 +362,10 @@ export default {
       this.listUserLoading = true;
       let filter = relfilter ? relfilter : [];
       
-      getAllHigherGroupByGroupType(currentPage, pageSize,this.groupType, filter).then(res => {
-        if (res.tableContent[0]) {
-          this.listUserPageTotal = res.summary.total;
-          this.listUserData = res.tableContent;
-          this.listUserLoading = false;
-        }
+      getAllHigherGroupByGroupType(currentPage, pageSize,this.groupType, JSON.stringify(filter)).then(res => {
+        this.listUserPageTotal = res.summary.total;
+        this.listUserData = res.tableContent;
+        this.listUserLoading = false;
       });
     },
     //过滤

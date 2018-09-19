@@ -130,7 +130,6 @@ import {
   getAllOrgData,
   getAllDepartmentData,
   getAllPermissionData,
-  updateMemberPermission,
   clearAppPermission
 } from "@/services//appService.js";
 import { APP_ACTION } from "@/assets/const";
@@ -139,10 +138,7 @@ export default {
   name: "permissionModal",
   components: {},
   props: {
-    modalStatis: Boolean,
-    editActionData: Object,
-    memberType: String,
-    isEdit: String
+    modalStatis: Boolean
   },
   data() {
     return {
@@ -211,92 +207,16 @@ export default {
       this.showPermissionModal = value;
       //动作权限每次清空
       this.permissionSelectDatas = [];
-      let memberShowData = [],
-        relPermissionData = [];
-      //获取回显动作权限数据
-      if (this.editActionData.action) {
-        relPermissionData = JSON.parse(this.editActionData.action);
+      //新增状态清空缓存数据
+      if(this.showPermissionModal){
+        this.getData();
       }
-      relPermissionData.forEach(val => {
-        for (let k in val) {
-          this.permissionSelectDatas.push({
-            name: val[k],
-            id: Number(k)
-          });
-        }
-      });
-
-      //编辑状态回显用户、组织、职位
-      if (this.isEdit === "edit") {
-        //编辑状态回显动作权限
-        let listId = this.appListId;
-        getAllPermissionData(listId).then(res => {
-          this.allPermissionData = res.tableContent;
-          this.allPermissionData.map(ac => {
-            ac.desc = APP_ACTION[ac.resourceName];
-          });
-          this.allPermissionData.map(aItem => {
-            this.permissionSelectDatas.map(item => {
-              if (item.id === aItem.id) {
-                aItem._checked = true;
-              }
-            });
-          });
-        });
-        //编辑状态回显用户、组织、职位
-        this.userSelectData = [];
-        this.orgSelectData = [];
-        this.departmentSelectData = [];
-        this.userSelection = [];
-        this.orgSelection = [];
-        this.departmentSelection = [];
-
-        if (Object.keys(this.editActionData).length > 0) {
-          let dispalyUserData = [],
-            dispalyOrgData = [],
-            dispalyDepData = [];
-          if (this.editActionData.objNames) {
-            JSON.parse(this.editActionData.objNames).forEach(val => {
-              if (val.type === "user") {
-                dispalyUserData.push({
-                  nickname: val.name,
-                  userId: val.id
-                });
-              } else if (val.type === "group") {
-                dispalyOrgData.push({
-                  name: val.name,
-                  id: val.id
-                });
-              } else {
-                dispalyDepData.push({
-                  name: val.name,
-                  id: val.id
-                });
-              }
-            });
-          }
-          this.userData = dispalyUserData;
-          this.userSelectData = dispalyUserData;
-          this.userSelection = dispalyUserData;
-          this.orgData = dispalyOrgData;
-          this.orgSelectData = dispalyOrgData;
-          this.orgSelection = dispalyOrgData;
-          this.departmentData = dispalyDepData;
-          this.departmentSelectData = dispalyDepData;
-          this.departmentSelection = dispalyDepData;
-        }
-      } else {
-        //新增状态清空缓存数据
-        if(this.showPermissionModal){
-          this.getData();
-        }
-        this.userSelectData = [];
-        this.orgSelectData = [];
-        this.departmentSelectData = [];
-        this.userSelection = [];
-        this.orgSelection = [];
-        this.departmentSelection = [];
-      }
+      this.userSelectData = [];
+      this.orgSelectData = [];
+      this.departmentSelectData = [];
+      this.userSelection = [];
+      this.orgSelection = [];
+      this.departmentSelection = [];
     }
   },
   methods: {
@@ -695,30 +615,14 @@ export default {
           groupId: groupId.join(","),
           permissionId: permissionId.join(",")
         };
-        if (this.isEdit === "edit") {
-          updateMemberPermission(
-            userId.join(","),
-            roleId.join(","),
-            groupId.join(","),
-            permissionId.join(","),
-            this.appListId
-          ).then(res => {
+        if (params) {
+          addPermission(params).then(res => {
             if (res.success) {
               this.$Message.success(res.message);
               let Num = this.emitChange++;
               this.$emit("reGetData", Num);
             }
           });
-        } else {
-          if (params) {
-            addPermission(params).then(res => {
-              if (res.success) {
-                this.$Message.success(res.message);
-                let Num = this.emitChange++;
-                this.$emit("reGetData", Num);
-              }
-            });
-          }
         }
     },
     getData() {

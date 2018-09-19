@@ -17,14 +17,16 @@
             </div>
         </Row>
         <!-- 授权modal -->
-        <action-modal @reGetData="reGetData" :modalStatis="showActionModal" :isEdit="isEdit" :memberType="memberType" @emitPermissionModal="emitPermissionModal" :editActionData="editActionData"></action-modal>
+        <action-modal @reGetData="reGetData" :modalStatis="showActionModal" @emitPermissionModal="emitPermissionModal"></action-modal>
     </div>
 </template>
 
 <script>
 import {
   getAppResourcesAndAuthoritys,
-  deleteRelationPermission
+  deleteRelationPermission,
+  getAllPermissionData,
+  updateMemberPermission
 } from "@/services/appService.js";
 import ActionModal from "./action-modal";
 
@@ -41,32 +43,20 @@ export default {
       listId: this.$route.params.listId,
       showActionModal: false,
       isAdminTrue: false,
-      isEdit: "",
-      editActionData: {},
-      memberType: "",
       //监听modal是否添加权限
       isModalConfirm: 1000,
+      actionData: [],
       columns: [
         {
           title: "已授权用户、组织或职位",
           key: "objNames",
           render: (h, params) => {
-            let objNames = params.row.objNames
-                ? JSON.parse(params.row.objNames)
-                : [],
-              renderData = [];
+            let objNames = params.row.objNames,
+                renderData = [];
             if (objNames.length > 0) {
               objNames.forEach((val, index) => {
                 let pushData;
-                pushData = h(
-                  "span",
-                  {
-                    style: {
-                      // margin: "0px 5px"
-                    }
-                  },
-                  val.name+'; '
-                );
+                pushData = h("span",{},val.name+'; ');
                 renderData.push(pushData);
               });
               return h("div", renderData);
@@ -76,29 +66,68 @@ export default {
         {
           title: "动作",
           key: "source",
+          align: 'center',
+          width: 600,
           render: (h, params) => {
-            let actionSource = params.row.action
-                ? JSON.parse(params.row.action)
-                : [],
-              renderData = [];
-            if (actionSource.length > 0) {
-              actionSource.forEach((val, index) => {
-                let pushData;
-                for (let k in val) {
-                  pushData = h(
-                    "span",
-                    {
-                      style: {
-                        margin: "0px 5px"
-                      }
-                    },
-                    val[k]
-                  );
+            let actionSource = params.row.action,
+                renderData = [],
+                actionId = [];
+
+            actionSource.forEach((val,i) => {
+              for(let k in val){
+                actionId.push(k);
+              }
+            });
+
+            this.actionData.forEach((val,index) => {
+              let pushData,pushDataStatus;
+              actionId.forEach(data => {
+                if(data == val.id){
+                  pushDataStatus = val.id;
                 }
-                renderData.push(pushData);
               });
-              return h("div", renderData);
-            }
+              pushData = h('span',{
+                style: {
+                  marginLeft: '10px'
+                }
+              },[
+                  h('Checkbox',{
+                    props: {
+                      value: pushDataStatus,
+                      trueValue:val.id,
+                      falseValue:val.id+'_false'
+                    },
+                    on: {
+                     'on-change': (permissionId) => {
+                       let userId,groupId,roleId,status;
+                       if(params.row.list === 'sys_role_permission'){
+                         roleId = params.row.objId;
+                       }else if(params.row.list === 'sys_user_permission'){
+                         userId = params.row.objId;
+                       }else{
+                         groupId = params.row.objId;
+                       }
+
+                       if(/_/.test(permissionId)){
+                         status = 0;
+                         permissionId = permissionId.split('_')[0];
+                       }else{
+                         status = 1;
+                       }
+
+                      updateMemberPermission(userId,roleId,groupId,permissionId,this.listId,status).then(res => {
+                          if(res.success){
+                            this.$Message.success(res.message);
+                          }
+                      });
+                     } 
+                    }
+                  }),
+                  h('span',{},val['name'])
+                ]);
+              renderData.push(pushData);
+            })
+            return h("div", renderData);
           }
         }
       ],
@@ -126,33 +155,6 @@ export default {
                   }
                 },
                 "删除"
-              ),
-              h("span", {
-                style: {
-                  height: "20px",
-                  borderLeft: "1px solid #39f",
-                  margin: "0px 5px"
-                }
-              }),
-              h(
-                "a",
-                {
-                  on: {
-                    click: () => {
-                      if (params.row.list === "sys_user_permission") {
-                        this.memberType = "user";
-                      } else if (params.row.list === "sys_role_permission") {
-                        this.memberType = "role";
-                      } else {
-                        this.memberType = "group";
-                      }
-                      this.isEdit = "edit";
-                      this.editActionData = params.row;
-                      this.showActionModal = true;
-                    }
-                  }
-                },
-                "授权"
               )
             ]);
           }
@@ -183,14 +185,7 @@ export default {
       this.showActionModal = false;
     },
     getActionData() {
-      let filter = JSON.stringify([
-        {
-          operator: "like",
-          value: "操作",
-          property: "type"
-        }
-      ]);
-      getAppResourcesAndAuthoritys(this.listId, filter).then(res => {
+      getAppResourcesAndAuthoritys('action',this.listId).then(res => {
         this.userSources = res.tableContent;
       });
     },
@@ -207,13 +202,13 @@ export default {
               groupId = [],
               roleId = [];
           //获取permissionIds的集合
-          JSON.parse(params.row.action).forEach(val => {
+          params.row.action.forEach(val => {
             for (let k in val) {
               permissionIds.push(k);
             }
           });
           //获取用户组织职位ids集合
-          JSON.parse(params.row.objNames).forEach(val => {
+          params.row.objNames.forEach(val => {
             if(val.type === 'user'){
               userId.push(val.id);
             }else if(val.type === 'group'){
@@ -238,7 +233,11 @@ export default {
       });
     },
   },
-  created() {},
+  created() {
+    getAllPermissionData(this.listId).then(res => {
+      this.actionData = res.tableContent;
+    })
+  },
   mounted() {
     this.getActionData();
   }

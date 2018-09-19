@@ -129,9 +129,9 @@ export const saveViewPermission = (permissionId, userId, groupId, roleId) => req
  * @author XiaoYing
  * @description 获取对应应用用户、组织、职位所有权限数据
  */
-export const getAppResourcesAndAuthoritys = (listId, filter) => request('/H_roleplay-si/ds/getAppResourcesAndAuthoritys', {
+export const getAppResourcesAndAuthoritys = (type,listId) => request('/H_roleplay-si/ds/getAppResourcesAndAuthoritys', {
   listId: listId,
-  filter: filter
+  type: type
 })
 
 /**
@@ -313,12 +313,13 @@ export const ProhibitApp = (id, permType) => request('/H_roleplay-si/app/Prohibi
  * @author XiaoYing
  * 修改权限确认
  */
-export const updateMemberPermission = (userId, roleId, groupId, permissionId,listId) => request('/H_roleplay-si/app/updateAppActionPermission', {
+export const updateMemberPermission = (userId, roleId, groupId, permissionId,listId,status) => request('/H_roleplay-si/app/updateAppActionPermission', {
   user: userId,
   role: roleId,
   group: groupId,
   multi: permissionId,
-  listId: listId
+  listId: listId,
+  status: status
 }, 'POST');
 
 /** 

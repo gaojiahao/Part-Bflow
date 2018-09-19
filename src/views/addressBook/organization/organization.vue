@@ -51,6 +51,7 @@
               <Option value="S">销售</Option>
               <Option value="C">制造</Option>
               <Option value="R">研发</Option>
+              <Option value="O">运营</Option>
             </Select>
           </FormItem>
           <div class="baseinfo-container-divider"></div>
@@ -321,6 +322,9 @@ export default {
                 break;
               case "R":
                 depFunction = "研发";
+                break;
+              case "O":
+                depFunction = "运营";
                 break;
             }
             return h("span", depFunction);

@@ -2,21 +2,21 @@ import * as ds from "deepstream.io-client-js";
 import { getToken } from "@/utils/utils";
 import { getProp } from "@/services/flowService";
 
-// function getDeepstream(){
-//     return  getProp().then(res=>{
-//         if(res.success){
-//             return res.message;
-//         }
-//     })
-// }
+function getDeepstream() {
+    return getProp().then(res => {
+        if (res.success) {
+            return res.message;
+        }
+    })
+}
 
-export  function deepstream(currentUser) {
-    // let address = getDeepstream();
-    let deeps = ds("wss://sunwingfood.roletask.com:6021/deepstream");
-    let name = currentUser.name?currentUser.name:currentUser.nickname;
+export async function deepstream(currentUser) {
+    let address = await getDeepstream(),
+        deeps = ds(`wss://${address}`),
+        token = getToken(),
+        name = currentUser.name ? currentUser.name : currentUser.nickname;
     if (name && currentUser.userId) {
         let username = [name, currentUser.userId].join("|");
-        let token = getToken();
         //注册deepStream
         deeps.login(
             {

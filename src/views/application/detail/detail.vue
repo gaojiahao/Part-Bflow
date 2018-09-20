@@ -120,13 +120,19 @@ export default {
           currentUserIds.push(val.id);
         });
         //判断当前用户是否有当前应用权限
+        // if(this.appData.administratorId){
+        //   if(currentUser.userId == this.appData.administratorId){
+        //     this.isAdmin = true;
+        //   }else if(/1/.test(currentUserIds)){
+        //     this.isCompanyAdmin = true;
+        //   }
+        // }
         if(currentUser.userId == this.appData.administratorId && /1/.test(currentUserIds)){
           this.isAdmin = true;
           this.isCompanyAdmin = true;
         }else if(currentUser.userId == this.appData.administratorId){
           this.isAdmin = true;
         }else if(/1/.test(currentUserIds)){
-          this.isAdmin = true;
           this.isCompanyAdmin = true;
         }else{
           this.isAdmin = false;

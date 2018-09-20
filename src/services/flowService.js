@@ -111,3 +111,7 @@ export const getObjFeildChangeHistory = (transCode) => request('/H_roleplay-si/e
 export const getListFeildChangeHistory = (transCode) => request('/H_roleplay-si/easy/transTypeHistoryApi/findData', {
     transCode: transCode,
 })
+
+export const getProp = () => request('/H_roleplay-si/ds/getProp', {
+    key: 'deepstream.uri2',
+})

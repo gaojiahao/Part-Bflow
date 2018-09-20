@@ -80,12 +80,22 @@ export default {
                 this.pageInfo.page++;
                 this.resreshNotifics();
             }
-        }
+        },
+
+        //订阅消息
+        subscribeMessage: function() {
+            let deepstream = this.$deepstream;
+            let userId = this.$currentUser.userId;
+            //消息订阅
+            deepstream.event.subscribe("commentMessage/" + userId, msg => {
+                this.notifications.unshift(...msg.tableContent);
+            });
+        },
         
     },
     mounted(){
         this.resreshNotifics();
-      
+        this.subscribeMessage();
         window.addEventListener('scroll', this.handleScroll)
     }
 }

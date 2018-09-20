@@ -1,9 +1,18 @@
 import * as ds from "deepstream.io-client-js";
 import { getToken } from "@/utils/utils";
+import { getProp } from "@/services/flowService";
 
-const deeps = ds("wss://sunwingfood.roletask.com:6021/deepstream")
+// function getDeepstream(){
+//     return  getProp().then(res=>{
+//         if(res.success){
+//             return res.message;
+//         }
+//     })
+// }
 
-export function deepstream(currentUser) {
+export  function deepstream(currentUser) {
+    // let address = getDeepstream();
+    let deeps = ds("wss://sunwingfood.roletask.com:6021/deepstream");
     let name = currentUser.name?currentUser.name:currentUser.nickname;
     if (name && currentUser.userId) {
         let username = [name, currentUser.userId].join("|");

@@ -11,10 +11,17 @@
             </Row>
             <div class="app-action-source">
                 <Row class="app-action-source-list">
-                    <Col span="6" class="app-action-source-item" v-for="(list,index) of actionData" :key="index">
+                    <Col span="6" 
+                      class="app-action-source-item" 
+                      v-for="(list,index) of actionData" 
+                      :key="index">
 
                         <Col span="2" class="app-action-source-item-check">
-                            <Checkbox @on-change="isForbidden(list,index)" :disabled="!isAdminTrue" :value="list.permType===0?true:false"></Checkbox>
+                            <Checkbox 
+                              @on-change="isForbidden(list,index)" 
+                              :disabled="!isAdminTrue" 
+                              :value="list.permType===0?true:false">
+                            </Checkbox>
                         </Col>
 
                         <Col span="21" class="app-action-source-item-content">

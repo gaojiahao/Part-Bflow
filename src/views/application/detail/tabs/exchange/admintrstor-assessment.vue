@@ -72,7 +72,13 @@
         </div>
       </div>
       <div v-if="isPage" class="pad20 bg_ff assessmentItem">
-        <Page @on-change="onPageChange" :total="page.total" :current="page.current" :page-size="page.pageSize" prev-text="上一页" next-text="下一页" />
+        <Page 
+          @on-change="onPageChange" 
+          :total="page.total" 
+          :current="page.current" 
+          :page-size="page.pageSize" 
+          prev-text="上一页" 
+          next-text="下一页" />
       </div>
     </div>
   </div>

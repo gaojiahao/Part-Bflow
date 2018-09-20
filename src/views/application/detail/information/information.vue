@@ -7,8 +7,8 @@
     
     <header class="app-header">
       <Breadcrumb>
-        <BreadcrumbItem >首页</BreadcrumbItem>
-        <BreadcrumbItem to="/application/list">应用列表</BreadcrumbItem>
+        <BreadcrumbItem>首页</BreadcrumbItem>
+        <BreadcrumbItem>应用列表</BreadcrumbItem>
         <BreadcrumbItem>{{ appData.title }}</BreadcrumbItem>
       </Breadcrumb>
     </header>
@@ -23,7 +23,7 @@
             <Col span="6">应用名称： 
               <span v-if="showEditAppInfo">{{ appData.title }}</span>
               <Input v-else v-model="appData.title" style="width: 120px"></Input>
-              <b @click="editAppinfo" v-if="isAdminTrue">
+              <b @click="editAppinfo" v-if="isAdminTrue || isCompanyAdmin">
                 <Tooltip v-if="showEditBtn" content="编辑" placement="top">
                   <Icon class="app-edit-icon" type="ios-create-outline"></Icon>
                 </Tooltip>
@@ -49,15 +49,15 @@
           </Row>
           <Row class="pad5">
             <Col span="24">说明：<span v-if="showEditAppInfo" v-html="appData.comment"></span>
-            <!-- <Input v-else type="textarea" v-model="appData.comment" style="width: 1000px"></Input> -->
               <vue-wangeditor
-              v-else 
-              ref="editorInfo" 
-              id="editorInfo"
-              :menus="menu"
-              v-model="appData.comment"
-              height="100" 
-              width="100%"></vue-wangeditor>
+                v-else 
+                ref="editorInfo" 
+                id="editorInfo"
+                :menus="menu"
+                v-model="appData.comment"
+                height="100" 
+                width="100%">
+              </vue-wangeditor>
             </Col>
           </Row>
         </Col>
@@ -200,18 +200,19 @@ export default {
     },
     //修改应用信息
     editAppinfo() {
-      this.showEditAppInfo = !this.showEditAppInfo;
+      if(this.isAdmin){
+        this.showEditAppInfo = !this.showEditAppInfo;
+      }
       //只有企业管理员可编辑应用管理员
       if(this.isCompanyAdmin){
         this.showAppEditAdmin = false;
       }
-      this.showEditBtn = !this.showEditBtn;
-      if (this.showEditAppInfo) {
+      if (!this.showEditBtn) {
         let params = {
           uniqueId: this.appData.uniqueId,
           title: this.appData.title,
           administrator: this.appData.userId,
-          comment: this.$refs.editorInfo.getHtml()
+          comment: this.$refs.editorInfo?this.$refs.editorInfo.getHtml():''
         };
         saveAppInformation(params).then(res => {
           if (res.success) {
@@ -222,6 +223,7 @@ export default {
           }
         });
       }
+      this.showEditBtn = !this.showEditBtn;
     },
     //管理员选择modal展示
     selectAdminModal() {

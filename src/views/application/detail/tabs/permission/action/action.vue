@@ -17,7 +17,11 @@
             </div>
         </Row>
         <!-- 授权modal -->
-        <action-modal @reGetData="reGetData" :modalStatis="showActionModal" @emitPermissionModal="emitPermissionModal"></action-modal>
+        <action-modal
+          @reGetData="reGetData" 
+          :modalStatis="showActionModal" 
+          @emitPermissionModal="emitPermissionModal">
+        </action-modal>
     </div>
 </template>
 
@@ -66,7 +70,6 @@ export default {
         {
           title: "动作",
           key: "source",
-          align: 'center',
           width: 600,
           render: (h, params) => {
             let actionSource = params.row.action,

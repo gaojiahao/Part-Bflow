@@ -107,6 +107,7 @@ export default {
     });
 
     getPulsationDiagramCase().then(res => {
+      console.log(res);
       this.pulseGraphLlistr = res.tableContent;
     });
   },

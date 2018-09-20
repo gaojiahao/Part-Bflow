@@ -134,6 +134,7 @@ export default {
           this.isAdmin = true;
         }else if(/1/.test(currentUserIds)){
           this.isCompanyAdmin = true;
+          this.isAdmin = false;
         }else{
           this.isAdmin = false;
           this.isCompanyAdmin = false;

@@ -83,42 +83,42 @@ export default {
     };
   },
   watch: {
-    isAdmin: function(value) {
-      const lastColumn = {
-          title: "操作",
-          key: "key",
-          align: "center",
-          render: (h,params) => {
-            let isDisabled = false,isChecked = false;
-            if(params.row.classify === 1){
-              isDisabled = true;
-            }
-            if(params.row.calcRels[0].status === 1){
-              isChecked = true;
-            }
-            return h('Checkbox',{
-              props: {
-                disabled: isDisabled,
-                value: isChecked
-              },
-              on: {
-                'on-change': (status) => {
-                  this.renderMethod(status,params);
-                }
-              }
-            })
-          }
-      };
-      if(value){
-        if(this.columns[this.columns.length-1].title !== '操作'){
-          this.columns.push(lastColumn);
-        }
-      }else{
-        if(this.columns[this.columns.length-1].title === '操作'){
-          this.columns.splice(this.columns.length-1,1);
-        }
-      }
-    }
+    // isAdmin: function(value) {
+    //   const lastColumn = {
+    //       title: "操作",
+    //       key: "key",
+    //       align: "center",
+    //       render: (h,params) => {
+    //         let isDisabled = false,isChecked = false;
+    //         if(params.row.classify === 1){
+    //           isDisabled = true;
+    //         }
+    //         if(params.row.calcRels[0].status === 1){
+    //           isChecked = true;
+    //         }
+    //         return h('Checkbox',{
+    //           props: {
+    //             disabled: isDisabled,
+    //             value: isChecked
+    //           },
+    //           on: {
+    //             'on-change': (status) => {
+    //               this.renderMethod(status,params);
+    //             }
+    //           }
+    //         })
+    //       }
+    //   };
+    //   if(value){
+    //     if(this.columns[this.columns.length-1].title !== '操作'){
+    //       this.columns.push(lastColumn);
+    //     }
+    //   }else{
+    //     if(this.columns[this.columns.length-1].title === '操作'){
+    //       this.columns.splice(this.columns.length-1,1);
+    //     }
+    //   }
+    // }
   },
   methods: {
     //重新渲染科目启用禁用columns

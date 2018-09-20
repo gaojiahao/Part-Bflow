@@ -70,7 +70,7 @@ export default {
         {
           title: "动作",
           key: "source",
-          width: 600,
+          width: 800,
           render: (h, params) => {
             let actionSource = params.row.action,
                 renderData = [],
@@ -97,8 +97,9 @@ export default {
                   h('Checkbox',{
                     props: {
                       value: pushDataStatus,
-                      trueValue:val.id,
-                      falseValue:val.id+'_false'
+                      trueValue: val.id,
+                      falseValue: val.id+'_false',
+                      disabled: !this.isAdminTrue
                     },
                     on: {
                      'on-change': (permissionId) => {

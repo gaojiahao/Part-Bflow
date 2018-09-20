@@ -411,10 +411,15 @@ export const getAllRole = (filter) => request('/H_roleplay-si/ds/getAllRole', {
 
 /**
  * @author GuoZheng
- * @description 保存组织基本信息
+ * @description 保存职位基本信息
  */
 export const saveRoleBaseInfo = (data) => request('/H_roleplay-si/sysRole/save', {}, "POST", data);
 
+/**
+ * @author GuoZheng
+ * @description 更新职位基本信息
+ */
+export const updateRoleBaseInfo = (data) => request('/H_roleplay-si/sysRole/update', {}, "POST", data);
 
 /**
  * @author GuoZheng

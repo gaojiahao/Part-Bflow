@@ -88,6 +88,7 @@
 import {
   getAllRole,
   saveRoleBaseInfo,
+  updateRoleBaseInfo,
   getObjDetailsCountByRoleId,
   checkoutFieldIsOnly
 } from "@/services/addressBookService.js";
@@ -249,7 +250,7 @@ export default {
           //判断是编辑,还是新增保存
           if (this.jobId) {
             this.formItem.id = this.jobId;
-            saveRoleBaseInfo(this.formItem)
+            updateRoleBaseInfo(this.formItem)
               .then(res => {
                 if (res) {
                   this.$Message.success("更新成功");

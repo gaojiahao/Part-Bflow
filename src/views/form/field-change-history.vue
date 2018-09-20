@@ -258,13 +258,13 @@ export default {
               reg = /jpg|jpeg|png/g;
             if (mainTable.length > 0) {
               mainTable.forEach(item => {
-                if (reg.test(item.fieldOldValue)) {
+                if (reg.test(item.fieldNewValue)) {
                   renderData.push(
                     h("img", {
                       attrs: {
                         src:
                           "/H_roleplay-si/ds/download?url=" +
-                          item.fieldOldValue,
+                          item.fieldNewValue,
                         style: "width: 30px;height: 30px;border-radius: 2px;"
                       }
                     })

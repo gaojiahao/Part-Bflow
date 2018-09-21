@@ -44,7 +44,6 @@ export default {
   },
   data() {
     return {
-      editable: true,
       isDragging: false,
       delayedDragging: false,
       isAdminTrue: false,
@@ -56,14 +55,18 @@ export default {
       return {
         animation: 0,
         group: "description",
-        disabled: !this.editable,
+        disabled: !this.isAdminTrue,
         ghostClass: "ghost"
       };
     }
   },
   watch: {
     isAdmin: function(value) {
-      value && (this.isAdminTrue = true);
+      if (value) {
+        this.isAdminTrue = true;
+      } else {
+        this.isAdminTrue = false;
+      }
     },
     isDragging(newValue) {
       if (newValue) {

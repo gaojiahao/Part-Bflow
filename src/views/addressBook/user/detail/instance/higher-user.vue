@@ -150,7 +150,9 @@ export default {
                           this.getHigherUserData();
                           this.$emit('changeInstance');
                         }
-                      })
+                      }).catch(error => {
+                            this.$Message.error(error.data.message);
+                        })
                     }
                   });
                 }
@@ -256,6 +258,8 @@ export default {
             this.getHigherUserData();
             this.$emit('changeInstance');
           }
+        }).catch(error => {
+            this.$Message.error(error.data.message);
         })
       }
     },

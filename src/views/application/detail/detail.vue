@@ -120,24 +120,27 @@ export default {
           currentUserIds.push(val.id);
         });
         //判断当前用户是否有当前应用权限
-        // if(this.appData.administratorId){
-        //   if(currentUser.userId == this.appData.administratorId){
-        //     this.isAdmin = true;
-        //   }else if(/1/.test(currentUserIds)){
-        //     this.isCompanyAdmin = true;
-        //   }
-        // }
-        if(currentUser.userId == this.appData.administratorId && /1/.test(currentUserIds)){
-          this.isAdmin = true;
-          this.isCompanyAdmin = true;
-        }else if(currentUser.userId == this.appData.administratorId){
-          this.isAdmin = true;
-        }else if(/1/.test(currentUserIds)){
-          this.isCompanyAdmin = true;
-          this.isAdmin = false;
+        if(this.appData.administratorId){
+          if(currentUser.userId == this.appData.administratorId && /1/.test(currentUserIds)){
+            this.isAdmin = true;
+            this.isCompanyAdmin = true;
+          }else if(currentUser.userId == this.appData.administratorId){
+            this.isAdmin = true;
+          }else if(/1/.test(currentUserIds)){
+            this.isCompanyAdmin = true;
+            this.isAdmin = false;
+          }else{
+            this.isAdmin = false;
+            this.isCompanyAdmin = false;
+          }
         }else{
-          this.isAdmin = false;
-          this.isCompanyAdmin = false;
+          if(/1/.test(currentUserIds)){
+            this.isAdmin = true;
+            this.isCompanyAdmin = true;
+          }else{
+            this.isAdmin = false;
+            this.isCompanyAdmin = false;
+          }
         }
         //判断是否是通讯录并控制其相关应用权限
         if(this.appData.type === 'hr'){

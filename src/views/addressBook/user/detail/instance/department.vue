@@ -151,6 +151,8 @@ export default {
                           this.getDepartmentData();
                           this.$emit('changeInstance');
                         }
+                      }).catch(error => {
+                          this.$Message.error(error.data.message);
                       })
                     }
                   });
@@ -187,6 +189,8 @@ export default {
           this.$Message.success(res.message);
           this.getDepartmentData();
         }
+      }).catch(error => {
+          this.$Message.error(error.data.message);
       });
     },
     //重新渲染默认部门columns方法
@@ -257,6 +261,8 @@ export default {
                 this.getDepartmentData();
                 this.$emit('changeInstance');
               }
+            }).catch(error => {
+                this.$Message.error(error.data.message);
             })
           }
         });
@@ -280,6 +286,8 @@ export default {
             this.getDepartmentData();
             this.$emit('changeInstance');
           }
+        }).catch(error => {
+            this.$Message.error(error.data.message);
         })
       }
     },

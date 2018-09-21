@@ -215,6 +215,8 @@ export default {
             this.$emit("getInstanceCount");
             this.getHigherCompanyData();
           }
+        }).catch(error => {
+            this.$Message.error(error.data.message);
         });
       } else {
         this.$Message.warning("请选择至少一个公司！");
@@ -232,6 +234,8 @@ export default {
               this.$emit("getInstanceCount");
               this.getHigherCompanyData();
             }
+          }).catch(error => {
+              this.$Message.error(error.data.message);
           });
         }
       });
@@ -253,6 +257,8 @@ export default {
             this.$emit("getInstanceCount");
             this.getHigherCompanyData();
           }
+        }).catch(error => {
+            this.$Message.error(error.data.message);
         });
       } else {
         this.$Message.warning("请选择至少一个公司！");

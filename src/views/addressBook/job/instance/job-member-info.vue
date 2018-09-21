@@ -16,16 +16,15 @@
   }
 }
 .app-search {
-    margin-bottom: 5px;
-    .app-search-icon {
-      font-size: 1rem;
-      color: #39f;
-      display: inline-block;
-      cursor: pointer;
-    }
+  margin-bottom: 5px;
+  .app-search-icon {
+    font-size: 1rem;
+    color: #39f;
+    display: inline-block;
+    cursor: pointer;
   }
+}
 
-  
 .page-selection-warp {
   width: 100%;
   height: 100%;
@@ -61,19 +60,10 @@
         <div class="app-search">
           <Input @on-search="userFilter" :search="true" v-model="searchValue" placeholder="搜索工号或名称" style="width: 300px"></Input>
           <a @click="userFilter" class="app-search-icon">
-              <Button type="primary" size="small">查询</Button>
+            <Button type="primary" size="small">查询</Button>
           </a>
         </div>
-        <Table 
-          height="400" 
-          size='small'
-          ref="selection"
-          :loading="listUserLoading" 
-          :columns="memberInfoColumnsModel" 
-          :data="listUserData"   
-          @on-select-all="onSelectAll" 
-          @on-selection-change="handerSelectionChange" 
-          @on-select-cancel="onSelectCancel">
+        <Table height="400" size='small' ref="selection" :loading="listUserLoading" :columns="memberInfoColumnsModel" :data="listUserData" @on-select-all="onSelectAll" @on-selection-change="handerSelectionChange" @on-select-cancel="onSelectCancel">
         </Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
@@ -116,7 +106,7 @@ export default {
   data() {
     return {
       memberInfoLoading: false,
-      searchValue: '',
+      searchValue: "",
       memberInfoParams: {
         roleId: this.jobId,
         page: 1,
@@ -127,18 +117,19 @@ export default {
           type: "selection",
           width: 60,
           align: "center"
-        }, {
+        },
+        {
           title: "头像",
           key: "photo",
           width: 80,
-          render: (h,params) => {
-            return h('div',[
-              h('Avatar',{
+          render: (h, params) => {
+            return h("div", [
+              h("Avatar", {
                 props: {
                   src: params.row.photo
                 }
               })
-            ])
+            ]);
           }
         },
         {
@@ -182,7 +173,7 @@ export default {
                   size: "small"
                 },
                 style: {
-                  cursor: "pointer",
+                  cursor: "pointer"
                 },
                 on: {
                   click: () => {
@@ -190,15 +181,17 @@ export default {
                       title: "确认",
                       content: "确认删除该成员？",
                       onOk: () => {
-                        deleteBatchRole(this.jobId, params.row.userId).then(
-                          res => {
+                        deleteBatchRole(this.jobId, params.row.userId)
+                          .then(res => {
                             if (res.success) {
                               this.$Message.success("删除成功!");
                               this.reload = true;
                               this.$emit("on-member-info-change", true);
                             }
-                          }
-                        );
+                          })
+                          .catch(error => {
+                            this.$Message.error(error.data.message);
+                          });
                       }
                     });
                   }
@@ -215,18 +208,19 @@ export default {
           type: "selection",
           width: 60,
           align: "center"
-        }, {
+        },
+        {
           title: "头像",
           key: "photo",
           width: 80,
-          render: (h,params) => {
-            return h('div',[
-              h('Avatar',{
+          render: (h, params) => {
+            return h("div", [
+              h("Avatar", {
                 props: {
                   src: params.row.photo
                 }
               })
-            ])
+            ]);
           }
         },
         {
@@ -328,9 +322,9 @@ export default {
         return f.userId !== id;
       });
 
-      this.$refs.selection.data.forEach((item,index) => {
+      this.$refs.selection.data.forEach((item, index) => {
         if (id === item.userId) {
-          this.$refs.selection.toggleSelect(index)
+          this.$refs.selection.toggleSelect(index);
         }
       });
     },
@@ -366,20 +360,24 @@ export default {
         multiId.push(val.userId);
       });
       if (multiId) {
-        deleteBatchRole(this.jobId, multiId.join(","), 0).then(res => {
-          if (res.success) {
-            this.$Message.success("删除成功!");
-            this.reload = true;
-            this.$emit("on-member-info-change", true);
-          }
-        });
+        deleteBatchRole(this.jobId, multiId.join(","), 0)
+          .then(res => {
+            if (res.success) {
+              this.$Message.success("删除成功!");
+              this.reload = true;
+              this.$emit("on-member-info-change", true);
+            }
+          })
+          .catch(error => {
+            this.$Message.error(error.data.message);
+          });
       }
     },
 
     //获取用户列表
-    getListUsers(currentPage, pageSize,filter) {
+    getListUsers(currentPage, pageSize, filter) {
       this.listUserLoading = true;
-      getAllUsers(pageSize, currentPage ,filter).then(res => {
+      getAllUsers(pageSize, currentPage, filter).then(res => {
         if (res.tableContent[0]) {
           this.listUserPageTotal = res.dataCount;
           this.listUserData = res.tableContent;
@@ -399,15 +397,33 @@ export default {
     },
 
     listUserChangePage(currentPage) {
-      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      let filter = JSON.stringify([
+        {
+          operator_1: "like",
+          value_1: this.searchValue,
+          property_1: "nickname",
+          link: "or",
+          operator_2: "like",
+          value_2: this.searchValue,
+          property_2: "userCode"
+        }
       ]);
-      this.getListUsers(currentPage, this.pageSize,filter);
+      this.getListUsers(currentPage, this.pageSize, filter);
     },
 
-         //点击切换每页显示条数
+    //点击切换每页显示条数
     onPageSizeChange(size) {
       this.pageSize = size;
-      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      let filter = JSON.stringify([
+        {
+          operator_1: "like",
+          value_1: this.searchValue,
+          property_1: "nickname",
+          link: "or",
+          operator_2: "like",
+          value_2: this.searchValue,
+          property_2: "userCode"
+        }
       ]);
       this.getListUsers(1, size, filter);
     },
@@ -419,12 +435,21 @@ export default {
       this.onPageSelection = [];
       this.getListUsers(this.listUserCurrentPage, this.pageSize);
     },
-   
+
     //过滤
     userFilter() {
-      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      let filter = JSON.stringify([
+        {
+          operator_1: "like",
+          value_1: this.searchValue,
+          property_1: "nickname",
+          link: "or",
+          operator_2: "like",
+          value_2: this.searchValue,
+          property_2: "userCode"
+        }
       ]);
-      this.getListUsers(this.listUserCurrentPage,this.pageSize,filter);
+      this.getListUsers(this.listUserCurrentPage, this.pageSize, filter);
     }
   }
 };

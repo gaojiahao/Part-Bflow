@@ -58,16 +58,7 @@
             <Button type="primary" size="small">查询</Button>
           </a>
         </div>
-        <Table 
-          height="400" 
-          size='small' 
-          ref="selection" 
-          :loading="listUserLoading" 
-          :columns="memberInfoColumnsModel" 
-          :data="listUserData" 
-          @on-select-all="onSelectAll" 
-          @on-selection-change="handerSelectionChange" 
-          @on-select-cancel="onSelectCancel">
+        <Table height="400" size='small' ref="selection" :loading="listUserLoading" :columns="memberInfoColumnsModel" :data="listUserData" @on-select-all="onSelectAll" @on-selection-change="handerSelectionChange" @on-select-cancel="onSelectCancel">
         </Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
@@ -184,17 +175,17 @@ export default {
                       title: "确认",
                       content: "确认删除该成员？",
                       onOk: () => {
-                        deleteOrgMember(
-                          this.groupId,
-                          params.row.userId,
-                          0
-                        ).then(res => {
-                          if (res.success) {
-                            this.$Message.success("删除成功!");
-                            this.reload = true;
-                            this.$emit("on-member-info-change", true);
-                          }
-                        });
+                        deleteOrgMember(this.groupId, params.row.userId, 0)
+                          .then(res => {
+                            if (res.success) {
+                              this.$Message.success("删除成功!");
+                              this.reload = true;
+                              this.$emit("on-member-info-change", true);
+                            }
+                          })
+                          .catch(error => {
+                            this.$Message.error(error.data.message);
+                          });
                       }
                     });
                   }
@@ -324,9 +315,9 @@ export default {
         return f.userId !== id;
       });
 
-      this.$refs.selection.data.forEach((item,index) => {
+      this.$refs.selection.data.forEach((item, index) => {
         if (id === item.userId) {
-          this.$refs.selection.toggleSelect(index)
+          this.$refs.selection.toggleSelect(index);
         }
       });
     },
@@ -347,7 +338,7 @@ export default {
       if (multiId) {
         addOrgMember(this.groupId, multiId.join(","), 1).then(res => {
           if (res.success) {
-            this.$Message.success('更新成功');
+            this.$Message.success("更新成功");
             this.reload = true;
             this.isShowMemberModal = false;
             this.$emit("on-member-info-change", true);

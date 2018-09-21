@@ -473,13 +473,17 @@ export default {
           delData.push({ groupId: val.groupId, parentId: "" });
         });
         if (delData) {
-          deleteBatchGroup(delData).then(res => {
-            if (res.success) {
-              this.$Message.success("删除成功!");
-              this.reload = true;
-              this.$emit("on-lower-organization-change", true);
-            }
-          });
+          deleteBatchGroup(delData)
+            .then(res => {
+              if (res.success) {
+                this.$Message.success("删除成功!");
+                this.reload = true;
+                this.$emit("on-lower-organization-change", true);
+              }
+            })
+            .catch(error => {
+              this.$Message.error(error.data.message);
+            });
         }
       } else {
         this.$Message.info("请选择要删除的下级组织");
@@ -489,8 +493,13 @@ export default {
     getAllLowerGroupByGroupType(currentPage, relfilter) {
       this.listUserLoading = true;
       let filter = relfilter ? relfilter : [];
-     
-      getAllLowerGroupByGroupType(currentPage, this.pageSize,this.groupType, JSON.stringify(filter)).then(res => {
+
+      getAllLowerGroupByGroupType(
+        currentPage,
+        this.pageSize,
+        this.groupType,
+        JSON.stringify(filter)
+      ).then(res => {
         this.listUserPageTotal = res.summary.total;
         this.listUserData = res.tableContent;
 
@@ -503,7 +512,7 @@ export default {
             });
           });
         }
-      this.listUserLoading = false;
+        this.listUserLoading = false;
       });
     },
     //过滤

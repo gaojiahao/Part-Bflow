@@ -94,7 +94,7 @@ export default {
                   size: "small"
                 },
                 style: {
-                  cursor: "pointer",
+                  cursor: "pointer"
                 },
                 on: {
                   click: () => {
@@ -102,15 +102,17 @@ export default {
                       title: "确认",
                       content: "确认删除该权限？",
                       onOk: () => {
-                        deleteRolePermission(this.jobId, params.row.id).then(
-                          res => {
+                        deleteRolePermission(this.jobId, params.row.id)
+                          .then(res => {
                             if (res.success) {
                               this.$Message.success("删除成功!");
                               this.reload = true;
                               this.$emit("on-permission-change", true);
                             }
-                          }
-                        );
+                          })
+                          .catch(error => {
+                            this.$Message.error(error.data.message);
+                          });
                       }
                     });
                   }
@@ -153,14 +155,18 @@ export default {
         multiId.push(val.id);
       });
       if (multiId) {
-        deleteRolePermission(this.jobId, multiId.join(",")).then(res => {
-          if (res.success) {
-            this.$Message.success("删除成功!");
-            this.selectPermissionNode = [];
-            this.reload = true;
-            this.$emit("on-permission-change", true);
-          }
-        });
+        deleteRolePermission(this.jobId, multiId.join(","))
+          .then(res => {
+            if (res.success) {
+              this.$Message.success("删除成功!");
+              this.selectPermissionNode = [];
+              this.reload = true;
+              this.$emit("on-permission-change", true);
+            }
+          })
+          .catch(error => {
+            this.$Message.error(error.data.message);
+          });
       }
     },
 

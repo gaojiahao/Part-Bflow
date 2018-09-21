@@ -113,6 +113,7 @@
         <permission :groupId="groupId" @on-permission-change='handleChangeObjDetailsCount'></permission>
       </section>
     </div>
+
     <member-modal v-model="isShowMemberModal" width="700" footerBtnAlign="right" title="选择组织" @on-ok="saveSelectionHighOrg">
       <div style="margin-top:10px;">
         <div class="app-search">
@@ -495,7 +496,7 @@ export default {
 
           saveBaseinfo(this.formItem).then(res => {
             if (res) {
-              this.$Message.success("保存成功");
+              this.$Message.success(res.message);
               this.$refs["formItem"].resetFields();
               this.formItem = {
                 groupName: "",
@@ -504,7 +505,9 @@ export default {
                 status: 1
               };
             }
-          });
+          }).catch(error=>{
+              this.$Message.error(error.data.message)
+            });;
         }
         if (!this.checkout) {
           this.$Message.error("名称已经存在!");
@@ -522,20 +525,24 @@ export default {
             delete this.formItem.groupId;
             saveBaseinfo(this.formItem).then(res => {
               if (res) {
-                this.$Message.success("保存成功");
+                this.$Message.success(res.message);
                 this.$router.push({
                   path: "/addressBook/organization/detail/" + res.groupId
                 });
                 window.location.reload();
               }
-            });
+            }).catch(error=>{
+              this.$Message.error(error.data.message)
+            });;
           } else if (this.groupId && this.checkout) {
             this.formItem.groupId = this.groupId;
             updateBaseinfo(this.formItem).then(res => {
               if (res) {
-                this.$Message.success("更新成功");
+                this.$Message.success(res.message);
                 window.location.reload();
               }
+            }).catch(error=>{
+              this.$Message.error(error.data.message)
             });
           }
           if (!this.checkout) {

@@ -94,7 +94,7 @@ export default {
                   size: "small"
                 },
                 style: {
-                  cursor: "pointer",
+                  cursor: "pointer"
                 },
                 on: {
                   click: () => {
@@ -102,17 +102,16 @@ export default {
                       title: "确认",
                       content: "确认删除该权限？",
                       onOk: () => {
-                        deleteOrgPermission(
-                          this.groupId,
-                          params.row.id
-                        ).then(res => {
-                          if (res.success) {
-                            this.$Message.success("删除成功!");
-                            this.reload = true;
-                            this.isShowModal = false;
-                            this.$emit("on-permission-change", true);
+                        deleteOrgPermission(this.groupId, params.row.id).then(
+                          res => {
+                            if (res.success) {
+                              this.$Message.success("删除成功!");
+                              this.reload = true;
+                              this.isShowModal = false;
+                              this.$emit("on-permission-change", true);
+                            }
                           }
-                        });
+                        );
                       }
                     });
                   }
@@ -185,15 +184,19 @@ export default {
         multiId.push(val.id);
       });
       if (multiId) {
-        addOrgPermission(this.groupId, multiId.join(",")).then(res => {
-          if (res.success) {
-            this.$Message.success(res.message);
-            this.selectPermissionNode = [];
-            this.reload = true;
-            this.isShowModal = false;
-            this.$emit("on-permission-change", true);
-          }
-        });
+        addOrgPermission(this.groupId, multiId.join(","))
+          .then(res => {
+            if (res.success) {
+              this.$Message.success(res.message);
+              this.selectPermissionNode = [];
+              this.reload = true;
+              this.isShowModal = false;
+              this.$emit("on-permission-change", true);
+            }
+          })
+          .catch(error => {
+            this.$Message.error(error.data.message);
+          });
       }
     },
 

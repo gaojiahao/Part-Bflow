@@ -18,29 +18,17 @@ Vue.config.productionTip = false;
 Vue.use(iView);
 Vue.use(VueWechatTitle);
 
-
-if(window.top.r2){
-  Vue.prototype.$currentUser = window.top.r2.global.WebContext.currentUser;
-  Vue.prototype.$deepstream = deepstream(window.top.r2.global.WebContext.currentUser)
-  new Vue({
-    el: '#app',
-    router,
-    components: { App },
-    template: '<App/>'
-  })
-}else{
-  getCurrentUserInfo().then(res => {
-    if (res) {
-      Vue.prototype.$currentUser = res;
-      Vue.prototype.$deepstream = deepstream(res)
-      /* eslint-disable no-new */
-      new Vue({
-        el: '#app',
-        router,
-        components: { App },
-        template: '<App/>'
-      })
-    }
-  })
-}
+getCurrentUserInfo().then(async (res) => {
+  if (res) {
+    Vue.prototype.$currentUser = res;
+    Vue.prototype.$deepstream = await deepstream(res);
+    /* eslint-disable no-new */
+    new Vue({
+      el: '#app',
+      router,
+      components: { App },
+      template: '<App/>'
+    })
+  }
+})
 

@@ -9,7 +9,7 @@
         <h3>管理员自评
         </h3>
       </Row>
-      <Row v-show="isAdminTrue" class="assessmentForm pad15" >
+      <Row v-if="isAdminTrue" class="assessmentForm pad15" >
           <Form 
             ref="formValidate" 
             :label-width="150" 
@@ -176,7 +176,11 @@ export default {
   },
   watch: {
     isAdmin: function(value) {
-      value && (this.isAdminTrue = true);
+      if (value) {
+        this.isAdminTrue = true;
+      } else {
+        this.isAdminTrue = false;
+      }
     }
   },
   methods: {

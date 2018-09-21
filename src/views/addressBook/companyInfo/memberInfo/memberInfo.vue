@@ -276,6 +276,8 @@ export default {
                 this.$emit("getInstanceCount");
                 this.getCompanyMember();
               }
+            }).catch(error => {
+                this.$Message.error(error.data.message);
             });
           }
         });
@@ -296,6 +298,8 @@ export default {
               this.$emit("getInstanceCount");
               this.getCompanyMember();
             }
+          }).catch(error => {
+              this.$Message.error(error.data.message);
           });
         }
       });
@@ -389,6 +393,8 @@ export default {
             this.$emit("getInstanceCount");
             this.getCompanyMember();
           }
+        }).catch(error => {
+            this.$Message.error(error.data.message);
         });
       } else {
         this.$Message.warning("请选择至少一个成员！");

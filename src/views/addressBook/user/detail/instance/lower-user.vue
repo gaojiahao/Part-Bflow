@@ -166,6 +166,8 @@ export default {
                         this.$Message.success('删除成功！');
                         this.getLowerUserData();
                         this.$emit('changeInstance');
+                      }).catch(error => {
+                          this.$Message.error(error.data.message);
                       })
                     }
                   });
@@ -297,6 +299,8 @@ export default {
             this.getLowerUserData();
             this.$emit('changeInstance');
           }
+        }).catch(error => {
+            this.$Message.error(error.data.message);
         })
       }else{
         this.$Message.warning('无用户ID，请先保存用户再进行编辑！');
@@ -320,6 +324,8 @@ export default {
               this.$Message.success('删除成功！');
               this.getLowerUserData();
               this.$emit('changeInstance');
+            }).catch(error => {
+                this.$Message.error(error.data.message);
             })
           }
         });

@@ -97,6 +97,8 @@ export default {
                           this.getDirPermissionData();
                           this.$emit('changeInstance');
                         }
+                      }).catch(error => {
+                          this.$Message.error(error.data.message);
                       })
                     }
                   });
@@ -164,6 +166,8 @@ export default {
             this.getDirPermissionData();
             this.$emit('changeInstance');
           }
+        }).catch(error => {
+            this.$Message.error(error.data.message);
         })
       }
     },
@@ -188,6 +192,8 @@ export default {
                   this.getDirPermissionData();
                   this.$emit('changeInstance');
                 }
+              }).catch(error => {
+                  this.$Message.error(error.data.message);
               })
             }
           });

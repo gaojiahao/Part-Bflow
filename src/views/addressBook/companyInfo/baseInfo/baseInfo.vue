@@ -279,6 +279,8 @@ export default {
             } else {
               this.$Message.error(res.message);
             }
+          }).catch(error => {
+              this.$Message.error(error.data.message);
           });
         }
       });
@@ -304,6 +306,8 @@ export default {
             } else {
               this.$Message.error(res.message);
             }
+          }).catch(error => {
+              this.$Message.error(error.data.message);
           });
         }
       });

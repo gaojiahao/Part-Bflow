@@ -103,13 +103,15 @@ export default {
                     },
                     on: {
                      'on-change': (permissionId) => {
-                       let userId,groupId,roleId,status;
+                       let userId,groupId,roleId,companyId,status;
                        if(params.row.list === 'sys_role_permission'){
                          roleId = params.row.objId;
                        }else if(params.row.list === 'sys_user_permission'){
                          userId = params.row.objId;
-                       }else{
+                       }else if(params.row.list === 'sys_group_permission'){
                          groupId = params.row.objId;
+                       }else{
+                         companyId = params.row.objId;
                        }
 
                        if(/_/.test(permissionId)){
@@ -119,7 +121,7 @@ export default {
                          status = 1;
                        }
 
-                      updateMemberPermission(userId,roleId,groupId,permissionId,this.listId,status).then(res => {
+                      updateMemberPermission(userId,roleId,groupId,companyId,permissionId,this.listId,status).then(res => {
                           if(res.success){
                             this.$Message.success(res.message);
                           }
@@ -204,7 +206,8 @@ export default {
               permissionIds = [],
               userId = [],
               groupId = [],
-              roleId = [];
+              roleId = [],
+              companyId = [];
           //获取permissionIds的集合
           params.row.action.forEach(val => {
             for (let k in val) {
@@ -217,14 +220,17 @@ export default {
               userId.push(val.id);
             }else if(val.type === 'group'){
               groupId.push(val.id);
-            }else{
+            }else if(val.type === 'role'){
               roleId.push(val.id);
+            }else{
+              companyId.push(val.id);
             }
           })
           depDeleteParams = {
             user: userId.join(','),
             group: groupId.join(','),
             role: roleId.join(','),
+            company: companyId.join(','),
             multi: permissionIds.join(",")
           };
           deleteRelationPermission(depDeleteParams).then(res => {

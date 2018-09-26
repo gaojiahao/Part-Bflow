@@ -3,57 +3,71 @@
 </style>
 
 <template>
-  <Modal v-model="showPermissionModal" title="应用权限" width="1000" :mask-closable="false" @on-ok="submitPermission" @on-visible-change="modalVisibleChange">
+  <Modal v-model="showPermissionModal" title="应用权限" width="1000" :styles="{top: '15px'}" :mask-closable="false" @on-ok="submitPermission" @on-visible-change="modalVisibleChange">
     <div>
       <Row :gutter="8" style="margin-bottom:10px;">
-        <Col span="4">
+        <Col span="3">
         <Button @click="selectUserModal" type="info" shape="circle">选择用户</Button>
         </Col>
-        <Col span="4">
+        <Col span="3">
         <Button @click="selectOrgModal" type="info" shape="circle">选择组织</Button>
         </Col>
-        <Col span="4">
+        <Col span="3">
         <Button @click="selectPositionModal" type="info" shape="circle">选择职位</Button>
+        </Col>
+        <Col span="3">
+        <Button @click="selectCompanyModal" type="info" shape="circle">选择公司</Button>
         </Col>
       </Row>
       <Row :gutter="8">
-        <Col span="12" class="permission-tab">
-        <Row style="margin-top:10px">
-          <Col span="3">
-          <b class="permission-title">用户</b>
-          </Col>
-          <Col span="21" class="member-body">
-          <Tag @on-close="deleteUser" v-for="(userData, index) of userSelectData" :key="index" :userId="userData.userId" closable color="warning">
-            {{ userData.nickname }}
-          </Tag>
-          </Col>
-        </Row>
-        <Row class="permission-line"></Row>
-        <Row>
-          <Col span="3">
-          <b class="permission-title">组织</b>
-          </Col>
-          <Col span="21" class="member-body">
-          <Tag @on-close="deleteOrg" v-for="(orgData, index) of orgSelectData" :key="index" :orgId="orgData.id" closable color="success">
-            {{ orgData.name }}
-          </Tag>
-          </Col>
-        </Row>
-        <Row class="permission-line"></Row>
-        <Row>
-          <Col span="3">
-          <b class="permission-title">职位</b>
-          </Col>
-          <Col span="21" class="member-body">
-          <Tag @on-close="deleteDepartment" v-for="(departmentData, index) of departmentSelectData" :key="index" :depId="departmentData.id" closable color="primary">
-            {{ departmentData.name }}
-          </Tag>
-          </Col>
-        </Row>
+        <Col span="12" class="permission-tab" style="height:480px">
+          <Row style="margin-top:10px">
+            <Col span="3">
+              <b class="permission-title">用户</b>
+            </Col>
+            <Col span="21" class="member-body">
+              <Tag @on-close="deleteUser" v-for="(userData, index) of userSelectData" :key="index" :userId="userData.userId" closable color="warning">
+                {{ userData.nickname }}
+              </Tag>
+            </Col>
+          </Row>
+          <Row class="permission-line"></Row>
+          <Row>
+            <Col span="3">
+            <b class="permission-title">组织</b>
+            </Col>
+            <Col span="21" class="member-body">
+            <Tag @on-close="deleteOrg" v-for="(orgData, index) of orgSelectData" :key="index" :orgId="orgData.id" closable color="success">
+              {{ orgData.name }}
+            </Tag>
+            </Col>
+          </Row>
+          <Row class="permission-line"></Row>
+          <Row>
+            <Col span="3">
+            <b class="permission-title">职位</b>
+            </Col>
+            <Col span="21" class="member-body">
+            <Tag @on-close="deleteDepartment" v-for="(departmentData, index) of departmentSelectData" :key="index" :depId="departmentData.id" closable color="primary">
+              {{ departmentData.name }}
+            </Tag>
+            </Col>
+          </Row>
+          <Row class="permission-line"></Row>
+          <Row>
+            <Col span="3">
+            <b class="permission-title">公司</b>
+            </Col>
+            <Col span="21" class="member-body">
+            <Tag @on-close="deleteCompany" v-for="(companyData, index) of companySelectData" :key="index" :comId="companyData.groupId" closable color="primary">
+              {{ companyData.groupName }}
+            </Tag>
+            </Col>
+          </Row>
         </Col>
         <Col span="12">
-        <Table @on-selection-change="permissionSelectChange" ref="actionRef" stripe height="350" :columns="allPermissionColumns" size="small" :data="allPermissionData">
-        </Table>
+          <Table @on-selection-change="permissionSelectChange" ref="actionRef" stripe height="480" :columns="allPermissionColumns" size="small" :data="allPermissionData">
+          </Table>
         </Col>
       </Row>
       <!-- 用户modal -->
@@ -119,6 +133,27 @@
           </Tag>
         </div>
       </Modal>
+      <!-- 公司modal -->
+      <Modal v-model="showCompanyModal" title="公司选择" :mask-closable="false" @on-ok="confirmCompany" @on-cancel="cancelSelectCom" :transfer="false">
+        <div class="app-search">
+          <Input v-model="searchComValue" @on-search="comFilter" :search="true" placeholder="搜索" style="width: 300px"></Input>
+          <p @click="comFilter" class="app-search-icon">
+            <Button type="primary" size="small">查询</Button>
+          </p>
+        </div>
+        <Table ref="companyTable" @on-select-cancel="selectComCancel" @on-select-all="onCompanySelectAll" @on-selection-change="selectCompanyClick" height="400" stripe size="small" :loading="comLoading" :columns="companyColumns" :data="companyData">
+        </Table>
+        <div class="user-page">
+          <div style="float: right;">
+            <Page :total="comTotal" :current="comCurrentPage" :page-size="pageSize" @on-change="onComPageChange" size="small" show-total></Page>
+          </div>
+        </div>
+        <div class="page-selection-warp" v-show="companySelection[0] ">
+          <Tag v-for="(item,index) in companySelection" :key="item.id" @on-close="deleteSelectCompany(item,index)" closable type="border" color="primary" size="small">
+            {{item.groupName}}
+          </Tag>
+        </div>
+      </Modal>
     </div>
   </Modal>
 </template>
@@ -132,6 +167,7 @@ import {
   getAllPermissionData,
   clearAppPermission
 } from "@/services//appService.js";
+import { getAllCompanys } from "@/services/addressBookService.js";
 import { APP_ACTION } from "@/assets/const";
 
 export default {
@@ -146,15 +182,19 @@ export default {
       selectUser: "",
       selectOrg: "",
       selectPosition: "",
+      selectCompany: "",
       searchUserValue: "",
       searchOrgValue: "",
       searchDepValue: "",
+      searchComValue: "",
       userTotal: 0,
       orgTotal: 0,
       depTotal: 0,
+      comTotal: 0,
       userCurrentPage: 1,
       orgCurrentPage: 1,
       depCurrentPage: 1,
+      comCurrentPage: 1,
       pageSize: 10,
       //监听数据变化刷新权限table
       emitChange: 0,
@@ -162,9 +202,11 @@ export default {
       userLoading: true,
       orgLoading: true,
       depLoading: true,
+      comLoading: true,
       showUserModal: false,
       showOrgModal: false,
       showDepartmentModal: false,
+      showCompanyModal: false,
       showPermissionModal: false,
       visibleLoading: true,
 
@@ -174,6 +216,8 @@ export default {
       orgData: [],
       departmentColumns: [],
       departmentData: [],
+      companyColumns: [],
+      companyData: [],
       allPermissionData: [],
       permissionSelectDatas: [],
       allPermissionColumns: [
@@ -196,9 +240,11 @@ export default {
       userSelectData: [],
       orgSelectData: [],
       departmentSelectData: [],
+      companySelectData: [],
       userSelection: [],
       orgSelection: [],
-      departmentSelection: []
+      departmentSelection: [],
+      companySelection: []
     };
   },
   watch: {
@@ -251,6 +297,11 @@ export default {
         ]),
         currentPageFilter = 1;
       this.selectPositionModal(filter,currentPageFilter);
+    },
+    //公司过滤
+    comFilter() {
+      let currentPageFilter = 1;
+      this.selectCompanyModal(this.searchComValue,currentPageFilter);
     },
     //用户数据加载
     selectUserModal(filter,currentPageFilter) {
@@ -338,6 +389,33 @@ export default {
             this.departmentData.map(item => {
               this.departmentSelection.map(sel => {
                 if (item.id == sel.id) {
+                  item._checked = true;
+                }
+              });
+            });
+          }
+        }
+      );
+    },
+    //公司数据加载
+    selectCompanyModal(filter,currentPageFilter) {
+      let companyColumn = [
+        { type: "selection", width: 60, align: "center" },
+        { title: "名称", key: "groupName" }
+      ];
+      this.showCompanyModal = true;
+      this.companyColumns = companyColumn;
+      this.comLoading = true;
+      getAllCompanys(this.pageSize, currentPageFilter?currentPageFilter:this.depCurrentPage, filter).then(
+        res => {
+          this.companyData = res.tableContent;
+          this.comTotal = res.dataCount;
+          this.comLoading = false;
+
+          if (this.companySelection.length > 0) {
+            this.companyData.map(item => {
+              this.companySelection.map(sel => {
+                if (item.groupId == sel.groupId) {
                   item._checked = true;
                 }
               });
@@ -475,6 +553,27 @@ export default {
         }, []);
       }
     },
+    //选择公司
+    selectCompanyClick(selection, row) {
+      if (selection.length === 0) {
+        let s = this.$refs.companyTable.data;
+        let p = this.companySelection;
+        s.map(item => {
+          p = p.filter(f => {
+            return f.groupId !== item.groupId;
+          });
+        });
+        this.companySelection = p;
+      } else {
+        let obj = {};
+        this.companySelection.push(...selection);
+        //数组去重
+        this.companySelection = this.companySelection.reduce((cur, next) => {
+          obj[next.groupId] ? "" : (obj[next.groupId] = true && cur.push(next));
+          return cur;
+        }, []);
+      }
+    },
     //职位全选
     onRoleSelectAll(selection) {
       let obj = {};
@@ -487,11 +586,31 @@ export default {
         return cur;
       }, []);
     },
+    //公司全选
+    onCompanySelectAll(selection) {
+      let obj = {};
+      //触发全选事件
+      //全选
+      this.companySelection.push(...selection);
+      //数组去重
+      this.companySelection = this.companySelection.reduce((cur, next) => {
+        obj[next.groupId] ? "" : (obj[next.groupId] = true && cur.push(next));
+        return cur;
+      }, []);
+    },
     //取消选择的职位
     selectDepCancel(selection, row) {
       this.departmentSelection.forEach((val, index) => {
         if (val.id === row.id) {
           this.departmentSelection.splice(index, 1);
+        }
+      });
+    },
+    //取消选择的公司
+    selectComCancel(selection, row) {
+      this.companySelection.forEach((val, index) => {
+        if (val.groupId === row.groupId) {
+          this.companySelection.splice(index, 1);
         }
       });
     },
@@ -504,9 +623,22 @@ export default {
         }
       })
     },
+    //删除选择的公司
+    deleteSelectCompany(item,index) {
+      this.companySelection.splice(index,1);
+      this.$refs.companyTable.data.forEach((data,i) => {
+        if(item.groupId === data.groupId){
+          this.$refs.companyTable.toggleSelect(i);
+        }
+      })
+    },
     //取消modal选择职位
     cancelSelectDep() {
       this.departmentSelection = this.departmentSelectData;
+    },
+    //取消modal选择公司
+    cancelSelectCom() {
+      this.companySelection = this.companySelectData;
     },
     //删除用户
     deleteUser(event) {
@@ -563,6 +695,24 @@ export default {
         }
       });
     },
+    //删除公司
+    deleteCompany(data, index) {
+      let comId = event.target.parentElement.getAttribute("comid"),
+          permissionIds = [];
+      this.permissionSelectDatas.forEach(val => {
+        permissionIds.push(val.id);
+      });
+      clearAppPermission('sys_group_permission',comId,permissionIds.join(',')).then(res => {
+        if (res.success) {
+          this.companySelectData = this.companySelectData.filter(f => {
+            return f.groupId != comId;
+          });
+          this.companySelectData = this.companySelectData.filter(f => {
+            return f.groupId != comId;
+          });
+        }
+      });
+    },
     //权限选择
     permissionSelectChange(selection, row) {
       this.permissionSelectDatas = selection;
@@ -595,6 +745,17 @@ export default {
         []
       );
     },
+    //添加公司权限
+    confirmCompany() {
+      let obj = {};
+      this.companySelectData = this.companySelection.reduce(
+        (cur, next) => {
+          obj[next.groupId] ? "" : (obj[next.groupId] = true && cur.push(next));
+          return cur;
+        },
+        []
+      );
+    },
     //提交权限
     submitPermission() {
       let userId = this.userSelectData.map(item => {
@@ -606,6 +767,9 @@ export default {
         roleId = this.departmentSelectData.map(item => {
           return item.id;
         }),
+        companyId = this.companySelectData.map(item => {
+          return item.groupId;
+        }),
         permissionId = this.permissionSelectDatas.map(item => {
           return item.id;
         }),
@@ -613,6 +777,7 @@ export default {
           userId: userId.join(","),
           roleId: roleId.join(","),
           groupId: groupId.join(","),
+          companyId: companyId.join(","),
           permissionId: permissionId.join(",")
         };
         if (params) {
@@ -672,6 +837,11 @@ export default {
       ]);
       this.depCurrentPage = currentPage;
       this.selectPositionModal(filter);
+    },
+    //公司page点击
+    onComPageChange(currentPage) {
+      this.comCurrentPage = currentPage;
+      this.selectPositionModal(this.searchComValue);
     }
   },
   mounted() {

@@ -111,6 +111,7 @@ export const addPermission = (params) => request('/H_roleplay-si/ps/insertObjPer
   userId: params.userId,
   roleId: params.roleId,
   groupId: params.groupId,
+  companyId: params.companyId,
   permissionId: params.permissionId
 }, 'POST');
 
@@ -313,10 +314,11 @@ export const ProhibitApp = (id, permType) => request('/H_roleplay-si/app/Prohibi
  * @author XiaoYing
  * 修改权限确认
  */
-export const updateMemberPermission = (userId, roleId, groupId, permissionId,listId,status) => request('/H_roleplay-si/app/updateAppActionPermission', {
+export const updateMemberPermission = (userId, roleId, groupId,companyId, permissionId,listId,status) => request('/H_roleplay-si/app/updateAppActionPermission', {
   user: userId,
   role: roleId,
   group: groupId,
+  company: companyId,
   multi: permissionId,
   listId: listId,
   status: status
@@ -324,7 +326,7 @@ export const updateMemberPermission = (userId, roleId, groupId, permissionId,lis
 
 /** 
  * @author XiaoYing
- * 删除某一用户或组织或职位全部权限
+ * 删除某一用户或组织或职位公司全部权限
  */
 export const clearAppPermission = (list,singleId,multiId) => request('/H_roleplay-si/ps/deleteRelation', {
   list: list,

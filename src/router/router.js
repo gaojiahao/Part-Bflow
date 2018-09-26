@@ -295,6 +295,14 @@ export const notifications = {
     import('@/views/notifications/notifications.vue')
 }
 
+//用户激活页面
+export const activation = {
+  path: '/activation',
+  name: 'activation',
+  component: () =>
+    import('@/views/activation/activation.vue')
+}
+
 
 
 export const routers = [
@@ -310,5 +318,6 @@ export const routers = [
   instanceCommetns,
   enterpriseInfo,
   notifications,
+  activation,
   ...appRouter
 ];

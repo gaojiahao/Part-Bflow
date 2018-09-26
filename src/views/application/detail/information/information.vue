@@ -37,7 +37,7 @@
               <span v-if="showAppEditAdmin">
                 <Icon type="person"></Icon>{{ appData.administrator }}
               </span>
-              <Input v-else @on-click="selectAdminModal" v-model="appData.administrator" icon="md-arrow-dropdown" style="width: 100px">
+              <Input v-else @on-click="selectAdminModal" @on-change="clearAdmintrstor" v-model="appData.administrator" icon="md-arrow-dropdown" style="width: 100px">
               </Input>
             </Col>
           </Row>
@@ -192,6 +192,12 @@ export default {
         window.top.location.href = '/Site/index.html#page/companys';
       }else{
         window.top.location.href = '/Site/index.html#list/'+this.appData.uniqueId;
+      }
+    },
+    //清除应用管理员
+    clearAdmintrstor() {
+      if(this.appData.administrator === ''){
+        this.appData.userId = '';
       }
     },
     //修改应用状态

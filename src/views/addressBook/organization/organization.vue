@@ -87,7 +87,7 @@
         </Form>
         <div class="baseinfo-container-action" @click="handleSubmitBoxs">
           <input type='submit' value="关闭" style="background-color:rgb(81, 90, 110)" class="baseinfo-container-action-submit" id="close" />
-          <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" id="edit" v-if="groupId" />
+          <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" id="edit" v-if="groupId && isPermission" />
           <input type='submit' value="保存" class="baseinfo-container-action-submit" id="save" v-show="!isEdit" />
           <input type='submit' value="保存并新建" class="baseinfo-container-action-submit" id="saveAndAdd" v-if="!groupId" />
         </div>
@@ -157,7 +157,8 @@ import {
   updateBaseinfo,
   checkoutFieldIsOnly,
   getAllHigherGroupByGroupType,
-  getAllUsers
+  getAllUsers,
+  getListById
 } from "@/services/addressBookService.js";
 import MemberModal from "@/components/modal/Modal";
 import PrincipalModal from "@/components/modal/Modal";
@@ -445,7 +446,8 @@ export default {
 
       checkout: true,
 
-      groupId: this.$route.params.groupId
+      groupId: this.$route.params.groupId,
+      isPermission: true
     };
   },
 
@@ -833,6 +835,12 @@ export default {
         }
       });
     }
+
+    getListById('000002').then(res => {
+        if(!res[0].action.update){
+          this.isPermission = false;
+        }
+      });
   }
 };
 </script>

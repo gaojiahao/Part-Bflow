@@ -12,6 +12,14 @@ export const checkoutFieldIsOnly = (tn, filter) => request('/H_roleplay-si/trans
   filter: filter
 });
 
+/**
+ * @author XiaoYing
+ * @description 获取应用信息
+ */
+export const getListById = (listId) => request('/H_roleplay-si/ds/list/getListById', {
+  uniqueId: listId
+});
+
 /************  用户  **************/
 
 /**

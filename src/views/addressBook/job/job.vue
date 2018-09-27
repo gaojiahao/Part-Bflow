@@ -66,7 +66,7 @@
         </Form>
         <div class="baseinfo-container-action" @click="handleSubmitBoxs">
           <input type='submit' value="关闭" style="background-color:rgb(81, 90, 110)" class="baseinfo-container-action-submit" id="close" />
-          <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" id="edit" v-if="jobId" />
+          <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" id="edit" v-if="jobId && isPermission" />
           <input type='submit' value="保存" class="baseinfo-container-action-submit" id="save" v-show="!isEdit" />
           <input type='submit' value="保存并新建" class="baseinfo-container-action-submit" id="saveAndAdd" v-if="!jobId"/>
         </div>
@@ -90,7 +90,8 @@ import {
   saveRoleBaseInfo,
   updateRoleBaseInfo,
   getObjDetailsCountByRoleId,
-  checkoutFieldIsOnly
+  checkoutFieldIsOnly,
+  getListById
 } from "@/services/addressBookService.js";
 import MemberModal from "@/components/modal/Modal";
 import MemberInfo from "./instance/job-member-info";
@@ -177,7 +178,8 @@ export default {
       },
       checkout: true,
 
-      jobId: this.$route.params.jobId
+      jobId: this.$route.params.jobId,
+      isPermission: true
     };
   },
 
@@ -371,6 +373,12 @@ export default {
         }
       });
     }
+
+    getListById('000003').then(res => {
+        if(!res[0].action.update){
+          this.isPermission = false;
+        }
+      });
   }
 };
 </script>

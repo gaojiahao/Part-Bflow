@@ -101,7 +101,7 @@
             <Button @click="goUserList" class="radius0" style="background-color: rgb(81, 90, 110) !important;color:#fff;font-weight:bold;padding: 6px 15px;">关闭</Button>
             <Button v-if="isAdd" @click="editUserInfo"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">{{ isEdit?'编辑':'放弃编辑'}}</Button>
             <Button v-if="!isEdit" @click="updateUserData"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">保存</Button>
-            <Button v-if="!isAdd" @click="saveAndAddUser" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">保存并新建</Button>
+            <Button v-if="!userId" @click="saveAndAddUser" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">保存并新建</Button>
         </Row>
         <Modal
             v-model="showCompanyModal"
@@ -127,7 +127,7 @@
 
 <script>
 import { getToken } from "@/utils/utils";
-import { updateUser,addUser,checkoutFieldIsOnly,getAllCompanys } from "@/services/addressBookService.js";
+import { updateUser,addUser,checkoutFieldIsOnly,getAllCompanys,getListById } from "@/services/addressBookService.js";
 
 export default {
   name: "userInfo",
@@ -464,10 +464,15 @@ export default {
   },
   mounted() {
       this.getAllCompanysData();
-      if(!this.userId){
-          this.isAdd = false;
-          this.isEdit = false;
-      }
+      getListById('000001').then(res => {
+        if(!this.userId){
+            this.isAdd = false;
+            this.isEdit = false;
+        }
+        if(!res[0].action.update){
+            this.isAdd = false;
+        }
+      });
   }
 };
 </script>

@@ -76,7 +76,7 @@
     </div>
     <Row class="info-btn">
       <Button @click="toCompanyLst" class="radius0" style="background-color: rgb(81, 90, 110) !important;color:#fff;font-weight:bold;padding: 6px 15px;">关闭</Button>
-      <Button v-if="isAdd" @click="isEditCompanyInfo" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">{{isEdit?'编辑':'放弃编辑'}}</Button>
+      <Button v-if="isAdd && isPermission" @click="isEditCompanyInfo" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">{{isEdit?'编辑':'放弃编辑'}}</Button>
       <Button v-if="baseInfoItem.groupId&&!isEdit" @click="updateCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">保存</Button>
       <Button v-else-if="!isEdit&&!isAdd" @click="addCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">保存</Button>
       <Button v-if="!baseInfoItem.groupId&&!isEdit&&!isAdd" @click="saveAndAddCompany" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">保存并新建</Button>
@@ -90,7 +90,8 @@ import {
   saveCompanyInfo,
   getCompanyInfoByGroupId,
   updateConpanyInfo,
-  checkValue
+  checkValue,
+  getListById
 } from "@/services/addressBookService.js";
 export default {
   data() {
@@ -102,6 +103,7 @@ export default {
       visible: false,
       isEdit: true,
       isAdd: true,
+      isPermission: true,
       cacheGroupName: "",
       cacheShortName: "",
       baseInfoItem: {
@@ -374,6 +376,12 @@ export default {
       return;
     }
     this.getCompanyInfo(groupId);
+
+    getListById('000004').then(res => {
+        if(!res[0].action.update){
+          this.isPermission = false;
+        }
+      });
   }
 };
 </script>

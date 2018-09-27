@@ -18,11 +18,11 @@
                     <FormItem prop="userName" label="昵称：">
                         <Input v-model="form.userName" placeholder="请输入昵称"></Input>
                     </FormItem>
-                    <FormItem prop="password" label="密码：">
+                    <FormItem prop="password" label="密码：(密码必须同时包含字母和数字，且不少于8位！)">
                         <Input type="password" v-model="form.password" placeholder="请输入密码"></Input>
                     </FormItem>
                     <FormItem prop="confirmPassword" label="确认密码：">
-                        <Input type="password" v-model="form.confirmPassword" placeholder="请确认密码"></Input>
+                        <Input type="password" @on-blur="blurConfirmPwd" v-model="form.confirmPassword" placeholder="请确认密码"></Input>
                     </FormItem>
                     <FormItem>
                         <Button @click="handleSubmit" type="primary" long>激活</Button>
@@ -55,7 +55,7 @@ export default {
           { required: true, message: "昵称不能为空", trigger: "blur" }
         ],
         password: [
-          { required: true, message: "密码不能为空", trigger: "blur" }
+          { required: true, message: "密码必须同时包含字母和数字，且不少于8位！",pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/, trigger: "blur" }
         ],
         confirmPassword: [
           { required: true, message: "确认密码不能为空", trigger: "blur" }
@@ -85,10 +85,16 @@ export default {
                 this.$Message.error(err.data.message);
               });
           } else {
-            this.$Message.error("两次输入的密码不一致！");
+            this.$Message.error("两次输入的密码不一致！请重新输入");
           }
         }
       });
+    },
+    //失去焦点再次确定密码一致性
+    blurConfirmPwd() {
+      if (this.form.password !== this.form.confirmPassword){
+        this.$Message.error("两次输入的密码不一致！请重新输入");
+      }
     }
   },
   mounted() {}

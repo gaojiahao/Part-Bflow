@@ -126,7 +126,7 @@
     height: 40px;
     line-height: 40px;
     border-bottom: 1px solid #e8e8e8;
-    padding-left: 15px;
+    padding: 0px 15px;
     background-color: #fff;
 }
 
@@ -329,7 +329,7 @@ margin-top: 0;
   color: #2db7f5;
 }
 .success-color{
-  color: #19be6b;
+  color: #009688;
 }
 .warning-color{
   color: #ff9900;

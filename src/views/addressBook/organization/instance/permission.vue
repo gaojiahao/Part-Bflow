@@ -205,12 +205,19 @@ export default {
       if (this.allPermissionData.length === 0) {
         getAllPermissionData(0).then(res => {
           res.tableContent.forEach(val => {
-            this.allPermissionData.push({
-              title: val.name,
-              id: val.id,
-              loading: false,
-              children: []
-            });
+            if(val.leaf === 'false'){
+              this.allPermissionData.push({
+                title: val.name,
+                id: val.id,
+                loading: false,
+                children: []
+              });
+            }else{
+              this.allPermissionData.push({
+                title: val.name,
+                id: val.id
+              });
+            }
           });
         });
       }

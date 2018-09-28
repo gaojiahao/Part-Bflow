@@ -260,10 +260,6 @@ export default {
   },
 
   methods: {
-    modalVisibleChange(val) {
-      this.$refs["formValidate"].resetFields();
-    },
-
     /**
      * 提交变更日志
      */
@@ -291,7 +287,7 @@ export default {
           if (res.success) {
             this.$Message.success(res.message);
             document.getElementById("editor").innerHTML = "";
-            this.modalFormData.scope = [];
+            this.$refs["formValidate"].resetFields();
             this.getChangeLog();
           } else {
             //faild todo

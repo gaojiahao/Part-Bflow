@@ -6,9 +6,9 @@
     <div class="app" style="margin-top:15px;">
         <Row class="app-action">
             <Row class="app-action-title">
-                <h3>动作<a v-if="isAdminTrue" @click="showModal" class="app-action-title-add">授权</a>
+                <h3>数据源<a v-if="isAdminTrue" @click="showModal" class="app-action-title-add">授权</a>
                 </h3>
-                <span class="warning-color marlr">授予用户、组织或职位当前应用动作的权限</span>
+                <span class="warning-color marlr">用户默认可查看我创建的实例、我经办的实例、我负责的组织经办的实例</span>
             </Row>
             <div class="app-action-source">
                 <Row>
@@ -30,13 +30,13 @@
 import {
   getAppResourcesAndAuthoritys,
   deleteRelationPermission,
-  getAllPermissionData,
+  getAllResourcePermissionData,
   updateMemberPermission
 } from "@/services/appService.js";
-import ActionModal from "./action-modal";
+import ActionModal from "../action/action-modal";
 
 export default {
-  name: "permissionSource",
+  name: "permissionSourceData",
   components: {
     ActionModal
   },
@@ -50,11 +50,11 @@ export default {
       isAdminTrue: false,
       //监听modal是否添加权限
       isModalConfirm: 1000,
-      actionData: [],
-      modalName: 'action',
+      resourceData: [],
+      modalName: 'resource',
       columns: [
         {
-          title: "已授权用户、组织或职位",
+          title: "已授权用户、用户组",
           key: "objNames",
           render: (h, params) => {
             let objNames = params.row.objNames,
@@ -70,11 +70,11 @@ export default {
           }
         },
         {
-          title: "动作",
+          title: "数据源",
           key: "source",
           width: 800,
           render: (h, params) => {
-            let actionSource = params.row.action,
+            let actionSource = params.row.resource,
                 renderData = [],
                 actionId = [];
 
@@ -84,7 +84,7 @@ export default {
               }
             });
 
-            this.actionData.forEach((val,index) => {
+            this.resourceData.forEach((val,index) => {
               let pushData,pushDataStatus;
               actionId.forEach(data => {
                 if(data == val.id){
@@ -144,7 +144,7 @@ export default {
   },
   watch: {
     isModalConfirm: function() {
-      this.getActionData();
+      this.getResourceData();
     },
     isAdmin: function(value) {
       const lastColumn = {
@@ -192,8 +192,8 @@ export default {
     emitPermissionModal() {
       this.showActionModal = false;
     },
-    getActionData() {
-      getAppResourcesAndAuthoritys('action',this.listId).then(res => {
+    getResourceData() {
+      getAppResourcesAndAuthoritys('resource',this.listId).then(res => {
         this.userSources = res.tableContent;
       });
     },
@@ -238,7 +238,7 @@ export default {
           deleteRelationPermission(depDeleteParams).then(res => {
             if (res.success) {
               that.$Message.success(res.message);
-              this.getActionData();
+              this.getResourceData();
             }
           });
         }
@@ -246,12 +246,12 @@ export default {
     },
   },
   created() {
-    getAllPermissionData(this.listId).then(res => {
-      this.actionData = res.tableContent;
+    getAllResourcePermissionData(this.listId).then(res => {
+      this.resourceData = res.tableContent;
     })
   },
   mounted() {
-    this.getActionData();
+    this.getResourceData();
   }
 };
 </script>

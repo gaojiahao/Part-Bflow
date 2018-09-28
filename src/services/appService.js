@@ -64,6 +64,14 @@ export const getAllPermissionData = (listId) => request('/H_roleplay-si/ds/getAc
 
 /**
  * @author XiaoYing
+ * @description 获取所有数据源权限数据
+ */
+export const getAllResourcePermissionData = (listId) => request('/H_roleplay-si/ds/getResPermissionByListId', {
+  listId: listId
+});
+
+/**
+ * @author XiaoYing
  * @description 获取用户数据
  */
 export const getAllUserData = (currentPage, pageSize, filter) => request('/H_roleplay-si/ds/getUserList2', {

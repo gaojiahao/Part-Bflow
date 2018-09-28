@@ -30,7 +30,7 @@
           <!-- 管理员自评 -->
           <admintrstor-assessment :isAdmin="isAdmin"></admintrstor-assessment>
           <!-- 用户评论 -->
-          <user-comments></user-comments>
+          <user-comments ></user-comments>
         </TabPane>
         <TabPane label="资源" name="name3">
           <permission-source 

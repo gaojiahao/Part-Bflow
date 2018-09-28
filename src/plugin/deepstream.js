@@ -15,6 +15,8 @@ export async function deepstream(currentUser) {
         deeps = ds(`wss://${address}`),
         token = getToken(),
         name = currentUser.name ? currentUser.name : currentUser.nickname;
+
+    
     if (name && currentUser.userId) {
         let username = [name, currentUser.userId].join("|");
         //注册deepStream

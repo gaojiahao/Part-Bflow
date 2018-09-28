@@ -3,100 +3,76 @@
 </style>
 <template>
     <div class="notificas">
-        <Row type="flex" justify="center" class="code-row-bg">
-            <Col span="8" class="bg_ff marlr10" style="min-width: 500px;">
-                <div class="notificas-header">
-                    <span class="marlr10">应用</span>
-                    <span class="marlr10">实例</span>
-                </div>
-                <div class="notificas-item" v-for="(n,index) in  notifications" :key="index">
-                    <img class="notificas-item-img" 
-                        onerror="src='resources/images/icon/defaultUserPhoto.jpg'"
-                        :src="n.photo">
-                    <div class="notificas-item-content">
-                        <div class="notificas-item-content-title">
-                            {{n.creatorName}}
-                        </div>
-                        <div class="notificas-item-content-subtitle">
-                            <p v-if="n.type=='listComment'">
-                                <span>评论了您负责的应用</span>
-                                <a>【销售订单】</a> 
-                                <span v-overTimeDirective="{time:n.crtTime}"></span>
-                            <p v-if="n.type=='instanceComment'">
-                                <span>评论了您创建的实例</span>
-                                <a>【WL1536231288652】</a> 
-                                <span v-overTimeDirective="{time:n.crtTime}"></span>
-                            <p v-if="n.type=='replyComment'">
-                                <span>回复了您</span>
-                                <a>【WL1536231288652】</a> 
-                                <span v-overTimeDirective="{time:n.crtTime}"></span>
-                            <p v-if="n.type=='praise'">
-                                <span>给您点赞啦</span>
-                                <span v-overTimeDirective="{time:n.crtTime}"></span>
-                            </p>
-                        </div>
+        <Row type="flex" justify="center" class="notificas-content notificas-layout">
 
-                        <div class="notificas-item-content-txt" v-if="n.type!='praise'">
-                            <div v-html="n.content"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="notificas-footer" v-if="visiblebuttom">我是有底线的</div>
+            <Col span="4" class="bg_ff notificas-layout-sider ">
+                <notifi-layout-sider :handleAvtiveNav='handleAvtiveNav'></notifi-layout-sider>
+             </Col>
+
+            <Col span="16" class="notificas-list bg_ff notificas-layout-content" >
+               
+                <notifications-header 
+                    :nav='avtiveNav' 
+                    v-if="avtiveNav.listName" 
+                    :handleExpendHistory="handleExpendHistory">
+                </notifications-header>
+                
+                <Row class="notificas-layout-content-notificwin" >
+                    <Col :span="expendHistoryVisbible?'16':'24'" class="notificas-layout-content-notificwin-msg">
+                       <notifilist 
+                            ref='notifilist'  
+                            :listId="avtiveNav.listId" 
+                            v-if="avtiveNav.listId">
+                        </notifilist>
+                    </Col>
+                    <Col span="8" v-if="expendHistoryVisbible" class="notificas-layout-content-notificwin-orderlist" >
+                        <notifi-history 
+                            :listId="avtiveNav.listId" 
+                            :expendVisbible="expendHistoryVisbible" 
+                            v-if="avtiveNav.listId">
+                        </notifi-history>
+                    </Col>
+                    
+                </Row>
             </Col>
         </Row>
+
+
+      
     </div>
 </template>
 <script>
-import {
-  getAllnotifications
-} from "@/services/notificationsService";
+
+import notifilist from "@/views/notifications/notifilist";
+import notifiLayoutSider from "@/views/notifications/notifiLayoutSider";
+import notifiHistory from "@/views/notifications/notifiHistory";
+import notificationsHeader from "@/views/notifications/notificationsHeader";
+
 export default {
     name:'notifications',
+    components: {
+        notifilist,
+        notifiLayoutSider,
+        notifiHistory,
+        notificationsHeader
+    },
     data(){
         return {
-            notifications:[
-            ],
-            visiblebuttom:false,
-            pageInfo:{
-                page:1,
-                limit:10,
-            }
+            avtiveNav:{},
+            expendHistoryVisbible:false
         }
     },
     methods:{
-        resreshNotifics(){
-            getAllnotifications(this.pageInfo).then(res =>{
-                this.notifications =  this.notifications.concat(res.tableContent);
-                if(this.notifications === res.dataCount){
-                    this.visiblebuttom = true;
-                }
-            });
+       
+        handleAvtiveNav(nav){
+            this.avtiveNav = nav;
         },
-        handleScroll () {
-            
-            var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-
-            if(document.body.scrollHeight  === (document.body.clientHeight+scrollTop)){
-                this.pageInfo.page++;
-                this.resreshNotifics();
-            }
-        },
-
-        //订阅消息
-        subscribeMessage: function() {
-            let deepstream = this.$deepstream;
-            let userId = this.$currentUser.userId;
-            //消息订阅
-            deepstream.event.subscribe("commentMessage/" + userId, msg => {
-                this.notifications.unshift(...msg.tableContent);
-            });
-        },
-        
+        handleExpendHistory(expendVisible){
+            this.expendHistoryVisbible = expendVisible;
+        }
+       
     },
     mounted(){
-        this.resreshNotifics();
-        this.subscribeMessage();
-        window.addEventListener('scroll', this.handleScroll)
     }
 }
 </script>

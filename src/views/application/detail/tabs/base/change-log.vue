@@ -213,7 +213,7 @@ export default {
         content: [
           {
             required: true,
-            message: "不允许为空"
+            message: " "
           }
         ]
       },

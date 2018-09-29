@@ -8,6 +8,8 @@
     <operation-manage :enabledForbidden="enabledForbidden" :isAdmin="isAdmin"></operation-manage>
     <!-- 动作管理 -->
     <action-manage :isAdmin="isAdmin"></action-manage>
+    <!-- 数据源管理 -->
+    <permission-data-source :isAdmin="isAdmin"></permission-data-source>
     <!-- 报表视图 -->
     <report-view :appType="appType" :isAdmin="isAdmin"></report-view>
     <!-- 表单 -->
@@ -23,6 +25,7 @@ import ReportView from './report/report';
 import AppForm from './form/form';
 import WorkFlow from './workflow/workflow';
 import ActionManage from './action/action';
+import PermissionDataSource from './datasource/data-source';
 
 export default {
   name: "permissionSource",
@@ -31,7 +34,8 @@ export default {
     ReportView,
     AppForm,
     WorkFlow,
-    ActionManage
+    ActionManage,
+    PermissionDataSource
   },
   props: {
     listId: String,

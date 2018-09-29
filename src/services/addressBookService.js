@@ -544,10 +544,11 @@ export const getCompanyList = (groupId, target, currentPage, pageSize) => reques
  * @author zhaohuai
  * 获取公司成员
  */
-export const getGroupUser = (groupId, currentPage, pageSize) => request('/H_roleplay-si/sysGroup/getGroupUser', {
+export const getGroupUser = (groupId, currentPage, pageSize,text) => request('/H_roleplay-si/sysGroup/getGroupUser', {
   groupId: groupId,
   currentPage: currentPage,
-  pageSize: pageSize
+  pageSize: pageSize,
+  search: text 
 })
 /**
  * @author zhaohuai

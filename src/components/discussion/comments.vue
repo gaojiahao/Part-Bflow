@@ -123,6 +123,7 @@
 
 import { 
     commentThumbsUp,
+    cancelCommentThumbsUp,
     saveComment,
     getComments,
     getUserInfoByUserId
@@ -179,7 +180,26 @@ export default {
         },
         handleThumbsUp:function (comment) {
             this.$forceUpdate();
-            commentThumbsUp({commentId:comment.id}).then(res=>{
+
+            if(comment.isPraise){
+                
+                 cancelCommentThumbsUp(comment.id).then(res=>{
+                    if(!res.success){
+                        this.$Notice.warning({
+                            title: '系统提示',
+                            desc: '点赞,您可以尝试再次点赞或者联系企业管理员哦!'
+                        });
+                        return;
+                    }
+                    
+                    if(this.$refs.praises){
+                        (this.$refs.praises.length>0) && (this.$refs.praises[0].refreshPraises());
+                    }
+                    comment.isPraise = false;
+                    comment.praiseNum--;
+                });
+            }else{
+                 commentThumbsUp({commentId:comment.id}).then(res=>{
                 if(!res.success){
                     this.$Notice.warning({
                         title: '系统提示',
@@ -194,6 +214,9 @@ export default {
                 comment.isPraise = true;
                 comment.praiseNum++;
             });
+            }
+
+           
         },
         handleShowChilds:function (comment) {
             this.$forceUpdate();

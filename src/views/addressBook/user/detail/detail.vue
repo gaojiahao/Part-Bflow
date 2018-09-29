@@ -25,7 +25,7 @@
       <div 
         @click="onClickTab(index)"
         v-if="userInformation.userId?item.isShow:item.isShowAcive"
-        :class="{'detail-tabs-child':true,'active':item.isShowAcive}" 
+        :class="{'detail-tabs-child':true,'active-item':item.isShowAcive}" 
         v-for="(item,index) of relativeInstance"
         :key="index">
         <img v-if="!item.type" :src="item.imgUrl"/>

@@ -25,7 +25,7 @@
           <label class="left-leble">企业简称</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.nickname}}</span>
           <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.nickname" class="input-common-att" />
-          <a @click="handleEditName">{{edit}}</a>
+          <a @click="handleEditName" v-if="$currentUser.isAdmin">{{edit}}</a>
         </div>
         <div class="select-explain">
           <label class="left-leble">企业全称</label>
@@ -60,20 +60,20 @@
             <Tag v-for="item in enterpriseInfo.admins" :key="item.userId" :userId="item.userId" type="border" :closable="closable" color="blue" size="small" @on-close="deleteEnterpriseAdmin">
               {{item.nickname}}
             </Tag>
-            <a @click="selectAdminModal" style="font-size:14px;">添加</a>
+            <a @click="selectAdminModal" v-if="$currentUser.isAdmin" style="font-size:14px;">添加</a>
           </div>
         </div>
       </section>
       <section class="info-warp-main-section">
         <div>
           <label class="left-leble">网占登录页背景图</label>
-          <div style="display: inline-block;vertical-align: middle;">
-            <Upload :show-upload-list="false" :before-upload="handleUploadBefore" :on-success="handleBackgroundSuccess" action="/H_roleplay-si/ds/upload" :headers="httpHeaders">
+          <div style="display: inline-block;vertical-align: middle;" >
+            <Upload v-if="$currentUser.isAdmin" :show-upload-list="false" :before-upload="handleUploadBefore" :on-success="handleBackgroundSuccess" action="/H_roleplay-si/ds/upload" :headers="httpHeaders">
               <Button icon="ios-cloud-upload-outline">选择背景图</Button>
             </Upload>
             <div v-if="enterpriseInfo.backgroundName">上传文件名称:
               <a :href="enterpriseInfo.backgroundImg" target="_blank">{{ enterpriseInfo.backgroundName }}</a>
-              <Button type="text" @click="upload" :loading="loadingStatus">{{ loadingStatus ? '上传中' : '点击上传' }}</Button>
+              <Button v-if="$currentUser.isAdmin" type="text" @click="upload" :loading="loadingStatus">{{ loadingStatus ? '上传中' : '点击上传' }}</Button>
             </div>
           </div>
         </div>
@@ -428,7 +428,6 @@ export default {
       });
     }
   },
-
   created() {
     this.getAdmintrstorData();
   }

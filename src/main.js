@@ -20,7 +20,17 @@ Vue.use(VueWechatTitle);
 
 getCurrentUserInfo().then(async (res) => {
   if (res) {
+
+    let user = res;
+        user.isAdmin =false;
+
+    user.isSysRoleList.map(role=>{
+      if(role.id === 1){
+        user.isAdmin = true;
+      }
+    });
     Vue.prototype.$currentUser = res;
+    
     Vue.prototype.$deepstream = await deepstream(res);
     /* eslint-disable no-new */
     new Vue({

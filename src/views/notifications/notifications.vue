@@ -3,13 +3,13 @@
 </style>
 <template>
     <div class="notificas">
-        <Row type="flex" justify="center" class="notificas-content notificas-layout">
+        <div  class="notificas-content notificas-layout">
 
-            <Col span="6" class="bg_ff notificas-layout-sider ">
+            <div  class="bg_ff notificas-layout-sider ">
                 <notifi-layout-sider :handleAvtiveNav='handleAvtiveNav'></notifi-layout-sider>
-             </Col>
+             </div>
 
-            <Col span="18" class="notificas-list bg_ff notificas-layout-content" >
+            <div  class="notificas-list bg_ff notificas-layout-content" >
                
                 <notifications-header 
                     :nav='avtiveNav' 
@@ -35,11 +35,8 @@
                     </Col>
                     
                 </Row>
-            </Col>
-        </Row>
-
-
-      
+            </div>
+        </div>
     </div>
 </template>
 <script>

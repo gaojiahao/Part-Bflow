@@ -281,13 +281,7 @@ export const getAssessmentByListId = (listId,pageSize,currentPage) => request('/
  * @author XiaoYing
  * 管理员自评数据新增
  */
-export const saveAssessment = (params) => request('/H_roleplay-si/app/saveAssessment', {
-  listId: params.listId,
-  chance: params.opportunity,
-  achievement: params.result,
-  date: params.date,
-  id: params.id
-}, 'POST');
+export const saveAssessment = (params) => request('/H_roleplay-si/app/saveAssessment', {}, 'POST',params);
 
 /** 
  * @author GuoZheng

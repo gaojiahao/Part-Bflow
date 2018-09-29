@@ -24,6 +24,11 @@
                             :listId="avtiveNav.listId" 
                             v-if="avtiveNav.listId">
                         </notifilist>
+
+                        <div v-if="!avtiveNav.listId" style="height: 100%;width: 100%;position: relative;">
+                            <Icon style="font-size: 50px;position: absolute;left: 50%;top: 50%;" type="ios-notifications-outline" :size=60 />
+                        </div>
+                        
                     </Col>
                     <Col span="8" v-if="expendHistoryVisbible" class="notificas-layout-content-notificwin-orderlist" >
                         <notifi-history 

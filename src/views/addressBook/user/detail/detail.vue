@@ -8,10 +8,18 @@
       <div class="detail-header-bread">
         <span class="detail-header-bread-user">用户</span>
         <span class="detail-header-bread-others">/</span>
-        <span v-if="userInformation.nickname?true:false" class="detail-header-bread-others">{{ userInformation.nickname }}</span>
+        <span 
+          v-if="userInformation.nickname?true:false" 
+          class="detail-header-bread-others">
+          {{ userInformation.nickname }}
+        </span>
         <span class="detail-header-bread-others">{{ userInformation.userCode?'':'创建' }}</span>
       </div>
-      <Tag v-show="userInformation.status?showTag:!showTag" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:userInformation.status}"></Tag>
+      <Tag 
+        v-show="userInformation.status?showTag:!showTag" 
+        class="radius10 marlr10 color_fff" 
+        v-instanceStateDirective="{status:userInformation.status}">
+      </Tag>
     </Row>
     <Row class="detail-tabs">
       <div 

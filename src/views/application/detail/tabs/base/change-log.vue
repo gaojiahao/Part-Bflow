@@ -196,21 +196,21 @@ export default {
       },
       ruleValidate: {
         //变更日志表单校验
-        scope: [
+        scope: [  
           {
             type: "array",
             required: true,
-            message: "不允许为空"
+            message: "不允许为空" 
           }
         ],
-        spendTime: [
+        spendTime: [ 
           {
-            required: true,
+            required: true, 
             message: "不允许为空",
             type: "number"
           }
         ],
-        content: [
+        content: [ 
           {
             required: true,
             message: " "

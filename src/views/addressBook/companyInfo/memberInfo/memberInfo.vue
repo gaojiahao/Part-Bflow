@@ -323,7 +323,7 @@ export default {
     //当前页改变
     pageChange(currentPage) {
       this.memberCurrentPage = currentPage;
-      this.getCompanyMember(currentPage);
+      this.getCompanyMember(this.searchTableValue);
     },
     //弹出所有用户
     showAllMember() {

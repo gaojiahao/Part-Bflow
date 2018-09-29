@@ -76,11 +76,12 @@ export const getRoleData = (userId, pageSize, currentPage) => request('/H_rolepl
  * @author XiaoYing
  * @description 获取user直接权限数据
  */
-export const getDirectPermissionData = (userId, pageSize, currentPage) => request('/H_roleplay-si/ds/getObjectPermission2Oneself', {
+export const getDirectPermissionData = (userId, pageSize, currentPage,filter) => request('/H_roleplay-si/ds/getObjectPermission2Oneself', {
   objectName: 'user',
   objectId: userId,
   page: currentPage,
-  limit: pageSize
+  limit: pageSize,
+  filter: filter
 });
 
 /**

@@ -42,7 +42,11 @@
         <div class="higher-user-detail" id="cliHeight">
             <b @click="showUserModal" class="higher-user-detail-btn">上级用户</b>
             <span style="color: #7a7676;">-添加上级用户</span>
-            <Table ref="selection" :columns="columns" :loading="loading" :data="higherUserData"></Table>
+            <Table ref="selection" 
+              :columns="columns" 
+              :loading="loading" 
+              :data="higherUserData">
+            </Table>
         </div>
         <Modal
             v-model="showModal"
@@ -51,15 +55,40 @@
             :styles="{top: '20px'}"
             width="1000">
             <div class="app-search">
-              <Input @on-search="userFilter" :search="true" v-model="searchValue" placeholder="搜索工号或名称" style="width: 300px"></Input>
+              <Input 
+                @on-search="userFilter" 
+                :search="true" 
+                v-model="searchValue" 
+                placeholder="搜索工号或名称" 
+                style="width: 300px">
+              </Input>
               <p @click="userFilter" class="app-search-icon">
                   <Button type="primary" size="small">查询</Button>
               </p>
             </div>
-            <Table class="rfd-principal-table" @on-row-dblclick="onDbClick" @on-row-click="onRowClick" ref="selection" :highlight-row="true" height="400" :loading="userLoading" :columns="userColumns" :data="userData"></Table>
+            <Table 
+              class="rfd-principal-table" 
+              @on-row-dblclick="onDbClick" 
+              @on-row-click="onRowClick" 
+              ref="selection" 
+              :highlight-row="true" 
+              height="400" 
+              :loading="userLoading" 
+              :columns="userColumns" 
+              :data="userData">
+            </Table>
             <div class="user-page">
                 <div class="fr">
-                  <Page @on-page-size-change="onAllUserPageSizeChange" :total="highUser.usertotal" show-elevator show-sizer :current="highUser.usercurrentPage" :page-size="highUser.allUserpageSize" @on-change="onUserPageChange" size="small" show-total></Page>
+                  <Page 
+                    @on-page-size-change="onAllUserPageSizeChange" 
+                    :total="highUser.usertotal" 
+                    show-elevator show-sizer 
+                    :current="highUser.usercurrentPage" 
+                    :page-size="highUser.allUserpageSize"
+                    @on-change="onUserPageChange" 
+                    size="small" 
+                    show-total>
+                   </Page>
                 </div>
             </div>
         </Modal>
@@ -67,7 +96,12 @@
 </template>
 
 <script>
-import { getHighUserData,getAllUsers,updateHighUser,deleteUser } from "@/services/addressBookService.js";
+import { 
+  getHighUserData,
+  getAllUsers,
+  updateHighUser,
+  deleteUser 
+  } from "@/services/addressBookService.js";
 
 export default {
   name: "higherUser",

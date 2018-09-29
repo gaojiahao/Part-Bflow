@@ -6,14 +6,14 @@
     <div class="app-workflow">
         <Row class="app-workflow-title">
             <h3>工作流  
-            <Dropdown v-if="isAdminTrue" @on-click="createWorkflow">
+            <Dropdown v-if="isAdminTrue && isOperationShow" @on-click="createWorkflow">
               <a href="javascript:void(0)">
                   操作
                   <Icon type="arrow-down-b"></Icon>
               </a>
               <DropdownMenu slot="list">
-                  <DropdownItem name="create">添加创建实例工作流</DropdownItem>
-                  <DropdownItem name="update">添加修改实例工作流</DropdownItem>
+                  <DropdownItem v-show="isCreateShow" name="create">添加创建实例工作流</DropdownItem>
+                  <DropdownItem v-show="isUpdateShow" name="update">添加修改实例工作流</DropdownItem>
               </DropdownMenu>
             </Dropdown>
             </h3>
@@ -42,6 +42,9 @@ export default {
     return {
       listId: this.$route.params.listId,
       isAdminTrue: false,
+      isOperationShow: true,
+      isCreateShow: true,
+      isUpdateShow: true,
       deleteRelationWorkflow: -1,
       columns: [
         {
@@ -139,7 +142,29 @@ export default {
     //获取已关联流程数据
     getRelativeWorkflowData() {
       getProcessDataByListId(this.listId).then(res => {
+        let triggerType = [];
         this.workflows = res;
+        //控制修改或创建实例权限
+        if(this.workflows.length > 0){
+          this.workflows.forEach(val => {
+            triggerType.push(val.triggerType);
+          });
+          if(/create/.test(triggerType) && /update/.test(triggerType)){
+            this.isOperationShow = true;
+            this.isCreateShow = true;
+            this.isUpdateShow = true;
+          }else if(/create/.test(triggerType)){
+            this.isOperationShow = true;
+            this.isCreateShow = true;
+            this.isUpdateShow = false;
+          }else if(/update/.test(triggerType)){
+            this.isOperationShow = true;
+            this.isCreateShow = false;
+            this.isUpdateShow = true;
+          }else{
+            this.isOperationShow = false;
+          }
+        }
       });
     },
     //删除已关联的工作流
@@ -151,7 +176,7 @@ export default {
             enabledForbiddenWorkFlow(null,null,row.id).then(res => {
               if(res.success){
                 this.$Message.success(res.message);
-                this.workflows.splice(index, 1);
+                this.getRelativeWorkflowData();
                 this.deleteRelationWorkflow++;
               }
             })

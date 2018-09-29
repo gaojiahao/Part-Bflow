@@ -445,6 +445,18 @@ export const getCommentsByParentId = (param) => request('/H_roleplay-si/comment/
  */
 export const commentThumbsUp = (data) => request('/H_roleplay-si/comment/savePraise', {},"POST",data)
 
+/**
+ * @author snack.huang
+ * @description 取消点赞
+ * @param {Object} data  
+ * {
+ *  commtenId:xxx 评论ID
+ * }
+ */
+export const cancelCommentThumbsUp = (commentId) => request('/H_roleplay-si/comment/deletePraise?commentId=' + commentId, {}, "POST")
+
+
+
 
 /**
  * @author snack.huang

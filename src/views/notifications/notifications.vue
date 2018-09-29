@@ -5,11 +5,11 @@
     <div class="notificas">
         <Row type="flex" justify="center" class="notificas-content notificas-layout">
 
-            <Col span="4" class="bg_ff notificas-layout-sider ">
+            <Col span="6" class="bg_ff notificas-layout-sider ">
                 <notifi-layout-sider :handleAvtiveNav='handleAvtiveNav'></notifi-layout-sider>
              </Col>
 
-            <Col span="20" class="notificas-list bg_ff notificas-layout-content" >
+            <Col span="18" class="notificas-list bg_ff notificas-layout-content" >
                
                 <notifications-header 
                     :nav='avtiveNav' 

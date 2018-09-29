@@ -1,9 +1,11 @@
+<style lang="less" scoped>
+@import "./notifiHistory.less";
+</style>
 <template>
     <div>
         <Tabs>
             <TabPane label="文档">
                 <div v-for="(file,index) in files" :key="index">
-                    
                     <a>{{file.attachmentName}}</a>
                 </div>
             </TabPane>
@@ -23,7 +25,7 @@
             </TabPane>
         </Tabs>
 
-        <Modal title="查看图片" v-model="imgModalVisible">
+        <Modal title="查看图片" v-model="imgModalVisible" width="60%">
             <img 
                 :src="imgName" 
                 v-if="imgModalVisible" style="width: 100%">
@@ -67,14 +69,7 @@ export default {
                 this.refreshFiles();
     　　　},
     　　　deep:true
-        },
-        expendVisbible:{
-            handler(newValue, oldValue) {
-                this.refreshImages();
-                this.refreshFiles();
-    　　　},
-    　　　deep:true
-        },
+        }
     },
     methods:{
          refreshAllWorkFlowTasks(){
@@ -115,6 +110,10 @@ export default {
             this.imgName = img;
             this.imgModalVisible = true;
         },
+    },
+    mounted(){
+        this.refreshFiles();
+        this.refreshImages();
     }
 
 }

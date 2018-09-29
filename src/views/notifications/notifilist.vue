@@ -1,11 +1,17 @@
+<style lang="less" scoped>
+@import "./notifications.less";
+@import "./notifilist.less";
+</style>
 <template>
     <div  class="notificas-layout-content-notificwin-msg-list notificasscrollbar" id="msgList">
         <div 
             class="notificas-layout-content-notificwin-msg-list-item"
             v-for="(n,index) in  notifications" 
             :key="index">
+            <div class="notice-time">{{n.crtTime}}</div>
+            <comment-notice-tpl :data="n" v-if="n.type=='comment' "></comment-notice-tpl>
 
-            <comment-notice-tpl :data="n" v-if="n.type=='praise' ||n.type=='comment' "></comment-notice-tpl>
+            <praise-notice-tpl  :data="n" v-if="n.type=='praise'"> </praise-notice-tpl>
 
             <flow-task-tpl :data="n" v-if="n.type=='flowTask' "></flow-task-tpl>
         </div>
@@ -15,12 +21,14 @@
 <script>
 import flowTaskTpl from "@/views/notifications/flowTaskTpl";
 import commentNoticeTpl from "@/views/notifications/commentNoticeTpl";
+import praiseNoticeTpl from "@/views/notifications/praiseNoticeTpl";
 import {getAllnotifications} from "@/services/notificationsService";
 export default {
     name:'notifilist',
     components:{
         flowTaskTpl,
-        commentNoticeTpl
+        commentNoticeTpl,
+        praiseNoticeTpl
     },
     props:{
         list:'',
@@ -28,14 +36,6 @@ export default {
             type:String,
             default:''
         }
-    },
-    watch:{
-        listId:{
-            handler(newValue, oldValue) {
-               this.refreshNotifics();
-    　　　},
-    　　　deep:true
-        },
     },
     data(){
         return {
@@ -142,6 +142,7 @@ export default {
             this.notifications.map(item=>{
                 if(item.type === 'comment' || item.type === 'praise'){
                     item.tempContent = JSON.parse(item.content).content;
+                    item.sourceContent = JSON.parse(item.content);
                 }else{
                    item.tempContent = JSON.parse(item.content); 
                 }

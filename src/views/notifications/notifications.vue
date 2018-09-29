@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="less" scoped>
 @import "./notifications.less";
 </style>
 <template>
@@ -9,7 +9,7 @@
                 <notifi-layout-sider :handleAvtiveNav='handleAvtiveNav'></notifi-layout-sider>
              </Col>
 
-            <Col span="16" class="notificas-list bg_ff notificas-layout-content" >
+            <Col span="20" class="notificas-list bg_ff notificas-layout-content" >
                
                 <notifications-header 
                     :nav='avtiveNav' 
@@ -27,6 +27,7 @@
                     </Col>
                     <Col span="8" v-if="expendHistoryVisbible" class="notificas-layout-content-notificwin-orderlist" >
                         <notifi-history 
+                            ref='noticeHistory'  
                             :listId="avtiveNav.listId" 
                             :expendVisbible="expendHistoryVisbible" 
                             v-if="avtiveNav.listId">
@@ -65,12 +66,20 @@ export default {
     methods:{
        
         handleAvtiveNav(nav){
+            this.$forceUpdate();
             this.avtiveNav = nav;
+
+            if(this.$refs.notifilist){
+                this.$refs.notifilist.listId = nav.listId;
+                this.$refs.notifilist.params.page = 1;
+                this.$refs.notifilist.isRolling = false;
+                this.$refs.notifilist.refreshNotifics();
+            }
+            
         },
         handleExpendHistory(expendVisible){
             this.expendHistoryVisbible = expendVisible;
         }
-       
     },
     mounted(){
     }

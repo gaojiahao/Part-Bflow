@@ -1,3 +1,7 @@
+<style lang="less" scoped>
+@import "./notificationsHeader.less";
+</style>
+
 <template>
     <div class="notificas-layout-content-header">
         <div>
@@ -5,8 +9,7 @@
             【{{nav.transName}}】管理员:{{nav.administratorName}}
                 <Icon class="fr" @click="handleExpend" type="ios-more" size="40" style="font-size: 40px;cursor: pointer;"/>
         </div>
-        <p style="font-size: 12px;color: rgb(146, 154, 171);height: 20px;" v-html="nav.comment"></p>
-        
+        <p class="nav-comment" v-html="nav.comment"></p>
     </div>
 </template>
 

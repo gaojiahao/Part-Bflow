@@ -1,7 +1,30 @@
+<style lang="less" scoped>
+@import "./notifications.less";
+</style>
 <template>
     <div style="height: 100%;">
         <div class="notificas-layout-sider-search">
-            <Input search placeholder="搜索" />
+            <AutoComplete
+                v-model="searchkeywords"
+                :data="searchResult"
+                @on-search="handleSearch"
+                placeholder="搜索">
+                <div 
+                    class="notificas-layout-sider-item" 
+                    v-bind:class="{ 'activeNav': nav.isActive }"
+                    @click="handleActiveNavigation(nav)"
+                    v-for="(nav,index) in  navs" 
+                    :key="index">
+                    <img width="50" :src="nav.icon">
+                    <div class="notificas-layout-sider-item-describe" >
+                        <div class="notificas-layout-sider-item-describe-title">{{nav.listName}}</div>
+                        <div class="notificas-layout-sider-item-describe-txt" >
+                            <p v-html="nav.comment"></p>
+                        </div>
+                    </div>
+                    <div class="notificas-layout-sider-item-msgcount" v-if="nav.unreadNum>0">{{nav.unreadNum}}</div>
+                </div>
+            </AutoComplete>
         </div>
         <div class="notificas-layout-sider-navs notificasscrollbar">
             <div class="notificas-layout-sider-item" v-if="navs.length==0">
@@ -17,8 +40,8 @@
             </div>
             <div 
                 class="notificas-layout-sider-item" 
-                v-bind:class="{ 'active': nav.isActive }"
-                @click="handleReadNotice(nav)"
+                v-bind:class="{ 'activeNav': nav.isActive }"
+                @click="handleActiveNavigation(nav)"
                 v-for="(nav,index) in  navs" 
                 :key="index">
                 <img width="50" :src="nav.icon">
@@ -48,7 +71,9 @@ export default {
                 page:1,
                 limit:10,
                 filter:''
-            }
+            },
+            searchkeywords:'',
+            searchResult:[]
         }
     },
     methods:{
@@ -99,40 +124,75 @@ export default {
         },
         //请求所有菜单菜单
         refreshNavListByMessage(){
+            let activeNavigatioIdOfNotice = localStorage.getItem('activeNavigatioIdOfNotice'),
+                activeNav;
+
             getNavListByMessage(this.params).then(res=>{
                 this.navs = res.tableContent;
-                if(res.dataCount>0){
-                    this.avtiveNav = this.navs[0];
+
+                if(res.dataCount===0) return;
+
+                if(activeNavigatioIdOfNotice){
+                    this.navs.map(nav=>{
+                        if(nav.listId === activeNavigatioIdOfNotice){
+                            nav.isActive = true;
+                            activeNav = nav;
+                        }
+                    });
+                }else{
                     this.navs[0].isActive = true;
-                    this.handleAvtiveNav(this.navs[0]);
+                    activeNav = this.navs[0];
                 }
+
+                if(!activeNav){
+                    this.navs[0].isActive = true;
+                    activeNav = this.navs[0];
+                }
+
+                this.handleAvtiveNav(activeNav);
+                
             });
         },
-        handleReadNotice(nav){
+        handleActiveNavigation(nav){
+
             this.$forceUpdate();
-            this.avtiveNav = nav;
+            this.handleAvtiveNav(nav);
+
+            localStorage.setItem('activeNavigatioIdOfNotice',nav.listId);
+
             this.navs.map(nav=>{
                 nav.isActive = false;
             });
+            nav.isActive = true;
+
             readNotice(nav.listId).then(res=>{
-                // nav.isActive = true;
                 nav.unreadNum = 0;
             });
-            nav.isActive = true;
-            this.handleAvtiveNav(nav);
         },
-          //订阅消息
+        //订阅消息
         subscribeMessage: function() {
             let deepstream = this.$deepstream,
                 userId = this.$currentUser.userId;
+                console.log('订阅');
             //消息订阅
             deepstream.event.subscribe("commentMessage/" + userId, res => {
                 this.refreshNavListByMessage();
                 this.hanleWindowNotification('您有'+ res.dataCount + '未读消息');
             });
         },
+        handleSearch:function (value) {
+            // var searchparams = {
+            //     page:1,
+            //     limit:10,
+            //     filter:this.searchkeywords
+            // };
+            // getNavListByMessage(this.params).then(res=>{
+                
+            // });
+        }
     },
     mounted(){
+
         this.refreshNavListByMessage();
         this.subscribeMessage();
     }

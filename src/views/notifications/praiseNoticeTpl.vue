@@ -12,8 +12,7 @@
                 <span v-if="data.sourceContent.type ==='list'">
                 应用
             </span>
-            <span>评论</span>
-            <span v-if="data.noticeSource.includes('commentRelpy')">回复</span>
+            <span>评论点赞</span>
             <span>通知</span>
         </div>
 
@@ -26,29 +25,17 @@
             </span>
             :
             <span v-if="data.sourceContent.type ==='instance' || data.sourceContent.type ==='list'">
-                <template v-if="data.noticeSource.includes('commentRelpy')">
-                   发表了评论:
-                   <span  class="notice-container" v-html="data.tempContent"></span>
-                    <div class="notice-container-relpy">
-                        <div class="notice-container-relpy-content">
-                            <span class="notice-creator">@{{data.sourceContent.objCreator}}</span>:
-                            <span v-if="data.sourceContent.type ==='instance'" class="notice-relationKey">{{data.sourceContent.relationKey}}</span>:
-                            <span  class="notice-container" v-html="data.sourceContent.objContent"></span>
-                        </div>
+                <span v-if="data.sourceContent.type ==='instance'">对实例 </span>
+                    <span v-if="data.sourceContent.type ==='list'">对应用</span>
+                <span v-if="data.sourceContent.type ==='instance'" class="notice-relationKey">{{data.sourceContent.relationKey}}</span>
+                的评论发表了态度: 
+                <Icon type="md-thumbs-up" size=18  color='#FF5722'/>
+                <div  class="notice-container-comment" >
+                    <div class="notice-container-comment-content">
+                            <span class="notice-creator">@{{data.sourceContent.creator}}</span>:
+                        <span v-html="data.tempContent"></span>
                     </div>
-                </template>
-
-                <template v-else>
-                    <span v-if="data.sourceContent.type ==='instance'">对实例 </span>
-                     <span v-if="data.sourceContent.type ==='list'">对应用</span>
-                    <span v-if="data.sourceContent.type ==='instance'" class="notice-relationKey">{{data.sourceContent.relationKey}}</span>
-                    发表了评论
-                    <div  class="notice-container-comment" >
-                        <div class="notice-container-comment-content">
-                            <span v-html="data.tempContent"></span>
-                        </div>
-                    </div> 
-                </template>
+                </div> 
             </span>
         </div>
 
@@ -60,7 +47,7 @@
 
 <script>
 export default {
-    name:'commentNoticeTpl',
+    name:'praiseNoticeTpl',
     props:{
         data:{}
     },
@@ -82,12 +69,9 @@ export default {
         }
     },
     mounted(){
-        // if(this.data.content.indexOf('{')===0){
-        //     this.data.content = JSON.parse(this.data.content).content;
-        // }
+       
     },
     beforeMount(){
-        // this.data.content = JSON.parse(this.data.content).content;
     },
 }
 </script>

@@ -6,14 +6,14 @@
         <div class="notificas-layout-sider-search">
             <AutoComplete
                 v-model="searchkeywords"
-                :data="searchResult"
                 @on-search="handleSearch"
+                clearable
                 placeholder="搜索">
                 <div 
                     class="notificas-layout-sider-item" 
                     v-bind:class="{ 'activeNav': nav.isActive }"
                     @click="handleActiveNavigation(nav)"
-                    v-for="(nav,index) in  navs" 
+                    v-for="(nav,index) in  searchResult" 
                     :key="index">
                     <img width="50" :src="nav.icon">
                     <div class="notificas-layout-sider-item-describe" >
@@ -70,7 +70,7 @@ export default {
             navs:{},
             params:{
                 page:1,
-                limit:10,
+                limit:100,
                 filter:''
             },
             searchkeywords:'',
@@ -184,14 +184,9 @@ export default {
             });
         },
         handleSearch:function (value) {
-            // var searchparams = {
-            //     page:1,
-            //     limit:10,
-            //     filter:this.searchkeywords
-            // };
-            // getNavListByMessage(this.params).then(res=>{
-                
-            // });
+           this.searchResult = this.navs.filter(nav=>{
+               return nav.listName.includes(this.searchkeywords);
+           });
         }
     },
     mounted(){

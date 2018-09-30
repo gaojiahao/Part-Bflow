@@ -21,7 +21,7 @@
           <h3> <span @click="goList" class="app-detail-title">{{ appData.title?appData.title:'待加载' }}</span>  - 应用详情</h3>
           <Row class="pad5">
             <Col span="6">应用名称： 
-              <span v-if="showEditAppInfo">{{ appData.title }}</span>
+              <span v-if="showAppEditAdmin">{{ appData.title }}</span>
               <Input v-else v-model="appData.title" style="width: 120px"></Input>
               <b @click="editAppinfo" v-if="isAdminTrue || isCompanyAdmin">
                 <Tooltip v-if="showEditBtn" content="编辑" placement="top">

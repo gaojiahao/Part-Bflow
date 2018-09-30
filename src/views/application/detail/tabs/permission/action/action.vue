@@ -72,7 +72,6 @@ export default {
         {
           title: "动作",
           key: "source",
-          width: 800,
           render: (h, params) => {
             let actionSource = params.row.action,
                 renderData = [],
@@ -202,7 +201,7 @@ export default {
       let that = this;
       that.$Modal.confirm({
         title: "确认",
-        content: "确认删除此用户权限？",
+        content: "确认删除此权限？",
         onOk: () => {
           let depDeleteParams = {},
               permissionIds = [],

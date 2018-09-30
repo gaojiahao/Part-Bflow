@@ -13,7 +13,6 @@
                
                 <notifications-header 
                     :nav='avtiveNav' 
-                    v-if="avtiveNav.listName" 
                     :handleExpendHistory="handleExpendHistory">
                 </notifications-header>
                 
@@ -40,7 +39,10 @@
                     </Col>
                     
                 </Row>
+
+                
             </div>
+           
         </div>
     </div>
 </template>

@@ -8,7 +8,7 @@
             <a title="查看应用详情" @click="handleViewDetail"><b>{{nav.listName}}</b> </a>
             【{{nav.transName}}】管理员:{{nav.administratorName}}
                 
-            <Icon class="fr" @click="handleExpend" type="ios-more" size="40" style="font-size: 40px;cursor: pointer;"/>
+            <!-- <Icon class="fr" @click="handleExpend" type="ios-more" size="40" style="font-size: 40px;cursor: pointer;"/> -->
         </div>
         <div v-if="!nav.listName" style="text-align: center;">
             暂无通知

@@ -20,7 +20,7 @@
         </Radio>
         <i class="vertical-divide"></i>
       </RadioGroup>
-      <RadioGroup class="taskbtn_2" size="large">
+      <!-- <RadioGroup class="taskbtn_2" size="large">
         <Radio label="no-overdue">
           <span>未逾期</span>
         </Radio>
@@ -28,7 +28,7 @@
           <span>逾期</span>
         </Radio>
         <i class="vertical-divide"></i>
-      </RadioGroup>
+      </RadioGroup> -->
       <div class="app-dropdown-select">
         <Poptip title="项目立项" width="660" content="content" v-model="projectPopTipVisible">
           <span class="app-dropdown-select-item" @click="getProjectList">
@@ -149,7 +149,20 @@
         </svg>
       </div>
     </div>
-    <task-modal :modal='modal' :listId="pageListId" @emitModal="emitModal" :taskValue="taskValue" :type="type" :orderCode="orderCode" :projectName="projectName"></task-modal>
+
+    <Modal v-model="subReportModel" draggable scrollable  width="900"   :title="subReportModelTitle">
+        <iframe height="300" width="100%"  style="height: 600px;border: none;" :src="subReportUrl"></iframe>
+    </Modal>
+
+    <task-modal 
+      :modal='modal' 
+      :listId="pageListId" 
+      @emitModal="emitModal" 
+      :taskValue="taskValue" 
+      :type="type" 
+      :orderCode="orderCode" 
+      :projectName="projectName">
+    </task-modal>
   </div>
 </template>
 
@@ -171,6 +184,10 @@ import { ICON_LIST } from "@/assets/const";
 export default {
   data() {
     return {
+      subReportUrl:'',
+      subReportId:'',
+      subReportModelTitle:'',
+      subReportModel:false,
       spinShow: true,
       baseLength: 45, //图形大小
       graphSpace: 65, //图形间距
@@ -639,7 +656,10 @@ export default {
      */
     opentask(item) {
       if (item.type === "subject") {
-        this.redirectTo(item, event);
+        this.subReportId = item.url.split('/')[1];
+        this.subReportUrl = '/Site/index.html?window=dialog#subject/'+ this.subReportId;
+        this.subReportModelTitle = item.value;
+        this.subReportModel = true;
       } else {
         this.modal = true;
 

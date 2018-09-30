@@ -38,6 +38,7 @@
                     </div>
                 </div>
             </div>
+           
             <div 
                 class="notificas-layout-sider-item" 
                 v-bind:class="{ 'activeNav': nav.isActive }"
@@ -177,7 +178,9 @@ export default {
             //消息订阅
             deepstream.event.subscribe("commentMessage/" + userId, res => {
                 this.refreshNavListByMessage();
-                this.hanleWindowNotification('您有'+ res.dataCount + '未读消息');
+                if(res.dataCount>0){
+                    this.hanleWindowNotification('您有'+ res.dataCount + '未读消息');
+                }
             });
         },
         handleSearch:function (value) {

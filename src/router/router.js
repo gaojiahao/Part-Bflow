@@ -97,9 +97,8 @@ export const addressBook = {
   },
   redirect: 'addressBook/user',
   component: () =>
-import('@/views/addressBook/index.vue'),
-  children: [
-    {
+    import('@/views/addressBook/index.vue'),
+  children: [{
       path: 'user',
       name: 'user',
       meta: {
@@ -232,9 +231,11 @@ import('@/views/addressBook/index.vue'),
         meta: {
           title: '新增'
         },
-        component: () => import('@/views/addressBook/companyInfo/companyInfo.vue')
+        component: () =>
+          import('@/views/addressBook/companyInfo/companyInfo.vue')
       }]
-    }]
+    }
+  ]
 }
 
 
@@ -302,7 +303,12 @@ export const activation = {
   component: () =>
     import('@/views/activation/activation.vue')
 }
-
+export const dictionaryManage = {
+  path: '/dictionaryManage/:dicId',
+  name: 'dictionaryManage',
+  component: () =>
+    import('@/views/dictionaryManage/dictionaryManage.vue')
+}
 
 
 export const routers = [
@@ -319,5 +325,6 @@ export const routers = [
   enterpriseInfo,
   notifications,
   activation,
+  dictionaryManage,
   ...appRouter
 ];

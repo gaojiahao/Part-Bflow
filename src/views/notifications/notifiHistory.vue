@@ -25,7 +25,7 @@
             </TabPane>
         </Tabs>
 
-        <Modal title="查看图片" v-model="imgModalVisible" width="60%">
+        <Modal title="查看图片" v-model="imgModalVisible" width="50%">
             <img 
                 :src="imgName" 
                 v-if="imgModalVisible" style="width: 100%">

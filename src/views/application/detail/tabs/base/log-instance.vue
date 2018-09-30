@@ -6,7 +6,7 @@
   width: 49.8%;
 }
 
-.line-chart-screen{
+.line-chart-screen {
   width: 100%;
 }
 
@@ -49,7 +49,7 @@
     </div>
     <!-- 实例图 -->
     <div>
-      <div :class="{'line-chart-screen':isAddress,'line-chart':true}" >
+      <div :class="{'line-chart-screen':isAddress,'line-chart':true}">
         <line-chart legendName="新增实例数" :xAxisData="xAxisData" :seriesData="seriesData" id="instanceLineChart" primaryColor="#1890ff" areaColor="#1890ff8c">
           <div slot="header" class="line-chart-header">
             查看范围:
@@ -74,9 +74,11 @@
         </line-chart-time>
       </div>
     </div>
-
+    <!--变更历史-->
+    <list-change-history></list-change-history>
     <!-- 变更日志 -->
     <change-log :listId="listId" :isAdmin="isAdmin"></change-log>
+
   </div>
 </template>
 
@@ -84,14 +86,20 @@
 import LineChart from "@/components/Charts/LineChart";
 import LineChartTime from "@/components/Charts/LineChart";
 import ChangeLog from "./change-log";
-import { getInstanceStatistics, getWorkFlowTime } from "@/services/appService.js";
+import ListChangeHistory from "./list-change-history";
+import {
+  getInstanceStatistics,
+  getWorkFlowTime
+} from "@/services/appService.js";
 import { FormatDate } from "@/utils/utils";
+
 export default {
   name: "LogInstance",
   components: {
     LineChart,
     ChangeLog,
-    LineChartTime
+    LineChartTime,
+    ListChangeHistory
   },
   props: {
     isAdmin: Boolean,
@@ -161,10 +169,10 @@ export default {
 
           res.list.map(function(item) {
             xAxis.push(item.xAxis);
-            if(!item.num){
-              series.push(0.00);
-            }else{
-               series.push(item.num);
+            if (!item.num) {
+              series.push(0.0);
+            } else {
+              series.push(item.num);
             }
           });
 

@@ -45,7 +45,7 @@
 <template>
   <div style="background-color:#f0f0f0">
     <div class="app-resource-group-title">
-      <h3>数据分析</h3>
+      <h3>数据增量分析</h3>
     </div>
     <!-- 实例图 -->
     <div>

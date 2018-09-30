@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="app-resource-group-title">
-            <h3>更新日志</h3>
+            <h3>数据变更分析</h3>
         </div>
         <div class="wrapper-body">
             <Table :columns="fieldDetailColumns" :data="fieldDetail"></Table>

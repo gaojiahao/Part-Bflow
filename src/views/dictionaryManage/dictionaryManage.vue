@@ -237,38 +237,38 @@ export default {
           });
         }
       });
-    },
-    setSort() {
-      const el = document
-        .querySelectorAll(".ivu-table-wrapper ")[0]
-        .querySelectorAll("table")[0];
-      this.sortable = Sortable.create(el, {
-        ghostClass: "sortable-ghost",
-        setData: function(dataTransfer) {
-          dataTransfer.setData("Text", ""); // to avoid Firefox bug
-        },
-        onEnd: evt => {
-          const targetRow = this.dictionaryData.splice(evt.oldIndex, 1)[0];
-          const tempIndex = this.numberList.splice(evt.newIndex, 1)[0];
-          let data = {
-            anticipationId: targetRow.anticipationId,
-            priorityNumber: tempIndex
-          };
-          //   codeAnticipationApi
-          //     .anticipationPriority(data)
-          //     .then(res => {
-          //       this.page = 1;
-          //       this.$set(this, "dataList", []);
-          //       this.$nextTick(() => {
-          //         this.$refs.Infinite.$emit("$InfiniteLoading:reset");
-          //       });
-          //     })
-          //     .catch(error => {
-          //       this.$message.error("排序失败：" + error);
-          //     });
-        }
-      });
     }
+    // setSort() {
+    //   const el = document
+    //     .querySelectorAll(".ivu-table-wrapper ")[0]
+    //     .querySelectorAll("table")[0];
+    //   this.sortable = Sortable.create(el, {
+    //     ghostClass: "sortable-ghost",
+    //     setData: function(dataTransfer) {
+    //       dataTransfer.setData("Text", ""); // to avoid Firefox bug
+    //     },
+    //     onEnd: evt => {
+    //       const targetRow = this.dictionaryData.splice(evt.oldIndex, 1)[0];
+    //       const tempIndex = this.numberList.splice(evt.newIndex, 1)[0];
+    //       let data = {
+    //         anticipationId: targetRow.anticipationId,
+    //         priorityNumber: tempIndex
+    //       };
+    //         codeAnticipationApi
+    //           .anticipationPriority(data)
+    //           .then(res => {
+    //             this.page = 1;
+    //             this.$set(this, "dataList", []);
+    //             this.$nextTick(() => {
+    //               this.$refs.Infinite.$emit("$InfiniteLoading:reset");
+    //             });
+    //           })
+    //           .catch(error => {
+    //             this.$message.error("排序失败：" + error);
+    //           });
+    //     }
+    //   });
+    // }
   },
   mounted() {
     this.getDictionarybyParentId(this.$route.params.dicId);

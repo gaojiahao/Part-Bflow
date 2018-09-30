@@ -5,7 +5,7 @@
 <template>
     <div class="notificas-layout-content-header">
         <div v-if="nav.listName">
-            <b>{{nav.listName}}</b> 
+            <a title="查看应用详情" @click="handleViewDetail"><b>{{nav.listName}}</b> </a>
             【{{nav.transName}}】管理员:{{nav.administratorName}}
                 
             <Icon class="fr" @click="handleExpend" type="ios-more" size="40" style="font-size: 40px;cursor: pointer;"/>
@@ -35,6 +35,9 @@ export default {
         handleExpend:function () {
             this.expend = !this.expend;
             this.handleExpendHistory(this.expend);
+        },
+        handleViewDetail:function () {
+            window.open('/Site/index.html#appSetting/' + this.nav.listId);
         }
     },
     data(){

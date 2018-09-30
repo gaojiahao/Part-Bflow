@@ -202,7 +202,7 @@ export default {
       let that = this;
       that.$Modal.confirm({
         title: "确认",
-        content: "确认删除此用户权限？",
+        content: "确认删除此权限？",
         onOk: () => {
           let depDeleteParams = {},
               permissionIds = [],
@@ -211,7 +211,7 @@ export default {
               roleId = [],
               companyId = [];
           //获取permissionIds的集合
-          params.row.action.forEach(val => {
+          params.row.resource.forEach(val => {
             for (let k in val) {
               permissionIds.push(k);
             }

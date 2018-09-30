@@ -72,7 +72,6 @@ export default {
         {
           title: "数据源",
           key: "source",
-          width: 800,
           render: (h, params) => {
             let actionSource = params.row.resource,
                 renderData = [],

@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <Modal v-model="showPermissionModal" title="应用权限" width="1000" :styles="{top: '15px'}" :mask-closable="false" @on-ok="submitPermission" @on-visible-change="modalVisibleChange">
+  <Modal v-model="showPermissionModal" title="应用权限" width="1000" :styles="{top: '15px'}" :mask-closable="false" @on-visible-change="modalVisibleChange">
     <div>
       <Row :gutter="8" style="margin-bottom:10px;">
         <Col span="3">
@@ -155,6 +155,10 @@
         </div>
       </Modal>
     </div>
+    <div slot="footer">
+        <Button type="default" @click="cancelAddPermission">取消</Button>
+        <Button type="primary" :disabled="isModalDisabled" @click="submitPermission">确定</Button>
+    </div>
   </Modal>
 </template>
 
@@ -210,7 +214,7 @@ export default {
       showDepartmentModal: false,
       showCompanyModal: false,
       showPermissionModal: false,
-      visibleLoading: true,
+      isModalDisabled: true,
 
       userColumns: [],
       userData: [],
@@ -265,9 +269,29 @@ export default {
       this.userSelection = [];
       this.orgSelection = [];
       this.departmentSelection = [];
+    },
+    //监听权限modal确定按钮的禁用启用状态
+    permissionSelectDatas: function(value){
+      if(value.length > 0){
+        if(this.userSelectData.length>0 || 
+        this.orgSelectData.length>0 || 
+        this.departmentSelectData.length>0 ||
+        this.companySelectData.length>0
+        ){
+          this.isModalDisabled = false;
+        }else{
+          this.isModalDisabled = true;
+        }
+      }else{
+        this.isModalDisabled = true;
+      }
     }
   },
   methods: {
+    //取消添加权限
+    cancelAddPermission() {
+      this.showPermissionModal = false;
+    },
     //用户过滤
     userFilter() {
       let filter = JSON.stringify([
@@ -786,6 +810,7 @@ export default {
           addPermission(params).then(res => {
             if (res.success) {
               this.$Message.success(res.message);
+              this.showPermissionModal = false;
               let Num = this.emitChange++;
               this.$emit("reGetData", Num);
             }

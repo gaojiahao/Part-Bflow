@@ -18,10 +18,24 @@
 <template>
     <div class="workflow">
         <div class="workflow-detail">
-            <Table ref="selection" :columns="columns" :loading="loading" :data="worlflowTaskData"></Table>
+            <Table 
+              ref="selection" 
+              :columns="columns" 
+              :loading="loading" 
+              :data="worlflowTaskData">
+            </Table>
             <div class="user-page">
                 <div style="float: right;">
-                  <Page @on-page-size-change="onPageSizeChange" :total="total" show-elevator show-sizer :current="currentPage" :page-size="pageSize" @on-change="onPageChange" size="small" show-total></Page>
+                  <Page 
+                    @on-page-size-change="onPageSizeChange" 
+                    :total="total" 
+                    show-elevator show-sizer 
+                    :current="currentPage" 
+                    :page-size="pageSize" 
+                    @on-change="onPageChange" 
+                    size="small" 
+                    show-total>
+                  </Page>
                 </div>
             </div>
         </div>

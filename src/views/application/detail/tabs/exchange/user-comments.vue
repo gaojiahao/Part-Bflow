@@ -5,7 +5,44 @@
 <template>
   <div class="bg_ff ">
     <Row class="app-resource-group-title">
-        <h3>评论 </h3>
+        <h3>评论 
+            <b class="fr subscribe-bar">
+               <span > 
+                    <span 
+                        class="subcribeing" 
+                        @mouseover="unsubcribeVisible=true;subcribeVisible=false;" 
+                        @mouseout="unsubcribeVisible=false;subcribeVisible=true;"
+                        v-if="subscribeInfo.isSubscribe==1 && subcribeVisible">
+                        <Icon type="md-checkmark" class="success-color" />正在关注中
+                    </span>
+
+                    <span 
+                        class="unsubcribe" v-if="subscribeInfo.isSubscribe==1 && unsubcribeVisible" 
+                        @click="handleUnsubscribeApp"
+                        @mouseout="unsubcribeVisible=false;subcribeVisible=true;">
+                        <Icon type="md-close" class="warning-color" />取消关注
+                    </span>
+
+                    <span class="subcribe" @click="handleSubscribeApp" v-if="subscribeInfo.isSubscribe==0">关注</span>
+
+                    <span> 
+                        <Icon type="md-notifications" size=18 class="success-color"  />
+                    </span>
+                
+                </span>
+
+                <span>
+                    <Dropdown style="margin-left: 20px" placement="bottom-end" trigger="click" >
+                         <Icon type="md-person" size=18  /> {{subscribeInfo.subscribeNum}}
+                        <DropdownMenu slot="list">
+                            <DropdownItem  v-for="(user,index) in  subscribeInfo.subscribeUsers" :key="index">
+                               {{user.nickname}}
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
+                </span>
+            </b>
+        </h3>
     </Row>
 
     <Row class="user-comment">
@@ -33,7 +70,19 @@
 </template>
 
 <script>
-import { saveComment,getComments } from "@/services/appService.js";
+
+import { 
+    saveComment,
+    getComments 
+} from "@/services/appService.js";
+
+import { 
+    subscribeApp,
+    unsubscribeAppByRelationKey,
+    getUserByRelationKey ,
+    judgeIsSubscribeByRelationKey
+} from "@/services/subscribeService";
+
 import comments from "@/components/discussion/comments";
 import commentPublish from "@/components/discussion/publish";
 
@@ -44,6 +93,7 @@ export default {
     commentPublish
   },
   props: {
+     
   },
   data() {
     return {
@@ -55,6 +105,13 @@ export default {
             limit:10, 
             page:1, 
             total:0
+        },
+        unsubcribeVisible:false,
+        subcribeVisible:true,
+        subscribeInfo:{
+            isSubscribe:0,
+            subscribeNum:0,
+            subscribeUsers:[]
         }
     };
   },
@@ -95,10 +152,48 @@ export default {
     handlePageChange:function (page) {
         this.pageInfo.page = page;
         this.refreshComments();
+    },
+    handleSubscribeApp:function () {
+        subscribeApp({
+            type:'list',
+            relationKey:this.listId
+        }).then(res=>{
+            this.subscribeInfo.isSubscribe = 1;
+            this.refreshSubscribeInfo();
+        });
+    },
+    handleUnsubscribeApp:function (params) {
+        unsubscribeAppByRelationKey({
+            relationKey:this.listId
+        }).then(res=>{
+            this.subscribeInfo.isSubscribe = 0;
+            this.refreshSubscribeInfo();
+        });
+    },
+    
+    refreshSubscribeInfo(){
+        this.$forceUpdate();
+        getUserByRelationKey({
+           relationKey:this.listId,
+           limit:10,
+           page:1
+        }).then(res=>{
+            this.subscribeInfo.subscribeUsers = res.tableContent;
+            this.subscribeInfo.subscribeNum = res.dataCount;
+        });
+    },
+    judgeIsSubscribeByRelationKey:function (params) {
+        judgeIsSubscribeByRelationKey({
+           relationKey:this.listId
+        }).then(res=>{
+            this.subscribeInfo.isSubscribe = res;
+        });
     }
   },
   mounted(){
         this.refreshComments();
+        this.refreshSubscribeInfo();
+        this.judgeIsSubscribeByRelationKey();
   }
 };
 </script>

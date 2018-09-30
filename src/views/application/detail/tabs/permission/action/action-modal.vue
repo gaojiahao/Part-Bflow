@@ -165,7 +165,8 @@ import {
   getAllOrgData,
   getAllDepartmentData,
   getAllPermissionData,
-  clearAppPermission
+  clearAppPermission,
+  getAllResourcePermissionData
 } from "@/services//appService.js";
 import { getAllCompanys } from "@/services/addressBookService.js";
 import { APP_ACTION } from "@/assets/const";
@@ -174,7 +175,8 @@ export default {
   name: "permissionModal",
   components: {},
   props: {
-    modalStatis: Boolean
+    modalStatis: Boolean,
+    modalName: String
   },
   data() {
     return {
@@ -315,7 +317,7 @@ export default {
             return h("div", [
               h("Avatar", {
                 props: {
-                  src: params.row.photo
+                  src: params.row.photo?params.row.photo:'resources/images/icon/defaultUserPhoto.jpg'
                 }
               })
             ]);
@@ -790,16 +792,6 @@ export default {
           });
         }
     },
-    getData() {
-      let listId = this.appListId;
-      //获取应用权限数据
-      getAllPermissionData(listId).then(res => {
-        this.allPermissionData = res.tableContent;
-        this.allPermissionData.map(ac => {
-          ac.desc = APP_ACTION[ac.resourceName];
-        });
-      });
-    },
     //通知父组件modal的状态
     modalVisibleChange(state) {
       if (!state) {
@@ -842,6 +834,34 @@ export default {
     onComPageChange(currentPage) {
       this.comCurrentPage = currentPage;
       this.selectPositionModal(this.searchComValue);
+    },
+    //获取权限数据
+    getData() {
+      let listId = this.appListId;
+      //获取应用权限数据
+      if(this.modalName === 'action'){
+        this.getActionPerData(listId);
+      }else{
+        this.getResPerData(listId);
+      }
+    },
+    //获取动作权限数据
+    getActionPerData(listId) {
+      getAllPermissionData(listId).then(res => {
+        this.allPermissionData = res.tableContent;
+        this.allPermissionData.map(ac => {
+          ac.desc = APP_ACTION[ac.resourceName];
+        });
+      });
+    },
+    //获取数据源权限数据
+    getResPerData(listId) {
+      getAllResourcePermissionData(listId).then(res => {
+        this.allPermissionData = res.tableContent;
+        this.allPermissionData.map(ac => {
+          ac.desc = APP_ACTION[ac.resourceName];
+        });
+    })
     }
   },
   mounted() {

@@ -64,6 +64,14 @@ export const getAllPermissionData = (listId) => request('/H_roleplay-si/ds/getAc
 
 /**
  * @author XiaoYing
+ * @description 获取所有数据源权限数据
+ */
+export const getAllResourcePermissionData = (listId) => request('/H_roleplay-si/ds/getResPermissionByListId', {
+  listId: listId
+});
+
+/**
+ * @author XiaoYing
  * @description 获取用户数据
  */
 export const getAllUserData = (currentPage, pageSize, filter) => request('/H_roleplay-si/ds/getUserList2', {
@@ -273,13 +281,7 @@ export const getAssessmentByListId = (listId,pageSize,currentPage) => request('/
  * @author XiaoYing
  * 管理员自评数据新增
  */
-export const saveAssessment = (params) => request('/H_roleplay-si/app/saveAssessment', {
-  listId: params.listId,
-  chance: params.opportunity,
-  achievement: params.result,
-  date: params.date,
-  id: params.id
-}, 'POST');
+export const saveAssessment = (params) => request('/H_roleplay-si/app/saveAssessment', {}, 'POST',params);
 
 /** 
  * @author GuoZheng
@@ -442,6 +444,18 @@ export const getCommentsByParentId = (param) => request('/H_roleplay-si/comment/
  * }
  */
 export const commentThumbsUp = (data) => request('/H_roleplay-si/comment/savePraise', {},"POST",data)
+
+/**
+ * @author snack.huang
+ * @description 取消点赞
+ * @param {Object} data  
+ * {
+ *  commtenId:xxx 评论ID
+ * }
+ */
+export const cancelCommentThumbsUp = (commentId) => request('/H_roleplay-si/comment/deletePraise?commentId=' + commentId, {}, "POST")
+
+
 
 
 /**

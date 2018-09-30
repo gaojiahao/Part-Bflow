@@ -18,10 +18,24 @@
 <template>
     <div class="indirect">
         <div class="indirect-detail" id="indirectHeight">
-            <Table ref="selection" :columns="columns" :loading="loading" :data="indirPermissionData"></Table>
+            <Table 
+              ref="selection" 
+              :columns="columns" 
+              :loading="loading" 
+              :data="indirPermissionData">
+            </Table>
             <div class="user-page">
                 <div style="float: right;">
-                  <Page @on-page-size-change="onPageSizeChange" :total="total" show-elevator show-sizer :current="currentPage" :page-size="pageSize" @on-change="onPageChange" size="small" show-total></Page>
+                  <Page 
+                    @on-page-size-change="onPageSizeChange" 
+                    :total="total" 
+                    show-elevator show-sizer 
+                    :current="currentPage" 
+                    :page-size="pageSize" 
+                    @on-change="onPageChange" 
+                    size="small" 
+                    show-total>
+                  </Page>
                 </div>
             </div>
         </div>

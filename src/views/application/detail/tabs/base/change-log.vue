@@ -196,24 +196,24 @@ export default {
       },
       ruleValidate: {
         //变更日志表单校验
-        scope: [
+        scope: [  
           {
             type: "array",
             required: true,
-            message: "不允许为空"
+            message: "不允许为空" 
           }
         ],
-        spendTime: [
+        spendTime: [ 
           {
-            required: true,
+            required: true, 
             message: "不允许为空",
             type: "number"
           }
         ],
-        content: [
+        content: [ 
           {
             required: true,
-            message: "不允许为空"
+            message: " "
           }
         ]
       },
@@ -260,10 +260,6 @@ export default {
   },
 
   methods: {
-    modalVisibleChange(val) {
-      this.$refs["formValidate"].resetFields();
-    },
-
     /**
      * 提交变更日志
      */
@@ -291,7 +287,7 @@ export default {
           if (res.success) {
             this.$Message.success(res.message);
             document.getElementById("editor").innerHTML = "";
-            this.modalFormData.scope = [];
+            this.$refs["formValidate"].resetFields();
             this.getChangeLog();
           } else {
             //faild todo

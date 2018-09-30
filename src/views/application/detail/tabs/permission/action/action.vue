@@ -20,6 +20,7 @@
         <action-modal
           @reGetData="reGetData" 
           :modalStatis="showActionModal" 
+          :modalName="modalName"
           @emitPermissionModal="emitPermissionModal">
         </action-modal>
     </div>
@@ -50,6 +51,7 @@ export default {
       //监听modal是否添加权限
       isModalConfirm: 1000,
       actionData: [],
+      modalName: 'action',
       columns: [
         {
           title: "已授权用户、组织或职位",

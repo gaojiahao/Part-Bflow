@@ -28,23 +28,48 @@
 <template>
     <div class="department">
         <div class="department-detail" id="depHeight">
+          <div class="department-header">
             <b type="info" @click="showGroupModal" class="department-detail-btn">部门</b>
             <span style="color: #7a7676;">-添加部门</span>
             <b type="info" @click="deleteGroup" class="department-detail-btn">删除</b>
             <span style="color: #7a7676;">-批量删除部门</span>
-            <Table ref="selection" @on-selection-change="selectDeleteGroup" :columns="columns" :loading="loading" :data="departmentData"></Table>
+          </div>
+          <div class="department-table">
+            <Table 
+              ref="selection" 
+              @on-selection-change="selectDeleteGroup" 
+              :columns="columns" 
+              :loading="loading" 
+              :data="departmentData">
+            </Table>
             <div class="user-page">
                 <div style="float: right;">
-                  <Page @on-page-size-change="onPageSizeChange" :total="total" show-elevator show-sizer :current="currentPage" :page-size="pageSize" @on-change="onPageChange" size="small" show-total></Page>
+                  <Page 
+                    @on-page-size-change="onPageSizeChange" 
+                    :total="total" 
+                    show-elevator show-sizer 
+                    :current="currentPage" 
+                    :page-size="pageSize" 
+                    @on-change="onPageChange" 
+                    size="small" 
+                    show-total>
+                  </Page>
                 </div>
             </div>
+          </div> 
         </div>
         <Modal
             v-model="showModal"
             title="选择部门"
             @on-ok="addDepartment"
             width="300">
-            <Tree :multiple="true" class="dep-tree" :data="groupData" @on-select-change="selectNode" :load-data="loadData"></Tree>
+            <Tree 
+              :multiple="true" 
+              class="dep-tree" 
+              :data="groupData"
+              @on-select-change="selectNode" 
+              :load-data="loadData">
+            </Tree>
         </Modal>
     </div>
 </template>

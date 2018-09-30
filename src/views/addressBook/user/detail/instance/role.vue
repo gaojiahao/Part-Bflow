@@ -41,16 +41,34 @@
 <template>
     <div class="role">
         <div class="role-detail" id="roleHeight">
+          <div class="role-header">
             <b @click="showRoleModal"  class="role-detail-btn">职位</b>
             <span style="color: #7a7676;">-添加职位</span>
             <b @click="deleteUserRole"  class="role-detail-btn">删除</b>
             <span style="color: #7a7676;">-批量删除职位</span>
-            <Table @on-selection-change="selectDeleteRole" :columns="columns" :loading="loading" :data="roleData"></Table>
+          </div>
+          <div class="role-table">
+            <Table 
+              @on-selection-change="selectDeleteRole" 
+              :columns="columns" 
+              :loading="loading" 
+              :data="roleData">
+            </Table>
             <div class="user-page">
                 <div style="float: right;">
-                  <Page @on-page-size-change="onPageSizeChange" :total="rolePage.total" show-elevator show-sizer :current="rolePage.currentPage" :page-size="rolePage.pageSize" @on-change="onPageChange" size="small" show-total></Page>
+                  <Page 
+                    @on-page-size-change="onPageSizeChange" 
+                    :total="rolePage.total" 
+                    show-elevator show-sizer 
+                    :current="rolePage.currentPage" 
+                    :page-size="rolePage.pageSize"
+                    @on-change="onPageChange" 
+                    size="small" 
+                    show-total>
+                   </Page>
                 </div>
             </div>
+          </div>
         </div>
         <Modal
             v-model="showModal"
@@ -59,19 +77,51 @@
             :styles="{top: '15px'}"
             width="1000">
             <div class="app-search">
-              <Input @on-search="roleFilter" :search="true" v-model="searchValue" placeholder="搜索职位名称" style="width: 300px"></Input>
+              <Input 
+                @on-search="roleFilter" 
+                :search="true" 
+                v-model="searchValue" 
+                placeholder="搜索职位名称" 
+                style="width: 300px">
+              </Input>
               <p @click="roleFilter" class="app-search-icon">
                   <Button type="primary" size="small">查询</Button>
               </p>
             </div>
-            <Table ref="selection" @on-selection-change="onSelectionChange" @on-select-all="onSelectAll" @on-select-cancel="onSelectCancel" height="400" :loading="roleLoading" :columns="RoleColumns" :data="allRoleData"></Table>
+            <Table 
+              ref="selection" 
+              @on-selection-change="onSelectionChange" 
+              @on-select-all="onSelectAll" 
+              @on-select-cancel="onSelectCancel" 
+              height="400" 
+              :loading="roleLoading" 
+              :columns="RoleColumns" 
+              :data="allRoleData">
+            </Table>
             <div class="user-page">
                 <div style="float: right;">
-                  <Page @on-page-size-change="onAllRolePageSizeChange" :total="rolePage.roletotal" show-elevator show-sizer :current="rolePage.rolecurrentPage" :page-size="rolePage.allRolepageSize" @on-change="onRolePageChange" size="small" show-total></Page>
+                  <Page 
+                    @on-page-size-change="onAllRolePageSizeChange" 
+                    :total="rolePage.roletotal" 
+                    show-elevator show-sizer 
+                    :current="rolePage.rolecurrentPage" 
+                    :page-size="rolePage.allRolepageSize" 
+                    @on-change="onRolePageChange" 
+                    size="small" 
+                    show-total>
+                  </Page>
                 </div>
             </div>
             <div class="page-selection-warp" v-show="selectRoleData[0] ">
-              <Tag v-for="(item,index) in selectRoleData" :key="item.id" @on-close="deleteSelectUser(item,index)" :userId="item.id" closable type="border" color="primary" size="small">
+              <Tag 
+                v-for="(item,index) in selectRoleData" 
+                :key="item.id" 
+                @on-close="deleteSelectUser(item,index)" 
+                :userId="item.id" 
+                closable 
+                type="border" 
+                color="primary" 
+                size="small">
                 {{item.name}}
               </Tag>
             </div>

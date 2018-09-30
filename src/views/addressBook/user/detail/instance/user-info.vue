@@ -36,10 +36,21 @@
                     </Modal>
                 </FormItem>
                 <FormItem label="工号：" prop="userCode">
-                    <Input :class="{'info-edit':isAdd}" :readonly="isAdd" @on-blur="userCodeBlur" v-model="formItem.userCode" style="width:60%"></Input>
+                    <Input 
+                        :class="{'info-edit':isAdd}" 
+                        :readonly="isAdd" 
+                        @on-blur="userCodeBlur" 
+                        v-model="formItem.userCode" 
+                        style="width:60%">
+                    </Input>
                 </FormItem>
                 <FormItem label="姓名：" prop="nickname">
-                    <Input :class="{'info-edit':isEdit}" :readonly="isEdit" v-model="formItem.nickname" style="width:60%"></Input>
+                    <Input 
+                        :class="{'info-edit':isEdit}" 
+                        :readonly="isEdit" 
+                        v-model="formItem.nickname" 
+                        style="width:60%">
+                    </Input>
                 </FormItem>
                 <FormItem label="性别：">
                     <RadioGroup v-model="formItem.gender">
@@ -49,13 +60,28 @@
                 </FormItem>
                 <div class="info-line"></div>
                 <FormItem label="手机：" prop="mobile">
-                    <Input :class="{'info-edit':isEdit}" :readonly="isEdit" v-model="formItem.mobile" style="width:60%"></Input>
+                    <Input 
+                        :class="{'info-edit':isEdit}" 
+                        :readonly="isEdit" 
+                        v-model="formItem.mobile" 
+                        style="width:60%">
+                    </Input>
                 </FormItem>
                 <FormItem label="座机：" prop="officePhone">
-                    <Input :class="{'info-edit':isEdit}" :readonly="isEdit" v-model="formItem.officePhone" style="width:60%"></Input>
+                    <Input 
+                        :class="{'info-edit':isEdit}" 
+                        :readonly="isEdit" 
+                        v-model="formItem.officePhone" 
+                        style="width:60%">
+                    </Input>
                 </FormItem>
                 <FormItem label="邮箱：" prop="email">
-                    <Input :class="{'info-edit':isEdit}" :readonly="isEdit" v-model="formItem.email" style="width:60%"></Input>
+                    <Input 
+                        :class="{'info-edit':isEdit}" 
+                        :readonly="isEdit" 
+                        v-model="formItem.email" 
+                        style="width:60%">
+                    </Input>
                 </FormItem>
                 <div class="info-line"></div>
                 <FormItem label="类型：">
@@ -65,7 +91,13 @@
                     </RadioGroup>
                 </FormItem>
                 <FormItem v-if="formItem.userType === '0'" label="账户有效期：" prop="termOfValidity">
-                    <DatePicker :class="{'info-edit':isEdit}" :readonly="isEdit" type="date" placeholder="" v-model="formItem.termOfValidity"></DatePicker>
+                    <DatePicker 
+                        :class="{'info-edit':isEdit}" 
+                        :readonly="isEdit" 
+                        type="date" 
+                        placeholder="" 
+                        v-model="formItem.termOfValidity">
+                    </DatePicker>
                 </FormItem>
                 <FormItem label="状态：">
                     <Select v-if="!isEdit" v-model="formItem.status" style="width:60%">
@@ -77,7 +109,14 @@
                     <span v-else>{{ userInfo.statusText }}</span>
                 </FormItem>
                 <FormItem label="公司：" prop="entityName">
-                    <Input @on-click="selectCompanyModal" v-model="formItem.entityName" :icon="isEdit?'':'md-arrow-dropdown'" :class="{'info-edit':isEdit}" :readonly="isEdit" style="width:60%"></Input>
+                    <Input 
+                        @on-click="selectCompanyModal" 
+                        v-model="formItem.entityName" 
+                        :icon="isEdit?'':'md-arrow-dropdown'" 
+                        :class="{'info-edit':isEdit}" 
+                        :readonly="isEdit" 
+                        style="width:60%">
+                    </Input>
                 </FormItem>
                 <FormItem v-if="hiddenInput" label="公司主体id" style="width:60%">
                     <Input v-model="formItem.entityId" />
@@ -98,10 +137,33 @@
             </Form>
         </Row>
         <Row class="info-btn">
-            <Button @click="goUserList" class="radius0" style="background-color: rgb(81, 90, 110) !important;color:#fff;font-weight:bold;padding: 6px 15px;">关闭</Button>
-            <Button v-if="isAdd" @click="editUserInfo"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">{{ isEdit?'编辑':'放弃编辑'}}</Button>
-            <Button v-if="!isEdit" @click="updateUserData"  class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">保存</Button>
-            <Button v-if="!userId" @click="saveAndAddUser" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">保存并新建</Button>
+            <Button 
+                @click="goUserList" 
+                class="radius0" 
+                style="background-color: rgb(81, 90, 110) !important;color:#fff;font-weight:bold;padding: 6px 15px;">
+                关闭
+            </Button>
+            <Button 
+                v-if="isAdd" 
+                @click="editUserInfo"  
+                class="radius0" 
+                style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">
+                {{ isEdit?'编辑':'放弃编辑'}}
+            </Button>
+            <Button 
+                v-if="!isEdit" 
+                @click="updateUserData"  
+                class="radius0" 
+                style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">
+                保存
+            </Button>
+            <Button 
+                v-if="!userId" 
+                @click="saveAndAddUser" 
+                class="radius0" 
+                style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">
+                保存并新建
+            </Button>
         </Row>
         <Modal
             v-model="showCompanyModal"
@@ -110,15 +172,41 @@
             :styles="{top: '20px'}"
             width="800">
             <div class="app-search">
-              <Input @on-search="companyFilter" :search="true" v-model="searchValue" placeholder="搜索公司名称" style="width: 300px"></Input>
+              <Input 
+                @on-search="companyFilter" 
+                :search="true" 
+                v-model="searchValue" 
+                placeholder="搜索公司名称" 
+                style="width: 300px">
+              </Input>
               <p @click="companyFilter" class="app-search-icon">
                   <Button type="primary" size="small">查询</Button>
               </p>
             </div>
-            <Table class="rfd-principal-table" @on-row-dblclick="onDbClick" @on-row-click="onRowClick" ref="selection" :highlight-row="true" height="400" :loading="loading" :columns="companyColumns" :data="companyData"></Table>
+            <Table 
+                class="rfd-principal-table"
+                @on-row-dblclick="onDbClick" 
+                @on-row-click="onRowClick" 
+                ref="selection" 
+                :highlight-row="true" 
+                height="400" 
+                :loading="loading" 
+                :columns="companyColumns" 
+                :data="companyData">
+            </Table>
             <div class="user-page">
                 <div class="fr">
-                  <Page @on-page-size-change="pageSizeChange" :total="companyTable.total" show-elevator show-sizer :current="companyTable.currentPage" :page-size="companyTable.pageSize" @on-change="onPageChange" size="small" show-total></Page>
+                  <Page 
+                    @on-page-size-change="pageSizeChange" 
+                    :total="companyTable.total" 
+                    show-elevator 
+                    show-sizer 
+                    :current="companyTable.currentPage" 
+                    :page-size="companyTable.pageSize" 
+                    @on-change="onPageChange" 
+                    size="small" 
+                    show-total>
+                  </Page>
                 </div>
             </div>
         </Modal>
@@ -127,7 +215,12 @@
 
 <script>
 import { getToken } from "@/utils/utils";
-import { updateUser,addUser,checkoutFieldIsOnly,getAllCompanys,getListById } from "@/services/addressBookService.js";
+import { 
+    updateUser,
+    addUser,
+    checkoutFieldIsOnly,
+    getAllCompanys,getListById 
+} from "@/services/addressBookService.js";
 
 export default {
   name: "userInfo",

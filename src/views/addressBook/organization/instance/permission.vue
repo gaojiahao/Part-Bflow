@@ -11,6 +11,15 @@
     color: rgb(122, 118, 118);
   }
 }
+.app-table-search{
+  float: right;
+  .app-search-icon {
+    font-size: 1rem;
+    color: #fff;
+    display: inline-block;
+    cursor: pointer;
+  }
+}
 </style>
 
 <template>
@@ -27,6 +36,13 @@
 
         <label @click="deletePermission">移除权限</label>
         <span>-移除权限</span>
+
+        <div class="app-table-search">
+          <Input @on-search="permissionFilter" :search="true" v-model="searchValue" placeholder="搜索权限名称" style="width: 300px"></Input>
+          <a @click="permissionFilter" class="app-search-icon">
+            <Button type="primary" size="small">查询</Button>
+          </a>
+        </div>
 
       </div>
     </custom-table>
@@ -128,7 +144,8 @@ export default {
       allPermissionData: [],
       selectPermissionNode: [],
       selectDeletePermission: [],
-      reload: false
+      reload: false,
+      searchValue: ""
     };
   },
 
@@ -205,12 +222,19 @@ export default {
       if (this.allPermissionData.length === 0) {
         getAllPermissionData(0).then(res => {
           res.tableContent.forEach(val => {
-            this.allPermissionData.push({
-              title: val.name,
-              id: val.id,
-              loading: false,
-              children: []
-            });
+            if(val.leaf === 'false'){
+              this.allPermissionData.push({
+                title: val.name,
+                id: val.id,
+                loading: false,
+                children: []
+              });
+            }else{
+              this.allPermissionData.push({
+                title: val.name,
+                id: val.id
+              });
+            }
           });
         });
       }
@@ -237,6 +261,18 @@ export default {
         });
         callback(data);
       });
+    },
+    //权限过滤
+    permissionFilter() {
+      let filter = JSON.stringify([
+        {
+          operator: "like",
+          value: this.searchValue,
+          property: "name"
+        }
+      ]);
+      this.permissionParams.filter = filter;
+      this.reload = true;
     }
   }
 };

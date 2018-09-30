@@ -56,7 +56,7 @@
         <div class="font14 content">
           <div>
             <h4>{{ assess.creator }}
-              <span class="fr">{{ formatDate(assess.date) }}</span>
+              <span class="fr">{{ formatDate(assess.date,true) }}</span>
             </h4>
           </div>
           <div class="assessment-info">
@@ -201,8 +201,8 @@ export default {
       }
       let params = {
         listId: this.listId,
-        opportunity: this.adminAssessData.opportunity,
-        result: this.adminAssessData.result,
+        chance: this.adminAssessData.opportunity,
+        achievement: this.adminAssessData.result,
         date: this.formatDate(this.adminAssessData.duringDate)
       };
       if (this.isEdit === "edit") {
@@ -245,7 +245,7 @@ export default {
       this.getAssessmentData(currentPage);
     },
     //格式化日期方法
-    formatDate(currentDate) {
+    formatDate(currentDate,status) {
       let date = new Date(currentDate),
         year = date.getFullYear(),
         month = date.getMonth() + 1,
@@ -253,8 +253,11 @@ export default {
       if (month >= 1 && month <= 9) {
         month = "0" + month;
       }
-      relDate = year + "-" + month;
-
+      if(status){
+        relDate = year + "-" + month;
+      }else{
+        relDate = year + "-" + month + "-1";
+      }
       return relDate;
     }
   },

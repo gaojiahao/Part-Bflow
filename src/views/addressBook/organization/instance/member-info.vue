@@ -24,6 +24,15 @@
     cursor: pointer;
   }
 }
+.app-table-search{
+  float: right;
+  .app-search-icon {
+    font-size: 1rem;
+    color: #fff;
+    display: inline-block;
+    cursor: pointer;
+  }
+}
 
 .page-selection-box {
   width: 100%;
@@ -46,6 +55,13 @@
 
         <label @click="deleteMemberInfo">移除成员</label>
         <span>-移除成员</span>
+
+        <div class="app-table-search">
+          <Input @on-search="userTableFilter" :search="true" v-model="searchTableValue" placeholder="搜索工号或名称" style="width: 300px"></Input>
+          <a @click="userTableFilter" class="app-search-icon">
+            <Button type="primary" size="small" style="color:#fff">查询</Button>
+          </a>
+        </div>
 
       </div>
     </custom-table>
@@ -120,7 +136,7 @@ export default {
             return h("div", [
               h("Avatar", {
                 props: {
-                  src: params.row.photo
+                  src: params.row.photo?params.row.photo:'../../../../../resources/images/icon/defaultUserPhoto.jpg'
                 }
               })
             ]);
@@ -210,7 +226,7 @@ export default {
             return h("div", [
               h("Avatar", {
                 props: {
-                  src: params.row.photo
+                  src: params.row.photo?params.row.photo:'../../../../../resources/images/icon/defaultUserPhoto.jpg'
                 }
               })
             ]);
@@ -443,6 +459,22 @@ export default {
         }
       ]);
       this.getListUsers(this.listUserCurrentPage, this.pageSize, filter);
+    },
+    //职位成员过滤
+    userTableFilter() {
+      let filter = JSON.stringify([
+        {
+          operator_1: "like",
+          value_1: this.searchTableValue,
+          property_1: "nickname",
+          link: "or",
+          operator_2: "like",
+          value_2: this.searchTableValue,
+          property_2: "userCode"
+        }
+      ]);
+      this.memberInfoParams.filter = filter;
+      this.reload = true;
     }
   }
 };

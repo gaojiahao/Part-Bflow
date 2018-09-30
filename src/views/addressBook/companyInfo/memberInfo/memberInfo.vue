@@ -5,12 +5,17 @@
 <template>
   <div class="member-wrap">
     <div class="member-wrap-table">
-      <b @click="showAllMember" class="member-wrap-table-btn">添加成员</b>
-      <span style="color: #7a7676;">-添加成员</span>
-      <b @click="delCompanyMember" class="member-wrap-table-btn">移除成员</b>
-      <span style="color: #7a7676;">-移除成员</span>
-      <br>
-      <Table :loading="memberLoading" :columns="columns1" :data="memberData" @on-selection-change="onMemberSelectionChange">
+      <div>
+        <b @click="showAllMember" class="member-wrap-table-btn">添加成员</b>
+        <span style="color: #7a7676;">-添加成员</span>
+        <b @click="delCompanyMember" class="member-wrap-table-btn">移除成员</b>
+        <span style="color: #7a7676;">-移除成员</span>
+        <div class="table-search">
+          <Input @on-search="tableSearch" :search="true" placeholder="请输入工号或姓名" class="search-btn" v-model="searchTableValue" />
+          <Button type="primary" size="small" @click="tableSearch">查询</Button>
+        </div>
+      </div>
+      <Table style="margin-top:10px;" :loading="memberLoading" :columns="columns1" :data="memberData" @on-selection-change="onMemberSelectionChange">
       </Table>
       <div style="margin: 10px;overflow: hidden">
         <div class="fr">
@@ -21,7 +26,7 @@
     <Modal v-model="showModal" title="选择公司成员" @on-ok="addCompanyMember" :styles="{top: '15px'}" width="870">
       <div class="search">
         <!-- <Input placeholder="请输入工号" class="serach-btn" v-model="userCode" /> -->
-        <Input @on-search="search" :search="true" placeholder="请输入姓名" class="search-btn" v-model="searchValue" />
+        <Input @on-search="search" :search="true" placeholder="请输入工号或姓名" class="search-btn" v-model="searchValue" />
         <Button type="primary" @click="search">搜索</Button>
       </div>
       <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" @on-select-all="onSelectAll" @on-select-cancel="onSelectCancel" height="400" :loading="allMemberLoading" :columns="columns2" :data="allMemberData">
@@ -65,7 +70,7 @@ export default {
             return h("div", [
               h("Avatar", {
                 props: {
-                  src: params.row.photo
+                  src: params.row.photo?params.row.photo:'../../../../../resources/images/icon/defaultUserPhoto.jpg'
                 }
               })
             ]);
@@ -151,7 +156,7 @@ export default {
             return h("div", [
               h("Avatar", {
                 props: {
-                  src: params.row.photo
+                  src: params.row.photo?params.row.photo:'../../../../../resources/images/icon/defaultUserPhoto.jpg'
                 }
               })
             ]);
@@ -220,6 +225,7 @@ export default {
       memberSelectionData: [],
       nowMemberselectionData: [],
       searchValue: "",
+      searchTableValue: "",
       onPageSelection: []
     };
   },
@@ -247,12 +253,13 @@ export default {
       );
     },
     //获取公司成员信息
-    getCompanyMember() {
+    getCompanyMember(text) {
       this.memberLoading = true;
       getGroupUser(
         this.groupId,
         this.memberCurrentPage,
-        this.memberPageSize
+        this.memberPageSize,
+        text
       ).then(res => {
         this.memberData = res.tableContent;
         this.pageTotal = res.dataCount;
@@ -316,7 +323,7 @@ export default {
     //当前页改变
     pageChange(currentPage) {
       this.memberCurrentPage = currentPage;
-      this.getCompanyMember(currentPage);
+      this.getCompanyMember(this.searchTableValue);
     },
     //弹出所有用户
     showAllMember() {
@@ -407,6 +414,9 @@ export default {
           this.allMemberTotal = res.length;
         }
       });
+    },
+    tableSearch() {
+      this.getCompanyMember(this.searchTableValue);
     }
   },
   mounted() {

@@ -76,11 +76,12 @@ export const getRoleData = (userId, pageSize, currentPage) => request('/H_rolepl
  * @author XiaoYing
  * @description 获取user直接权限数据
  */
-export const getDirectPermissionData = (userId, pageSize, currentPage) => request('/H_roleplay-si/ds/getObjectPermission2Oneself', {
+export const getDirectPermissionData = (userId, pageSize, currentPage,filter) => request('/H_roleplay-si/ds/getObjectPermission2Oneself', {
   objectName: 'user',
   objectId: userId,
   page: currentPage,
-  limit: pageSize
+  limit: pageSize,
+  filter: filter
 });
 
 /**
@@ -544,10 +545,11 @@ export const getCompanyList = (groupId, target, currentPage, pageSize) => reques
  * @author zhaohuai
  * 获取公司成员
  */
-export const getGroupUser = (groupId, currentPage, pageSize) => request('/H_roleplay-si/sysGroup/getGroupUser', {
+export const getGroupUser = (groupId, currentPage, pageSize,text) => request('/H_roleplay-si/sysGroup/getGroupUser', {
   groupId: groupId,
   currentPage: currentPage,
-  pageSize: pageSize
+  pageSize: pageSize,
+  search: text 
 })
 /**
  * @author zhaohuai

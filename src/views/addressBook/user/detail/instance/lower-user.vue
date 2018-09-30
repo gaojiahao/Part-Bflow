@@ -41,16 +41,34 @@
 <template>
     <div class="lower-user">
         <div class="lower-user-detail" id="lowHeight">
+          <div class="lower-user-header">
             <b @click="showUserModal" class="lower-user-detail-btn">下级用户</b>
             <span style="color: #7a7676;">-添加下级用户</span>
             <b @click="deleteLowUser" class="lower-user-detail-btn">删除</b>
             <span style="color: #7a7676;">-批量删除下级用户</span>
-            <Table @on-selection-change="selectLowUser" :columns="columns" :loading="loading" :data="lowerUserData"></Table>
+          </div>
+          <div class="lower-user-table">
+            <Table 
+              @on-selection-change="selectLowUser" 
+              :columns="columns" 
+              :loading="loading" 
+              :data="lowerUserData">
+            </Table>
             <div class="user-page">
                 <div style="float: right;">
-                  <Page @on-page-size-change="onPageSizeChange" :total="lowUser.total" show-elevator show-sizer :current="lowUser.currentPage" :page-size="lowUser.pageSize" @on-change="onPageChange" size="small" show-total></Page>
+                  <Page 
+                    @on-page-size-change="onPageSizeChange" 
+                    :total="lowUser.total" 
+                    show-elevator show-sizer 
+                    :current="lowUser.currentPage" 
+                    :page-size="lowUser.pageSize" 
+                    @on-change="onPageChange" 
+                    size="small" 
+                    show-total>
+                  </Page>
                 </div>
             </div>
+          </div>
         </div>
         <Modal
             v-model="showModal"
@@ -59,19 +77,51 @@
             :styles="{top: '15px'}"
             width="1000">
             <div class="app-search">
-              <Input @on-search="userFilter" :search="true" v-model="searchValue" placeholder="搜索工号或姓名" style="width: 300px"></Input>
+              <Input 
+                @on-search="userFilter" 
+                :search="true" 
+                v-model="searchValue" 
+                placeholder="搜索工号或姓名" 
+                style="width: 300px">
+              </Input>
               <p @click="userFilter" class="app-search-icon">
                   <Button type="primary" size="small">查询</Button>
               </p>
             </div>
-            <Table ref="selection" @on-selection-change="onSelectionChange" @on-select-all="onSelectAll" @on-select-cancel="onSelectCancel" height="400" :loading="userLoading" :columns="userColumns" :data="userData"></Table>
+            <Table 
+              ref="selection" 
+              @on-selection-change="onSelectionChange" 
+              @on-select-all="onSelectAll" 
+              @on-select-cancel="onSelectCancel" 
+              height="400" 
+              :loading="userLoading" 
+              :columns="userColumns" 
+              :data="userData">
+            </Table>
             <div class="user-page">
                 <div style="float: right;">
-                  <Page @on-page-size-change="onAllUserPageSizeChange" :total="lowUser.usertotal" show-elevator show-sizer :current="lowUser.usercurrentPage" :page-size="lowUser.allUserpageSize" @on-change="onUserPageChange" size="small" show-total></Page>
+                  <Page 
+                    @on-page-size-change="onAllUserPageSizeChange" 
+                    :total="lowUser.usertotal" 
+                    show-elevator show-sizer 
+                    :current="lowUser.usercurrentPage" 
+                    :page-size="lowUser.allUserpageSize" 
+                    @on-change="onUserPageChange" 
+                    size="small" 
+                    show-total>
+                  </Page>
                 </div>
             </div>
             <div class="page-selection-warp" v-show="onPageSelection[0] ">
-              <Tag v-for="(item,index) in onPageSelection" :key="item.userId" @on-close="deleteSelectUser(item,index)" :userId="item.userId" closable type="border" color="primary" size="small">
+              <Tag 
+                v-for="(item,index) in onPageSelection" 
+                :key="item.userId" 
+                @on-close="deleteSelectUser(item,index)" 
+                :userId="item.userId" 
+                closable 
+                type="border" 
+                color="primary" 
+                size="small">
                 {{item.nickname}}
               </Tag>
             </div>
@@ -80,7 +130,12 @@
 </template>
 
 <script>
-import { getLowUserData,getAllUsers,updateHighUser,deleteUser } from "@/services/addressBookService.js";
+import { 
+  getLowUserData,
+  getAllUsers,
+  updateHighUser,
+  deleteUser 
+  } from "@/services/addressBookService.js";
 
 export default {
   name: "lowerUser",
@@ -115,7 +170,7 @@ export default {
             return h('div',[
               h('Avatar',{
                 props: {
-                  src: params.row.photo
+                  src: params.row.photo?params.row.photo:'../../../../../resources/images/icon/defaultUserPhoto.jpg'
                 }
               })
             ])
@@ -191,7 +246,7 @@ export default {
             return h('div',[
               h('Avatar',{
                 props: {
-                  src: params.row.photo
+                  src: params.row.photo?params.row.photo:'../../../../../resources/images/icon/defaultUserPhoto.jpg'
                 }
               })
             ])

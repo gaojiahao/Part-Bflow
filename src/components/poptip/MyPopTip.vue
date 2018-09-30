@@ -23,9 +23,9 @@
                     <div class="userInfo-right">
                         <b class="font14">{{userInfo.nickname}}</b>
                         <i class="iconfont" style="color:#2d8cf0">&#xe601;</i>
-                        <p>
+                        <!-- <p>
                             <span class="user-font">{{userInfo.groupName}}</span>
-                        </p>
+                        </p> -->
                     </div>
                 </div>
                 <div class="userInfo-bottom">
@@ -37,10 +37,10 @@
                         <span class="user-font">邮件</span>
                         <span class="left-margin">{{ userInfo.email}}</span>
                     </p>
-                    <p>
+                    <!-- <p>
                         <span class="user-font">部门</span>
                         <span class="left-margin">{{userInfo.groupName}}</span>
-                    </p>
+                    </p> -->
                 </div>
             </div>
         </div>

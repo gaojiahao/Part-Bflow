@@ -6,21 +6,21 @@
   <Modal v-model="showPermissionModal" title="应用权限" width="1000" :styles="{top: '15px'}" :mask-closable="false" @on-visible-change="modalVisibleChange">
     <div>
       <Row :gutter="8" style="margin-bottom:10px;">
-        <Col span="3">
+        <Col span="4">
         <Button @click="selectUserModal" type="info" shape="circle">选择用户</Button>
         </Col>
-        <Col span="3">
+        <Col span="4">
         <Button @click="selectOrgModal" type="info" shape="circle">选择组织</Button>
         </Col>
-        <Col span="3">
+        <Col span="4">
         <Button @click="selectPositionModal" type="info" shape="circle">选择职位</Button>
         </Col>
-        <Col span="3">
+        <Col v-if="false" span="3">
         <Button @click="selectCompanyModal" type="info" shape="circle">选择公司</Button>
         </Col>
       </Row>
       <Row :gutter="8">
-        <Col span="12" class="permission-tab" style="height:480px">
+        <Col span="12" class="permission-tab">
           <Row style="margin-top:10px">
             <Col span="3">
               <b class="permission-title">用户</b>
@@ -53,8 +53,8 @@
             </Tag>
             </Col>
           </Row>
-          <Row class="permission-line"></Row>
-          <Row>
+          <!-- <Row class="permission-line"></Row> -->
+          <Row v-if="false">
             <Col span="3">
             <b class="permission-title">公司</b>
             </Col>
@@ -66,7 +66,7 @@
           </Row>
         </Col>
         <Col span="12">
-          <Table @on-selection-change="permissionSelectChange" ref="actionRef" stripe height="480" :columns="allPermissionColumns" size="small" :data="allPermissionData">
+          <Table @on-selection-change="permissionSelectChange" ref="actionRef" stripe height="350" :columns="allPermissionColumns" size="small" :data="allPermissionData">
           </Table>
         </Col>
       </Row>
@@ -324,7 +324,7 @@ export default {
         currentPageFilter = 1;
       this.selectPositionModal(filter,currentPageFilter);
     },
-    //公司过滤
+    // 公司过滤
     comFilter() {
       let currentPageFilter = 1;
       this.selectCompanyModal(this.searchComValue,currentPageFilter);

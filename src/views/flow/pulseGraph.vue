@@ -151,7 +151,7 @@
     </div>
 
     <Modal v-model="subReportModel" draggable scrollable  width="900"   :title="subReportModelTitle">
-        <iframe height="300" width="100%"  style="height: 600px;border: none;" :src="subReportUrl"></iframe>
+        <iframe  width="100%"  style="height: 400px;border: none;" :src="subReportUrl"></iframe>
     </Modal>
 
     <task-modal 

@@ -127,9 +127,9 @@
                    
                 </div>
             </Poptip>
-            <span v-if="ischild">
+            <!-- <span v-if="ischild">
                 <Checkbox v-model="commentAndReply">同时评论到此应用</Checkbox>
-            </span>
+            </span> -->
         </Col>
         <Col class="publish-bar-right" span="12">
             <Button  @click.native="handleSend" >发送</Button>

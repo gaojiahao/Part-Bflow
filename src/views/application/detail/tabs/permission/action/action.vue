@@ -92,7 +92,7 @@ export default {
               });
               pushData = h('span',{
                 style: {
-                  marginLeft: '10px'
+                  marginLeft: '5px'
                 }
               },[
                   h('Checkbox',{

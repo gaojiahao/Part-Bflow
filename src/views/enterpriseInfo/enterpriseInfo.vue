@@ -8,7 +8,7 @@
       <section class="info-warp-main-section">
         <div class="select-logo">
           <label class="left-leble">企业LOGO</label>
-          <Upload ref="upload" :show-upload-list="false" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" type="drag" action="/H_roleplay-si/ds/upload" style="display: inline-block;width:256px;vertical-align: middle;" :headers="httpHeaders">
+          <Upload v-if="$currentUser.isAdmin" ref="upload" :show-upload-list="false" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" type="drag" action="/H_roleplay-si/ds/upload" style="display: inline-block;width:256px;vertical-align: middle;" :headers="httpHeaders">
             <div style="width: 256px;height:64px;line-height: 64px;" v-if="!enterpriseInfo.logo">
               <img v-if="enterpriseInfo.logo" :src="enterpriseInfo.logo">
               <i v-if="!enterpriseInfo.logo" class="iconfont">&#xe63b;</i>
@@ -20,6 +20,7 @@
               </div>
             </div>
           </Upload>
+          <img v-else :src="enterpriseInfo.logo"/>
         </div>
         <div class="select-explain">
           <label class="left-leble">企业简称</label>

@@ -434,7 +434,6 @@ export default {
       }
     },
     dataChange(value) {
-      debugger;
       if (value.length > 0) {
         this.startDate = value[0];
         this.endDate = value[1];
@@ -454,7 +453,6 @@ export default {
       getListChangeHistory(data).then(res => {
         this.fieldDetail = res.tableContent;
         this.dataTotal = res.dataCount;
-        debugger;
         let extColumns = res.tableContent[0].extColumns;
         if (extColumns.length > 0 && firstCloumn) {
           extColumns.forEach(function(e) {

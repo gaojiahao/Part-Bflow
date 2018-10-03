@@ -5,8 +5,9 @@
 <template>
     <div class="app-workflow">
         <Row class="app-workflow-title">
-            <h3>工作流  
-            <Dropdown v-if="isAdminTrue && isOperationShow" @on-click="createWorkflow">
+            <h3>工作流
+            <span v-if="isAdminTrue && workflows.length===0" class="app-workflow-create">新建</span>  
+            <!-- <Dropdown v-if="isAdminTrue && isOperationShow" @on-click="createWorkflow">
               <a href="javascript:void(0)">
                   操作
                   <Icon type="arrow-down-b"></Icon>
@@ -15,7 +16,7 @@
                   <DropdownItem v-show="isCreateShow" name="create">添加创建实例工作流</DropdownItem>
                   <DropdownItem v-show="isUpdateShow" name="update">添加修改实例工作流</DropdownItem>
               </DropdownMenu>
-            </Dropdown>
+            </Dropdown> -->
             </h3>
         </Row>
         <Row class="app-workflow-table">

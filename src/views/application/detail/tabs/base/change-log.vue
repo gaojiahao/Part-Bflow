@@ -1,7 +1,6 @@
 <style lang="less" >
 .timeline-box {
   position: relative;
-  margin-top: 15px;
   &-header {
     height: 48px;
     line-height: 48px;

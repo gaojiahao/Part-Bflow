@@ -48,7 +48,7 @@
             <Col span="6">修改时间： <span>{{ appData.modTime }}</span></Col>
           </Row>
           <Row class="pad5">
-            <Col span="24">说明：<span v-if="showEditAppInfo" v-html="appData.comment"></span>
+            <Col span="24">说明：<span v-if="showAppEditAdmin" v-html="appData.comment"></span>
               <vue-wangeditor
                 v-else 
                 ref="editorInfo" 

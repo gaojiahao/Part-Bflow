@@ -23,7 +23,8 @@
         <TabPane label="一般" name="name1">
           <log-instance 
             :isAdmin="isAdmin" 
-            :isAddress="isAddress">
+            :isAddress="isAddress"
+            :appType="appType">
           </log-instance>
         </TabPane>
         <TabPane label="互动" name="name2">
@@ -32,7 +33,7 @@
           <!-- 用户评论 -->
           <user-comments ></user-comments>
         </TabPane>
-        <TabPane label="资源" name="name3">
+        <TabPane v-if="isAdmin || isCompanyAdmin" label="资源" name="name3">
           <permission-source 
             :appType="appType" 
             :isAdmin="isAdmin" 
@@ -40,7 +41,7 @@
             :enabledForbidden="enabledForbidden">
           </permission-source>
         </TabPane>
-        <TabPane label="连接" name="name4">
+        <TabPane v-if="(isAdmin || isCompanyAdmin) && appType !== 'subject'" label="连接" name="name4">
           <!-- 应用科目 -->
           <div class="app-sub">
             <app-subject 
@@ -121,12 +122,12 @@ export default {
         });
         //判断当前用户是否有当前应用权限
         if(this.appData.administratorId){
-          if(currentUser.userId == this.appData.administratorId && /1/.test(currentUserIds)){
+          if(currentUser.userId == this.appData.administratorId && currentUserIds.indexOf(1) > -1){
             this.isAdmin = true;
             this.isCompanyAdmin = true;
           }else if(currentUser.userId == this.appData.administratorId){
             this.isAdmin = true;
-          }else if(/1/.test(currentUserIds)){
+          }else if(currentUserIds.indexOf(1) > -1){
             this.isCompanyAdmin = true;
             this.isAdmin = false;
           }else{
@@ -134,7 +135,7 @@ export default {
             this.isCompanyAdmin = false;
           }
         }else{
-          if(/1/.test(currentUserIds)){
+          if(currentUserIds.indexOf(1) > -1){
             this.isAdmin = true;
             this.isCompanyAdmin = true;
           }else{

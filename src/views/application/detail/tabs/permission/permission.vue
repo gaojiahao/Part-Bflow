@@ -9,13 +9,13 @@
     <!-- 动作管理 -->
     <action-manage :isAdmin="isAdmin"></action-manage>
     <!-- 数据源管理 -->
-    <permission-data-source :isAdmin="isAdmin"></permission-data-source>
+    <permission-data-source v-if="appType !== 'subject'" :isAdmin="isAdmin"></permission-data-source>
     <!-- 报表视图 -->
-    <report-view :appType="appType" :isAdmin="isAdmin"></report-view>
+    <report-view v-if="appType !== 'subject'" :appType="appType" :isAdmin="isAdmin"></report-view>
     <!-- 表单 -->
-    <app-form v-if="!isAddress" :isAdmin="isAdmin"></app-form>
+    <app-form v-if="!isAddress && appType !== 'subject'" :isAdmin="isAdmin"></app-form>
     <!-- 工作流 -->
-    <work-flow v-if="!isAddress" :isAdmin="isAdmin"></work-flow>
+    <work-flow v-if="!isAddress && appType !== 'subject'" :isAdmin="isAdmin"></work-flow>
   </div>
 </template>
 

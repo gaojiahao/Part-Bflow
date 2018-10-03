@@ -455,7 +455,7 @@ export default {
 <style lang="less">
 .wrapper {
   position: relative;
-  margin-top: 15px;
+  margin-bottom: 15px;
 
   &-body {
     width: 80%;

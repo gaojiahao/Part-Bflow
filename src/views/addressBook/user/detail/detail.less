@@ -1,7 +1,12 @@
+.detail{
+    overflow: hidden;
+    height: 100%;
+}
 .detail-header{
     border-bottom: 1px solid #ddd;
     padding: 3px 10px;
     background-color: #fff;
+    height: 40px;
     &-status{
         float: left;
         margin-left: 19px;
@@ -55,14 +60,15 @@
     width: 100%;
     background-color: #fff;
     overflow: hidden;
-    margin-top: -5px;
     border-bottom: 1px solid #ddd;
+    height: 45px;
     &-child{
         float: right;
         border-left: 1px solid #ddd;
         padding: 2px 9px;
         text-align: center;
         cursor: pointer;
+        height: 100%;
         color: gray;
         &-right{
             vertical-align: middle;
@@ -87,11 +93,9 @@
     }
     &-child:first-child{
         border-right: 1px solid #ddd;
-        margin-right: 10px;
     }
     &-child:last-child{
-        height: 43px;
-        line-height: 43px;
+        line-height: 45px;
         img{
             border-radius: 30px;
             padding-bottom: 4px;
@@ -101,11 +105,9 @@
         background-color: #ddd;
     }
 }
-.ivu-breadcrumb{
-    font-size: 18px;
-}
 .detail-content-tabs{
     overflow: auto;
+    height: calc(100% - 85px);
     padding: 5px 0;
     background-color: #ddd;
 }

@@ -34,7 +34,7 @@
           <user-comments ></user-comments>
         </TabPane>
         <TabPane 
-        :disabled="!isAdmin || !isCompanyAdmin" 
+        :disabled="!(isAdmin || isCompanyAdmin)" 
         :label="(isAdmin || isCompanyAdmin)?'资源':''" 
         name="name3">
           <permission-source 
@@ -45,7 +45,7 @@
           </permission-source>
         </TabPane>
         <TabPane 
-        :disabled="(!isAdmin || !isCompanyAdmin) && appType === 'subject'" 
+        :disabled="!(isAdmin || isCompanyAdmin) && appType === 'subject'" 
         :label="((isAdmin || isCompanyAdmin) && appType !== 'subject')?'连接':''" 
         name="name4">
           <!-- 应用科目 -->

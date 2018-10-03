@@ -45,7 +45,7 @@
                     发表了评论
                     <div  class="notice-container-comment" >
                         <div class="notice-container-comment-content">
-                            <span v-html="data.tempContent"></span>
+                            <span class="notice-container" v-html="data.tempContent"></span>
                         </div>
                     </div> 
                 </template>

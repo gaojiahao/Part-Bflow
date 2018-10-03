@@ -132,7 +132,7 @@ export default {
       let deepstream = this.$deepstream;
       let token = getToken();
       //消息订阅
-      deepstream.event.subscribe("taskChange/" + token, msg => {
+      deepstream.event.subscribe("taskChange/" + this.$currentUser.userId, msg => {
         this.allTaskCount = msg.tableContent;
       });
     },

@@ -6,7 +6,10 @@
     <div class="app-workflow">
         <Row class="app-workflow-title">
             <h3>工作流
-            <span v-if="isAdminTrue && workflows.length===0" class="app-workflow-create">新建</span>  
+            <span 
+            v-if="isAdminTrue && workflows.length===0" 
+            class="app-workflow-create"
+            @click="goCreateWorkflow">新建</span>  
             <!-- <Dropdown v-if="isAdminTrue && isOperationShow" @on-click="createWorkflow">
               <a href="javascript:void(0)">
                   操作
@@ -187,6 +190,10 @@ export default {
     //监听modal添加工作流刷新
     addWorkflow() {
       this.getRelativeWorkflowData();
+    },
+    //创建工作流
+    goCreateWorkflow() {
+      window.open('/myflow/createWorkFlow.html?listId=' + this.listId + '&triggerType=create');
     },
     //修改应用工作流状态
     updateWorkFlowStaus(record){

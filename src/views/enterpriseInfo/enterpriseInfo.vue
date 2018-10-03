@@ -66,7 +66,7 @@
       </section>
       <section class="info-warp-main-section">
         <div>
-          <label class="left-leble">网占登录页背景图</label>
+          <label class="left-leble">网站登录页背景图</label>
           <div style="display: inline-block;vertical-align: middle;" >
             <Upload v-if="$currentUser.isAdmin" :show-upload-list="false" :before-upload="handleUploadBefore" :on-success="handleBackgroundSuccess" action="/H_roleplay-si/ds/upload" :headers="httpHeaders">
               <Button icon="ios-cloud-upload-outline">选择背景图</Button>

@@ -33,7 +33,10 @@
           <!-- 用户评论 -->
           <user-comments ></user-comments>
         </TabPane>
-        <TabPane v-show="isAdmin || isCompanyAdmin" label="资源" name="name3">
+        <TabPane 
+        :disabled="!isAdmin || !isCompanyAdmin" 
+        :label="(isAdmin || isCompanyAdmin)?'资源':''" 
+        name="name3">
           <permission-source 
             :appType="appType" 
             :isAdmin="isAdmin" 
@@ -41,7 +44,10 @@
             :enabledForbidden="enabledForbidden">
           </permission-source>
         </TabPane>
-        <TabPane v-show="(isAdmin || isCompanyAdmin) && appType !== 'subject'" label="连接" name="name4">
+        <TabPane 
+        :disabled="(!isAdmin || !isCompanyAdmin) && appType === 'subject'" 
+        :label="((isAdmin || isCompanyAdmin) && appType !== 'subject')?'连接':''" 
+        name="name4">
           <!-- 应用科目 -->
           <div class="app-sub">
             <app-subject 

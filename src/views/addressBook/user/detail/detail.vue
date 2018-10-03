@@ -4,16 +4,16 @@
 
 <template>
   <Row class="detail">
-    <Row class="detail-header">
+    <Row class="detail-user-header">
       <div class="detail-header-bread">
-        <span class="detail-header-bread-user">用户</span>
-        <span class="detail-header-bread-others">/</span>
+        <span class="detail-user-header-bread-user">用户</span>
+        <span class="detail-user-header-bread-others">/</span>
         <span 
           v-if="userInformation.nickname?true:false" 
-          class="detail-header-bread-others">
+          class="detail-user-header-bread-others">
           {{ userInformation.nickname }}
         </span>
-        <span class="detail-header-bread-others">{{ userInformation.userCode?'':'创建' }}</span>
+        <span class="detail-user-header-bread-others">{{ userInformation.userCode?'':'创建' }}</span>
       </div>
       <Tag 
         v-show="userInformation.status?showTag:!showTag" 
@@ -100,10 +100,10 @@ export default {
         { name: "工作流任务", showName: 'workflow', isShow: true, isShowAcive: false, relativeNum: 0, type:"md-menu" },
         { name: "间接权限", showName: 'indirper', isShow: true, isShowAcive: false, relativeNum: 0, type:"ios-people" },
         { name: "直接权限", showName: 'dirper', isShow: true, isShowAcive: false, relativeNum: 0, type:"md-person" },
-        { name: "职位", showName: 'role', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: '/resources/images/icon/job.png' },
-        { name: "部门", showName: 'dep',  isShow: true,isShowAcive: false, relativeNum: 0, imgUrl: '/resources/images/icon/organization.png' },
-        { name: "下级用户", showName: 'lowuser', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: '/buildresources/images/icon/user.png' },
-        { name: "上级用户", showName: 'highuser', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: '/resources/images/icon/user.png' },
+        { name: "职位", showName: 'role', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/job.png' },
+        { name: "部门", showName: 'dep',  isShow: true,isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/organization.png' },
+        { name: "下级用户", showName: 'lowuser', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'buildresources/images/icon/user.png' },
+        { name: "上级用户", showName: 'highuser', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/user.png' },
         { name: "基本信息", showName: 'userinfo', isShow: true, isShowAcive: true, type:"ios-home" }
       ]
     };

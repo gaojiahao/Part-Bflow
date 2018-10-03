@@ -4,7 +4,15 @@
             <h3>数据变更分析</h3>
         </div>
         <div class="wrapper-body">
+            <div class="search">
+                <DatePicker type="daterange" :editable="false" placement="bottom-end" placeholder="请选择日期范围" style="width: 280px" @on-change="dataChange"></DatePicker>
+            </div>
             <Table :columns="fieldDetailColumns" :data="fieldDetail"></Table>
+            <div style="margin: 10px;overflow: hidden">
+                <div class="fr">
+                    <Page @on-page-size-change="onPageSizeChange" :total="dataTotal" show-elevator show-sizer :current="pageIndex" :page-size="pageSize" @on-change="pageChange" size="small" show-total></Page>
+                </div>
+            </div>
         </div>
 
         <change-detail v-model="showChangeDetailsModal" title="变更详情" width="900" :footerHide="true">
@@ -400,7 +408,12 @@ export default {
       modiferTime: "", //修改时间
       addRows: [], //添加行
       deleteRows: [], //删除行
-      locationField: "" //定位字段key
+      locationField: "", //定位字段key,
+      startDate: "",
+      endDate: "",
+      pageSize: 10,
+      pageIndex: 1,
+      dataTotal: 0
     };
   },
 
@@ -419,6 +432,50 @@ export default {
           return "table-column-detele";
         }
       }
+    },
+    dataChange(value) {
+      debugger;
+      if (value.length > 0) {
+        this.startDate = value[0];
+        this.endDate = value[1];
+      }
+      this.getListChangeHistory();
+    },
+    getListChangeHistory(firstCloumn) {
+      let listId = this.$route.params.listId;
+      let data = {
+        listId: listId,
+        startDate: this.startDate,
+        endDate: this.endDate,
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize
+      };
+      let fieldDetailColumns = this.fieldDetailColumns;
+      getListChangeHistory(data).then(res => {
+        this.fieldDetail = res.tableContent;
+        this.dataTotal = res.dataCount;
+        debugger;
+        let extColumns = res.tableContent[0].extColumns;
+        if (extColumns.length > 0 && firstCloumn) {
+          extColumns.forEach(function(e) {
+            for (let key1 in e) {
+              fieldDetailColumns.push({
+                title: key1,
+                key: key1,
+                align: "center"
+              });
+            }
+          });
+        }
+      });
+    },
+    onPageSizeChange(pageSize) {
+      this.pageSize = pageSize;
+      this.getListChangeHistory();
+    },
+    pageChange(currentPage) {
+      this.pageIndex = currentPage;
+      this.getListChangeHistory();
     }
   },
 
@@ -431,34 +488,18 @@ export default {
   },
 
   mounted() {
-    let listId = this.$route.params.listId;
-    let fieldDetailColumns = this.fieldDetailColumns;
-    getListChangeHistory(listId).then(res => {
-      this.fieldDetail = res;
-      let extColumns = res[0].extColumns;
-      if (extColumns.length > 0) {
-        extColumns.forEach(function(e) {
-          for (let key1 in e) {
-            fieldDetailColumns.push({
-              title: key1,
-              key: key1,
-              align: "center"
-            });
-          }
-        });
-      }
-    });
+    this.getListChangeHistory(true);
   }
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .wrapper {
   position: relative;
   margin-bottom: 15px;
 
   &-body {
-    width: 80%;
+    width: 100%;
     height: 100%;
     background-color: #fff;
     padding: 10px 20px;
@@ -533,6 +574,9 @@ export default {
 .ivu-table .table-column-update {
   background-color: #bdd7ee;
   color: #000;
+}
+.search {
+  margin-bottom: 5px;
 }
 </style>
 

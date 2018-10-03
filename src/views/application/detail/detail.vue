@@ -33,7 +33,7 @@
           <!-- 用户评论 -->
           <user-comments ></user-comments>
         </TabPane>
-        <TabPane v-if="isAdmin || isCompanyAdmin" label="资源" name="name3">
+        <TabPane v-show="isAdmin || isCompanyAdmin" label="资源" name="name3">
           <permission-source 
             :appType="appType" 
             :isAdmin="isAdmin" 
@@ -41,7 +41,7 @@
             :enabledForbidden="enabledForbidden">
           </permission-source>
         </TabPane>
-        <TabPane v-if="(isAdmin || isCompanyAdmin) && appType !== 'subject'" label="连接" name="name4">
+        <TabPane v-show="(isAdmin || isCompanyAdmin) && appType !== 'subject'" label="连接" name="name4">
           <!-- 应用科目 -->
           <div class="app-sub">
             <app-subject 
@@ -122,7 +122,7 @@ export default {
         });
         //判断当前用户是否有当前应用权限
         if(this.appData.administrator){
-          if(currentUser.nickname == this.appData.administrator && currentUserIds.indexOf(1) > -1){
+          if(currentUser.nickname === this.appData.administrator && currentUserIds.indexOf(1) > -1){
             this.isAdmin = true;
             this.isCompanyAdmin = true;
           }else if(currentUser.nickname == this.appData.administrator){

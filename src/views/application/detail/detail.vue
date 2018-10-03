@@ -121,11 +121,11 @@ export default {
           currentUserIds.push(val.id);
         });
         //判断当前用户是否有当前应用权限
-        if(this.appData.administratorId){
-          if(currentUser.userId == this.appData.administratorId && currentUserIds.indexOf(1) > -1){
+        if(this.appData.administrator){
+          if(currentUser.nickname == this.appData.administrator && currentUserIds.indexOf(1) > -1){
             this.isAdmin = true;
             this.isCompanyAdmin = true;
-          }else if(currentUser.userId == this.appData.administratorId){
+          }else if(currentUser.nickname == this.appData.administrator){
             this.isAdmin = true;
           }else if(currentUserIds.indexOf(1) > -1){
             this.isCompanyAdmin = true;

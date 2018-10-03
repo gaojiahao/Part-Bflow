@@ -71,6 +71,7 @@
           </div>
         </div>
       </div>
+      <div v-if="assessments.length===0" class="pad10 bg_ff assessmentItem">暂无数据</div>
       <div v-if="isPage" class="pad20 bg_ff assessmentItem">
         <Page 
           @on-change="onPageChange" 

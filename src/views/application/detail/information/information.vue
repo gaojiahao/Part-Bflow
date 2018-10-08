@@ -23,7 +23,7 @@
             <Col span="6">应用名称： 
               <span v-if="showAppEditAdmin">{{ appData.title }}</span>
               <Input v-else v-model="appData.title" style="width: 120px"></Input>
-              <b @click="editAppinfo" v-if="isAdminTrue || isCompanyAdmin">
+              <b @click="editAppinfo" v-if="isCompanyAdmin">
                 <Tooltip v-if="showEditBtn" content="编辑" placement="top">
                   <Icon class="app-edit-icon" type="ios-create-outline"></Icon>
                 </Tooltip>

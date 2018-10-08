@@ -17,11 +17,11 @@
 </style>
 <template>
   <div class="content-wrap">
-    <Row class="detail-header">
-      <div class="detail-header-bread">
-        <span class="detail-header-bread-user">公司</span>
-        <span class="detail-header-bread-others">/</span>
-        <span class="detail-header-bread-others">{{ (companyInformation&&companyInformation.groupName)?companyInformation.groupName:'创建'}}</span>
+    <Row class="detail-com-header">
+      <div class="detail-com-header-bread">
+        <span class="detail-com-header-bread-user">公司</span>
+        <span class="detail-com-header-bread-others">/</span>
+        <span class="detail-com-header-bread-others">{{ (companyInformation&&companyInformation.groupName)?companyInformation.groupName:'创建'}}</span>
       </div>
       <Tag v-show="companyInformation.status" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:companyInformation.status}"></Tag>
     </Row>

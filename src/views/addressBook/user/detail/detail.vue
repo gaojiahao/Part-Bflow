@@ -14,12 +14,12 @@
           {{ userInformation.nickname }}
         </span>
         <span class="detail-user-header-bread-others">{{ userInformation.userCode?'':'创建' }}</span>
+        <Tag 
+          v-show="userInformation.status?showTag:!showTag" 
+          class="radius10 marlr10 color_fff" 
+          v-instanceStateDirective="{status:userInformation.status}">
+        </Tag>
       </div>
-      <Tag 
-        v-show="userInformation.status?showTag:!showTag" 
-        class="radius10 marlr10 color_fff" 
-        v-instanceStateDirective="{status:userInformation.status}">
-      </Tag>
     </Row>
     <Row class="detail-tabs">
       <div 

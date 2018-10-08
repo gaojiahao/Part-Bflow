@@ -234,6 +234,8 @@ export default {
     //管理员选择modal展示
     selectAdminModal() {
       this.showAdminModal = true;
+      this.searchValue = '';
+      this.getAdmintrstorData();
     },
     //管理员选择确认
     confirmModal() {

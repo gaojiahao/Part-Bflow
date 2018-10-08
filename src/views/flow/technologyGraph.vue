@@ -323,7 +323,7 @@ export default {
         this.screenWidth = window.screenWidth;
       })();
     };
-
+  debugger
     this.getProcessAndProcedure(this.processRouteCode);
   }
 };

@@ -78,16 +78,12 @@
     </div>
     <!--变更历史-->
     <list-change-history v-if="appType !== 'subject'"></list-change-history>
-    <!-- 变更日志 -->
-    <change-log :listId="listId" :isAdmin="isAdmin"></change-log>
-
   </div>
 </template>
 
 <script>
 import LineChart from "@/components/Charts/LineChart";
 import LineChartTime from "@/components/Charts/LineChart";
-import ChangeLog from "./change-log";
 import ListChangeHistory from "./list-change-history";
 import {
   getInstanceStatistics,
@@ -99,7 +95,6 @@ export default {
   name: "LogInstance",
   components: {
     LineChart,
-    ChangeLog,
     LineChartTime,
     ListChangeHistory
   },

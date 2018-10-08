@@ -20,14 +20,18 @@
 
     <div class="rfd-tab">
       <Tabs value="name1" class="rfd-tab-warp">
-        <TabPane label="一般" name="name1">
+        <TabPane label="更新日志" name="name1">
+          <!-- 变更日志 -->
+          <change-log :listId="listId" :isAdmin="isAdmin"></change-log>
+        </TabPane>
+        <TabPane label="数据分析" name="name2">
           <log-instance 
             :isAdmin="isAdmin" 
             :isAddress="isAddress"
             :appType="appType">
           </log-instance>
         </TabPane>
-        <TabPane label="互动" name="name2">
+        <TabPane label="互动" name="name3">
           <!-- 管理员自评 -->
           <admintrstor-assessment :isAdmin="isAdmin"></admintrstor-assessment>
           <!-- 用户评论 -->
@@ -36,7 +40,7 @@
         <TabPane 
         :disabled="!(isAdmin || isCompanyAdmin)" 
         :label="(isAdmin || isCompanyAdmin)?'资源':''" 
-        name="name3">
+        name="name4">
           <permission-source 
             :appType="appType" 
             :isAdmin="isAdmin" 
@@ -47,7 +51,7 @@
         <TabPane 
         :disabled="!(isAdmin || isCompanyAdmin) && appType === 'subject'" 
         :label="((isAdmin || isCompanyAdmin) && appType !== 'subject')?'连接':''" 
-        name="name4">
+        name="name5">
           <!-- 应用科目 -->
           <div class="app-sub">
             <app-subject 
@@ -71,7 +75,7 @@
 
 <script>
 import { getListData } from "@/services/appService.js";
-import LogInstance from "./tabs/base/log-instance";
+import LogInstance from "./tabs/analysis/log-instance";
 import AppInfo from "./information/information";
 import AppSubject from "./tabs/connection/subject";
 import AppApi from "./tabs/connection/api";
@@ -79,6 +83,7 @@ import RelatedApp from  './tabs/connection/related-app';
 import AdmintrstorAssessment from "./tabs/exchange/admintrstor-assessment";
 import UserComments from "./tabs/exchange/user-comments";
 import PermissionSource from "./tabs/permission/permission";
+import ChangeLog from "./tabs/changelog/change-log";
 export default {
   name: "detail",
   components: {
@@ -89,7 +94,8 @@ export default {
     PermissionSource,
     AppInfo,
     LogInstance,
-    RelatedApp
+    RelatedApp,
+    ChangeLog
   },
   data() {
     return {

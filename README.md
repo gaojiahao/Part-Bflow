@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://www.roletask.com">
-        <img width="200" src="static/favicon.ico">
+        <img width="200" src="http://www.roletask.com/img/1234.png">
     </a>
 </p>
 
@@ -59,10 +59,10 @@ npm test
 ```
 
 ## 编码规范
-```
+``` bash
+# 组件
 1、组件文件名称全部为小写字母,如果为了突出文件名,而导致文件名过长,用`-`隔开定义
 	如: 进度环  progress-ring
-	
 2、组件名称词之间首字母大写
 	如: 进度环  ProgressRing
 ```

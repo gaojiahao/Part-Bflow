@@ -65,4 +65,8 @@ npm test
 	如: 进度环  progress-ring
 2、组件名称词之间首字母大写
 	如: 进度环  ProgressRing
+	export default {
+    	name: "ProgressRing",
+		...
+	}
 ```

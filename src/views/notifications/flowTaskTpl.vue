@@ -28,11 +28,11 @@
             <p v-if="data.noticeSource=='taskTransfer'">执行者:{{data.tempContent.transfer}}</p>
 
             <p>任务创建时间:{{data.tempContent.taskCrtTime}}</p>
-            <p v-if="data.noticeSource.includes('taskComplete') || data.noticeSource.includes('taskRetract')">
+            <p v-if="data.noticeSource.includes('taskComplete') || data.noticeSource.includes('taskRetract') || data.noticeSource.includes('taskStop')">
                 任务截至时间:{{data.tempContent.cplTime}}
                
             </p>
-            <p v-if="data.noticeSource.includes('taskComplete') || data.noticeSource.includes('taskRetract')">
+            <p v-if="data.noticeSource.includes('taskComplete') || data.noticeSource.includes('taskRetract') || data.noticeSource.includes('taskStop')">
                 任务历时: <span v-overTimeDirective="{startTime:data.tempContent.taskCrtTime, endTime:data.tempContent.cplTime}" /> 
             </p>
 

@@ -167,7 +167,7 @@ export default {
     },
     //监听modal状态变化
     changeModalStatus() {
-      this.showModal = false;
+      this.isShowModal = false;
     },
 
     listUserChangePage(currentPage) {

@@ -285,7 +285,7 @@ export const bigProcess = {
   path: '/bigProcess/:orderCode',
   name: 'bigProcess',
   component: () =>
-    import('@/components/bigProcess.vue')
+    import('@/views/end-to-end/bigProcess.vue')
 }
 
 //消息通知页面

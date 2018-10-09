@@ -25,11 +25,6 @@
             <Button @click="handleNext" v-if="pageInfo.page<Math.ceil(comment.praiseNum/20)">下一页</Button>
         </div>
 
-        <!-- <div id="container">
-            <div id="chat"></div> -->
-            <!-- <div id="triangle"></div> -->
-            <!-- <div id="triangle1"></div> -->
-        <!-- </div> -->
     </div>
 </template>
 

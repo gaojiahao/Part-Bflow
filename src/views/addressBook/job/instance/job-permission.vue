@@ -48,9 +48,8 @@
 
     <!-- 权限modal -->
     <permission-modal 
-    :permissionId="jobId" 
-    :permissionType="type"
-    :isShowModal="isShowModal" 
+    :target="target"
+    :visible="isShowModal" 
     @changeModalStatus="changeModalStatus"
     @permissionChange="permissionChange">
     </permission-modal>
@@ -144,7 +143,10 @@ export default {
       selectDeletePermission: [],
       reload: false,
       searchValue: "",
-      type: 'sys_role_permission'
+      target: {
+        type: 'sys_role_permission',
+        targetId: this.jobId
+      }
     };
   },
 

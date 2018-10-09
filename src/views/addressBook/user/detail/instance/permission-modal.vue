@@ -1,5 +1,5 @@
 <style lang="less" scoped>
-  .user-page {
+  .permission-page {
     margin-top: 10px;
     overflow: hidden;
   }
@@ -33,45 +33,45 @@
 
 <template>
     <Modal 
-    v-model="showModal" 
-    title="权限列表" 
-    @on-ok="addPermissions" 
-    width="800" 
-    :styles="{top: '20px'}"
-    @on-visible-change="onVisibleChange">
-        <div class="app-search">
-            <Input 
-            @on-search="filter" 
+      v-model="showModal" 
+      title="权限列表" 
+      @on-ok="addPermissions" 
+      width="800" 
+      :styles="{top: '20px'}"
+      @on-visible-change="onVisibleChange">
+      <div class="app-search">
+          <Input 
+            @on-search="handleFilter" 
             :search="true" 
             v-model="searchValue" 
             placeholder="搜索权限名称" 
             style="width: 300px">
-            </Input>
-            <p @click="filter" class="app-search-icon">
-                <Button type="primary" size="small">查询</Button>
-            </p>
-        </div>
+          </Input>
+          <p @click="handleFilter" class="app-search-icon">
+              <Button type="primary" size="small">查询</Button>
+          </p>
+      </div>
         <Table
-        @on-selection-change="onSelectionChange" 
-        @on-select-all="onSelectAll" 
-        @on-select-cancel="onSelectCancel"
-        ref="permissionTable" 
-        :data="data"
-        :columns="column"
-        :loading="loading"
-        height="400">
+          @on-selection-change="onSelectionChange" 
+          @on-select-all="onSelectAll" 
+          @on-select-cancel="onSelectCancel"
+          ref="permissionTable" 
+          :data="data"
+          :columns="column"
+          :loading="loading"
+          height="400">
         </Table>
-        <div class="user-page">
+        <div class="permission-page">
             <div style="float: right;">
                 <Page 
-                @on-page-size-change="onPageSizeChange" 
-                :total="total" 
-                show-elevator show-sizer 
-                :current="currentPage" 
-                :page-size="pageSize" 
-                @on-change="onPageChange" 
-                size="small" 
-                show-total>
+                  @on-page-size-change="onPageSizeChange" 
+                  :total="total" 
+                  show-elevator show-sizer 
+                  :current="currentPage" 
+                  :page-size="pageSize" 
+                  @on-change="onPageChange" 
+                  size="small" 
+                  show-total>
                 </Page>
             </div>
         </div>
@@ -101,14 +101,11 @@ export default {
   name: "PermissionModal",
   components: {},
   props: {
-      permissionId: {
-          type: String
+      target: {
+          type: Object
       },
-      isShowModal: {
+      visible: {
           type: Boolean
-      },
-      permissionType: {
-          type: String
       }
   },
   data() {
@@ -135,7 +132,7 @@ export default {
     };
   },
   watch: {
-      isShowModal: function (value) {
+      visible: function (value) {
           if(value){
               this.showModal = true;
               this.searchValue = "";
@@ -156,8 +153,8 @@ export default {
       this.selectPermission.forEach(val => {
         multiId.push(val.id);
       });
-      if (multiId && this.permissionId) {
-        addPermission(this.permissionType,this.permissionId, multiId.join(","))
+      if (multiId && this.target) {
+        addPermission(this.target.type,this.target.targetId, multiId.join(","))
           .then(res => {
             if (res.success) {
               this.selectPermission = [];
@@ -252,7 +249,7 @@ export default {
       this.getAllPermissionDatas(filter);
     },
     //权限列表过滤
-    filter() {
+    handleFilter() {
       let filter = JSON.stringify([{ operator: "like", value: this.searchValue, property: "name" }]);
       this.getAllPermissionDatas(filter);
     }

@@ -60,9 +60,8 @@
     </custom-table>
     <!-- 权限modal -->
     <permission-modal 
-    :permissionId="groupId" 
-    :permissionType="type"
-    :isShowModal="isShowModal" 
+    :target="target"
+    :visible="isShowModal" 
     @changeModalStatus="changeModalStatus"
     @permissionChange="permissionChange">
     </permission-modal>
@@ -155,7 +154,10 @@ export default {
       selectDeletePermission: [],
       reload: false,
       searchValue: "",
-      type: 'sys_group_permission'
+      target: {
+        type: 'sys_group_permission',
+        targetId: this.groupId
+      }
     };
   },
 
@@ -176,8 +178,6 @@ export default {
 
     addPermission() {
       this.isShowModal = true;
-      this.searchPermissionListValue = "";
-      this.getAllPermissionDatas();
     },
 
     deletePermission() {

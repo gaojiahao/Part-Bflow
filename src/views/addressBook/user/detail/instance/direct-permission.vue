@@ -95,11 +95,10 @@
     </div>
     <!-- 权限modal -->
     <permission-modal 
-    :permissionId="userId" 
-    :permissionType="type"
-    :isShowModal="showModal" 
-    @changeModalStatus="changeModalStatus"
-    @permissionChange="permissionChange">
+      :target="target"
+      :visible="showModal" 
+      @changeModalStatus="changeModalStatus"
+      @permissionChange="permissionChange">
     </permission-modal>
   </div>
 </template>
@@ -121,7 +120,10 @@ export default {
     return {
       userId: this.$route.params.userId,
       searchValue: "",
-      type: 'sys_user_permission',
+      target: {
+        type: 'sys_user_permission',
+        targetId: this.$route.params.userId
+      },
       total: 0,
       currentPage: 1,
       pageSize: 10,
@@ -187,7 +189,7 @@ export default {
       this.getDirPermissionData();
       this.$emit("changeInstance");
     },
-    //监听modal状态变化
+    // //监听modal状态变化
     changeModalStatus() {
       this.showModal = false;
     },

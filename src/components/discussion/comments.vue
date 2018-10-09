@@ -57,12 +57,12 @@
                 <div class="comments-content-item-content-bar" >
                     <span  class="comments-content-item-content-bar-left">
                         <span>
-                            <span v-overTimeDirective="{time:comment.crtTime}"></span>发布
+                            <span v-overTimeDirective="{startTime:comment.crtTime,describe:'前' }" />
                         </span>
                         <span 
                             class="cursor-pointer"
                             @click="handleShowChilds(comment)" 
-                            v-if="comment.childCommentNum>0">|&nbsp;查看{{comment.childCommentNum}}条回复
+                            v-if="comment.childCommentNum>0">|&nbsp;查看<strong> {{comment.childCommentNum}}</strong>条回复
                             </span>
                     </span>
 
@@ -110,7 +110,7 @@
             </Col>
         </Row>
     </div>
-     <Modal title="查看图片" v-model="imgModalVisible">
+     <Modal title="查看图片" v-model="imgModalVisible" width='80%'>
         <img 
             :src="imgName" 
             v-if="imgModalVisible" style="width: 100%">

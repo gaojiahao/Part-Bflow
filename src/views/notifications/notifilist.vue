@@ -37,6 +37,16 @@ export default {
             default:''
         }
     },
+     watch:{
+        navId:{
+            handler(newValue, oldValue) {
+                if(newValue){
+                    this.listId = newValue;
+                }
+        　　　},
+        　　　deep:true
+        },
+    },
     data(){
         return {
             params:{
@@ -46,6 +56,7 @@ export default {
             },
             notifications:[],
             isRolling:false,
+            navId:''
         }
     },
     methods:{

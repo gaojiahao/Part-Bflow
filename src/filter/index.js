@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import dateFormatFilter from '@/filter/dateFormatFilter'
-// import numFixedFilter from '@/filter/numFixedFilter'
+import toFixedFilter from '@/filter/toFixedFilter'
 
 Vue.filter('dateFormatFilter',dateFormatFilter)
-// Vue.filter('numFixedFilter',numFixedFilter)
+Vue.filter('toFixedFilter', toFixedFilter)

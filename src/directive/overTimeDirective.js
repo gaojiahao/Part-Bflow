@@ -1,8 +1,10 @@
 /**
  * @author snack.huang
- * @description 已过时间
- * @prop status 实例数据值
- * @example  <Tag v-overTimeDirective="{time:time}"></Tag>
+ * @description 时间区间
+ * @param startTime 开始时间  必须
+ * @param endTime 截至时间 可有可没有，默认为当前时间
+ * @param describe 描述字符 可有可没有 描述信息
+ * @example  <Tag v-overTimeDirective="{startTime:startTime [endTime:endTime][describe:describe]}"></Tag>
  */
 function render(el, bind) {
 
@@ -31,28 +33,37 @@ function render(el, bind) {
 
         if (diffDays > 0) {
             if(diffDays >= 10){
-                return bind.value.time;
+                return bind.value.startTime ; 
             }
-            return diffDays + '天前';
+            return diffDays + '天' + describe; 
         }
         if (diffHours > 0) {
-            return diffHours + '小时' + diffMinutes + '分钟前';
+            return diffHours + '小时' + diffMinutes + '分钟' + describe; 
         }
         if (diffMinutes>0){
-            return diffMinutes + '分钟' + diffSeconds + '秒前'; 
+            return diffMinutes + '分钟' + diffSeconds + '秒' + describe;  
         } 
-        return  diffSeconds + '秒前'; 
+        return diffSeconds + '秒' + describe; 
     }
 
-    let time = bind.value.time;
+    let startTime = bind.value.startTime,
+        endTime = bind.value.endTime ? bind.value.endTime : new Date(),
+        describe = bind.value.describe ? bind.value.describe: '';
 
-    if(typeof(time) === 'number'){
-        time = new Date(parseInt(time) * 1000);
-    }else{
-        time = new Date(Date.parse(bind.value.time.replace(/-/g, "/")));
+    if (typeof (startTime) === 'number'){
+        startTime = new Date(parseInt(startTime) * 1000);
+    } else if (typeof (startTime) === 'string'){
+        startTime = new Date(Date.parse(bind.value.startTime.replace(/-/g, "/")));
+
+    }
+
+    if (typeof (endTime) === 'number') {
+        endTime = new Date(parseInt(endTime) * 1000);
+    } else if (typeof (endTime) === 'string') {
+        endTime = new Date(Date.parse(bind.value.endTime.replace(/-/g, "/")));
     }
    
-    el.innerText = calcTimeDiff(time,new Date());
+    el.innerText = calcTimeDiff(startTime, endTime);
 }
 const overTimeDirective = {
     componentUpdated: function (el, binding) {

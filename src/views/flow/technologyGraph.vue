@@ -48,6 +48,8 @@
           <g v-for="(item) in ProcessAndProcedureData" :key="item.procedureCode">
             <!-- <shape :xAxion="item.pointX" :yAxion="item.pointY" color="#b9d3ef" borderColor="#739cc3" :width="defaultShapeWidth" :height="defaultShapeWidth"></shape> -->
 
+            <ProgressRing :x="item.pointX+60" :y="item.pointY" :radius=25  :progress=89 :strokeWidth=2 progressColor='#9C27B0'></ProgressRing>
+            
             <image :x="item.pointX" :y="item.pointY" :width="defaultShapeWidth" :height="defaultShapeWidth" :xlink:href="item.photo" rx="25"></image>
 
             <text :x="item.pointX+defaultShapeWidth/2" :y="item.pointY+defaultShapeWidth+5" fill="#000" style="font-size:14px" class="svg-text-common-style">
@@ -59,6 +61,8 @@
             <text :x="item.pointX" :y="item.pointY-4" fill="#fff" class="svg-text-common-style" style="font-size:10px;font-weight:bold">
               {{item.num>99?'99+':item.num}}
             </text>
+
+            
 
           </g>
           <g v-for="(line,index) in pointList" :key="index">
@@ -72,6 +76,7 @@
 
 <script>
 import Shape from "@/components/Shape";
+import ProgressRing from "@/components/progress-ring";
 import {
   getProcedureAndProcess,
   getMockData,
@@ -84,7 +89,8 @@ export default {
   name: "TechnologyGraph",
 
   components: {
-    Shape
+    Shape,
+    ProgressRing
   },
 
   data() {
@@ -100,7 +106,7 @@ export default {
       ProcessAndProcedureData: [],
       defaultxAxion: 40,
       defaultyAxion: 80,
-      graphSpace: 100,
+      graphSpace: 160,
       defaultShapeWidth: 50,
       showNumber: 9, //一行显示多少个
 
@@ -262,7 +268,7 @@ export default {
                   "," +
                   (item.pointY + this.defaultShapeWidth / 2) +
                   " " +
-                  (nextPointX + defaultShapeWidth + 4) +
+                  (nextPointX + defaultShapeWidth + 4 + 75) +
                   "," +
                   (nextPointY + this.defaultShapeWidth / 2)
               });
@@ -273,7 +279,7 @@ export default {
                 id: item.procedureCode,
                 value:
                   item.pointX +
-                  this.defaultShapeWidth +
+                  this.defaultShapeWidth + 75 +
                   "," +
                   (item.pointY + this.defaultShapeWidth / 2) +
                   " " +
@@ -323,7 +329,7 @@ export default {
         this.screenWidth = window.screenWidth;
       })();
     };
-  debugger
+  
     this.getProcessAndProcedure(this.processRouteCode);
   }
 };

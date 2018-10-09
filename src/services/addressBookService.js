@@ -20,6 +20,16 @@ export const getListById = (listId) => request('/H_roleplay-si/ds/list/getListBy
   uniqueId: listId
 });
 
+/**
+ * @author XiaoYing
+ * @description 添加权限
+ */
+export const addPermission = (list,single, multi) => request('/H_roleplay-si/ps/updatePermissionRelation', {
+  list: list,
+  multi: multi,
+  single: single
+}, 'POST');
+
 /************  用户  **************/
 
 /**
@@ -165,19 +175,12 @@ export const getAllRoleData = (pageSize, currentPage, filter) => request('/H_rol
  * @author XiaoYing
  * @description 获取所用权限数据
  */
-export const getAllPermissionData = (parentId) => request('/H_roleplay-si/ds/getPermissionListByParentId', {
-  parentId: parentId
+export const getAllPermissionData = (parentId,limit,currentPage,filter) => request('/H_roleplay-si/ds/getPermissionListByParentId', {
+  parentId: parentId,
+  limit: limit,
+  page: currentPage,
+  filter: filter
 });
-
-/**
- * @author XiaoYing
- * @description 添加权限
- */
-export const addIndirPermission = (single, multi) => request('/H_roleplay-si/ps/updatePermissionRelation', {
-  list: 'sys_user_permission',
-  multi: multi,
-  single: single
-}, 'POST');
 
 /**
  * @author XiaoYing
@@ -274,15 +277,6 @@ export const listUsers = (currentPage, pageSize) => request('/H_roleplay-si/ds/l
   start: 0,
 });
 
-/**
- * @author GuoZheng
- * @description 添加组织权限
- */
-export const addOrgPermission = (single, multi) => request('/H_roleplay-si/ps/updatePermissionRelation', {
-  list: 'sys_group_permission',
-  multi: multi,
-  single: single
-}, 'POST');
 
 /**
  * @author GuoZheng
@@ -450,16 +444,6 @@ export const deleteBatchRole = (roleId, userId) => request('/H_roleplay-si/ps/de
   single: userId,
 }, 'POST');
 
-
-/**
- * @author GuoZheng
- * @description 添加职位权限
- */
-export const addRolePermission = (single, multi) => request('/H_roleplay-si/ps/updatePermissionRelation', {
-  list: 'sys_role_permission',
-  single: single,
-  multi: multi
-}, 'POST');
 
 /**
  * @author GuoZheng

@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { deleteOrgPermissio } from "@/services/addressBookService.js";
+import { deleteOrgPermission } from "@/services/addressBookService.js";
 import CustomTable from "./CustomTable";
 import PermissionModal from '../../user/detail/instance/permission-modal';
 

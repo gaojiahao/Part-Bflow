@@ -415,6 +415,7 @@ export default {
             if(valid){
                 if(this.checkout){
                     this.formItem.photo = this.logo;
+                    this.formItem.status = Number(this.formItem.status);
                     if(this.formItem.termOfValidity){
                         this.formItem.termOfValidity = this.formatDate(this.formItem.termOfValidity);
                     }
@@ -495,6 +496,7 @@ export default {
             if(valid){
                 if(this.checkout){
                     this.formItem.photo = this.logo;
+                    this.formItem.status = Number(this.formItem.status);
                     if(this.formItem.termOfValidity){
                         this.formItem.termOfValidity = this.formatDate(this.formItem.termOfValidity);
                     }

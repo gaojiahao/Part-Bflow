@@ -29,9 +29,9 @@ export const getNavData = (params) => request('/H_roleplay-si/ds/list/getMenuByP
  * @author XiaoYing
  * @description 获取所有流程数据
  */
-export const getAllProcessData = (page,limit) => request('/H_roleplay-si/ds/getDeployedProcess', {
-    page: page,
-    limit: limit
+export const getAllProcessData = (page, limit) => request('/H_roleplay-si/ds/getDeployedProcess', {
+  page: page,
+  limit: limit
 });
 
 /**
@@ -39,16 +39,16 @@ export const getAllProcessData = (page,limit) => request('/H_roleplay-si/ds/getD
  * @description 获取应用流程数据
  */
 export const getProcessDataByListId = (listId, currentPage, pageSize) => request('/H_roleplay-si/ds/list/getProcessRelConfigByListId', {
-    listId: listId,
-    page: currentPage,
-    limit: pageSize
+  listId: listId,
+  page: currentPage,
+  limit: pageSize
 });
 
 /**
  * @author XiaoYing
  * @description 获取管理员数据
  */
-export const getAdminData = (filter,page,limit) => request('/H_roleplay-si/ds/getAllUsers', {
+export const getAdminData = (filter, page, limit) => request('/H_roleplay-si/ds/getAllUsers', {
   filter: filter,
   page: page,
   limit: limit
@@ -138,7 +138,7 @@ export const saveViewPermission = (permissionId, userId, groupId, roleId) => req
  * @author XiaoYing
  * @description 获取对应应用用户、组织、职位所有权限数据
  */
-export const getAppResourcesAndAuthoritys = (type,listId) => request('/H_roleplay-si/ds/getAppResourcesAndAuthoritys', {
+export const getAppResourcesAndAuthoritys = (type, listId) => request('/H_roleplay-si/ds/getAppResourcesAndAuthoritys', {
   listId: listId,
   type: type
 })
@@ -206,10 +206,10 @@ export const getAppviews = (params) => request('/H_roleplay-si/ds/getListViewOrT
  * @author XiaoYing
  * @description 启用禁用工作流
  */
-export const enabledForbiddenWorkFlow = (enabledIds,forbiddenIds,deleteId) => request('/H_roleplay-si/app/prohibitProc', {
-    open: enabledIds,
-    close: forbiddenIds,
-    delete: deleteId
+export const enabledForbiddenWorkFlow = (enabledIds, forbiddenIds, deleteId) => request('/H_roleplay-si/app/prohibitProc', {
+  open: enabledIds,
+  close: forbiddenIds,
+  delete: deleteId
 }, 'POST');
 
 /**
@@ -245,10 +245,10 @@ export const saveAppLog = (listId, scope, spendTime, content) => request('/H_rol
  * @author GUOZHENG
  * 更新日志
  */
-export const getChangeLog = (listId,currentPage=1) => request('/H_roleplay-si/ds/getChangeLog', {
+export const getChangeLog = (listId, currentPage = 1) => request('/H_roleplay-si/ds/getChangeLog', {
   listId: listId,
-  limit:10,
-  page:currentPage
+  limit: 10,
+  page: currentPage
 });
 
 /** 
@@ -265,13 +265,13 @@ export const getAppSubjectData = (listId) => request('/corebiz-api/calc/calcRel/
  */
 export const openOrForbiddenSubject = (componentId) => request('/corebiz-api/calc/calcConfig/editStatus', {
   componentId: componentId
-},'POST');
+}, 'POST');
 
 /** 
  * @author XiaoYing
  * 管理员自评数据获取
  */
-export const getAssessmentByListId = (listId,pageSize,currentPage) => request('/H_roleplay-si/ds/getAssessmentByListId', {
+export const getAssessmentByListId = (listId, pageSize, currentPage) => request('/H_roleplay-si/ds/getAssessmentByListId', {
   listId: listId,
   limit: pageSize,
   page: currentPage
@@ -281,7 +281,7 @@ export const getAssessmentByListId = (listId,pageSize,currentPage) => request('/
  * @author XiaoYing
  * 管理员自评数据新增
  */
-export const saveAssessment = (params) => request('/H_roleplay-si/app/saveAssessment', {}, 'POST',params);
+export const saveAssessment = (params) => request('/H_roleplay-si/app/saveAssessment', {}, 'POST', params);
 
 /** 
  * @author GuoZheng
@@ -316,7 +316,7 @@ export const ProhibitApp = (id, permType) => request('/H_roleplay-si/app/Prohibi
  * @author XiaoYing
  * 修改权限确认
  */
-export const updateMemberPermission = (userId, roleId, groupId,companyId, permissionId,listId,status) => request('/H_roleplay-si/app/updateAppActionPermission', {
+export const updateMemberPermission = (userId, roleId, groupId, companyId, permissionId, listId, status) => request('/H_roleplay-si/app/updateAppActionPermission', {
   user: userId,
   role: roleId,
   group: groupId,
@@ -330,7 +330,7 @@ export const updateMemberPermission = (userId, roleId, groupId,companyId, permis
  * @author XiaoYing
  * 删除某一用户或组织或职位公司全部权限
  */
-export const clearAppPermission = (list,singleId,multiId) => request('/H_roleplay-si/ps/deleteRelation', {
+export const clearAppPermission = (list, singleId, multiId) => request('/H_roleplay-si/ps/deleteRelation', {
   list: list,
   single: singleId,
   multi: multiId
@@ -344,10 +344,10 @@ export const downloadImage = (url) => request('/H_roleplay-si/ds/download', {
  * @author XiaoYing
  * 启用禁用应用动作权限
  */
-export const enabledForbiddenApp = (enabledIds,forbiddenIds) => request('/H_roleplay-si/app/prohibitList', {
-    open: enabledIds,
-    close: forbiddenIds
-  }, 'POST');
+export const enabledForbiddenApp = (enabledIds, forbiddenIds) => request('/H_roleplay-si/app/prohibitList', {
+  open: enabledIds,
+  close: forbiddenIds
+}, 'POST');
 
 /** 
  * @author XiaoYing
@@ -370,27 +370,35 @@ export const sortExampleDetails = (examples) => request('/H_roleplay-si/trans/so
  * @param {String} listId  应用ID
  * @description 获取应用相关应用信息
  */
-export const getRelatedApp = (listId) => request('/H_roleplay-si/trans/getAllExampleDetailsByAppId', { appId: listId });
+export const getRelatedApp = (listId) => request('/H_roleplay-si/trans/getAllExampleDetailsByAppId', {
+  appId: listId
+});
 
 /**
  * @author zhaohuai
  * @description 获取用户相关信息
  */
-export const getUserInfoByUserId = (userId) => request('/H_roleplay-si/ds/getUserInfoByUserId', { userId: userId });
+export const getUserInfoByUserId = (userId) => request('/H_roleplay-si/ds/getUserInfoByUserId', {
+  userId: userId
+});
 
 
 /**
  * @author GuoZheng
  * @description 获取查询应用json数据
  */
-export const findList = (listId) => request('/H_roleplay-si/easy/list/findList', { listId: listId });
+export const findList = (listId) => request('/H_roleplay-si/easy/list/findList', {
+  listId: listId
+});
 
 /**
  * @author snack.huang
  * @description 获取订单大流程图信息
  * @param {String} treansCode 
  */
-export const getBigProcessByOrderCode = (treansCode) => request('/corebiz-api/largeProcess', { order_code: treansCode})
+export const getBigProcessByOrderCode = (treansCode) => request('/corebiz-api/largeProcess', {
+  order_code: treansCode
+})
 
 
 /**
@@ -443,7 +451,7 @@ export const getCommentsByParentId = (param) => request('/H_roleplay-si/comment/
  *  commtenId:xxx 评论ID
  * }
  */
-export const commentThumbsUp = (data) => request('/H_roleplay-si/comment/savePraise', {},"POST",data)
+export const commentThumbsUp = (data) => request('/H_roleplay-si/comment/savePraise', {}, "POST", data)
 
 /**
  * @author snack.huang
@@ -468,4 +476,37 @@ export const cancelCommentThumbsUp = (commentId) => request('/H_roleplay-si/comm
  *   page=xx 页数
  * }
  */
-export const getCommentThumbaUps = (param) => request('/H_roleplay-si/comment/getPraiseByCommentId', param) 
+export const getCommentThumbaUps = (param) => request('/H_roleplay-si/comment/getPraiseByCommentId', param)
+
+/**
+ * @author zhaohuai
+ * @description 过去流程状态信息
+ * @param {*} param 
+ * {
+ *   listId 应用Id
+ *   limit 条数
+ *   page 页数
+ * }
+ */
+export const getProcessStatus = (param) => request('/H_roleplay-si/listProcessStatusRel/findData', param)
+
+/**
+ * @author zhaohuai
+ * @description 删除流程状态
+ * @param {*} param 
+ */
+export const deleteProcessStatus = (param) => request('/H_roleplay-si/listProcessStatusRel/delete', {}, "POST", param)
+
+/**
+ * @author zhaohuai
+ * @description 更新流程状态
+ * @param {*} param 
+ */
+export const updateProcessStatus = (param) => request('/H_roleplay-si/listProcessStatusRel/update', {}, "POST", param)
+
+/**
+ * @author zhaohuai
+ * @description 新增流程状态
+ * @param {*} param 
+ */
+export const addProcessStatus = (param) => request('/H_roleplay-si/listProcessStatusRel/save', {}, "POST", param)

@@ -9,11 +9,11 @@
             v-for="(n,index) in  notifications" 
             :key="index">
             <div class="notice-time">{{n.crtTime}}</div>
-            <comment-notice-tpl :data="n" v-if="n.type=='comment' "></comment-notice-tpl>
+            <comment-notice-tpl :data="n" v-if="n.type=='comment' " v-bind:class="{'notice-unread':!n.isRead}"></comment-notice-tpl>
 
-            <praise-notice-tpl  :data="n" v-if="n.type=='praise'"> </praise-notice-tpl>
+            <praise-notice-tpl  :data="n" v-if="n.type=='praise'" v-bind:class="{'notice-unread':!n.isRead}"> </praise-notice-tpl>
 
-            <flow-task-tpl :data="n" v-if="n.type=='flowTask' "></flow-task-tpl>
+            <flow-task-tpl :data="n" v-if="n.type=='flowTask' " v-bind:class="{'notice-unread':!n.isRead}"></flow-task-tpl>
         </div>
     </div>
 </template>
@@ -37,6 +37,16 @@ export default {
             default:''
         }
     },
+     watch:{
+        navId:{
+            handler(newValue, oldValue) {
+                if(newValue){
+                    this.listId = newValue;
+                }
+        　　　},
+        　　　deep:true
+        },
+    },
     data(){
         return {
             params:{
@@ -46,6 +56,7 @@ export default {
             },
             notifications:[],
             isRolling:false,
+            navId:''
         }
     },
     methods:{

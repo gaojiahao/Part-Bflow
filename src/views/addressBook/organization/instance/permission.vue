@@ -11,6 +11,10 @@
     color: rgb(122, 118, 118);
   }
 }
+.user-page {
+    margin: 10px;
+    overflow: hidden;
+  }
 .app-table-search{
   float: right;
   .app-search-icon {
@@ -20,6 +24,14 @@
     cursor: pointer;
   }
 }
+.page-selection-warp {
+    width: 100%;
+    height: 100%;
+    min-height: 30px;
+    background-color: #e6e6e6;
+    margin-bottom: 10px;
+    padding: 1px 5px;
+  }
 </style>
 
 <template>
@@ -46,29 +58,27 @@
 
       </div>
     </custom-table>
-
-    <member-modal v-model="isShowModal" width="600" footerBtnAlign="right" title="权限列表" @on-ok="savePermission">
-      <div style="max-height:350px;overflow:auto;">
-        <Tree :data="allPermissionData" :multiple="true" @on-select-change="onCheckChange" :load-data="loadData"></Tree>
-      </div>
-    </member-modal>
+    <!-- 权限modal -->
+    <permission-modal 
+    :target="target"
+    :visible="isShowModal" 
+    @changeModalStatus="changeModalStatus"
+    @permissionChange="permissionChange">
+    </permission-modal>
   </div>
 </template>
 
 <script>
-import MemberModal from "@/components/modal/Modal";
-import {
-  getAllPermissionData,
-  addOrgPermission,
-  deleteOrgPermission
-} from "@/services/addressBookService.js";
+import { deleteOrgPermission } from "@/services/addressBookService.js";
 import CustomTable from "./CustomTable";
+import PermissionModal from '../../user/detail/instance/permission-modal';
+
 export default {
   name: "principal",
 
   components: {
     CustomTable,
-    MemberModal
+    PermissionModal
   },
 
   props: {
@@ -141,22 +151,33 @@ export default {
 
       //模态框参数
       isShowModal: false,
-      allPermissionData: [],
-      selectPermissionNode: [],
       selectDeletePermission: [],
       reload: false,
-      searchValue: ""
+      searchValue: "",
+      target: {
+        type: 'sys_group_permission',
+        targetId: this.groupId
+      }
     };
   },
 
   methods: {
+    //添加权限后更新数据
+    permissionChange() {
+      this.reload = true;
+      this.$emit("on-permission-change", true);
+    },
+    //监听modal状态变化
+    changeModalStatus() {
+      this.isShowModal = false;
+    },
+
     listUserChangePage(currentPage) {
       this.getListUsers(currentPage, this.pageSize);
     },
 
     addPermission() {
       this.isShowModal = true;
-      this.getAllPermissionData();
     },
 
     deletePermission() {
@@ -193,75 +214,7 @@ export default {
     onCheckChange(node) {
       this.selectPermissionNode = node;
     },
-
-    //保存添加的权限
-    savePermission() {
-      let multiId = [];
-      this.selectPermissionNode.forEach(val => {
-        multiId.push(val.id);
-      });
-      if (multiId) {
-        addOrgPermission(this.groupId, multiId.join(","))
-          .then(res => {
-            if (res.success) {
-              this.$Message.success(res.message);
-              this.selectPermissionNode = [];
-              this.reload = true;
-              this.isShowModal = false;
-              this.$emit("on-permission-change", true);
-            }
-          })
-          .catch(error => {
-            this.$Message.error(error.data.message);
-          });
-      }
-    },
-
-    //加载所有权限数据
-    getAllPermissionData() {
-      if (this.allPermissionData.length === 0) {
-        getAllPermissionData(0).then(res => {
-          res.tableContent.forEach(val => {
-            if(val.leaf === 'false'){
-              this.allPermissionData.push({
-                title: val.name,
-                id: val.id,
-                loading: false,
-                children: []
-              });
-            }else{
-              this.allPermissionData.push({
-                title: val.name,
-                id: val.id
-              });
-            }
-          });
-        });
-      }
-    },
-
-    //异步加载权限数据
-    loadData(item, callback) {
-      getAllPermissionData(item.id).then(res => {
-        let data = [];
-        res.tableContent.forEach(val => {
-          if (val.leaf === "false") {
-            data.push({
-              title: val.name,
-              id: val.id,
-              loading: false,
-              children: []
-            });
-          } else {
-            data.push({
-              title: val.name,
-              id: val.id
-            });
-          }
-        });
-        callback(data);
-      });
-    },
+   
     //权限过滤
     permissionFilter() {
       let filter = JSON.stringify([

@@ -154,6 +154,7 @@ export default {
                 
             });
         },
+        //点击某个菜单
         handleActiveNavigation(nav){
 
             this.$forceUpdate();

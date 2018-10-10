@@ -12,7 +12,13 @@
       <Table :columns="columns" :data="reportSources" size="small"></Table>
 
     </Row>
-    <report-modal :modalStatis="showReportModal" @emitPermissionModal="emitPermissionModal" :permissionId="permissionId" @reGetData="reGetData" :permissionData="permissionData"></report-modal>
+    <report-modal 
+      :modalStatis="showReportModal" 
+      @emitPermissionModal="emitPermissionModal" 
+      :permissionId="permissionId" 
+      @reGetData="reGetData" 
+      :permissionData="permissionData">
+    </report-modal>
   </div>
 </template>
 

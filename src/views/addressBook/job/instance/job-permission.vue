@@ -46,28 +46,26 @@
       </div>
     </custom-table>
 
-    <member-modal v-model="isShowModal" width="600" footerBtnAlign="right" title="权限列表" @on-ok="savePermission">
-      <div style="max-height:350px;overflow:auto">
-        <Tree :data="allPermissionData" :multiple="true" @on-select-change="onCheckChange" :load-data="loadData"></Tree>
-      </div>
-    </member-modal>
+    <!-- 权限modal -->
+    <permission-modal 
+    :target="target"
+    :visible="isShowModal" 
+    @changeModalStatus="changeModalStatus"
+    @permissionChange="permissionChange">
+    </permission-modal>
   </div>
 </template>
 
 <script>
-import MemberModal from "@/components/modal/Modal";
-import {
-  getAllPermissionData,
-  addRolePermission,
-  deleteRolePermission
-} from "@/services/addressBookService.js";
+import { deleteRolePermission } from "@/services/addressBookService.js";
 import CustomTable from "@/views/addressBook/organization/instance/CustomTable";
+import PermissionModal from '../../user/detail/instance/permission-modal';
 export default {
   name: "job-permission",
 
   components: {
     CustomTable,
-    MemberModal
+    PermissionModal
   },
 
   props: {
@@ -142,22 +140,33 @@ export default {
 
       //模态框参数
       isShowModal: false,
-      allPermissionData: [],
-      selectPermissionNode: [],
       selectDeletePermission: [],
       reload: false,
-      searchValue: ""
+      searchValue: "",
+      target: {
+        type: 'sys_role_permission',
+        targetId: this.jobId
+      }
     };
   },
 
   methods: {
+    //添加权限后更新数据
+    permissionChange() {
+      this.reload = true;
+      this.$emit("on-permission-change", true);
+    },
+    //监听modal状态变化
+    changeModalStatus() {
+      this.isShowModal = false;
+    },
+
     listUserChangePage(currentPage) {
       this.getListUsers(currentPage, this.pageSize);
     },
 
     addPermission() {
       this.isShowModal = true;
-      this.getAllPermissionData();
     },
 
     onRefeshChange(val) {
@@ -198,69 +207,6 @@ export default {
       this.selectPermissionNode = node;
     },
 
-    //保存添加的权限
-    savePermission() {
-      let multiId = [];
-      this.selectPermissionNode.forEach(val => {
-        multiId.push(val.id);
-      });
-      if (multiId) {
-        addRolePermission(this.jobId, multiId.join(",")).then(res => {
-          if (res.success) {
-            this.$Message.success(res.message);
-            this.reload = true;
-            this.$emit("on-permission-change", true);
-            this.isShowModal = false;
-          }
-        });
-      }
-    },
-
-    //加载所有权限数据
-    getAllPermissionData() {
-      if (this.allPermissionData.length === 0) {
-        getAllPermissionData(0).then(res => {
-          res.tableContent.forEach(val => {
-            if(val.leaf === 'false'){
-              this.allPermissionData.push({
-                title: val.name,
-                id: val.id,
-                loading: false,
-                children: []
-              });
-            }else{
-              this.allPermissionData.push({
-                title: val.name,
-                id: val.id
-              });
-            }
-          });
-        });
-      }
-    },
-
-    //异步加载权限数据
-    loadData(item, callback) {
-      getAllPermissionData(item.id).then(res => {
-        let data = [];
-        res.tableContent.forEach(val => {
-          if (val.leaf === "false") {
-            data.push({
-              title: val.name,
-              id: val.id,
-              loading: false,
-              children: []
-            });
-          } else {
-            data.push({
-              title: val.name,
-              id: val.id
-            });
-          }
-        });
-        callback(data);
-      });
-    },
     //权限过滤
     permissionFilter() {
       let filter = JSON.stringify([

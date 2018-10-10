@@ -10,12 +10,20 @@
                 {{ list.name }}
             </p>
             <a href="#" slot="extra"></a>
-            <div @click="selectApp(index,list.name)" class="app-card" v-for="(item,index) of list.list" :key="index">
+            <div 
+                @click="selectApp(index,list.name)" 
+                class="app-card" 
+                v-for="(item,index) of list.list" 
+                :key="index">
                 <Card>
                     <div class="app-block">
                         <img class="app-img" :src="item.icon" />
                         <p class="app-title">{{ item.title }}</p>
-                        <Icon v-show="item.isSelect" class="app-select-icon" type="checkmark-round"></Icon>
+                        <Icon 
+                            v-show="item.isSelect" 
+                            class="app-select-icon" 
+                            type="checkmark-round">
+                        </Icon>
                         <p class="app-desc">{{ item.comment }}</p>
                     </div>
                 </Card>

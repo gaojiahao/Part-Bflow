@@ -4,25 +4,35 @@
 <template>
   <div class="app-list">
     <Row class="app-container" :gutter="8">
-      <Col :xs="24" :sm="12" :md="8" :lg="6" class="app-col" v-for="(list, index) of listData" :key="index">
-      <Card class="app-card">
-        <img class="card-img" :src="list.icon" />
-        <b class="card-name">{{ list.title }}</b>
-        <span class="card-type">{{ list.transName }}
-          <my-pop-tip :userInfo="userInfo" v-if="list.administrator">
-            <span class="card-admintrstor" slot="userCard" @mouseenter="focusChange(list.administratorId)">
-              <Icon type="person"></Icon>{{ list.administrator }}
-            </span>
-          </my-pop-tip>
-        </span>
-        <span class="card-desc" v-html="list.comment"></span>
-        <a class="card-setting" type="text" @click="goAppSetting(list)">详情</a>
-        <p @click="deleteApplication(index, list)" class="card-delete">
-          <Tooltip content="删除应用" placement="top">
-            <Icon type="close-round"></Icon>
-          </Tooltip>
-        </p>
-      </Card>
+      <Col 
+        :xs="24" 
+        :sm="12" 
+        :md="8" 
+        :lg="6" 
+        class="app-col" 
+        v-for="(list, index) of listData" 
+        :key="index">
+        <Card class="app-card">
+          <img class="card-img" :src="list.icon" />
+          <b class="card-name">{{ list.title }}</b>
+          <span class="card-type">{{ list.transName }}
+            <my-pop-tip :userInfo="userInfo" v-if="list.administrator">
+              <span 
+                class="card-admintrstor" 
+                slot="userCard" 
+                @mouseenter="focusChange(list.administratorId)">
+                <Icon type="person"></Icon>{{ list.administrator }}
+              </span>
+            </my-pop-tip>
+          </span>
+          <span class="card-desc" v-html="list.comment"></span>
+          <a class="card-setting" type="text" @click="goAppSetting(list)">详情</a>
+          <p @click="deleteApplication(index, list)" class="card-delete">
+            <Tooltip content="删除应用" placement="top">
+              <Icon type="close-round"></Icon>
+            </Tooltip>
+          </p>
+        </Card>
       </Col>
     </Row>
   </div>

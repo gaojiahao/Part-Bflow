@@ -31,13 +31,9 @@
         </TabPane>
         <TabPane :disabled="!(isAdmin || isCompanyAdmin) && appType === 'subject'" :label="((isAdmin || isCompanyAdmin) && appType !== 'subject')?'连接':''" name="name5">
           <!-- 应用科目 -->
-          <div class="app-sub">
-            <app-subject v-if="!isAddress" :isAdmin="isAdmin">
-            </app-subject>
-          </div>
+          <app-subject v-if="!isAddress" :isAdmin="isAdmin"></app-subject>
           <!-- 相关应用 -->
-          <related-app v-if="!isAddress" :isAdmin="isAdmin">
-          </related-app>
+          <related-app v-if="!isAddress" :isAdmin="isAdmin"></related-app>
           <!-- 流程状态管理-->
           <process v-if="!isAddress" :isAdmin="isAdmin"></process>
           <!-- API -->

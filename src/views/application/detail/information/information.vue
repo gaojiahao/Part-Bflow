@@ -18,7 +18,12 @@
           <img :src="appData.icon" class="appIcon" />
         </Col>
         <Col span="21" class="pad15">
-          <h3> <span @click="goList" class="app-detail-title">{{ appData.title?appData.title:'待加载' }}</span>  - 应用详情</h3>
+          <h3> 
+            <span 
+              @click="goList" 
+              class="app-detail-title">{{ appData.title?appData.title:'待加载' }}
+            </span>  - 应用详情
+          </h3>
           <Row class="pad5">
             <Col span="6">应用名称： 
               <span v-if="showAppEditAdmin">{{ appData.title }}</span>
@@ -37,7 +42,13 @@
               <span v-if="showAppEditAdmin">
                 <Icon type="person"></Icon>{{ appData.administrator }}
               </span>
-              <Input v-else @on-click="selectAdminModal" @on-change="clearAdmintrstor" v-model="appData.administrator" icon="md-arrow-dropdown" style="width: 100px">
+              <Input 
+                v-else 
+                @on-click="selectAdminModal" 
+                @on-change="clearAdmintrstor" 
+                v-model="appData.administrator" 
+                icon="md-arrow-dropdown" 
+                style="width: 100px">
               </Input>
             </Col>
           </Row>
@@ -74,19 +85,41 @@
             </Dropdown>
         </Col>
     </Row>
-
-   
+    <!-- 应用管理员modal -->
     <Modal v-model="showAdminModal" title="请选择管理员" @on-ok="confirmModal" width="800">
       <div class="app-search">
-        <Input @on-search="adminFilter" :search="true" v-model="searchValue" placeholder="搜索名称或工号" style="width: 300px"></Input>
+        <Input 
+          @on-search="adminFilter" 
+          :search="true" 
+          v-model="searchValue" 
+          placeholder="搜索名称或工号" 
+          style="width: 300px">
+        </Input>
         <p @click="adminFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
         </p>
       </div>
-      <Table :highlight-row="true" @on-row-dblclick="dbclickConfirmModal" @on-row-click="selectAdmin" :loading="adminLoading" height="300" stripe :columns="adminColumns" size="small" :data="adminData"></Table>
+      <Table 
+        :highlight-row="true" 
+        @on-row-dblclick="dbclickConfirmModal" 
+        @on-row-click="selectAdmin" 
+        :loading="adminLoading" 
+        height="300" 
+        stripe 
+        :columns="adminColumns" 
+        size="small" 
+        :data="adminData">
+      </Table>
       <div class="user-page">
           <div style="float: right;">
-            <Page :total="total" :current="currentPage" :page-size="pageSize" @on-change="onPageChange" size="small" show-total></Page>
+            <Page 
+              :total="total" 
+              :current="currentPage" 
+              :page-size="pageSize" 
+              @on-change="onPageChange" 
+              size="small" 
+              show-total>
+            </Page>
           </div>
       </div>
     </Modal>
@@ -111,8 +144,8 @@ export default {
   props: {
     listId: String,
     appData: Object,
-    isAdmin: Boolean,
-    isCompanyAdmin: Boolean
+    isAdmin: Boolean,//应用管理员
+    isCompanyAdmin: Boolean//企业管理员
   },
   data() {
     return {
@@ -121,14 +154,8 @@ export default {
       isAdminTrue: false,
       showEditBtn: true,
       adminLoading: true,
-      selectModel: "",
       showAdminModal: false,
-      selector: "",
       searchValue: "",
-      hasPublishStatus: "已发布",
-      notPublishStatus: "未发布",
-      notAppStatusColor: "blue",
-      hasAppStatusColor: "green",
       total: 0,
       currentPage: 1,
       pageSize: 10,

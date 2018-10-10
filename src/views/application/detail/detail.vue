@@ -38,9 +38,9 @@
           <user-comments ></user-comments>
         </TabPane>
         <TabPane 
-        :disabled="!(isAdmin || isCompanyAdmin)" 
-        :label="(isAdmin || isCompanyAdmin)?'资源':''" 
-        name="name4">
+          :disabled="!(isAdmin || isCompanyAdmin)" 
+          :label="(isAdmin || isCompanyAdmin)?'资源':''" 
+          name="name4">
           <permission-source 
             :appType="appType" 
             :isAdmin="isAdmin" 
@@ -49,21 +49,13 @@
           </permission-source>
         </TabPane>
         <TabPane 
-        :disabled="!(isAdmin || isCompanyAdmin) && appType === 'subject'" 
-        :label="((isAdmin || isCompanyAdmin) && appType !== 'subject')?'连接':''" 
-        name="name5">
+          :disabled="!(isAdmin || isCompanyAdmin) && appType === 'subject'" 
+          :label="((isAdmin || isCompanyAdmin) && appType !== 'subject')?'连接':''" 
+          name="name5">
           <!-- 应用科目 -->
-          <div class="app-sub">
-            <app-subject 
-              v-if="!isAddress" 
-              :isAdmin="isAdmin">
-            </app-subject>
-          </div>
+          <app-subject v-if="!isAddress" :isAdmin="isAdmin"></app-subject>
           <!-- 相关应用 -->
-          <related-app 
-            v-if="!isAddress" 
-            :isAdmin="isAdmin">
-          </related-app>
+          <related-app v-if="!isAddress" :isAdmin="isAdmin"></related-app>
           <!-- API -->
           <app-api></app-api>
         </TabPane>

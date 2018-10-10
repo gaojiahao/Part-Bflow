@@ -102,7 +102,7 @@ export default {
         { name: "直接权限", showName: 'dirper', isShow: true, isShowAcive: false, relativeNum: 0, type:"md-person" },
         { name: "职位", showName: 'role', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/job.png' },
         { name: "部门", showName: 'dep',  isShow: true,isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/organization.png' },
-        { name: "下级用户", showName: 'lowuser', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'buildresources/images/icon/user.png' },
+        { name: "下级用户", showName: 'lowuser', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/user.png' },
         { name: "上级用户", showName: 'highuser', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'resources/images/icon/user.png' },
         { name: "基本信息", showName: 'userinfo', isShow: true, isShowAcive: true, type:"ios-home" }
       ]

@@ -234,6 +234,9 @@ export default {
             if (res.success === true) {
               this.$Message.info("添加成功");
               this.getProcessStatusByListId();
+              this.$refs["processInfoItem"].resetFields();
+              this.processInfoItem.fieldValue = "";
+              this.processInfoItem.sort = "";
               this.showModal = false;
             }
           });

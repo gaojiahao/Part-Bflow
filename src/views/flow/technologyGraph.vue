@@ -58,7 +58,7 @@
           </defs>
           <defs>
             <marker id="arrow1" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" viewBox="0 0 15 15" refX="6" refY="6" orient="auto">
-              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: #808695;" />
+              <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: #9cd3d3;" />
             </marker>
           </defs>
           <defs>
@@ -75,14 +75,14 @@
 
           <g v-for="(item) in ProcessAndProcedureData" :key="item.procedureCode">
             <g v-if="item.procedureCode === 'start'">
-              <shape :xAxion="item.pointX+80" :yAxion="item.pointY+25" color="#038a03" :text="item.procedureName"></shape>
+              <shape :xAxion="item.pointX+80" :yAxion="item.pointY+25" color="#7da87b" :text="item.procedureName"></shape>
             </g>
             <g v-else-if="item.procedureCode === 'end'">
               <shape :xAxion="item.pointX+25" :yAxion="item.pointY+25" color="#ff0000" :text="item.procedureName"></shape>
             </g>
             <g v-else>
               <ProgressRing :x="item.pointX+60" :y="item.pointY" :radius=25 :progress="percent[item.procedureCode]" :strokeWidth=2 progressColor='#9C27B0'></ProgressRing>
-              <image :x="item.pointX" :y="item.pointY" :width="defaultShapeWidth" :height="defaultShapeWidth" :xlink:href="item.photo" rx="25"></image>
+              <image :x="item.pointX" :y="item.pointY" :width="defaultShapeWidth" :height="defaultShapeWidth" :xlink:href="'/H_roleplay-si/ds/download?url='+item.photo" rx="25"></image>
               <text :x="item.pointX+defaultShapeWidth/2" :y="item.pointY+defaultShapeWidth+5" fill="#000" style="font-size:14px" class="svg-text-common-style">
                 {{item.procedureName}}
               </text>
@@ -98,7 +98,7 @@
 
           </g>
           <g v-for="(line,index) in pointList" :key="index">
-            <polyline :points="line.value" marker-end='url(#arrow1)' style="fill:none;stroke:#808695;stroke-width:2" />
+            <polyline :points="line.value" marker-end='url(#arrow1)' style="fill:none;stroke:#9cd3d3;stroke-width:2" />
           </g>
         </svg>
       </div>

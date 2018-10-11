@@ -21,8 +21,8 @@
             :r="normalizedRadius" 
             :cx="radius" 
             :cy="radius" 
-        /> 
-        <text :x="radius - 10" :dy="radius + 5" style="fill: gray;font-weight: 600;">{{progress}}%</text>
+        />  
+        <text :x="radius " :dy="radius-3" style="fill: gray;font-weight: 600; text-anchor: middle; baseline-shift: sub; font-family: sans-serif;" >{{progress}}%</text>
     </svg>
 </template>
 

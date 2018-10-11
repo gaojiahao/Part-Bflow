@@ -4,8 +4,7 @@
             :cx="xAxion" 
             :cy="yAxion"
             r="25"
-            stroke="#03448a" 
-            stroke-width='2' 
+           
             :fill="color" 
             >
         </circle>  

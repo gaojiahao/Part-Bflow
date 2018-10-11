@@ -21,8 +21,8 @@
             :r="normalizedRadius" 
             :cx="radius" 
             :cy="radius" 
-        /> 
-        <text :x="radius - 10" :dy="radius + 5" style="fill: gray;font-weight: 600;">{{progress}}%</text>
+        />  
+        <text :x="radius " :dy="radius-3" style="fill: gray;font-weight: 600; text-anchor: middle; baseline-shift: sub; font-family: sans-serif;" >{{progress}}%</text>
     </svg>
 </template>
 
@@ -56,6 +56,20 @@ export default {
             return this.circumference - this.percent / 100 * this.circumference;
         } 
     },
+
+    watch:{
+        progress(){
+            this.percent = 0;
+            const interval = setInterval(() => {
+                this.percent += 1;
+                if (this.progress === this.percent){
+                    clearInterval(interval);
+                }else if(this.progress === 0){
+                    clearInterval(interval);
+                }
+            }, 10);
+        }
+    },
     data() {
         const normalizedRadius = this.radius - this.strokeWidth * 2;
         const circumference = normalizedRadius * 2 * Math.PI;
@@ -68,8 +82,11 @@ export default {
         //实现动画效果
         const interval = setInterval(() => {
             this.percent += 1;
-            if (this.progress === this.percent)
+            if (this.progress === this.percent){
                 clearInterval(interval);
+            }else if(this.progress === 0){
+                clearInterval(interval);
+            }
         }, 10);
     }
 };

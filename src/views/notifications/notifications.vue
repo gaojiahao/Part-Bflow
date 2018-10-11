@@ -4,18 +4,14 @@
 <template>
     <div class="notificas">
         <div  class="notificas-content notificas-layout">
-
             <div  class="bg_ff notificas-layout-sider ">
                 <notifi-layout-sider :handleAvtiveNav='handleAvtiveNav'></notifi-layout-sider>
              </div>
-
             <div  class="notificas-list bg_ff notificas-layout-content" >
-               
                 <notifications-header 
                     :nav='avtiveNav' 
                     :handleExpendHistory="handleExpendHistory">
                 </notifications-header>
-                
                 <Row class="notificas-layout-content-notificwin" >
                     <Col :span="expendHistoryVisbible?'16':'24'" class="notificas-layout-content-notificwin-msg">
                        <notifilist 
@@ -39,8 +35,6 @@
                     </Col>
                     
                 </Row>
-
-                
             </div>
            
         </div>

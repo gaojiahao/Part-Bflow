@@ -69,6 +69,9 @@ npm test
     	name: "ProgressRing",
 		...
 	}
-3、具有高度重用性的组建,也就是功能组建,才收纳到Components文件夹下,
+3、具有高度重用性的组建,也就是功能组建,才收纳到Components文件夹下
+
+# 文件结构
+1、
    
 ```

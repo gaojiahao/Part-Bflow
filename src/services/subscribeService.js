@@ -21,7 +21,7 @@ export const unsubscribeApp = (data) => request('/H_roleplay-si/comment/unsubscr
 
 /**
  * @author snack.haugng
- * @description 取消订阅
+ * @description 取消订阅 通过关系ID取消订阅
  */
 export const unsubscribeAppByRelationKey = (data) => request('/H_roleplay-si/comment/unsubscribeAppByRelationKey', data, 'POST')
 
@@ -35,7 +35,7 @@ export const getUserByRelationKey = (params) => request('/H_roleplay-si/comment/
 
 /**
  * @author snack.haugng
- * @description 判断是否已经定于某内容
+ * @description 判断是否已经订阅
  */
 export const judgeIsSubscribeByRelationKey = (prarms) => request('/H_roleplay-si/comment/isSubscribeByRelationKey', prarms)
 

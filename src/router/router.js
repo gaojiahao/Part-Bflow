@@ -310,6 +310,7 @@ export const dictionaryManage = {
     import('@/views/dictionaryManage/dictionaryManage.vue')
 }
 
+import { socialRouter} from '@/views/social/router';
 
 export const routers = [
   loginRouter,
@@ -326,5 +327,6 @@ export const routers = [
   notifications,
   activation,
   dictionaryManage,
+  socialRouter,
   ...appRouter
 ];

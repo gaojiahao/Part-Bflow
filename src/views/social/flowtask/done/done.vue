@@ -83,8 +83,15 @@ export default {
                 },
                 {
                     title:'待办创建时间',
-                    key:'crtTime'
+                    key:'crtTime',
+                    width:150
+                },
+                {
+                    title:'任务处理时间',
+                    key:'endTime',
+                    width:150
                 }
+                
             ],
             data: [],
             pageInfo:{

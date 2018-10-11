@@ -1,11 +1,11 @@
 <style lang="less" scoped>
-@import "./notifications.less";
 @import "./notifilist.less";
+
 </style>
 <template>
-    <div  class="notificas-layout-content-notificwin-msg-list notificasscrollbar" id="msgList">
+    <div  class="message-list notificasscrollbar" id="msgList">
         <div 
-            class="notificas-layout-content-notificwin-msg-list-item"
+            class="message-list-item"
             v-for="(n,index) in  notifications" 
             :key="index">
             <div class="notice-time">{{n.crtTime}}</div>
@@ -94,7 +94,7 @@ export default {
             
             getAllnotifications(this.params).then(res =>{
                 if(this.isRolling){
-                    this.notifications.unshift(...res.tableContent);
+                    this.notifications = this.notifications.concat(...res.tableContent);
                 }else{
                     this.notifications = res.tableContent;
                 }

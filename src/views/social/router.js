@@ -13,6 +13,7 @@ export const  socialRouter = {
                 title: '消息通知',
             },
             component: () => import('@/views/notifications/notifications.vue')
+            // component: () => import('@/views/social/message/message-layout.vue') 暂时使用notifications,后续将重构
         },{
             path: 'flowtask',
             name: 'flowtask',

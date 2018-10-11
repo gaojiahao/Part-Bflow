@@ -70,7 +70,7 @@ export default {
                 {
                     title: '交易号',
                     key: 'businessKey',
-                    width:140,
+                    width:130,
                     render: (h,params) => {
                         return h('a',{
                             on: {
@@ -84,7 +84,7 @@ export default {
                 {
                     title: '操作名称',
                     key: 'nodeName',
-                    width:140
+                    width:120
                 },
                 {
                     title: '应用名称',
@@ -95,11 +95,6 @@ export default {
                     title: '经办人',
                     key: 'handlerName2',
                     width:80
-                },
-                {
-                    title: '经办人组织',
-                    key: 'handlerUnitName',
-                    width:120
                 },
                 {
                     title: '发起人',
@@ -114,6 +109,7 @@ export default {
                 {
                 title: "已过时间",
                 key: "crtTime",
+                 width:150,
                 render: (h,params) => {
                         let outTime = this.calcLeadTime(params.row.startTime);
                         return h('span',{},outTime);

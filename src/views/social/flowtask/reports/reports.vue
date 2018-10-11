@@ -29,13 +29,24 @@
                         <div class="reports-content-tasks-item-count">{{all}}</div>
                     </router-link>
                 </div>
+                
 
                 <div  class="reports-content-tasks-item">
-                    <div class="reports-content-tasks-item-txt" style="height:35px;">完成率</div>
-                    <ProgressRing  :radius=40  :progress=completionratio :strokeWidth=5 progressColor='#9C27B0'></ProgressRing>
+                     <i-circle 
+                    :percent="completionratio"
+                    :size="120"
+                    :trail-width="4"
+                    :stroke-width="8"
+                    stroke-linecap="square"
+                    stroke-color="#1fe5bd">
+                    <div class="demo-Circle-custom">
+                        <strong style="font-size: 1rem!important;color: #aaa;">完成率</strong>
+                        <p style="font-size: 2.5em;font-family: lcletter;color: #1fe5bd;">{{completionratio}}%</p>
+                    </div>
+                </i-circle>
                 </div>
             </div>
-            
+    
         </div>
     </div>
 </template>
@@ -46,19 +57,6 @@ export default {
     name:'Reports',
     components:{
         ProgressRing
-    },
-    watch:{
-        done:{
-            handler (newvalue,oldValue) {
-                this.completionratio = parseInt((this.done/this.all*100));
-            }
-        },
-        all:{
-            handler (newvalue,oldValue) {
-                this.completionratio = parseInt((this.done/this.all*100));
-            }
-        },
-        deep:true
     },
     data () {
         return {
@@ -75,32 +73,22 @@ export default {
         }
     },
     methods:{
-        getFlowAllTasks:function () {
-            getFlowAllTasks(this.pageInfo).then(res=>{
-                this.all = res.dataCount;
-            });
-        },
-        getFlowTodoTasks:function () {
+        getData:function () {
             getFlowTodoTasks(this.pageInfo).then(res=>{
                 this.todo = res.dataCount;
-            });
-        },
-        getFlowDoneTasks:function () {
-            getFlowDoneTasks(this.pageInfo).then(res=>{
-                this.done = res.dataCount;
-            });
-        },
-        getDraftData:function () {
-            getDraftData(this.pageInfo).then(res=>{
-                this.draft = res.dataCount;
+                getFlowDoneTasks(this.pageInfo).then(res=>{
+                    this.done = res.dataCount;
+                    this.all = this.todo + this.done;
+
+                    this.completionratio = parseInt(this.done/this.all*100);
+
+                });
             });
         }
+
     },
     mounted(){
-       this.getFlowAllTasks();
-       this.getFlowTodoTasks();
-       this.getFlowDoneTasks();
-       this.getDraftData();
+      this.getData();
     }
 }
 </script>

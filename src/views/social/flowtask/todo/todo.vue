@@ -83,7 +83,7 @@ export default {
                 },
                 {
                     title: '应用名称',
-                    key: 'processName',
+                    key: 'title',
                     width:140
                 },
                 {
@@ -94,6 +94,15 @@ export default {
                 {
                     title:'待办创建时间',
                     key:'crtTime',
+                    width:150
+                },
+                 {
+                title: "已过时间",
+                key: "crtTime",
+                render: (h,params) => {
+                        let outTime = this.calcLeadTime(params.row.crtTime);
+                        return h('span',{},outTime);
+                    }
                 }
             ],
             data: [],
@@ -127,6 +136,22 @@ export default {
                 {"operator":"like","value":this.searchkeywords,"property":"businessKey"}
             ]);
             this.getFlowTodoTasks();
+        },
+        //计算时间差
+        calcLeadTime(date) {
+            let startDate = new Date(date.replace(/-/g,"/")),
+                currentDate = new Date(),
+                dateDiff = currentDate.getTime() - startDate.getTime(),//时间差的毫秒数
+                dayDiff = Math.floor(dateDiff/(24*3600*1000)),//相差天数
+                restMilliSeconds1 = dateDiff%(24*3600*1000),//计算天数后剩余的毫秒数
+                hourDiff = Math.floor(restMilliSeconds1/(3600*1000)),//计算出小时数
+                restMilliSeconds2 = restMilliSeconds1%(3600*1000),//计算小时数后剩余的毫秒数
+                minuteDiff = Math.floor(restMilliSeconds2/(60*1000)),//计算相差分钟数
+                restMilliSeconds3 = restMilliSeconds2%(60*1000),//计算分钟数后剩余的毫秒数
+                secondDiff = Math.round(restMilliSeconds3/1000),//计算出相差秒数
+                outdateTime;
+            outdateTime = dayDiff + '天' + hourDiff + '时' + minuteDiff + '分' + secondDiff + '秒';
+            return outdateTime;
         }
     },
     mounted(){

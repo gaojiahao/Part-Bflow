@@ -131,7 +131,7 @@ export default {
             return h('div',[
               h('Avatar',{
                 props: {
-                  src: params.row.photo?params.row.photo:'../../../../../resources/images/icon/defaultUserPhoto.jpg'
+                  src: params.row.photo?params.row.photo:'resources/images/icon/defaultUserPhoto.jpg'
                 }
               })
             ])
@@ -204,7 +204,7 @@ export default {
             return h('div',[
               h('Avatar',{
                 props: {
-                  src: params.row.photo?params.row.photo:'../../../../../resources/images/icon/defaultUserPhoto.jpg'
+                  src: params.row.photo?params.row.photo:'resources/images/icon/defaultUserPhoto.jpg'
                 }
               })
             ])

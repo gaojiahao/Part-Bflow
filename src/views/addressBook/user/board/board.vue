@@ -5,16 +5,26 @@
 
 <template>
     <div class="pad5">
-        <Card  class="radius0 rfd-card" v-for="(user, index) of users" :key="index" >
+        <Card  
+          class="radius0 rfd-card" 
+          v-for="(user, index) of users" 
+          :key="index" >
             <Row  class="rfd-card-container">
                 <Col span="3" class="rfd-card-left">
-                <!--  -->
-                    <img :src="user.photo || 'resources/images/icon/defaultUserPhoto.jpg'" class="rfd-card-img" @click="goDetail(user)">
+                    <img 
+                      :src="user.photo || 'resources/images/icon/defaultUserPhoto.jpg'" 
+                      class="rfd-card-img" 
+                      @click="goDetail(user)">
                 </Col>
                 <Col span="17" class="rfd-card-content">
-                    <h5 class="text-nowrap font14">{{ user.nickname }}
-                    </h5>
-                    <p>{{user.mobile}}<Tag  color="blue" class="fr radius10 color_fff"  v-instanceStateDirective="{status:user.status}"></Tag></p>
+                    <h5 class="text-nowrap font14">{{ user.nickname }}</h5>
+                    <p>{{user.mobile}}
+                      <Tag  
+                        color="blue" 
+                        class="fr radius10 color_fff"  
+                        v-instanceStateDirective="{status:user.status}">
+                      </Tag>
+                    </p>
                     <p>{{user.userCode}}</p>
                 </Col>
             </Row>

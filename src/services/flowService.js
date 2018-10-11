@@ -98,7 +98,11 @@ export const getProcedureAndProcess = (technicsCode) => request('/H_roleplay-si/
  * 获取工艺与工序的关系
  * 
  */
-export const getProcessRouteProcedureRel = () => request('/H_roleplay-si/ds/getProcessRouteProcedureRel');
+export const getTaskCountFilter = (type,technicsCode,filter) => request('/H_roleplay-si/objTechnicsProcessRel/getTaskCountFilter',{
+  type:type,
+  technicsCode: technicsCode,
+  filter: filter
+});
 
 /** 
  * 获取表单视图

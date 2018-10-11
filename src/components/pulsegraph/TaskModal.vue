@@ -20,7 +20,7 @@
         </div>
         <div class="input-filter-box">
           <label class="input-filter-lebal">创建时间:</label>
-          <DatePicker v-model="filterData.crtTime" format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="请输入过滤时间" style="width: 170px"></DatePicker>
+          <DatePicker v-model="filterData.crtTime" format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="请输入创建时间" style="width: 170px"></DatePicker>
         </div>
       </div>
       <div class="action-btn">

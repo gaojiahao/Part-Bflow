@@ -2,17 +2,45 @@
   <div :class="[prefixCls+'-wrap']">
     <Spin size="large" fix v-if="spinShow"></Spin>
     <header :class="[prefixCls+'-wrap-header']">
-      <label style="font-size:14px">任务过滤：</label>
-
-      <Cascader 
-        v-model="cascaderValue" 
-        :data="cascaderData" 
-        :class="[prefixCls+'-cascader']"
-        filterable>
-      </Cascader>
-      
+      <RadioGroup v-model="radioGroupLabel" size="large" @on-change="radioGroupChange">
+        <Radio label="mytask">
+          <span>我的任务</span>
+        </Radio>
+        <Radio label="teamtask">
+          <span>团队任务</span>
+        </Radio>
+        <i class="vertical-divide"></i>
+      </RadioGroup>
+      <RadioGroup v-model="rodioGroupDoOrNot" size="large" @on-change="radioGroupChangeDoneOrTodo">
+        <Radio label="todo">
+          <span>未完成</span>
+        </Radio>
+        <Radio label="done">
+          <span>已完成</span>
+        </Radio>
+      </RadioGroup>
+      <div :class="[prefixCls+'-dropdown-select']">
+        <Poptip title="销售订单" content="content" width="560" v-model="visible">
+          <span style="margin-left:10px" :class="[prefixCls+'dropdown-select-item']" @click="getSaleOrderList">
+            <Tag closable color="primary" @on-close='onHandleClearOrderTag'>{{orderCode?orderCode:'销售订单'}}</Tag>
+            <Icon type="ios-arrow-down"></Icon>
+          </span>
+          <div slot="content" class="api">
+            <div :class="[prefixCls+'dropdown-select-search']">
+              <Input v-model="searchValue" placeholder="请输入交易号" style="width: 300px" @on-enter="onHandleFilterByCode" @on-click="getSaleOrderList" icon="ios-close-circle" />
+              <Button type="primary" size="small" @click="onHandleFilterByCode">查询</Button>
+            </div>
+            <Table :columns="columns" :data="columnData" :loading="ordersLoading" size="small" @on-row-dblclick="handleDblclick"></Table>
+            <div style="margin: 10px;overflow: hidden">
+              <div style="float: right;">
+                <Page :total="pageTotal" :current="currentPage" size="small" :page-size="ordersPageSize" @on-change="orderPageChange" show-total show-elevator></Page>
+              </div>
+            </div>
+          </div>
+        </Poptip>
+      </div>
     </header>
-    <main  :class="[prefixCls+'-wrap-main']">
+    <main :class="[prefixCls+'-wrap-main']">
       <div class="svg-container">
         <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
           <defs>
@@ -46,23 +74,27 @@
           </defs>
 
           <g v-for="(item) in ProcessAndProcedureData" :key="item.procedureCode">
-            <!-- <shape :xAxion="item.pointX" :yAxion="item.pointY" color="#b9d3ef" borderColor="#739cc3" :width="defaultShapeWidth" :height="defaultShapeWidth"></shape> -->
-
-            <ProgressRing :x="item.pointX+60" :y="item.pointY" :radius=25  :progress=89 :strokeWidth=2 progressColor='#9C27B0'></ProgressRing>
-            
-            <image :x="item.pointX" :y="item.pointY" :width="defaultShapeWidth" :height="defaultShapeWidth" :xlink:href="item.photo" rx="25"></image>
-
-            <text :x="item.pointX+defaultShapeWidth/2" :y="item.pointY+defaultShapeWidth+5" fill="#000" style="font-size:14px" class="svg-text-common-style">
-              {{item.procedureName}}
-            </text>
+            <g v-if="item.procedureCode === 'start'">
+              <shape :xAxion="item.pointX+80" :yAxion="item.pointY+25" color="#038a03" :text="item.procedureName"></shape>
+            </g>
+            <g v-else-if="item.procedureCode === 'end'">
+              <shape :xAxion="item.pointX+25" :yAxion="item.pointY+25" color="#ff0000" :text="item.procedureName"></shape>
+            </g>
+            <g v-else>
+              <ProgressRing :x="item.pointX+60" :y="item.pointY" :radius=25 :progress="percent[item.procedureCode]" :strokeWidth=2 progressColor='#9C27B0'></ProgressRing>
+              <image :x="item.pointX" :y="item.pointY" :width="defaultShapeWidth" :height="defaultShapeWidth" :xlink:href="item.photo" rx="25"></image>
+              <text :x="item.pointX+defaultShapeWidth/2" :y="item.pointY+defaultShapeWidth+5" fill="#000" style="font-size:14px" class="svg-text-common-style">
+                {{item.procedureName}}
+              </text>
+            </g>
 
             <!-- 所有待办 -->
-            <circle :cx="item.pointX" :cy="item.pointY" r="12" stroke-width="1" fill="red" />
-            <text :x="item.pointX" :y="item.pointY-4" fill="#fff" class="svg-text-common-style" style="font-size:10px;font-weight:bold">
-              {{item.num>99?'99+':item.num}}
-            </text>
-
-            
+            <g v-if="defaultDisplayTask[item.procedureCode]>0">
+              <circle :cx="item.pointX" :cy="item.pointY" r="12" stroke-width="1" fill="red" />
+              <text :x="item.pointX" :y="item.pointY-4" fill="#fff" class="svg-text-common-style" style="font-size:10px;font-weight:bold">
+                {{defaultDisplayTask[item.procedureCode]}}
+              </text>
+            </g>
 
           </g>
           <g v-for="(line,index) in pointList" :key="index">
@@ -80,10 +112,11 @@ import ProgressRing from "@/components/progress-ring";
 import {
   getProcedureAndProcess,
   getMockData,
-  getProcessRouteProcedureRel
+  getOrders,
+  getTaskCountFilter
 } from "@/services/flowService";
 
-const prefixCls = 'rfd-technology';
+const prefixCls = "rfd-technology";
 
 export default {
   name: "TechnologyGraph",
@@ -110,77 +143,48 @@ export default {
       defaultShapeWidth: 50,
       showNumber: 9, //一行显示多少个
 
-      cascaderData: [
+      radioGroupLabel: "mytask",
+      rodioGroupDoOrNot: "todo",
+
+      defaultDisplayTask: {}, //任务数量
+      percent:{}, //任务比例
+      taskType: "mytask",
+      taskStatus: "todo",
+      type:'myToDo',
+
+      //订单列表配置项
+      visible: false,
+      ordersLoading: false,
+      searchValue: "",
+      orderCode: "",
+      columnData: [],
+      columns: [
         {
-          value: "my",
-          label: "我的任务",
-          children: [
-            {
-              value: "done",
-              label: "已完成",
-              children: [
-                {
-                  value: "overdue",
-                  label: "逾期"
-                },
-                {
-                  value: "no-overdue",
-                  label: "未逾期"
-                }
-              ]
-            },
-            {
-              value: "todo",
-              label: "未完成",
-              children: [
-                {
-                  value: "overdue",
-                  label: "逾期"
-                },
-                {
-                  value: "no-overdue",
-                  label: "未逾期"
-                }
-              ]
-            }
-          ]
+          title: "交易号",
+          key: "transCode",
+
+          align: "center"
         },
         {
-          value: "team",
-          label: "团队任务",
-          children: [
-            {
-              value: "done",
-              label: "已完成",
-              children: [
-                {
-                  value: "overdue",
-                  label: "逾期"
-                },
-                {
-                  value: "no-overdue",
-                  label: "未逾期"
-                }
-              ]
-            },
-            {
-              value: "todo",
-              label: "未完成",
-              children: [
-                {
-                  value: "overdue",
-                  label: "逾期"
-                },
-                {
-                  value: "no-overdue",
-                  label: "未逾期"
-                }
-              ]
-            }
-          ]
+          title: "创建者",
+          key: "creatorName",
+          align: "center",
+          width: 80
+        },
+        {
+          title: "创建时间",
+          key: "crtTime",
+          align: "center"
+        },
+        {
+          title: "生效时间",
+          key: "effectiveTime",
+          align: "center"
         }
       ],
-      cascaderValue:['my','done','overdue']
+      pageTotal: 0,
+      currentPage: 1,
+      ordersPageSize: 6
     };
   },
 
@@ -211,6 +215,31 @@ export default {
         consumeNode = 0,
         data = this.ProcessAndProcedureData;
 
+      //构造开始节点，以及结束节点
+      if (data[0].procedureCode !== "start") {
+        let start = {
+          procedureCode: "start",
+          procedureName: "开始",
+          procedureStatus: 1,
+          underProcedure: data[0].procedureCode,
+          sort: "0",
+          myToDo: 0,
+          start: 1
+        };
+        data.unshift(start);
+      }
+      if (data[data.length - 1].procedureCode !== "end") {
+        let end = {
+          procedureCode: "end",
+          procedureName: "结束",
+          procedureStatus: 1,
+          myToDo: 0,
+          sort: data.length,
+          start: 1
+        };
+        data[data.length - 1].underProcedure = "end";
+        data.push(end);
+      }
       for (let i = 0; i < data.length; i++) {
         if (i % this.showNumber === 0 && i !== 0) {
           yCount++;
@@ -227,15 +256,24 @@ export default {
           xCount++;
         } else {
           //从右往左
-          data[i].pointX =
-            this.defaultxAxion +
-            (xCount - 1) * (graphSpace + defaultShapeWidth);
+          if (data[i].procedureCode === "end") {
+            data[i].pointX =
+              this.defaultxAxion +
+              (xCount - 1) * (graphSpace + defaultShapeWidth) +
+              60;
+          } else {
+            data[i].pointX =
+              this.defaultxAxion +
+              (xCount - 1) * (graphSpace + defaultShapeWidth);
+          }
           data[i].pointY =
             this.defaultyAxion + (this.defaultShapeWidth + graphSpace) * yCount;
           nodePointXY[data[i].procedureCode] =
             data[i].pointX + "," + data[i].pointY;
           xCount--;
         }
+
+        this.defaultDisplayTask[data[i].procedureCode] = data[i].myToDo;
       }
 
       data.forEach((item, itemIndex) => {
@@ -261,17 +299,31 @@ export default {
             }
             //线条从右指左
             if (nextPointX < item.pointX && nextPointY === item.pointY) {
-              this.pointList.push({
-                id: item.procedureCode,
-                value:
-                  item.pointX +
-                  "," +
-                  (item.pointY + this.defaultShapeWidth / 2) +
-                  " " +
-                  (nextPointX + defaultShapeWidth + 4 + 75) +
-                  "," +
-                  (nextPointY + this.defaultShapeWidth / 2)
-              });
+              if (item.underProcedure === "end") {
+                this.pointList.push({
+                  id: item.procedureCode,
+                  value:
+                    item.pointX +
+                    "," +
+                    (item.pointY + this.defaultShapeWidth / 2) +
+                    " " +
+                    (nextPointX + defaultShapeWidth + 4) +
+                    "," +
+                    (nextPointY + this.defaultShapeWidth / 2)
+                });
+              } else {
+                this.pointList.push({
+                  id: item.procedureCode,
+                  value:
+                    item.pointX +
+                    "," +
+                    (item.pointY + this.defaultShapeWidth / 2) +
+                    " " +
+                    (nextPointX + defaultShapeWidth + 4 + 75) +
+                    "," +
+                    (nextPointY + this.defaultShapeWidth / 2)
+                });
+              }
             }
             //线条从左指右
             if (nextPointX > item.pointX && nextPointY === item.pointY) {
@@ -279,7 +331,8 @@ export default {
                 id: item.procedureCode,
                 value:
                   item.pointX +
-                  this.defaultShapeWidth + 75 +
+                  this.defaultShapeWidth +
+                  65 +
                   "," +
                   (item.pointY + this.defaultShapeWidth / 2) +
                   " " +
@@ -295,16 +348,188 @@ export default {
 
     //查询工艺和工序关系
     getProcessAndProcedure(processRouteCode) {
+      let percent = {};
       this.spinShow = true;
       getProcedureAndProcess(processRouteCode)
         .then(res => {
           this.ProcessAndProcedureData = res;
+          res.forEach(item=>{
+            if(item['mytask'] === 0 ){
+              percent[item.procedureCode] = 0;
+            }else{
+              percent[item.procedureCode] = (item['myToDo']/item['mytask']).toFixed(2) * 100;
+            }
+          })
+          this.percent = percent;
           this.drawGraph();
           this.spinShow = false;
         })
         .catch(error => {
           this.$Message.error(error);
         });
+    },
+
+    /**
+     * 选择任务类型
+     */
+    radioGroupChange: function(e) {
+      let type = "myToDo";
+      this.taskType = e;
+      if (e === "teamtask" && this.taskStatus === "done") {
+        this.type = "teamDone";
+      } else if (e === "teamtask" && this.taskStatus === "todo") {
+        this.type = "teamToDo";
+      } else if (e === "mytask" && this.taskStatus === "done") {
+        this.type = "myDone";
+      } else if (e === "mytask" && this.taskStatus === "todo") {
+        this.type = "myToDo";
+      }
+      this.getTaskCountFilter(this.type,this.orderCode);
+    },
+
+    /**
+     * 选择任务状态
+     */
+    radioGroupChangeDoneOrTodo: function(e) {
+      let type = "myToDo";
+      this.taskStatus = e;
+      if (this.taskType === "teamtask" && e === "done") {
+        this.type = "teamDone";
+      } else if (this.taskType === "teamtask" && e === "todo") {
+        this.type = "teamToDo";
+      } else if (this.taskType === "mytask" && e === "done") {
+        this.type = "myDone";
+      } else if (this.taskType === "mytask" && e === "todo") {
+        this.type = "myToDo";
+      }
+      this.getTaskCountFilter(this.type,this.orderCode);
+    },
+
+    getTaskCountFilter(type,value){
+      let filter ;
+      if(value){
+        filter = JSON.stringify([{
+        property:'t1.orderCode',
+        value:value,
+        operator:'eq'
+        }])
+      }
+      getTaskCountFilter(type,this.processRouteCode,filter).then(res=>{
+        let keyType ='',
+            percent = {},
+            taskNum = {};
+        if(res[0]){
+          Object.keys(res[0]).forEach(function(item){
+            if(~type.toLowerCase().indexOf(item)){
+              keyType = item;
+            }
+          })
+        }
+        res.forEach(item=>{
+          let total = item['todo']+item['done'];
+          if(total === 0 ){
+            percent[item.procedureCode] = 0;
+          }else{
+            percent[item.procedureCode] = (item[keyType]/total).toFixed(2) * 100;;
+          }
+          taskNum[item.procedureCode] = item[keyType]
+
+        })
+        this.percent = percent;
+        this.defaultDisplayTask = taskNum;
+      })
+    },
+
+    //获取销售订单列表
+    getSaleOrderList() {
+      this.searchValue = "";
+      this.currentPage = 1;
+      this.ordersLoading = true;
+      getOrders(this.currentPage).then(res => {
+        this.pageTotal = res.dataCount;
+        this.columnData = res.tableContent;
+        this.ordersLoading = false;
+      });
+    },
+
+    //清空销售订单选中项
+    onHandleClearOrderTag() {
+      this.orderCode = "";
+      this.getTaskCountFilter(this.type,this.orderCode);
+    },
+
+    //根据交易号过滤销售订单列表
+    onHandleFilterByCode() {
+      let filter = [];
+      if (this.searchValue) {
+        filter = JSON.stringify([
+          { operator: "like", value: this.searchValue, property: "transCode" }
+        ]);
+      }
+      this.currentPage = 1;
+      this.ordersLoading = true;
+      getOrders(this.currentPage, filter).then(res => {
+        this.pageTotal = res.dataCount;
+        this.columnData = res.tableContent;
+        this.ordersLoading = false;
+      });
+    },
+
+    /**
+     * 双击选中订单
+     */
+    handleDblclick(row, index) {
+      let type = this.type;
+      this.orderCode = row.transCode;
+      let filter = JSON.stringify([{
+        property:'t1.orderCode',
+        value:row.transCode,
+        operator:'eq'
+        }]);
+      getTaskCountFilter(type,this.processRouteCode,filter).then(res=>{
+         this.visible = false;
+          let keyType ='',
+              percent = {},
+              taskNum = {};
+          if(res[0]){
+            Object.keys(res[0]).forEach(function(item){
+              if(~type.toLowerCase().indexOf(item)){
+                keyType = item;
+              }
+            })
+          }
+          res.forEach(item=>{
+            let total = item['todo']+item['done'];
+            if(total === 0 ){
+              percent[item.procedureCode] = 0;
+            }else{
+              percent[item.procedureCode] = (item[keyType]/total).toFixed(2) * 100;;
+            }
+            taskNum[item.procedureCode] = item[keyType]
+
+          })
+          this.percent = percent;
+          this.defaultDisplayTask = taskNum;
+      })
+    },
+
+    /**
+     * 销售订单分页加载
+     */
+    orderPageChange(currentPage) {
+      let filter = [];
+      if (this.searchValue) {
+        filter = JSON.stringify([
+          { operator: "like", value: this.searchValue, property: "transCode" }
+        ]);
+      }
+      this.currentPage = currentPage;
+      this.ordersLoading = true;
+      getOrders(this.currentPage, filter).then(res => {
+        this.pageTotal = res.dataCount;
+        this.columnData = res.tableContent;
+        this.ordersLoading = false;
+      });
     }
   },
 
@@ -312,13 +537,11 @@ export default {
     let mainMaxHeight = document.body.clientHeight - 45;
     window.document.getElementsByClassName(
       "rfd-technology-wrap-main"
-    )[0].style.height =
-      mainMaxHeight + "px";
+    )[0].style.height = mainMaxHeight + "px";
 
     window.document.getElementsByClassName(
       "rfd-technology-wrap-main"
-    )[0].style.maxHeight =
-      mainMaxHeight + "px";
+    )[0].style.maxHeight = mainMaxHeight + "px";
 
     this.showNumber = Math.floor(
       document.body.clientWidth / (this.defaultShapeWidth + this.graphSpace)
@@ -329,13 +552,15 @@ export default {
         this.screenWidth = window.screenWidth;
       })();
     };
-  
+
     this.getProcessAndProcedure(this.processRouteCode);
   }
 };
 </script>
 
 <style lang="less" >
+@borderColor: #dddee1;
+
 .rfd-technology-wrap {
   background-color: #fff;
 
@@ -349,12 +574,26 @@ export default {
       margin: 0 5px;
     }
 
-    .rfd-technology-cascader{
-      width:300px;
+    .vertical-divide {
+      height: 20px;
+      vertical-align: middle;
       display: inline-block;
+      width: 1px;
+      border-left: 1px solid @borderColor;
+      margin-right: 8px;
+    }
 
-      .ivu-cascader-label{
-        font-size: 14px;
+    .rfd-technology-dropdown-select {
+      display: inline-block;
+      position: fixed;
+      z-index: 999;
+      &-item:hover {
+        color: #2d8cf0;
+        cursor: pointer;
+      }
+
+      &-search {
+        margin-bottom: 5px;
       }
     }
   }

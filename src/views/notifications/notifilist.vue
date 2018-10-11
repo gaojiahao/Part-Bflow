@@ -9,19 +9,31 @@
             v-for="(n,index) in  notifications" 
             :key="index">
             <div class="notice-time">{{n.crtTime}}</div>
-            <comment-notice-tpl :data="n" v-if="n.type=='comment' " v-bind:class="{'notice-unread':!n.isRead}"></comment-notice-tpl>
+            <comment-notice-tpl 
+                :data="n" 
+                v-if="n.type=='comment'" 
+                v-bind:class="{'notice-unread':!n.isRead}">
+            </comment-notice-tpl>
 
-            <praise-notice-tpl  :data="n" v-if="n.type=='praise'" v-bind:class="{'notice-unread':!n.isRead}"> </praise-notice-tpl>
+            <praise-notice-tpl  
+                :data="n" 
+                v-if="n.type=='praise'" 
+                v-bind:class="{'notice-unread':!n.isRead}">
+            </praise-notice-tpl>
 
-            <flow-task-tpl :data="n" v-if="n.type=='flowTask' " v-bind:class="{'notice-unread':!n.isRead}"></flow-task-tpl>
+            <flow-task-tpl 
+                :data="n" 
+                v-if="n.type=='flowTask'" 
+                v-bind:class="{'notice-unread':!n.isRead}">
+            </flow-task-tpl>
         </div>
     </div>
 </template>
 
 <script>
-import flowTaskTpl from "@/views/notifications/flowTaskTpl";
-import commentNoticeTpl from "@/views/notifications/commentNoticeTpl";
-import praiseNoticeTpl from "@/views/notifications/praiseNoticeTpl";
+import flowTaskTpl from "@/views/notifications/notice-tpl/flowTaskTpl";
+import commentNoticeTpl from "@/views/notifications/notice-tpl/commentNoticeTpl";
+import praiseNoticeTpl from "@/views/notifications/notice-tpl/praiseNoticeTpl";
 import {getAllnotifications} from "@/services/notificationsService";
 export default {
     name:'notifilist',
@@ -60,65 +72,6 @@ export default {
         }
     },
     methods:{
-         //桌面消息通知
-        hanleWindowNotification(content){
-
-            let showNotification = function () {
-                var notification = new Notification('Roletask【路塔】', {
-                    body: content,
-                    icon: 'static/favicon.ico'
-                });
-                notification.onclick = function () {
-                    console.log('点击');
-                    window.self.focus();
-                    notification.close();
-                };
-            }
-            // 先检查浏览器是否支持
-            if (window.Notification) {
- 
-            var ua = navigator.userAgent.toLowerCase();
-                if (ua.indexOf('safari') != -1) {
-                    if (ua.indexOf('chrome') > -1) {
-                        // Chrome
-                        Notification.requestPermission().then(function (permission) {
-                            if (permission == "granted") {
-                               showNotification();
-                            } else {
-                                Notification.requestPermission();
-                                console.log('没有权限,用户拒绝:Notification');
-                            }
-                        });
-                    } else {
-                        // Safari
-                        Notification.requestPermission(function (permission) {
-                            if (permission == "granted") {
-                                showNotification
-                            } else {
-                                Notification.requestPermission();
-                                console.log('没有权限,用户拒绝:Notification');
-                            }
-                        })
-                    }
-                }
-            } else {
-                console.log('不支持Notification');
-            }
-
-        },
-         //订阅消息
-        subscribeMessage: function() {
-            let deepstream = this.$deepstream,
-                userId = this.$currentUser.userId;
-            //消息订阅
-            deepstream.event.subscribe("commentMessage/" + userId, res => {
-                // this.notifications.unshift(...res.tableContent);
-                // this.notifications = res.tableContent;
-                this.refreshNotifics();
-                this.hanleWindowNotification('您有'+ res.dataCount + '未读消息');
-                this.formatNotifications();
-            });
-        },
         //滚动加载
         handleScroll () {
             let scrollDiv = document.getElementById('msgList'),
@@ -148,7 +101,6 @@ export default {
                 this.formatNotifications();
             });
         },
-
         formatNotifications(){
             this.notifications.map(item=>{
                 if(item.type === 'comment' || item.type === 'praise'){
@@ -164,7 +116,6 @@ export default {
     mounted(){
         this.handleScroll();
         this.refreshNotifics();
-        // this.subscribeMessage();
     }
 }
 </script>

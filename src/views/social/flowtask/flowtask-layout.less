@@ -1,0 +1,47 @@
+
+.flowtask{
+    height: 100%;
+    width: 100%;
+    &-sider{
+        width: 260px;
+        float: left;
+        height: 100%;
+        background-color: #fff;
+
+        &-header{
+            font-size: 16px;
+            padding: 0px 10px;
+            text-align: center;
+            height: 50px;
+            line-height: 50px;
+            font-weight: 600;
+            color: #515a6e;
+        }
+
+        &-list{
+            border-top: 1px solid #ddd;
+
+            &-item{
+                cursor: pointer;
+                padding: 14px;
+                font-size: 14px;
+                color: #515a6e;
+            }
+        }
+        
+
+        
+    }
+    &-content{
+        width: calc(100% - 260px);
+        float: left;
+        height: 100%;
+        border: 1px solid #ddd;
+        border-top-style: none;
+    }
+}
+
+.active{
+    background-color: #edf9fc;
+    border-right: 2px solid #65a696;
+}

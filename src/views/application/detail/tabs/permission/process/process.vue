@@ -12,12 +12,12 @@
     <Row class="app-process-table">
       <Modal v-model="showModal" title="新增流程状态" @on-ok="addProcessStatus" @on-cancel="cancel">
         <Form :model="processInfoItem" ref="processInfoItem" :label-width="100" :rules="ruleValidate">
-          <FormItem label="流程状态值:" prop="fieldValue">
+          <FormItem label="流程状态:" prop="fieldValue">
             <Input v-model="processInfoItem.fieldValue"></Input>
           </FormItem>
-          <FormItem label="流程状态编码:" prop="fieldCode">
+          <!-- <FormItem label="流程状态编码:" prop="fieldCode">
             <Input v-model="processInfoItem.fieldCode"></Input>
-          </FormItem>
+          </FormItem> -->
           <FormItem label="排序:" prop="sort">
             <Input v-model="processInfoItem.sort"></Input>
           </FormItem>
@@ -147,14 +147,14 @@ export default {
       showModal: false,
       processInfoItem: {
         fieldValue: "",
-        fieldClde: "",
+        fieldCode: "biProcessStatus",
         sort: ""
       },
       ruleValidate: {
         fieldValue: [
           {
             required: true,
-            message: "流程状态值不能为空",
+            message: "流程状态不能为空",
             trigger: "blur"
           }
         ],

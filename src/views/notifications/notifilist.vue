@@ -6,6 +6,7 @@
     <div  class="message-list notificasscrollbar" id="msgList">
         <div 
             class="message-list-item"
+            v-bind:class="{'createbyme':n.creatorName===$currentUser.nickname}"
             v-for="(n,index) in  notifications" 
             :key="index">
             <div class="notice-time">{{n.crtTime}}</div>

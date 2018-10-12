@@ -20,7 +20,7 @@
         </Radio>
       </RadioGroup>
       <div :class="[prefixCls+'-dropdown-select']">
-        <Poptip title="销售订单" content="content" width="560" v-model="visible">
+        <Poptip content="content" width="560" v-model="visible">
           <span style="margin-left:10px" :class="[prefixCls+'dropdown-select-item']" @click="getSaleOrderList">
             <Tag closable color="primary" @on-close='onHandleClearOrderTag'>{{orderCode?orderCode:'销售订单'}}</Tag>
             <Icon type="ios-arrow-down"></Icon>
@@ -91,7 +91,7 @@
             <!-- 所有待办 -->
             <g v-if="defaultDisplayTask[item.procedureCode]>0">
               <circle :cx="item.pointX" :cy="item.pointY" r="12" stroke-width="1" fill="red" />
-              <text :x="item.pointX" :y="item.pointY-4" fill="#fff" class="svg-text-common-style" style="font-size:10px;font-weight:bold">
+              <text :x="item.pointX" :y="item.pointY-4" fill="#fff" class="svg-text-common-style" style="font-size:10px;font-weight:bold" @click="openTask(item)">
                 {{defaultDisplayTask[item.procedureCode]}}
               </text>
             </g>
@@ -103,16 +103,30 @@
         </svg>
       </div>
     </main>
+
+    <task-detail-modal v-model="modalVisable" width="720" footerBtnAlign="right" title="任务列表" :footerHide="true">
+      <div style="margin-top: 10px">
+        <Table :loading="taskTableLoading" :data="taskTableData" :columns="taskTableColumns" size="small" stripe></Table>
+        <div style="margin: 10px;overflow: hidden">
+          <div style="float: right;">
+            <Page :total="taskModalPage.pageTotal" :current="taskModalPage.currentPage" :page-size="taskModalPage.pageSize" @on-change="changeCurrentPage" size="small" show-total show-elevator></Page>
+          </div>
+        </div>
+      </div>
+    </task-detail-modal>
   </div>
 </template>
 
 <script>
 import Shape from "@/components/Shape";
 import ProgressRing from "@/components/progress-ring";
+import TaskDetailModal from "@/components/modal/Modal";
+import CustomTable from "@/views/addressBook/organization/instance/CustomTable";
 import {
   getProcedureAndProcess,
   getMockData,
   getOrders,
+  getProcedureInfoFilter,
   getTaskCountFilter
 } from "@/services/flowService";
 
@@ -123,6 +137,8 @@ export default {
 
   components: {
     Shape,
+    TaskDetailModal,
+    CustomTable,
     ProgressRing
   },
 
@@ -147,10 +163,10 @@ export default {
       rodioGroupDoOrNot: "todo",
 
       defaultDisplayTask: {}, //任务数量
-      percent:{}, //任务比例
+      percent: {}, //任务比例
       taskType: "mytask",
       taskStatus: "todo",
-      type:'myToDo',
+      type: "myToDo",
 
       //订单列表配置项
       visible: false,
@@ -184,7 +200,47 @@ export default {
       ],
       pageTotal: 0,
       currentPage: 1,
-      ordersPageSize: 6
+      ordersPageSize: 6,
+
+      modalVisable: false,
+
+      taskTableLoading: false,
+      taskTableColumns: [
+        {
+          title: "交易号",
+          key: "transCode",
+          render: function(h, params) {
+            return h(
+              "a",
+              {
+                attrs: {
+                  href: "/Form/index.html?data=" + params.row.transCode,
+                  target: "_blank"
+                }
+              },
+              params.row.transCode
+            );
+          }
+        },
+        {
+          title: "创建者",
+          key: "creator"
+        },
+        {
+          title: "创建时间",
+          key: "crtTime"
+        },
+        {
+          title: "待办数量",
+          key: "num"
+        }
+      ],
+      taskTableData: [],
+      taskModalPage: {
+        pageTotal: 0,
+        currentPage: 1,
+        pageSize: 6
+      }
     };
   },
 
@@ -352,14 +408,26 @@ export default {
       this.spinShow = true;
       getProcedureAndProcess(processRouteCode)
         .then(res => {
+          let showNumber = this.showNumber;
+          if (
+            Math.ceil((res.length + 2) / showNumber) * 220 >
+            document.body.clientHeight - 45
+          ) {
+            window.document.getElementsByClassName(
+              "rfd-technology-wrap-main"
+            )[0].style.height =
+              Math.ceil((res.length + 2) / showNumber) * 220 + "px";
+          }
+
           this.ProcessAndProcedureData = res;
-          res.forEach(item=>{
-            if(item['mytask'] === 0 ){
+          res.forEach(item => {
+            if (item["mytask"] === 0) {
               percent[item.procedureCode] = 0;
-            }else{
-              percent[item.procedureCode] = (item['myToDo']/item['mytask']).toFixed(2) * 100;
+            } else {
+              percent[item.procedureCode] =
+                Number((item["myToDo"] / item["mytask"]).toFixed(2)) * 10 * 10;
             }
-          })
+          });
           this.percent = percent;
           this.drawGraph();
           this.spinShow = false;
@@ -384,7 +452,7 @@ export default {
       } else if (e === "mytask" && this.taskStatus === "todo") {
         this.type = "myToDo";
       }
-      this.getTaskCountFilter(this.type,this.orderCode);
+      this.getTaskCountFilter(this.type, this.orderCode);
     },
 
     /**
@@ -402,42 +470,44 @@ export default {
       } else if (this.taskType === "mytask" && e === "todo") {
         this.type = "myToDo";
       }
-      this.getTaskCountFilter(this.type,this.orderCode);
+      this.getTaskCountFilter(this.type, this.orderCode);
     },
 
-    getTaskCountFilter(type,value){
-      let filter ;
-      if(value){
-        filter = JSON.stringify([{
-        property:'t1.orderCode',
-        value:value,
-        operator:'eq'
-        }])
+    getTaskCountFilter(type, value) {
+      let filter;
+      if (value) {
+        filter = JSON.stringify([
+          {
+            property: "t1.orderCode",
+            value: value,
+            operator: "eq"
+          }
+        ]);
       }
-      getTaskCountFilter(type,this.processRouteCode,filter).then(res=>{
-        let keyType ='',
-            percent = {},
-            taskNum = {};
-        if(res[0]){
-          Object.keys(res[0]).forEach(function(item){
-            if(~type.toLowerCase().indexOf(item)){
+      getTaskCountFilter(type, this.processRouteCode, filter).then(res => {
+        let keyType = "",
+          percent = {},
+          taskNum = {};
+        if (res[0]) {
+          Object.keys(res[0]).forEach(function(item) {
+            if (~type.toLowerCase().indexOf(item)) {
               keyType = item;
             }
-          })
+          });
         }
-        res.forEach(item=>{
-          let total = item['todo']+item['done'];
-          if(total === 0 ){
+        res.forEach(item => {
+          let total = item["todo"] + item["done"];
+          if (total === 0) {
             percent[item.procedureCode] = 0;
-          }else{
-            percent[item.procedureCode] = (item[keyType]/total).toFixed(2) * 100;;
+          } else {
+            percent[item.procedureCode] =
+              Number((item[keyType] / total).toFixed(2)) * 10 * 10;
           }
-          taskNum[item.procedureCode] = item[keyType]
-
-        })
+          taskNum[item.procedureCode] = item[keyType];
+        });
         this.percent = percent;
         this.defaultDisplayTask = taskNum;
-      })
+      });
     },
 
     //获取销售订单列表
@@ -455,7 +525,7 @@ export default {
     //清空销售订单选中项
     onHandleClearOrderTag() {
       this.orderCode = "";
-      this.getTaskCountFilter(this.type,this.orderCode);
+      this.getTaskCountFilter(this.type, this.orderCode);
     },
 
     //根据交易号过滤销售订单列表
@@ -481,36 +551,38 @@ export default {
     handleDblclick(row, index) {
       let type = this.type;
       this.orderCode = row.transCode;
-      let filter = JSON.stringify([{
-        property:'t1.orderCode',
-        value:row.transCode,
-        operator:'eq'
-        }]);
-      getTaskCountFilter(type,this.processRouteCode,filter).then(res=>{
-         this.visible = false;
-          let keyType ='',
-              percent = {},
-              taskNum = {};
-          if(res[0]){
-            Object.keys(res[0]).forEach(function(item){
-              if(~type.toLowerCase().indexOf(item)){
-                keyType = item;
-              }
-            })
-          }
-          res.forEach(item=>{
-            let total = item['todo']+item['done'];
-            if(total === 0 ){
-              percent[item.procedureCode] = 0;
-            }else{
-              percent[item.procedureCode] = (item[keyType]/total).toFixed(2) * 100;;
+      this.visible = false;
+      let filter = JSON.stringify([
+        {
+          property: "t1.orderCode",
+          value: row.transCode,
+          operator: "eq"
+        }
+      ]);
+      getTaskCountFilter(type, this.processRouteCode, filter).then(res => {
+        let keyType = "",
+          percent = {},
+          taskNum = {};
+        if (res[0]) {
+          Object.keys(res[0]).forEach(function(item) {
+            if (~type.toLowerCase().indexOf(item)) {
+              keyType = item;
             }
-            taskNum[item.procedureCode] = item[keyType]
-
-          })
-          this.percent = percent;
-          this.defaultDisplayTask = taskNum;
-      })
+          });
+        }
+        res.forEach(item => {
+          let total = item["todo"] + item["done"];
+          if (total === 0) {
+            percent[item.procedureCode] = 0;
+          } else {
+            percent[item.procedureCode] =
+              (item[keyType] / total).toFixed(2) * 10 * 10;
+          }
+          taskNum[item.procedureCode] = item[keyType];
+        });
+        this.percent = percent;
+        this.defaultDisplayTask = taskNum;
+      });
     },
 
     /**
@@ -530,6 +602,41 @@ export default {
         this.columnData = res.tableContent;
         this.ordersLoading = false;
       });
+    },
+
+    /**
+     * 打开任务列表
+     */
+    openTask(item) {
+      this.modalVisable = true;
+      this.taskTableLoading = true;
+      getProcedureInfoFilter(
+        item.procedureCode,
+        this.type,
+        this.taskModalPage.currentPage,
+        this.taskModalPage.pageSize
+      ).then(res => {
+        this.taskTableLoading = false;
+        this.taskModalPage.pageSize = res.dataCount;
+        this.taskTableData = res.tableContent;
+      });
+    },
+    /**
+     * 分页加载
+     */
+    changeCurrentPage(currentPage) {
+      this.taskModalPage.currentPage = currentPage;
+      this.taskTableLoading = true;
+      getProcedureInfoFilter(
+        item.procedureCode,
+        this.type,
+        this.taskModalPage.currentPage,
+        this.taskModalPage.pageSize
+      ).then(res => {
+        this.taskTableLoading = false;
+        this.taskModalPage.pageSize = res.dataCount;
+        this.taskTableData = res.tableContent;
+      });
     }
   },
 
@@ -539,9 +646,9 @@ export default {
       "rfd-technology-wrap-main"
     )[0].style.height = mainMaxHeight + "px";
 
-    window.document.getElementsByClassName(
-      "rfd-technology-wrap-main"
-    )[0].style.maxHeight = mainMaxHeight + "px";
+    // window.document.getElementsByClassName(
+    //   "rfd-technology-wrap-main"
+    // )[0].style.maxHeight = mainMaxHeight + "px";
 
     this.showNumber = Math.floor(
       document.body.clientWidth / (this.defaultShapeWidth + this.graphSpace)

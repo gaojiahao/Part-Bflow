@@ -1,10 +1,10 @@
 <template>
-  <div class="rfd-cs">
+  <div class="rfd-cs" :style="mainStyle">
     <header class="rfd-cs-header">
       <slot name="header"></slot>
     </header>
     <div class="rfd-cs-table">
-      <Table :loading="loading" :columns="columns" :data="columnsData" ref="selection" @on-selection-change='onSelectionChange'></Table>
+      <Table :loading="loading" :columns="columns" :data="columnsData" ref="selection" @on-selection-change='onSelectionChange' :height="height" size="small"></Table>
     </div>
     <div class="rfd-cs-table" v-if="!isHiddenPage">
       <div style="float: right;">
@@ -40,6 +40,14 @@ export default {
       default: false
     },
 
+    height: {
+      type: [Number, String],
+    },
+
+     styles: {
+      type: Object
+    },
+
     isHiddenPage:{
       type:Boolean,
       default:false
@@ -56,11 +64,31 @@ export default {
     };
   },
 
+  computed:{
+    mainStyle(){
+      let style = {};
+      const height = parseInt(this.height);
+      const styleheight = {
+        height: height <= 100 ? `${height}%` : `${height+44}px`
+      };
+      const customStyle = this.styles ? this.styles : {};
+      Object.assign(style, styleheight, customStyle);
+      return style;
+    }
+  },
+
   watch: {
     value(val) {
       if (val) {
         this.getTableData(this.apiParams);
       }
+    },
+
+    apiParams:{
+      handler:function(newVal,oldVal){
+        this.getTableData(newVal);
+      },
+      deep: true
     }
   },
 

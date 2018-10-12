@@ -7,88 +7,112 @@
             统计报表
         </div>
         <div class="reports-content">
-            <div class="reports-content-tasks">
-                
-                    <div  class="reports-content-tasks-item">
-                        <div class="reports-content-tasks-item-txt">待办</div>
-                        <router-link :to="{ name:'todo'}">
-                            <div class="reports-content-tasks-item-count todotask" >{{todo}}</div>
-                        </router-link>
-                    </div>
-                
-                <div  class="reports-content-tasks-item">
-                    
-                    <div class="reports-content-tasks-item-txt">已办</div>
-                    <router-link :to="{ name:'done'}">
-                        <div class="reports-content-tasks-item-count donetask">{{done}}</div>
-                    </router-link>
-                </div>
-                <div  class="reports-content-tasks-item">
-                    <div class="reports-content-tasks-item-txt">所有</div>
-                    <router-link :to="{ name:'all'}">
-                        <div class="reports-content-tasks-item-count">{{all}}</div>
-                    </router-link>
-                </div>
-                
-
-                <div  class="reports-content-tasks-item">
-                     <i-circle 
-                    :percent="completionratio"
-                    :size="120"
-                    :trail-width="4"
-                    :stroke-width="8"
-                    stroke-linecap="square"
-                    stroke-color="#1fe5bd">
-                    <div class="demo-Circle-custom">
-                        <strong style="font-size: 1rem!important;color: #aaa;">完成率</strong>
-                        <p style="font-size: 2.5em;font-family: lcletter;color: #1fe5bd;">{{completionratio}}%</p>
-                    </div>
-                </i-circle>
-                </div>
-            </div>
-    
+            <task-statistics></task-statistics>
+            <task-incremental-analysis></task-incremental-analysis>
+          
         </div>
     </div>
 </template>
 <script>
-import {getFlowAllTasks,getFlowTodoTasks,getFlowDoneTasks,getDraftData} from "@/services/socialService";
+import {
+    getFlowTodoTasks,
+    getFlowDoneTasks,
+} from "@/services/socialService";
 import ProgressRing from "@/components/progress-ring";
+
+import TaskStatistics from "./task-statistics";
+import TaskIncrementalAnalysis from "./task-incremental-analysis";
 export default {
     name:'Reports',
     components:{
-        ProgressRing
+        ProgressRing,
+        TaskStatistics,
+        TaskIncrementalAnalysis
     },
     data () {
         return {
-            todo:0,
-            done:0,
-            all:0,
-            draft:0,
-            pageInfo:{
-                limit:30, 
-                page:1, 
-                total:0
-            },
-            completionratio: 0
+            active:false,
+            month:'',
         }
     },
     methods:{
-        getData:function () {
-            getFlowTodoTasks(this.pageInfo).then(res=>{
-                this.todo = res.dataCount;
-                getFlowDoneTasks(this.pageInfo).then(res=>{
-                    this.done = res.dataCount;
-                    this.all = this.todo + this.done;
-
-                    this.completionratio = parseInt(this.done/this.all*100);
-
-                });
-            });
+        handleSelectDataRange:function (dataRange) {
         }
 
     },
     mounted(){
-      this.getData();
+       this.$nextTick(() => {
+            var dataSourcePie = echarts.init(document.getElementById('data_source_con'));
+            const option = {
+    
+                tooltip : {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        label: {
+                            backgroundColor: '#6a7985'
+                        }
+                    }
+                },
+                legend: {
+                    selectedMode: false,
+                    x: 30,
+                    y: 8,
+                    data:['待办任务','已办任务','所有任务']
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis : [
+                    {
+                        type : 'category',
+                        boundaryGap : false,
+                        data : ['周一','周二','周三','周四','周五','周六','周日']
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value'
+                    }
+                ],
+                series : [
+                    {
+                        name:'待办任务',
+                        type:'line',
+                        stack: '总量',
+                        areaStyle: {},
+                        data:[120, 132, 101, 134, 90, 230, 210]
+                    },
+                    {
+                        name:'已办任务',
+                        type:'line',
+                        stack: '总量',
+                        areaStyle: {},
+                        data:[220, 182, 191, 234, 290, 330, 310]
+                    },
+                    {
+                        name:'所有任务',
+                        type:'line',
+                        stack: '总量',
+                        areaStyle: {},
+                        data:[150, 232, 201, 154, 190, 330, 410]
+                    },
+                ]
+            };
+
+            dataSourcePie.setOption(option);
+            window.addEventListener('resize', function () {
+                dataSourcePie.resize();
+            });
+        });
     }
 }
 </script>

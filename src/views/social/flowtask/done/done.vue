@@ -7,7 +7,7 @@
             所有已办任务
         </div>
         <div class="donetask-content">
-            <div class="donetask-content-container">
+            <div class="donetask-content-container shadow">
                 <div class="donetask-content-container-toolbar">
                     <Input 
                         search  

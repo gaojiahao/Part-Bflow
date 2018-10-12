@@ -7,7 +7,7 @@
             所有任务
         </div>
         <div class="draftbox-content">
-            <div class="draftbox-content-container">
+            <div class="draftbox-content-container shadow">
                 <div class="draftbox-content-container-toolbar">
                     <Input 
                         search  

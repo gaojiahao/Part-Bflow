@@ -25,4 +25,12 @@ export const getFlowDoneTasks = (params) => request('/H_roleplay-si/ds/getComple
  */
 export const getDraftData = (params) => request('/H_roleplay-si/ds/getRoughDraftListData', params)
 
+/**
+ * @author snack.haugng
+ * @description 获取用户工作流任务增量分析数据
+ */
+export const getFlowTaskStatistics = (params) => request('/H_roleplay-si/trans/getMyTaskStatistics', params)
+
+    
+
 

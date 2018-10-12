@@ -69,6 +69,7 @@ export default {
       default: true
     },
 
+    //是否隐藏确定取消按钮
     footerHide: {
       type: Boolean,
       default: false

@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <div class="wrapper-body">
-      <Table :columns="fieldDetailColumns" :data="fieldDetail"></Table>
+      <Table :loading="loading" :columns="fieldDetailColumns" :data="fieldDetail"></Table>
     </div>
    
     <change-detail v-model="showChangeDetailsModal" title="变更详情" width="900" :footerHide="true">
@@ -383,6 +383,7 @@ export default {
         }
       ],
       fieldDetail: [],
+      loading: false,
 
       showChangeDetailsModal: false,
       beforeChangeData: [], //变更前数据
@@ -424,7 +425,9 @@ export default {
 
   mounted() {
     let transCode = this.$route.params.transCode;
+    this.loading = true;
     getListFeildChangeHistory(transCode).then(res => {
+      this.loading = false;
       this.fieldDetail = res;
     });
   }

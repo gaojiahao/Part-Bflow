@@ -4,21 +4,21 @@
 <template>
     <div class="statistics shadow">
         <div  class="statistics-item">
-            <div class="statistics-item-txt">待办</div>
+            <div class="statistics-item-txt">待办任务</div>
             <router-link :to="{ name:'todo'}">
                 <div class="statistics-item-count todotask" >{{todo}}</div>
             </router-link>
         </div>
         
         <div  class="statistics-item">
-            <div class="statistics-item-txt">已办</div>
+            <div class="statistics-item-txt">已办任务</div>
             <router-link :to="{ name:'done'}">
                 <div class="statistics-item-count donetask">{{done}}</div>
             </router-link>
         </div>
 
         <div  class="statistics-item">
-            <div class="statistics-item-txt">所有</div>
+            <div class="statistics-item-txt">所有任务</div>
             <router-link :to="{ name:'all'}">
                 <div class="statistics-item-count">{{all}}</div>
             </router-link>

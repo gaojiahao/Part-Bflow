@@ -12,6 +12,7 @@
                 placeholder="选择月份" 
                 v-model="month" 
                 format="yyyy-MM" 
+                style="width:100px;"
                 :clearable="false">
             </DatePicker>
 
@@ -106,9 +107,10 @@ export default {
                         }
                     }
                 },
+                 title: {
+                    text: '任务增量分析'
+                },
                 legend: {
-                    x: 30,
-                    y: 8,
                     data:['待办任务','已办任务','所有任务']
                 },
                 toolbox: {

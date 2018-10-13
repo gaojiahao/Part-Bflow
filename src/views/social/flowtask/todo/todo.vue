@@ -152,10 +152,19 @@ export default {
                 outdateTime;
             outdateTime = dayDiff + '天' + hourDiff + '时' + minuteDiff + '分' + secondDiff + '秒';
             return outdateTime;
+        },
+        //订阅消息
+        subscribeMessage: function() {
+            let deepstream = this.$deepstream;
+            //消息订阅
+            deepstream.event.subscribe("taskChange/" + this.$currentUser.userId, msg => {
+                this.getFlowTodoTasks();
+            });
         }
     },
     mounted(){
         this.getFlowTodoTasks();
+        this.subscribeMessage();
         this.tableHeight = document.body.clientHeight-200;
 
         window.onresize = () =>{

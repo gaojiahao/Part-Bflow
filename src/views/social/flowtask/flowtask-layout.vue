@@ -31,12 +31,12 @@
                     </div>
                 </router-link>
 
-                <router-link :to="{ name:'reports'}">
+                <!-- <router-link :to="{ name:'reports'}">
                     <div class="flowtask-sider-list-item" v-bind:class="{ 'active':$route.name=='reports' }">
                         <Icon type="ios-pie" color="#53cde2" size=30 />
                         统计报表
                     </div>
-                </router-link>
+                </router-link> -->
 
                 <router-link :to="{ name:'draftbox'}">
                     <div class="flowtask-sider-list-item" v-bind:class="{ 'active':$route.name=='draftbox' }">

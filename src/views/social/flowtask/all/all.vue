@@ -7,7 +7,7 @@
             所有任务
         </div>
         <div class="alltask-content">
-            <div class="alltask-content-container">
+            <div class="alltask-content-container shadow">
                 <div class="alltask-content-container-toolbar">
                     <Input 
                         search  

@@ -8,7 +8,7 @@
             <span v-if="data.sourceContent.type ==='instance'">实例</span>
             <span v-if="data.sourceContent.type ==='list'">应用</span>
             <span>评论</span>
-            <span v-if="data.noticeSource.includes('commentRelpy')">回复</span>
+            <span v-if="data.sourceContent.objContent">回复</span>
             <span>通知</span>
         </div>
 
@@ -20,7 +20,7 @@
             </span>
             :
             <span v-if="data.sourceContent.type ==='instance' || data.sourceContent.type ==='list'">
-                <template v-if="data.noticeSource.includes('commentRelpy')">
+                <template v-if="data.sourceContent.objContent">
                    发表了评论:
                    <span  class="notice-container" v-html="data.tempContent"></span>
                     <div class="notice-container-relpy">

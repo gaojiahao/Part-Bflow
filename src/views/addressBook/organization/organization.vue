@@ -527,7 +527,6 @@ export default {
             delete this.formItem.groupId;
             saveBaseinfo(this.formItem).then(res => {
               if (res) {
-                this.$Message.success(res.message);
                 this.$router.push({
                   path: "/addressBook/organization/detail/" + res.groupId
                 });

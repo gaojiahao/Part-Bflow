@@ -239,7 +239,8 @@ export default {
       taskModalPage: {
         pageTotal: 0,
         currentPage: 1,
-        pageSize: 6
+        pageSize: 6,
+        procedureCode:''
       }
     };
   },
@@ -610,6 +611,7 @@ export default {
     openTask(item) {
       this.modalVisable = true;
       this.taskTableLoading = true;
+      this.taskModalPage.procedureCode = item.procedureCode;
       getProcedureInfoFilter(
         item.procedureCode,
         this.type,
@@ -617,7 +619,7 @@ export default {
         this.taskModalPage.pageSize
       ).then(res => {
         this.taskTableLoading = false;
-        this.taskModalPage.pageSize = res.dataCount;
+        this.taskModalPage.pageTotal = res.dataCount;
         this.taskTableData = res.tableContent;
       });
     },
@@ -628,13 +630,13 @@ export default {
       this.taskModalPage.currentPage = currentPage;
       this.taskTableLoading = true;
       getProcedureInfoFilter(
-        item.procedureCode,
+        this.taskModalPage.procedureCode,
         this.type,
         this.taskModalPage.currentPage,
         this.taskModalPage.pageSize
       ).then(res => {
         this.taskTableLoading = false;
-        this.taskModalPage.pageSize = res.dataCount;
+        this.taskModalPage.pageTotal = res.dataCount;
         this.taskTableData = res.tableContent;
       });
     }

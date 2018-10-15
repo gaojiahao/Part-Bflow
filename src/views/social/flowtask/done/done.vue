@@ -69,17 +69,14 @@ export default {
                 {
                     title: '应用名称',
                     key: 'processName',
-                    width:140
                 },
                 {
                     title: '经办人',
                     key: 'handlerName',
-                    width:80
                 },
                 {
                     title: '发起人',
                     key: 'creatorName',
-                    width:80
                 },
                 {
                     title:'待办创建时间',
@@ -124,10 +121,19 @@ export default {
                 {"operator":"like","value":this.searchkeywords,"property":"transId"}
             ]);
             this.getFlowDoneTasks();
+        },
+        //订阅消息
+        subscribeMessage: function() {
+            let deepstream = this.$deepstream;
+            //消息订阅
+            deepstream.event.subscribe("taskChange/" + this.$currentUser.userId, msg => {
+                this.getFlowDoneTasks();
+            });
         }
     },
     mounted(){
         this.getFlowDoneTasks();
+        this.subscribeMessage();
         this.tableHeight = document.body.clientHeight-200;
 
         window.onresize = () =>{

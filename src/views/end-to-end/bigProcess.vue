@@ -1,5 +1,5 @@
 <template>
-<div style="width:100%;height:100%">
+<div style="background-color: #fff;">
     <div class="order">
         <div v-for="(node,index) in bigProcessNodes" :key="index" class="n">
             <div class="lines" v-if="node.durationTime">
@@ -135,6 +135,7 @@ export default {
     padding-top: 5%;
     width: 89%;
     margin: 0 auto;
+    overflow: hidden;
 }
 .order .line {
   display: inline-block;
@@ -197,7 +198,6 @@ export default {
 
 .trans{
     width: 80%;
-    height: 80px;
     margin: 0 auto;
 }
 

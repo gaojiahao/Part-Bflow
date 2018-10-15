@@ -69,17 +69,14 @@ export default {
                 {
                     title: '应用名称',
                     key: 'processName',
-                    width:140
                 },
                 {
                     title: '经办人',
                     key: 'handlerName',
-                    width:80
                 },
                 {
                     title: '发起人',
                     key: 'creatorName',
-                    width:80
                 },
                 {
                     title:'待办创建时间',

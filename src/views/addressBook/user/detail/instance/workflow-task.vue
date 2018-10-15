@@ -133,28 +133,7 @@ export default {
         },
         {
           title: "表单状态",
-          key: "baseinfoStatus",
-          render: (h,params) => {
-              if(params.row.baseinfoStatus === 0){
-                  return h('b',{
-                    style: {
-                        color: '#999'
-                    }
-                },'草稿');
-              }else if(params.row.baseinfoStatus === 1){
-                  return h('b',{
-                    style: {
-                        color: '#e4393c'
-                    }
-                },'已生效');
-              }else{
-                  return h('b',{
-                    style: {
-                        color: '#19be6b'
-                    }
-                },'进行中');
-              }
-          }
+          key: "status"
         },
         {
           title: "已过时间",

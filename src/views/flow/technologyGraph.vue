@@ -25,9 +25,9 @@
             <Tag closable color="primary" @on-close='onHandleClearOrderTag'>{{orderCode?orderCode:'销售订单'}}</Tag>
             <Icon type="ios-arrow-down"></Icon>
           </span>
-          <div slot="content" class="api">
+          <div slot="content" >
             <div :class="[prefixCls+'dropdown-select-search']">
-              <Input v-model="searchValue" placeholder="请输入交易号" style="width: 300px" @on-enter="onHandleFilterByCode" @on-click="getSaleOrderList" icon="ios-close-circle" />
+              <Input v-model="searchValue" placeholder="请输入交易号" style="width: 300px;margin-bottom:5px" @on-enter="onHandleFilterByCode" @on-click="getSaleOrderList" icon="ios-close-circle" />
               <Button type="primary" size="small" @click="onHandleFilterByCode">查询</Button>
             </div>
             <Table :columns="columns" :data="columnData" :loading="ordersLoading" size="small" @on-row-dblclick="handleDblclick"></Table>
@@ -231,7 +231,7 @@ export default {
           key: "crtTime"
         },
         {
-          title: "待办数量",
+          title: "任务数量",
           key: "num"
         }
       ],
@@ -426,7 +426,7 @@ export default {
               percent[item.procedureCode] = 0;
             } else {
               percent[item.procedureCode] =
-                Number((item["myToDo"] / item["mytask"]).toFixed(2)) * 10 * 10;
+                parseInt((item["myToDo"] / item["mytask"])*100);
             }
           });
           this.percent = percent;
@@ -501,8 +501,7 @@ export default {
           if (total === 0) {
             percent[item.procedureCode] = 0;
           } else {
-            percent[item.procedureCode] =
-              Number((item[keyType] / total).toFixed(2)) * 10 * 10;
+            percent[item.procedureCode] =parseInt((item[keyType] / total)*100);
           }
           taskNum[item.procedureCode] = item[keyType];
         });
@@ -576,8 +575,7 @@ export default {
           if (total === 0) {
             percent[item.procedureCode] = 0;
           } else {
-            percent[item.procedureCode] =
-              (item[keyType] / total).toFixed(2) * 10 * 10;
+            percent[item.procedureCode] = parseInt((item[keyType] / total)*100);
           }
           taskNum[item.procedureCode] = item[keyType];
         });

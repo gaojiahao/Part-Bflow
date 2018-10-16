@@ -610,18 +610,11 @@ export default {
       this.modalVisable = true;
       this.taskTableLoading = true;
       this.taskModalPage.procedureCode = item.procedureCode;
-      let filter = "";
-      if(this.orderCode){
-        filter = JSON.stringify([
-          { operator: "eq", value: this.orderCode, property: "t1.orderCode" }
-        ]);
-      }
       getProcedureInfoFilter(
         item.procedureCode,
         this.type,
         this.taskModalPage.currentPage,
-        this.taskModalPage.pageSize,
-        filter
+        this.taskModalPage.pageSize
       ).then(res => {
         this.taskTableLoading = false;
         this.taskModalPage.pageTotal = res.dataCount;

@@ -105,7 +105,7 @@
       </div>
     </main>
 
-    <task-detail-modal v-model="modalVisable" width="720" footerBtnAlign="right" title="任务列表" :footerHide="true">
+    <task-detail-modal v-model="modalVisable" width="721" footerBtnAlign="right" title="任务列表" :footerHide="true">
       <div style="margin-top: 10px">
         <Table :loading="taskTableLoading" :data="taskTableData" :columns="taskTableColumns" size="small" stripe></Table>
         <div style="margin: 10px;overflow: hidden">

@@ -25,7 +25,7 @@
             <Tag closable color="primary" @on-close='onHandleClearOrderTag'>{{orderCode?orderCode:'销售订单'}}</Tag>
             <Icon type="ios-arrow-down"></Icon>
           </span>
-          <div slot="content" >
+          <div slot="content">
             <div :class="[prefixCls+'dropdown-select-search']">
               <Input v-model="searchValue" placeholder="请输入交易号" style="width: 300px;margin-bottom:5px" @on-enter="onHandleFilterByCode" @on-click="getSaleOrderList" icon="ios-close-circle" />
               <Button type="primary" size="small" @click="onHandleFilterByCode">查询</Button>
@@ -105,7 +105,7 @@
       </div>
     </main>
 
-    <task-detail-modal v-model="modalVisable" width="720" footerBtnAlign="right" title="任务列表" :footerHide="true">
+    <task-detail-modal v-model="modalVisable" width="721" footerBtnAlign="right" title="任务列表" :footerHide="true">
       <div style="margin-top: 10px">
         <Table :loading="taskTableLoading" :data="taskTableData" :columns="taskTableColumns" size="small" stripe></Table>
         <div style="margin: 10px;overflow: hidden">
@@ -145,7 +145,7 @@ export default {
 
   data() {
     return {
-      showTechnology:false,
+      showTechnology: false,
       prefixCls: prefixCls,
       processRouteCode: this.$route.params.processRouteCode,
       spinShow: false,
@@ -207,10 +207,12 @@ export default {
       modalVisable: false,
 
       taskTableLoading: false,
-      taskTableColumns: [
+      taskTableColumns: [],
+      todoColumns: [
         {
-          title: "交易号",
+          title: "任务单号",
           key: "transCode",
+          align: "center",
           render: function(h, params) {
             return h(
               "a",
@@ -225,16 +227,77 @@ export default {
           }
         },
         {
-          title: "创建者",
-          key: "creator"
-        },
-        {
-          title: "创建时间",
-          key: "crtTime"
+          title: "执行者",
+          key: "worker",
+          align: "center",
         },
         {
           title: "任务数量",
-          key: "num"
+          key: "todonum",
+          align: "center",
+        },
+        {
+          title: "创建时间",
+          key: "crtTime",
+          align: "center",
+        }
+      ],
+      doneColumns: [
+        {
+          title: "任务单号",
+          key: "transCode",
+          align: "center",
+          render: function(h, params) {
+            return h(
+              "a",
+              {
+                attrs: {
+                  href: "/Form/index.html?data=" + params.row.transCode,
+                  target: "_blank"
+                }
+              },
+              params.row.transCode
+            );
+          }
+        },
+        {
+          title: "执行者",
+          key: "worker",
+          width: 75
+        },
+        {
+          title: "验收单号",
+          align: "center",
+          key: "checkCode",
+          render: function(h, params) {
+            return h(
+              "a",
+              {
+                attrs: {
+                  href: "/Form/index.html?data=" + params.row.checkCode,
+                  target: "_blank"
+                }
+              },
+              params.row.checkCode
+            );
+          }
+        },
+        {
+          title: "验收者",
+          key: "checker",
+          width: 75
+        },
+        {
+          title: "验收数量",
+          key: "donenum",
+          align: "center",
+          width: 85
+        },
+        {
+          title: "创建时间",
+          key: "crtTime",
+          align: "center",
+          width: 150
         }
       ],
       taskTableData: [],
@@ -242,7 +305,7 @@ export default {
         pageTotal: 0,
         currentPage: 1,
         pageSize: 6,
-        procedureCode:''
+        procedureCode: ""
       }
     };
   },
@@ -410,7 +473,7 @@ export default {
       this.spinShow = true;
       getProcedureAndProcess(processRouteCode)
         .then(res => {
-          if(res[0]){
+          if (res[0]) {
             let showNumber = this.showNumber;
             if (
               Math.ceil((res.length + 2) / showNumber) * 220 >
@@ -421,20 +484,21 @@ export default {
               )[0].style.height =
                 Math.ceil((res.length + 2) / showNumber) * 220 + "px";
             }
-  
+
             this.ProcessAndProcedureData = res;
             res.forEach(item => {
               if (item["mytask"] === 0) {
                 percent[item.procedureCode] = 0;
               } else {
-                percent[item.procedureCode] =
-                  parseInt((item["myToDo"] / item["mytask"])*100);
+                percent[item.procedureCode] = Math.round(
+                  (item["myToDo"] / item["mytask"]) * 100
+                );
               }
             });
             this.percent = percent;
             this.showTechnology = false;
             this.drawGraph();
-          }else{
+          } else {
             this.showTechnology = true;
           }
           this.spinShow = false;
@@ -507,7 +571,9 @@ export default {
           if (total === 0) {
             percent[item.procedureCode] = 0;
           } else {
-            percent[item.procedureCode] =parseInt((item[keyType] / total)*100);
+            percent[item.procedureCode] = Math.round(
+              (item[keyType] / total) * 100
+            );
           }
           taskNum[item.procedureCode] = item[keyType];
         });
@@ -581,7 +647,9 @@ export default {
           if (total === 0) {
             percent[item.procedureCode] = 0;
           } else {
-            percent[item.procedureCode] = parseInt((item[keyType] / total)*100);
+            percent[item.procedureCode] = Math.round(
+              (item[keyType] / total) * 100
+            );
           }
           taskNum[item.procedureCode] = item[keyType];
         });
@@ -613,11 +681,19 @@ export default {
      * 打开任务列表
      */
     openTask(item) {
+      let type = this.type,
+          filter = "";
       this.modalVisable = true;
       this.taskTableLoading = true;
       this.taskModalPage.procedureCode = item.procedureCode;
-      let filter = "";
-      if(this.orderCode){
+      //判断当前是已办任务还是待办任务
+      if (~type.toLowerCase().indexOf("todo")) {
+        this.taskTableColumns = [...this.todoColumns]
+      }else{
+        this.taskTableColumns = [...this.doneColumns]
+      }
+     
+      if (this.orderCode) {
         filter = JSON.stringify([
           { operator: "eq", value: this.orderCode, property: "t1.orderCode" }
         ]);
@@ -750,12 +826,12 @@ export default {
   }
 }
 
-.no-technology{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    font-size: 16px;
-    color: #6d6a6a;
+.no-technology {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 16px;
+  color: #6d6a6a;
 }
 </style>
 

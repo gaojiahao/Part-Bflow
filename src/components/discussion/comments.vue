@@ -236,7 +236,14 @@ export default {
                 c.showPraises = false;
                 c.showChilds = false;
             });
+
+            
+            if(window.top.setInstaceCommentsIframeHeight){
+                window.top.setInstaceCommentsIframeHeight();
+            }
+
             comment.showReply = !comment.showReply;
+            
         },
         handleReplyPublish:function (content,uploadList,superComment,commentAndReply) {
             this.$forceUpdate();

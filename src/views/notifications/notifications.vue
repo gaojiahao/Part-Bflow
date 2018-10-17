@@ -68,7 +68,7 @@ export default {
             this.avtiveNav = nav;
 
             if(this.$refs.notifilist){
-                this.$refs.notifilist.navId = nav.listId;
+                this.$refs.notifilist.listId =nav.listId;
                 this.$refs.notifilist.params.page = 1;
                 this.$refs.notifilist.isRolling = false;
                 this.$refs.notifilist.refreshNotifics();

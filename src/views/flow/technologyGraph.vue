@@ -101,6 +101,7 @@
             <polyline :points="line.value" marker-end='url(#arrow1)' style="fill:none;stroke:#9cd3d3;stroke-width:2" />
           </g>
         </svg>
+        <span class="no-technology" v-if="showTechnology">暂无工序...</span>
       </div>
     </main>
 
@@ -144,6 +145,7 @@ export default {
 
   data() {
     return {
+      showTechnology:false,
       prefixCls: prefixCls,
       processRouteCode: this.$route.params.processRouteCode,
       spinShow: false,
@@ -316,8 +318,7 @@ export default {
           if (data[i].procedureCode === "end") {
             data[i].pointX =
               this.defaultxAxion +
-              (xCount - 1) * (graphSpace + defaultShapeWidth) +
-              60;
+              (xCount - 1) * (graphSpace + defaultShapeWidth);
           } else {
             data[i].pointX =
               this.defaultxAxion +
@@ -409,28 +410,33 @@ export default {
       this.spinShow = true;
       getProcedureAndProcess(processRouteCode)
         .then(res => {
-          let showNumber = this.showNumber;
-          if (
-            Math.ceil((res.length + 2) / showNumber) * 220 >
-            document.body.clientHeight - 45
-          ) {
-            window.document.getElementsByClassName(
-              "rfd-technology-wrap-main"
-            )[0].style.height =
-              Math.ceil((res.length + 2) / showNumber) * 220 + "px";
-          }
-
-          this.ProcessAndProcedureData = res;
-          res.forEach(item => {
-            if (item["mytask"] === 0) {
-              percent[item.procedureCode] = 0;
-            } else {
-              percent[item.procedureCode] =
-                parseInt((item["myToDo"] / item["mytask"])*100);
+          if(res[0]){
+            let showNumber = this.showNumber;
+            if (
+              Math.ceil((res.length + 2) / showNumber) * 220 >
+              document.body.clientHeight - 45
+            ) {
+              window.document.getElementsByClassName(
+                "rfd-technology-wrap-main"
+              )[0].style.height =
+                Math.ceil((res.length + 2) / showNumber) * 220 + "px";
             }
-          });
-          this.percent = percent;
-          this.drawGraph();
+  
+            this.ProcessAndProcedureData = res;
+            res.forEach(item => {
+              if (item["mytask"] === 0) {
+                percent[item.procedureCode] = 0;
+              } else {
+                percent[item.procedureCode] =
+                  parseInt((item["myToDo"] / item["mytask"])*100);
+              }
+            });
+            this.percent = percent;
+            this.showTechnology = false;
+            this.drawGraph();
+          }else{
+            this.showTechnology = true;
+          }
           this.spinShow = false;
         })
         .catch(error => {
@@ -610,11 +616,18 @@ export default {
       this.modalVisable = true;
       this.taskTableLoading = true;
       this.taskModalPage.procedureCode = item.procedureCode;
+      let filter = "";
+      if(this.orderCode){
+        filter = JSON.stringify([
+          { operator: "eq", value: this.orderCode, property: "t1.orderCode" }
+        ]);
+      }
       getProcedureInfoFilter(
         item.procedureCode,
         this.type,
         this.taskModalPage.currentPage,
-        this.taskModalPage.pageSize
+        this.taskModalPage.pageSize,
+        filter
       ).then(res => {
         this.taskTableLoading = false;
         this.taskModalPage.pageTotal = res.dataCount;
@@ -692,7 +705,6 @@ export default {
 
     .rfd-technology-dropdown-select {
       display: inline-block;
-      position: fixed;
       z-index: 999;
       &-item:hover {
         color: #2d8cf0;
@@ -736,6 +748,14 @@ export default {
       }
     }
   }
+}
+
+.no-technology{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 16px;
+    color: #6d6a6a;
 }
 </style>
 

@@ -10,7 +10,7 @@
       </span>
     </Row>
     <Row class="app-process-table">
-      <Modal v-model="showModal" title="新增流程状态" @on-ok="addProcessStatus" @on-cancel="cancel">
+      <Modal v-model="showModal" title="新增流程状态" @on-ok="addProcessStatus">
         <Form :model="processInfoItem" ref="processInfoItem" :label-width="100" :rules="ruleValidate">
           <FormItem label="流程状态:" prop="fieldValue">
             <Input v-model="processInfoItem.fieldValue"></Input>

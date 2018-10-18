@@ -94,23 +94,23 @@
       </section>
       <!-- 上级组织 -->
       <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===4">
-        <high-organization :groupId="groupId" :groupType="formItem.groupType" @on-high-organization-change='handleChangeObjDetailsCount'></high-organization>
+        <high-organization :isPermission="isPermission" :groupId="groupId" :groupType="formItem.groupType" @on-high-organization-change='handleChangeObjDetailsCount'></high-organization>
       </section>
       <!-- 下级组织 -->
       <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===3">
-        <lower-organization :groupId="groupId" :groupType="formItem.groupType" @on-lower-organization-change='handleChangeObjDetailsCount'></lower-organization>
+        <lower-organization :isPermission="isPermission" :groupId="groupId" :groupType="formItem.groupType" @on-lower-organization-change='handleChangeObjDetailsCount'></lower-organization>
       </section>
       <!-- 负责人 -->
       <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===2">
-        <principal :groupId="groupId" @on-principal-change='handleChangeObjDetailsCount'></principal>
+        <principal :isPermission="isPermission" :groupId="groupId" @on-principal-change='handleChangeObjDetailsCount'></principal>
       </section>
       <!-- 成员信息 -->
       <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===1">
-        <member-info :groupId="groupId" @on-member-info-change='handleChangeObjDetailsCount'></member-info>
+        <member-info :isPermission="isPermission" :groupId="groupId" @on-member-info-change='handleChangeObjDetailsCount'></member-info>
       </section>
       <!-- 权限 -->
       <section class="permission-container rfd-tab-container-common" v-if="actionIndex===0">
-        <permission :groupId="groupId" @on-permission-change='handleChangeObjDetailsCount'></permission>
+        <permission :isPermission="isPermission" :groupId="groupId" @on-permission-change='handleChangeObjDetailsCount'></permission>
       </section>
     </div>
 

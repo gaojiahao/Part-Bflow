@@ -29,7 +29,7 @@
 <template>
   <div>
     <custom-table apiUrl="/ds/getPrincipalByGroupId" :columns="principalColumns" :apiParams="principalParams" v-model="reload" @on-refesh-change='onRefeshChange' :isHiddenPage="true">
-      <div slot="header" class="header-action">
+      <div v-if="isPermission" slot="header" class="header-action">
         <label @click="addPrincipal">添加负责人</label>
         <span>-添加负责人</span>
       </div>
@@ -69,6 +69,9 @@ export default {
   props: {
     groupId: {
       type: String
+    },
+    isPermission: {
+      type: Boolean
     }
   },
 
@@ -134,7 +137,8 @@ export default {
               {
                 props: {
                   type: "error",
-                  size: "small"
+                  size: "small",
+                  disabled: !this.isPermission
                 },
                 style: {
                   cursor: "pointer"

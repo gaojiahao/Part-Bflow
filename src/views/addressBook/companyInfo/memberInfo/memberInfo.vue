@@ -6,10 +6,12 @@
   <div class="member-wrap">
     <div class="member-wrap-table">
       <div>
-        <b @click="showAllMember" class="member-wrap-table-btn">添加成员</b>
-        <span style="color: #7a7676;">-添加成员</span>
-        <b @click="delCompanyMember" class="member-wrap-table-btn">移除成员</b>
-        <span style="color: #7a7676;">-移除成员</span>
+        <div v-if="isPermission" style="display:inline;">
+          <b @click="showAllMember" class="member-wrap-table-btn">添加成员</b>
+          <span style="color: #7a7676;">-添加成员</span>
+          <b @click="delCompanyMember" class="member-wrap-table-btn">移除成员</b>
+          <span style="color: #7a7676;">-移除成员</span>
+        </div>
         <div class="table-search">
           <Input @on-search="tableSearch" :search="true" placeholder="请输入工号或姓名" class="search-btn" v-model="searchTableValue" />
           <Button type="primary" size="small" @click="tableSearch">查询</Button>
@@ -54,6 +56,11 @@ import {
   filterUser
 } from "@/services/addressBookService.js";
 export default {
+  props: {
+    isPermission: {
+      type: Boolean
+    }
+  },
   data() {
     return {
       columns1: [
@@ -128,7 +135,8 @@ export default {
                 {
                   props: {
                     type: "error",
-                    size: "small"
+                    size: "small",
+                    disabled: !this.isPermission
                   },
                   on: {
                     click: () => {

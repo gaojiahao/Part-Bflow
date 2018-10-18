@@ -50,11 +50,13 @@
     <custom-table apiUrl="/ds/getUsersByGroupId" :columns="memberInfoColumns" :apiParams="memberInfoParams" v-model="reload" @on-selection-change="onSelectionChange" @on-refesh-change='onRefeshChange'>
 
       <div slot="header" class="header-action">
-        <label @click="showMemberModal">添加成员</label>
-        <span>-添加成员</span>
+        <div v-if="isPermission" style="display:inline;">
+          <label @click="showMemberModal">添加成员</label>
+          <span>-添加成员</span>
 
-        <label @click="deleteMemberInfo">移除成员</label>
-        <span>-移除成员</span>
+          <label @click="deleteMemberInfo">移除成员</label>
+          <span>-移除成员</span>
+        </div>
 
         <div class="app-table-search">
           <Input @on-search="userTableFilter" :search="true" v-model="searchTableValue" placeholder="搜索工号或名称" style="width: 300px"></Input>
@@ -111,6 +113,9 @@ export default {
   props: {
     groupId: {
       type: String
+    },
+    isPermission: {
+      type: Boolean
     }
   },
 
@@ -180,7 +185,8 @@ export default {
               {
                 props: {
                   type: "error",
-                  size: "small"
+                  size: "small",
+                  disabled: !this.isPermission
                 },
                 style: {
                   cursor: "pointer"

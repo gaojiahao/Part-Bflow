@@ -34,7 +34,7 @@
   <div>
     <custom-table apiUrl="/ds/getAllGroup" :columns="lowerOrgColumns" :apiParams="lowOrganizationParams" v-model="reload" @on-refesh-change='onRefeshChange' @on-selection-change="onSelectionChange">
 
-      <div slot="header" class="header-action">
+      <div v-if="isPermission" slot="header" class="header-action">
         <label @click="showLoverOrgModal">添加下级组织</label>
         <span>-添加下级组织</span>
 
@@ -89,6 +89,9 @@ export default {
     },
     groupType: {
       type: String
+    },
+    isPermission: {
+      type: Boolean
     }
   },
 
@@ -208,7 +211,8 @@ export default {
               {
                 props: {
                   type: "error",
-                  size: "small"
+                  size: "small",
+                  disabled: !this.isPermission
                 },
                 style: {
                   cursor: "pointer"

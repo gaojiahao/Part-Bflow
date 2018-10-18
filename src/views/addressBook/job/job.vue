@@ -73,11 +73,11 @@
       </section>
       <!-- 成员信息 -->
       <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===1">
-        <member-info :jobId="jobId" @on-member-info-change='handleChangeObjDetailsCount'></member-info>
+        <member-info :isPermission="isPermission" :jobId="jobId" @on-member-info-change='handleChangeObjDetailsCount'></member-info>
       </section>
       <!-- 权限 -->
       <section class="permission-container rfd-tab-container-common" v-if="actionIndex===0">
-        <permission :jobId="jobId" @on-permission-change='handleChangeObjDetailsCount'></permission>
+        <permission :isPermission="isPermission" :jobId="jobId" @on-permission-change='handleChangeObjDetailsCount'></permission>
       </section>
     </div>
 

@@ -37,13 +37,13 @@
     </Row>
     <Row class="detail-content">
       <!-- 公司基本信息 -->
-      <base-info v-if="whichShow.baseInfo"></base-info>
+      <base-info :isPermission="isPermission" v-if="whichShow.baseInfo"></base-info>
       <!-- 公司成员-->
-      <member-info v-if="whichShow.member" @getInstanceCount="getInstanceCount"></member-info>
+      <member-info :isPermission="isPermission" v-if="whichShow.member" @getInstanceCount="getInstanceCount"></member-info>
       <!--上级公司-->
-      <higher-company v-if="whichShow.higherCompany" @getInstanceCount="getInstanceCount"></higher-company>
+      <higher-company :isPermission="isPermission" v-if="whichShow.higherCompany" @getInstanceCount="getInstanceCount"></higher-company>
       <!--下级公司-->
-      <lower-company v-if="whichShow.lowerCompany" @getInstanceCount="getInstanceCount"></lower-company>
+      <lower-company :isPermission="isPermission" v-if="whichShow.lowerCompany" @getInstanceCount="getInstanceCount"></lower-company>
 
     </Row>
   </div>
@@ -68,6 +68,7 @@ export default {
   data() {
     return {
       groupId: this.$route.params.groupId,
+      isPermission: true,
       whichShow: {
         baseInfo: true,
         higherCompany: false,
@@ -149,6 +150,11 @@ export default {
     }
     this.getCompanyInfo(groupId);
     this.getInstanceCount();
+    getListById('000004').then(res => {
+        if(!res[0].action.update){
+          this.isPermission = false;
+        }
+      });
   }
 };
 </script>

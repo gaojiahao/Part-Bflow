@@ -51,10 +51,12 @@
   <div class="direct">
     <div class="direct-detail" id="directHeight">
       <div class="direct-header">
-        <b @click="showAddPermission" class="direct-detail-btn">添加权限</b>
-        <span style="color: #7a7676;">-添加直接权限</span>
-        <b @click="deletePermission" class="direct-detail-btn">删除权限</b>
-        <span style="color: #7a7676;">-删除直接权限</span>
+        <div v-if="isUpdate" style="display:inline;">
+          <b @click="showAddPermission" class="direct-detail-btn">添加权限</b>
+          <span style="color: #7a7676;">-添加直接权限</span>
+          <b @click="deletePermission" class="direct-detail-btn">删除权限</b>
+          <span style="color: #7a7676;">-删除直接权限</span>
+        </div>
         <div class="app-table-search">
           <Input 
             @on-search="permissionFilter" 
@@ -115,7 +117,11 @@ export default {
   components: {
     PermissionModal
   },
-  props: {},
+  props: {
+    isUpdate: {
+          type: Boolean
+      }
+  },
   data() {
     return {
       userId: this.$route.params.userId,
@@ -150,7 +156,8 @@ export default {
               {
                 props: {
                   type: "error",
-                  size: "small"
+                  size: "small",
+                  disabled: !this.isUpdate
                 },
                 on: {
                   click: () => {

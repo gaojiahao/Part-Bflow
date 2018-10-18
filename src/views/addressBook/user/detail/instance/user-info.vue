@@ -228,6 +228,9 @@ export default {
   props: {
       userInfo: {
           type: Object
+      },
+      isUpdate: {
+          type: Boolean
       }
   },
   data() {
@@ -559,15 +562,13 @@ export default {
   },
   mounted() {
       this.getAllCompanysData();
-      getListById('000001').then(res => {
-        if(!this.userId){
-            this.isAdd = false;
-            this.isEdit = false;
-        }
-        if(!res[0].action.update){
-            this.isAdd = false;
-        }
-      });
+    if(!this.userId){
+        this.isAdd = false;
+        this.isEdit = false;
+    }
+    if(!this.isUpdate){
+        this.isAdd = false;
+    }
   }
 };
 </script>

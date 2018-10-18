@@ -66,7 +66,7 @@ import RoleMember from "./instance/role";
 import DirectPermission from "./instance/direct-permission";
 import IndirectPermission from "./instance/indirect-permission";
 import WorkfowTask from './instance/workflow-task';
-import { getUserInfoById,getInstanceCountByUserId } from "@/services/addressBookService.js";
+import { getUserInfoById,getInstanceCountByUserId,getListById } from "@/services/addressBookService.js";
 
 export default {
   name: "detail",

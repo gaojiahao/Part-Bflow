@@ -219,7 +219,7 @@ import {
     updateUser,
     addUser,
     checkoutFieldIsOnly,
-    getAllCompanys,getListById 
+    getAllCompanys
 } from "@/services/addressBookService.js";
 
 export default {

@@ -56,7 +56,8 @@ import HigherCompany from "@/views/addressBook/companyInfo/higherCompany/higherC
 import LowerCompany from "@/views/addressBook/companyInfo/lowerCompany/lowerCompany";
 import {
   getCompanyInfoByGroupId,
-  getInstanceCountByGroupId
+  getInstanceCountByGroupId,
+  getListById
 } from "@/services/addressBookService.js";
 export default {
   components: {

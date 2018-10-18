@@ -34,10 +34,12 @@
 <template>
   <div class="lower-company">
     <div class="lower-company-detail" id="cliHeight">
-      <b @click="showCompanyModal" class="lower-company-detail-btn">添加公司</b>
-      <span style="color: #7a7676;">-选择下级公司</span>
-      <b @click="delCompany" class="lower-company-detail-btn">删除</b>
-      <span style="color: #7a7676;">-批量删除下级公司</span>
+      <div v-if="isPermission" style="display:inline;">
+        <b @click="showCompanyModal" class="lower-company-detail-btn">添加公司</b>
+        <span style="color: #7a7676;">-选择下级公司</span>
+        <b @click="delCompany" class="lower-company-detail-btn">删除</b>
+        <span style="color: #7a7676;">-批量删除下级公司</span>
+      </div>
       <br>
       <Table ref="selection" :columns="columns" :loading="lowerLoading" :data="lowerCompanyData" @on-selection-change="delCompanyChange"></Table>
       <div style="margin: 10px;overflow: hidden">
@@ -74,6 +76,11 @@ import {
   searchCompany
 } from "@/services/addressBookService.js";
 export default {
+  props: {
+    isPermission: {
+      type: Boolean
+    }
+  },
   data() {
     return {
       groupId: this.$route.params.groupId,
@@ -121,7 +128,8 @@ export default {
                 {
                   props: {
                     type: "error",
-                    size: "small"
+                    size: "small",
+                    disabled: !this.isPermission
                   },
                   on: {
                     click: () => {

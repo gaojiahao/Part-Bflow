@@ -29,7 +29,7 @@
 <template>
   <div>
     <custom-table apiUrl="/ds/getParentGroupByGroupId" :columns="highOrgColumns" :apiParams="highOrganizationParams" v-model="reload" @on-refesh-change='onRefeshChange' :isHiddenPage="true">
-      <div slot="header" class="header-action">
+      <div v-if="isPermission" slot="header" class="header-action">
         <label @click="showHighOrgModal">上级组织</label>
         <span>-选择上级组织</span>
       </div>
@@ -72,6 +72,9 @@ export default {
     },
     groupType: {
       type: String
+    },
+    isPermission: {
+      type: Boolean
     }
   },
 

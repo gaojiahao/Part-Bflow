@@ -38,17 +38,17 @@
     </Row>
     <Row class="detail-content-tabs">
       <!-- 用户信息 -->
-      <user-info v-show="whichShow.userinfo" :userInfo="userInformation"></user-info>
+      <user-info v-show="whichShow.userinfo" :userInfo="userInformation" :isUpdate="isUpdate"></user-info>
       <!-- 上级用户 -->
-      <higher-user @changeInstance="getInstanceCount" v-if="whichShow.highuser"></higher-user>
+      <higher-user @changeInstance="getInstanceCount" v-if="whichShow.highuser" :isUpdate="isUpdate"></higher-user>
       <!-- 下级用户 -->
-      <lower-user @changeInstance="getInstanceCount" v-if="whichShow.lowuser"></lower-user>
+      <lower-user @changeInstance="getInstanceCount" v-if="whichShow.lowuser" :isUpdate="isUpdate"></lower-user>
       <!-- 部门 -->
-      <department-member @changeInstance="getInstanceCount" v-if="whichShow.dep"></department-member>
+      <department-member @changeInstance="getInstanceCount" v-if="whichShow.dep" :isUpdate="isUpdate"></department-member>
       <!-- 职位 -->
-      <role-member @changeInstance="getInstanceCount" v-if="whichShow.role"></role-member>
+      <role-member @changeInstance="getInstanceCount" v-if="whichShow.role" :isUpdate="isUpdate"></role-member>
       <!-- 直接权限 -->
-      <direct-permission @changeInstance="getInstanceCount" v-if="whichShow.dirper"></direct-permission>
+      <direct-permission @changeInstance="getInstanceCount" v-if="whichShow.dirper" :isUpdate="isUpdate"></direct-permission>
       <!-- 间接权限 -->
       <indirect-permission v-if="whichShow.indirper"></indirect-permission>
       <!-- 工作流任务 -->
@@ -85,6 +85,7 @@ export default {
     return {
       userId: this.$route.params.userId,
       showTag: true,
+      isUpdate: true,
       whichShow: {
         userinfo: true,
         highuser: false,
@@ -158,6 +159,11 @@ export default {
   mounted() {
     this.getUserInfoData();
     this.getInstanceCount();
+    getListById('000001').then(res => {
+        if(!res[0].action.update){
+            this.isUpdate = false;
+        }
+      });
   }
 };
 </script>

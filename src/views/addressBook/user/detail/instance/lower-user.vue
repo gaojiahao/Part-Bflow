@@ -41,7 +41,7 @@
 <template>
     <div class="lower-user">
         <div class="lower-user-detail" id="lowHeight">
-          <div class="lower-user-header">
+          <div v-if="isUpdate" class="lower-user-header">
             <b @click="showUserModal" class="lower-user-detail-btn">下级用户</b>
             <span style="color: #7a7676;">-添加下级用户</span>
             <b @click="deleteLowUser" class="lower-user-detail-btn">删除</b>
@@ -140,7 +140,11 @@ import {
 export default {
   name: "lowerUser",
   components: {},
-  props: {},
+  props: {
+    isUpdate: {
+          type: Boolean
+      }
+  },
   data() {
     return {
       userId: this.$route.params.userId,
@@ -209,7 +213,8 @@ export default {
             return h('Button',{
               props: {
                 type: 'error',
-                size: 'small'
+                size: 'small',
+                disabled: !this.isUpdate
               },
               on: {
                 click: () => {

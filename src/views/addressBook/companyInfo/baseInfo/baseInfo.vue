@@ -94,6 +94,11 @@ import {
   getListById
 } from "@/services/addressBookService.js";
 export default {
+  props: {
+    isPermission: {
+      type: Boolean
+    }
+  },
   data() {
     return {
       httpHeaders: {
@@ -103,7 +108,6 @@ export default {
       visible: false,
       isEdit: true,
       isAdd: true,
-      isPermission: true,
       cacheGroupName: "",
       cacheShortName: "",
       baseInfoItem: {
@@ -376,12 +380,6 @@ export default {
       return;
     }
     this.getCompanyInfo(groupId);
-
-    getListById('000004').then(res => {
-        if(!res[0].action.update){
-          this.isPermission = false;
-        }
-      });
   }
 };
 </script>

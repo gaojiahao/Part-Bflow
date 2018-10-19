@@ -20,7 +20,7 @@
             </span>
             :
             <span v-if="data.sourceContent.type ==='instance' || data.sourceContent.type ==='list'">
-                <template v-if="data.sourceContent.objContent">
+                <template v-if="data.sourceContent.objContent || data.sourceContent.objAttachment">
                    发表了评论:
                    <span  class="notice-container" v-html="data.tempContent"></span>
                     <div class="notice-container-relpy">

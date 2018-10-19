@@ -22,6 +22,10 @@
             <Input v-model="processInfoItem.sort"></Input>
           </FormItem>
         </Form>
+        <div slot="footer">
+          <Button type="text" size="large" @click="showModal=false">取消1</Button>
+          <Button type="primary" size="large" @click="addProcessStatus">确定</Button>
+        </div>
       </Modal>
       <Table :columns="columns" :data="processData" size="small"></Table>
       <div style="margin: 10px;overflow: hidden">
@@ -46,7 +50,6 @@ export default {
         {
           title: "流程状态",
           key: "fieldValue",
-          width: 180,
           render: (h, params) => {
             if (params.row.$isEdit) {
               return h("input", {
@@ -67,7 +70,6 @@ export default {
         {
           title: "排序",
           key: "sort",
-          width: 180,
           render: (h, params) => {
             if (params.row.$isEdit) {
               return h("input", {

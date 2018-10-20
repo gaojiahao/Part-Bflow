@@ -12,7 +12,7 @@
             
         </div>
         <div class="msg-comment-content">
-            <p>实例编码:{{data.tempContent.transCode}}</p>
+            <p>实例编码:<a @click="handleViewDetail">{{data.tempContent.transCode}}</a></p>
             <p>节点名称:{{data.tempContent.name}}</p>
             <p>任务编码:{{data.relationKey}}</p>
 
@@ -40,9 +40,9 @@
             <p>实例创建时间:{{data.tempContent.startTime}}</p>
             
         </div>
-        <div class="msg-comment-href">
+        <!-- <div class="msg-comment-href">
             <a @click="handleViewDetail">详情 <Icon class="fr" type="ios-arrow-forward" /></a>
-        </div>
+        </div> -->
     </div>
 </template>
 

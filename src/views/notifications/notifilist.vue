@@ -9,7 +9,7 @@
             v-bind:class="{'createbyme':n.creatorName===$currentUser.nickname}"
             v-for="(n,index) in  notifications" 
             :key="index">
-            <div class="notice-time">{{n.crtTime}}</div>
+            <!-- <div class="notice-time">{{n.crtTime}}</div> -->
             <comment-notice-tpl 
                 :data="n" 
                 v-if="n.type=='comment'" 
@@ -27,6 +27,9 @@
                 v-if="n.type=='flowTask'" 
                 v-bind:class="{'notice-unread':!n.isRead}">
             </flow-task-tpl>
+
+            <pro-status-tpl :data="n" v-if="n.type=='processStatus'" ></pro-status-tpl>
+
         </div>
     </div>
 </template>
@@ -35,13 +38,16 @@
 import flowTaskTpl from "@/views/notifications/notice-tpl/flowTaskTpl";
 import commentNoticeTpl from "@/views/notifications/notice-tpl/commentNoticeTpl";
 import praiseNoticeTpl from "@/views/notifications/notice-tpl/praiseNoticeTpl";
+import ProStatusTpl from "@/views/notifications/notice-tpl/pro-status-tpl";
+
 import {getAllnotifications} from "@/services/notificationsService";
 export default {
     name:'notifilist',
     components:{
         flowTaskTpl,
         commentNoticeTpl,
-        praiseNoticeTpl
+        praiseNoticeTpl,
+        ProStatusTpl
     },
     props:{
         list:'',

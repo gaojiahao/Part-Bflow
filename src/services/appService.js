@@ -510,3 +510,60 @@ export const updateProcessStatus = (param) => request('/H_roleplay-si/listProces
  * @param {*} param 
  */
 export const addProcessStatus = (param) => request('/H_roleplay-si/listProcessStatusRel/save', {}, "POST", param)
+
+/**
+ * @author XiaoYing
+ * @description 保存自定义数据源
+ * @param {*} param 
+ */
+export const saveCustomDatasource = (param) => request('/H_roleplay-si/resource/save', {
+  data: param
+}, "POST")
+
+/**
+ * @author XiaoYing
+ * @description 修改自定义数据源
+ * @param {*} param 
+ */
+export const updateCustomDatasource = (param) => request('/H_roleplay-si/resource/update', {
+  data: param
+}, "POST")
+
+/**
+ * @author XiaoYing
+ * @description 获取字段数据源
+ * @param {String} listId
+ */
+export const getFieldResorce = (listId) => request('/H_roleplay-si/resource/getAppField', {
+  listId: listId
+})
+
+/**
+ * @author XiaoYing
+ * @description 获取字段数据源列表
+ * @param {String} listId
+ */
+export const getResorceList = (listId) => request('/H_roleplay-si/resource/getResourceList', {
+  listId: listId
+})
+
+/**
+ * @author XiaoYing
+ * @description 获取修改回显字段数据源
+ * @param {String} listId
+ * @param {String} resourceId
+ */
+export const getResourceDetailList = (listId,resourceId) => request('/H_roleplay-si/resource/getResourceDetailList', {
+  listId: listId,
+  resourceId: resourceId
+})
+
+/**
+ * @author XiaoYing
+ * @description 删除已授权的自定义数据源
+ * @param {String} listId
+ * @param {String} resourceId
+ */
+export const deleteCustomDatasource = (resourceId) => request('/H_roleplay-si/resource/delete', {
+  resourceId: resourceId
+}, "POST")

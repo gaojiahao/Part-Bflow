@@ -150,7 +150,7 @@
       </div>
     </div>
 
-    <Modal v-model="subReportModel"  scrollable  width="960"    :title="subReportModelTitle">
+    <Modal v-model="subReportModel"  scrollable  width="960"  :styles="{top: '20px',pandding:'0px'}"  :title="subReportModelTitle">
         <iframe  width="100%"  style="height: 400px;border: none;" :src="subReportUrl"></iframe>
     </Modal>
 

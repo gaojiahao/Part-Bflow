@@ -176,7 +176,7 @@ export default {
                 ),
                 h("span", {
                   style: {
-                    height: "20px",
+                    height: "10px",
                     borderLeft: "1px solid #39f",
                     margin: "0px 5px",
                     display:(this.isCompanyAdmin||this.isAdmin) ? 'inline-block':'none'
@@ -196,7 +196,7 @@ export default {
                 ),
                 h("span", {
                   style: {
-                    height: "20px",
+                    height: "10px",
                     borderLeft: "1px solid #39f",
                     margin: "0px 5px",
                     display:(this.isCompanyAdmin||this.isAdmin) ? 'inline-block':'none'

@@ -35,7 +35,7 @@
           <!-- 相关应用 -->
           <related-app v-if="!isAddress" :isAdmin="isAdmin"></related-app>
           <!-- 流程状态管理-->
-          <process v-if="!isAddress" :isAdmin="isAdmin"></process>
+          <process v-if="appType !== 'obj' && appType !=='subject' && !isAddress" :isAdmin="isAdmin" :isCompanyAdmin="isCompanyAdmin"></process>
           <!-- API -->
           <app-api></app-api>
         </TabPane>
@@ -78,9 +78,9 @@ export default {
       //应用详情信息
       appData: {},
       enforData: [],
-      isAdmin: false,
-      isCompanyAdmin: false,
-      isAddress: false,
+       isAdmin: false,       //应用管理员权限
+      isCompanyAdmin: false,  //企业管理员权限
+      isAddress: false,   //通讯录权限
       appType: "",
       enabledForbidden: -1
     };

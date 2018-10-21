@@ -150,7 +150,13 @@
       </div>
     </div>
 
-    <Modal v-model="subReportModel" draggable scrollable  width="900"   :title="subReportModelTitle">
+    <Modal 
+      v-model="subReportModel"  
+      scrollable  
+      width="960"  
+      class-name="subReportModel-modal"
+      :styles="{top: '20px',pandding:'0px'}"  
+      :title="subReportModelTitle">
         <iframe  width="100%"  style="height: 400px;border: none;" :src="subReportUrl"></iframe>
     </Modal>
 
@@ -926,6 +932,13 @@ export default {
 @bg-text-color: #000;
 @borderColor: #dddee1;
 
+.subReportModel-modal{
+  .ivu-modal{
+    .ivu-modal-body{
+      padding: 0px !important;
+    }
+  }
+}
 .bg_white {
   background-color: white;
 }

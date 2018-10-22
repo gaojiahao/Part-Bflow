@@ -348,6 +348,11 @@ export default {
                 this.formItem.entityId = this.userInfo.entityId;
                 this.formItem.entityName = this.userInfo.entityName;
           }
+      },
+      isUpdate: function(){
+          if(!this.isUpdate){
+              this.isAdd = false;
+          }
       }
   },
   methods: {
@@ -565,9 +570,6 @@ export default {
     if(!this.userId){
         this.isAdd = false;
         this.isEdit = false;
-    }
-    if(!this.isUpdate){
-        this.isAdd = false;
     }
   }
 };

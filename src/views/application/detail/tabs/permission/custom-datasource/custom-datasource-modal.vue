@@ -436,7 +436,9 @@ export default {
                 let Num = this.emitChange++;
                 this.$emit("reGetData", Num);
               }
-            })
+            }).catch(err => {
+              this.$Message.error(err.data.message);
+            });
           }else{
             saveCustomDatasource(JSON.stringify(params)).then(res => {
               if (res.success) {
@@ -445,6 +447,8 @@ export default {
                 let Num = this.emitChange++;
                 this.$emit("reGetData", Num);
               }
+            }).catch(err => {
+              this.$Message.error(err.data.message);
             });
           }
         }

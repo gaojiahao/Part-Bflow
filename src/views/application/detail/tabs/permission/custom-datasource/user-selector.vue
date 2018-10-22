@@ -25,22 +25,59 @@
 <template>
     <div>
       <!-- 用户modal -->
-      <Modal v-model="showUserModal" title="用户选择" :mask-closable="false" width="800" @on-ok="confirmUser" @on-cancel="cancelSelectUser" @on-visible-change="modalVisibleChange" :transfer="false">
+      <Modal 
+        v-model="showUserModal" 
+        title="用户选择" 
+        :mask-closable="false" 
+        width="800" 
+        @on-ok="confirmUser" 
+        @on-cancel="cancelSelectUser" 
+        @on-visible-change="modalVisibleChange" 
+        :transfer="false">
         <div class="app-search">
-          <Input v-model="searchUserValue" @on-search="userFilter" :search="true" placeholder="名称或工号搜索" style="width: 300px"></Input>
+          <Input 
+            v-model="searchUserValue" 
+            @on-search="userFilter" 
+            :search="true" 
+            placeholder="名称或工号搜索" 
+            style="width: 300px">
+          </Input>
           <p @click="userFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </p>
         </div>
-        <Table ref="userTable" @on-select-cancel="selectUserCancel" @on-select-all="onUserSelectAll" @on-selection-change="selectUserClick" height="400" stripe size="small" :loading="userLoading" :columns="userColumns" :data="userData">
+        <Table 
+          ref="userTable" 
+          @on-select-cancel="selectUserCancel" 
+          @on-select-all="onUserSelectAll" 
+          @on-selection-change="selectUserClick" 
+          height="400" 
+          stripe size="small" 
+          :loading="userLoading" 
+          :columns="userColumns" 
+          :data="userData">
         </Table>
         <div class="user-page">
           <div style="float: right;">
-            <Page :total="userTotal" :current="userCurrentPage" :page-size="pageSize" @on-change="onUserPageChange" size="small" show-total></Page>
+            <Page 
+              :total="userTotal" 
+              :current="userCurrentPage" 
+              :page-size="pageSize" 
+              @on-change="onUserPageChange" 
+              size="small" 
+              show-total>
+            </Page>
           </div>
         </div>
         <div class="page-selection-warp" v-show="userSelection[0] ">
-          <Tag v-for="(item,index) in userSelection" :key="item.userId" @on-close="deleteSelectUser(item,index)" :userId="item.userId" closable type="border" color="primary" size="small">
+          <Tag 
+            v-for="(item,index) in userSelection" 
+            :key="item.userId" 
+            @on-close="deleteSelectUser(item,index)" 
+            :userId="item.userId" 
+            closable type="border" 
+            color="primary" 
+            size="small">
             {{item.nickname}}
           </Tag>
         </div>
@@ -61,7 +98,6 @@ export default {
   },
   data() {
     return {
-      selectUser: "",
       searchUserValue: "",
       userTotal: 0,
       userCurrentPage: 1,

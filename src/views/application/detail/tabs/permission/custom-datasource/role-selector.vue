@@ -25,22 +25,57 @@
 <template>
     <div>
       <!-- 职位modal -->
-      <Modal v-model="showDepartmentModal" title="职位选择" :mask-closable="false" @on-ok="confirmDepartment" @on-cancel="cancelSelectDep" @on-visible-change="modalVisibleChange" :transfer="false">
+      <Modal 
+        v-model="showDepartmentModal" 
+        title="职位选择" 
+        :mask-closable="false" 
+        @on-ok="confirmDepartment" 
+        @on-cancel="cancelSelectDep" 
+        @on-visible-change="modalVisibleChange" 
+        :transfer="false">
         <div class="app-search">
-          <Input v-model="searchDepValue" @on-search="depFilter" :search="true" placeholder="搜索" style="width: 300px"></Input>
+          <Input 
+            v-model="searchDepValue" 
+            @on-search="depFilter" 
+            :search="true" 
+            placeholder="搜索" 
+            style="width: 300px">
+          </Input>
           <p @click="depFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </p>
         </div>
-        <Table ref="roleTable" @on-select-cancel="selectDepCancel" @on-select-all="onRoleSelectAll" @on-selection-change="selectDepartmentClick" height="400" stripe size="small" :loading="depLoading" :columns="departmentColumns" :data="departmentData">
+        <Table 
+          ref="roleTable" 
+          @on-select-cancel="selectDepCancel" 
+          @on-select-all="onRoleSelectAll" 
+          @on-selection-change="selectDepartmentClick" 
+          height="400" 
+          stripe size="small" 
+          :loading="depLoading" 
+          :columns="departmentColumns" 
+          :data="departmentData">
         </Table>
         <div class="user-page">
           <div style="float: right;">
-            <Page :total="depTotal" :current="depCurrentPage" :page-size="pageSize" @on-change="onDepPageChange" size="small" show-total></Page>
+            <Page 
+              :total="depTotal" 
+              :current="depCurrentPage" 
+              :page-size="pageSize" 
+              @on-change="onDepPageChange" 
+              size="small" 
+              show-total>
+            </Page>
           </div>
         </div>
         <div class="page-selection-warp" v-show="departmentSelection[0] ">
-          <Tag v-for="(item,index) in departmentSelection" :key="item.id" @on-close="deleteSelectRole(item,index)" closable type="border" color="primary" size="small">
+          <Tag 
+            v-for="(item,index) in departmentSelection" 
+            :key="item.id" 
+            @on-close="deleteSelectRole(item,index)" 
+            closable type="border" 
+            color="primary" 
+            size="small">
             {{item.name}}
           </Tag>
         </div>
@@ -61,7 +96,6 @@ export default {
   },
   data() {
     return {
-      selectPosition: "",
       searchDepValue: "",
       depTotal: 0,
       depCurrentPage: 1,

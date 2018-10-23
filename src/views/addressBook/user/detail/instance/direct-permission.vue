@@ -1,5 +1,9 @@
 <style lang="less" scoped>
     .direct{
+      &-header{
+        overflow:hidden;
+        margin-bottom:-8px;
+      }
       &-detail{
         background-color: #fff;
         width: 75%;

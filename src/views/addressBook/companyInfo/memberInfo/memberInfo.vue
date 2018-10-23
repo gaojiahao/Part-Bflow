@@ -5,7 +5,7 @@
 <template>
   <div class="member-wrap">
     <div class="member-wrap-table">
-      <div>
+      <div style="overflow:hidden;margin-bottom:-8px;">
         <div v-if="isPermission" style="display:inline;">
           <b @click="showAllMember" class="member-wrap-table-btn">添加成员</b>
           <span style="color: #7a7676;">-添加成员</span>

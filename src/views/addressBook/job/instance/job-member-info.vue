@@ -4,6 +4,7 @@
 }
 
 .header-action {
+  overflow: hidden;
   label {
     color: #009688;
     font-size: 17px;
@@ -14,8 +15,10 @@
   span {
     color: rgb(122, 118, 118);
   }
+
+
 }
-.app-search {
+  .app-search {
   margin-bottom: 5px;
   .app-search-icon {
     font-size: 1rem;
@@ -55,11 +58,13 @@
       </div> -->
 
       <div slot="header" class="header-action">
-        <label @click="showMemberModal">添加成员</label>
-        <span>-添加成员</span>
+        <div v-if="isPermission" style="display:inline;">
+          <label @click="showMemberModal">添加成员</label>
+          <span>-添加成员</span>
 
-        <label @click="deleteMemberInfo">移除成员</label>
-        <span>-移除成员</span>
+          <label @click="deleteMemberInfo">移除成员</label>
+          <span>-移除成员</span>
+        </div>
 
         <div class="app-table-search">
           <Input @on-search="userTableFilter" :search="true" v-model="searchTableValue" placeholder="搜索工号或名称" style="width: 300px"></Input>
@@ -116,6 +121,9 @@ export default {
   props: {
     jobId: {
       type: String
+    },
+    isPermission: {
+      type: Boolean
     }
   },
 
@@ -143,7 +151,9 @@ export default {
             return h("div", [
               h("Avatar", {
                 props: {
-                  src: params.row.photo?params.row.photo:'resources/images/icon/defaultUserPhoto.jpg'
+                  src: params.row.photo
+                    ? params.row.photo
+                    : "resources/images/icon/defaultUserPhoto.jpg"
                 }
               })
             ]);
@@ -187,7 +197,8 @@ export default {
               {
                 props: {
                   type: "error",
-                  size: "small"
+                  size: "small",
+                  disabled: !this.isPermission
                 },
                 style: {
                   cursor: "pointer"
@@ -234,7 +245,9 @@ export default {
             return h("div", [
               h("Avatar", {
                 props: {
-                  src: params.row.photo?params.row.photo:'resources/images/icon/defaultUserPhoto.jpg'
+                  src: params.row.photo
+                    ? params.row.photo
+                    : "resources/images/icon/defaultUserPhoto.jpg"
                 }
               })
             ]);
@@ -373,10 +386,11 @@ export default {
 
     deleteMemberInfo() {
       let multiId = [];
+
       this.selectDeleteMemberInfo.forEach(val => {
         multiId.push(val.userId);
       });
-      if (multiId) {
+      if (multiId.length > 0) {
         deleteBatchRole(this.jobId, multiId.join(","), 0)
           .then(res => {
             if (res.success) {
@@ -388,6 +402,8 @@ export default {
           .catch(error => {
             this.$Message.error(error.data.message);
           });
+      } else {
+        this.$Message.error("请选择要移除的成员");
       }
     },
 

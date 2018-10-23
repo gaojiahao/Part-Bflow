@@ -2,18 +2,18 @@
 @import "./dictionaryManage.less";
 </style>
  <template>
-    <div class="wrap">
-        <div class="wrap-table">
-            <br>
-            <Table :loading="loading" :columns="columns1" :data="dictionaryData">
-            </Table>
-            <!-- <div style="margin: 10px;overflow: hidden">
+  <div class="wrap">
+    <div class="wrap-table">
+      <br>
+      <Table :loading="loading" :columns="columns1" :data="dictionaryData">
+      </Table>
+      <!-- <div style="margin: 10px;overflow: hidden">
                 <div class="fr">
                     <Page :total="pageTotal" @on-page-size-change="pageSizeChange" :current="currentPage" :page-size="pageSize" size="small" @on-change="pageChange" show-sizer show-elevator show-total/>
                 </div> -->
-        </div>
     </div>
-    </div>
+  </div>
+  </div>
 </template>
 
 <script>
@@ -40,6 +40,7 @@ export default {
                 domProps: {
                   value: params.row.name
                 },
+                style: { width: "150px" },
                 on: {
                   input: function(event) {
                     params.row.name = event.target.value;
@@ -61,6 +62,7 @@ export default {
                 domProps: {
                   value: params.row.shortName
                 },
+                style: { width: "150px" },
                 on: {
                   input: function(event) {
                     params.row.shortName = event.target.value;
@@ -82,6 +84,7 @@ export default {
                 domProps: {
                   value: params.row.value
                 },
+                style: { width: "150px" },
                 on: {
                   input: function(event) {
                     params.row.value = event.target.value;
@@ -96,13 +99,14 @@ export default {
         {
           title: "类型",
           key: "type",
-          width: 180,
+          width: 150,
           render: (h, params) => {
             if (params.row.$isEdit) {
               return h("input", {
                 domProps: {
                   value: params.row.type
                 },
+                style: { width: "100px" },
                 on: {
                   input: function(event) {
                     params.row.type = event.target.value;
@@ -117,13 +121,14 @@ export default {
         {
           title: "排序",
           key: "sort",
-          width: 180,
+          width: 80,
           render: (h, params) => {
             if (params.row.$isEdit) {
               return h("input", {
                 domProps: {
                   value: params.row.sort
                 },
+                style: { width: "50px" },
                 on: {
                   input: function(event) {
                     params.row.sort = event.target.value;
@@ -138,7 +143,7 @@ export default {
         {
           title: "编辑",
           key: "action",
-          width: 150,
+          width: 80,
           align: "center",
           render: (h, params) => {
             return h("div", [
@@ -167,7 +172,7 @@ export default {
         {
           title: "操作",
           key: "action",
-          width: 150,
+          width: 80,
           align: "center",
           render: (h, params) => {
             return h("div", [

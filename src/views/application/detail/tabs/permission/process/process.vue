@@ -23,14 +23,14 @@
           </FormItem>
         </Form>
         <div slot="footer">
-          <Button type="text" size="large" @click="showModal=false">取消1</Button>
+          <Button type="text" size="large" @click="showModal=false">取消</Button>
           <Button type="primary" size="large" @click="addProcessStatus">确定</Button>
         </div>
       </Modal>
       <Table :columns="columns" :data="processData" size="small"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div class="fr">
-          <Page @on-page-size-change="onPageSizeChange" :total="dataTotal" show-elevator show-sizer :current="pageIndex" :page-size="pageSize" @on-change="pageChange" size="small" show-total></Page>
+          <Page @on-page-size-change="onPageSizeChange" :total="dataTotal" show-elevator :current="pageIndex" :page-size="pageSize" @on-change="pageChange" size="small" show-total></Page>
         </div>
       </div>
     </Row>
@@ -76,6 +76,7 @@ export default {
                 domProps: {
                   value: params.row.sort
                 },
+                style: { width: "50px" },
                 on: {
                   input: function(event) {
                     params.row.sort = event.target.value;

@@ -108,34 +108,34 @@ export default {
             }
           }
         },
-        // {
-        //   title: "标准周期(小时)",
-        //   width: 180,
-        //   key: "delayHour",
-        //   align: "center",
-        //   render: function(h, params) {
-        //     if (params.row.$isEdit) {
-        //       return h("input", {
-        //         domProps: {
-        //           value: params.row.delayHour
-        //         },
-        //         style: {
-        //           border: "none",
-        //           borderBottom: "1px solid #c5c8ce",
-        //           backgroundColor: "#fff",
-        //           outline: "none"
-        //         },
-        //         on: {
-        //           input: function(event) {
-        //             params.row.delayHour = event.target.value;
-        //           }
-        //         }
-        //       });
-        //     } else {
-        //       return h("div", params.row.delayHour);
-        //     }
-        //   }
-        // },
+        {
+          title: "标准周期(小时)",
+          width: 180,
+          key: "delayHour",
+          align: "center",
+          render: function(h, params) {
+            if (params.row.$isEdit) {
+              return h("input", {
+                domProps: {
+                  value: params.row.delayHour
+                },
+                style: {
+                  border: "none",
+                  borderBottom: "1px solid #c5c8ce",
+                  backgroundColor: "#fff",
+                  outline: "none"
+                },
+                on: {
+                  input: function(event) {
+                    params.row.delayHour = event.target.value;
+                  }
+                }
+              });
+            } else {
+              return h("div", params.row.delayHour);
+            }
+          }
+        },
         {
           title: "操作",
           key: "opt",

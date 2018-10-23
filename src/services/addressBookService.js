@@ -552,7 +552,7 @@ export const addHigherCompany = (groupId, parentId) => {
     "groupId": groupId,
     "parentId": parentId
   }];
-  return request('/H_roleplay-si/sysGroup/updateBatch', {}, 'POST', data);
+  return request('/H_roleplay-si/sysGroup/company/updateBatch', {}, 'POST', data);
 }
 
 /**
@@ -567,7 +567,7 @@ export const addLowerCompany = (groupIds, parentId) => {
       parentId: parentId
     })
   });
-  return request('/H_roleplay-si/sysGroup/updateBatch', {}, 'POST', data);
+  return request('/H_roleplay-si/sysGroup/company/updateBatch', {}, 'POST', data);
 }
 /**
  *@author zhaohuai 
@@ -615,7 +615,7 @@ export const removeCompany = (groupIds) => {
       })
     });
   }
-  return request('/H_roleplay-si/sysGroup/updateBatch', {}, 'POST', data);
+  return request('/H_roleplay-si/sysGroup/company/updateBatch', {}, 'POST', data);
 }
 
 /**
@@ -643,7 +643,7 @@ export const updateConpanyInfo = (data) => {
     groupId,
     groupPic
   } = data
-  return request('/H_roleplay-si/sysGroup/updateBatch', {}, 'POST', [{
+  return request('/H_roleplay-si/sysGroup/company/updateBatch', {}, 'POST', [{
     groupName: groupName,
     groupShortName: groupShortName,
     companyType: companyType,

@@ -19,6 +19,7 @@
           <span>已完成</span>
         </Radio>
         <i class="vertical-divide"></i>
+        <Icon type="md-refresh" size=20 @click="refreshData()"  style="cursor: pointer;"/>
       </RadioGroup>
       <!-- <RadioGroup class="taskbtn_2" size="large">
         <Radio label="no-overdue">
@@ -150,8 +151,15 @@
       </div>
     </div>
 
-    <Modal v-model="subReportModel" draggable scrollable  width="900"   :title="subReportModelTitle">
-        <iframe  width="100%"  style="height: 400px;border: none;" :src="subReportUrl"></iframe>
+    <Modal 
+      v-model="subReportModel"  
+      scrollable  
+      width='80%'
+      class-name="subReportModel-modal"
+      :styles="{top: '20px',pandding:'0px'}"  
+      @on-ok="refreshData"
+      :title="subReportModelTitle">
+        <iframe  width="100%"  style="height: 450px;border: none;" :src="subReportUrl"></iframe>
     </Modal>
 
     <task-modal 
@@ -841,28 +849,10 @@ export default {
         this.defaultDisplayTask = res;
       });
     },
-  },
 
-  created() {
-    var that = this;
-    let currentUser = this.$currentUser;
-    let username = [currentUser.nickname, currentUser.userId].join("|");
-    let token = getToken();
-    that.ds.login(
-      {
-        token: token,
-        username: username
-      },
-      data => {
-        console.log("connect success!");
-      }
-    );
-
-    this.subscribeMessage();
-  },
-  mounted() {
-    var that = this;
-    getPulseGraph(this.caseId)
+    refreshData(){
+      var that = this;
+      getPulseGraph(this.caseId)
       .then(res => {
         var getSubjectIicon = subjectName => {
           var icon = "";
@@ -917,6 +907,28 @@ export default {
           closable: true
         });
       });
+    }
+  },
+
+  created() {
+    var that = this;
+    let currentUser = this.$currentUser;
+    let username = [currentUser.nickname, currentUser.userId].join("|");
+    let token = getToken();
+    that.ds.login(
+      {
+        token: token,
+        username: username
+      },
+      data => {
+        console.log("connect success!");
+      }
+    );
+
+    this.subscribeMessage();
+  },
+  mounted() {
+    this.refreshData();
   }
 };
 </script>
@@ -926,6 +938,13 @@ export default {
 @bg-text-color: #000;
 @borderColor: #dddee1;
 
+.subReportModel-modal{
+  .ivu-modal{
+    .ivu-modal-body{
+      padding: 0px !important;
+    }
+  }
+}
 .bg_white {
   background-color: white;
 }

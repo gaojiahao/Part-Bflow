@@ -43,11 +43,13 @@
       </div> -->
 
       <div slot="header" class="header-action">
-        <label @click="addPermission">添加权限</label>
-        <span>-添加权限</span>
+        <div v-if="isPermission" style="display:inline;">
+          <label @click="addPermission">添加权限</label>
+          <span>-添加权限</span>
 
-        <label @click="deletePermission">移除权限</label>
-        <span>-移除权限</span>
+          <label @click="deletePermission">移除权限</label>
+          <span>-移除权限</span>
+        </div>
 
         <div class="app-table-search">
           <Input @on-search="permissionFilter" :search="true" v-model="searchValue" placeholder="搜索权限名称" style="width: 300px"></Input>
@@ -84,6 +86,9 @@ export default {
   props: {
     groupId: {
       type: String
+    },
+    isPermission: {
+      type: Boolean
     }
   },
 
@@ -117,7 +122,8 @@ export default {
               {
                 props: {
                   type: "error",
-                  size: "small"
+                  size: "small",
+                  disabled: !this.isPermission
                 },
                 style: {
                   cursor: "pointer"

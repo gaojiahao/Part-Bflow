@@ -143,9 +143,7 @@ export default {
   methods: {
     //modal状态发生改变
     onVisibleChange(status) {
-        if(!status){
-            this.$emit('changeModalStatus');
-        }
+        if(!status) this.$emit('changeModalStatus');
     },
     //添加权限
     addPermissions() {

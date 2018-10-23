@@ -20,7 +20,7 @@
             <Poptip 
             placement="bottom-start" 
             v-model="faceVisible"
-            width="400">
+            width="350">
                 <Icon 
                     class="choice-face" 
                     type="ios-happy-outline"  

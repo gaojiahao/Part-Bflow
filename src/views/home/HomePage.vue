@@ -236,7 +236,7 @@ export default {
 
 .bg-white-lighter {
   background-color: #fff;
-  padding: 0 10%;
+  padding: 0 14%;
 }
 
 .menu-group {

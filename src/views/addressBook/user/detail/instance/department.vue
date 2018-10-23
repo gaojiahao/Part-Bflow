@@ -28,7 +28,7 @@
 <template>
     <div class="department">
         <div class="department-detail" id="depHeight">
-          <div class="department-header">
+          <div v-if="isUpdate" class="department-header">
             <b type="info" @click="showGroupModal" class="department-detail-btn">部门</b>
             <span style="color: #7a7676;">-添加部门</span>
             <b type="info" @click="deleteGroup" class="department-detail-btn">删除</b>
@@ -86,7 +86,11 @@ import {
 export default {
   name: "departmentMember",
   components: {},
-  props: {},
+  props: {
+    isUpdate: {
+          type: Boolean
+      }
+  },
   data() {
     return {
       userId: this.$route.params.userId,
@@ -143,7 +147,8 @@ export default {
             }
             return h("Radio", {
               props: {
-                value: defaultView
+                value: defaultView,
+                disabled: !this.isUpdate
               },
               on: {
                 "on-change": e => {
@@ -162,7 +167,8 @@ export default {
             return h('Button',{
               props: {
                 type: 'error',
-                size: 'small'
+                size: 'small',
+                disabled: !this.isUpdate
               },
               on: {
                 click: () => {

@@ -108,11 +108,12 @@ export const getTaskCountFilter = (type,technicsCode,filter) => request('/H_role
  * 获取工序任务数量
  * 
  */
-export const getProcedureInfoFilter = (procedureCode,type,currentPage,pageSize=6) => request('/H_roleplay-si/objTechnicsProcessRel/getProcedureInfoFilter',{
+export const getProcedureInfoFilter = (procedureCode,type,currentPage,pageSize=6,filter="") => request('/H_roleplay-si/objTechnicsProcessRel/getProcedureInfoFilter',{
   procedureCode: procedureCode,
   type:type,
   page:currentPage,
-  limit:pageSize
+  limit:pageSize,
+  filter:filter
 });
 
 /** 

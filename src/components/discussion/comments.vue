@@ -236,7 +236,14 @@ export default {
                 c.showPraises = false;
                 c.showChilds = false;
             });
+
+            
+            if(window.top.setInstaceCommentsIframeHeight){
+                window.top.setInstaceCommentsIframeHeight();
+            }
+
             comment.showReply = !comment.showReply;
+            
         },
         handleReplyPublish:function (content,uploadList,superComment,commentAndReply) {
             this.$forceUpdate();
@@ -265,8 +272,13 @@ export default {
             });
         },
         handleViewImg:function (img) {
-            this.imgName = img;
-            this.imgModalVisible = true;
+            if(window.top.viewInsCommentsImg){
+                window.top.viewInsCommentsImg(img);
+            }else{
+                this.imgName = img;
+                this.imgModalVisible = true;
+            }
+            
         },
         handleViewFile:function (file) {
           window.open(file.attachment)  

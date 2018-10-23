@@ -41,7 +41,7 @@
 <template>
     <div class="role">
         <div class="role-detail" id="roleHeight">
-          <div class="role-header">
+          <div v-if="isUpdate" class="role-header">
             <b @click="showRoleModal"  class="role-detail-btn">职位</b>
             <span style="color: #7a7676;">-添加职位</span>
             <b @click="deleteUserRole"  class="role-detail-btn">删除</b>
@@ -141,7 +141,11 @@ import {
 export default {
   name: "roleMember",
   components: {},
-  props: {},
+  props: {
+    isUpdate: {
+          type: Boolean
+      }
+  },
   data() {
     return {
       userId: this.$route.params.userId,
@@ -207,7 +211,8 @@ export default {
             }
             return h("Radio", {
               props: {
-                value: defaultView
+                value: defaultView,
+                disabled: !this.isUpdate
               },
               on: {
                 "on-change": e => {
@@ -226,7 +231,8 @@ export default {
             return h('Button',{
               props: {
                 type: 'error',
-                size: 'small'
+                size: 'small',
+                disabled: !this.isUpdate
               },
               on: {
                 click: () => {

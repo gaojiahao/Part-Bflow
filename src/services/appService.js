@@ -479,16 +479,18 @@ export const cancelCommentThumbsUp = (commentId) => request('/H_roleplay-si/comm
 export const getCommentThumbaUps = (param) => request('/H_roleplay-si/comment/getPraiseByCommentId', param)
 
 /**
- * @author zhaohuai
- * @description 过去流程状态信息
- * @param {*} param 
- * {
+ * @author guozheng
+ * @description 查询流程状态列表
  *   listId 应用Id
  *   limit 条数
  *   page 页数
- * }
  */
-export const getProcessStatus = (param) => request('/H_roleplay-si/listProcessStatusRel/findData', param)
+export const getProcessStatusByListId = (listId,currentPage,pageSize,filter="") => request('/H_roleplay-si/ds/getProcessStatusByListId', {
+  listId:listId,
+  page: currentPage,
+  limit:pageSize,
+  filter:filter
+})
 
 /**
  * @author zhaohuai
@@ -510,3 +512,78 @@ export const updateProcessStatus = (param) => request('/H_roleplay-si/listProces
  * @param {*} param 
  */
 export const addProcessStatus = (param) => request('/H_roleplay-si/listProcessStatusRel/save', {}, "POST", param)
+
+/**
+<<<<<<< HEAD
+ * @author XiaoYing
+ * @description 保存自定义数据源
+ * @param {*} param 
+ */
+export const saveCustomDatasource = (param) => request('/H_roleplay-si/resource/save', {
+  data: param
+}, "POST")
+
+/**
+ * @author XiaoYing
+ * @description 修改自定义数据源
+ * @param {*} param 
+ */
+export const updateCustomDatasource = (param) => request('/H_roleplay-si/resource/update', {
+  data: param
+}, "POST")
+
+/**
+ * @author XiaoYing
+ * @description 获取字段数据源
+ * @param {String} listId
+ */
+export const getFieldResorce = (listId) => request('/H_roleplay-si/resource/getAppField', {
+  listId: listId
+})
+
+/**
+ * @author XiaoYing
+ * @description 获取字段数据源列表
+ * @param {String} listId
+ */
+export const getResorceList = (listId) => request('/H_roleplay-si/resource/getResourceList', {
+  listId: listId
+})
+
+/**
+ * @author XiaoYing
+ * @description 获取修改回显字段数据源
+ * @param {String} listId
+ * @param {String} resourceId
+ */
+export const getResourceDetailList = (listId,resourceId) => request('/H_roleplay-si/resource/getResourceDetailList', {
+  listId: listId,
+  resourceId: resourceId
+})
+
+/**
+ * @author XiaoYing
+ * @description 删除已授权的自定义数据源
+ * @param {String} listId
+ * @param {String} resourceId
+ */
+export const deleteCustomDatasource = (resourceId) => request('/H_roleplay-si/resource/delete', {
+  resourceId: resourceId
+}, "POST")
+/*
+ * @author guozheng
+ * @description 流程管理-取消关注
+ * @param {*} param 
+ */
+export const subscribeApp = (relationKey) => request('/H_roleplay-si/comment/subscribeApp', {
+  type:"processStatus",
+  relationKey:relationKey
+},"POST")
+
+/**
+ * @author guozheng
+ * @description 流程管理-关注
+ */
+export const unsubscribeAppByRelationKey = (processStatusId) => request('/H_roleplay-si/comment/unsubscribeAppByRelationKey', {
+  relationKey:processStatusId
+},"POST")

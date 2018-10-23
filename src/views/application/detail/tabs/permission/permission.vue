@@ -10,6 +10,8 @@
     <action-manage :isAdmin="isAdmin"></action-manage>
     <!-- 数据源管理 -->
     <permission-data-source v-if="appType !== 'subject'" :isAdmin="isAdmin"></permission-data-source>
+    <!-- 自定义数据源管理 -->
+    <custom-datasource :isAdmin="isAdmin"></custom-datasource>
     <!-- 报表视图 -->
     <report-view v-if="appType !== 'subject'" :appType="appType" :isAdmin="isAdmin"></report-view>
     <!-- 表单 -->
@@ -26,6 +28,7 @@ import AppForm from './form/form';
 import WorkFlow from './workflow/workflow';
 import ActionManage from './action/action';
 import PermissionDataSource from './datasource/data-source';
+import CustomDatasource from './custom-datasource/custom-datasource';
 
 export default {
   name: "permissionSource",
@@ -35,7 +38,8 @@ export default {
     AppForm,
     WorkFlow,
     ActionManage,
-    PermissionDataSource
+    PermissionDataSource,
+    CustomDatasource
   },
   props: {
     listId: String,

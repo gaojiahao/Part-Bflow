@@ -2,53 +2,104 @@
 @import "./notice-common.less";
 </style>
 <template>
-    <div class="msg-comment">
-        <div class="msg-comment-title">
-            <Icon type="ios-notifications-outline" :size=18 color="#3AA373"/>
-            <span v-if="data.sourceContent.type ==='instance'">实例</span>
-            <span v-if="data.sourceContent.type ==='list'">应用</span>
-            <span>评论</span>
-            <span v-if="data.sourceContent.objContent">回复</span>
-            <span>通知</span>
-        </div>
-
-        <div class="msg-comment-content">
-            <span 
-                class="notice-creator"
-                v-if="data.sourceContent.type=='list' || data.sourceContent.type ==='instance'">
-                {{data.creatorName}}
-            </span>
-            :
-            <span v-if="data.sourceContent.type ==='instance' || data.sourceContent.type ==='list'">
-                <template v-if="data.sourceContent.objContent">
-                   发表了评论:
-                   <span  class="notice-container" v-html="data.tempContent"></span>
+    
+    <div class="message-container" v-bind:class="{'noticefromme':data.creatorName===$currentUser.nickname}">
+        <div>{{data.crtTime}}</div>
+        <div >
+            <template v-if="data.sourceContent.objContent || data.sourceContent.objAttachment">
+                
+                <div class="message-container-content">
+                    <div class="message-container-creator" >
+                        <span class="notice-creator">{{data.creatorName}}</span>
+                        回复了
+                        <span v-if="data.sourceContent.type ==='instance'">实例</span>
+                        <span v-if="data.sourceContent.type ==='list'">应用</span>
+                        的评论:
+                    </div>
+                    <span  class="notice-container" v-html="data.tempContent"></span>
                     <div class="notice-container-relpy">
                         <div class="notice-container-relpy-content">
                             <span class="notice-creator">@{{data.sourceContent.objCreator}}</span>:
-                            <span v-if="data.sourceContent.type ==='instance'" class="notice-relationKey">{{data.sourceContent.relationKey}}</span>:
+                            <a v-if="data.sourceContent.type ==='instance'" class="notice-relationKey" @click="handleViewDetail">{{data.sourceContent.relationKey}}</a>:
                             <span  class="notice-container" v-html="data.sourceContent.objContent"></span>
+                            <div 
+                                class="comimg"
+                                v-for="(c,index) in data.sourceContent.objAttachment" 
+                                :key="index" 
+                                v-if="c.type==='image'">
+                                <img 
+                                :src="c.attachment?c.attachment:'resources/images/icon/defaultUserPhoto.png'" 
+                                >
+                                <div class="comimg-cover">
+                                    <Icon 
+                                    type="ios-eye-outline" 
+                                    @click.native="handleViewImg(c.attachment)">
+                                    </Icon>
+                                </div>
+                            </div>
+                            <div >
+                                <p  v-for="(f,index) in data.sourceContent.objAttachment" 
+                                    :key="index"   
+                                    v-if="f.type==='file'" >
+                                    <a @click="handleViewFile(f)">{{f.name}}
+                                    </a>
+                                </p>
+                            </div>
+
                         </div>
                     </div>
-                </template>
-
-                <template v-else>
+                </div>
+                  
+            </template>
+            <template v-else>
+                
+                <div class="message-container-content">
+                    <div class="message-container-creator " >
+                    <span class="notice-creator">{{data.creatorName}}:</span>
                     <span v-if="data.sourceContent.type ==='instance'">对实例 </span>
-                     <span v-if="data.sourceContent.type ==='list'">对应用</span>
-                    <span v-if="data.sourceContent.type ==='instance'" class="notice-relationKey">{{data.sourceContent.relationKey}}</span>
+                    <span v-if="data.sourceContent.type ==='list'">对<a @click="handleViewDetail"><strong>应用</strong></a></span>
+                    <a v-if="data.sourceContent.type ==='instance'" class="notice-relationKey" @click="handleViewDetail">{{data.sourceContent.relationKey}}</a>
                     发表了评论
-                    <div  class="notice-container-comment" >
-                        <div class="notice-container-comment-content">
-                            <span class="notice-container" v-html="data.tempContent"></span>
+                </div>
+                    <div  v-html="data.tempContent" >
+                    
+                    </div>
+                    <div class="notice-comment-images">
+                        <div 
+                            class="comimg"
+                            v-for="(c,index) in data.sourceContent.attachment" 
+                            :key="index" 
+                            v-if="c.type==='image'">
+                            <img 
+                            :src="c.attachment?c.attachment:'resources/images/icon/defaultUserPhoto.png'" 
+                            >
+                            <div class="comimg-cover">
+                                <Icon 
+                                type="ios-eye-outline" 
+                                @click.native="handleViewImg(c.attachment)">
+                                </Icon>
+                            </div>
                         </div>
-                    </div> 
-                </template>
-            </span>
+                    </div>
+
+                    <div class="notice-comment-files">
+                        <p  v-for="(f,index) in data.sourceContent.attachment" 
+                            :key="index"   
+                            v-if="f.type==='file'" >
+                            <a @click="handleViewFile(f)">{{f.name}}
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                
+            </template>
         </div>
 
-        <div class="msg-comment-href">
-            <a @click="handleViewDetail">详情 <Icon class="fr" type="ios-arrow-forward" /></a>
-        </div>
+         <Modal title="查看图片" v-model="imgModalVisible" width='60%'>
+            <img 
+                :src="imgName" 
+                v-if="imgModalVisible" style="width: 100%">
+        </Modal>
     </div>
 </template>
 
@@ -56,7 +107,14 @@
 export default {
     name:'commentNoticeTpl',
     props:{
-        data:{}
+        data:{
+        }
+    },
+    data(){
+        return {
+            imgModalVisible:false,
+            imgName:''
+        }
     },
     methods:{
         handleViewDetail:function () {
@@ -73,6 +131,13 @@ export default {
             if(href){
                 window.open(href);
             }
+        },
+        handleViewImg:function (img) {
+            this.imgName = img;
+            this.imgModalVisible = true;
+        },
+        handleViewFile:function (file) {
+          window.open(file.attachment)  
         }
     },
     mounted(){

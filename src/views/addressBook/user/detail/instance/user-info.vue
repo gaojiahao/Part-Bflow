@@ -219,7 +219,7 @@ import {
     updateUser,
     addUser,
     checkoutFieldIsOnly,
-    getAllCompanys,getListById 
+    getAllCompanys
 } from "@/services/addressBookService.js";
 
 export default {
@@ -228,6 +228,9 @@ export default {
   props: {
       userInfo: {
           type: Object
+      },
+      isUpdate: {
+          type: Boolean
       }
   },
   data() {
@@ -344,6 +347,11 @@ export default {
                 this.logo = this.userInfo.photo;
                 this.formItem.entityId = this.userInfo.entityId;
                 this.formItem.entityName = this.userInfo.entityName;
+          }
+      },
+      isUpdate: function(){
+          if(!this.isUpdate){
+              this.isAdd = false;
           }
       }
   },
@@ -559,15 +567,10 @@ export default {
   },
   mounted() {
       this.getAllCompanysData();
-      getListById('000001').then(res => {
-        if(!this.userId){
-            this.isAdd = false;
-            this.isEdit = false;
-        }
-        if(!res[0].action.update){
-            this.isAdd = false;
-        }
-      });
+    if(!this.userId){
+        this.isAdd = false;
+        this.isEdit = false;
+    }
   }
 };
 </script>

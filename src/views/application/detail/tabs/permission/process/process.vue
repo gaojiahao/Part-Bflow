@@ -22,11 +22,15 @@
             <Input v-model="processInfoItem.sort"></Input>
           </FormItem>
         </Form>
+        <div slot="footer">
+          <Button type="text" size="large" @click="showModal=false">取消</Button>
+          <Button type="primary" size="large" @click="addProcessStatus">确定</Button>
+        </div>
       </Modal>
       <Table :loading="loading" :columns="columns" :data="processData" size="small"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div class="fr">
-          <Page @on-page-size-change="onPageSizeChange" :total="dataTotal" show-elevator show-sizer :current="pageIndex" :page-size="pageSize" @on-change="pageChange" size="small" show-total></Page>
+          <Page @on-page-size-change="onPageSizeChange" :total="dataTotal" show-elevator :current="pageIndex" :page-size="pageSize" @on-change="pageChange" size="small" show-total></Page>
         </div>
       </div>
     </Row>
@@ -90,7 +94,8 @@ export default {
                   border: "none",
                   borderBottom: "1px solid #c5c8ce",
                   backgroundColor: "#fff",
-                  outline: "none"
+                  outline: "none",
+                  width: "50px"
                 },
                 on: {
                   input: function(event) {
@@ -168,8 +173,11 @@ export default {
                     attrs: {
                       id: "delete"
                     },
-                    style:{
-                      display:(this.isCompanyAdmin||this.isAdmin) ? 'inline-block':'none'
+                    style: {
+                      display:
+                        this.isCompanyAdmin || this.isAdmin
+                          ? "inline-block"
+                          : "none"
                     }
                   },
                   "删除"
@@ -179,7 +187,10 @@ export default {
                     height: "10px",
                     borderLeft: "1px solid #39f",
                     margin: "0px 5px",
-                    display:(this.isCompanyAdmin||this.isAdmin) ? 'inline-block':'none'
+                    display:
+                      this.isCompanyAdmin || this.isAdmin
+                        ? "inline-block"
+                        : "none"
                   }
                 }),
                 h(
@@ -188,8 +199,11 @@ export default {
                     attrs: {
                       id: "edit"
                     },
-                    style:{
-                      display:(this.isCompanyAdmin||this.isAdmin) ? 'inline-block':'none'
+                    style: {
+                      display:
+                        this.isCompanyAdmin || this.isAdmin
+                          ? "inline-block"
+                          : "none"
                     }
                   },
                   params.row.$isEdit ? "保存" : "编辑"
@@ -199,7 +213,10 @@ export default {
                     height: "10px",
                     borderLeft: "1px solid #39f",
                     margin: "0px 5px",
-                    display:(this.isCompanyAdmin||this.isAdmin) ? 'inline-block':'none'
+                    display:
+                      this.isCompanyAdmin || this.isAdmin
+                        ? "inline-block"
+                        : "none"
                   }
                 }),
                 h(
@@ -360,8 +377,8 @@ export default {
     },
     addProcess() {
       this.showModal = true;
-      this.processInfoItem.fieldValue = '';
-      this.processInfoItem.sort = '';
+      this.processInfoItem.fieldValue = "";
+      this.processInfoItem.sort = "";
     }
   },
   mounted() {

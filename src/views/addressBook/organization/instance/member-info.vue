@@ -4,6 +4,7 @@
 }
 
 .header-action {
+  overflow: hidden;
   label {
     color: #009688;
     font-size: 17px;
@@ -14,6 +15,19 @@
   span {
     color: rgb(122, 118, 118);
   }
+
+  .app-table-search{
+    float: right;
+    .app-search-icon {
+      font-size: 1rem;
+      color: #fff;
+      display: inline-block;
+      cursor: pointer;
+      span{
+        color: #fff;
+      }
+    }
+  }
 }
 .app-search {
   margin-bottom: 5px;
@@ -22,17 +36,10 @@
     color: #39f;
     display: inline-block;
     cursor: pointer;
+   
   }
 }
-.app-table-search{
-  float: right;
-  .app-search-icon {
-    font-size: 1rem;
-    color: #fff;
-    display: inline-block;
-    cursor: pointer;
-  }
-}
+
 
 .page-selection-box {
   width: 100%;
@@ -61,7 +68,7 @@
         <div class="app-table-search">
           <Input @on-search="userTableFilter" :search="true" v-model="searchTableValue" placeholder="搜索工号或名称" style="width: 300px"></Input>
           <a @click="userTableFilter" class="app-search-icon">
-            <Button type="primary" size="small" style="color:#fff">查询</Button>
+            <Button type="primary" size="small">查询</Button>
           </a>
         </div>
 
@@ -141,7 +148,9 @@ export default {
             return h("div", [
               h("Avatar", {
                 props: {
-                  src: params.row.photo?params.row.photo:'resources/images/icon/defaultUserPhoto.jpg'
+                  src: params.row.photo
+                    ? params.row.photo
+                    : "resources/images/icon/defaultUserPhoto.jpg"
                 }
               })
             ]);
@@ -232,7 +241,9 @@ export default {
             return h("div", [
               h("Avatar", {
                 props: {
-                  src: params.row.photo?params.row.photo:'resources/images/icon/defaultUserPhoto.jpg'
+                  src: params.row.photo
+                    ? params.row.photo
+                    : "resources/images/icon/defaultUserPhoto.jpg"
                 }
               })
             ]);

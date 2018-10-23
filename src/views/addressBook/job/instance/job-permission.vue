@@ -1,5 +1,6 @@
 <style lang="less" scoped>
 .header-action {
+  overflow: hidden;
   label {
     color: #009688;
     font-size: 17px;
@@ -10,15 +11,16 @@
   span {
     color: rgb(122, 118, 118);
   }
+
+  .app-table-search{
+    float: right;
+    .app-search-icon {
+      font-size: 1rem;
+      color: #fff;
+      display: inline-block;
+      cursor: pointer;
+    }
 }
-.app-table-search{
-  float: right;
-  .app-search-icon {
-    font-size: 1rem;
-    color: #fff;
-    display: inline-block;
-    cursor: pointer;
-  }
 }
 </style>
 

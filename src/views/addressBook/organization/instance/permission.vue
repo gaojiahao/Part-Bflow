@@ -1,5 +1,6 @@
 <style lang="less" scoped>
 .header-action {
+  overflow: hidden;
   label {
     color: #009688;
     font-size: 17px;
@@ -10,20 +11,25 @@
   span {
     color: rgb(122, 118, 118);
   }
+
+  .app-table-search{
+    float: right;
+    .app-search-icon {
+      font-size: 1rem;
+      color: #fff;
+      display: inline-block;
+      cursor: pointer;
+      span{
+        color: #fff;
+      }
+    }
+  }
 }
 .user-page {
     margin: 10px;
     overflow: hidden;
   }
-.app-table-search{
-  float: right;
-  .app-search-icon {
-    font-size: 1rem;
-    color: #fff;
-    display: inline-block;
-    cursor: pointer;
-  }
-}
+
 .page-selection-warp {
     width: 100%;
     height: 100%;
@@ -61,11 +67,7 @@
       </div>
     </custom-table>
     <!-- 权限modal -->
-    <permission-modal 
-    :target="target"
-    :visible="isShowModal" 
-    @changeModalStatus="changeModalStatus"
-    @permissionChange="permissionChange">
+    <permission-modal :target="target" :visible="isShowModal" @changeModalStatus="changeModalStatus" @permissionChange="permissionChange">
     </permission-modal>
   </div>
 </template>
@@ -73,7 +75,7 @@
 <script>
 import { deleteOrgPermission } from "@/services/addressBookService.js";
 import CustomTable from "./CustomTable";
-import PermissionModal from '../../user/detail/instance/permission-modal';
+import PermissionModal from "../../user/detail/instance/permission-modal";
 
 export default {
   name: "principal",
@@ -161,7 +163,7 @@ export default {
       reload: false,
       searchValue: "",
       target: {
-        type: 'sys_group_permission',
+        type: "sys_group_permission",
         targetId: this.groupId
       }
     };
@@ -220,7 +222,7 @@ export default {
     onCheckChange(node) {
       this.selectPermissionNode = node;
     },
-   
+
     //权限过滤
     permissionFilter() {
       let filter = JSON.stringify([

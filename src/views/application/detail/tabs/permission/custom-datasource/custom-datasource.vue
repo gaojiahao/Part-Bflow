@@ -56,7 +56,17 @@ export default {
       columns: [
         {
             title: '字段过滤',
-            key: 'expression'
+            key: 'expression',
+            render: (h,params) => {
+              let express = params.row.expression.split('br'),
+                  renderData = [];
+              express.forEach(val => {
+                renderData.push(
+                  h('div',{},val)
+                );
+              });
+              return h('div',renderData);
+            }
         },
         {
           title: "已授权用户、组织或职位",

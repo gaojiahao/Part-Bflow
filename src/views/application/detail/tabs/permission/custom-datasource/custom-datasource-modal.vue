@@ -103,7 +103,6 @@ import {
   getResourceDetailList,
   updateCustomDatasource
 } from "@/services//appService.js";
-import { APP_ACTION } from "@/assets/const";
 import UserSelector from './user-selector';
 import GroupSelector from './group-selector';
 import RoleSelector from './role-selector';

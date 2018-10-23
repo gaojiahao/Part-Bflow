@@ -25,22 +25,57 @@
 <template>
     <div>
       <!-- 组织modal -->
-      <Modal v-model="showOrgModal" title="组织选择" :mask-closable="false" @on-ok="confirmOrg" @on-cancel="cancelSelectOrg" @on-visible-change="modalVisibleChange" :transfer="false">
+      <Modal 
+        v-model="showOrgModal" 
+        title="组织选择" 
+        :mask-closable="false" 
+        @on-ok="confirmOrg" 
+        @on-cancel="cancelSelectOrg" 
+        @on-visible-change="modalVisibleChange" 
+        :transfer="false">
         <div class="app-search">
-          <Input v-model="searchOrgValue" @on-search="orgFilter" :search="true" placeholder="搜索" style="width: 300px"></Input>
+          <Input 
+            v-model="searchOrgValue" 
+            @on-search="orgFilter" 
+            :search="true" 
+            placeholder="搜索" 
+            style="width: 300px">
+          </Input>
           <p @click="orgFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </p>
         </div>
-        <Table ref="orgTable" @on-select-cancel="selectOrgCancel" @on-select-all="onOrgSelectAll" @on-selection-change="selectOrgClick" height="400" stripe size="small" :loading="orgLoading" :columns="orgColumns" :data="orgData">
+        <Table 
+          ref="orgTable" 
+          @on-select-cancel="selectOrgCancel" 
+          @on-select-all="onOrgSelectAll" 
+          @on-selection-change="selectOrgClick" 
+          height="400" 
+          stripe size="small" 
+          :loading="orgLoading" 
+          :columns="orgColumns" 
+          :data="orgData">
         </Table>
         <div class="user-page">
           <div style="float: right;">
-            <Page :total="orgTotal" :current="orgCurrentPage" :page-size="pageSize" @on-change="onOrgPageChange" size="small" show-total></Page>
+            <Page 
+              :total="orgTotal" 
+              :current="orgCurrentPage" 
+              :page-size="pageSize" 
+              @on-change="onOrgPageChange" 
+              size="small" 
+              show-total>
+            </Page>
           </div>
         </div>
         <div class="page-selection-warp" v-show="orgSelection[0] ">
-          <Tag v-for="(item,index) in orgSelection" :key="item.id" @on-close="deleteSelectOrg(item,index)" closable type="border" color="primary" size="small">
+          <Tag 
+            v-for="(item,index) in orgSelection" 
+            :key="item.id" 
+            @on-close="deleteSelectOrg(item,index)" 
+            closable type="border" 
+            color="primary" 
+            size="small">
             {{item.name}}
           </Tag>
         </div>
@@ -61,7 +96,6 @@ export default {
   },
   data() {
     return {
-      selectOrg: "",
       searchOrgValue: "",
       orgTotal: 0,
       orgCurrentPage: 1,

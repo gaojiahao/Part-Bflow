@@ -11,8 +11,8 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/H_roleplay-si':{
-        target:'https://7senses.roletask.com',
+      '/H_roleplay-si': {
+        target: 'http://192.168.3.172',
         changeOrigin: true
       },
       '/corebiz-api': {
@@ -65,7 +65,7 @@ module.exports = {
     /**
      * Source Maps
      */
-    
+
     productionSourceMap: false,
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',

@@ -4,6 +4,7 @@
 </style>
 <template>
     <div  class="message-list notificasscrollbar" id="msgList">
+        <div>
         <div 
             class="message-list-item"
             v-bind:class="{'createbyme':n.creatorName===$currentUser.nickname}"
@@ -30,6 +31,7 @@
 
             <pro-status-tpl :data="n" v-if="n.type=='processStatus'" ></pro-status-tpl>
 
+        </div>
         </div>
     </div>
 </template>

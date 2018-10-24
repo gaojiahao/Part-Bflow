@@ -45,6 +45,15 @@ import {
   unsubscribeAppByRelationKey,
   subscribeApp
 } from "@/services/appService.js";
+
+const inputStyle = {
+  border: "none",
+  borderBottom: "1px solid #c5c8ce",
+  backgroundColor: "#fff",
+  outline: "none",
+  padding: "0 5px",
+  height: "30px"
+};
 export default {
   data() {
     return {
@@ -62,12 +71,7 @@ export default {
                 domProps: {
                   value: params.row.fieldValue
                 },
-                style: {
-                  border: "none",
-                  borderBottom: "1px solid #c5c8ce",
-                  backgroundColor: "#fff",
-                  outline: "none"
-                },
+                style: inputStyle,
                 on: {
                   input: function(event) {
                     params.row.fieldValue = event.target.value;
@@ -90,13 +94,7 @@ export default {
                 domProps: {
                   value: params.row.sort
                 },
-                style: {
-                  border: "none",
-                  borderBottom: "1px solid #c5c8ce",
-                  backgroundColor: "#fff",
-                  outline: "none",
-                  width: "50px"
-                },
+                style: inputStyle,
                 on: {
                   input: function(event) {
                     params.row.sort = event.target.value;
@@ -119,12 +117,7 @@ export default {
                 domProps: {
                   value: params.row.delayHour
                 },
-                style: {
-                  border: "none",
-                  borderBottom: "1px solid #c5c8ce",
-                  backgroundColor: "#fff",
-                  outline: "none"
-                },
+                style: inputStyle,
                 on: {
                   input: function(event) {
                     params.row.delayHour = event.target.value;

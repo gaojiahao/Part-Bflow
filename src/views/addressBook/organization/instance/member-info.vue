@@ -277,7 +277,7 @@ export default {
           key: "email"
         }
       ],
-
+      searchTableValue:"",
       //模态框参数
       searchValue: "",
       isShowMemberModal: false,

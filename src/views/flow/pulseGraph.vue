@@ -139,9 +139,10 @@
 
           </g>
 
-          <g v-for="(point) in pointList" :key="point.id">
+           <!-- 应用与科目之间的关系 -->
+          <!-- <g v-for="(point) in pointList" :key="point.id">
             <polyline :points="point.value" :marker-end="waterFlow[point.id]!==undefined?'url(#arrow_hight_color)':'url(#arrow1)'" v-bind:class="waterFlow[point.id]!==undefined?'path':''" style="fill:none;stroke:#fff;stroke-width:1" />
-          </g>
+          </g> -->
           <!-- 应用与应用之间的关系 -->
           <g v-for="(point) in transTypePointList" :key="point.id">
             <polyline :points="point.value" class="transTypeRel_style" marker-end='url(#arrow)' />

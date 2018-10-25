@@ -648,11 +648,9 @@ export default {
      
       filter = JSON.stringify(filter);
       getAllHigherGroupByGroupType(currentPage, pageSize,this.formItem.groupType, filter).then(res => {
-        if (res.tableContent[0]) {
           this.listUserPageTotal = res.summary.total;
           this.listUserData = res.tableContent;
           this.highOrgModalLoading = false;
-        }
       });
     },
 
@@ -680,11 +678,9 @@ export default {
     getListUsers(currentPage, pageSize, filter) {
       this.PrincipalModaLoading = true;
       getAllUsers(pageSize, currentPage, filter).then(res => {
-        if (res.tableContent[0]) {
           this.principalPageTotal = res.summary.total;
           this.principalData = res.tableContent;
           this.PrincipalModaLoading = false;
-        }
       });
     },
 

@@ -4,13 +4,11 @@
 </style>
 <template>
     <div  class="message-list notificasscrollbar" id="msgList">
-        <div>
         <div 
             class="message-list-item"
             v-bind:class="{'createbyme':n.creatorName===$currentUser.nickname}"
             v-for="(n,index) in  notifications" 
             :key="index">
-            <!-- <div class="notice-time">{{n.crtTime}}</div> -->
             <comment-notice-tpl 
                 :data="n" 
                 v-if="n.type=='comment'" 
@@ -31,7 +29,6 @@
 
             <pro-status-tpl :data="n" v-if="n.type=='processStatus'" ></pro-status-tpl>
 
-        </div>
         </div>
     </div>
 </template>
@@ -73,7 +70,8 @@ export default {
             params:{
                 page:1,
                 limit:10,
-                filter:[]
+                filter:[],
+                total:0
             },
             notifications:[],
             isRolling:false,
@@ -89,10 +87,12 @@ export default {
             scrollDiv.addEventListener('scroll', function() {
                 scrollTop = scrollDiv.scrollTop;
 
-                if(scrollDiv.scrollHeight  === (scrollDiv.clientHeight+scrollTop)){
-                    that.params.page++;
-                    that.isRolling = true;
-                    that.refreshNotifics();
+                if(Math.ceil(scrollDiv.clientHeight+scrollTop) +2 >= scrollDiv.scrollHeight){
+                    if(that.params.total > that.notifications.length){
+                        that.params.page++;
+                        that.isRolling = true;
+                        that.refreshNotifics();
+                    }
                 }
             });
         },
@@ -100,8 +100,8 @@ export default {
         refreshNotifics(){
             let filter=[{property:"listid",value:this.listId,operator:"eq"}];
             this.params.filter = JSON.stringify(filter);
-            
             getAllnotifications(this.params).then(res =>{
+                this.params.total = res.dataCount;
                 if(this.isRolling){
                     this.notifications = this.notifications.concat(...res.tableContent);
                 }else{

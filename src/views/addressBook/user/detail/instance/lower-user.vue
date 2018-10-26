@@ -349,10 +349,8 @@ export default {
         this.onPageSelection.forEach(val => {
           parentId.push(val.userId);
         });
-      }else{
-        this.$Message.warning('请选择至少一个用户！');
       }
-      if(parentId && this.userId){
+      if(parentId.length>0 && this.userId){
         updateHighUser(parentId.join(','),this.userId).then(res => {
           if(res.success){
             this.$Message.success('更新成功');
@@ -362,8 +360,6 @@ export default {
         }).catch(error => {
             this.$Message.error(error.data.message);
         })
-      }else{
-        this.$Message.warning('无用户ID，请先保存用户再进行编辑！');
       }
     },
     //删除下级用户

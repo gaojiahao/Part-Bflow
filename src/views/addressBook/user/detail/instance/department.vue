@@ -305,7 +305,7 @@ export default {
     },
     //添加组织部门
     addDepartment() {
-      if(this.selectGroup && this.userId){
+      if(this.selectGroup.length>0 && this.userId){
         let groupIds = [];
         this.selectGroup.forEach(val => {
           groupIds.push(val.groupId);

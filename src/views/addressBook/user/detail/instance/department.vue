@@ -306,10 +306,13 @@ export default {
     //添加组织部门
     addDepartment() {
       if(this.selectGroup.length>0 && this.userId){
-        let groupIds = [];
+        let groupIds = [],params={row: {}};
         this.selectGroup.forEach(val => {
           groupIds.push(val.groupId);
         });
+        if(this.departmentData.length === 0){
+          setUserDefaultDepOrRole(this.userId,'group',groupIds[0]).then(res => {})
+        }
         addMember('sys_group_user',groupIds.join(','),this.userId).then(res => {
           if(res.success){
             this.selectGroup = [];

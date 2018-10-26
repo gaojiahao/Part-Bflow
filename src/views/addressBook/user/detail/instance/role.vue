@@ -427,6 +427,9 @@ export default {
         });
       }
       if(multiId.length>0 && this.userId){
+        if(this.roleData.length === 0){
+          setUserDefaultDepOrRole(this.userId,'role',multiId[0]).then(res => {})
+        }
         addMember('sys_user_role',this.userId,multiId.join(',')).then(res => {
           if(res.success){
             this.$Message.success('更新成功');

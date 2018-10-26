@@ -224,7 +224,6 @@ export default {
             delete this.formItem.id;
             saveRoleBaseInfo(this.formItem)
               .then(res => {
-                if (res) {
                   this.$Message.success("保存成功");
                   this.$refs["formItem"].resetFields();
                   this.formItem = {
@@ -233,7 +232,6 @@ export default {
                     describe: "",
                     status: 1
                   };
-                }
               })
               .catch(errer => {
                 this.$Message.errer(error.data.message);

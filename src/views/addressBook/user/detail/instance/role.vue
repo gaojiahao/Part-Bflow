@@ -425,10 +425,8 @@ export default {
         this.selectRoleData.forEach(val => {
           multiId.push(val.id);
         });
-      }else{
-        this.$Message.warning('请选择至少一个职位！');
       }
-      if(multiId && this.userId){
+      if(multiId.length>0 && this.userId){
         addMember('sys_user_role',this.userId,multiId.join(',')).then(res => {
           if(res.success){
             this.$Message.success('更新成功');
@@ -438,8 +436,6 @@ export default {
         }).catch(error => {
             this.$Message.error(error.data.message);
         })
-      }else{
-        this.$Message.warning('无用户ID，请先保存用户再进行编辑！');
       }
     },
     //删除选择的用户

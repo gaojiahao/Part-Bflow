@@ -32,11 +32,11 @@
         </div>
         <div class="detail-table">
           <div class="detail-table-before">
-            <div class="detail-table-before-title">更变前</div>
+            <div class="detail-table-before-title">变更前</div>
             <Table :row-class-name="deleteRowClassName" :columns="changeColumns" :data='beforeChangeData' size="small" height="152" :disabled-hover="true"></Table>
           </div>
           <div class="detail-table-after">
-            <div class="detail-table-after-title">更变后</div>
+            <div class="detail-table-after-title">变更后</div>
             <Table :row-class-name="addRowClassName" :columns="changeColumns" :data='afterChangeData' size="small" height="152" :disabled-hover="true"></Table>
           </div>
         </div>

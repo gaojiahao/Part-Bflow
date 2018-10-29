@@ -98,10 +98,11 @@ export const getDirectPermissionData = (userId, pageSize, currentPage,filter) =>
  * @author XiaoYing
  * @description 获取user间接权限数据
  */
-export const getIndirectPermissionData = (userId, pageSize, currentPage) => request('/H_roleplay-si/ps/getUserOrGroupPermissionById', {
+export const getIndirectPermissionData = (userId, pageSize, currentPage,search) => request('/H_roleplay-si/ps/getUserOrGroupPermissionById', {
   userId: userId,
   page: currentPage,
-  limit: pageSize
+  limit: pageSize,
+  search: search
 });
 
 /**

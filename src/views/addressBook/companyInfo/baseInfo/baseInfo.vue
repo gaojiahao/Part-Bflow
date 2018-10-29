@@ -192,7 +192,7 @@ export default {
                 ? "add"
                 : this.$route.params.groupId;
             if (res[0].groupId) {
-              this.$Message.info("保存成功");
+              this.$Message.success("保存成功");
               this.$router.push({
                 path: "/addressBook/companyInfo/baseInfo/" + res[0].groupId
               });
@@ -270,7 +270,7 @@ export default {
                 ? "add"
                 : this.$route.params.groupId;
             if (res[0].groupId) {
-              this.$Message.info("保存成功");
+              this.$Message.success("保存成功");
               this.$refs["baseInfoItem"].resetFields();
               this.logo = "";
               this.baseInfoItem.groupName = "";

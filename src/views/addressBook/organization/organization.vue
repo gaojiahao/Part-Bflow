@@ -497,8 +497,7 @@ export default {
           delete this.formItem.groupId;
 
           saveBaseinfo(this.formItem).then(res => {
-            if (res) {
-              this.$Message.success(res.message);
+              this.$Message.success('保存成功');
               this.$refs["formItem"].resetFields();
               this.formItem = {
                 groupName: "",
@@ -506,7 +505,6 @@ export default {
                 depFunction: "",
                 status: 1
               };
-            }
           }).catch(error=>{
               this.$Message.error(error.data.message)
             });;

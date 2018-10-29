@@ -113,7 +113,7 @@ export default {
     getTableData(params) {
       this.loading = true;
       getTableData(this.apiUrl, params).then(res => {
-          this.pageTotal = res.dataCount?res.dataCount:res.summary.total;
+          this.pageTotal = 'dataCount' in res?res.dataCount:res.summary.total;
           this.columnsData = res.tableContent;
           if (this.value) {
             this.$emit("on-refesh-change", false);

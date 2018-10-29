@@ -20,7 +20,7 @@
               </div>
             </div>
           </Upload>
-          <img v-else :src="enterpriseInfo.logo"/>
+          <img v-else :src="enterpriseInfo.logo" />
         </div>
         <div class="select-explain">
           <label class="left-leble">企业简称</label>
@@ -68,7 +68,7 @@
       <section class="info-warp-main-section">
         <div>
           <label class="left-leble">网站登录页背景图</label>
-          <div style="display: inline-block;vertical-align: middle;" >
+          <div style="display: inline-block;vertical-align: middle;">
             <Upload v-if="$currentUser.isAdmin" :show-upload-list="false" :before-upload="handleUploadBefore" :on-success="handleBackgroundSuccess" action="/H_roleplay-si/ds/upload" :headers="httpHeaders">
               <Button icon="ios-cloud-upload-outline">选择背景图</Button>
             </Upload>
@@ -179,7 +179,7 @@ export default {
       this.showAdminModal = true;
       this.searchValue = "";
       this.onPageSelection = []; //清空选中的用户
-      this.getListUsers(this.currentPage,this.pageSize);
+      this.getListUsers(this.currentPage, this.pageSize);
     },
 
     //全选
@@ -256,13 +256,11 @@ export default {
       updateRelation(singleId.join(",")).then(res => {
         if (res.success) {
           this.$Message.info("添加成功！");
-           this.showAdminModal = false;
+          this.showAdminModal = false;
         } else {
           this.$Message.error(res.message);
         }
       });
-
-     
     },
 
     //删除管理员节点
@@ -286,9 +284,17 @@ export default {
     changeCurrentPage(currentPage) {
       this.currentPage = currentPage;
       let filter = JSON.stringify([
-        { operator: "like", value: this.searchValue, property: "nickname" }
+        {
+          operator_1: "like",
+          value_1: this.searchValue,
+          property_1: "nickname",
+          link: "or",
+          operator_2: "like",
+          value_2: this.searchValue,
+          property_2: "userCode"
+        }
       ]);
-      this.getListUsers(this.currentPage,this.pageSize,filter);
+      this.getListUsers(this.currentPage, this.pageSize, filter);
     },
 
     //查询管理员
@@ -304,13 +310,14 @@ export default {
           property_2: "userCode"
         }
       ]);
-      this.getListUsers(1,this.pageSize,filter);
+      this.currentPage = 1;
+      this.getListUsers(this.currentPage, this.pageSize, filter);
     },
 
     //清空输入框
     handleInputValueChange(event) {
       if (!this.searchValue) {
-        this.getListUsers(this.currentPage,this.pageSize);
+        this.getListUsers(this.currentPage, this.pageSize);
       }
     },
 
@@ -324,20 +331,17 @@ export default {
     getListUsers(currentPage, pageSize, filter) {
       this.loading = true;
       getAllUsers(pageSize, currentPage, filter).then(res => {
-        if (res.tableContent[0]) {
-          this.pageTotal = res.dataCount;
-          this.columnsData = res.tableContent;
-
-          if (this.onPageSelection.length > 0) {
-            this.columnsData.map(item => {
-              this.onPageSelection.map(sel => {
-                if (item.userId === sel.userId) {
-                  item._checked = true;
-                }
-              });
+        this.pageTotal = res.dataCount;
+        this.columnsData = res.tableContent;
+        this.loading = false;
+        if (this.onPageSelection.length > 0) {
+          this.columnsData.map(item => {
+            this.onPageSelection.map(sel => {
+              if (item.userId === sel.userId) {
+                item._checked = true;
+              }
             });
-          }
-          this.loading = false;
+          });
         }
       });
     },

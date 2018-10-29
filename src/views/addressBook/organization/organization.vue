@@ -9,7 +9,7 @@
       <span class="organization-wrap-header-others">/</span>
       <span v-show="groupId" class="organization-wrap-header-others">{{name}}</span>
       <span v-show="!groupId" class="organization-wrap-header-others">创建</span>
-      <Tag v-show="groupId" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status}" style="margin-bottom: 7px; padding-right: 20px;"></Tag>
+      <Tag v-show="groupId" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status}" style="margin-bottom: 7px; padding-right: 13px;"></Tag>
     </header>
 
     <div class="organization-wrap-action">

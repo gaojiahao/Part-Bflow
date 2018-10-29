@@ -151,7 +151,7 @@ export default {
       this.selectPermission.forEach(val => {
         multiId.push(val.id);
       });
-      if (multiId && this.target) {
+      if (multiId.length>0 && this.target) {
         addPermission(this.target.type,this.target.targetId, multiId.join(","))
           .then(res => {
             if (res.success) {

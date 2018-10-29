@@ -13,11 +13,32 @@
     margin: 10px;
     overflow: hidden;
   }
+  .app-table-search{
+    margin-bottom: 5px;
+    .app-search-icon {
+      font-size: 1rem;
+      color: #fff;
+      display: inline-block;
+      cursor: pointer;
+    }
+}
 </style>
 
 <template>
     <div class="indirect">
-        <div class="indirect-detail" id="indirectHeight">
+        <div class="indirect-detail">
+            <div class="app-table-search">
+              <Input 
+                @on-search="permissionFilter" 
+                :search="true" 
+                v-model="searchValue" 
+                placeholder="搜索权限名称" 
+                style="width: 300px">
+              </Input>
+              <a @click="permissionFilter" class="app-search-icon">
+                <Button type="primary" size="small">查询</Button>
+              </a>
+            </div>
             <Table 
               ref="selection" 
               :columns="columns" 
@@ -52,6 +73,7 @@ export default {
   data() {
     return {
       userId: this.$route.params.userId,
+      searchValue: "",
       total: 0,
       currentPage: 1,
       pageSize: 10,
@@ -76,10 +98,10 @@ export default {
   },
   methods: {
     //获取间接权限数据
-    getIndirPermissionData() {
+    getIndirPermissionData(search) {
       if(this.userId){
         this.loading = true;
-        getIndirectPermissionData(this.userId,this.pageSize,this.currentPage).then(res => {
+        getIndirectPermissionData(this.userId,this.pageSize,this.currentPage,search).then(res => {
           this.indirPermissionData = res.tableContent;
           this.total = res.dataCount;
           this.loading = false;
@@ -91,12 +113,16 @@ export default {
     //点击分页
     onPageChange(currentPage) {
       this.currentPage = currentPage;
-      this.getIndirPermissionData();
+      this.getIndirPermissionData(this.searchValue);
     },
     //点击切换每页显示条数
     onPageSizeChange(size) {
       this.pageSize = size;
-      this.getIndirPermissionData();
+      this.getIndirPermissionData(this.searchValue);
+    },
+    //权限过滤
+    permissionFilter() {
+      this.getIndirPermissionData(this.searchValue);
     }
   },
   mounted() {

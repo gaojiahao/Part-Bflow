@@ -94,6 +94,11 @@ export default {
                 domProps: {
                   value: params.row.sort
                 },
+                attrs:{
+                  type:'number',
+                  min:"1",
+                  max:"100"
+                },
                 style: inputStyle,
                 on: {
                   input: function(event) {
@@ -116,6 +121,11 @@ export default {
               return h("input", {
                 domProps: {
                   value: params.row.delayHour
+                },
+                attrs:{
+                  type:'number',
+                  min:"1",
+                  max:"100"
                 },
                 style: inputStyle,
                 on: {

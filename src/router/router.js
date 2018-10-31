@@ -43,42 +43,6 @@ export const dashboardRouter = {
     import('@/views/dashboard/dashboard.vue')
 };
 
-export const app = {
-  path: '/application',
-  name: 'application',
-  meta: {
-    title: '应用'
-  },
-  redirect: 'application/list',
-  component: () =>
-    import('@/views/application/application.vue'),
-  children: [{
-    path: 'list',
-    name: 'list',
-    meta: {
-      title: '应用列表'
-    },
-    component: () =>
-      import('@/views/application/list/list.vue'),
-  }, {
-    path: 'add',
-    name: 'add',
-    meta: {
-      title: '添加应用',
-    },
-    component: () =>
-      import('@/views/application/add/add.vue')
-  }, {
-    path: 'detail/:listId',
-    name: 'detail',
-    meta: {
-      title: 'detail - 应用详情'
-    },
-    component: () =>
-      import('@/views/application/detail/detail.vue')
-  }]
-};
-
 export const homepageRouter = {
   path: '/homepage',
   name: 'homepage',
@@ -310,7 +274,10 @@ export const dictionaryManage = {
     import('@/views/dictionaryManage/dictionaryManage.vue')
 }
 
+//社交模块
 import { socialRouter} from '@/views/social/router';
+//应用模块
+import { applicationRouter} from '@/views/application/router';
 
 export const routers = [
   loginRouter,
@@ -319,7 +286,6 @@ export const routers = [
   technologyRouter,
   dashboardRouter,
   bigProcess,
-  app,
   addressBook,
   fieldChangeHistoryRouter,
   instanceCommetns,
@@ -328,5 +294,6 @@ export const routers = [
   activation,
   dictionaryManage,
   socialRouter,
+  applicationRouter,
   ...appRouter
 ];

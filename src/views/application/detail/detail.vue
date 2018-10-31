@@ -145,6 +145,7 @@ export default {
     }
   },
   created() {
+    debugger
     this.getAppInfoDatas();
   }
 };

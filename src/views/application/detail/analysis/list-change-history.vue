@@ -1,3 +1,6 @@
+<style lang="less" scoped>
+@import "./list-change-history.less";
+</style>
 <template>
     <div class="wrapper">
         <div class="app-resource-group-title">
@@ -55,7 +58,6 @@
         </change-detail>
     </div>
 </template>
-
 <script>
 import { getListChangeHistory } from "@/services/flowService";
 import ChangeDetail from "@/components/modal/Modal";
@@ -491,90 +493,4 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.wrapper {
-  position: relative;
-  margin-bottom: 15px;
-
-  &-body {
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
-    padding: 10px 20px;
-  }
-}
-
-.detail-header {
-  margin: 5px 0;
-  p {
-    font-size: 14px;
-  }
-
-  &-time {
-    font-size: 14px;
-    height: 30px;
-    line-height: 30px;
-    ul {
-      list-style: none;
-      overflow: auto;
-      float: right;
-      li {
-        display: inline-block;
-        margin-right: 15px;
-        div {
-          width: 60px;
-          height: 25px;
-          vertical-align: middle;
-          display: inline-block;
-        }
-      }
-    }
-  }
-}
-
-.detail-table {
-  &-before {
-    &-title {
-      height: 30px;
-      line-height: 30px;
-      background-color: #d5d5d5;
-      width: 100%;
-      text-align: center;
-      color: #000;
-    }
-  }
-
-  &-after {
-    margin: 10px 0;
-    &-title {
-      height: 30px;
-      line-height: 30px;
-      background-color: #d5d5d5;
-      width: 100%;
-      text-align: center;
-      color: #000;
-    }
-  }
-}
-
-// 新增
-.ivu-table .table-column-add td {
-  background-color: #c6e0b4;
-  color: #000;
-}
-
-//删除
-.ivu-table .table-column-detele td {
-  background-color: #ffe699;
-  color: #000;
-}
-//修改
-.ivu-table .table-column-update {
-  background-color: #bdd7ee;
-  color: #000;
-}
-.search {
-  margin-bottom: 5px;
-}
-</style>
 

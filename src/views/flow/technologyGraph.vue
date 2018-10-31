@@ -754,7 +754,7 @@ export default {
 };
 </script>
 
-<style lang="less" >
+<style lang="less" scoped>
 @borderColor: #dddee1;
 
 .rfd-technology-wrap {

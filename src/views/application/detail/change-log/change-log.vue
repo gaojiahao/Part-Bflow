@@ -1,4 +1,4 @@
-<style lang="less" >
+<style lang="less" scoped>
 @import "./change-log.less";
 </style>
 
@@ -23,8 +23,16 @@
           <span style="margin-left:10px;">单位/时</span>
         </FormItem>
         <FormItem label="更新内容:" prop="content">
-          <vue-wangeditor ref="editor" id="editor" v-model="modalFormData.content" :menus="menu" height="143" width="100%"></vue-wangeditor>
+          <vue-wangeditor 
+            ref="editor" 
+            id="editor" 
+            v-model="modalFormData.content" 
+            :menus="menu" 
+            height="143"
+             width="100%">
+            </vue-wangeditor>
         </FormItem>
+        
         <FormItem>
           <input type='button' value="提交" class="timeline-box-form-submit" @click="submitLog" />
         </FormItem>

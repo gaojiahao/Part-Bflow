@@ -1,47 +1,7 @@
+
 <style lang="less" scoped>
-.line-chart {
-  background-color: #fff;
-  position: relative;
-  display: inline-block;
-  width: 49.8%;
-}
-
-.line-chart-screen {
-  width: 100%;
-}
-
-.line-chart-header {
-  position: absolute;
-  top: 0px;
-  right: 38px;
-  z-index: 1;
-}
-.customs-tag {
-  background-color: #d8d9db;
-  padding: 2px 10px;
-  color: #403b3b;
-  font-size: 13px;
-  vertical-align: middle;
-  opacity: 1;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.customs-tag-active {
-  background-color: #19be6b;
-  color: #fff;
-}
-
-.select-range {
-  border: 1px solid #d8d9db;
-  display: inline-block;
-  background-color: #19be6b;
-}
-.app-tabs {
-  border-top: 1px solid #ddd;
-}
+@import "./log-instance.less";
 </style>
-
 <template>
   <div style="background-color:#f0f0f0">
     <div v-if="appType !== 'subject'" style="margin-bottom:15px;">
@@ -51,10 +11,23 @@
       <!-- 实例图 -->
       <div>
         <div :class="{'line-chart-screen':isAddress,'line-chart':true}">
-          <line-chart legendName="新增实例数" :xAxisData="xAxisData" :seriesData="seriesData" id="instanceLineChart" primaryColor="#1890ff" areaColor="#1890ff8c">
+          <line-chart 
+            legendName="新增实例数" 
+            :xAxisData="xAxisData" 
+            :seriesData="seriesData"
+             id="instanceLineChart" 
+             primaryColor="#1890ff" 
+             areaColor="#1890ff8c">
             <div slot="header" class="line-chart-header">
               查看范围:
-              <DatePicker type="month" placeholder="选择月份" style="width: 120px;margin-left:10px;" v-model="month" format="yyyy-MM" :clearable="false"></DatePicker>
+              <DatePicker 
+                type="month" 
+                placeholder="选择月份" 
+                style="width: 120px;margin-left:10px;" 
+                v-model="month" 
+                format="yyyy-MM" 
+                :clearable="false">
+              </DatePicker>
               <div class="select-range">
                 <span v-bind:class="{'customs-tag-active':active}" class="customs-tag" @click="selectDataRange('week')">周</span>
                 <span v-bind:class="{'customs-tag-active':!active}" class="customs-tag" @click="selectDataRange('day')">天</span>
@@ -63,10 +36,22 @@
           </line-chart>
         </div>
         <div v-if="!isAddress" class="line-chart">
-          <line-chart-time legendName="实例平均工作流耗用时间周期(小时)" :xAxisData="xAxisTimeData" :seriesData="seriesTimeData" id="spendTimeChart" primaryColor="#f9499e" areaColor="#f9499e8c">
+          <line-chart-time 
+            legendName="实例平均工作流耗用时间周期(小时)" 
+            :xAxisData="xAxisTimeData" 
+            :seriesData="seriesTimeData" 
+            id="spendTimeChart" 
+            primaryColor="#f9499e" 
+            areaColor="#f9499e8c">
             <div slot="header" class="line-chart-header">
               查看范围:
-              <DatePicker type="month" placeholder="选择月份" style="width: 120px;margin-left:10px;" v-model="workFlowMonth" format="yyyy-MM" :clearable="false"></DatePicker>
+              <DatePicker type="month" 
+                placeholder="选择月份" 
+                style="width: 120px;margin-left:10px;" 
+                v-model="workFlowMonth" 
+                format="yyyy-MM" 
+                :clearable="false">
+              </DatePicker>
               <div class="select-range">
                 <span v-bind:class="{'customs-tag-active':workFlowTimeActive}" class="customs-tag" @click="selectSpendTimeRange('week')">周</span>
                 <span v-bind:class="{'customs-tag-active':!workFlowTimeActive}" class="customs-tag" @click="selectSpendTimeRange('day')">天</span>
@@ -76,15 +61,13 @@
         </div>
       </div>
     </div>
-    <!--变更历史-->
-    <list-change-history v-if="appType !== 'subject'"></list-change-history>
+   
   </div>
 </template>
 
 <script>
 import LineChart from "@/components/Charts/LineChart";
 import LineChartTime from "@/components/Charts/LineChart";
-import ListChangeHistory from "./list-change-history";
 import {
   getInstanceStatistics,
   getWorkFlowTime
@@ -95,8 +78,7 @@ export default {
   name: "LogInstance",
   components: {
     LineChart,
-    LineChartTime,
-    ListChangeHistory
+    LineChartTime
   },
   props: {
     isAdmin: Boolean,

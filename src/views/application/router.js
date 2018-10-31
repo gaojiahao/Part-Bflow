@@ -1,6 +1,6 @@
 export const  applicationRouter = {
-    path: '/app',
-    name: 'app',
+    path: '/application',
+    name: 'application',
     meta: {
         title: '应用'
     },
@@ -28,7 +28,7 @@ export const  applicationRouter = {
                     meta: {
                         title: '数据分析',
                     },
-                    component: () => import('@/views/application/detail/analysis/log-instance.vue'),
+                    component: () => import('@/views/application/detail/analysis/analysis-layout.vue'),
                 },
                 {
                     path: 'interaction',
@@ -44,7 +44,7 @@ export const  applicationRouter = {
                     meta: {
                         title: '资源授权',
                     },
-                    component: () => import('@/views/application/detail/permission/permission.vue'),
+                    component: () => import('@/views/application/detail/permission/permission-layout.vue'),
                 },
                 {
                     path: 'connection',

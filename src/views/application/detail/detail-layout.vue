@@ -1,5 +1,5 @@
 <style lang="less" scoped>
-@import "./detail.less";
+@import "./detail-layout.less";
 </style>
 
 <template>

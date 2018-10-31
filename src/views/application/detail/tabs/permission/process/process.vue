@@ -323,6 +323,7 @@ export default {
       });
     },
     handleSave(param) {
+      param.listId = this.$route.params.listId;
       updateProcessStatus([param]).then(res => {
         if (res.success === true) {
           this.$Message.info("更新成功");

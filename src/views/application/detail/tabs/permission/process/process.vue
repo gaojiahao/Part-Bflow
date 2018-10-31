@@ -306,6 +306,7 @@ export default {
     },
     delProcessStatus(params) {
       let param = [params.row];
+      param[0].listId = this.$route.params.listId;
       this.$Modal.confirm({
         title: "确认",
         content: "确认删除此状态？",
@@ -322,6 +323,7 @@ export default {
       });
     },
     handleSave(param) {
+      param.listId = this.$route.params.listId;
       updateProcessStatus([param]).then(res => {
         if (res.success === true) {
           this.$Message.info("更新成功");
@@ -371,6 +373,8 @@ export default {
               this.processInfoItem.fieldValue = "";
               this.processInfoItem.sort = "";
               this.showModal = false;
+            } else {
+              this.$Message.error(res.message);
             }
           });
         } else {

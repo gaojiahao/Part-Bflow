@@ -78,7 +78,7 @@
                     操作
                     <Icon type="ios-arrow-down"></Icon>
                 </a>
-                <DropdownMenu v-if="isAdminTrue" slot="list">
+                <DropdownMenu v-if="isAdmin" slot="list">
                     <DropdownItem name="enabled">启用</DropdownItem>
                     <DropdownItem name="forbidden">停用</DropdownItem>
                 </DropdownMenu>
@@ -151,7 +151,6 @@ export default {
     return {
       showEditAppInfo: true,
       showAppEditAdmin: true,
-      isAdminTrue: false,
       showEditBtn: true,
       adminLoading: true,
       showAdminModal: false,
@@ -197,15 +196,6 @@ export default {
       adminData: [],
       selectAdminData: {}
     };
-  },
-  watch: {
-    isAdmin: function(value) {
-      if(value){
-        this.isAdminTrue = true;
-      }else{
-        this.isAdminTrue = false;
-      }
-    }
   },
   methods: {
     goList() {

@@ -306,6 +306,7 @@ export default {
     },
     delProcessStatus(params) {
       let param = [params.row];
+      param[0].listId = this.$route.params.listId;
       this.$Modal.confirm({
         title: "确认",
         content: "确认删除此状态？",
@@ -313,22 +314,35 @@ export default {
           deleteProcessStatus(param).then(res => {
             if (res.success === true) {
               this.getProcessStatusByListId();
-              this.$Message.info(res.message);
+              this.$Message.info({
+                content: res.message,
+                duration: 2
+              });
             } else {
-              this.$Message.error(res.message);
+              this.$Message.error({
+                content: res.message,
+                duration: 2
+              });
             }
           });
         }
       });
     },
     handleSave(param) {
+      param.listId = this.$route.params.listId;
       updateProcessStatus([param]).then(res => {
         if (res.success === true) {
-          this.$Message.info("更新成功");
-          this.getProcessStatusByListId();
+          this.$Message.info({
+            content: "更新成功",
+            duration: 2
+          });
         } else {
-          this.$Message.error(res.message);
+          this.$Message.error({
+            content: res.message,
+            duration: 2
+          });
         }
+        this.getProcessStatusByListId();
       });
       this.$set(param, "$isEdit", false);
     },
@@ -371,10 +385,18 @@ export default {
               this.processInfoItem.fieldValue = "";
               this.processInfoItem.sort = "";
               this.showModal = false;
+            } else {
+              this.$Message.error({
+                content: res.message,
+                duration: 2
+              });
             }
           });
         } else {
-          this.$Message.error("请输入必填项");
+          this.$Message.error({
+            content: "请输入必填项",
+            duration: 2
+          });
         }
       });
     },

@@ -6,7 +6,7 @@
     <Row class="app-process-title">
       <h3>流程状态管理</h3>
       <span class="warning-color marlr">管理员用户可以管理状态
-        <a @click="addProcess">添加</a>
+        <a v-if="isAdmin" @click="addProcess">添加</a>
       </span>
     </Row>
     <Row class="app-process-table">
@@ -178,7 +178,7 @@ export default {
                     },
                     style: {
                       display:
-                        this.isCompanyAdmin || this.isAdmin
+                        this.isAdmin
                           ? "inline-block"
                           : "none"
                     }
@@ -191,7 +191,7 @@ export default {
                     borderLeft: "1px solid #39f",
                     margin: "0px 5px",
                     display:
-                      this.isCompanyAdmin || this.isAdmin
+                      this.isAdmin
                         ? "inline-block"
                         : "none"
                   }
@@ -204,7 +204,7 @@ export default {
                     },
                     style: {
                       display:
-                        this.isCompanyAdmin || this.isAdmin
+                        this.isAdmin
                           ? "inline-block"
                           : "none"
                     }
@@ -217,7 +217,7 @@ export default {
                     borderLeft: "1px solid #39f",
                     margin: "0px 5px",
                     display:
-                      this.isCompanyAdmin || this.isAdmin
+                      this.isAdmin
                         ? "inline-block"
                         : "none"
                   }
@@ -275,11 +275,6 @@ export default {
 
   props: {
     isAdmin: {
-      type: Boolean,
-      default: false
-    },
-
-    isCompanyAdmin: {
       type: Boolean,
       default: false
     }

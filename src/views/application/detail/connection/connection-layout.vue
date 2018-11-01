@@ -1,5 +1,6 @@
 <style lang="less" scoped>
 .connection-layout{
+    background-color: #f0f0f0;
     margin-top: 15px;
 }
 </style>

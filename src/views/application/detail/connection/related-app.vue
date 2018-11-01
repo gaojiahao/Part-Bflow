@@ -15,7 +15,7 @@
           <Card class="app-card">
             <img class="card-img" :src="app.icon" />
             <div class="card-right">
-              <Checkbox @on-change="changeAppStatus(app,index)" class="card-check" :disabled="!isAdminTrue" :value="app.STATUS===1?true:false"></Checkbox>
+              <Checkbox @on-change="changeAppStatus(app,index)" class="card-check" :disabled="!isAdmin" :value="app.STATUS===1?true:false"></Checkbox>
               <p class="card-name">{{ app.listName }}</p>
               <p class="card-type">{{ app.transName }}</p>
             </div>
@@ -46,7 +46,6 @@ export default {
     return {
       isDragging: false,
       delayedDragging: false,
-      isAdminTrue: false,
       relatedApps: []
     };
   },
@@ -55,19 +54,12 @@ export default {
       return {
         animation: 0,
         group: "description",
-        disabled: !this.isAdminTrue,
+        disabled: !this.isAdmin,
         ghostClass: "ghost"
       };
     }
   },
   watch: {
-    isAdmin: function(value) {
-      if (value) {
-        this.isAdminTrue = true;
-      } else {
-        this.isAdminTrue = false;
-      }
-    },
     isDragging(newValue) {
       if (newValue) {
         this.delayedDragging = true;

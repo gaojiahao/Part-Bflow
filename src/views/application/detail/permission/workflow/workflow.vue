@@ -7,10 +7,10 @@
         <Row class="app-workflow-title">
             <h3>工作流
             <span 
-            v-if="isAdminTrue && workflows.length===0" 
+            v-if="isAdmin && workflows.length===0" 
             class="app-workflow-create"
             @click="goCreateWorkflow">新建</span>  
-            <!-- <Dropdown v-if="isAdminTrue && isOperationShow" @on-click="createWorkflow">
+            <!-- <Dropdown v-if="isAdmin && isOperationShow" @on-click="createWorkflow">
               <a href="javascript:void(0)">
                   操作
                   <Icon type="arrow-down-b"></Icon>
@@ -45,7 +45,6 @@ export default {
   data() {
     return {
       listId: this.$route.params.listId,
-      isAdminTrue: false,
       isOperationShow: true,
       isCreateShow: true,
       isUpdateShow: true,
@@ -182,7 +181,7 @@ export default {
             return h("Checkbox", {
               props: {
                 value: status,
-                disabled: !this.isAdminTrue
+                disabled: !this.isAdmin
               },
               on: {
                 "on-change": e => {

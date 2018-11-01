@@ -5,7 +5,7 @@
         <!-- 相关应用 -->
         <related-app v-if="!isAddress" :isAdmin="isAdmin"></related-app>
         <!-- 流程状态管理-->
-        <process v-if="appType !== 'obj' && appType !=='subject' && !isAddress" :isAdmin="isAdmin" :isCompanyAdmin="isCompanyAdmin"></process>
+        <process v-if="appType !== 'obj' && appType !=='subject' && !isAddress" :isAdmin="isAdmin"></process>
         <!-- API -->
         <app-api></app-api>
     </div>

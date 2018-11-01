@@ -3,8 +3,7 @@
 @import "./log-instance.less";
 </style>
 <template>
-  <div style="background-color:#f0f0f0">
-    <div v-if="appType !== 'subject'" style="margin-bottom:15px;">
+    <div  v-if="appType !== 'subject'" >
       <div class="app-resource-group-title">
         <h3>数据增量分析</h3>
       </div>
@@ -61,8 +60,6 @@
         </div>
       </div>
     </div>
-   
-  </div>
 </template>
 
 <script>

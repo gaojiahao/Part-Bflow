@@ -39,7 +39,7 @@
       </Form>
     </div>
 
-    <div v-show="logData.length===0?false:true">
+    <div  class="timeline-box-log" v-show="logData.length===0?false:true">
       <div class="timeline-box-log-item" v-for="(item,index) in logData" :key="index">
         <div class="timeline-item-content-header">
           <div class="circle"></div>

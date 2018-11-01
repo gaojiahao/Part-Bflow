@@ -1,5 +1,10 @@
+<style lang="less" scoped>
+.connection-layout{
+    margin-top: 15px;
+}
+</style>
 <template>
-    <div>
+    <div class="connection-layout">
         <!-- 应用科目 -->
         <app-subject v-if="!isAddress" :isAdmin="isAdmin"></app-subject>
         <!-- 相关应用 -->

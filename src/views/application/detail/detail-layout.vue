@@ -49,7 +49,7 @@
       </router-link>
     </Menu>
 
-  <div class="detail-content martop10">
+  <div class="detail-content">
     <router-view 
       :listId="this.$route.params.listId" 
       :isAdmin="isAdmin"

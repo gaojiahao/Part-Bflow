@@ -50,6 +50,10 @@ npm test
 	 |-- style 样式
 	 |-- utils 辅助类
 	 |-- view 页面文件
+	 	|--activation 用户账号激活
+		|--address-book 通讯录
+		|--application 应用
+		|--sacial 社交
 	 |-- App.vue 程序主入口vue文件
 	 |-- main.js 程序主入口js
 |-- static 静态文件

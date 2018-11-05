@@ -404,10 +404,9 @@ export default {
     getListUsers(currentPage, pageSize, filter) {
       this.listUserLoading = true;
       getAllUsers(pageSize, currentPage, filter).then(res => {
-        if (res.tableContent[0]) {
           this.listUserPageTotal = res.dataCount;
           this.listUserData = res.tableContent;
-
+          this.listUserLoading = false;
           if (this.onPageSelection.length > 0) {
             this.listUserData.map(item => {
               this.onPageSelection.map(sel => {
@@ -417,8 +416,7 @@ export default {
               });
             });
           }
-          this.listUserLoading = false;
-        }
+         
       });
     },
 

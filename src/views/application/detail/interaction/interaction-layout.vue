@@ -1,5 +1,11 @@
+<style lang="less" scoped>
+.interaction-layout{
+    margin-top: 15px;
+}
+</style>
+
 <template>
-    <div>
+    <div class="interaction-layout">
         <!-- 管理员自评 -->
         <admintrstor-assessment :isAdmin="isAdmin"></admintrstor-assessment>
         <!-- 用户评论 -->

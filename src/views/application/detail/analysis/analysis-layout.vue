@@ -1,5 +1,10 @@
+<style lang="less" scoped>
+.analysis-layout{
+    margin-top: 15px;
+}
+</style>
 <template>
-    <div>
+    <div class="analysis-layout">
         <!-- 数据增量分析 -->
         <log-instance :isAdmin="isAdmin" :isAddress="isAddress" :appType="appType">
         </log-instance>

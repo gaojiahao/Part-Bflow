@@ -13,7 +13,7 @@
     <!-- 自定义数据源管理 -->
     <custom-datasource :isAdmin="isAdmin"></custom-datasource>
     <!-- 报表视图 -->
-    <report-view v-if="appType !== 'subject'" :appType="appType" :isAdmin="isAdmin"></report-view>
+    <report-view :appType="appType" :isAdmin="isAdmin"></report-view>
     <!-- 表单 -->
     <app-form v-if="!isAddress && appType !== 'subject'" :isAdmin="isAdmin"></app-form>
     <!-- 工作流 -->

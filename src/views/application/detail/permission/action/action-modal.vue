@@ -184,6 +184,63 @@ export default {
       }else{
         this.isModalDisabled = true;
       }
+    },
+    userSelectData: function(value) {
+      if(value.length > 0){
+        if(this.permissionSelectDatas.length > 0){
+          this.isModalDisabled = false;
+        }else{
+          this.isModalDisabled = true;
+        }
+      }else{
+        if(this.orgSelectData.length > 0 || this.departmentSelectData.length > 0){
+          if(this.permissionSelectDatas.length > 0){
+            this.isModalDisabled = false;
+          }else{
+            this.isModalDisabled = true;
+          }
+        }else{
+          this.isModalDisabled = true;
+        }
+      }
+    },
+    orgSelectData: function(value) {
+      if(value.length > 0){
+        if(this.permissionSelectDatas.length > 0){
+          this.isModalDisabled = false;
+        }else{
+          this.isModalDisabled = true;
+        }
+      }else{
+        if(this.userSelectData.length > 0 || this.departmentSelectData.length > 0){
+          if(this.permissionSelectDatas.length > 0){
+            this.isModalDisabled = false;
+          }else{
+            this.isModalDisabled = true;
+          }
+        }else{
+          this.isModalDisabled = true;
+        }
+      }
+    },
+    departmentSelectData: function(value) {
+      if(value.length > 0){
+        if(this.permissionSelectDatas.length > 0){
+          this.isModalDisabled = false;
+        }else{
+          this.isModalDisabled = true;
+        }
+      }else{
+        if(this.orgSelectData.length > 0 || this.userSelectData.length > 0){
+          if(this.permissionSelectDatas.length > 0){
+            this.isModalDisabled = false;
+          }else{
+            this.isModalDisabled = true;
+          }
+        }else{
+          this.isModalDisabled = true;
+        }
+      }
     }
   },
   methods: {

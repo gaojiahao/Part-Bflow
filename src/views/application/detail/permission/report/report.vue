@@ -253,6 +253,7 @@ export default {
           key: "list",
           align: "center",
           render: (h, params) => {
+            console.log(this.appType);
             return h("div", [
               h(
                 "a",
@@ -261,7 +262,10 @@ export default {
                     click: () => {
                       this.deleteViews(params, params.index);
                     }
-                  }
+                  },
+                  style: {
+                      display: this.appType !== 'subject' ? "inline-block" : "none"
+                    }
                 },
                 "删除"
               ),
@@ -269,7 +273,8 @@ export default {
                 style: {
                   height: "20px",
                   borderLeft: "1px solid #39f",
-                  margin: "0px 5px"
+                  margin: "0px 5px",
+                  display: this.appType !== 'subject' ? "inline" : "none"
                 }
               }),
               h(
@@ -284,7 +289,10 @@ export default {
                         params.row.viewId;
                       window.top.location.href = href;
                     }
-                  }
+                  },
+                  style: {
+                      display: this.appType !== 'subject' ? "inline-block" : "none"
+                    }
                 },
                 "修改"
               ),
@@ -292,7 +300,8 @@ export default {
                 style: {
                   height: "20px",
                   borderLeft: "1px solid #39f",
-                  margin: "0px 5px"
+                  margin: "0px 5px",
+                  display: this.appType !== 'subject' ? "inline" : "none"
                 }
               }),
               h(

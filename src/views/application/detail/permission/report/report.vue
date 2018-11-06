@@ -5,7 +5,7 @@
 <template>
   <div class="app-report">
     <Row class="app-report-title">
-      <h3>报表 <a v-if="isAdmin" @click="goCreateView">添加报表</a></h3>
+      <h3>报表 <a v-if="isAdmin && appType!='subject'" @click="goCreateView">添加报表</a></h3>
       <span class="warning-color marlr">用户默认拥有此应用默认报表的权限</span>
     </Row>
     <Row class="app-report-table">

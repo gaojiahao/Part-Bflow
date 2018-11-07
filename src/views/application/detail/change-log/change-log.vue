@@ -19,7 +19,7 @@
           </Select>
         </FormItem>
         <FormItem label="耗用时间:" prop="spendTime">
-          <InputNumber v-model="modalFormData.spendTime" />
+          <InputNumber v-model="modalFormData.spendTime"  :min="0"/>
           <span style="margin-left:10px;">单位/时</span>
         </FormItem>
         <FormItem label="更新内容:" prop="content">

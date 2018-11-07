@@ -168,9 +168,14 @@ export default {
           width: 80,
           render: (h,params) => {
             return h('div',[
-              h('Avatar',{
-                props: {
-                  src: params.row.photo?params.row.photo:'resources/images/icon/defaultUserPhoto.jpg'
+              h('img',{
+                 attrs: {
+                  src: params.row.photo?params.row.photo:'/resources/images/icon/defaultUserPhoto.jpg'
+                },
+                style: {
+                  borderRadius:'50%',
+                  height:'32px',
+                  width:'32px'
                 }
               })
             ])

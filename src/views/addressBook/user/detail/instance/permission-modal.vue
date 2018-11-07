@@ -249,6 +249,7 @@ export default {
     //权限列表过滤
     handleFilter() {
       let filter = JSON.stringify([{ operator: "like", value: this.searchValue, property: "name" }]);
+      this.currentPage = 1;
       this.getAllPermissionDatas(filter);
     }
   },

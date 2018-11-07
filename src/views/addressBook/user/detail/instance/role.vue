@@ -525,6 +525,7 @@ export default {
         { operator: "like", value: this.searchValue, property: "name" },
         { operator: "eq", value: 1, property: "status" }
       ]);
+      this.rolePage.rolecurrentPage = 1;
       this.getAllRoleData(filter);
     }
   },

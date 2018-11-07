@@ -127,7 +127,9 @@ export default {
 
       showPermissionModal: false,
       isModalDisabled: true,
+      //已经配置的应用字段数据
       fieldData: [],
+      //所有字段数据=>用于选择字段
       allFieldData: [],
       fieldColumns: [
         {

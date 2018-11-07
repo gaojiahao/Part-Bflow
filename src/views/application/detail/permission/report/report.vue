@@ -151,7 +151,6 @@ export default {
           element.permissionList = [...element.groups,...element.roles,...element.users]
         });
         this.reportSources = res;
-        this.reRenderDefaultView();
       });
     },
 
@@ -164,7 +163,7 @@ export default {
           this.setDefaultViews(params);
         },
         onCancel: () => {
-          this.reRenderDefaultView();
+          this.reloadViewData();
         }
       });
     },
@@ -181,25 +180,6 @@ export default {
           this.reloadViewData();
         }
       });
-    },
-    //重新渲染默认视图columns方法
-    reRenderDefaultView() {
-      this.columns[3].render = (h, params) => {
-        let defaultView = false;
-        if (params.row.isDefault === 1) {
-          defaultView = true;
-        }
-        return h("Radio", {
-          props: {
-            value: defaultView
-          },
-          on: {
-            "on-change": () => {
-              this.onClickDefaultView(params);
-            }
-          }
-        });
-      };
     },
 
     setColumns(){
@@ -225,8 +205,8 @@ export default {
               return h("div", renderData);
             }
           }
-        },
-        {
+        }],
+        defaultViewColumn = [{
           title: "默认视图",
           key: "isDefault",
           align: "center",
@@ -320,8 +300,9 @@ export default {
             ]);
           }
         }];
-      
-      if(this.isAdmin){
+      if(this.isAdmin && this.appType !== 'subject'){
+        this.columns = defaultColumns.concat(defaultViewColumn).concat(optColumns);
+      }else if(this.isAdmin){
         this.columns = defaultColumns.concat(optColumns);
       }else{
         this.columns = defaultColumns;

@@ -28,7 +28,8 @@
       <Modal 
         v-model="showDepartmentModal" 
         title="职位选择" 
-        :mask-closable="false" 
+        :mask-closable="false"
+        :styles="{top: '15px'}" 
         @on-ok="confirmDepartment" 
         @on-cancel="cancelSelectDep" 
         @on-visible-change="modalVisibleChange" 

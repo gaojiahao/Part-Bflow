@@ -29,6 +29,7 @@
         v-model="showOrgModal" 
         title="组织选择" 
         :mask-closable="false" 
+        :styles="{top: '15px'}"
         @on-ok="confirmOrg" 
         @on-cancel="cancelSelectOrg" 
         @on-visible-change="modalVisibleChange" 

@@ -3,7 +3,7 @@
     <div class="wrapper-body">
       <Table :loading="loading" :columns="fieldDetailColumns" :data="fieldDetail"></Table>
     </div>
-   
+
     <change-detail v-model="showChangeDetailsModal" title="变更详情" width="900" :footerHide="true">
       <div class="detail">
         <div class="detail-header">
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { getListFeildChangeHistory} from "@/services/flowService";
+import { getListFeildChangeHistory } from "@/services/flowService";
 import ChangeDetail from "@/components/modal/Modal";
 export default {
   components: {
@@ -72,7 +72,7 @@ export default {
           align: "center"
         },
         {
-          title: "变更字段",  
+          title: "变更字段",
           key: "mainTable",
           align: "center",
           render: (h, params) => {
@@ -86,7 +86,7 @@ export default {
                     "p",
                     {
                       style: {
-                        minHeight: "16px",
+                        minHeight: "16px"
                       }
                     },
                     item.fieldName
@@ -94,7 +94,7 @@ export default {
                 );
               });
             }
-            
+
             if (params.row.detailTable.length > 0) {
               params.row.detailTable.forEach((item, index) => {
                 renderData.push(
@@ -167,29 +167,26 @@ export default {
                           this.showChangeDetailsModal = true;
                           this.modiferName = params.row.modiferName;
                           this.modiferTime = params.row.modiferTime;
-                          //填加明细
-                          this.addRows = JSON.parse(
-                            JSON.parse(detailTable[index].changes).adds
-                          );
-                          //删除明细
-                          this.deleteRows = JSON.parse(
+
+                          let detailTableParse = JSON.parse(
                             detailTable[index].changes
-                          ).deletes
-                            ? JSON.parse(
-                                JSON.parse(detailTable[index].changes).deletes
-                              )
+                          );
+                          //填加明细
+                          this.addRows = detailTableParse.adds
+                            ? JSON.parse(detailTableParse.adds)
+                            : [];
+                          //删除明细
+                          this.deleteRows = detailTableParse.deletes
+                            ? JSON.parse(detailTableParse.deletes)
                             : [];
                           //更新明细
-                          let updateTd = JSON.parse(detailTable[index].changes)
-                            .updates
-                            ? JSON.parse(
-                                JSON.parse(detailTable[index].changes).updates
-                              )
+                          let updateTd = detailTableParse.updates
+                            ? JSON.parse(detailTableParse.updates)
                             : [];
 
-                          let fieldName = JSON.parse(
-                            detailTable[index].fieldName
-                          );
+                          let fieldName = detailTable[index].fieldName
+                            ? JSON.parse(detailTable[index].fieldName)
+                            : [];
                           //获取定位字段key值
                           for (let id in fieldName) {
                             if (fieldName[id] === "ID") {
@@ -217,10 +214,14 @@ export default {
 
                           this.beforeChangeData = JSON.parse(
                             detailTable[index].oldData
-                          );
+                          )
+                            ? JSON.parse(detailTable[index].oldData)
+                            : [];
                           this.afterChangeData = JSON.parse(
                             detailTable[index].newData
-                          );
+                          )
+                            ? JSON.parse(detailTable[index].newData)
+                            : [];
 
                           if (updateTd.length > 0) {
                             updateTd.forEach(update => {
@@ -253,7 +254,7 @@ export default {
           align: "center",
           render: (h, params) => {
             let mainTable = params.row.mainTable,
-                detailTable = params.row.detailTable,
+              detailTable = params.row.detailTable,
               renderData = [],
               reg = /jpg|jpeg|png/g;
             if (mainTable.length > 0) {
@@ -301,29 +302,26 @@ export default {
                           this.showChangeDetailsModal = true;
                           this.modiferName = params.row.modiferName;
                           this.modiferTime = params.row.modiferTime;
-                          //填加明细
-                          this.addRows = JSON.parse(
-                            JSON.parse(detailTable[index].changes).adds
-                          );
-                          //删除明细
-                          this.deleteRows = JSON.parse(
+
+                          let detailTableParse = JSON.parse(
                             detailTable[index].changes
-                          ).deletes
-                            ? JSON.parse(
-                                JSON.parse(detailTable[index].changes).deletes
-                              )
+                          );
+                          //填加明细
+                          this.addRows = detailTableParse.adds
+                            ? JSON.parse(detailTableParse.adds)
+                            : [];
+                          //删除明细
+                          this.deleteRows = detailTableParse.deletes
+                            ? JSON.parse(detailTableParse.deletes)
                             : [];
                           //更新明细
-                          let updateTd = JSON.parse(detailTable[index].changes)
-                            .updates
-                            ? JSON.parse(
-                                JSON.parse(detailTable[index].changes).updates
-                              )
+                          let updateTd = detailTableParse.updates
+                            ? JSON.parse(detailTableParse.updates)
                             : [];
 
-                          let fieldName = JSON.parse(
-                            detailTable[index].fieldName
-                          );
+                          let fieldName = detailTable[index].fieldName
+                            ? JSON.parse(detailTable[index].fieldName)
+                            : [];
                           //获取定位字段key值
                           for (let id in fieldName) {
                             if (fieldName[id] === "ID") {
@@ -351,10 +349,14 @@ export default {
 
                           this.beforeChangeData = JSON.parse(
                             detailTable[index].oldData
-                          );
+                          )
+                            ? JSON.parse(detailTable[index].oldData)
+                            : [];
                           this.afterChangeData = JSON.parse(
                             detailTable[index].newData
-                          );
+                          )
+                            ? JSON.parse(detailTable[index].newData)
+                            : [];
 
                           if (updateTd.length > 0) {
                             updateTd.forEach(update => {
@@ -415,11 +417,11 @@ export default {
     }
   },
 
-  filters:{
-    capitalize:function(value){
-       if (!value) return '';
-       value = Math.abs(Number(value));
-       return value.toFixed(2);
+  filters: {
+    capitalize: function(value) {
+      if (!value) return "";
+      value = Math.abs(Number(value));
+      return value.toFixed(2);
     }
   },
 

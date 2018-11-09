@@ -32,8 +32,7 @@
         :styles="{top: '15px'}"
         @on-ok="confirmOrg" 
         @on-cancel="cancelSelectOrg" 
-        @on-visible-change="modalVisibleChange" 
-        :transfer="false">
+        @on-visible-change="modalVisibleChange">
         <div class="app-search">
           <Input 
             v-model="searchOrgValue" 

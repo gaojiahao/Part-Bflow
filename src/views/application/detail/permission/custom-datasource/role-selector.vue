@@ -32,8 +32,7 @@
         :styles="{top: '15px'}" 
         @on-ok="confirmDepartment" 
         @on-cancel="cancelSelectDep" 
-        @on-visible-change="modalVisibleChange" 
-        :transfer="false">
+        @on-visible-change="modalVisibleChange">
         <div class="app-search">
           <Input 
             v-model="searchDepValue" 

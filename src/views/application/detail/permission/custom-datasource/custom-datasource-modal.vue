@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <Modal v-model="showPermissionModal" title="自定义数据源" width="1000" :styles="{top: '15px'}" :mask-closable="false" @on-visible-change="modalVisibleChange">
+  <Modal v-model="showPermissionModal" title="自定义数据源" width="1000" :transfer="false" :styles="{top: '15px'}" :mask-closable="false" @on-visible-change="modalVisibleChange">
     <div>
       <Row :gutter="8" style="margin-bottom:10px;">
         <Button @click="addNewField" type="info" shape="circle" style="margin-bottom:5px;">新增字段</Button>

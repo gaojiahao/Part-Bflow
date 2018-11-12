@@ -459,7 +459,7 @@ export default {
 
   watch:{
     formItemGroupType:function(oldValue,newValue){
-      if(oldValue !== newValue){
+      if(oldValue !== newValue && !this.isEdit){
         this.formItem.highGroup=""
       }
     }

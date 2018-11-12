@@ -8,7 +8,7 @@
         
         <div>
             <span class="message-container-content">
-                <span class="message-container-creator notice-creator" >{{data.creatorName}}</span>
+                <span class="message-container-creator notice-creator" v-if="data.noticeSource == 'processStatusChange'" >{{data.creatorName}}</span>
                 <span class="message-container-creator notice-creator"  v-if="data.noticeSource == 'processStatusOvertime'">路塔</span>
                 :
                 <a @click="handleViewDetail">{{data.tempContent.transCode}}</a>实例

@@ -112,7 +112,7 @@ export default {
               let type = '';
               switch(params.row.groupType){
                 case 'M': 
-                  type = '管理部';
+                  type = '管理层';
                   break;
                 case 'A': 
                   type = '事业部';
@@ -122,6 +122,12 @@ export default {
                   break;
                 case 'G': 
                   type = '小组';
+                  break;
+                case 'D': 
+                  type = '直营店';
+                  break;
+                case 'J': 
+                  type = '加盟店';
                   break;
               }
               return h('span',{},type);

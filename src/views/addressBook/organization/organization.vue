@@ -451,6 +451,20 @@ export default {
     };
   },
 
+  computed: {
+    formItemGroupType() {
+　　　　return this.formItem.groupType;
+　　}
+  },
+
+  watch:{
+    formItemGroupType:function(oldValue,newValue){
+      if(oldValue !== newValue){
+        this.formItem.highGroup=""
+      }
+    }
+  },
+
   methods: {
     /** 
      * 切换相关实例
@@ -654,9 +668,13 @@ export default {
 
     //展示上级组织选择器
     selectHighOrgModal() {
-      this.isShowMemberModal = true;
-      this.searchHighOrgValue = "";
-      this.getAllHigherGroupByGroupType(this.listUserCurrentPage, this.pageSize);
+      if(this.formItem.groupType){
+        this.isShowMemberModal = true;
+        this.searchHighOrgValue = "";
+        this.getAllHigherGroupByGroupType(this.listUserCurrentPage, this.pageSize);
+      }else{
+        this.$Message.info('组织类型不能为空！')
+      }
     },
     //确认选择的上级组织
     saveSelectionHighOrg() {

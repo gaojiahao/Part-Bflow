@@ -5,6 +5,7 @@
 <template>
   <Modal 
     v-model="showPermissionModal" 
+    :transfer="false"
     title="视图权限" 
     width="600" 
     :mask-closable="false" 

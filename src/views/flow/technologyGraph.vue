@@ -508,21 +508,18 @@ export default {
         });
     },
 
-    /**
+     /**
      * 选择任务类型
      */
     radioGroupChange: function(e) {
-      let type = "myToDo";
       this.taskType = e;
-      if (e === "teamtask" && this.taskStatus === "done") {
-        this.type = "teamDone";
-      } else if (e === "teamtask" && this.taskStatus === "todo") {
-        this.type = "teamToDo";
-      } else if (e === "mytask" && this.taskStatus === "done") {
-        this.type = "myDone";
-      } else if (e === "mytask" && this.taskStatus === "todo") {
-        this.type = "myToDo";
-      }
+      let actions = new Map([
+        ['teamtask_done',()=>{return 'teamDone'}],
+        ['teamtask_todo',()=>{return 'teamTodo'}],
+        ['mytask_done',()=>{return 'myDone'}],
+        ['mytask_todo',()=>{return 'myToDo'}]
+      ]);
+      this.type = actions.get(`${e}_${this.taskStatus}`)();
       this.getTaskCountFilter(this.type, this.orderCode);
     },
 
@@ -530,17 +527,14 @@ export default {
      * 选择任务状态
      */
     radioGroupChangeDoneOrTodo: function(e) {
-      let type = "myToDo";
       this.taskStatus = e;
-      if (this.taskType === "teamtask" && e === "done") {
-        this.type = "teamDone";
-      } else if (this.taskType === "teamtask" && e === "todo") {
-        this.type = "teamToDo";
-      } else if (this.taskType === "mytask" && e === "done") {
-        this.type = "myDone";
-      } else if (this.taskType === "mytask" && e === "todo") {
-        this.type = "myToDo";
-      }
+       let actions = new Map([
+        ['teamtask_done',()=>{return 'teamDone'}],
+        ['teamtask_todo',()=>{return 'teamTodo'}],
+        ['mytask_done',()=>{return 'myDone'}],
+        ['mytask_todo',()=>{return 'myToDo'}]
+      ]);
+      this.type = actions.get(`${this.taskType}_${e}`)();
       this.getTaskCountFilter(this.type, this.orderCode);
     },
 

@@ -584,15 +584,14 @@ export default {
 
     radioGroupChange: function(e) {
       this.taskType = e;
-      if (this.taskType === "teamtask" && this.doneortodo === "done") {
-        this.type = "teamDone";
-      } else if (this.taskType === "teamtask" && this.doneortodo === "todo") {
-        this.type = "teamTodo";
-      } else if (this.taskType === "mytask" && this.doneortodo === "done") {
-        this.type = "myDone";
-      } else if (this.taskType === "mytask" && this.doneortodo === "todo") {
-        this.type = "myToDo";
-      }
+      let actions = new Map([
+        ['teamtask_done',()=>{return 'teamDone'}],
+        ['teamtask_todo',()=>{return 'teamTodo'}],
+        ['mytask_done',()=>{return 'myDone'}],
+        ['mytask_todo',()=>{return 'myToDo'}]
+      ])
+      this.type = actions.get(`${this.taskType}_${this.doneortodo}`)();
+
       if (!this.orderCode && !this.projectName) {
         switch (this.type) {
           case "teamDone":
@@ -623,15 +622,14 @@ export default {
 
     radioGroupChangeDoneOrTodo: function(e) {
       this.doneortodo = e;
-      if (this.taskType === "teamtask" && this.doneortodo === "done") {
-        this.type = "teamDone";
-      } else if (this.taskType === "teamtask" && this.doneortodo === "todo") {
-        this.type = "teamTodo";
-      } else if (this.taskType === "mytask" && this.doneortodo === "done") {
-        this.type = "myDone";
-      } else if (this.taskType === "mytask" && this.doneortodo === "todo") {
-        this.type = "myToDo";
-      }
+       let actions = new Map([
+        ['teamtask_done',()=>{return 'teamDone'}],
+        ['teamtask_todo',()=>{return 'teamTodo'}],
+        ['mytask_done',()=>{return 'myDone'}],
+        ['mytask_todo',()=>{return 'myToDo'}]
+      ])
+      this.type = actions.get(`${this.taskType}_${this.doneortodo}`)();
+      
       if (!this.orderCode && !this.projectName) {
         switch (this.type) {
           case "teamDone":

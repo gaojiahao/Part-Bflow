@@ -29,6 +29,8 @@
 
             <pro-status-tpl :data="n" v-if="n.type=='processStatus'" ></pro-status-tpl>
 
+            <instance-create-notice :data="n" v-if="n.type=='instanceCreate'"></instance-create-notice>
+
         </div>
     </div>
 </template>
@@ -38,6 +40,7 @@ import flowTaskTpl from "@/views/notifications/notice-tpl/flowTaskTpl";
 import commentNoticeTpl from "@/views/notifications/notice-tpl/commentNoticeTpl";
 import praiseNoticeTpl from "@/views/notifications/notice-tpl/praiseNoticeTpl";
 import ProStatusTpl from "@/views/notifications/notice-tpl/pro-status-tpl";
+import InstanceCreateNotice from "@/views/notifications/notice-tpl/instance-create-notice";
 
 import {getAllnotifications} from "@/services/notificationsService";
 export default {
@@ -46,7 +49,8 @@ export default {
         flowTaskTpl,
         commentNoticeTpl,
         praiseNoticeTpl,
-        ProStatusTpl
+        ProStatusTpl,
+        InstanceCreateNotice
     },
     props:{
         list:'',

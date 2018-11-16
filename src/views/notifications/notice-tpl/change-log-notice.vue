@@ -3,16 +3,15 @@
 </style>
 <template>
     <div class="message-container" 
-        :class="{'noticefromme':JSON.parse(data.content).creator===$currentUser.nickname}">
-        <div>{{JSON.parse(data.content).crtTime}}</div>
+        :class="{'noticefromme':data.tempContent.creator===$currentUser.nickname}">
+        <div>{{data.tempContent.crtTime}}</div>
         
         <div>
             <span class="message-container-content">
-                <span class="message-container-creator notice-creator">路塔</span>
-                <span style="font-size: 12px;">:您有新的变更日志</span>
-                <span>创建人:</span>
-                <strong>{{ JSON.parse(data.content).creator }}</strong>
-                <a @click="handleViewDetail">去查看</a>
+                
+                <span class="message-container-creator notice-creator">{{ data.tempContent.creator }}</span>
+                <span>:应用有更新,点击</span>
+                <a @click="handleViewDetail">了解</a>更多
             </span>
         </div>
     </div>
@@ -26,10 +25,7 @@ export default {
     },
     methods:{
         handleViewDetail:function () {
-            this.$router.push({
-                path: `/application/detail/${this.data.listId}`,
-                params: { listId: this.data.listId }
-            });
+            window.open('/Site/index.html#appSetting/' + this.data.listId);
         }
     }
 }

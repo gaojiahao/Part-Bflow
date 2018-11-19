@@ -36,8 +36,8 @@
 
         <!-- 节点绘制 -->
         <g v-for="item in nodeList" :key="item.id">
-            <shape v-if="item.id=='start'||item.id=='end'" :xAxion="item.xAxion+nodeWidth/2" :yAxion="item.yAxion" color="#7da87b"  ></shape>
-            <rect v-else
+            <!-- <shape v-if="item.id=='start'||item.id=='end'" :xAxion="item.xAxion+nodeWidth/2" :yAxion="item.yAxion" color="#7da87b"  ></shape> -->
+            <rect
               :x="item.xAxion" 
               :y="item.yAxion-nodeHeight/2" 
               :width="nodeWidth" 
@@ -205,11 +205,11 @@ export default {
                       " " +
                     (parentNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    (parentNodeYAxion+this.nodeHeight/2+10) +
+                    (parentNodeYAxion+this.nodeHeight/2+20) +
                       " " +
                      (nextNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    (nextNodeYAxion+this.nodeHeight/2+10) +
+                    (nextNodeYAxion+this.nodeHeight/2+20) +
                      " " +
                    (nextNodeXAxion+this.nodeWidth/2) +
                     "," +

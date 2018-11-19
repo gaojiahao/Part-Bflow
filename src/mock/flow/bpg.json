@@ -39,30 +39,30 @@
             }]
         },
         {
-            "title": "产品设计_1",
-            "id": "0003_1",
-            "position":"pos_003",
-            "process":"pro_002"
-        },
-        {
-            "title": "产品设计_2",
-            "id": "0003_2",
-            "position":"pos_003",
-            "process":"pro_002"
-        },
-        {
             "title": "产品设计",
             "id": "0003",
             "y": "y0005",
             "position":"pos_005",
-            "process":"pro_002"
+            "process":"pro_002",
+            "nextNode":[{
+                "id":"0004",
+                "title": "产品设计评审",
+                "position":"pos_005",
+                "process":"pro_002"
+            }]
         },
         {
             "title": "产品设计评审",
             "id": "0004",
             "y": "y0005",
             "position":"pos_005",
-            "process":"pro_002"
+            "process":"pro_002",
+            "nextNode":[{
+                "id":"0005",
+                "title": "分支",
+                "position":"pos_005",
+                "process":"pro_002"
+            }]
         },
         {
             "title": "分支",
@@ -85,11 +85,6 @@
                 "title": "产品打样",
                 "position":"pos_004",
                 "process":"pro_003"
-            },{
-                "title": "产品设计_1",
-                "id": "0003_1",
-                "position":"pos_003",
-                "process":"pro_002"
             }]
         },
         {
@@ -118,7 +113,13 @@
             "id": "0008",
             "y": "y0001",
             "position":"pos_001",
-            "process":"pro_004"
+            "process":"pro_004",
+            "nextNode":[{
+                "id":"0009",
+                "title": "分支",
+                "position":"pos_001",
+                "process":"pro_004"
+            }]
         },
         {
             "title": "分支",
@@ -131,6 +132,11 @@
                 "title": "产品打样",
                 "position":"pos_004",
                 "process":"pro_003"
+            },{
+                "id":"00010",
+                "title": "封样",
+                "position":"pos_001",
+                "process":"pro_004"
             }]
         },
         {
@@ -138,14 +144,26 @@
             "id": "00010",
             "y": "y0001",
             "position":"pos_001",
-            "process":"pro_004"
+            "process":"pro_004",
+            "nextNode":[{
+                "id":"00011",
+                "title": "产品确认书",
+                "position":"pos_001",
+                "process":"pro_004"
+            }]
         },
         {
             "title": "产品确认书",
             "id": "00011",
             "y": "y0001",
             "position":"pos_001",
-            "process":"pro_004"
+            "process":"pro_004",
+            "nextNode":[{
+                "id":"00012",
+                "title": "分支",
+                "position":"pos_001",
+                "process":"pro_004"
+            }]
         },
         {
             "title": "分支",
@@ -158,6 +176,11 @@
                 "title": "产品发布",
                 "position":"pos_002",
                 "process":"pro_001"
+            },{
+                "title": "产品设计",
+                "id": "0003",
+                "position":"pos_005",
+                "process":"pro_002"
             }]
         },
         {
@@ -165,14 +188,26 @@
             "id": "00013",
             "y": "y0005",
             "position":"pos_005",
-            "process":"pro_005"
+            "process":"pro_005",
+            "nextNode":[{
+                "id":"00014",
+                "title": "用户反馈",
+                "position":"pos_006",
+                "process":"pro_006"
+            }]
         },
         {
             "title": "用户反馈",
             "id": "00014",
             "y": "y0006",
             "position":"pos_006",
-            "process":"pro_006"
+            "process":"pro_006",
+            "nextNode":[{
+                "id":"end",
+                "title": "结束",
+                "position":"pos_006",
+                "process":"pro_006"
+            }]
         },
         {
             "title": "结束",

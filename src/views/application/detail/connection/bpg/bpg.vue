@@ -205,11 +205,11 @@ export default {
                       " " +
                     (parentNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    (parentNodeYAxion+this.nodeHeight/2+20) +
+                    (parentNodeYAxion+this.nodeHeight/2+10) +
                       " " +
                      (nextNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    (nextNodeYAxion+this.nodeHeight/2+20) +
+                    (nextNodeYAxion+this.nodeHeight/2+10) +
                      " " +
                    (nextNodeXAxion+this.nodeWidth/2) +
                     "," +

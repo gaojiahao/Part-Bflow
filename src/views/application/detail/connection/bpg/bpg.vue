@@ -345,15 +345,12 @@ export default {
 
   mounted() {
     this.spinShow = true;
+    
     getMockData().then(res => {
       let that = this;
       that.title = res.title;
       that.position = res.position;
       that.svgHeight = res.position.length * that.defaultHeight + 40; //svg 画布高度
-
-      window.document.getElementsByClassName(
-      "svg-board"
-    )[0].style.height = (that.svgHeight+20)+'px';
 
       //处理流程步骤数据
       that.process = that.handleProcssData(res.process);
@@ -363,6 +360,13 @@ export default {
       that.nodeList = that.drawNodePoint(res.nodeList);
       //绘制线条
       that.drawLine(that.nodeList);
+
+       window.document.getElementsByClassName(
+      "svg-board"
+      )[0].style.height = (that.svgHeight+20)+'px';
+      window.document.getElementsByClassName(
+        "svg-board"
+      )[0].style.width = this.svgWidth+'px';
 
       this.spinShow = false;
     });

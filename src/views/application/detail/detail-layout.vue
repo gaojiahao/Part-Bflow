@@ -47,6 +47,11 @@
           连接&API
         </MenuItem>
       </router-link>
+       <router-link :to="{ name:'BPG'}">
+        <MenuItem name="BPG">
+          BPG
+        </MenuItem>
+      </router-link>
     </Menu>
 
   <div class="detail-content">

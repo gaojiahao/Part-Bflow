@@ -1,0 +1,192 @@
+{
+    "nodeList": [ 
+        {
+            "title": "开始",
+            "id": "start",
+            "position":"pos_001",
+            "process":"pro_001",
+            "nextNode":[{
+                "id":"0001",
+                "title": "产品需求",
+                "position":"pos_001",
+                "process":"pro_001"
+            }]
+        },
+        {
+            "title": "产品需求",
+            "id": "0001",
+            "y": "y0001",
+            "position":"pos_001",
+            "process":"pro_001",
+            "nextNode":[{
+                "id":"0002",
+                "title": "需求分析",
+                "position":"pos_002",
+                "process":"pro_001"
+            }]
+        },
+        {
+            "title": "需求分析",
+            "id": "0002",
+            "y": "y0002",
+            "position":"pos_002",
+            "process":"pro_001",
+            "nextNode":[{
+                "id":"0003",
+                "title": "需求分析",
+                "position":"pos_005",
+                "process":"pro_002"
+            }]
+        },
+        {
+            "title": "产品设计",
+            "id": "0003",
+            "y": "y0005",
+            "position":"pos_005",
+            "process":"pro_002"
+        },
+        {
+            "title": "产品设计评审",
+            "id": "0004",
+            "y": "y0005",
+            "position":"pos_005",
+            "process":"pro_002"
+        },
+        {
+            "title": "分支",
+            "id": "0005",
+            "y": "y0005",
+            "position":"pos_005",
+            "process":"pro_002"
+        },
+        {
+            "title": "供应商开发",
+            "id": "0006",
+            "y": "y0003",
+            "position":"pos_003",
+            "process":"pro_003"
+        },
+        {
+            "title": "产品打样",
+            "id": "0007",
+            "y": "y0004",
+            "position":"pos_004",
+            "process":"pro_003"
+        },
+        {
+            "title": "样品确认",
+            "id": "0008",
+            "y": "y0001",
+            "position":"pos_001",
+            "process":"pro_004"
+        },
+        {
+            "title": "分支",
+            "id": "0009",
+            "y": "y0001",
+            "position":"pos_001",
+            "process":"pro_004"
+        },
+        {
+            "title": "封样",
+            "id": "00010",
+            "y": "y0001",
+            "position":"pos_001",
+            "process":"pro_004"
+        },
+        {
+            "title": "产品确认书",
+            "id": "00011",
+            "y": "y0001",
+            "position":"pos_001",
+            "process":"pro_004"
+        },
+        {
+            "title": "分支",
+            "id": "00012",
+            "y": "y0001",
+            "position":"pos_001",
+            "process":"pro_004"
+        },
+        {
+            "title": "产品发布",
+            "id": "00013",
+            "y": "y0005",
+            "position":"pos_005",
+            "process":"pro_005"
+        },
+        {
+            "title": "用户反馈",
+            "id": "00014",
+            "y": "y0006",
+            "position":"pos_006",
+            "process":"pro_006"
+        },
+        {
+            "title": "结束",
+            "id": "0007",
+            "y": "y0006",
+            "position":"pos_006",
+            "process":"pro_006"
+        }
+    ],
+    "process": [
+        {
+            "name": "需求",
+            "id": "pro_001",
+            "length": 2
+        },
+        {
+            "name": "设计",
+            "id": "pro_002",
+            "length": 3
+        },
+        {
+            "name": "打样",
+            "id": "pro_003",
+            "length": 1
+        },
+        {
+            "name": "客户确认",
+            "id": "pro_004",
+            "length": 5
+        },
+        {
+            "name": "发布",
+            "id": "pro_005",
+            "length": 1
+        },
+        {
+            "name": "反馈",
+            "id": "pro_006",
+            "length": 2
+        }
+    ],
+    "position": [
+        {
+            "name": "客户",
+            "id": "pos_001"
+        },
+        {
+            "name": "销售",
+            "id": "pos_002"
+        },
+        {
+            "name": "采购",
+            "id": "pos_003"
+        },
+        {
+            "name": "生产",
+            "id": "pos_004"
+        },
+        {
+            "name": "研发",
+            "id": "pos_005"
+        },
+        {
+            "name": "售后",
+            "id": "pos_006"
+        }
+    ],
+    "title": "产品研发BPG"
+}

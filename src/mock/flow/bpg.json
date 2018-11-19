@@ -70,7 +70,12 @@
             "y": "y0005",
             "position":"pos_005",
             "process":"pro_002",
-            "nextNode":[{
+            "nextNode":[ {
+                "title": "产品设计",
+                "id": "0003",
+                "position":"pos_005",
+                "process":"pro_002"
+            },{
                 "id":"0006",
                 "title": "供应商开发",
                 "position":"pos_003",

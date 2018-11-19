@@ -198,13 +198,31 @@ export default {
               parentNodeYAxion = +parentNode[1],
               nextNodeXAxion = +nextNode[0],
               nextNodeYAxion = +nextNode[1];
-            return (parentNodeXAxion+this.nodeWidth) +
+            if(Math.abs(parentNodeXAxion-nextNodeXAxion)>(this.graphSpace*2+this.nodeWidth)){
+               return (parentNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    parentNodeYAxion +
-                    " " +
-                    (nextNodeXAxion-3) +
+                    (parentNodeYAxion+this.nodeHeight/2) +
+                      " " +
+                    (parentNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    nextNodeYAxion;
+                    (parentNodeYAxion+this.nodeHeight/2+10) +
+                      " " +
+                     (nextNodeXAxion+this.nodeWidth/2) +
+                    "," +
+                    (nextNodeYAxion+this.nodeHeight/2+10) +
+                     " " +
+                   (nextNodeXAxion+this.nodeWidth/2) +
+                    "," +
+                    (nextNodeYAxion+this.nodeHeight/2+3);
+            } else{
+              return (parentNodeXAxion+this.nodeWidth) +
+                      "," +
+                      parentNodeYAxion +
+                      " " +
+                      (nextNodeXAxion-3) +
+                      "," +
+                      nextNodeYAxion;
+            } 
         }],
         [2,(parentNode,nextNode)=>{
           let parentNodeXAxion = +parentNode[0],

@@ -36,12 +36,14 @@
 
         <!-- 节点绘制 -->
         <g v-for="item in nodeList" :key="item.id">
-            <rect 
+            <shape v-if="item.id=='start'||item.id=='end'" :xAxion="item.xAxion+nodeWidth/2" :yAxion="item.yAxion" color="#7da87b"  ></shape>
+            <rect v-else
               :x="item.xAxion" 
               :y="item.yAxion-nodeHeight/2" 
               :width="nodeWidth" 
               :height="nodeHeight" 
               style="fill:#ff9234; stroke:#de9002; stroke-width:1px;" />
+             
             <text 
               :x="item.xAxion+nodeWidth/2"
               :y="item.yAxion-5"
@@ -61,9 +63,12 @@
 
 <script>
 import { getMockData } from "@/services/flowService";
-
+import Shape from "@/components/Shape";
 export default {
-  
+  components: {
+    Shape,
+  },
+
   data() {
     return {
       spinShow: false,

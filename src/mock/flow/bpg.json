@@ -39,6 +39,18 @@
             }]
         },
         {
+            "title": "产品设计_1",
+            "id": "0003_1",
+            "position":"pos_003",
+            "process":"pro_002"
+        },
+        {
+            "title": "产品设计_2",
+            "id": "0003_2",
+            "position":"pos_003",
+            "process":"pro_002"
+        },
+        {
             "title": "产品设计",
             "id": "0003",
             "y": "y0005",
@@ -57,7 +69,18 @@
             "id": "0005",
             "y": "y0005",
             "position":"pos_005",
-            "process":"pro_002"
+            "process":"pro_002",
+            "nextNode":[{
+                "id":"0006",
+                "title": "供应商开发",
+                "position":"pos_003",
+                "process":"pro_003"
+            },{
+                "id":"0007",
+                "title": "产品打样",
+                "position":"pos_004",
+                "process":"pro_003"
+            }]
         },
         {
             "title": "供应商开发",
@@ -71,7 +94,14 @@
             "id": "0007",
             "y": "y0004",
             "position":"pos_004",
-            "process":"pro_003"
+            "process":"pro_003",
+            "nextNode": [{
+                "title": "样品确认",
+                "id": "0008",
+                "y": "y0001",
+                "position":"pos_001",
+                "process":"pro_004"
+            }]
         },
         {
             "title": "样品确认",
@@ -85,7 +115,13 @@
             "id": "0009",
             "y": "y0001",
             "position":"pos_001",
-            "process":"pro_004"
+            "process":"pro_004",
+            "nextNode": [{
+                "id":"0007",
+                "title": "产品打样",
+                "position":"pos_004",
+                "process":"pro_003"
+            }]
         },
         {
             "title": "封样",
@@ -106,7 +142,13 @@
             "id": "00012",
             "y": "y0001",
             "position":"pos_001",
-            "process":"pro_004"
+            "process":"pro_004",
+            "nextNode":[{
+                "id":"00013",
+                "title": "产品发布",
+                "position":"pos_002",
+                "process":"pro_001"
+            }]
         },
         {
             "title": "产品发布",
@@ -124,7 +166,7 @@
         },
         {
             "title": "结束",
-            "id": "0007",
+            "id": "end",
             "y": "y0006",
             "position":"pos_006",
             "process":"pro_006"

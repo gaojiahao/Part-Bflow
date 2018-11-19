@@ -235,6 +235,42 @@ export default {
                     (nextNodeXAxion-3) +
                     "," +
                     nextNodeYAxion;
+              }else if(parentNodeXAxion-nextNodeXAxion<0 && parentNodeYAxion-nextNodeYAxion>0){ //右上
+                point =  (parentNodeXAxion+this.nodeWidth) +
+                    "," +
+                    parentNodeYAxion +
+                    " " +
+                    (parentNodeXAxion+this.nodeWidth+10) +
+                    "," +
+                    parentNodeYAxion +
+                    " " +
+                     (parentNodeXAxion+this.nodeWidth+10) +
+                    "," +
+                    nextNodeYAxion+
+                     " " +
+                    (nextNodeXAxion-3) +
+                    "," +
+                    nextNodeYAxion;
+              }else if(parentNodeXAxion-nextNodeXAxion>0 && parentNodeYAxion-nextNodeYAxion<0){ //左下
+                point =  parentNodeXAxion +
+                    "," +
+                    parentNodeYAxion +
+                    " " +
+                    (parentNodeXAxion-10) +
+                    "," +
+                    parentNodeYAxion +
+                    " " +
+                     (parentNodeXAxion-10) +
+                    "," +
+                     (nextNodeYAxion+this.nodeHeight/2+10) +
+                     " " +
+                    (nextNodeXAxion+this.nodeWidth/2) +
+                    "," +
+                    (nextNodeYAxion+this.nodeHeight/2+10) +
+                     " " +
+                   (nextNodeXAxion+this.nodeWidth/2) +
+                    "," +
+                    (nextNodeYAxion+this.nodeHeight/2+3);
               }
               return point
         }]

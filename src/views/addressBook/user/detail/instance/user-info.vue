@@ -486,7 +486,7 @@ export default {
     //获取所有公司数据
     getAllCompanysData(searchText) {
         this.loading = true;
-        getAllCompanys(this.companyTable.pageSize,this.companyTable.currentPage,searchText).then(res => {
+        getAllCompanys(this.companyTable.pageSize,this.companyTable.currentPage,searchText,4).then(res => {
             this.companyData = res.tableContent;
             this.companyTable.total = res.dataCount;
             this.loading = false;

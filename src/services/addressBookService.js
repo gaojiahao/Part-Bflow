@@ -624,10 +624,11 @@ export const removeCompany = (groupIds) => {
  * 获取所有公司数据
  * 
  */
-export const getAllCompanys = (pageSize, currentPage, searchValue) => request('/H_roleplay-si/sysGroup/getCompanyList', {
+export const getAllCompanys = (pageSize, currentPage, searchValue, targer) => request('/H_roleplay-si/sysGroup/getCompanyList', {
   currentPage: currentPage,
   pageSize: pageSize,
-  search: searchValue
+  search: searchValue,
+  target: targer
 });
 
 /**

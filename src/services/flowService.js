@@ -48,7 +48,7 @@ export const getMyFavorite = () => request('/H_roleplay-si/ds/getMyFavorite')
  */
 export const getAppTaskCount = (params) => request('/H_roleplay-si/trans/getAppTaskInfo', params)
 
-export const getMockData = () => request('../mock/flow/technologyGraph.json');
+export const getMockData = () => request('../mock/flow/bpg.json');
 
 /** 
  * 获取订单列表

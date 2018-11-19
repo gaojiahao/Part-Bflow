@@ -222,7 +222,25 @@ export default {
               nextNodeYAxion = +nextNode[1];
               //判断下节点在父节点什么位置
               if(parentNodeXAxion-nextNodeXAxion>0 && parentNodeYAxion-nextNodeYAxion>0){ //左上
-
+                point =  (parentNodeXAxion+this.nodeWidth/2) +
+                    "," +
+                    (parentNodeYAxion-this.nodeHeight/2) +
+                    " " +
+                    (parentNodeXAxion+this.nodeWidth/2) +
+                    "," +
+                    (parentNodeYAxion-this.nodeHeight/2-10) +
+                    " " +
+                    (nextNodeXAxion-10) +
+                    "," +
+                    (parentNodeYAxion-this.nodeHeight/2-10) +
+                    " " +
+                     (nextNodeXAxion-10) +
+                    "," +
+                    nextNodeYAxion+
+                     " " +
+                    (nextNodeXAxion-3) +
+                    "," +
+                    nextNodeYAxion;
               }else if(parentNodeXAxion-nextNodeXAxion<0 && parentNodeYAxion-nextNodeYAxion<0){ //右下
                 point =  (parentNodeXAxion+this.nodeWidth/2) +
                     "," +
@@ -236,13 +254,17 @@ export default {
                     "," +
                     nextNodeYAxion;
               }else if(parentNodeXAxion-nextNodeXAxion<0 && parentNodeYAxion-nextNodeYAxion>0){ //右上
-                point =  (parentNodeXAxion+this.nodeWidth) +
+                point =  (parentNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    parentNodeYAxion +
+                    (parentNodeYAxion-this.nodeHeight/2) +
+                    " " +
+                    (parentNodeXAxion+this.nodeWidth/2) +
+                    "," +
+                    (parentNodeYAxion-this.nodeHeight/2-10) +
                     " " +
                     (parentNodeXAxion+this.nodeWidth+10) +
                     "," +
-                    parentNodeYAxion +
+                    (parentNodeYAxion-this.nodeHeight/2-10) +
                     " " +
                      (parentNodeXAxion+this.nodeWidth+10) +
                     "," +

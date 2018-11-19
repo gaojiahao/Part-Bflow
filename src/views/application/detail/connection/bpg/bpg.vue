@@ -251,11 +251,11 @@ export default {
                     " " +
                     (parentNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    (parentNodeYAxion-this.nodeHeight/2-10) +
+                    (parentNodeYAxion-this.nodeHeight/2-20) +
                     " " +
                     (nextNodeXAxion-10) +
                     "," +
-                    (parentNodeYAxion-this.nodeHeight/2-10) +
+                    (parentNodeYAxion-this.nodeHeight/2-20) +
                     " " +
                      (nextNodeXAxion-10) +
                     "," +
@@ -283,11 +283,11 @@ export default {
                     " " +
                     (parentNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    (parentNodeYAxion-this.nodeHeight/2-10) +
+                    (parentNodeYAxion-this.nodeHeight/2-20) +
                     " " +
                     (parentNodeXAxion+this.nodeWidth+10) +
                     "," +
-                    (parentNodeYAxion-this.nodeHeight/2-10) +
+                    (parentNodeYAxion-this.nodeHeight/2-20) +
                     " " +
                      (parentNodeXAxion+this.nodeWidth+10) +
                     "," +
@@ -307,11 +307,11 @@ export default {
                     " " +
                      (parentNodeXAxion-10) +
                     "," +
-                     (nextNodeYAxion+this.nodeHeight/2+10) +
+                     (nextNodeYAxion+this.nodeHeight/2+20) +
                      " " +
                     (nextNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    (nextNodeYAxion+this.nodeHeight/2+10) +
+                    (nextNodeYAxion+this.nodeHeight/2+20) +
                      " " +
                    (nextNodeXAxion+this.nodeWidth/2) +
                     "," +

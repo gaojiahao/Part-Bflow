@@ -351,6 +351,10 @@ export default {
       that.position = res.position;
       that.svgHeight = res.position.length * that.defaultHeight + 40; //svg 画布高度
 
+      window.document.getElementsByClassName(
+      "svg-board"
+    )[0].style.height = (that.svgHeight+20)+'px';
+
       //处理流程步骤数据
       that.process = that.handleProcssData(res.process);
 

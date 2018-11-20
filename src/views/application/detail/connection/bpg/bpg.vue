@@ -237,13 +237,24 @@ export default {
               parentNodeYAxion = +parentNode[1],
               nextNodeXAxion = +nextNode[0],
               nextNodeYAxion = +nextNode[1];
-            return (parentNodeXAxion+this.nodeWidth/2) +
+
+            if(nextNodeYAxion<parentNodeYAxion){   //箭头朝上
+              return (parentNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    (parentNodeYAxion+this.nodeHeight/2) +
+                    (parentNodeYAxion-this.nodeHeight/2) +
                     " " +
                     (nextNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    (nextNodeYAxion-this.nodeHeight/2-3);
+                    (nextNodeYAxion+this.nodeHeight/2+3);
+            }else if(nextNodeYAxion>parentNodeYAxion){    //箭头朝下
+              return (parentNodeXAxion+this.nodeWidth/2) +
+                      "," +
+                      (parentNodeYAxion+this.nodeHeight/2) +
+                      " " +
+                      (nextNodeXAxion+this.nodeWidth/2) +
+                      "," +
+                      (nextNodeYAxion-this.nodeHeight/2-3);
+            } 
         }],
         [3,(parentNode,nextNode)=>{
            let point = "0,0,0,0";

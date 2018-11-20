@@ -84,7 +84,7 @@ export default {
       topSpace: 40, 
       graphSpace:30,//节点间间距
       defaultWidth: 130, //单元格默认宽度
-      defaultHeight: 100, //单元格默认高度
+      defaultHeight: 140, //单元格默认高度
       nodeWidth: 80, //节点宽度
       nodeHeight: 40, //节点高度
       nodeList: [],   //节点数据
@@ -206,22 +206,22 @@ export default {
               parentNodeYAxion = +parentNode[1],
               nextNodeXAxion = +nextNode[0],
               nextNodeYAxion = +nextNode[1];
-            if(Math.abs(parentNodeXAxion-nextNodeXAxion)>(this.graphSpace*2+this.nodeWidth*2)){
+            if(Math.abs(parentNodeXAxion-nextNodeXAxion)>(this.graphSpace*4+this.nodeWidth)){
                return (parentNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    (parentNodeYAxion+this.nodeHeight/2) +
+                    (parentNodeYAxion-this.nodeHeight/2) +
                       " " +
                     (parentNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    (parentNodeYAxion+this.nodeHeight/2+10) +
+                    (parentNodeYAxion-this.nodeHeight/2-10) +
                       " " +
                      (nextNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    (nextNodeYAxion+this.nodeHeight/2+10) +
+                    (nextNodeYAxion-this.nodeHeight/2-10) +
                      " " +
                    (nextNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    (nextNodeYAxion+this.nodeHeight/2+3);
+                    (nextNodeYAxion-this.nodeHeight/2-3);
             } else{
               return (parentNodeXAxion+this.nodeWidth) +
                       "," +

@@ -284,15 +284,19 @@ export default {
                     "," +
                     nextNodeYAxion;
               }else if(parentNodeXAxion-nextNodeXAxion<0 && parentNodeYAxion-nextNodeYAxion<0){ //右下
-                point =  (parentNodeXAxion+this.nodeWidth) +
+                point =  (parentNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    (parentNodeYAxion) +
+                    (parentNodeYAxion+this.nodeHeight/2) +
                     " " +
-                     (parentNodeXAxion+this.nodeWidth+10) +
+                     (parentNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    parentNodeYAxion+
+                    (parentNodeYAxion+this.nodeHeight/2+20)+
                      " " +
-                    (parentNodeXAxion+this.nodeWidth+10) +
+                    (nextNodeXAxion-20) +
+                    "," +
+                    (parentNodeYAxion+this.nodeHeight/2+20)+
+                     " " +
+                    (nextNodeXAxion-20) +
                     "," +
                     nextNodeYAxion+
                      " " +

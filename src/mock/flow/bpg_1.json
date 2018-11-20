@@ -181,20 +181,6 @@
             }]
         },
         {
-            "title": "现款销售交付",
-            "id": "00012",
-            "position": "pos_003",
-            "process": "pro_003",
-            "nextNode": [
-                {
-                    "id": "00015",
-                    "title": "售后收款",
-                    "position": "pos_003",
-                    "process": "pro_003"
-                }
-            ]
-        },
-        {
             "title": "预售销售订单",
             "id": "00014",
             "position": "pos_003",
@@ -203,6 +189,20 @@
                 {
                     "id": "00013",
                     "title": "产品销售交付",
+                    "position": "pos_003",
+                    "process": "pro_003"
+                }
+            ]
+        },
+        {
+            "title": "现款销售交付",
+            "id": "00012",
+            "position": "pos_003",
+            "process": "pro_003",
+            "nextNode": [
+                {
+                    "id": "00015",
+                    "title": "售后收款",
                     "position": "pos_003",
                     "process": "pro_003"
                 }

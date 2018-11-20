@@ -12,7 +12,7 @@
       <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%">
         <defs>
           <marker id="arrow" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" viewBox="0 0 15 15" refX="6" refY="6" orient="auto">
-            <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: #9cd3d3;" />
+            <path d="M2,0 L10,6 L2,12 L6,6 L2,0" style="fill: #4672c4;" />
           </marker>
         </defs>
         
@@ -21,29 +21,36 @@
           <text :x="item.xAxion" y="20" class="top-process">
             {{item.name}}
           </text>
-          <line :x1="item.xAxionLine" y1="0" :x2="item.xAxionLine" :y2="svgHeight" style="stroke:#bec1cb;stroke-width:1" />
+          <line :x1="item.xAxionLine" y1="0" :x2="item.xAxionLine" :y2="svgHeight" style="stroke:#eceef6;stroke-width:2" />
         </g>
-        <line x1="40" y1="0" x2="40" :y2="svgHeight" style="stroke:#bec1cb;stroke-width:1" />
+        <line x1="40" y1="0" x2="40" :y2="svgHeight" style="stroke:#eceef6;stroke-width:2" />
         
         <!-- 列绘制 -->
         <g v-for="(item,index) in position" :key="item.id">
           <text x="30" :y="topSpace+(defaultHeight/2)*(2*index+1)" class="top-process left-slide">
             {{item.name}}
           </text>
-          <line x1="0" :y1="topSpace+defaultHeight*index" :x2="topSpace+svgWidth" :y2="topSpace+defaultHeight*index" style="stroke:#bec1cb;stroke-width:1" />
+          <line x1="0" :y1="topSpace+defaultHeight*index" :x2="topSpace+svgWidth" :y2="topSpace+defaultHeight*index" style="stroke:#eceef6;stroke-width:2" />
         </g>
-        <line x1="0" :y1="svgHeight" :x2="topSpace+svgWidth" :y2="svgHeight" style="stroke:#bec1cb;stroke-width:1" />
+        <line x1="0" :y1="svgHeight" :x2="topSpace+svgWidth" :y2="svgHeight" style="stroke:#eceef6;stroke-width:2" />
 
         <!-- 节点绘制 -->
         <g v-for="item in nodeList" :key="item.id">
             <!-- <shape v-if="item.id=='start'||item.id=='end'" :xAxion="item.xAxion+nodeWidth/2" :yAxion="item.yAxion" color="#7da87b"  ></shape> -->
-            <polygon v-if="item.type ==='branch'" :points="(item.xAxion+nodeWidth/2)+','+(item.yAxion-nodeHeight/2)+' '+(item.xAxion+nodeWidth)+','+item.yAxion+' '+(item.xAxion+nodeWidth/2)+','+(item.yAxion+nodeHeight/2)+' '+item.xAxion+','+item.yAxion" style="fill: #0d91ee;stroke: #5763ef;stroke-width:1"/>
+            <polygon 
+              v-if="item.type ==='branch'" 
+              :points="(item.xAxion+nodeWidth/2)+','+(item.yAxion-nodeHeight/2)+' '
+                      +(item.xAxion+nodeWidth)+','+item.yAxion+' '
+                      +(item.xAxion+nodeWidth/2)+','+(item.yAxion+nodeHeight/2)+' '
+                      +item.xAxion+','+item.yAxion" 
+              style="fill: #4672c4;stroke: #4672c4;stroke-width:1"
+            />
             <rect v-else
               :x="item.xAxion" 
               :y="item.yAxion-nodeHeight/2" 
               :width="nodeWidth" 
               :height="nodeHeight" 
-              style="fill:#ff9234; stroke:#de9002; stroke-width:1px;" />
+              style="fill:#d16d2a; stroke:#b3622b; stroke-width:1px;" />
              
             <text 
               :x="item.xAxion+nodeWidth/2"
@@ -55,7 +62,7 @@
         </g>
 
          <g v-for="(line,index) in polyLineList" :key="line.id+'_'+index">
-            <polyline :points="line.value" marker-end='url(#arrow)' style="fill:none;stroke:#9cd3d3;stroke-width:2" />
+            <polyline :points="line.value" marker-end='url(#arrow)' style="fill:none;stroke:#4672c4;stroke-width:2" />
           </g>
       </svg>
     </div>

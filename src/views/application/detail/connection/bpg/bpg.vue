@@ -206,7 +206,7 @@ export default {
               parentNodeYAxion = +parentNode[1],
               nextNodeXAxion = +nextNode[0],
               nextNodeYAxion = +nextNode[1];
-            if(Math.abs(parentNodeXAxion-nextNodeXAxion)>(this.graphSpace*2+this.nodeWidth)){
+            if(Math.abs(parentNodeXAxion-nextNodeXAxion)>(this.graphSpace*2+this.nodeWidth*2)){
                return (parentNodeXAxion+this.nodeWidth/2) +
                     "," +
                     (parentNodeYAxion+this.nodeHeight/2) +
@@ -307,7 +307,7 @@ export default {
               }else if(parentNodeXAxion-nextNodeXAxion>0 && parentNodeYAxion-nextNodeYAxion<0){ //左下
                 point =  (parentNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    (parentNodeYAxion-this.nodeHeight/2) +
+                    (parentNodeYAxion+this.nodeHeight/2) +
                     " " +
                    (parentNodeXAxion+this.nodeWidth/2) +
                     "," +

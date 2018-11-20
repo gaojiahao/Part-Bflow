@@ -273,14 +273,18 @@ export default {
                     "," +
                     nextNodeYAxion;
               }else if(parentNodeXAxion-nextNodeXAxion<0 && parentNodeYAxion-nextNodeYAxion<0){ //右下
-                point =  (parentNodeXAxion+this.nodeWidth/2) +
+                point =  (parentNodeXAxion+this.nodeWidth) +
                     "," +
-                    (parentNodeYAxion+this.nodeHeight/2) +
+                    (parentNodeYAxion) +
                     " " +
-                     (parentNodeXAxion+this.nodeWidth/2) +
+                     (parentNodeXAxion+this.nodeWidth+10) +
+                    "," +
+                    parentNodeYAxion+
+                     " " +
+                    (parentNodeXAxion+this.nodeWidth+10) +
                     "," +
                     nextNodeYAxion+
-                     "," +
+                     " " +
                     (nextNodeXAxion-3) +
                     "," +
                     nextNodeYAxion;
@@ -301,18 +305,14 @@ export default {
                     "," +
                     nextNodeYAxion;
               }else if(parentNodeXAxion-nextNodeXAxion>0 && parentNodeYAxion-nextNodeYAxion<0){ //左下
-                point =  parentNodeXAxion +
+                point =  (parentNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    parentNodeYAxion +
+                    (parentNodeYAxion-this.nodeHeight/2) +
                     " " +
-                    (parentNodeXAxion-10) +
+                   (parentNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    parentNodeYAxion +
+                   (nextNodeYAxion+this.nodeHeight/2+20) +
                     " " +
-                     (parentNodeXAxion-10) +
-                    "," +
-                     (nextNodeYAxion+this.nodeHeight/2+20) +
-                     " " +
                     (nextNodeXAxion+this.nodeWidth/2) +
                     "," +
                     (nextNodeYAxion+this.nodeHeight/2+20) +

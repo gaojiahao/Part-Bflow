@@ -37,7 +37,8 @@
         <!-- 节点绘制 -->
         <g v-for="item in nodeList" :key="item.id">
             <!-- <shape v-if="item.id=='start'||item.id=='end'" :xAxion="item.xAxion+nodeWidth/2" :yAxion="item.yAxion" color="#7da87b"  ></shape> -->
-            <rect
+            <polygon v-if="item.type ==='branch'" :points="(item.xAxion+nodeWidth/2)+','+(item.yAxion-nodeHeight/2)+' '+(item.xAxion+nodeWidth)+','+item.yAxion+' '+(item.xAxion+nodeWidth/2)+','+(item.yAxion+nodeHeight/2)+' '+item.xAxion+','+item.yAxion" style="fill: #0d91ee;stroke: #5763ef;stroke-width:1"/>
+            <rect v-else
               :x="item.xAxion" 
               :y="item.yAxion-nodeHeight/2" 
               :width="nodeWidth" 
@@ -53,7 +54,7 @@
             </text> 
         </g>
 
-         <g v-for="(line,index) in polyLineList" :key="index">
+         <g v-for="(line,index) in polyLineList" :key="line.id+'_'+index">
             <polyline :points="line.value" marker-end='url(#arrow)' style="fill:none;stroke:#9cd3d3;stroke-width:2" />
           </g>
       </svg>
@@ -277,17 +278,13 @@ export default {
                     "," +
                     nextNodeYAxion;
               }else if(parentNodeXAxion-nextNodeXAxion<0 && parentNodeYAxion-nextNodeYAxion>0){ //右上
-                point =  (parentNodeXAxion+this.nodeWidth/2) +
+                point =  (parentNodeXAxion+this.nodeWidth) +
                     "," +
-                    (parentNodeYAxion-this.nodeHeight/2) +
-                    " " +
-                    (parentNodeXAxion+this.nodeWidth/2) +
-                    "," +
-                    (parentNodeYAxion-this.nodeHeight/2-20) +
-                    " " +
+                    parentNodeYAxion +
+                    " " +               
                     (parentNodeXAxion+this.nodeWidth+10) +
                     "," +
-                    (parentNodeYAxion-this.nodeHeight/2-20) +
+                    parentNodeYAxion +
                     " " +
                      (parentNodeXAxion+this.nodeWidth+10) +
                     "," +
@@ -351,7 +348,6 @@ export default {
       that.title = res.title;
       that.position = res.position;
       that.svgHeight = res.position.length * that.defaultHeight + 40; //svg 画布高度
-
       //处理流程步骤数据
       that.process = that.handleProcssData(res.process);
 
@@ -360,13 +356,12 @@ export default {
       that.nodeList = that.drawNodePoint(res.nodeList);
       //绘制线条
       that.drawLine(that.nodeList);
-
        window.document.getElementsByClassName(
       "svg-board"
       )[0].style.height = (that.svgHeight+20)+'px';
       window.document.getElementsByClassName(
         "svg-board"
-      )[0].style.width = this.svgWidth+'px';
+      )[0].style.width = that.svgWidth+'px';
 
       this.spinShow = false;
     });

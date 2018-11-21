@@ -223,11 +223,12 @@ export default {
                     "," +
                     (nextNodeYAxion-this.nodeHeight/2-3);
             } else{
-              return (parentNodeXAxion+this.nodeWidth) +
+              return (parentNodeXAxion<nextNodeXAxion?(parentNodeXAxion+this.nodeWidth):(parentNodeXAxion)) +
                       "," +
                       parentNodeYAxion +
                       " " +
-                      (nextNodeXAxion-3) +
+                      (parentNodeXAxion<nextNodeXAxion?((nextNodeXAxion-3)):(nextNodeXAxion+this.nodeWidth+3)) 
+                       +
                       "," +
                       nextNodeYAxion;
             } 
@@ -237,24 +238,31 @@ export default {
               parentNodeYAxion = +parentNode[1],
               nextNodeXAxion = +nextNode[0],
               nextNodeYAxion = +nextNode[1];
-
-            if(nextNodeYAxion<parentNodeYAxion){   //箭头朝上
-              return (parentNodeXAxion+this.nodeWidth/2) +
+            if(Math.abs(parentNodeYAxion-nextNodeYAxion)>=this.defaultHeight*2){
+                  return parentNodeXAxion +
                     "," +
-                    (parentNodeYAxion-this.nodeHeight/2) +
+                    parentNodeYAxion +
+                    " " +
+                    (parentNodeXAxion-10) +
+                    "," +
+                    parentNodeYAxion +
+                    " " +
+                    (nextNodeXAxion-10) +
+                    "," +
+                    nextNodeYAxion +
+                    " " +
+                    (parentNodeXAxion-3) +
+                    "," +
+                    nextNodeYAxion;
+              }else{
+                return (parentNodeXAxion+this.nodeWidth/2) +
+                    "," +
+                    (nextNodeYAxion<parentNodeYAxion?(parentNodeYAxion-this.nodeHeight/2):(parentNodeYAxion+this.nodeHeight/2)) +
                     " " +
                     (nextNodeXAxion+this.nodeWidth/2) +
                     "," +
-                    (nextNodeYAxion+this.nodeHeight/2+3);
-            }else if(nextNodeYAxion>parentNodeYAxion){    //箭头朝下
-              return (parentNodeXAxion+this.nodeWidth/2) +
-                      "," +
-                      (parentNodeYAxion+this.nodeHeight/2) +
-                      " " +
-                      (nextNodeXAxion+this.nodeWidth/2) +
-                      "," +
-                      (nextNodeYAxion-this.nodeHeight/2-3);
-            } 
+                    (nextNodeYAxion<parentNodeYAxion?(nextNodeYAxion+this.nodeHeight/2+3):(nextNodeYAxion-this.nodeHeight/2-3));
+              }
         }],
         [3,(parentNode,nextNode)=>{
            let point = "0,0,0,0";
@@ -324,7 +332,15 @@ export default {
                     "," +
                     (parentNodeYAxion+this.nodeHeight/2) +
                     " " +
-                   (parentNodeXAxion+this.nodeWidth/2) +
+                     (parentNodeXAxion+this.nodeWidth/2) +
+                    "," +
+                    (parentNodeYAxion+this.nodeHeight/2+20) +
+                    " " +
+                     (parentNodeXAxion-20) +
+                    "," +
+                    (parentNodeYAxion+this.nodeHeight/2+20) +
+                    " " +
+                   (parentNodeXAxion-20) +
                     "," +
                    (nextNodeYAxion+this.nodeHeight/2+20) +
                     " " +

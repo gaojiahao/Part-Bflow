@@ -9,6 +9,18 @@
         </Row>
         <Row class="check-list-table">
             <Button class="check-list-btn" type="primary" @click="goAddCheckSheet">新增</Button>
+            <div class="app-search">
+              <Input 
+                @on-search="checkSheetFilter" 
+                :search="true" 
+                v-model="searchValue" 
+                placeholder="搜索点检表名称" 
+                style="width: 300px">
+              </Input>
+              <p @click="checkSheetFilter" class="app-search-icon">
+                  <Button type="primary" size="small">查询</Button>
+              </p>
+            </div>
             <Table :columns="columns" :data="data" size="small"></Table>
             <div class="user-page">
                 <div style="float: right;">
@@ -39,6 +51,7 @@ export default {
       currentPage: 1,
       pageSize: 10,
       total: 0,
+      searchValue: '',
       columns: [
         {
           type: "index",
@@ -125,15 +138,21 @@ export default {
     };
   },
   methods: {
+    checkSheetFilter() {
+      let filter = JSON.stringify([{operator:"like",value:this.searchValue,property:"name"}]);
+      this.getCheckSheetData(filter);
+    },
     //点击分页
     onPageChange(currentPage) {
+      let filter = JSON.stringify([{operator:"like",value:this.searchValue,property:"name"}]);
       this.currentPage = currentPage;
-      this.getCheckSheetData();
+      this.getCheckSheetData(filter);
     },
     //点击切换下级用户每页显示条数
     onPageSizeChange(size) {
+      let filter = JSON.stringify([{operator:"like",value:this.searchValue,property:"name"}]);
       this.pageSize = size;
-      this.getCheckSheetData();
+      this.getCheckSheetData(filter);
     },
     goAddCheckSheet() {
       this.$router.push({
@@ -141,8 +160,8 @@ export default {
       });
     },
     //获取点检表数据
-    getCheckSheetData() {
-      listCheckKeyTable(this.currentPage, this.pageSize).then(res => {
+    getCheckSheetData(filter) {
+      listCheckKeyTable(this.currentPage, this.pageSize,filter).then(res => {
         this.data = res.tableContent;
         this.total = res.dataCount;
       });

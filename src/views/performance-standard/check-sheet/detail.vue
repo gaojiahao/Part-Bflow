@@ -20,6 +20,18 @@
         </Row>
         <Row class="check-detail-table">
             <Button class="check-detail-btn" type="primary" @click="addCheckItem">新增</Button>
+            <div class="app-search">
+              <Input 
+                @on-search="checkSheetItemFilter" 
+                :search="true" 
+                v-model="searchValue" 
+                placeholder="搜索检查项目名称" 
+                style="width: 300px">
+              </Input>
+              <p @click="checkSheetItemFilter" class="app-search-icon">
+                  <Button type="primary" size="small">查询</Button>
+              </p>
+            </div>
             <Table :columns="columns" :data="data" size="small"></Table>
             <div class="user-page">
                 <div style="float: right;">
@@ -73,6 +85,7 @@ export default {
       pageSize: 10,
       checkSheetName: "",
       checkSheetDesc: "",
+      searchValue: "",
       showModal: false,
       columns: [
         {
@@ -105,15 +118,21 @@ export default {
     };
   },
   methods: {
+    checkSheetItemFilter() {
+      let filter = JSON.stringify([{operator:"like",value:this.searchValue,property:"title"}]);
+      this.getCheckSheetItemData(filter);
+    },
     //点击分页
     onPageChange(currentPage) {
+      let filter = JSON.stringify([{operator:"like",value:this.searchValue,property:"title"}]);
       this.currentPage = currentPage;
-      this.getCheckSheetItemData();
+      this.getCheckSheetItemData(filter);
     },
     //点击切换下级用户每页显示条数
     onPageSizeChange(size) {
+      let filter = JSON.stringify([{operator:"like",value:this.searchValue,property:"title"}]);
       this.pageSize = size;
-      this.getCheckSheetItemData();
+      this.getCheckSheetItemData(filter);
     },
     goCheckSheet() {
       this.$router.push({
@@ -226,8 +245,8 @@ export default {
       }
     },
     //获取检查项目数据
-    getCheckSheetItemData() {
-      listCheckContent(this.checkSheetId, this.currentPage, this.pageSize).then(
+    getCheckSheetItemData(filter) {
+      listCheckContent(this.checkSheetId, this.currentPage, this.pageSize,filter).then(
         res => {
           this.data = res.tableContent;
           this.total = res.dataCount;

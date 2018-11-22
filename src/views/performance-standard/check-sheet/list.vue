@@ -1,5 +1,5 @@
 <style lang="less" scoped>
-@import "./list.less";
+  @import "./list.less";
 </style>
 
 <template>
@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       currentPage: 1,
-      pageSize: 20,
+      pageSize: 10,
       total: 0,
       columns: [
         {
@@ -71,7 +71,7 @@ export default {
         },
         {
           title: "创建者",
-          key: "creator"
+          key: "creatorName"
         },
         {
           title: "创建时间",
@@ -79,7 +79,7 @@ export default {
         },
         {
           title: "修改者",
-          key: "modifer"
+          key: "menderName"
         },
         {
           title: "修改时间",

@@ -1,41 +1,5 @@
 <style lang="less" scoped>
-    .check-detail{
-        &-bread{
-           color:#39f;
-           margin: 10px 10px; 
-        }
-        &-btn{
-            margin: 5px 0px;
-            background-color: rgb(0, 150, 136);
-            border-radius: 0px;
-        }
-        &-table{
-            margin: 0px 100px;
-            background-color:#fff;
-            padding:10px 20px;
-        }
-        &-title{
-            margin: 10px 100px;
-            font-size:15px;
-        }
-        &-save{
-            width: 100%;
-            background-color: #fff;
-            position: fixed !important;
-            z-index: 10;
-            bottom: 0px;
-            text-align: center;
-            padding: 5px;
-            &-btn{
-                background-color: rgb(0, 150, 136);
-                border-radius: 0px;
-            }
-        }
-    }
-    .user-page {
-        margin: 10px;
-        overflow: hidden;
-    }
+    @import "./detail.less";
 </style>
 
 <template>
@@ -50,7 +14,7 @@
 
         </Row>
 
-        <Row class="check-detail-title">
+        <Row class="check-detail-desc">
             <span>点检表描述：</span>
             <Input v-model="checkSheetDesc" type="textarea"></Input>
         </Row>
@@ -71,7 +35,8 @@
             </div>
         </Row>
         <Row class="check-detail-save">
-            <Button class="check-detail-save-btn" type="primary" @click="saveCheckSheet">保存</Button>
+            <Button class="check-detail-save-btn" @click="saveCheckSheet">保存</Button>
+            <Button class="check-detail-save-btn" @click="saveAndAddCheckSheet">保存并继续添加</Button>
         </Row>
         <Modal v-model="showModal" title="新增检查项目">
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
@@ -105,7 +70,7 @@ export default {
       checkSheetId: this.$route.params.id,
       total: 0,
       currentPage: 1,
-      pageSize: 20,
+      pageSize: 10,
       checkSheetName: "",
       checkSheetDesc: "",
       showModal: false,
@@ -120,31 +85,8 @@ export default {
         },
         {
           title: "检查内容",
-          key: "content"
-        },
-        {
-          title: "操作",
-          key: "action",
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "error",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
-                  on: {
-                    click: () => {}
-                  }
-                },
-                "删除"
-              )
-            ]);
-          }
+          key: "content",
+          width: 400
         }
       ],
       data: [],
@@ -180,6 +122,8 @@ export default {
     },
     addCheckItem() {
       this.showModal = true;
+      this.$refs['formValidate'].resetFields();
+      this.formValidate.edit = false;
     },
     cancelAdd() {
       this.showModal = false;
@@ -187,14 +131,20 @@ export default {
     confirmAdd() {
       this.$refs["formValidate"].validate(v => {
         if (v) {
-          this.data.push({
-            title: this.formValidate.name,
-            content: this.formValidate.content
-          });
+          if(this.formValidate.edit){
+            this.data[this.formValidate.currentIndex].title = this.formValidate.name;
+            this.data[this.formValidate.currentIndex].content = this.formValidate.content;
+          }else{
+            this.data.push({
+              title: this.formValidate.name,
+              content: this.formValidate.content
+            });
+          }
           this.showModal = false;
         }
       });
     },
+    //保存新增点检表
     saveCheckSheet() {
       if (this.checkSheetName && this.data.length > 0) {
         let data;
@@ -202,7 +152,47 @@ export default {
           data = {
             name: this.checkSheetName,
             comment: this.checkSheetDesc,
-            jopCheckContentList: this.data
+            jopCheckItemList: this.data
+          };
+          saveCheckContent(data)
+            .then(res => {
+              if (res.message) {
+                this.$Message.success(res.message);
+                this.$router.push({path:'/checkSheet/list'});
+              }
+            })
+            .catch(error => {
+              this.$Message.error(error.data.message);
+            });
+        } else {
+          data = {
+            id: this.checkSheetId,
+            name: this.checkSheetName,
+            comment: this.checkSheetDesc,
+            jopCheckItemList: this.data
+          };
+          updateCheckContent(data)
+            .then(res => {
+              if (res.success) {
+                this.$Message.success(res.message);
+                this.$router.push({path:'/checkSheet/list'});
+              }
+            })
+            .catch(error => {
+              this.$Message.error(error.data.message);
+            });
+        }
+      }
+    },
+    //保存并继续新增点检表
+    saveAndAddCheckSheet() {
+      if (this.checkSheetName && this.data.length > 0) {
+        let data;
+        if (!this.checkSheetId) {
+          data = {
+            name: this.checkSheetName,
+            comment: this.checkSheetDesc,
+            jopCheckItemList: this.data
           };
           saveCheckContent(data)
             .then(res => {
@@ -221,7 +211,7 @@ export default {
             id: this.checkSheetId,
             name: this.checkSheetName,
             comment: this.checkSheetDesc,
-            jopCheckContentList: this.data
+            jopCheckItemList: this.data
           };
           updateCheckContent(data)
             .then(res => {
@@ -241,34 +231,73 @@ export default {
         res => {
           this.data = res.tableContent;
           this.total = res.dataCount;
-          this.checkSheetDesc = res.checkKeyTableComment;
-          this.checkSheetName = res.checkKeyTableName;
+          this.checkSheetDesc = res.checkTableComment;
+          this.checkSheetName = res.checkTableName;
         }
       );
     }
   },
   mounted() {
-    let column = [
-      {
+    let column = [{
         title: "创建者",
-        key: "creator"
-      },
-      {
+        key: "creatorName"
+      },{
         title: "创建时间",
         key: "crtTime"
-      },
-      {
+      },{
         title: "修改者",
-        key: "modifer"
-      },
-      {
+        key: "menderName"
+      },{
         title: "修改时间",
         key: "modTime"
-      }
-    ];
+      }],
+      actionColumn = {
+          title: "操作",
+          key: "action",
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "a",
+                {
+                  on: {
+                    click: () => {
+                      this.data.splice(params.index,1);
+                    }
+                  }
+                },
+                "删除"
+              ),
+              h("span", {
+                style: {
+                  height: "20px",
+                  borderLeft: "1px solid #39f",
+                  margin: "0px 5px"
+                }
+              }),
+              h(
+                "a",
+                {
+                  on: {
+                    click: () => {
+                      this.formValidate.name = params.row.title;
+                      this.formValidate.content = params.row.content;
+                      this.formValidate.currentIndex = params.index;
+                      this.formValidate.edit = true;
+                      this.showModal = true;
+                    }
+                  }
+                },
+                "修改"
+              )
+            ]);
+          }
+        };
     if (this.checkSheetId) {
+      column.push(actionColumn);
       this.columns.push(...column);
       this.getCheckSheetItemData();
+    }else{
+      this.columns.push(actionColumn);
     }
   }
 };

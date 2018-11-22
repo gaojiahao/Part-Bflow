@@ -50,8 +50,11 @@
               :y="item.yAxion-nodeHeight/2" 
               :width="nodeWidth" 
               :height="nodeHeight" 
-              style="fill:#d16d2a; stroke:#b3622b; stroke-width:1px;" />
-             
+              :stroke="item.id==='end'||item.id==='start'?'#cd5334':'#df8931'"
+              :fill ="item.id ==='end'||item.id==='start'?'#cd5334':'#df8931'"
+              stroke-width="1"
+              />
+             <!-- item.id !=='end'||item.id!=='start'?'#d16d2a':'#ddd' -->
             <text 
               :x="item.xAxion+nodeWidth/2"
               :y="item.yAxion-5"

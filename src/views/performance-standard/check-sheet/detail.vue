@@ -19,6 +19,7 @@
             <Input v-model="checkSheetDesc" type="textarea"></Input>
         </Row>
         <Row class="check-detail-table">
+          <div style="margin-bottom:15px">
             <span class="check-detail-btn" @click="addCheckItem">新增</span>
             <div class="app-search">
               <Input 
@@ -29,7 +30,8 @@
                 style="width: 300px">
               </Input>
             </div>
-            <Table :columns="columns" :data="data" size="small" style="margin-top:5px;"></Table>
+          </div>
+            <Table :columns="columns" :data="data" size="small"></Table>
             <div class="user-page">
                 <div style="float: right;">
                     <Page 

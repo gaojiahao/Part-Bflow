@@ -5,6 +5,7 @@
 <template>
     <div class="check-list">
         <Row class="check-list-table">
+          <div style="margin-bottom:15px;">
             <span class="check-list-btn" type="primary" @click="goAddCheckSheet">新增</span>
             <div class="app-search">
               <Input 
@@ -15,7 +16,8 @@
                 style="width: 300px">
               </Input>
             </div>
-            <Table :columns="columns" :data="data" size="small" style="margin-top:10px;"></Table>
+          </div>
+            <Table :columns="columns" :data="data" size="small"></Table>
             <div class="user-page">
                 <div style="float: right;">
                     <Page 
@@ -33,7 +35,7 @@
           title="检查项"
           width=1000
           :styles="{top: '20px'}">
-          <Table :columns="itemColumns" :data="itemData" size="small" style="margin-top:5px;"></Table>
+          <Table :columns="itemColumns" :data="itemData" size="small" height="500" style="margin-top:5px;"></Table>
           <div slot="footer">
             
           </div>
@@ -110,7 +112,8 @@ export default {
         },
         {
           title: "描述",
-          key: "comment"
+          key: "comment",
+          width: 400
         },
         {
           title: "检查项",
@@ -175,7 +178,7 @@ export default {
   methods: {
     //获取检查项目数据
     getCheckSheetItemData(id) {
-      listCheckContent(id, this.currentPage, this.pageSize).then(
+      listCheckContent(id,1,1000).then(
         res => {
           this.itemData = res.tableContent;
         }

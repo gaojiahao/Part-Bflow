@@ -9,17 +9,17 @@
                 / {{checkSheetName}}</h3>
         </Row>
         <Row class="check-detail-title">
-            <span style="font-weight:bold;">点检表名称：</span>
-            <Input v-model="checkSheetName" :autofocus="true" placeholder="请输入点检表名称" style="width: 200px" />
+            <span><b style="color:#e4393c">*</b>点检表名称：</span>
+            <Input v-model="checkSheetName" :autofocus="true" placeholder="请输入点检表名称" style="width:200px;font-size:14px" />
 
         </Row>
 
         <Row class="check-detail-desc">
-            <span style="font-weight:bold;">点检表描述：</span>
+            <span>点检表描述：</span>
             <Input v-model="checkSheetDesc" type="textarea"></Input>
         </Row>
         <Row class="check-detail-table">
-            <Button class="check-detail-btn" type="primary" @click="addCheckItem">新增</Button>
+            <span class="check-detail-btn" @click="addCheckItem">新增</span>
             <div class="app-search">
               <Input 
                 @on-search="checkSheetItemFilter" 
@@ -28,11 +28,8 @@
                 placeholder="搜索检查项目名称" 
                 style="width: 300px">
               </Input>
-              <p @click="checkSheetItemFilter" class="app-search-icon">
-                  <Button type="primary" size="small">查询</Button>
-              </p>
             </div>
-            <Table :columns="columns" :data="data" size="small"></Table>
+            <Table :columns="columns" :data="data" size="small" style="margin-top:5px;"></Table>
             <div class="user-page">
                 <div style="float: right;">
                     <Page 
@@ -47,8 +44,8 @@
             </div>
         </Row>
         <Row class="check-detail-save">
-            <Button class="check-detail-save-btn" @click="saveCheckSheet">保存</Button>
-            <Button class="check-detail-save-btn" @click="saveAndAddCheckSheet">保存并继续添加</Button>
+            <span class="check-detail-save-btn" @click="saveCheckSheet">保存</span>
+            <span class="check-detail-save-btn" @click="saveAndAddCheckSheet">保存并继续添加</span>
         </Row>
         <Modal v-model="showModal" title="新增检查项目">
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
@@ -165,83 +162,98 @@ export default {
     },
     //保存新增点检表
     saveCheckSheet() {
-      if (this.checkSheetName && this.data.length > 0) {
-        let data;
-        if (!this.checkSheetId) {
-          data = {
-            name: this.checkSheetName,
-            comment: this.checkSheetDesc,
-            jopCheckItemList: this.data
-          };
-          saveCheckContent(data)
-            .then(res => {
-              if (res.message) {
-                this.$Message.success(res.message);
-                this.$router.push({path:'/checkSheet/list'});
-              }
-            })
-            .catch(error => {
-              this.$Message.error(error.data.message);
-            });
-        } else {
-          data = {
-            id: this.checkSheetId,
-            name: this.checkSheetName,
-            comment: this.checkSheetDesc,
-            jopCheckItemList: this.data
-          };
-          updateCheckContent(data)
-            .then(res => {
-              if (res.success) {
-                this.$Message.success(res.message);
-                this.$router.push({path:'/checkSheet/list'});
-              }
-            })
-            .catch(error => {
-              this.$Message.error(error.data.message);
-            });
+      if (this.checkSheetName) {
+        if(this.data.length > 0){
+          let data;
+          if (!this.checkSheetId) {
+            data = {
+              name: this.checkSheetName,
+              comment: this.checkSheetDesc,
+              jopCheckItemList: this.data
+            };
+            saveCheckContent(data)
+              .then(res => {
+                if (res.success) {
+                  this.$Message.success(res.message);
+                  this.$router.push({path:'/checkSheet/list'});
+                }
+              })
+              .catch(error => {
+                this.$Message.error(error.data.message);
+              });
+          } else {
+            data = {
+              id: this.checkSheetId,
+              name: this.checkSheetName,
+              comment: this.checkSheetDesc,
+              jopCheckItemList: this.data
+            };
+            updateCheckContent(data)
+              .then(res => {
+                if (res.success) {
+                  this.$Message.success(res.message);
+                  this.$router.push({path:'/checkSheet/list'});
+                }
+              })
+              .catch(error => {
+                this.$Message.error(error.data.message);
+              });
+          }
+        }else{
+          this.$Message.error('请至少添加一条检查项目！');
         }
+      }else{
+        this.$Message.error('请输入点检表名称！');
       }
     },
     //保存并继续新增点检表
     saveAndAddCheckSheet() {
-      if (this.checkSheetName && this.data.length > 0) {
-        let data;
-        if (!this.checkSheetId) {
-          data = {
-            name: this.checkSheetName,
-            comment: this.checkSheetDesc,
-            jopCheckItemList: this.data
-          };
-          saveCheckContent(data)
-            .then(res => {
-              if (res.message) {
-                this.$Message.success(res.message);
-                this.checkSheetName = "";
-                this.checkSheetDesc = "";
-                this.data = [];
-              }
-            })
-            .catch(error => {
-              this.$Message.error(error.data.message);
-            });
-        } else {
-          data = {
-            id: this.checkSheetId,
-            name: this.checkSheetName,
-            comment: this.checkSheetDesc,
-            jopCheckItemList: this.data
-          };
-          updateCheckContent(data)
-            .then(res => {
-              if (res.success) {
-                this.$Message.success(res.message);
-              }
-            })
-            .catch(error => {
-              this.$Message.error(error.data.message);
-            });
+      if (this.checkSheetName) {
+        if(this.data.length > 0){
+          let data;
+          if (!this.checkSheetId) {
+            data = {
+              name: this.checkSheetName,
+              comment: this.checkSheetDesc,
+              jopCheckItemList: this.data
+            };
+            saveCheckContent(data)
+              .then(res => {
+                if (res.success) {
+                  this.$Message.success(res.message);
+                  this.checkSheetName = "";
+                  this.checkSheetDesc = "";
+                  this.data = [];
+                }
+              })
+              .catch(error => {
+                this.$Message.error(error.data.message);
+              });
+          } else {
+            data = {
+              id: this.checkSheetId,
+              name: this.checkSheetName,
+              comment: this.checkSheetDesc,
+              jopCheckItemList: this.data
+            };
+            updateCheckContent(data)
+              .then(res => {
+                if (res.success) {
+                  this.$Message.success(res.message);
+                  this.checkSheetName = "";
+                  this.checkSheetDesc = "";
+                  this.data = [];
+                }
+              })
+              .catch(error => {
+                this.$Message.error(error.data.message);
+              });
+          }
+        }else{
+          this.$Message.error('请至少添加一条检查项目！');
         }
+      }else{
+        this.$Message.error('请输入点检表名称！');
       }
     },
     //获取检查项目数据
@@ -258,12 +270,6 @@ export default {
   },
   mounted() {
     let column = [{
-        title: "创建者",
-        key: "creatorName"
-      },{
-        title: "创建时间",
-        key: "crtTime"
-      },{
         title: "修改者",
         key: "menderName"
       },{

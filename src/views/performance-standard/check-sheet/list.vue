@@ -5,7 +5,7 @@
 <template>
     <div class="check-list">
         <Row class="check-list-table">
-            <Button class="check-list-btn" type="primary" @click="goAddCheckSheet">新增</Button>
+            <span class="check-list-btn" type="primary" @click="goAddCheckSheet">新增</span>
             <div class="app-search">
               <Input 
                 @on-search="checkSheetFilter" 
@@ -14,11 +14,8 @@
                 placeholder="搜索点检表名称" 
                 style="width: 300px">
               </Input>
-              <p @click="checkSheetFilter" class="app-search-icon">
-                  <Button type="primary" size="small">查询</Button>
-              </p>
             </div>
-            <Table :columns="columns" :data="data" size="small"></Table>
+            <Table :columns="columns" :data="data" size="small" style="margin-top:10px;"></Table>
             <div class="user-page">
                 <div style="float: right;">
                     <Page 
@@ -31,13 +28,24 @@
                 </div>
             </div>
         </Row>
+        <Modal
+          v-model="showModal"
+          title="检查项"
+          width=1000
+          :styles="{top: '20px'}">
+          <Table :columns="itemColumns" :data="itemData" size="small" style="margin-top:5px;"></Table>
+          <div slot="footer">
+            
+          </div>
+      </Modal>
     </div>
 </template>
 
 <script>
 import {
   listCheckKeyTable,
-  deleteCheckKeyTable
+  deleteCheckKeyTable,
+  listCheckContent
 } from "@/services/performanceStandardService.js";
 
 export default {
@@ -48,7 +56,32 @@ export default {
       currentPage: 1,
       pageSize: 10,
       total: 0,
+      showModal: false,
       searchValue: '',
+      itemColumns: [
+        {
+          type: "index",
+          width: 80
+        },
+        {
+          title: "检查项目",
+          key: "title"
+        },
+        {
+          title: "检查内容",
+          key: "content",
+          width: 400
+        },
+        {
+          title: "修改者",
+          key: "menderName"
+        },
+        {
+          title: "修改时间",
+          key: "modTime"
+        }
+      ],
+      itemData: [],
       columns: [
         {
           type: "index",
@@ -76,16 +109,22 @@ export default {
           }
         },
         {
-          title: "检查内容项",
+          title: "描述",
           key: "comment"
         },
         {
-          title: "创建者",
-          key: "creatorName"
-        },
-        {
-          title: "创建时间",
-          key: "crtTime"
+          title: "检查项",
+          key: "comment",
+          render: (h,params) => {
+            return h('a',{
+              on: {
+                click: () => {
+                    this.showModal = true;
+                    this.getCheckSheetItemData(params.row.id);
+                }
+              }
+            },params.row.num);
+          }
         },
         {
           title: "修改者",
@@ -101,15 +140,8 @@ export default {
           render: (h, params) => {
             return h("div", [
               h(
-                "Button",
+                "a",
                 {
-                  props: {
-                    type: "error",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
                   on: {
                     click: () => {
                       this.$Modal.confirm({
@@ -141,6 +173,14 @@ export default {
     };
   },
   methods: {
+    //获取检查项目数据
+    getCheckSheetItemData(id) {
+      listCheckContent(id, this.currentPage, this.pageSize).then(
+        res => {
+          this.itemData = res.tableContent;
+        }
+      );
+    },
     checkSheetFilter() {
       let filter = JSON.stringify([{operator:"like",value:this.searchValue,property:"name"}]);
       this.getCheckSheetData(filter);

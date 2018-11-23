@@ -9,13 +9,13 @@
                 / {{checkSheetName}}</h3>
         </Row>
         <Row class="check-detail-title">
-            <span>点检表名称：</span>
+            <span style="font-weight:bold;">点检表名称：</span>
             <Input v-model="checkSheetName" :autofocus="true" placeholder="请输入点检表名称" style="width: 200px" />
 
         </Row>
 
         <Row class="check-detail-desc">
-            <span>点检表描述：</span>
+            <span style="font-weight:bold;">点检表描述：</span>
             <Input v-model="checkSheetDesc" type="textarea"></Input>
         </Row>
         <Row class="check-detail-table">

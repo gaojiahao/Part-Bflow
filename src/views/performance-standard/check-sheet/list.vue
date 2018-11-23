@@ -4,9 +4,6 @@
 
 <template>
     <div class="check-list">
-        <Row>
-            <h2 class="check-list-title">点检表</h2>
-        </Row>
         <Row class="check-list-table">
             <Button class="check-list-btn" type="primary" @click="goAddCheckSheet">新增</Button>
             <div class="app-search">
@@ -115,16 +112,22 @@ export default {
                   },
                   on: {
                     click: () => {
-                      deleteCheckKeyTable(params.row.id)
-                        .then(res => {
-                          if (res.success) {
-                            this.$Message.success(res.message);
-                            this.getCheckSheetData();
-                          }
-                        })
-                        .catch(error => {
-                          this.$Message.error(error.data.message);
-                        });
+                      this.$Modal.confirm({
+                        title: "确认",
+                        content: "确认删除<b style=color:#e4393c;>"+params.row.name+"</b>么？",
+                        onOk: () => {
+                          deleteCheckKeyTable(params.row.id)
+                          .then(res => {
+                            if (res.success) {
+                              this.$Message.success(res.message);
+                              this.getCheckSheetData();
+                            }
+                          })
+                          .catch(error => {
+                            this.$Message.error(error.data.message);
+                          });
+                        }
+                      });
                     }
                   }
                 },

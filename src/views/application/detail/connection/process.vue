@@ -27,6 +27,10 @@
           <Button type="primary" size="large" @click="addProcessStatus">确定</Button>
         </div>
       </Modal>
+      <div class="search">
+        <Input placeholder="请输入流程状态名称" @on-search="search" :search="true" v-model="serValue" style="width:300px;" />
+        <Button type="primary" @click="search" class="search-btn" size="small">查询</Button>
+      </div>
       <Table :loading="loading" :columns="columns" :data="processData" size="small"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div class="fr">
@@ -43,7 +47,8 @@ import {
   updateProcessStatus,
   addProcessStatus,
   unsubscribeAppByRelationKey,
-  subscribeApp
+  subscribeApp,
+  serachProcess
 } from "@/services/appService.js";
 
 const inputStyle = {
@@ -177,10 +182,7 @@ export default {
                       id: "delete"
                     },
                     style: {
-                      display:
-                        this.isAdmin
-                          ? "inline-block"
-                          : "none"
+                      display: this.isAdmin ? "inline-block" : "none"
                     }
                   },
                   "删除"
@@ -190,10 +192,7 @@ export default {
                     height: "10px",
                     borderLeft: "1px solid #39f",
                     margin: "0px 5px",
-                    display:
-                      this.isAdmin
-                        ? "inline-block"
-                        : "none"
+                    display: this.isAdmin ? "inline-block" : "none"
                   }
                 }),
                 h(
@@ -203,10 +202,7 @@ export default {
                       id: "edit"
                     },
                     style: {
-                      display:
-                        this.isAdmin
-                          ? "inline-block"
-                          : "none"
+                      display: this.isAdmin ? "inline-block" : "none"
                     }
                   },
                   params.row.$isEdit ? "保存" : "编辑"
@@ -216,10 +212,7 @@ export default {
                     height: "10px",
                     borderLeft: "1px solid #39f",
                     margin: "0px 5px",
-                    display:
-                      this.isAdmin
-                        ? "inline-block"
-                        : "none"
+                    display: this.isAdmin ? "inline-block" : "none"
                   }
                 }),
                 h(
@@ -242,6 +235,7 @@ export default {
       pageSize: 10,
       processValue: "",
       showModal: false,
+      serValue: "",
       processInfoItem: {
         fieldValue: "",
         fieldCode: "biProcessStatus",
@@ -399,6 +393,26 @@ export default {
       this.showModal = true;
       this.processInfoItem.fieldValue = "";
       this.processInfoItem.sort = "";
+    },
+    search() {
+      this.loading = true;
+      let filter = [
+        {
+          property: "fieldValue",
+          operator: "like",
+          value: this.serValue
+        }
+      ];
+      serachProcess(
+        this.listId,
+        this.pageIndex,
+        this.pageSize,
+        JSON.stringify(filter)
+      ).then(res => {
+        this.loading = false;
+        this.processData = res.tableContent;
+        this.dataTotal = res.dataCount;
+      });
     }
   },
   mounted() {

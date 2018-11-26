@@ -6,14 +6,16 @@
     <div class="check-detail">
         <Row class="check-detail-bread">
             <h3><span @click.stop="goCheckSheet" style="cursor:pointer">点检表</span>
-                / {{checkSheetName}}</h3>
+              / {{checkSheetName}}</h3>
         </Row>
         <Row class="check-detail-title">
             <span><b style="color:#e4393c">*</b>点检表名称：</span>
-            <Input v-model="checkSheetName" :autofocus="true" placeholder="请输入点检表名称" style="width:200px;font-size:14px" />
-
+            <Input 
+              v-model="checkSheetName" 
+              :autofocus="true" 
+              placeholder="请输入点检表名称" 
+              style="width:200px;font-size:14px" />
         </Row>
-
         <Row class="check-detail-desc">
             <span>点检表描述：</span>
             <Input v-model="checkSheetDesc" type="textarea"></Input>
@@ -46,8 +48,8 @@
             </div>
         </Row>
         <Row class="check-detail-save">
-            <span class="check-detail-save-btn" @click="saveCheckSheet">保存</span>
-            <span class="check-detail-save-btn" @click="saveAndAddCheckSheet">保存并继续添加</span>
+            <span class="check-detail-save-btn" @click="saveCheckSheet('save')">保存</span>
+            <span class="check-detail-save-btn" @click="saveCheckSheet">保存并继续添加</span>
         </Row>
         <Modal v-model="showModal" title="新增检查项目">
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
@@ -117,6 +119,7 @@ export default {
     };
   },
   methods: {
+    //点检表项目查询
     checkSheetItemFilter() {
       let filter = JSON.stringify([{operator:"like",value:this.searchValue,property:"title"}]);
       this.getCheckSheetItemData(filter);
@@ -133,11 +136,13 @@ export default {
       this.pageSize = size;
       this.getCheckSheetItemData(filter);
     },
+    //返回点检列表
     goCheckSheet() {
       this.$router.push({
         path: "/checkSheet/list"
       });
     },
+    //展开新增检查项目modal
     addCheckItem() {
       this.showModal = true;
       this.$refs['formValidate'].resetFields();
@@ -146,6 +151,7 @@ export default {
     cancelAdd() {
       this.showModal = false;
     },
+    //添加新检查项目
     confirmAdd() {
       this.$refs["formValidate"].validate(v => {
         if (v) {
@@ -163,7 +169,7 @@ export default {
       });
     },
     //保存新增点检表
-    saveCheckSheet() {
+    saveCheckSheet(isSave) {
       if (this.checkSheetName) {
         if(this.data.length > 0){
           let data;
@@ -177,7 +183,13 @@ export default {
               .then(res => {
                 if (res.success) {
                   this.$Message.success(res.message);
-                  this.$router.push({path:'/checkSheet/list'});
+                  if(isSave === 'save'){
+                    this.$router.push({path:'/checkSheet/list'});
+                  }else{
+                    this.checkSheetName = "";
+                    this.checkSheetDesc = "";
+                    this.data = [];
+                  }
                 }
               })
               .catch(error => {
@@ -194,57 +206,13 @@ export default {
               .then(res => {
                 if (res.success) {
                   this.$Message.success(res.message);
-                  this.$router.push({path:'/checkSheet/list'});
-                }
-              })
-              .catch(error => {
-                this.$Message.error(error.data.message);
-              });
-          }
-        }else{
-          this.$Message.error('请至少添加一条检查项目！');
-        }
-      }else{
-        this.$Message.error('请输入点检表名称！');
-      }
-    },
-    //保存并继续新增点检表
-    saveAndAddCheckSheet() {
-      if (this.checkSheetName) {
-        if(this.data.length > 0){
-          let data;
-          if (!this.checkSheetId) {
-            data = {
-              name: this.checkSheetName,
-              comment: this.checkSheetDesc,
-              jopCheckItemList: this.data
-            };
-            saveCheckContent(data)
-              .then(res => {
-                if (res.success) {
-                  this.$Message.success(res.message);
-                  this.checkSheetName = "";
-                  this.checkSheetDesc = "";
-                  this.data = [];
-                }
-              })
-              .catch(error => {
-                this.$Message.error(error.data.message);
-              });
-          } else {
-            data = {
-              id: this.checkSheetId,
-              name: this.checkSheetName,
-              comment: this.checkSheetDesc,
-              jopCheckItemList: this.data
-            };
-            updateCheckContent(data)
-              .then(res => {
-                if (res.success) {
-                  this.$Message.success(res.message);
-                  this.checkSheetName = "";
-                  this.checkSheetDesc = "";
-                  this.data = [];
+                  if(isSave === 'save'){
+                    this.$router.push({path:'/checkSheet/list'});
+                  }else{
+                    this.checkSheetName = "";
+                    this.checkSheetDesc = "";
+                    this.data = [];
+                  }
                 }
               })
               .catch(error => {

@@ -123,6 +123,8 @@ import { applicationRouter} from '@/views/application/router';
 import { addressBookRouter } from  '@/views/addressBook/router';
 //社交模块
 import { socialRouter} from '@/views/social/router';
+//作业标准模块
+import { checkSheetRouter } from '@/views/performance-standard/router';
 
 export const routers = [
   loginRouter,
@@ -139,5 +141,6 @@ export const routers = [
   dictionaryManage,
   socialRouter,
   applicationRouter,
+  checkSheetRouter,
   ...appRouter
 ];

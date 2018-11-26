@@ -22,7 +22,7 @@
                             <p v-html="nav.comment"></p>
                         </div>
                     </div>
-                    <div class="notificas-layout-sider-item-msgcount" v-if="nav.unreadNum>0">{{nav.unreadNum}}</div>
+                    <div class="notificas-layout-sider-item-msgcount" v-if="nav.unreadNum>0">{{nav.unreadNum>99?'99+':nav.unreadNum}}</div>
                 </div>
             </AutoComplete>
         </div>
@@ -52,7 +52,7 @@
                         <p v-html="nav.comment"></p>
                     </div>
                 </div>
-                <div class="notificas-layout-sider-item-msgcount" v-if="nav.unreadNum>0">{{nav.unreadNum}}</div>
+                <div class="notificas-layout-sider-item-msgcount" v-if="nav.unreadNum>0">{{nav.unreadNum>99?'99+':nav.unreadNum}}</div>
             </div>
         </div>
     </div>

@@ -99,6 +99,7 @@ export default {
         {
           title: "点检表名称",
           key: "name",
+          width: 150,
           render: (h, params) => {
             return h(
               "a",
@@ -142,7 +143,8 @@ export default {
         },
         {
           title: "修改时间",
-          key: "modTime"
+          key: "modTime",
+          width: 180
         },
         {
           title: "操作",
@@ -179,6 +181,7 @@ export default {
     //点检列表查询
     checkSheetFilter() {
       let filter = JSON.stringify([{operator:"like",value:this.searchValue,property:"name"}]);
+      this.currentPage = 1;
       this.getCheckSheetData(filter);
     },
     //点击分页

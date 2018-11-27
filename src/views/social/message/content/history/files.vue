@@ -7,7 +7,7 @@
             <img width="40" :src="'resources/images/file/'+ file.icon" >
 
             <div  style="display: inline-table;vertical-align: top;line-height: 22px;">
-                <div >{{file.attachmentName}} </div>
+                <div ><a @click="downLoadfiles(file.attachment)">{{file.attachmentName}} </a></div>
                 <div >{{file.creatorName}}</div>
             </div>
                 <div  style="display: inline-table;vertical-align: top;line-height: 22px;float: right;">
@@ -65,7 +65,7 @@ export default {
 
                 this.files.map((file)=>{
                     if(/.jpg|.png|.PNG/.test(file.attachmentName)){
-                        file.icon = 'word.png';
+                        file.icon = 'image.png';
                     }
 
                     if(/.xlsx/.test(file.attachmentName)){
@@ -77,7 +77,7 @@ export default {
                     }
 
                     if(/.txt/.test(file.attachmentName)){
-                        file.icon = 'word.png';
+                        file.icon = 'txt.png';
                     }
 
                     if(!file.icon){
@@ -86,6 +86,9 @@ export default {
                 });
             });
         },
+        downLoadfiles(url) {
+            window.open(url);
+        }
     },
     mounted(){
         this.listId = this.$route.params.listId;

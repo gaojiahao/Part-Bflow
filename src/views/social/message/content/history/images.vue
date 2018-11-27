@@ -3,7 +3,7 @@
 </style>
 
 <template>
-    <div>
+    <div id="imgHistory" class="img">
         <div v-for="(img,index) in images" :key="index" class="comimg" >
             <img 
             width="80"
@@ -35,21 +35,41 @@ export default {
             images:[],
             imgName:'',
             imgModalVisible:false,
-            listId:''
+            isRolling: false,
+            listId:'',
+            imgParams: { 
+                page:1,
+                limit:100,
+                total: 0,
+                listId:this.$route.params.listId,
+                type:'image'
+            }
         };
     },
     methods:{
+        //滚动加载
+        handleScroll () {
+            let scrollDiv = document.getElementById('imgHistory'),
+                that= this;
+            scrollDiv.addEventListener('scroll', function() {
+                if(Math.ceil(scrollDiv.clientHeight+scrollDiv.scrollTop) +2 >= scrollDiv.scrollHeight){
+                    if(that.imgParams.total > that.images.length){
+                        that.imgParams.page++;
+                        that.isRolling = true;
+                        that.refreshImages();
+                    }
+                }
+            });
+        },
         //请求图片
         refreshImages(){
-            let params = { 
-                page:1,
-                limit:10,
-                listId:this.listId,
-                type:'image'
-            };
-
-            getAttachmentByListId(params).then(res =>{
-                this.images = res.tableContent;
+            getAttachmentByListId(this.imgParams).then(res =>{
+                this.imgParams.total = res.dataCount;
+                if(this.isRolling){
+                    this.images = this.images.concat(...res.tableContent);
+                }else{
+                    this.images = res.tableContent;
+                }
             });
         },
       
@@ -61,6 +81,7 @@ export default {
     mounted(){
         this.listId = this.$route.params.listId;
         this.refreshImages();
+        this.handleScroll();
     }
 }
 </script>

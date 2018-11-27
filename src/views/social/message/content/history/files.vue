@@ -2,7 +2,7 @@
 @import "./files.less";
 </style>
 <template>
-    <ul class="files messagescrollbar">
+    <ul class="files messagescrollbar" id="fileHistory">
         <li v-for="(file,index) in files" :key="index" class="files-item">
             <img width="40" :src="'resources/images/file/'+ file.icon" >
 
@@ -25,22 +25,43 @@ export default {
     name:'Files',
     data(){
         return {
+            isRolling: false,
             files:[],
-            listId:''
+            listId:'',
+            wordParams: { 
+                page:1,
+                limit:20,
+                total: 0,
+                listId:this.$route.params.listId,
+                type:'file'
+            }
         }
     },
      methods:{
+         //滚动加载
+        handleScroll () {
+            let scrollDiv = document.getElementById('fileHistory'),
+                that= this;
+            scrollDiv.addEventListener('scroll', function() {
+                if(Math.ceil(scrollDiv.clientHeight+scrollDiv.scrollTop) +2 >= scrollDiv.scrollHeight){
+                    if(that.wordParams.total > that.files.length){
+                        that.wordParams.page++;
+                        that.isRolling = true;
+                        that.refreshFiles();
+                    }
+                }
+            });
+        },
         //请求文档附件
         refreshFiles(){
-           let params = { 
-                page:1,
-                limit:100,
-                listId:this.listId,
-                type:'file'
-            };
 
-            getAttachmentByListId(params).then(res =>{
-                this.files = res.tableContent;
+            getAttachmentByListId(this.wordParams).then(res =>{
+                this.wordParams.total = res.dataCount;
+                if(this.isRolling){
+                    this.files = this.files.concat(...res.tableContent);
+                }else{
+                    this.files = res.tableContent;
+                }
 
                 this.files.map((file)=>{
                     if(/.jpg|.png|.PNG/.test(file.attachmentName)){
@@ -69,6 +90,7 @@ export default {
     mounted(){
         this.listId = this.$route.params.listId;
         this.refreshFiles();
+        this.handleScroll();
     }
 }
 </script>

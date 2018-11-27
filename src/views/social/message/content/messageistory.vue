@@ -34,11 +34,10 @@ import {
   getAllWorkFlowTasks
 } from "@/services/notificationsService";
 export default {
-    name:'Messageistory',
+    name:'MessageHistory',
 
     data(){
         return {
-           
             files:[]
         }
     },
@@ -49,43 +48,10 @@ export default {
              getAllWorkFlowTasks(this.notiParams).then(res =>{
                
             });
-        },
-        //请求文档附件
-        refreshFiles(){
-           let params = { 
-                page:1,
-                limit:100,
-                listId:this.listId,
-                type:'file'
-            };
-
-            getAttachmentByListId(params).then(res =>{
-                this.files = res.tableContent;
-            });
-        },
-        //请求图片
-        refreshImages(){
-            let params = { 
-                page:1,
-                limit:10,
-                listId:this.listId,
-                type:'image'
-            };
-
-            getAttachmentByListId(params).then(res =>{
-                this.images = res.tableContent;
-            });
-        },
-      
-        handleViewImg:function (img) {
-            this.imgName = img;
-            this.imgModalVisible = true;
-        },
+        }
     },
     mounted(){
         this.listId = this.$route.params.listId;
-        // this.refreshFiles();
-        // this.refreshImages();
     }
 
 }

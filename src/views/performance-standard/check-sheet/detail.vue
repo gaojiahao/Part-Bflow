@@ -33,19 +33,7 @@
               </Input>
             </div>
           </div>
-            <Table :columns="columns" :data="data" size="small"></Table>
-            <div class="user-page">
-                <div style="float: right;">
-                    <Page 
-                    :total="total" 
-                    :current="currentPage" 
-                    :page-size="pageSize" 
-                    @on-page-size-change="onPageSizeChange" 
-                    @on-change="onPageChange" 
-                    size="small" 
-                    show-elevator show-sizer />
-                </div>
-            </div>
+            <Table :columns="columns" height=269 :data="data" size="small"></Table>
         </Row>
         <Row class="check-detail-save">
             <span class="check-detail-save-btn" @click="saveCheckSheet('save')">保存</span>
@@ -81,9 +69,8 @@ export default {
   data() {
     return {
       checkSheetId: this.$route.params.id,
-      total: 0,
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 10000,
       checkSheetName: "",
       checkSheetDesc: "",
       searchValue: "",
@@ -124,18 +111,6 @@ export default {
       let filter = JSON.stringify([{operator:"like",value:this.searchValue,property:"title"}]);
       this.getCheckSheetItemData(filter);
     },
-    //点击分页
-    onPageChange(currentPage) {
-      let filter = JSON.stringify([{operator:"like",value:this.searchValue,property:"title"}]);
-      this.currentPage = currentPage;
-      this.getCheckSheetItemData(filter);
-    },
-    //点击切换下级用户每页显示条数
-    onPageSizeChange(size) {
-      let filter = JSON.stringify([{operator:"like",value:this.searchValue,property:"title"}]);
-      this.pageSize = size;
-      this.getCheckSheetItemData(filter);
-    },
     //返回点检列表
     goCheckSheet() {
       this.$router.push({
@@ -159,7 +134,7 @@ export default {
             this.data[this.formValidate.currentIndex].title = this.formValidate.name;
             this.data[this.formValidate.currentIndex].content = this.formValidate.content;
           }else{
-            this.data.push({
+            this.data.unshift({
               title: this.formValidate.name,
               content: this.formValidate.content
             });
@@ -244,7 +219,8 @@ export default {
         key: "menderName"
       },{
         title: "修改时间",
-        key: "modTime"
+        key: "modTime",
+        width: 180
       }],
       actionColumn = {
           title: "操作",

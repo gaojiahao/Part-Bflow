@@ -140,6 +140,9 @@ export default {
                 }
               })
             }
+          },
+          onCancel: () => {
+            this.getRelativeWorkflowData();
           }
       });
     },

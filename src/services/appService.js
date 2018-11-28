@@ -36,6 +36,12 @@ export const getAllProcessData = (page, limit) => request('/H_roleplay-si/ds/get
 
 /**
  * @author XiaoYing
+ * @description 添加或删除应用工作流
+ */
+export const saveWorkFlowInfo = (params) => request('/H_roleplay-si/ds/saveData', params, 'POST');
+
+/**
+ * @author XiaoYing
  * @description 获取应用流程数据
  */
 export const getProcessDataByListId = (listId, currentPage, pageSize) => request('/H_roleplay-si/ds/list/getProcessRelConfigByListId', {

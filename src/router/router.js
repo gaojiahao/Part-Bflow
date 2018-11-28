@@ -126,7 +126,7 @@ import { socialRouter} from '@/views/social/router';
 //作业标准模块
 import { checkSheetRouter } from '@/views/performance-standard/router';
 //知识库模块
-import { knowledgeBaseRouter } from '@/views/knowlwdge-base/router';
+import { knowledgeBaseRouter } from '@/views/knowledge/router';
 
 export const routers = [
   loginRouter,

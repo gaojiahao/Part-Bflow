@@ -52,6 +52,7 @@
               <Option value="C">制造</Option>
               <Option value="R">研发</Option>
               <Option value="O">运营</Option>
+              <Option value="E">工程</Option>
             </Select>
           </FormItem>
           <div class="baseinfo-container-divider"></div>

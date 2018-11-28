@@ -694,6 +694,7 @@ export default {
       }
       getProcedureInfoFilter(
         item.procedureCode,
+        this.processRouteCode,
         this.type,
         this.taskModalPage.currentPage,
         this.taskModalPage.pageSize,

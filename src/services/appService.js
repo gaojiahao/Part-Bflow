@@ -29,10 +29,17 @@ export const getNavData = (params) => request('/H_roleplay-si/ds/list/getMenuByP
  * @author XiaoYing
  * @description 获取所有流程数据
  */
-export const getAllProcessData = (page, limit) => request('/H_roleplay-si/ds/getDeployedProcess', {
+export const getAllProcessData = (page, limit,filter) => request('/H_roleplay-si/ds/getDeployedProcess', {
   page: page,
-  limit: limit
+  limit: limit,
+  filter: filter
 });
+
+/**
+ * @author XiaoYing
+ * @description 添加或删除应用工作流
+ */
+export const saveWorkFlowInfo = (params) => request('/H_roleplay-si/ds/saveData', params, 'POST');
 
 /**
  * @author XiaoYing
@@ -485,11 +492,11 @@ export const getCommentThumbaUps = (param) => request('/H_roleplay-si/comment/ge
  *   limit 条数
  *   page 页数
  */
-export const getProcessStatusByListId = (listId,currentPage,pageSize,filter="") => request('/H_roleplay-si/ds/getProcessStatusByListId', {
-  listId:listId,
+export const getProcessStatusByListId = (listId, currentPage, pageSize, filter = "") => request('/H_roleplay-si/ds/getProcessStatusByListId', {
+  listId: listId,
   page: currentPage,
-  limit:pageSize,
-  filter:filter
+  limit: pageSize,
+  filter: filter
 })
 
 /**
@@ -556,7 +563,7 @@ export const getResorceList = (listId) => request('/H_roleplay-si/resource/getRe
  * @param {String} listId
  * @param {String} resourceId
  */
-export const getResourceDetailList = (listId,resourceId) => request('/H_roleplay-si/resource/getResourceDetailList', {
+export const getResourceDetailList = (listId, resourceId) => request('/H_roleplay-si/resource/getResourceDetailList', {
   listId: listId,
   resourceId: resourceId
 })
@@ -576,14 +583,28 @@ export const deleteCustomDatasource = (resourceId) => request('/H_roleplay-si/re
  * @param {*} param 
  */
 export const subscribeApp = (relationKey) => request('/H_roleplay-si/comment/subscribeApp', {
-  type:"processStatus",
-  relationKey:relationKey
-},"POST")
+  type: "processStatus",
+  relationKey: relationKey
+}, "POST")
 
 /**
  * @author guozheng
  * @description 流程管理-关注
  */
 export const unsubscribeAppByRelationKey = (processStatusId) => request('/H_roleplay-si/comment/unsubscribeAppByRelationKey', {
-  relationKey:processStatusId
-},"POST")
+  relationKey: processStatusId
+}, "POST")
+
+/**
+ * 根据流程状态名称过滤数据
+ * @param {*} listId 
+ * @param {*} currentPage 
+ * @param {*} pageSize 
+ * @param {*} filter 
+ */
+export const serachProcess = (listId, currentPage, pageSize, filter) => request('/H_roleplay-si/ds/getProcessStatusByListId', {
+  listId: listId,
+  page: currentPage,
+  limit: pageSize,
+  filter: filter
+})

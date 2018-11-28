@@ -33,6 +33,8 @@
 
             <change-log-notice :data="n" v-if="n.type=='appChangeLog'"></change-log-notice>
 
+            <instance-change-notice :data="n" v-if="n.type=='instanceStatusChange'"></instance-change-notice>
+
         </div>
     </div>
 </template>
@@ -44,6 +46,7 @@ import praiseNoticeTpl from "@/views/notifications/notice-tpl/praiseNoticeTpl";
 import ProStatusTpl from "@/views/notifications/notice-tpl/pro-status-tpl";
 import InstanceCreateNotice from "@/views/notifications/notice-tpl/instance-create-notice";
 import ChangeLogNotice from "@/views/notifications/notice-tpl/change-log-notice";
+import InstanceChangeNotice from "@/views/notifications/notice-tpl/instance-change-notice";
 
 import {getAllnotifications} from "@/services/notificationsService";
 export default {
@@ -54,7 +57,8 @@ export default {
         praiseNoticeTpl,
         ProStatusTpl,
         InstanceCreateNotice,
-        ChangeLogNotice
+        ChangeLogNotice,
+        InstanceChangeNotice
     },
     props:{
         list:'',

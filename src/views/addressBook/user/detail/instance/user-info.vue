@@ -75,13 +75,18 @@
                         style="width:60%">
                     </Input>
                 </FormItem>
-                <FormItem label="邮箱：" prop="email">
+                <FormItem label="公司：" prop="entityName">
                     <Input 
+                        @on-click="selectCompanyModal" 
+                        v-model="formItem.entityName" 
+                        :icon="isEdit?'':'md-arrow-dropdown'" 
                         :class="{'info-edit':isEdit}" 
                         :readonly="isEdit" 
-                        v-model="formItem.email" 
                         style="width:60%">
                     </Input>
+                </FormItem>
+                <FormItem v-if="hiddenInput" label="公司主体id" style="width:60%">
+                    <Input v-model="formItem.entityId" />
                 </FormItem>
                 <div class="info-line"></div>
                 <FormItem label="类型：">
@@ -108,18 +113,13 @@
                     </Select>
                     <span v-else>{{ userInfo.statusText }}</span>
                 </FormItem>
-                <FormItem label="公司：" prop="entityName">
+                <FormItem label="邮箱：" prop="email">
                     <Input 
-                        @on-click="selectCompanyModal" 
-                        v-model="formItem.entityName" 
-                        :icon="isEdit?'':'md-arrow-dropdown'" 
                         :class="{'info-edit':isEdit}" 
                         :readonly="isEdit" 
+                        v-model="formItem.email" 
                         style="width:60%">
                     </Input>
-                </FormItem>
-                <FormItem v-if="hiddenInput" label="公司主体id" style="width:60%">
-                    <Input v-model="formItem.entityId" />
                 </FormItem>
                 <div class="info-line"></div>
                 <FormItem v-if="isAdd && isEdit" label="创建者：">
@@ -486,7 +486,7 @@ export default {
     //获取所有公司数据
     getAllCompanysData(searchText) {
         this.loading = true;
-        getAllCompanys(this.companyTable.pageSize,this.companyTable.currentPage,searchText).then(res => {
+        getAllCompanys(this.companyTable.pageSize,this.companyTable.currentPage,searchText,4).then(res => {
             this.companyData = res.tableContent;
             this.companyTable.total = res.dataCount;
             this.loading = false;

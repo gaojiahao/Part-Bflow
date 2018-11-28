@@ -42,6 +42,9 @@
                     <instance-create-notice :data="n" v-if="n.type=='instanceCreate'"></instance-create-notice>
 
                     <change-log-notice :data="n" v-if="n.type=='appChangeLog'"></change-log-notice>
+
+                    <instance-change-notice :data="n" v-if="n.type=='instanceStatusChange'"></instance-change-notice>
+                    
                 </div>
             </Col>
             <Col span="8" v-if="$route.name !='list'" class="content-container-history" >
@@ -59,6 +62,7 @@ import praiseNoticeTpl from "@/views/social/message/notice-tpl/praiseNoticeTpl";
 import ProStatusTpl from "@/views/social/message/notice-tpl/pro-status-tpl";
 import InstanceCreateNotice from "@/views/social/message/notice-tpl/instance-create-notice";
 import ChangeLogNotice from "@/views/social/message/notice-tpl/change-log-notice";
+import InstanceChangeNotice from "@/views/social/message/notice-tpl/instance-change-notice";
 
 import Messageistory from "@/views/social/message/content/messageistory";
 
@@ -74,7 +78,7 @@ export default {
         ProStatusTpl,
         InstanceCreateNotice,
         ChangeLogNotice,
-
+        InstanceChangeNotice,
         Messageistory
     },
     data(){

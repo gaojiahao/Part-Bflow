@@ -29,9 +29,10 @@ export const getNavData = (params) => request('/H_roleplay-si/ds/list/getMenuByP
  * @author XiaoYing
  * @description 获取所有流程数据
  */
-export const getAllProcessData = (page, limit) => request('/H_roleplay-si/ds/getDeployedProcess', {
+export const getAllProcessData = (page, limit,filter) => request('/H_roleplay-si/ds/getDeployedProcess', {
   page: page,
-  limit: limit
+  limit: limit,
+  filter: filter
 });
 
 /**

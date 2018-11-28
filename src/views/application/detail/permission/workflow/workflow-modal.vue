@@ -9,16 +9,28 @@
     width="1010" 
     @on-ok="selectWorkFlow" 
     :mask-closable="false" 
-    @on-visible-change="modalVisibleChange">
+    @on-visible-change="modalVisibleChange"
+    :styles="{top: '20px'}">
     <Row :gutter="8">
       <Col span="12">
-      <h4 class="flow-title">所有工作流</h4>
+      <h4 class="flow-title">所有工作流
+        <div class="app-search">
+          <Input 
+            @on-search="workflowFilter" 
+            :search="true" 
+            v-model="searchValue" 
+            placeholder="搜索工作流名称" 
+            style="width: 300px">
+          </Input>
+        </div>
+      </h4>
       <Table 
         @on-row-dblclick="addWorkflowData" 
         :loading="loadingAll" 
         stripe height="350" 
         :columns="allWorkFlowColumns" 
-        :data="allWorkFlowData"></Table>
+        :data="allWorkFlowData"
+        style="margin-top:10px"></Table>
       <div class="workflow-page">
         <div style="float: right;">
           <Page 
@@ -68,6 +80,7 @@ export default {
   data() {
     return {
       listId: this.$route.params.listId,
+      searchValue: '',
       showWorkFlow: false,
       relativeWorkFlowTotal: 0,
       allWorkFlowTotal: 0,
@@ -159,11 +172,17 @@ export default {
     }
   },
   methods: {
+    //所有工作流查询
+    workflowFilter() {
+      let filter = JSON.stringify([{operator:"like",value:this.searchValue,property:"processName"}]);
+      this.allCurrentPage = 1;
+      this.getAllWorkflowData(filter);
+    },
     selectWorkFlow() {},
     //获取所有流程数据
-    getAllWorkflowData() {
+    getAllWorkflowData(filter) {
       this.loadingAll = true;
-      getAllProcessData(this.allCurrentPage,this.pageSize).then(res => {
+      getAllProcessData(this.allCurrentPage,this.pageSize,filter).then(res => {
         this.allWorkFlowData = res.tableContent;
         this.allWorkFlowTotal = res.dataCount;
         this.loadingAll = false;

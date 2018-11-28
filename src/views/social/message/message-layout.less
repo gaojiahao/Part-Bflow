@@ -20,17 +20,7 @@
 
         &-list{
             border-top: 1px solid #ddd;
-
-            &-item{
-                cursor: pointer;
-                padding: 14px;
-                font-size: 14px;
-                color: #515a6e;
-            }
-
-            // &-item:hover{
-            //     box-shadow: darkgrey 1px 1px 1px 1px;
-            // }
+            height: calc(100% - 50px);
         }
         
 
@@ -48,4 +38,20 @@
 .active{
     background-color: #d1f4fa;
     border-right: 2px solid #65a696;
+}
+
+/*滚动条样式*/
+.messagescrollbar::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 4px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 4px;
+}
+.messagescrollbar::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+}
+.messagescrollbar::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: #e6ecf0;
 }

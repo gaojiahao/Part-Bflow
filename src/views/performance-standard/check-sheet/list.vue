@@ -6,7 +6,11 @@
     <div class="check-list">
         <Row class="check-list-table">
           <div style="margin-bottom:15px;">
-            <span class="check-list-btn" type="primary" @click="goAddCheckSheet">新增</span>
+            <span 
+              class="check-list-btn" 
+              type="primary" 
+              @click="goAddCheckSheet">
+              新增</span>
             <div class="app-search">
               <Input 
                 @on-search="checkSheetFilter" 
@@ -21,12 +25,12 @@
             <div class="user-page">
                 <div style="float: right;">
                     <Page 
-                    :total="total" 
-                    :current="currentPage" 
-                    :page-size="pageSize"
-                    @on-page-size-change="onPageSizeChange" 
-                    @on-change="onPageChange" 
-                    size="small" show-elevator show-sizer />
+                      :total="total" 
+                      :current="currentPage" 
+                      :page-size="pageSize"
+                      @on-page-size-change="onPageSizeChange" 
+                      @on-change="onPageChange" 
+                      size="small" show-elevator show-sizer />
                 </div>
             </div>
         </Row>
@@ -35,10 +39,13 @@
           title="检查项"
           width=1000
           :styles="{top: '20px'}">
-          <Table :columns="itemColumns" :data="itemData" size="small" height="500" style="margin-top:5px;"></Table>
-          <div slot="footer">
-            
-          </div>
+          <Table 
+            :columns="itemColumns" 
+            :data="itemData" 
+            size="small" 
+            height="500" 
+            style="margin-top:5px;"></Table>
+          <div slot="footer"></div>
       </Modal>
     </div>
 </template>
@@ -92,6 +99,7 @@ export default {
         {
           title: "点检表名称",
           key: "name",
+          width: 140,
           render: (h, params) => {
             return h(
               "a",
@@ -113,7 +121,7 @@ export default {
         {
           title: "描述",
           key: "comment",
-          width: 400
+          width: 390
         },
         {
           title: "检查项",
@@ -135,7 +143,8 @@ export default {
         },
         {
           title: "修改时间",
-          key: "modTime"
+          key: "modTime",
+          width: 160
         },
         {
           title: "操作",
@@ -147,22 +156,7 @@ export default {
                 {
                   on: {
                     click: () => {
-                      this.$Modal.confirm({
-                        title: "确认",
-                        content: "确认删除<b style=color:#e4393c;>"+params.row.name+"</b>么？",
-                        onOk: () => {
-                          deleteCheckKeyTable(params.row.id)
-                          .then(res => {
-                            if (res.success) {
-                              this.$Message.success(res.message);
-                              this.getCheckSheetData();
-                            }
-                          })
-                          .catch(error => {
-                            this.$Message.error(error.data.message);
-                          });
-                        }
-                      });
+                      this.deleteCheckSheetData(params);
                     }
                   }
                 },
@@ -184,8 +178,10 @@ export default {
         }
       );
     },
+    //点检列表查询
     checkSheetFilter() {
       let filter = JSON.stringify([{operator:"like",value:this.searchValue,property:"name"}]);
+      this.currentPage = 1;
       this.getCheckSheetData(filter);
     },
     //点击分页
@@ -200,9 +196,29 @@ export default {
       this.pageSize = size;
       this.getCheckSheetData(filter);
     },
+    //进入点检列表详情
     goAddCheckSheet() {
       this.$router.push({
         path: "/checkSheet/detail"
+      });
+    },
+    //删除点检表某一条数据
+    deleteCheckSheetData(params) {
+      this.$Modal.confirm({
+        title: "确认",
+        content: "确认删除<b style=color:#e4393c;>"+params.row.name+"</b>么？",
+        onOk: () => {
+          deleteCheckKeyTable(params.row.id)
+          .then(res => {
+            if (res.success) {
+              this.$Message.success(res.message);
+              this.getCheckSheetData();
+            }
+          })
+          .catch(error => {
+            this.$Message.error(error.data.message);
+          });
+        }
       });
     },
     //获取点检表数据

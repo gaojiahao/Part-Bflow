@@ -9,7 +9,11 @@
             <span 
             v-if="isAdmin && workflows.length===0" 
             class="app-workflow-create"
-            @click="goCreateWorkflow">新建</span>  
+            @click="goCreateWorkflow">新建</span> 
+            <span 
+            v-if="isAdmin" 
+            class="app-workflow-create"
+            @click="showWorkflowModal">关联</span> 
             <!-- <Dropdown v-if="isAdmin && isOperationShow" @on-click="createWorkflow">
               <a href="javascript:void(0)">
                   操作
@@ -25,6 +29,13 @@
         <Row class="app-workflow-table">
             <Table :columns="columns" :data="workflows" size="small"></Table>
         </Row>
+        <!-- 工作流modal -->
+        <workflow-modal 
+          :modalWorkflowStatus="showModal" 
+          :deleteRelationWorkflow="deleteRelationWorkflow"
+          @emitWorkFlowModal="emitWorkFlowModal"
+          @addWorkflow="addWorkflow">
+        </workflow-modal>
     </div>
 </template>
 
@@ -33,12 +44,11 @@ import {
   getProcessDataByListId,
   enabledForbiddenWorkFlow
 } from "@/services/appService.js";
+import WorkflowModal from './workflow-modal';
 
 export default {
   name: "workflowSource",
-  components: {
-    
-  },
+  components: { WorkflowModal },
   props: {
     isAdmin: Boolean
   },
@@ -48,6 +58,7 @@ export default {
       isOperationShow: true,
       isCreateShow: true,
       isUpdateShow: true,
+      showModal: false,
       deleteRelationWorkflow: -1,
       columns: [],
       workflows: []
@@ -59,6 +70,17 @@ export default {
     }
   },
   methods: {
+    addWorkflow() {
+      this.getRelativeWorkflowData();
+    },
+    //通知父组件modal状态
+    emitWorkFlowModal() {
+      this.showModal = false;
+    },
+    //展示工作流modal
+    showWorkflowModal() {
+      this.showModal = true;
+    },
     //获取已关联流程数据
     getRelativeWorkflowData() {
       getProcessDataByListId(this.listId).then(res => {

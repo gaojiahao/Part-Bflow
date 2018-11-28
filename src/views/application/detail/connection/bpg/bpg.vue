@@ -7,6 +7,7 @@
     <Spin size="large" fix v-if="spinShow"></Spin>
     <header class="header">
       <span>{{title}}</span>
+      <span>配置</span>
     </header>
     <div class="svg-board">
       <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%">
@@ -69,15 +70,19 @@
           </g>
       </svg>
     </div>
+
+    <config-table></config-table>
   </div>
 </template>
 
 <script>
 import { getMockData } from "@/services/flowService";
 import Shape from "@/components/Shape";
+import ConfigTable from "./config"
 export default {
   components: {
     Shape,
+    ConfigTable
   },
 
   data() {
@@ -97,7 +102,7 @@ export default {
       svgHeight: 0,   //svg画布高度
       localPoint: {},  //每块区域节点定位坐标集合
       nodePointAxion:{},//节点坐标集合
-      polyLineList:[]
+      polyLineList:[],
     };
   },
 
@@ -373,7 +378,7 @@ export default {
             })
         }
       })
-    }
+    },
   },
 
   errorCaptured (err, vm, info) {

@@ -6,17 +6,20 @@
         padding: 15px 10%;
         border-bottom: 1px solid #ddd;
         height: 50px;
+        &-add{
+            background-color: rgb(0, 150, 136);
+            border-radius: 0px;
+            color: #fff; 
+            margin: 5px 0px;
+            line-height: 30px;
+            padding: 10px 15px 10px 10px;
+            cursor: pointer;
+        }
+        &-search{
+            float: right;
+        }
     }
   
-    &-add{
-        background-color: rgb(0, 150, 136);
-        border-radius: 0px;
-        color: #fff; 
-        margin: 5px 0px;
-        line-height: 30px;
-        padding: 10px 15px 10px 10px;
-        cursor: pointer;
-    }
     &-list{
         height: calc(100% - 50px);
         overflow-y: auto;
@@ -25,10 +28,25 @@
         &-item{
             border-bottom: 1px solid #ddd;
             padding: 15px 0px 10px 0px;
-            h2:hover{
-                color: #39f;
-                text-decoration: underline;
-                cursor: pointer;
+            &-title{
+                b{
+                    font-size: 18px;
+                }
+                b:hover{
+                    color: #39f;
+                    text-decoration: underline;
+                    cursor: pointer;
+                }
+                .knowledge-delete{
+                    color: #39f;
+                    display: none;
+                    cursor: pointer;
+                }
+            }
+        }
+        &-item:hover{
+            .knowledge-delete{
+                display: inline;
             }
         }
         p{

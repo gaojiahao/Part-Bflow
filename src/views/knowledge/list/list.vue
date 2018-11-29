@@ -5,12 +5,24 @@
 <template>
     <div class="knowledge">
         <div class="knowledge-toolbar">
-          <span class="knowledge-add" @click="addKnowledgeData">新增</span>
+          <span class="knowledge-toolbar-add" @click="addKnowledgeData">新增</span>
+          <div class="knowledge-toolbar-search">
+              <Input 
+                @on-search="knowledgeFilter" 
+                :search="true" 
+                v-model="searchValue" 
+                placeholder="关键词搜索" 
+                style="width: 300px">
+              </Input>
+          </div>
         </div>
-        <div class="knowledge-list">
+        <div class="knowledge-list" id="knowledgeList">
           <Row class="knowledge-list-item"  v-for="(knowledge,index) of knowledgeData":key="index" :gutter="8">
               <Col :span="knowledge.img?'22':'24'">
-                <h2 @click="editKnowledgeData(knowledge,index)">{{ knowledge.title }}</h2>
+                <div class="knowledge-list-item-title">
+                  <b @click="editKnowledgeData(knowledge,index)">{{ knowledge.title }}</b>
+                  <span @click="deleteKnowledge(knowledge,index)" class="knowledge-delete">删除</span>
+                </div>
                 <p v-html="knowledge.content"></p>
                 <span>{{ knowledge.creator }}</span>
                 <span>{{ knowledge.crtTime }}</span>
@@ -26,26 +38,56 @@
 </template>
 
 <script>
-import { getKnowledgeData } from "@/services/knowledgeBaseService.js";
+import { getKnowledgeData, deleteKnowledgeData } from "@/services/knowledgeBaseService.js";
 
 export default {
   name: "KnowledgeBase",
   components: {},
   data() {
     return {
+      currentPage: 1,
+      total: 0,
+      limit: 10,
+      isRolling: false,
+      searchValue: '',
       knowledgeData: []
     };
   },
   methods: {
+    //知识库查询
+    knowledgeFilter() {
+      this.currentPage = 1;
+      this.getAllKnowledgeData();
+    },
+    //滚动加载
+    handleScroll () {
+        let scrollDiv = document.getElementById('knowledgeList');
+        scrollDiv.addEventListener('scroll', () => {
+            if(Math.ceil(scrollDiv.clientHeight+scrollDiv.scrollTop) +2 >= scrollDiv.scrollHeight){
+                if(this.total > this.knowledgeData.length){
+                    this.currentPage++;
+                    this.isRolling = true;
+                    this.getAllKnowledgeData();
+                }
+            }
+        });
+    },
     //获取所有知识库数据
     getAllKnowledgeData() {
-      getKnowledgeData().then(res => {
+      getKnowledgeData(this.currentPage,this.limit,this.searchValue).then(res => {
         if(res.success){
-          this.knowledgeData = res.tableContent;
+          if(this.isRolling){
+              this.knowledgeData = this.knowledgeData.concat(...res.tableContent);
+          }else{
+              this.knowledgeData = res.tableContent;
+          }
+          this.total = res.dataCount;
           this.knowledgeData.forEach((val) => {
-            val.img = this.getString(val.content);
-            val.content = this.deleteImg(val.content);
-          })
+            if(!val.img){
+              val.img = this.getString(val.content);
+              val.content = this.deleteImg(val.content);
+            }
+          });
         }
       })
     },
@@ -63,6 +105,28 @@ export default {
         name: "knowledgeDetail",
         path: "/knowledge/detail",
         params: { id: data.id }
+      });
+    },
+    //删除知识库数据
+    deleteKnowledge(knowledge,index) {
+      let knowledgeIds = [];
+      this.$Modal.confirm({
+        title: "确认",
+        content: "确认删除<b style=color:#e4393c;>"+knowledge.title+"</b>么？",
+        onOk: () => {
+          knowledgeIds.push(knowledge.id);
+          deleteKnowledgeData(knowledgeIds)
+          .then(res => {
+            if (res.success) {
+              this.$Message.success(res.message);
+              this.currentPage = 1;
+              this.getAllKnowledgeData();
+            }
+          })
+          .catch(error => {
+            this.$Message.error(error.data.message);
+          });
+        }
       });
     },
     //截取指定字符串
@@ -100,6 +164,7 @@ export default {
   },
   mounted() {
     this.getAllKnowledgeData();
+    this.handleScroll();
   }
 };
 </script>

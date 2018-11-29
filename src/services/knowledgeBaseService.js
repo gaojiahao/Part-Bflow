@@ -1,6 +1,6 @@
 import {request} from './fetch';
 
-//获取点检表数据
+//获取知识库数据
 export const getKnowledgeData = (currentPage,limit,search) =>  request('/H_roleplay-si/kb/query',{
     page: currentPage,
     limit: limit,
@@ -24,6 +24,4 @@ export const saveKnowledgeData = (params) =>  request('/H_roleplay-si/kb/save',{
 export const updateKnowledgeData = (params) =>  request('/H_roleplay-si/kb/update',{},'POST',params);
 
 //删除知识库
-export const deleteKnowledgeData = (knowledgeId) =>  request('/H_roleplay-si/kb/update',{
-    ID: knowledgeId
-},'POST');
+export const deleteKnowledgeData = (knowledgeIds) =>  request('/H_roleplay-si/kb/delete',{},'POST',knowledgeIds);

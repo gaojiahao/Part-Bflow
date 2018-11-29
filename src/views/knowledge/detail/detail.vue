@@ -9,18 +9,24 @@
             :label-width="120" 
             :model="knowledgeForm" 
             :rules="ruleValidate">
-            <FormItem label="标题:" prop="title">
-                <Input v-model="knowledgeForm.title" style="width: 300px" />
-                </DatePicker>
-            </FormItem>
-            <FormItem label="分类:" prop="type">
-                <Select v-model="knowledgeForm.type" :transfer="false" style="width:300px">
-                    <Option v-for="item in typeList" :value="item.value" :key="item.id">{{ item.name }}</Option>
-                </Select>
-                </DatePicker>
+            <FormItem label="">
+              <Row>
+                <Col span="10" style="margin-left:-121px;">
+                    <FormItem prop="title" label="标题:">
+                        <Input v-model="knowledgeForm.title" style="width: 300px" />
+                    </FormItem>
+                </Col>
+                <Col span="12">
+                    <FormItem prop="type" label="分类:">
+                         <Select v-model="knowledgeForm.type" :transfer="false" style="width:300px">
+                            <Option v-for="item in typeList" :value="item.value" :key="item.id">{{ item.name }}</Option>
+                         </Select>
+                    </FormItem>
+                </Col>
+            </Row>
             </FormItem>
             <FormItem label="内容:" prop="content" style="margin-bottom: 65px;">
-                <div ref="editor"></div>
+                <div ref="editor" style="height:400px"></div>
             </FormItem>
         </Form>
         <Row class="knowledge-save">
@@ -132,6 +138,7 @@ export default {
         }
         this.editor.customConfig.uploadImgShowBase64 = true;
         this.editor.create();
+        this.editor.$textContainerElem[0].style.height = '400px';
         this.editor.cmd.do('insertHTML', res.content)
       })
     }

@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="less">
   @import "./detail.less";
 </style>
 
@@ -14,18 +14,13 @@
                 </DatePicker>
             </FormItem>
             <FormItem label="分类:" prop="type">
-                <Select v-model="knowledgeForm.type" style="width:300px">
+                <Select v-model="knowledgeForm.type" :transfer="false" style="width:300px">
                     <Option v-for="item in typeList" :value="item.value" :key="item.id">{{ item.name }}</Option>
                 </Select>
                 </DatePicker>
             </FormItem>
             <FormItem label="内容:" prop="content" style="margin-bottom: 65px;">
-                <vue-wangeditor 
-                ref="content" 
-                id="editorContent" 
-                :menus="menu"
-                width="100%">
-                </vue-wangeditor>
+                <div ref="editor"></div>
             </FormItem>
         </Form>
         <Row class="knowledge-save">
@@ -39,15 +34,19 @@
 import { 
   updateKnowledgeData, 
   getKnowledgeTypeDataById,
-  getKnowledgeTypeData } from "@/services/knowledgeBaseService.js";
-import VueWangeditor from 'vue-wangeditor';
+  getKnowledgeTypeData,
+  saveKnowledgeData
+  } from "@/services/knowledgeBaseService.js";
+
+  import { getToken } from "@/utils/utils";
+  import E from 'wangeditor';
 
 export default {
   name: "KnowledgeDetail",
-  components: { VueWangeditor },
+  components: {},
   data() {
     return {
-      showModal: false,
+      knowledgeId: this.$route.params.id,
       knowledgeForm: {
         title: '',
         type: '',
@@ -64,55 +63,53 @@ export default {
         content: [
             { required: true, message: ' 123', trigger: 'blur' }
         ]
-      },
-      menu: [
-        'source',	// 源码模式
-        '|',
-        'bold',	// 粗体
-        'underline',	// 下划线
-        'italic',	// 斜体
-        'strikethrough',	// 中线
-        'eraser',	// 清空格式
-        'forecolor',	// 文字颜色
-        'bgcolor',	// 背景颜色
-        '|',
-        'quote',	// 引用
-        'fontfamily',	// 字体
-        'fontsize',	// 字号
-        'head',	// 标题
-        'unorderlist',	// 无序列表
-        'orderlist',	// 有序列表
-        'alignleft',	// 左对齐
-        'aligncenter',	// 居中
-        'alignright',	// 右对齐
-        '|',
-        'emotion',	// 表情
-        'img',
-        '|',
-        'undo',	// 撤销
-        'redo'	// 重做
-      ]
+      }
     };
   },
   methods: {
     //保存
-    saveKnowledge() {
-      if(this.$refs.content.getHtml() === ''){
+    saveKnowledge(isSave) {
+      if(this.editor.txt.html() === '<p><br></p>'){
         this.$Message.error('必填项请输入！');
       }else{
-        this.knowledgeForm.content = document.getElementById('editorContent').innerHTML;
+        this.knowledgeForm.content = this.editor.txt.html();
       }
+
       this.$refs["formValidate"].validate(v => {
         if(v){
-          updateKnowledgeData(this.knowledgeForm).then(res => {
+          if(this.knowledgeId){
+            this.knowledgeForm.id = this.knowledgeId;
+            updateKnowledgeData(this.knowledgeForm).then(res => {
               if(res.success){
                 this.$Message.success(res.message);
-                this.showModal = false;
-                this.getAllKnowledgeData();
+                if(isSave === 'save'){
+                    this.$router.push({path:'/knowledge/list'});
+                }else{
+                  this.knowledgeId = null;
+                  this.knowledgeForm.content = '';
+                  this.$refs['formValidate'].resetFields();
+                  this.editor.txt.html('');
+                }
               }
             }).catch(error => {
                 this.$Message.error(error.data.message);
             });
+          }else{
+            saveKnowledgeData(this.knowledgeForm).then(res => {
+              if(res.success){
+                this.$Message.success(res.message);
+                if(isSave === 'save'){
+                    this.$router.push({path:'/knowledge/list'});
+                }else{
+                  this.knowledgeForm.content = '';
+                  this.$refs['formValidate'].resetFields();
+                  this.editor.txt.html('');
+                }
+              }
+            }).catch(error => {
+                this.$Message.error(error.data.message);
+            });
+          }
         }
       })
     },
@@ -124,15 +121,22 @@ export default {
     },
     //获取编辑知识库信息
     getKnowledgeDataById() {
-      getKnowledgeTypeDataById(this.$route.params.id).then(res => {
+      getKnowledgeTypeDataById(this.knowledgeId).then(res => {
         this.knowledgeForm.title = res.title;
         this.knowledgeForm.type = res.type;
         this.knowledgeForm.content = res.content;
-        this.$refs.content.setHtml(res.content);
+
+        this.editor = new E(this.$refs.editor)
+        this.editor.customConfig.onchange = (html) => {
+          this.knowledgeForm.content = html
+        }
+        this.editor.customConfig.uploadImgShowBase64 = true;
+        this.editor.create();
+        this.editor.cmd.do('insertHTML', res.content)
       })
     }
   },
-  mounted() {
+  created() {
     this.getAllKnowledgeTypeData();
     this.getKnowledgeDataById();
   }

@@ -4,6 +4,7 @@
 
 <template>
     <div class="knowledge">
+      <Row class="knowledge-form">
           <Form 
             ref="formValidate" 
             :label-width="120" 
@@ -11,7 +12,7 @@
             :rules="ruleValidate">
             <FormItem label="">
               <Row>
-                <Col span="10" style="margin-left:-121px;">
+                <Col span="12" style="margin-left:-121px;">
                     <FormItem prop="title" label="标题:">
                         <Input v-model="knowledgeForm.title" style="width: 300px" />
                     </FormItem>
@@ -28,7 +29,8 @@
             <FormItem label="内容:" prop="content" style="margin-bottom: 65px;">
                 <div ref="editor" style="height:400px"></div>
             </FormItem>
-        </Form>
+          </Form>
+        </Row>
         <Row class="knowledge-save">
             <span class="knowledge-save-btn" @click="saveKnowledge('save')">保存</span>
             <span class="knowledge-save-btn" @click="saveKnowledge">保存并继续添加</span>

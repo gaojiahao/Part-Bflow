@@ -130,7 +130,7 @@ export default {
             if (res.success) {
               this.$Message.success(res.message);
               this.currentPage = 1;
-              this.getAllKnowledgeData();
+              this.knowledgeData.splice(index,1);
             }
           })
           .catch(error => {

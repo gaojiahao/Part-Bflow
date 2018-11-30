@@ -63,13 +63,13 @@ export default {
       typeList: [],
       ruleValidate: {
         title: [
-            { required: true, message: '不能为空！', trigger: 'blur' }
+            { required: true, message: ' ', trigger: 'blur' }
         ],
         type: [
-            { required: true, message: '不能为空！', trigger: 'change' }
+            { required: true, message: ' ', trigger: 'change' }
         ],
         content: [
-            { required: true, message: ' 123', trigger: 'blur' }
+            { required: true, message: ' ', trigger: 'blur' }
         ]
       }
     };
@@ -77,7 +77,9 @@ export default {
   methods: {
     //保存
     saveKnowledge(isSave) {
-      if(this.editor.txt.html() === '<p><br></p>'){
+      if(this.editor.txt.html() === '<p><br></p>' || 
+        this.knowledgeForm.title==='' || 
+        this.knowledgeForm.type===''){
         this.$Message.error('必填项请输入！');
       }else{
         this.knowledgeForm.content = this.editor.txt.html();

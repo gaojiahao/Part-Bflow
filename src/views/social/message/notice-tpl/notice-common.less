@@ -1,0 +1,138 @@
+.msg-comment{
+    background-color: #fff;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    width: 60%;
+    margin-left: 0px;
+    // margin: 0 auto;
+    max-width: 600px;
+    &-title{
+        padding: 5px 0px;
+        span{
+            font-size: 12px;
+            color: #607D8B;
+            margin-left: -3px;
+        }
+        i{
+            font-weight: 600;
+        }
+    }
+
+    &-content{
+        // border-bottom: 1px solid #ddd;
+        font-size: 12px;
+        padding: 5px 20px;
+    }
+
+    &-href{
+        padding: 5px 0px;
+        cursor: pointer;
+        a{
+            color: #607D8B;
+        }
+    }
+}
+
+
+.notice-creator{
+    color: #FF5722;
+    font-size: 14px;
+}
+
+.notice-relationKey{
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.notice-container{
+    padding: 5px 0px 0px 5px;
+    word-break: break-all;
+    &-relpy{
+        &-content{
+            padding: 5px;
+            background-color: #03a9f461;
+            border-left: 5px solid #4CAF50;
+            border-radius: 1px;
+        }
+    }
+    &-comment{
+        padding: 5px 0px 0px 20px;
+        &-content{
+            padding: 5px;
+            background-color: #e6ecf0;
+            border-left: 5px solid #ddd;
+        }
+    }
+}
+
+.notice-comment-files{
+    padding: 2px 0px;
+}
+.notice-comment-images{
+    padding: 2px 0px;
+}
+.comimg{
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+    box-shadow: 0 1px 1px rgba(0,0,0,.2);
+    margin-right: 4px;
+img{
+    width: 100%;
+    height: 100%;
+}
+
+&-cover{
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,.6);
+
+    i{
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    margin: 0 2px;
+}
+
+    
+}
+}
+
+.comimg:hover .comimg-cover{
+    display: block;
+}
+
+
+.message-container{
+    &-creator{
+        margin-bottom: 5px;
+    }
+    &-content{
+        padding: 8px;
+        border-radius: 3px;
+        background-color:#ddd;
+        display: inline-block;
+        text-align: left;
+        max-width: 50%;
+        word-break: break-all;
+    }
+}
+
+.noticefromme{
+    text-align: right;
+    .message-container-content{
+        background-color:#B3E5FC;
+    }
+}

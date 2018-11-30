@@ -182,9 +182,9 @@ export default {
     },
     //添加管理员自评
     submitAdminAssess() {
-      if(this.$refs.result.getHtml() === ''){
+      if(this.$refs.result.getHtml() === '<p><br></p>'){
         this.$Message.error('必填项请输入！');
-      }else if(this.$refs.oppor.getHtml() === ''){
+      }else if(this.$refs.oppor.getHtml() === '<p><br></p>'){
         this.$Message.error('必填项请输入！');
       }else{
         this.adminAssessData.opportunity = document.getElementById('editorOppor').innerHTML;

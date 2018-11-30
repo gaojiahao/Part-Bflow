@@ -11,7 +11,7 @@
                 @on-search="knowledgeFilter" 
                 :search="true" 
                 v-model="searchValue" 
-                placeholder="关键词搜索" 
+                placeholder="搜索" 
                 style="width: 300px">
               </Input>
           </div>
@@ -50,6 +50,7 @@ export default {
       limit: 10,
       isRolling: false,
       searchValue: '',
+      filter: false,
       knowledgeData: []
     };
   },
@@ -57,6 +58,7 @@ export default {
     //知识库查询
     knowledgeFilter() {
       this.currentPage = 1;
+      this.filter = true;
       this.getAllKnowledgeData();
     },
     //滚动加载
@@ -68,6 +70,8 @@ export default {
                     this.currentPage++;
                     this.isRolling = true;
                     this.getAllKnowledgeData();
+                }else{
+                  this.isRolling = false;
                 }
             }
         });
@@ -76,11 +80,17 @@ export default {
     getAllKnowledgeData() {
       getKnowledgeData(this.currentPage,this.limit,this.searchValue).then(res => {
         if(res.success){
-          if(this.isRolling){
+          if(!this.filter){
+            if(this.isRolling){
               this.knowledgeData = this.knowledgeData.concat(...res.tableContent);
+            }else{
+                this.knowledgeData = res.tableContent;
+            }
           }else{
-              this.knowledgeData = res.tableContent;
+            this.knowledgeData = res.tableContent;
+            this.filter = false
           }
+          
           this.total = res.dataCount;
           this.knowledgeData.forEach((val) => {
             if(!val.img){

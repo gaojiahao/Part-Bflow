@@ -173,7 +173,7 @@ export default {
     submitLog(event) {
       //校验提交的数据是否为空
       let valid;
-      if (this.$refs.editor.getHtml() === "") {
+      if (this.$refs.editor.getHtml() === "<p><br></p>") {
         this.$Message.error("必填项请输入！");
       } else {
         this.modalFormData.content = document.getElementById(

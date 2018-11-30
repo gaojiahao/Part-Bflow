@@ -30,7 +30,7 @@
         stripe height="350" 
         :columns="allWorkFlowColumns" 
         :data="allWorkFlowData"
-        style="margin-top:10px"></Table>
+        style="margin-top:15px"></Table>
       <div class="workflow-page">
         <div style="float: right;">
           <Page 

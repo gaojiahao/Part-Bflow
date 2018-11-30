@@ -99,7 +99,7 @@ export default {
         {
           title: "点检表名称",
           key: "name",
-          width: 150,
+          width: 140,
           render: (h, params) => {
             return h(
               "a",
@@ -121,7 +121,7 @@ export default {
         {
           title: "描述",
           key: "comment",
-          width: 400
+          width: 390
         },
         {
           title: "检查项",
@@ -144,7 +144,7 @@ export default {
         {
           title: "修改时间",
           key: "modTime",
-          width: 180
+          width: 160
         },
         {
           title: "操作",

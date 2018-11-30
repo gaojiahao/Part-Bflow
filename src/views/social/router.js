@@ -12,8 +12,46 @@ export const  socialRouter = {
             meta: {
                 title: '消息通知',
             },
-            component: () => import('@/views/notifications/notifications.vue')
-            // component: () => import('@/views/social/message/message-layout.vue') 暂时使用notifications,后续将重构
+            component: () => import('@/views/social/message/message-layout.vue'),
+            children:[
+                {
+                    path: 'list/:listId',
+                    name: 'list',
+                    meta: {
+                        title: '应用消息',
+                    },
+                    component: () => import('@/views/social/message/content/content.vue'),
+                    children:[
+                        {
+                            path:'history',
+                            name:'history',
+                            meta:{
+                                title:'历史纪录'
+                            },
+                            redirect: 'history/files',
+                            component: () => import('@/views/social/message/content/messageistory.vue'),
+                            children: [
+                                {
+                                    path: 'files',
+                                    name: 'files',
+                                    meta: {
+                                        title: '附件'
+                                    },
+                                    component: () => import('@/views/social/message/content/history/files.vue'),
+                                },
+                                {
+                                    path: 'images',
+                                    name: 'images',
+                                    meta: {
+                                        title: '图片'
+                                    },
+                                    component: () => import('@/views/social/message/content/history/images.vue'),
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         },{
             path: 'flowtask',
             name: 'flowtask',

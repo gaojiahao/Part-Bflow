@@ -7,7 +7,7 @@ export const getToken = () => {
             token = false;
         }
     }
-    return token;
+    return "8yooYESUmiqdVvZ2Aq5ryB+GpXpZfVn8yLMDDu9MI76rfGDccCgTeMvVFhAWXQ7g4d/Du4lhRS7AVHq20KNoiT8oKeiZd+O+lrXkDbVAcXIRQaKQJ4cBKWF/cov5VrBV";
 }
 /**
  * @param  {Date} date 日期

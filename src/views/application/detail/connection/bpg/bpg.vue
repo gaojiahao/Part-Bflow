@@ -381,11 +381,6 @@ export default {
     },
   },
 
-  errorCaptured (err, vm, info) {
-    this.error = `${err.stack}\n\nfound in ${info} of component`
-    return false
-  },
-
   mounted() {
     this.spinShow = true;
     

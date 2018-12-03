@@ -22,6 +22,22 @@ export const wrokGuideRouter = {
                 title: '作业指导详情',
             },
             component: () => import('@/views/work-guide/detail/detail.vue'),
+        },
+        {
+            path: 'add',
+            name: 'wokdGuideAdd',
+            meta: {
+                title: '作业指导新增',
+            },
+            component: () => import('@/views/work-guide/detail/detail.vue'),
+        },
+        {
+            path: 'view/:id',
+            name: 'wokdGuideView',
+            meta: {
+                title: '作业指导查看',
+            },
+            component: () => import('@/views/work-guide/view/view.vue'),
         }
     ]
 }

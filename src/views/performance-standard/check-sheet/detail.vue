@@ -4,10 +4,6 @@
 
 <template>
     <div class="check-detail">
-        <Row class="check-detail-bread">
-            <h3><span @click.stop="goCheckSheet" style="cursor:pointer">点检表</span>
-              / {{checkSheetName}}</h3>
-        </Row>
         <Row class="check-detail-title">
             <span><b style="color:#e4393c">*</b>点检表名称：</span>
             <Input 
@@ -38,6 +34,7 @@
         <Row class="check-detail-save">
             <span class="check-detail-save-btn" @click="saveCheckSheet('save')">保存</span>
             <span class="check-detail-save-btn" @click="saveCheckSheet">保存并继续添加</span>
+            <span class="check-detail-save-btn" @click="goCheckSheet">返回</span>
         </Row>
         <Modal v-model="showModal" title="新增检查项目">
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">

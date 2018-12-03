@@ -14,30 +14,26 @@
               <Row>
                 <Col span="11" style="margin-left:-121px;">
                     <FormItem prop="title" label="标题:">
-                        <Input v-if="!knowledgeId || isEdit" v-model="knowledgeForm.title" style="width: 300px" />
-                        <span v-else>{{ knowledgeForm.title }}</span>
+                        <Input v-model="knowledgeForm.title" style="width: 300px" />
                     </FormItem>
                 </Col>
                 <Col span="11">
                     <FormItem prop="type" label="分类:">
-                         <Select v-if="!knowledgeId || isEdit" v-model="knowledgeForm.type" :transfer="false" style="width:300px">
+                         <Select v-model="knowledgeForm.type" :transfer="false" style="width:300px">
                             <Option v-for="item in typeList" :value="item.value" :key="item.id">{{ item.name }}</Option>
                          </Select>
-                         <span v-else>{{ knowledgeForm.type }}</span>
                     </FormItem>
                 </Col>
             </Row>
             </FormItem>
             <FormItem label="内容:" prop="content" style="margin-bottom: 65px;">
-                <div v-show="!knowledgeId || isEdit" ref="editor" style="height:400px"></div>
-                <span v-show="knowledgeId && !isEdit" v-html="knowledgeForm.content"></span>
+                <div ref="editor" style="height:400px"></div>
             </FormItem>
           </Form>
         </Row>
         <Row class="knowledge-save">
-            <span v-if="!knowledgeId || isEdit" class="knowledge-save-btn" @click="saveKnowledge('save')">保存</span>
-            <span v-if="!knowledgeId || isEdit" class="knowledge-save-btn" @click="saveKnowledge">保存并继续添加</span>
-            <span v-if="knowledgeId && !isEdit" class="knowledge-save-btn" @click="editKnowledge">编辑</span>
+            <span class="knowledge-save-btn" @click="saveKnowledge('save')">保存</span>
+            <span class="knowledge-save-btn" @click="saveKnowledge">保存并继续添加</span>
             <span class="knowledge-save-btn" @click="goBack">返回</span>
         </Row>
     </div>
@@ -81,9 +77,6 @@ export default {
   methods: {
     goBack() {
       this.$router.push({path:'/knowledge/list'});
-    },
-    editKnowledge() {
-      this.isEdit = true;
     },
     //保存
     saveKnowledge(isSave) {
@@ -139,21 +132,31 @@ export default {
     },
     //获取编辑知识库信息
     getKnowledgeDataById() {
-      getKnowledgeTypeDataById(this.knowledgeId).then(res => {
-        this.knowledgeForm.title = res.title;
-        this.knowledgeForm.type = res.type;
-        this.knowledgeForm.content = res.content;
+      if(this.knowledgeId){
+        getKnowledgeTypeDataById(this.knowledgeId).then(res => {
+          this.knowledgeForm.title = res.title;
+          this.knowledgeForm.type = res.type;
+          this.knowledgeForm.content = res.content;
 
-        this.editor = new E(this.$refs.editor)
-        this.editor.customConfig.onchange = (html) => {
-          this.knowledgeForm.content = html
-        }
-        this.editor.customConfig.uploadImgShowBase64 = true;
-        this.editor.create();
-        this.editor.$textContainerElem[0].style.height = '400px';
-        this.editor.txt.html(res.content);
-      })
+          this.createEditor(res.content);
+        })
+      }
+    },
+    //create富文本编辑器
+    createEditor(content) {
+      let knowledgeContent = content?content:'';
+      this.editor = new E(this.$refs.editor)
+      this.editor.customConfig.onchange = (html) => {
+        this.knowledgeForm.content = html
+      }
+      this.editor.customConfig.uploadImgShowBase64 = true;
+      this.editor.create();
+      this.editor.$textContainerElem[0].style.height = '400px';
+      this.editor.txt.html(knowledgeContent);
     }
+  },
+  mounted() {
+      this.createEditor();
   },
   created() {
     this.getAllKnowledgeTypeData();

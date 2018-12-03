@@ -13,12 +13,26 @@ export const  knowledgeBaseRouter = {
             },
             component: () => import('@/views/knowledge/list/list.vue')
         },{
-            path: 'detail',
+            path: 'detail/:id',
             name: 'knowledgeDetail',
             meta: {
                 title: '知识库详情',
             },
             component: () => import('@/views/knowledge/detail/detail.vue')
+        },{
+            path: 'add',
+            name: 'knowledgeAdd',
+            meta: {
+                title: '知识库新增',
+            },
+            component: () => import('@/views/knowledge/detail/detail.vue')
+        },{
+            path: 'view/:id',
+            name: 'knowledgeView',
+            meta: {
+                title: '知识库查看',
+            },
+            component: () => import('@/views/knowledge/view/view.vue')
         }
     ]
 }   

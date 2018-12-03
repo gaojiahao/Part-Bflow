@@ -104,17 +104,16 @@ export default {
     //新增知识库数据
     addKnowledgeData() {
       this.$router.push({
-        name: "knowledgeDetail",
-        path: "/knowledge/detail",
-        params: {}
+        name: "knowledgeAdd",
+        path: "/knowledge/add"
       });
     },
     //修改知识库数据
     editKnowledgeData(data,index){
       this.$router.push({
-        name: "knowledgeDetail",
-        path: "/knowledge/detail",
-        params: { id: data.id }
+        name: "knowledgeView",
+        path: "/knowledge/view/"+data.id,
+        params: {id: data.id}
       });
     },
     //删除知识库数据

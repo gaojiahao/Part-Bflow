@@ -1,0 +1,73 @@
+<style lang="less" scoped>
+  @import "./view.less";
+</style>
+
+<template>
+    <div class="knowledge">
+        <Row class="knowledge-title">
+            <span>{{ knowledgeForm.title }}</span>
+        </Row>
+        <Row class="knowledge-desc">
+            <img :src="knowledgeForm.photo"/>
+            <span class="knowledge-desc-type">{{ knowledgeForm.typeName }}</span>
+            <span class="knowledge-desc-creator">{{ knowledgeForm.creator }}</span>
+            <span class="knowledge-desc-crtTime">{{ knowledgeForm.crtTime }}</span>
+        </Row>
+        <Row class="knowledge-content">
+            <span v-html="knowledgeForm.content"></span>
+        </Row>
+        <Row class="knowledge-save">
+            <span class="knowledge-save-btn" @click="editKnowledge">编辑</span>
+            <span class="knowledge-save-btn" @click="goBack">返回</span>
+        </Row>
+    </div>
+</template>
+
+<script>
+import { 
+  updateKnowledgeData, 
+  getKnowledgeTypeDataById,
+  getKnowledgeTypeData,
+  saveKnowledgeData
+  } from "@/services/knowledgeBaseService.js";
+  import E from 'wangeditor';
+
+export default {
+  name: "KnowledgeView",
+  components: {},
+  data() {
+    return {
+      knowledgeId: this.$route.params.id,
+      knowledgeForm: {
+        title: '',
+        type: '',
+        content: '',
+        creator: '',
+        crtTime: ''
+      }
+    };
+  },
+  methods: {
+    goBack() {
+      this.$router.push({path:'/knowledge/list'});
+    },
+    editKnowledge() {
+      this.$router.push({
+        name: "knowledgeDetail",
+        path:'/knowledge/detail/'+this.$route.params.id,
+        params: {id: this.$route.params.id}
+      });
+    },
+    //获取编辑知识库信息
+    getKnowledgeDataById() {
+      getKnowledgeTypeDataById(this.knowledgeId).then(res => {
+        this.knowledgeForm = res
+      })
+    }
+  },
+  created() {
+    this.getKnowledgeDataById();
+  }
+};
+</script>
+

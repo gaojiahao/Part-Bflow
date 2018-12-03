@@ -4,36 +4,36 @@
 
 <template>
     <div class="check-list">
-        <Row class="check-list-table">
-          <div style="margin-bottom:15px;">
-            <span 
-              class="check-list-btn" 
-              type="primary" 
-              @click="goAddCheckSheet">
-              新增</span>
-            <div class="app-search">
-              <Input 
-                @on-search="checkSheetFilter" 
-                :search="true" 
-                v-model="searchValue" 
-                placeholder="搜索点检表名称" 
-                style="width: 300px">
-              </Input>
-            </div>
+          <div class="check-list-toolbar">
+              <span 
+                class="check-list-btn" 
+                type="primary" 
+                @click="goAddCheckSheet">
+                新增</span>
+              <div class="app-search">
+                <Input 
+                  @on-search="checkSheetFilter" 
+                  :search="true" 
+                  v-model="searchValue" 
+                  placeholder="搜索点检表名称" 
+                  style="width: 300px">
+                </Input>
+              </div>
           </div>
-            <Table :columns="columns" :data="data" size="small"></Table>
-            <div class="user-page">
-                <div style="float: right;">
-                    <Page 
-                      :total="total" 
-                      :current="currentPage" 
-                      :page-size="pageSize"
-                      @on-page-size-change="onPageSizeChange" 
-                      @on-change="onPageChange" 
-                      size="small" show-elevator show-sizer />
-                </div>
-            </div>
-        </Row>
+          <div class="check-list-table">
+              <Table :columns="columns" :data="data" size="small"></Table>
+              <div class="user-page">
+                  <div style="float: right;">
+                      <Page 
+                        :total="total" 
+                        :current="currentPage" 
+                        :page-size="pageSize"
+                        @on-page-size-change="onPageSizeChange" 
+                        @on-change="onPageChange" 
+                        size="small" show-elevator show-sizer />
+                  </div>
+              </div>
+          </div>
         <Modal
           v-model="showModal"
           title="检查项"
@@ -63,7 +63,7 @@ export default {
   data() {
     return {
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 15,
       total: 0,
       showModal: false,
       searchValue: '',

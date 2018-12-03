@@ -12,12 +12,12 @@
             :rules="ruleValidate">
             <FormItem label="">
               <Row>
-                <Col span="12" style="margin-left:-121px;">
+                <Col span="11" style="margin-left:-121px;">
                     <FormItem prop="title" label="标题:">
                         <Input v-model="knowledgeForm.title" style="width: 300px" />
                     </FormItem>
                 </Col>
-                <Col span="12">
+                <Col span="11">
                     <FormItem prop="type" label="分类:">
                          <Select v-model="knowledgeForm.type" :transfer="false" style="width:300px">
                             <Option v-for="item in typeList" :value="item.value" :key="item.id">{{ item.name }}</Option>
@@ -34,6 +34,7 @@
         <Row class="knowledge-save">
             <span class="knowledge-save-btn" @click="saveKnowledge('save')">保存</span>
             <span class="knowledge-save-btn" @click="saveKnowledge">保存并继续添加</span>
+            <span class="knowledge-save-btn" @click="goBack">返回</span>
         </Row>
     </div>
 </template>
@@ -63,10 +64,10 @@ export default {
       typeList: [],
       ruleValidate: {
         title: [
-            { required: true, message: ' ', trigger: 'blur' }
+            { required: true, message: '请输入标题', trigger: 'blur' }
         ],
         type: [
-            { required: true, message: ' ', trigger: 'change' }
+            { required: true, message: '请选择分类', trigger: 'change' }
         ],
         content: [
             { required: true, message: ' ', trigger: 'blur' }
@@ -75,11 +76,12 @@ export default {
     };
   },
   methods: {
+    goBack() {
+      this.$router.push({path:'/knowledge/list'});
+    },
     //保存
     saveKnowledge(isSave) {
-      if(this.editor.txt.html() === '<p><br></p>' || 
-        this.knowledgeForm.title==='' || 
-        this.knowledgeForm.type===''){
+      if(this.editor.txt.html() === '<p><br></p>'){
         this.$Message.error('必填项请输入！');
       }else{
         this.knowledgeForm.content = this.editor.txt.html();

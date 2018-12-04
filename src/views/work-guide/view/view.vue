@@ -5,11 +5,11 @@
 <template>
     <div class="workguide">
         <Row class="workguide-title">
-            <span>{{ workguideData.title }}</span>
+            <h2>{{ workguideData.title }}</h2>
         </Row>
         <Row class="workguide-type">
             <img src="/resources/images/icon/after-sales-service-orders.png"/>
-            <span class="workguide-type-worktype">{{ workguideData.creator }}</span>
+            <span class="workguide-type-worktype">{{ workguideData.creatorName }}</span>
             <span class="workguide-type-crtTime">{{ workguideData.crtTime }}</span>
         </Row>
         <Row class="workguide-desc">
@@ -20,14 +20,15 @@
             <div class="workguide-read-go" @click="goStep"><Icon type="ios-arrow-forward" />分布阅读</div>
         </Row>
         <Row class="workguide-content">
-           <Timeline v-for="(data,idx) of workguideData.workStepList" :key="idx" >
-                <TimelineItem>
-                    <div class="step-detail">
-                        <h4>{{ data.title }}</h4>
+            <Timeline >
+                <TimelineItem  v-for="(data,idx) of workguideData.workStepList" :key="idx">
+                  <div class="step-detail">
+                        <h2>{{ data.title }}</h2>
                         <div>{{ data.comment }}</div>
                         <img :src="data.image"/>
-                    </div>
+                  </div>
                 </TimelineItem>
+                
             </Timeline>
         </Row>
         <Row class="workguide-save">

@@ -168,7 +168,7 @@ export default {
       percent: {}, //任务比例
       taskType: "mytask",
       taskStatus: "todo",
-      type: "myToDo",
+      type: "myTodo",
 
       //订单列表配置项
       visible: false,
@@ -345,7 +345,7 @@ export default {
           procedureStatus: 1,
           underProcedure: data[0].procedureCode,
           sort: "0",
-          myToDo: 0,
+          myTodo: 0,
           start: 1
         };
         data.unshift(start);
@@ -355,7 +355,7 @@ export default {
           procedureCode: "end",
           procedureName: "结束",
           procedureStatus: 1,
-          myToDo: 0,
+          myTodo: 0,
           sort: data.length,
           start: 1
         };
@@ -394,7 +394,7 @@ export default {
           xCount--;
         }
 
-        this.defaultDisplayTask[data[i].procedureCode] = data[i].myToDo;
+        this.defaultDisplayTask[data[i].procedureCode] = data[i].myTodo;
       }
 
       data.forEach((item, itemIndex) => {
@@ -491,7 +491,7 @@ export default {
                 percent[item.procedureCode] = 0;
               } else {
                 percent[item.procedureCode] = Math.round(
-                  (item["myToDo"] / item["mytask"]) * 100
+                  (item["myTodo"] / item["mytask"]) * 100
                 );
               }
             });
@@ -517,7 +517,7 @@ export default {
         ['teamtask_done',()=>{return 'teamDone'}],
         ['teamtask_todo',()=>{return 'teamTodo'}],
         ['mytask_done',()=>{return 'myDone'}],
-        ['mytask_todo',()=>{return 'myToDo'}]
+        ['mytask_todo',()=>{return 'myTodo'}]
       ]);
       this.type = actions.get(`${e}_${this.taskStatus}`)();
       this.getTaskCountFilter(this.type, this.orderCode);
@@ -532,7 +532,7 @@ export default {
         ['teamtask_done',()=>{return 'teamDone'}],
         ['teamtask_todo',()=>{return 'teamTodo'}],
         ['mytask_done',()=>{return 'myDone'}],
-        ['mytask_todo',()=>{return 'myToDo'}]
+        ['mytask_todo',()=>{return 'myTodo'}]
       ]);
       this.type = actions.get(`${this.taskType}_${e}`)();
       this.getTaskCountFilter(this.type, this.orderCode);
@@ -713,6 +713,7 @@ export default {
       this.taskTableLoading = true;
       getProcedureInfoFilter(
         this.taskModalPage.procedureCode,
+        this.processRouteCode,
         this.type,
         this.taskModalPage.currentPage,
         this.taskModalPage.pageSize

@@ -5,7 +5,7 @@
 <template>
     <div class="workguide">
         <Row class="workguide-title">
-            <span>标题：</span>
+            <span><b style="color:#e4393c;margin-left: -9px;">*</b>标题：</span>
             <Input v-model="workGuideData.title" style="width: 300px" />
         </Row>
         <Row v-if="this.$route.params.id" class="workguide-type">
@@ -19,7 +19,7 @@
         </Row>
         <Row class="workguide-read">
             <img v-for="(data,idx) of workGuideData.workStepList" :key="idx" :src="data.image"/>
-            <div v-if="workGuideData.workStepList.length>0" class="workguide-read-go"><Icon type="ios-arrow-forward" />分布阅读</div>
+            <div v-if="workGuideData.workStepList.length>0"  @click="goStep" class="workguide-read-go"><Icon type="ios-arrow-forward" />分布阅读</div>
         </Row>
         <Row class="workguide-content">
             <div @click="addStep" class="workguide-content-add">添加步骤</div>
@@ -140,7 +140,6 @@ export default {
       //执行在dom更新之后
       this.$nextTick(() => {
         this.delayedDragging = false;
-        // this.saveAppData();
       });
     }
   },
@@ -162,40 +161,56 @@ export default {
         (!relatedElement || !relatedElement.fixed) && !draggedElement.fixed
       );
     },
+    //分布阅读
+    goStep() {
+        this.$router.push({
+            name: "wokdGuideStep",
+            path:'/wokdGuide/step/'+this.$route.params.id,
+            params: {id: this.$route.params.id}
+        });
+    },
     goBack() {
       this.$router.push({path:'/wokdGuide/list'});
     },
     saveWorkguide(save) {
         if(!this.workguideId){
-            saveWorkGuideData(this.workGuideData).then(res => {
-                if(res.success){
-                    this.$Message.success(res.message);
-                    if(save === 'save'){
-                        this.$router.push({path:'/wokdGuide/list'});
-                    }else{
-                        this.workGuideData = {
-                            title: '',
-                            comment: '',
-                            workStepList: []
-                        };
+            if(this.workGuideData.title === ''){
+                this.$Message.error('请输入标题！');
+            }else{
+                saveWorkGuideData(this.workGuideData).then(res => {
+                    if(res.success){
+                        this.$Message.success(res.message);
+                        if(save === 'save'){
+                            this.$router.push({path:'/wokdGuide/list'});
+                        }else{
+                            this.workGuideData = {
+                                title: '',
+                                comment: '',
+                                workStepList: []
+                            };
+                        }
                     }
-                }
-            })
+                })
+            }
         }else{
-            updateWorkGuideData(this.workGuideData).then(res => {
-                if(res.success){
-                    this.$Message.success(res.message);
-                    if(save === 'save'){
-                        this.$router.push({path:'/wokdGuide/list'});
-                    }else{
-                        this.workGuideData = {
-                            title: '',
-                            comment: '',
-                            workStepList: []
-                        };
+            if(this.workGuideData.title === ''){
+                this.$Message.error('请输入标题！');
+            }else{
+                updateWorkGuideData(this.workGuideData).then(res => {
+                    if(res.success){
+                        this.$Message.success(res.message);
+                        if(save === 'save'){
+                            this.$router.push({path:'/wokdGuide/list'});
+                        }else{
+                            this.workGuideData = {
+                                title: '',
+                                comment: '',
+                                workStepList: []
+                            };
+                        }
                     }
-                }
-            })
+                })
+            }
         }
         
     },

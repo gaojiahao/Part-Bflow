@@ -19,8 +19,12 @@
                         <div class="step-num">
                             <span class="step-num-current">{{stepValue+1}}</span>
                             <span class="step-num-total">/{{total}}</span>
+                            <span style="
+    font-size: 18px;
+    font-weight: 600;
+    margin-left: 10px;
+">{{ list.title }}</span>
                         </div>
-                        <h3>{{ list.title }}</h3>
                         <p>{{ list.comment }}</p>
                         <img :src="list.image"/>
                     </div>

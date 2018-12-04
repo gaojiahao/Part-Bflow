@@ -128,6 +128,9 @@ import { checkSheetRouter } from '@/views/performance-standard/router';
 //知识库模块
 import { knowledgeBaseRouter } from '@/views/knowledge/router';
 
+//作业指导模块
+import { wrokGuideRouter } from '@/views/work-guide/router';
+
 export const routers = [
   loginRouter,
   flowRouter,
@@ -145,5 +148,6 @@ export const routers = [
   applicationRouter,
   checkSheetRouter,
   knowledgeBaseRouter,
+  wrokGuideRouter,
   ...appRouter
 ];

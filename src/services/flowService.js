@@ -136,3 +136,21 @@ export const getProp = () => request('/H_roleplay-si/ds/getProp', {
   key: 'deepstream.uri2',
 })
 export const getListChangeHistory = (data) => request('/H_roleplay-si/easy/transTypeHistoryApi/findAllHistory', data)
+
+
+
+/**
+ * @author TanGuoZheng
+ * @description 获取所有职位数据
+ */
+export const getAllRoleData = () => request('/H_roleplay-si/ds/getRoleList2');
+
+/**
+ * @author TanGuoZheng
+ * @description 获取所有应用信息
+ */
+export const getAllAppList = (currentPage,pageSize=6,filter="") => request('/H_roleplay-si/ds/getAllList',{
+  page:currentPage,
+  limit:pageSize,
+  filter:filter
+});

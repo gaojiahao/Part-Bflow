@@ -11,9 +11,29 @@
     color: rgb(98, 100, 105);
 }
 
-.drawer-add-next-node:hover{
-  cursor:pointer;
-  color: #ff0000;
+.drawer-detail-save-submit{
+  width: 100%;
+  line-height: 1.5;
+  border: 1px solid transparent;
+  padding: 6px 15px;
+  background-color: rgb(0, 150, 136);
+  color:#fff;
+  outline: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.drawer-detail-save-submit:hover{
+  background-color: rgb(6, 132, 121);
+}
+
+.page-selection-warp {
+  width: 100%;
+  height: 100%;
+  min-height: 30px;
+  background-color: #e6e6e6;
+  margin-bottom: 10px;
+  padding: 1px 5px;
 }
 
 </style>
@@ -23,47 +43,41 @@
         <div class="" style="padding:20px">
             <div style="font-size:16px">
                 <a @click="addJobs">添加职位</a>
-                <a @click="addProcess">添加流程</a>
+                <a @click="addProcess">添加阶段</a>
             </div>
             <div>
                 <Table :columns="columns" :data="columnDatas" size="small" border ></Table>
             </div>
         </div>
-        <Drawer title="节点详情" :closable="false" v-model="drawerVisable" transfer>
+        <Drawer title="节点详情" v-model="drawerVisable" :mask-closable="false" closable transfer>
           <Form :model="NodeDetailFrom" :labelWidth="60" ref="NodeDetailFrom" >
             <FormItem label="名称:" style="font-size:16px" prop="title">
                 <Input v-model="NodeDetailFrom.title" />
             </FormItem>
             <FormItem label="下级节点" :labelWidth="60" prop="nextNode">
-              <Select  v-model="NodeDetailFrom.nextNode" >
-                <Option value="M">管理层</Option>
-                <Option value="A">事业部</Option>
-                <Option value="O">部门</Option>
-                <Option value="D">直营店</Option>
-                <Option value="J">加盟店</Option>
-                <Option value="G">小组</Option>
+              <Select multiple v-model="NodeDetailFrom.nextNode" >
+                <Option v-for="item in appNodes" v-if="item.id !== NodeDetailFrom.id" :value="item.id" :key="item.id">{{item.title}}</Option>
               </Select>
             </FormItem>
           </Form>
-          <div style="text-align:center;font-size: 14px;">
-            <span class="drawer-add-next-node">
-              <i class="iconfont">&#xe719;</i>
-              添加下级节点
-            </span>
+          <div >
+            <input type='submit' value="保存" class="drawer-detail-save-submit" @click="handleSaveNodeDetail"/>
           </div>
         </Drawer>
      
 
         <add-jobs-modal v-model="isShowAddJobsModal" width="360" footerBtnAlign="right" title="添加职位" @on-ok="addJobsZColumn">
             <div style="margin-top:10px;">
-                <Form :model="jobsFormItem" :labelWidth="60" ref="jobsFormItem" >
-                    <FormItem label="名称:" style="font-size:16px" prop="name">
-                        <Input v-model="jobsFormItem.name" />
-                    </FormItem>
+                <Form :model="jobsFormItem" :labelWidth="60" ref="jobsFormItem" prop="id">
+                     <FormItem label="名称:" style="font-size:16px">
+                        <Select  v-model="jobsFormItem.id" @on-change="handleJobModalNameChage" :label-in-value="true">
+                          <Option v-for="item in joblist" :value="item.id" :key="item.id" :label="item.name">{{item.name}}</Option>
+                        </Select>
+                      </FormItem>
                 </Form>
             </div>
         </add-jobs-modal>
-        <add-process-modal v-model="isShowAddProcessModal" width="360" footerBtnAlign="right" title="添加流程" @on-ok="addProcssColumn">
+        <add-process-modal v-model="isShowAddProcessModal" width="360" footerBtnAlign="right" title="添加阶段" @on-ok="addProcssColumn">
             <div style="margin-top:10px;">
                 <Form :model="processFormItem" :labelWidth="60" ref="processFormItem">
                     <FormItem label="key:" style="font-size:16px" prop="key">
@@ -76,13 +90,47 @@
             </div>
         </add-process-modal>
 
-        <add-node-modal v-model="isShowAddNodeModal" width="360" footerBtnAlign="right" title="添加节点" @on-ok="handleAddNode">
+        <add-node-modal v-model="isShowAddNodeModal" width="720" footerBtnAlign="right" title="添加应用" @on-ok="handleAddNode">
             <div style="margin-top:10px;">
-                <Form :model="nodeFormItem" :labelWidth="60" ref="nodeFormItem">
-                    <FormItem label="名称:" style="font-size:16px" prop="title">
-                        <Input v-model="nodeFormItem.title"/>
-                    </FormItem>
-                </Form>
+              <Table 
+                :loading="appListLoading" 
+                :columns="appListColumns" 
+                :data="appListData" 
+                size='small' 
+                ref="selection" 
+                @on-select-all="onSelectAll" 
+                @on-selection-change="handerSelectionChange" 
+                @on-select-cancel="onSelectCancel"
+                >
+              </Table>
+              <div style="margin: 10px;overflow: hidden">
+                <div style="float: right;">
+                  <Page 
+                    :total="appListPageTotal" 
+                    :current="appListCurrentPage" 
+                    :page-size="pageSize" 
+                    size="small" 
+                    show-total
+                    show-elevator
+                    @on-change="appListChangePage"  
+                    >
+                  </Page>
+                </div>
+              </div>
+            </div>
+            <div class="page-selection-warp" v-show="onPageSelection[0] ">
+              <Tag 
+                v-for="item in onPageSelection" 
+                :key="item.id" 
+                :id="item.id" 
+                type="border" 
+                color="primary" 
+                size="small"
+                :closable="true" 
+                @on-close="deletePageSelection" 
+                >
+                  {{item.title}}
+              </Tag>
             </div>
         </add-node-modal>
     </div>
@@ -93,6 +141,7 @@ import AddJobsModal from "@/components/modal/Modal";
 import AddProcessModal from "@/components/modal/Modal";
 import AddNodeModal from "@/components/modal/Modal";
 
+import {getAllRoleData,getAllAppList} from "@/services/flowService";
 export default {
   components: {
     AddJobsModal,
@@ -108,11 +157,13 @@ export default {
       drawerVisable:false,
 
       NodeDetailFrom:{
+        id:"",
         title:"",
-        nextNode:"A"
+        nextNode:[]
       },
 
       jobsFormItem: {
+        id:"",
         name: ""
       },
 
@@ -121,9 +172,27 @@ export default {
         key: ""
       },
 
-      nodeFormItem: {
-        title: ""
-      },
+      appListLoading:false,
+      appListColumns:[{
+        type: "selection",
+        width: 60,
+        align: "center"
+      },{
+        title: "id",
+        key: "id"
+      },{
+        title: "应用名称",
+        key: "title"
+      },{
+        title: "创建时间",
+        key: "crt_time"
+      }],
+      appListData:[],
+      appListPageTotal:0,
+      appListCurrentPage:1,
+      pageSize:8,
+      onPageSelection:[],
+     
       nodePositionId: "",
       nodeProcssId: "",
 
@@ -153,7 +222,11 @@ export default {
           }
         }
       ],
-      columnDatas: []
+      columnDatas: [],
+
+      appNodes:{},  //应用节点集合
+
+      joblist:[]
     };
   },
 
@@ -178,7 +251,8 @@ export default {
 
     addJobs() {
       this.isShowAddJobsModal = true;
-      this.$refs["jobsFormItem"].resetFields();
+      this.jobsFormItem.name = "";
+      this.jobsFormItem.id = "";
     },
 
     addProcess() {
@@ -220,11 +294,18 @@ export default {
                 on: {
                   click: e => {
                     let that = this;
-                    (that.nodePositionId = params.row.positionId),
-                      (that.nodeProcssId = params.column.columnId);
+                        that.nodePositionId = params.row.positionId,
+                        that.nodeProcssId = params.column.columnId;
 
-                    that.isShowAddNodeModal = true;
-                    that.$refs["nodeFormItem"].resetFields();
+                      that.isShowAddNodeModal = true;
+                      this.onPageSelection = [];
+                      this.appListLoading = true;
+                      getAllAppList(this.appListCurrentPage,this.pageSize).then(res=>{
+                        this.appListPageTotal = res.dataCount;
+                        this.appListData = res.tableContent;
+                         this.appListLoading = false;
+                      })  
+                   
                   }
                 }
               },
@@ -288,27 +369,30 @@ export default {
       })[0].key;
       this.columnDatas.forEach(item => {
         if (item.positionId === this.nodePositionId) {
-          let nodes =[];
+          let nodes =[],
+              nodeItem={};
           if(item[key] && item[key].length>0){
-              nodes = [{
-                    title:this.nodeFormItem.title,
-                    id:this.getRandomCode(),
-                    rowId:this.nodePositionId,
-                    columnId:this.nodeProcssId
-                  },...item[key]]
+              nodeItem = {
+                title:this.nodeFormItem.title,
+                id:this.getRandomCode(),
+                rowId:this.nodePositionId,
+                columnId:this.nodeProcssId
+              };
+              nodes = [nodeItem,...item[key]]
           }else{
-              nodes.push({
+              nodeItem={
                   title:this.nodeFormItem.title,
                   id:this.getRandomCode(),
                   rowId:this.nodePositionId,
                   columnId:this.nodeProcssId
-              })
+              }
+              nodes.push(nodeItem)
           }
-
+          this.appNodes[nodeItem.id] = nodeItem; //保存所以添加的节点
           this.$set(item, key,nodes);
         }
       });
-
+     
       this.isShowAddNodeModal = false;
     },
 
@@ -316,12 +400,21 @@ export default {
      * 添加职位-行
     */
     addJobsZColumn() {
-      let id = this.getRandomCode();
+      let id = this.jobsFormItem.id;
       this.columnDatas.push({
         positionId: id,
         positionName: this.jobsFormItem.name
       });
       this.isShowAddJobsModal = false;
+    },
+
+    /** 
+     * 保存职位信息
+    */
+    handleJobModalNameChage(value){
+      if(value){
+        this.jobsFormItem.name = value.label;
+      }
     },
 
     /** 
@@ -340,7 +433,7 @@ export default {
     */
     handleRowDelete(positionId){
         let f = this.columnDatas.filter(f=>{
-            return f.positionId !==positionId;
+            return f.positionId != positionId;
         });
 
         this.columnDatas = f;
@@ -351,7 +444,7 @@ export default {
     */
     handleColumnDelete(columnId){
         let f = this.columns.filter(f=>{
-            return f.columnId !==columnId;
+            return f.columnId != columnId;
         });
 
         this.columns = f;
@@ -366,11 +459,11 @@ export default {
       })[0].key;
 
       this.columnDatas.forEach(item => {
-        if (item.positionId === rowId) {
+        if (item.positionId == rowId) {
           let nodes =[];
           if(item[columnKey] && item[columnKey].length>0){
              let nodes = item[columnKey].filter(f =>{
-               return f.id !== nodeId
+               return f.id != nodeId
              })
              this.$set(item, columnKey,nodes);
           }
@@ -378,9 +471,113 @@ export default {
       });
     },
 
+    /** 
+     * 编辑应用节点信息
+    */
     handleEditNode(nodeId){
       this.drawerVisable = true;
-    }
+      let nodeDetails = this.appNodes[nodeId];
+
+      this.NodeDetailFrom.id = nodeDetails.id;
+      this.NodeDetailFrom.title=nodeDetails.title;
+    },
+
+    /** 
+     * 保存应用节点信息
+    */
+    handleSaveNodeDetail(event){
+      let that = this;
+      let nodeId = that.NodeDetailFrom.id;
+      if(that.NodeDetailFrom.nextNode[0]){
+        that.appNodes[nodeId].nextNode = that.appNodes[nodeId].nextNode?that.appNodes[nodeId].nextNode:[];
+        that.NodeDetailFrom.nextNode.forEach(nextNodeId=>{
+          let f = that.appNodes[nodeId].nextNode.filter(f=>{
+            return f.id === nextNodeId
+          })
+          if(f.length === 0){
+            that.appNodes[nodeId].nextNode.push(that.appNodes[nextNodeId])
+          }
+        })
+      }
+    },
+
+
+    //全选
+    onSelectAll(selection) {
+      let obj = {};
+      //触发全选事件
+      //全选
+      this.onPageSelection.push(...selection);
+      //数组去重
+      this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+        obj[next.id] ? "" : (obj[next.id] = true && cur.push(next));
+        return cur;
+      }, []);
+    },
+
+    //保存分页选中
+    handerSelectionChange(selection) {
+      //取消全选
+      if (selection.length === 0) {
+        let s = this.$refs.selection.data;
+        let p = this.onPageSelection;
+        s.map(item => {
+          p = p.filter(f => {
+            return f.id !== item.id;
+          });
+        });
+        this.onPageSelection = p;
+      } else {
+        let obj = {};
+        this.onPageSelection.push(...selection);
+        //数组去重
+        this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+          obj[next.id] ? "" : (obj[next.id] = true && cur.push(next));
+          return cur;
+        }, []);
+      }
+    },
+
+    //单选取消
+    onSelectCancel(selection, row) {
+      this.onPageSelection = this.onPageSelection.filter(f => {
+        return f.id !== row.id;
+      });
+    },
+
+    deletePageSelection(){
+      let id = Number(event.target.parentElement.getAttribute("id"));
+      this.onPageSelection = this.onPageSelection.filter(f => {
+        return f.id !== id;
+      });
+
+      this.$refs.selection.data.forEach((item, index) => {
+        if (id === item.id) {
+          this.$refs.selection.toggleSelect(index);
+        }
+      });
+    },
+
+    /** 
+     * 应用列表分页加载
+    */
+    appListChangePage(currentPage) {
+      // let filter = [
+      //   { operator: "like", value: this.searchValue, property: "groupName" }
+      // ];
+      this.appListLoading = true;
+      getAllAppList(currentPage,this.pageSize).then(res=>{
+        this.appListPageTotal = res.dataCount;
+        this.appListData = res.tableContent;
+        this.appListLoading = false;
+      })  
+    },
+  },
+
+  mounted(){
+    getAllRoleData().then(res=>{
+      this.joblist = res.tableContent;
+    })
   }
 };
 </script>

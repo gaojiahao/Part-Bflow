@@ -38,6 +38,14 @@ export const wrokGuideRouter = {
                 title: '作业指导查看',
             },
             component: () => import('@/views/work-guide/view/view.vue'),
+        },
+        {
+            path: 'step/:id',
+            name: 'wokdGuideStep',
+            meta: {
+                title: '作业指导步骤',
+            },
+            component: () => import('@/views/work-guide/step/step.vue'),
         }
     ]
 }

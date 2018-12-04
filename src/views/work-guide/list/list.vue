@@ -55,17 +55,17 @@ export default {
     workGuideFilter() {
       this.currentPage = 1;
       this.filter = true;
-      this.getAllKnowledgeData();
+      this.getAllWorkGuideData();
     },
     //滚动加载
     handleScroll () {
         let scrollDiv = document.getElementById('workguideList');
         scrollDiv.addEventListener('scroll', () => {
             if(Math.ceil(scrollDiv.clientHeight+scrollDiv.scrollTop) +2 >= scrollDiv.scrollHeight){
-                if(this.total > this.knowledgeData.length){
+                if(this.total > this.workGuideData.length){
                     this.currentPage++;
                     this.isRolling = true;
-                    this.getAllKnowledgeData();
+                    this.getAllWorkGuideData();
                 }else{
                   this.isRolling = false;
                 }

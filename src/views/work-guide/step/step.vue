@@ -14,7 +14,7 @@
         </Row>
         <Row class="workguide-step">
             <Carousel v-model="stepValue" arrow="always">
-                <CarouselItem v-for="(list,index) of stepsData.workStepList" :key="index">
+                <CarouselItem v-for="(list) of stepsData.workStepList" :key="list.id">
                     <div class="demo-carousel">
                         <div class="step-num">
                             <span class="step-num-current">{{stepValue+1}}</span>

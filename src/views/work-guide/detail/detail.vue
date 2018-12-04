@@ -24,6 +24,7 @@
         <Row class="workguide-content">
             <div @click="addStep" class="workguide-content-add">添加步骤</div>
            <Timeline>
+               <draggable v-model="workGuideData.workStepList" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="isDragging=false">
                 <TimelineItem v-for="(list,index) of workGuideData.workStepList" :key="index">
                     <div class="step-detail">
                         <h4>{{list.title}}</h4>
@@ -33,6 +34,7 @@
                         <img :src="list.image"/>
                     </div>
                 </TimelineItem>
+                </draggable>
             </Timeline>
         </Row>
         <Row class="workguide-save">
@@ -89,15 +91,20 @@
 <script>
 import { saveWorkGuideData,getworkDataById,updateWorkGuideData } from "@/services/workGuideService.js";
 import { getToken } from "@/utils/utils";
+import draggable from "vuedraggable";
 
 export default {
   name: "wokdGuideDetail",
-  components: {},
+  components: {
+      draggable
+  },
   data() {
     return {
         workguideId: this.$route.params.id,
+        isDragging: false,
         showModal: false,
         visible: false,
+        delayedDragging: false,
         httpHeaders: {
             Authorization: getToken()
         },
@@ -124,7 +131,37 @@ export default {
         }
     };
   },
+  watch: {
+    isDragging(newValue) {
+      if (newValue) {
+        this.delayedDragging = true;
+        return;
+      }
+      //执行在dom更新之后
+      this.$nextTick(() => {
+        this.delayedDragging = false;
+        // this.saveAppData();
+      });
+    }
+  },
+  computed: {
+    dragOptions() {
+      return {
+        animation: 0,
+        group: "description",
+        disabled: false,
+        ghostClass: "ghost"
+      };
+    }
+  },
   methods: {
+      onMove({ relatedContext, draggedContext }) {
+      const relatedElement = relatedContext.element;
+      const draggedElement = draggedContext.element;
+      return (
+        (!relatedElement || !relatedElement.fixed) && !draggedElement.fixed
+      );
+    },
     goBack() {
       this.$router.push({path:'/wokdGuide/list'});
     },

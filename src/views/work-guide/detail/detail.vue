@@ -9,8 +9,8 @@
             <Input v-model="workGuideData.title" style="width: 300px" />
         </Row>
         <Row v-if="this.$route.params.id" class="workguide-type">
-            <img src="/resources/images/icon/after-sales-service-orders.png"/>
-            <span class="workguide-type-worktype">{{ workGuideData.creator }}</span>
+            <img :src="workGuideData.creatorImage"/>
+            <span class="workguide-type-worktype">{{ workGuideData.creatorName }}</span>
             <span class="workguide-type-crtTime">{{ workGuideData.crtTime }}</span>
         </Row>
         <Row class="workguide-desc">

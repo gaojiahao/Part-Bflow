@@ -4,9 +4,17 @@
 
 <template>
     <div class="workguide">
-        <div class="workguide-step">
-            <Carousel v-model="stepValue" loop>
-                <CarouselItem v-for="(list,index) of stepsData" :key="index">
+        <Row class="workguide-title">
+            <span>{{ stepsData.title }}</span>
+        </Row>
+        <Row class="workguide-type">
+            <img :src="stepsData.creatorImage"/>
+            <span class="workguide-type-worktype">{{ stepsData.creatorName }}</span>
+            <span class="workguide-type-crtTime">{{ stepsData.crtTime }}</span>
+        </Row>
+        <Row class="workguide-step">
+            <Carousel v-model="stepValue" arrow="always">
+                <CarouselItem v-for="(list,index) of stepsData.workStepList" :key="index">
                     <div class="demo-carousel">
                         <div class="step-num">
                             <span class="step-num-current">{{stepValue+1}}</span>
@@ -18,12 +26,12 @@
                     </div>
                 </CarouselItem>
             </Carousel>
-        </div>
+        </Row>
     </div>
 </template>
 
 <script>
-import { getworkGuideStepsById } from '@/services/workGuideService.js';
+import { getworkDataById } from '@/services/workGuideService.js';
 
 export default {
   name: "wokdGuideStep",
@@ -38,11 +46,9 @@ export default {
   methods: {
       getStepsData(){
           if(this.$route.params.id){
-              getworkGuideStepsById(this.$route.params.id).then(res => {
-                  if(res.success){
-                      this.stepsData = res.tableContent;
-                      this.total = res.dataCount;
-                  }
+              getworkDataById(this.$route.params.id).then(res => {
+                this.stepsData = res;
+                this.total = this.stepsData.workStepList.length;
               })
           }
       }

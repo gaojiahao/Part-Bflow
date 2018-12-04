@@ -27,6 +27,9 @@
                 </CarouselItem>
             </Carousel>
         </Row>
+        <Row class="workguide-save">
+            <span class="workguide-save-btn" @click="goBack">返回</span>
+        </Row>
     </div>
 </template>
 
@@ -44,6 +47,9 @@ export default {
     };
   },
   methods: {
+      goBack() {
+        history.go(-1);
+      },
       getStepsData(){
           if(this.$route.params.id){
               getworkDataById(this.$route.params.id).then(res => {

@@ -8,7 +8,7 @@
             <h2>{{ workguideData.title }}</h2>
         </Row>
         <Row class="workguide-type">
-            <img src="/resources/images/icon/after-sales-service-orders.png"/>
+            <img :src="workguideData.creatorImage"/>
             <span class="workguide-type-worktype">{{ workguideData.creatorName }}</span>
             <span class="workguide-type-crtTime">{{ workguideData.crtTime }}</span>
         </Row>

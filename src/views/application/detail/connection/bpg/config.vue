@@ -155,7 +155,7 @@ import AddJobsModal from "@/components/modal/Modal";
 import AddProcessModal from "@/components/modal/Modal";
 import AddNodeModal from "@/components/modal/Modal";
 
-import {getAllRoleData,getAllAppList} from "@/services/flowService";
+import {getAllRoleData,getAllAppList,saveBusinessModule} from "@/services/flowService";
 export default {
   components: {
     AddJobsModal,
@@ -216,6 +216,7 @@ export default {
         {
           title: " ",
           key: "positionName",
+          columnId:"cacf-ool4-jbpj-wkx5-slj9-013e-psir-ak24",
           align: "center",
           fixed: "left",
           render:(h,params)=>{
@@ -279,7 +280,63 @@ export default {
     /** 
      * 保存配置信息
     */
-    saveAppConfig(){},
+    saveAppConfig(){
+      let configDetailData = {},
+          nodeList = [],
+          positionList = [],
+          stageList = [];
+      
+      //构造列数据
+      this.columns.forEach((column,index)=>{
+        if(column.key !== "positionName"){
+          let {columnId,key,title} = column;
+          stageList.push({
+            title:title,
+            key:key,
+            sort:index,
+            columnAnchorPoint:columnId
+          })
+        }
+      })
+
+      //构造行数据
+      this.columnDatas.forEach((data,index)=>{
+        positionList.push({
+          title:data.positionName,
+          rowAnchorPoint:data.positionId,
+          sort:index
+        })
+      })
+
+      //构造应用节点数据
+      for(let nodeId in this.appNodes){
+        let nextNodeId = [];
+        if(this.appNodes[nodeId].nextNode && this.appNodes[nodeId].nextNode.length>0){  //判断是否存在下级节点
+           this.appNodes[nodeId].nextNode.forEach(next=>{
+             nextNodeId.push(next.id);
+           })  
+        }
+        nodeList.push({
+            name:this.appNodes[nodeId].title,
+            nextNode:nextNodeId.join(','),
+            listId:this.appNodes[nodeId].uniqueId,
+            rowAnchorPoint:this.appNodes[nodeId].rowId,
+            columnAnchorPoint:this.appNodes[nodeId].columnId
+          })
+      }
+
+      configDetailData['nodeList'] = nodeList;
+      configDetailData['stageList'] = stageList;
+      configDetailData['positionList'] = positionList;
+      configDetailData['title'] = "业务2号";
+
+      
+      saveBusinessModule(configDetailData).then(res=>{
+        this.$Message.success(res.message)
+      }).catch(error=>{
+        this.$Message.error(error.message)
+      })
+    },
 
     /** 
      * 构造模板列
@@ -446,9 +503,8 @@ export default {
      * 添加职位-行
     */
     addJobsZColumn() {
-      let id = this.jobsFormItem.id+"";
       this.columnDatas.push({
-        positionId: id,
+        positionId: this.getRandomCode(),
         positionName: this.jobsFormItem.name
       });
       this.isShowAddJobsModal = false;

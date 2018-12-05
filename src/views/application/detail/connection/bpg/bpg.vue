@@ -18,18 +18,18 @@
         </defs>
         
         <!-- 行绘制 -->
-        <g v-for="(item,index) in process" :key="index">
+        <g v-for="(item,index) in stageList" :key="index">
           <text :x="item.xAxion" y="20" class="top-process">
-            {{item.name}}
+            {{item.title}}
           </text>
           <line :x1="item.xAxionLine" y1="0" :x2="item.xAxionLine" :y2="svgHeight" style="stroke:#eceef6;stroke-width:2" />
         </g>
         <line x1="40" y1="0" x2="40" :y2="svgHeight" style="stroke:#eceef6;stroke-width:2" />
         
         <!-- 列绘制 -->
-        <g v-for="(item,index) in position" :key="item.id">
+        <g v-for="(item,index) in positionList" :key="item.id">
           <text x="30" :y="topSpace+(defaultHeight/2)*(2*index+1)" class="top-process left-slide">
-            {{item.name}}
+            {{item.title}}
           </text>
           <line x1="0" :y1="topSpace+defaultHeight*index" :x2="topSpace+svgWidth" :y2="topSpace+defaultHeight*index" style="stroke:#eceef6;stroke-width:2" />
         </g>
@@ -37,7 +37,7 @@
 
         <!-- 节点绘制 -->
         <g v-for="item in nodeList" :key="item.id">
-            <!-- <shape v-if="item.id=='start'||item.id=='end'" :xAxion="item.xAxion+nodeWidth/2" :yAxion="item.yAxion" color="#7da87b"  ></shape> -->
+            <!-- <shape v-if="item.id=='-2'||item.id=='end'" :xAxion="item.xAxion+nodeWidth/2" :yAxion="item.yAxion" color="#7da87b"  ></shape> -->
             <polygon 
               v-if="item.type ==='branch'" 
               :points="(item.xAxion+nodeWidth/2)+','+(item.yAxion-nodeHeight/2)+' '
@@ -51,17 +51,16 @@
               :y="item.yAxion-nodeHeight/2" 
               :width="nodeWidth" 
               :height="nodeHeight" 
-              :stroke="item.id==='end'||item.id==='start'?'#cd5334':'#df8931'"
-              :fill ="item.id ==='end'||item.id==='start'?'#cd5334':'#df8931'"
+              :stroke="item.id==='-3'||item.id==='-2'?'#cd5334':'#df8931'"
+              :fill ="item.id ==='-3'||item.id==='-2'?'#cd5334':'#df8931'"
               stroke-width="1"
               />
-             <!-- item.id !=='end'||item.id!=='start'?'#d16d2a':'#ddd' -->
             <text 
               :x="item.xAxion+nodeWidth/2"
               :y="item.yAxion-5"
               fill="#fff" 
               style="font-size:12px; text-anchor: middle;baseline-shift: sub; font-family: sans-serif;">
-                {{item.title}}
+                {{item.name}}
             </text> 
         </g>
 
@@ -76,7 +75,7 @@
 </template>
 
 <script>
-import { getMockData } from "@/services/flowService";
+import { getMockData,getBusinessModuleById } from "@/services/flowService";
 import Shape from "@/components/Shape";
 import ConfigTable from "./config"
 export default {
@@ -96,8 +95,8 @@ export default {
       nodeWidth: 80, //节点宽度
       nodeHeight: 40, //节点高度
       nodeList: [],   //节点数据
-      process: [],    //流程布置
-      position: [],   //节点职位
+      stageList: [],    //流程布置
+      positionList: [],   //节点职位
       svgWidth: 0,    //svg画布宽度
       svgHeight: 0,   //svg画布高度
       localPoint: {},  //每块区域节点定位坐标集合
@@ -107,22 +106,22 @@ export default {
   },
 
   methods: {
-    handleProcssData(process) {
+    handleProcssData(stageList) {
       let preWidth = 40;
-      for (let i = 0; i < process.length; i++) {
+      for (let i = 0; i < stageList.length; i++) {
         if (i != 0) {
-          preWidth = process[i - 1].xAxionLine;
+          preWidth = stageList[i - 1].xAxionLine;
         }
-        process[i].xAxion =
-          (process[i].length * this.defaultWidth) / 2 + preWidth;
-        process[i].xAxionLine =
-          process[i].length * this.defaultWidth + preWidth;
+        stageList[i].xAxion =
+          (stageList[i].length * this.defaultWidth) / 2 + preWidth;
+        stageList[i].xAxionLine =
+          stageList[i].length * this.defaultWidth + preWidth;
 
-        if (i == process.length - 1) {
-          this.svgWidth = process[i].xAxionLine; //svg 画布宽度
+        if (i == stageList.length - 1) {
+          this.svgWidth = stageList[i].xAxionLine; //svg 画布宽度
         }
       }
-      return process;
+      return stageList;
     },
 
     //构造每块区域坐标定位点
@@ -149,16 +148,16 @@ export default {
       //数组对象分组  分组格式[{id:**,arr:[{},{}]},{id:**,arr:[{},{}]}]
       for (let i = 0; i < nodes.length; i++) {
         let node = nodes[i];
-        if (!groupItem[node.process+'_'+node.position]) {
+        if (!groupItem[node.columnAnchorPoint+'_'+node.rowAnchorPoint]) {
           group.push({
-            id:node.process+'_'+node.position,
+            id:node.columnAnchorPoint+'_'+node.rowAnchorPoint,
             arr: [node]
           });
-          groupItem[node.process+'_'+node.position] = node;
+          groupItem[node.columnAnchorPoint+'_'+node.rowAnchorPoint] = node;
         } else {
           for (let j = 0; j < group.length; j++) {
             let dj = group[j];
-            if (dj.id == node.process+'_'+node.position) {
+            if (dj.id == node.columnAnchorPoint+'_'+node.rowAnchorPoint) {
               dj.arr.push(node);
               break;
             }
@@ -170,14 +169,14 @@ export default {
        nodePointAxion ={},
        localPoint = this.localPoint,
        preNodeXAion = 0;
-      let firstProcessId = this.process[0].id;
+      let firstProcessId = this.stageList[0].id;
       let flag = false;
       group.forEach(item => {
         //给流程节点为一的里面区域内节点向右多偏移一个单位
         flag = ~item.id.indexOf(firstProcessId)? true:false;  
         if(flag){
           let f = item['arr'].filter(node=>{
-            return node.id === 'start';
+            return node.id === '-2';
           })
           flag = f.length>0?false:true;
         }
@@ -364,8 +363,8 @@ export default {
         }]
       ]);
       node.forEach(parentNode =>{
-        if(parentNode.nextNode && parentNode.nextNode.length>0){   //判断当前节点是否存在下一节点
-            parentNode.nextNode.forEach(next =>{
+        if(parentNode.nextNodeList && parentNode.nextNodeList.length>0){   //判断当前节点是否存在下一节点
+            parentNode.nextNodeList.forEach(next =>{
               let nextPoint = nodePointAxion[next.id].split(','),
                   parentPoint = nodePointAxion[parentNode.id].split(',');
                   if(nextPoint[0] != parentPoint[0] && nextPoint[1] == parentPoint[1]){ //X轴坐标不相同,y轴相同
@@ -384,15 +383,15 @@ export default {
   mounted() {
     this.spinShow = true;
     
-    getMockData().then(res => {
+    getBusinessModuleById().then(res => {
       let that = this;
       that.title = res.title;
-      that.position = res.position;
-      that.svgHeight = res.position.length * that.defaultHeight + 40; //svg 画布高度
+      that.positionList = res.positionList;
+      that.svgHeight = res.positionList.length * that.defaultHeight + 40; //svg 画布高度
       //处理流程步骤数据
-      that.process = that.handleProcssData(res.process);
+      that.stageList = that.handleProcssData(res.stageList);
 
-      that.localPoint = that.setLocalPoint(that.process, that.position);
+      that.localPoint = that.setLocalPoint(that.stageList, that.positionList);
 
       that.nodeList = that.drawNodePoint(res.nodeList);
       //绘制线条

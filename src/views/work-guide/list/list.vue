@@ -31,13 +31,6 @@
                     <img :src="list.image" width="150"/>
                     <p>{{ list.comment }}</p>
                 </div>
-                <router-link :to="{ name:'wokdGuideView',params:{id: workguide.id}}">
-                  <div v-if="workguide.isMore" class="step-more">
-                    <Tooltip content="点击查看更多" placement="right">
-                    ...
-                    </Tooltip>
-                  </div>
-                </router-link>
             </div>
           </Row>
         </div>
@@ -96,15 +89,6 @@ export default {
             this.workGuideData = res.tableContent;
             this.filter = false
           }
-          //step只显示5条
-          this.workGuideData.forEach(val => {
-            if(!val.isMore){
-              if(val.workStepList.length > 5){
-                val.workStepList = val.workStepList.slice(0,5);
-                val.isMore = true;
-              }
-            }
-          });
           this.total = res.dataCount;
         }
       }).catch(error => {

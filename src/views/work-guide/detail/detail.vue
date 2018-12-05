@@ -19,11 +19,6 @@
         </Row>
         <Row class="workguide-read">
             <img v-for="(data,idx) of workGuideData.workStepList" :key="idx" :src="data.image"/>
-            <router-link :to="{ name:'wokdGuideStep',params:{id: workGuideData.id}}">
-                <div v-if="workGuideData.workStepList.length>0" class="workguide-read-go">
-                    <Icon type="ios-arrow-forward" />分布阅读
-                </div>
-            </router-link>
         </Row>
         <Row class="workguide-content">
             <div @click="addStep" class="workguide-content-add">添加步骤</div>

@@ -40,14 +40,14 @@ export default {
   name: "wokdGuideStep",
   data() {
     return {
-        stepsData: [],
+        stepsData: {},
         total: 0,
         stepValue: 0
     };
   },
   methods: {
       goBack() {
-        history.go(-1);
+        this.$router.push({path:'/wokdGuide/view/'+this.stepsData.id});
       },
       getStepsData(){
           if(this.$route.params.id){

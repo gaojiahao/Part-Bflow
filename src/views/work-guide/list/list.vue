@@ -5,7 +5,9 @@
 <template>
     <div class="workguide">
         <div class="workguide-toolbar">
-          <span class="workguide-toolbar-add" @click="addWorkGuideData">新增</span>
+          <router-link :to="{ name:'wokdGuideAdd'}">
+            <span class="workguide-toolbar-add">新增</span>
+          </router-link>
           <div class="workguide-toolbar-search">
               <Input 
                 @on-search="workGuideFilter" 
@@ -17,9 +19,11 @@
           </div>
         </div>
         <div class="workguide-list" id="workguideList">
-          <Row class="workguide-list-item"  v-for="(workguide,index) of workGuideData" :key="index" :gutter="8">
+          <Row class="workguide-list-item"  v-for="(workguide,index) of workGuideData" :key="index">
             <div class="workguide-list-item-title">
-                <b @click="editKnowledgeData(workguide,index)">{{ workguide.title }}</b>
+                <router-link :to="{ name:'wokdGuideView',params:{id: workguide.id}}">
+                  <b >{{ workguide.title }}</b>
+                </router-link>
                 <span @click="deleteKnowledge(workguide,index)" class="workguide-delete">删除</span>
             </div>
             <div class="workguide-list-item-step">
@@ -27,6 +31,13 @@
                     <img :src="list.image" width="150"/>
                     <p>{{ list.comment }}</p>
                 </div>
+                <router-link :to="{ name:'wokdGuideView',params:{id: workguide.id}}">
+                  <div v-if="workguide.isMore" class="step-more">
+                    <Tooltip content="点击查看更多" placement="right">
+                    ...
+                    </Tooltip>
+                  </div>
+                </router-link>
             </div>
           </Row>
         </div>
@@ -38,14 +49,13 @@ import { getWorkGuideData,deleteWorkGuideData } from "@/services/workGuideServic
 
 export default {
   name: "wokdGuideList",
-  components: {},
   data() {
     return {
+      searchValue: '',
       currentPage: 1,
       total: 0,
       limit: 10,
       isRolling: false,
-      searchValue: '',
       filter: false,
       workGuideData: []
     };
@@ -86,23 +96,19 @@ export default {
             this.workGuideData = res.tableContent;
             this.filter = false
           }
+          //step只显示5条
+          this.workGuideData.forEach(val => {
+            if(!val.isMore){
+              if(val.workStepList.length > 5){
+                val.workStepList = val.workStepList.slice(0,5);
+                val.isMore = true;
+              }
+            }
+          });
           this.total = res.dataCount;
         }
-      })
-    },
-    //新增知识库数据
-    addWorkGuideData() {
-      this.$router.push({
-        name: "wokdGuideAdd",
-        path: "/wokdGuide/add"
-      });
-    },
-    //查看知识库数据
-    editKnowledgeData(data,index){
-      this.$router.push({
-        name: "wokdGuideView",
-        path: "/wokdGuide/view/"+data.id,
-        params: {id: data.id}
+      }).catch(error => {
+        this.$Message.error(error.data.message);
       });
     },
     //删除知识库数据

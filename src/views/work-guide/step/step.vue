@@ -17,13 +17,9 @@
                 <CarouselItem v-for="(list) of stepsData.workStepList" :key="list.id">
                     <div class="demo-carousel">
                         <div class="step-num">
-                            <span class="step-num-current">{{stepValue+1}}</span>
-                            <span class="step-num-total">/{{total}}</span>
-                            <span style="
-    font-size: 18px;
-    font-weight: 600;
-    margin-left: 10px;
-">{{ list.title }}</span>
+                            <span class="step-num-current">{{ stepValue+1 }}</span>
+                            <span class="step-num-total">/{{ total }}</span>
+                            <span class="step-num-title">{{ list.title }}</span>
                         </div>
                         <p>{{ list.comment }}</p>
                         <img :src="list.image"/>
@@ -42,7 +38,6 @@ import { getworkDataById } from '@/services/workGuideService.js';
 
 export default {
   name: "wokdGuideStep",
-  components: {},
   data() {
     return {
         stepsData: [],
@@ -59,7 +54,9 @@ export default {
               getworkDataById(this.$route.params.id).then(res => {
                 this.stepsData = res;
                 this.total = this.stepsData.workStepList.length;
-              })
+              }).catch(error => {
+                this.$Message.error(error.data.message);
+              });
           }
       }
   },

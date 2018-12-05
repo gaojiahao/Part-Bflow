@@ -19,31 +19,37 @@
         </Row>
         <Row class="workguide-read">
             <img v-for="(data,idx) of workGuideData.workStepList" :key="idx" :src="data.image"/>
-            <div v-if="workGuideData.workStepList.length>0"  @click="goStep" class="workguide-read-go"><Icon type="ios-arrow-forward" />分布阅读</div>
+            <router-link :to="{ name:'wokdGuideStep',params:{id: workGuideData.id}}">
+                <div v-if="workGuideData.workStepList.length>0" class="workguide-read-go">
+                    <Icon type="ios-arrow-forward" />分布阅读
+                </div>
+            </router-link>
         </Row>
         <Row class="workguide-content">
             <div @click="addStep" class="workguide-content-add">添加步骤</div>
            <Timeline>
-               <draggable v-model="workGuideData.workStepList" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="isDragging=false">
-                <TimelineItem v-for="(list,index) of workGuideData.workStepList" :key="index">
-                    <div class="step-detail">
-                        <h4>{{list.title}}</h4>
-                        <div @click="deleteStep(list,index)" class="workguide-content-delete">删除</div>
-                        <div @click="editStep(list,index)" class="workguide-content-delete">修改</div>
-                        <div>{{list.comment}}</div>
-                        <img :src="list.image"/>
-                    </div>
-                </TimelineItem>
+                <draggable v-model="workGuideData.workStepList" :options="dragOptions" :move="onMove">
+                    <TimelineItem v-for="(list,index) of workGuideData.workStepList" :key="index">
+                        <div class="step-detail">
+                            <h4>{{list.title}}</h4>
+                            <div @click="deleteStep(list,index)" class="workguide-content-delete">删除</div>
+                            <div @click="editStep(list,index)" class="workguide-content-delete">修改</div>
+                            <div class="step-detail-comment">{{list.comment}}</div>
+                            <img :src="list.image"/>
+                        </div>
+                    </TimelineItem>
                 </draggable>
             </Timeline>
         </Row>
         <Row class="workguide-save">
             <span class="workguide-save-btn" @click="saveWorkguide('save')">保存</span>
             <span class="workguide-save-btn" @click="saveWorkguide">保存并继续添加</span>
-            <span class="workguide-save-btn" @click="goBack">返回</span>
+            <router-link :to="{ name:'wokdGuideList'}">
+                <span class="workguide-save-btn">返回</span>
+            </router-link>
         </Row>
         <!-- modal -->
-        <Modal v-model="showModal" title="添加步骤">
+        <Modal v-model="showModal" :transfer="false" title="添加步骤">
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
                 <FormItem label="标题" prop="title">
                     <Input v-model="formValidate.title"></Input>
@@ -60,14 +66,14 @@
                         :on-format-error="handleFormatError" 
                         :on-exceeded-size="handleMaxSize" 
                         type="drag"
-                        action="/H_roleplay-si/ds/upload" 
-                        style="display: inline-block;width:128px;vertical-align: middle;" 
+                        action="/H_roleplay-si/ds/upload"
+                        class="upload-img"
                         :headers="httpHeaders">
-                        <div style="width: 128px;height:128px;line-height: 128px;" v-if="!formValidate.logo">
+                        <div class="upload-img-first" v-if="!formValidate.logo">
                             <img v-if="formValidate.logo" :src="formValidate.logo">
                             <i v-if="!formValidate.logo" class="iconfont">&#xe63b;</i>
                         </div>
-                        <div style="width: 128px;height:128px;line-height: 128px;" class="demo-upload-list" v-if="formValidate.logo">
+                        <div class="demo-upload-list" v-if="formValidate.logo">
                             <img :src="formValidate.logo">
                             <div class="demo-upload-list-cover">
                                 <Icon type="ios-eye-outline" color="#fff" size="30" @click.stop="handleView"></Icon>
@@ -77,6 +83,7 @@
                     </Upload>
                     <Modal title="查看头像" v-model="visible">
                         <img :src="formValidate.logo" v-if="visible" style="width: 100%">
+                        <div slot="footer"></div>
                     </Modal>
                 </FormItem>
             </Form>
@@ -101,10 +108,8 @@ export default {
   data() {
     return {
         workguideId: this.$route.params.id,
-        isDragging: false,
         showModal: false,
         visible: false,
-        delayedDragging: false,
         httpHeaders: {
             Authorization: getToken()
         },
@@ -131,22 +136,10 @@ export default {
         }
     };
   },
-  watch: {
-    isDragging(newValue) {
-      if (newValue) {
-        this.delayedDragging = true;
-        return;
-      }
-      //执行在dom更新之后
-      this.$nextTick(() => {
-        this.delayedDragging = false;
-      });
-    }
-  },
   computed: {
     dragOptions() {
       return {
-        animation: 0,
+        animation: 500,
         group: "description",
         disabled: false,
         ghostClass: "ghost"
@@ -161,17 +154,7 @@ export default {
         (!relatedElement || !relatedElement.fixed) && !draggedElement.fixed
       );
     },
-    //分布阅读
-    goStep() {
-        this.$router.push({
-            name: "wokdGuideStep",
-            path:'/wokdGuide/step/'+this.$route.params.id,
-            params: {id: this.$route.params.id}
-        });
-    },
-    goBack() {
-      this.$router.push({path:'/wokdGuide/list'});
-    },
+    //保存
     saveWorkguide(save) {
         if(!this.workguideId){
             if(this.workGuideData.title === ''){
@@ -190,7 +173,9 @@ export default {
                             };
                         }
                     }
-                })
+                }).catch(error => {
+                    this.$Message.error(error.data.message);
+                });
             }
         }else{
             if(this.workGuideData.title === ''){
@@ -209,7 +194,9 @@ export default {
                             };
                         }
                     }
-                })
+                }).catch(error => {
+                    this.$Message.error(error.data.message);
+                });
             }
         }
         
@@ -218,7 +205,9 @@ export default {
     getKnowledgeDataById() {
       getKnowledgeTypeDataById(this.knowledgeId).then(res => {
         this.knowledgeForm = res
-      })
+      }).catch(error => {
+        this.$Message.error(error.data.message);
+      });
     },
     //添加步骤
     addStep() {
@@ -268,7 +257,7 @@ export default {
     //上传图片
     handleSuccess(res, file) {
       this.formValidate.logo =
-        "/H_roleplay-si/ds/download?width=128&height=128&url=" +
+        "/H_roleplay-si/ds/download?width=300&height=300&url=" +
         res.data[0].attacthment;
     },
     //判断上传头像大小
@@ -299,7 +288,9 @@ export default {
     getWorkGuideDataById() {
         getworkDataById(this.$route.params.id).then(res => {
             this.workGuideData = res;
-        })
+        }).catch(error => {
+            this.$Message.error(error.data.message);
+        });
     }
   },
   created() {

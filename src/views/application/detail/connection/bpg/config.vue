@@ -1,4 +1,4 @@
-<style>
+<style lang="less">
 .column-icon-delete{
     font-size: 16px;
     position: absolute;
@@ -27,6 +27,16 @@
   background-color: rgb(6, 132, 121);
 }
 
+.app-search {
+  margin-bottom: 5px;
+  .app-search-icon {
+    font-size: 1rem;
+    color: #39f;
+    display: inline-block;
+    cursor: pointer;
+  }
+}
+
 .page-selection-warp {
   width: 100%;
   height: 100%;
@@ -44,6 +54,7 @@
             <div style="font-size:16px">
                 <a @click="addJobs">添加职位</a>
                 <a @click="addProcess">添加阶段</a>
+                <a @click="saveAppConfig" style="float: right;">保存</a>
             </div>
             <div>
                 <Table :columns="columns" :data="columnDatas" size="small" border ></Table>
@@ -56,7 +67,7 @@
             </FormItem>
             <FormItem label="下级节点" :labelWidth="60" prop="nextNode">
               <Select multiple v-model="NodeDetailFrom.nextNode" >
-                <Option v-for="item in appNodes" v-if="item.id !== NodeDetailFrom.id" :value="item.id" :key="item.id">{{item.title}}</Option>
+                <Option v-for="item in appNodes" v-if="item.uniqueId !== NodeDetailFrom.uniqueId" :value="item.uniqueId" :key="item.uniqueId">{{item.title}}</Option>
               </Select>
             </FormItem>
           </Form>
@@ -80,9 +91,6 @@
         <add-process-modal v-model="isShowAddProcessModal" width="360" footerBtnAlign="right" title="添加阶段" @on-ok="addProcssColumn">
             <div style="margin-top:10px;">
                 <Form :model="processFormItem" :labelWidth="60" ref="processFormItem">
-                    <FormItem label="key:" style="font-size:16px" prop="key">
-                        <Input v-model="processFormItem.key" />
-                    </FormItem>
                     <FormItem label="名称:" style="font-size:16px" prop="title">
                         <Input v-model="processFormItem.title" />
                     </FormItem>
@@ -92,6 +100,12 @@
 
         <add-node-modal v-model="isShowAddNodeModal" width="720" footerBtnAlign="right" title="添加应用" @on-ok="handleAddNode">
             <div style="margin-top:10px;">
+              <div class="app-search">
+                <Input @on-search="handleAppNameFilter"  :search="true" v-model="searchValue" placeholder="搜索应用名称" style="width: 300px"></Input>
+                <a class="app-search-icon">
+                  <Button @click="handleAppNameFilter" type="primary" size="small">查询</Button>
+                </a>
+              </div>
               <Table 
                 :loading="appListLoading" 
                 :columns="appListColumns" 
@@ -121,8 +135,8 @@
             <div class="page-selection-warp" v-show="onPageSelection[0] ">
               <Tag 
                 v-for="item in onPageSelection" 
-                :key="item.id" 
-                :id="item.id" 
+                :key="item.uniqueId" 
+                :uniqueId="item.uniqueId" 
                 type="border" 
                 color="primary" 
                 size="small"
@@ -157,7 +171,7 @@ export default {
       drawerVisable:false,
 
       NodeDetailFrom:{
-        id:"",
+        uniqueId:"",
         title:"",
         nextNode:[]
       },
@@ -172,6 +186,7 @@ export default {
         key: ""
       },
 
+      searchValue:"",
       appListLoading:false,
       appListColumns:[{
         type: "selection",
@@ -185,16 +200,17 @@ export default {
         key: "title"
       },{
         title: "创建时间",
-        key: "crt_time"
+        key: "crtTime"
       }],
       appListData:[],
       appListPageTotal:0,
       appListCurrentPage:1,
       pageSize:8,
+      withoutListId:"",
       onPageSelection:[],
      
-      nodePositionId: "",
-      nodeProcssId: "",
+      nodePositionId: "", //当前添加应用节点的职位ID
+      nodeProcssId: "", //当前添加应用节点的阶段ID
 
       columns: [
         {
@@ -261,6 +277,11 @@ export default {
     },
 
     /** 
+     * 保存配置信息
+    */
+    saveAppConfig(){},
+
+    /** 
      * 构造模板列
     */
     columnTemplate(columnId, key, title) {
@@ -287,31 +308,7 @@ export default {
             ])
         },
         render: (h, params) => {
-          let rerderData = [
-            h(
-              "a",
-              {
-                on: {
-                  click: e => {
-                    let that = this;
-                        that.nodePositionId = params.row.positionId,
-                        that.nodeProcssId = params.column.columnId;
-
-                      that.isShowAddNodeModal = true;
-                      this.onPageSelection = [];
-                      this.appListLoading = true;
-                      getAllAppList(this.appListCurrentPage,this.pageSize).then(res=>{
-                        this.appListPageTotal = res.dataCount;
-                        this.appListData = res.tableContent;
-                         this.appListLoading = false;
-                      })  
-                   
-                  }
-                }
-              },
-              "添加"
-            )
-          ];
+          let rerderData = [];
           if (
             params.row[params.column.key] &&
             params.row[params.column.key].length > 0
@@ -321,7 +318,7 @@ export default {
                     "Tag",
                     {
                       attrs:{
-                          id:item.id,
+                          uniqueId:item.uniqueId,
                           rowId:item.rowId,
                           columnId:item.columnId
                       },
@@ -332,7 +329,7 @@ export default {
                       on:{
                           "on-close":(event)=>{
                             let target = event.target.parentNode || event.srcElement.parentNode;
-                            this.handleDeleteNode(target.getAttribute('id'),target.getAttribute('rowId'),target.getAttribute('columnId'));
+                            this.handleDeleteNode(target.getAttribute('uniqueId'),target.getAttribute('rowId'),target.getAttribute('columnId'));
                           }
                       }
                     },
@@ -343,7 +340,7 @@ export default {
                           on:{
                             click:(e)=>{
                               e.preventDefault();
-                              let nodeId = e.target.parentNode.parentNode.getAttribute('id');
+                              let nodeId = e.target.parentNode.parentNode.getAttribute('uniqueId');
                               this.handleEditNode(nodeId)
                             }
                           },
@@ -351,10 +348,37 @@ export default {
                          item.title
                       )
                     ],
-                )  
-              rerderData.unshift(pushdata);
+                  );  
+              rerderData.push(pushdata);
             });
-          }
+          };
+          rerderData.push(h(
+              "a",
+              {
+                on: {
+                  click: e => {
+                    let that = this,
+                        unId =[];
+                        that.nodePositionId = params.row.positionId;
+                        that.nodeProcssId = params.column.columnId;
+
+                      that.isShowAddNodeModal = true;
+                      that.onPageSelection = [];
+                      
+                      for(let keyId in that.appNodes){
+                        if(that.appNodes[keyId].columnId===that.nodeProcssId && that.appNodes[keyId].rowId === that.nodePositionId){
+                            unId.push(that.appNodes[keyId].id);
+                        }
+                      }
+                      that.withoutListId = unId.join(',')
+
+                      that.getAllAppList(that.appListCurrentPage,that.pageSize,that.withoutListId)
+                   
+                  }
+                }
+              },
+              "添加"
+            ))
           return h("div", rerderData);
         }
       };
@@ -370,25 +394,47 @@ export default {
       this.columnDatas.forEach(item => {
         if (item.positionId === this.nodePositionId) {
           let nodes =[],
-              nodeItem={};
-          if(item[key] && item[key].length>0){
-              nodeItem = {
-                title:this.nodeFormItem.title,
-                id:this.getRandomCode(),
-                rowId:this.nodePositionId,
-                columnId:this.nodeProcssId
-              };
-              nodes = [nodeItem,...item[key]]
-          }else{
-              nodeItem={
-                  title:this.nodeFormItem.title,
-                  id:this.getRandomCode(),
-                  rowId:this.nodePositionId,
-                  columnId:this.nodeProcssId
+              nodeItem=[];
+          if(item[key] && item[key].length>0){  //判断当前区域是否存在添加的节点
+              if(this.onPageSelection.length>0){
+                this.onPageSelection.forEach(selection=>{
+                  nodeItem.push({
+                      title:selection.title,
+                      id:selection.id,
+                      uniqueId:selection.uniqueId,
+                      rowId:this.nodePositionId,
+                      columnId:this.nodeProcssId
+                  })
+                  this.appNodes[selection.uniqueId] = { //保存所以添加的节点
+                      title:selection.title,
+                      id:selection.id,
+                      uniqueId:selection.uniqueId,
+                      rowId:this.nodePositionId,
+                      columnId:this.nodeProcssId
+                  }; 
+                })
+                nodes = [...item[key],...nodeItem]
               }
-              nodes.push(nodeItem)
+          }else{
+             if(this.onPageSelection.length>0){
+                this.onPageSelection.forEach(selection=>{
+                  nodes.push({
+                      title:selection.title,
+                      id:selection.id,
+                      uniqueId:selection.uniqueId,
+                      rowId:this.nodePositionId,
+                      columnId:this.nodeProcssId
+                  });
+                  this.appNodes[selection.uniqueId] = { //保存所以添加的节点
+                      title:selection.title,
+                      id:selection.id,
+                      uniqueId:selection.uniqueId,
+                      rowId:this.nodePositionId,
+                      columnId:this.nodeProcssId
+                  }; 
+                })
+              }
           }
-          this.appNodes[nodeItem.id] = nodeItem; //保存所以添加的节点
           this.$set(item, key,nodes);
         }
       });
@@ -400,7 +446,7 @@ export default {
      * 添加职位-行
     */
     addJobsZColumn() {
-      let id = this.jobsFormItem.id;
+      let id = this.jobsFormItem.id+"";
       this.columnDatas.push({
         positionId: id,
         positionName: this.jobsFormItem.name
@@ -421,7 +467,8 @@ export default {
      * 添加阶段-列
     */
     addProcssColumn() {
-      let { key, title } = this.processFormItem;
+      let {title} = this.processFormItem;
+      let key = 'column_'+this.getRandomCode();
       let column = this.columnTemplate(this.getRandomCode(), key, title, this);
 
       this.columns.push(column);
@@ -463,12 +510,16 @@ export default {
           let nodes =[];
           if(item[columnKey] && item[columnKey].length>0){
              let nodes = item[columnKey].filter(f =>{
-               return f.id != nodeId
+               return f.uniqueId != nodeId
              })
              this.$set(item, columnKey,nodes);
           }
         }
       });
+      let res = delete this.appNodes[nodeId]
+      if(res){
+        this.$Message.success('删除成功!')
+      }
     },
 
     /** 
@@ -478,8 +529,14 @@ export default {
       this.drawerVisable = true;
       let nodeDetails = this.appNodes[nodeId];
 
-      this.NodeDetailFrom.id = nodeDetails.id;
+      this.NodeDetailFrom.uniqueId = nodeDetails.uniqueId;
       this.NodeDetailFrom.title=nodeDetails.title;
+      this.NodeDetailFrom.nextNode = [];
+      if(nodeDetails.nextNode && nodeDetails.nextNode.length>0){
+        nodeDetails.nextNode.map(item=>{
+          this.NodeDetailFrom.nextNode.push(item.uniqueId)
+        })
+      }
     },
 
     /** 
@@ -487,20 +544,28 @@ export default {
     */
     handleSaveNodeDetail(event){
       let that = this;
-      let nodeId = that.NodeDetailFrom.id;
+      let nodeId = that.NodeDetailFrom.uniqueId;
       if(that.NodeDetailFrom.nextNode[0]){
         that.appNodes[nodeId].nextNode = that.appNodes[nodeId].nextNode?that.appNodes[nodeId].nextNode:[];
         that.NodeDetailFrom.nextNode.forEach(nextNodeId=>{
           let f = that.appNodes[nodeId].nextNode.filter(f=>{
-            return f.id === nextNodeId
+            return f.uniqueId === nextNodeId
           })
           if(f.length === 0){
             that.appNodes[nodeId].nextNode.push(that.appNodes[nextNodeId])
           }
         })
       }
+      this.$Message.success('保存成功!')
+      this.drawerVisable = false;
     },
 
+    /** 
+     * 根据应用名称过滤
+    */
+    handleAppNameFilter(value){
+      this.getAllAppList(this.appListCurrentPage,this.pageSize,"",this.searchValue);
+    },
 
     //全选
     onSelectAll(selection) {
@@ -510,7 +575,7 @@ export default {
       this.onPageSelection.push(...selection);
       //数组去重
       this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
-        obj[next.id] ? "" : (obj[next.id] = true && cur.push(next));
+        obj[next.uniqueId] ? "" : (obj[next.uniqueId] = true && cur.push(next));
         return cur;
       }, []);
     },
@@ -523,7 +588,7 @@ export default {
         let p = this.onPageSelection;
         s.map(item => {
           p = p.filter(f => {
-            return f.id !== item.id;
+            return f.uniqueId !== item.uniqueId;
           });
         });
         this.onPageSelection = p;
@@ -532,7 +597,7 @@ export default {
         this.onPageSelection.push(...selection);
         //数组去重
         this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
-          obj[next.id] ? "" : (obj[next.id] = true && cur.push(next));
+          obj[next.uniqueId] ? "" : (obj[next.uniqueId] = true && cur.push(next));
           return cur;
         }, []);
       }
@@ -541,18 +606,21 @@ export default {
     //单选取消
     onSelectCancel(selection, row) {
       this.onPageSelection = this.onPageSelection.filter(f => {
-        return f.id !== row.id;
+        return f.uniqueId !== row.uniqueId;
       });
     },
 
+    /** 
+     * 删除分页选择项 
+    */
     deletePageSelection(){
-      let id = Number(event.target.parentElement.getAttribute("id"));
+      let uniqueId = event.target.parentElement.getAttribute("uniqueId");
       this.onPageSelection = this.onPageSelection.filter(f => {
-        return f.id !== id;
+        return f.uniqueId !== uniqueId;
       });
 
       this.$refs.selection.data.forEach((item, index) => {
-        if (id === item.id) {
+        if (uniqueId === item.uniqueId) {
           this.$refs.selection.toggleSelect(index);
         }
       });
@@ -565,13 +633,32 @@ export default {
       // let filter = [
       //   { operator: "like", value: this.searchValue, property: "groupName" }
       // ];
+      this.getAllAppList(currentPage,this.pageSize,this.withoutListId);
+    },
+
+    /** 
+     * 获取应用列表
+    */
+    getAllAppList(currentPage,pageSize,withoutListId,search){
       this.appListLoading = true;
-      getAllAppList(currentPage,this.pageSize).then(res=>{
+      withoutListId=withoutListId?withoutListId:'-1';
+      getAllAppList(currentPage,this.pageSize,withoutListId,search).then(res=>{
         this.appListPageTotal = res.dataCount;
         this.appListData = res.tableContent;
+        if (this.onPageSelection.length > 0) {
+          this.appListData.map(item => {
+            this.onPageSelection.map(sel => {
+              if (item.uniqueId === sel.uniqueId) {
+                item._checked = true;
+              }
+            });
+          });
+        }
         this.appListLoading = false;
+      }).catch(error=>{
+        this.$Message.error(error.message)
       })  
-    },
+    }
   },
 
   mounted(){

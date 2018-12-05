@@ -149,8 +149,9 @@ export const getAllRoleData = () => request('/H_roleplay-si/ds/getRoleList2');
  * @author TanGuoZheng
  * @description 获取所有应用信息
  */
-export const getAllAppList = (currentPage,pageSize=6,filter="") => request('/H_roleplay-si/ds/getAllList',{
+export const getAllAppList = (currentPage,pageSize=8,withoutListId="-1",search="") => request('/H_roleplay-si/ds/getAllList',{
   page:currentPage,
   limit:pageSize,
-  filter:filter
+  withoutListId:withoutListId,
+  search:search,
 });

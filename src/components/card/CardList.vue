@@ -27,39 +27,56 @@ export default {
 @import './common.less';
 
 
-@media screen and (max-width: 521px) {
+@media screen and (max-width: 646px) {
   .ivu-col-span-4 {
     display: block !important;
-    width: 90% !important;
+    width: 320px !important;
+    padding: unset !important;
   }
 }
 
-@media screen and (min-width: 522px) and (max-width: 780px) {
+@media screen and (min-width: 647px) and (max-width: 808px) {
   .ivu-col-span-4 {
     display: block !important;
-     width: 50% !important;
+    width: 240px !important;
+    margin-right: 10px;
+    padding: unset !important;
   }
 }
 
-@media screen and (min-width: 781px) and (max-width: 1023px) {
+@media screen and (min-width: 809px) and (max-width: 1023px) {
   .ivu-col-span-4 {
     display: block !important;
-    width: 33.333333% !important;
+    width: 250px !important;
+    margin-right: 10px;
+    padding: unset !important;
   }
 }
 
-
-@media screen and (min-width:1024px) and (max-width: 1466px) {
+@media screen and (min-width: 1024px) and (max-width: 1466px) {
   .ivu-col-span-4 {
     display: block !important;
-    width: 25% !important;
+    width: 250px !important;
+    margin-right: 10px;
+    padding: unset !important;
   }
 }
 
-@media screen and (min-width:1467px) and (max-width:1680px) {
-   .ivu-col-span-4 {
+@media screen and (min-width: 1467px) and (max-width: 1680px) {
+  .ivu-col-span-4 {
     display: block !important;
-    width: 20% !important;
+    width: 250px !important;
+    margin-right: 10px;
+    padding: unset !important;
+  }
+}
+
+@media screen and (min-width: 1680px) {
+  .ivu-col-span-4 {
+    display: block !important;
+    width: 240px !important;
+    margin-right: 10px;
+    padding: unset !important;
   }
 }
 

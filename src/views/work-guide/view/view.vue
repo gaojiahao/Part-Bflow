@@ -17,7 +17,11 @@
         </Row>
         <Row class="workguide-read">
             <img v-for="(list,index) of workguideData.workStepList" :key="index" :src="list.image"/>
-            <div class="workguide-read-go" @click="goStep"><Icon type="ios-arrow-forward" />分布阅读</div>
+            <router-link :to="{ name:'wokdGuideStep',params:{id: workguideData.id}}">
+                <div class="workguide-read-go">
+                    <Icon type="ios-arrow-forward" />分布阅读
+                </div>
+            </router-link>
         </Row>
         <Row class="workguide-content">
             <Timeline >
@@ -32,8 +36,12 @@
             </Timeline>
         </Row>
         <Row class="workguide-save">
-            <span class="workguide-save-btn" @click="editKnowledge">编辑</span>
-            <span class="workguide-save-btn" @click="goBack">返回</span>
+            <router-link :to="{ name:'wokdGuideDetail',params:{id: workguideData.id}}">
+                <span class="workguide-save-btn">编辑</span>
+            </router-link>
+            <router-link :to="{ name:'wokdGuideList'}">
+                <span class="workguide-save-btn">返回</span>
+            </router-link>
         </Row>
     </div>
 </template>
@@ -51,28 +59,13 @@ export default {
     };
   },
   methods: {
-    goStep() {
-        this.$router.push({
-            name: "wokdGuideStep",
-            path:'/wokdGuide/step/'+this.$route.params.id,
-            params: {id: this.$route.params.id}
-        });
-    },
-    goBack() {
-      this.$router.push({path:'/wokdGuide/list'});
-    },
-    editKnowledge() {
-      this.$router.push({
-        name: "wokdGuideDetail",
-        path:'/wokdGuide/detail/'+this.$route.params.id,
-        params: {id: this.$route.params.id}
-      });
-    },
     //查询作业指导数据
     getWorkGuideDataById() {
         getworkDataById(this.$route.params.id).then(res => {
             this.workguideData = res;
-        })
+        }).catch(error => {
+            this.$Message.error(error.data.message);
+        });
     }
   },
   created() {

@@ -96,4 +96,37 @@
     img{
         width: 240px;
     }
+    &-comment{
+        width: 94%;
+    }
+}
+.upload-img{
+    display: inline-block;
+    width:300px;
+    vertical-align: middle;
+    &-first{
+        width: 300px;
+        height:300px;
+        line-height: 300px;
+    }
+    .demo-upload-list{
+        width: 300px;
+        height:300px;
+        line-height: 300px;
+    }
+    .demo-upload-list-cover {
+        display: none;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.6);
+      }
+    .demo-upload-list:hover .demo-upload-list-cover {
+        display: block;
+    }
+    .demo-upload-list-cover i {
+        cursor: pointer;
+    }
 }

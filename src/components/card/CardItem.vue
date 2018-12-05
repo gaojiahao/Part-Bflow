@@ -325,6 +325,7 @@ export default {
         position: relative;
         width: 120px;
         cursor: pointer;
+        color: #000;
         font-size: 16px;
         text-overflow: ellipsis;
         overflow: hidden;

@@ -40,13 +40,20 @@
             border-bottom: 1px solid #ddd;
             padding: 15px 0px 10px 0px;
             &-step{
-                max-height: 180px;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                .step-more{
+                    color: #9d9797;
+                    cursor: pointer;
+                    font-size: 25px;
+                    line-height: 150px;
+                }
+                .step-more:hover{
+                    color: #39f;
+                }
             }
             &-title{
                 b{
                     font-size: 18px;
+                    color: #333;
                 }
                 b:hover{
                     color: #39f;

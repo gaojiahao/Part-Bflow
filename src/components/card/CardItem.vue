@@ -22,7 +22,9 @@
     <img :src="appinfo.icon" :class="'img-radius-'+this.appinfo.type" />
     <div class="content">
       <div class="content-title">
-        <h5 @click="redirectTo(appinfo)">{{appinfo.text}}</h5>
+        <Tooltip :content="appinfo.text" placement="top-start">
+          <h5 @click="redirectTo(appinfo)">{{appinfo.text}}</h5>
+        </Tooltip>
         <a @click.stop="goAppSetting(appinfo)" class="content-title-detail">详情</a>
       </div>
       <div class="content-instance">
@@ -323,6 +325,7 @@ export default {
         position: relative;
         width: 120px;
         cursor: pointer;
+        color: #000;
         font-size: 16px;
         text-overflow: ellipsis;
         overflow: hidden;

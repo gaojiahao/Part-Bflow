@@ -21,7 +21,10 @@
             <img v-for="(data,idx) of workGuideData.workStepList" :key="idx" :src="data.image"/>
         </Row>
         <Row class="workguide-content">
-            <div @click="addStep" class="workguide-content-add">添加步骤</div>
+            <div class="workguide-content-add">
+                <span @click="addStep" class="workguide-content-add-btn">添加步骤</span>
+                <b>拖动下方列表可排序</b>
+            </div>
            <Timeline>
                 <draggable v-model="workGuideData.workStepList" :options="dragOptions" :move="onMove">
                     <TimelineItem v-for="(list,index) of workGuideData.workStepList" :key="index">

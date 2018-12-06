@@ -11,12 +11,10 @@ require('@/filter/index');
 require('./assets/App.css');
 
 import { getCurrentUserInfo } from "@/services/flowService";
-import VueWechatTitle from 'vue-wechat-title';
 
 Vue.config.productionTip = false;
 
 Vue.use(iView);
-Vue.use(VueWechatTitle);
 
 getCurrentUserInfo().then(async (res) => {
   if (res) {

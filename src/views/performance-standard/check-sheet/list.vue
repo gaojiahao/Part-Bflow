@@ -10,7 +10,7 @@
                 type="primary" 
                 @click="goAddCheckSheet">
                 新增</span>
-              <div class="app-search">
+              <div class="check-list-toolbar-search">
                 <Input 
                   @on-search="checkSheetFilter" 
                   :search="true" 

@@ -36,7 +36,7 @@
             </Row>
             </FormItem>
             <FormItem label="内容:" prop="content" style="margin-bottom: 65px;">
-                <div ref="editor" style="height:400px"></div>
+                <div ref="editor" style="height:400px;padding-right:20%;"></div>
             </FormItem>
           </Form>
         </Row>

@@ -108,7 +108,7 @@ export default {
                   click: () => {
                     this.$router.push({
                       name: "checkSheetDetail",
-                      path: "/checkSheet/detail",
+                      path: "/checkSheet/detail/"+params.row.id,
                       params: { id: params.row.id }
                     });
                   }

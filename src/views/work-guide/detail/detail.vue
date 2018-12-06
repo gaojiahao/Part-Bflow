@@ -25,7 +25,9 @@
            <Timeline>
                 <draggable v-model="workGuideData.workStepList" :options="dragOptions" :move="onMove">
                     <TimelineItem v-for="(list,index) of workGuideData.workStepList" :key="index">
+                        <div class="step-num" slot="dot">{{index+1}}</div>
                         <div class="step-detail">
+                            <i class=""></i>
                             <h4>{{list.title}}</h4>
                             <div @click="deleteStep(list,index)" class="workguide-content-delete">删除</div>
                             <div @click="editStep(list,index)" class="workguide-content-delete">修改</div>
@@ -137,6 +139,7 @@ export default {
         animation: 500,
         group: "description",
         disabled: false,
+        handle: ".step-detail",
         ghostClass: "ghost"
       };
     }
@@ -182,11 +185,8 @@ export default {
                         if(save === 'save'){
                             this.$router.push({path:'/wokdGuide/list'});
                         }else{
-                            this.workGuideData = {
-                                title: '',
-                                comment: '',
-                                workStepList: []
-                            };
+                            this.$router.push({path:'/wokdGuide/add'});
+                            window.location.reload();
                         }
                     }
                 }).catch(error => {

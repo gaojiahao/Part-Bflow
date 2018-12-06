@@ -3,8 +3,8 @@
 </style>
 <template>
     <div class="social">
-        <div class="social-sider">
-            <div class="social-sider-item">
+        <!-- <div class="social-sider"> -->
+            <!-- <div class="social-sider-item">
                 <Icon type="md-menu" color="#fff" size=26  />
             </div>
 
@@ -18,7 +18,7 @@
                 <div class="social-sider-item" v-bind:class="{ 'active':$route.path.includes('flowtask') }">
                     <Icon type="md-clipboard" color="#fff" size=26 />
                 </div>
-            </router-link>
+            </router-link> -->
             
             <!-- <div class="social-sider-item">
                 //同事圈
@@ -34,7 +34,7 @@
                 //知识库
                 <Icon type="ios-school-outline"  color="#fff" size=30 />
             </div> -->
-        </div>
+        <!-- </div> -->
         <div class="social-content">
              <router-view></router-view>
         </div>

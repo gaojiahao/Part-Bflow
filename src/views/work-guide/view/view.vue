@@ -36,12 +36,12 @@
                 
             </Timeline>
         </Row>
-        <Row class="workguide-save">
+        <Row class="workguide-toolbar">
             <router-link :to="{ name:'wokdGuideDetail',params:{id: workguideData.id}}">
-                <span class="workguide-save-btn">编辑</span>
+                <span class="workguide-toolbar-btn">编辑</span>
             </router-link>
             <router-link :to="{ name:'wokdGuideList'}">
-                <span class="workguide-save-btn">返回</span>
+                <span class="workguide-toolbar-btn">返回</span>
             </router-link>
         </Row>
     </div>

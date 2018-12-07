@@ -17,9 +17,9 @@
             <div v-html="knowledgeForm.content" class="knowledge-content-desc"></div>
             <knowledge-comments></knowledge-comments>
         </Row>
-        <Row class="knowledge-save">
-            <span class="knowledge-save-btn" @click="editKnowledge">编辑</span>
-            <span class="knowledge-save-btn" @click="goBack">返回</span>
+        <Row class="knowledge-toolbar">
+            <span class="knowledge-toolbar-btn" @click="editKnowledge">编辑</span>
+            <span class="knowledge-toolbar-btn" @click="goBack">返回</span>
         </Row>
     </div>
 </template>

@@ -33,13 +33,20 @@
     &-content{
         padding-top: 13px; 
         overflow-x: auto;
+        padding-left: 3px;
         &-add{
-            color: #39f;
-            cursor: pointer;
-            font-size: 14px;
             border-bottom: 1px solid #ddd;
-            padding: 5px 0px;
             margin-bottom: 10px;
+            &-btn{
+                color: #39f;
+                cursor: pointer;
+                font-size: 14px;
+                padding: 5px 0px;
+            }
+            b{
+                color: #ff9900;
+                margin-left: 10px;
+            }
         }
         &-delete{
             padding: 0px 5px;
@@ -97,8 +104,20 @@
         width: 240px;
     }
     &-comment{
-        width: 94%;
+        width: 92%;
     }
+}
+.step-num{
+    font-size: 16px;
+    border: 1px solid #39f;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+    line-height: 20px;
+}
+.step-detail:hover{
+    cursor: move;
 }
 .upload-img{
     display: inline-block;

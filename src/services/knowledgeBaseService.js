@@ -25,3 +25,11 @@ export const updateKnowledgeData = (params) =>  request('/H_roleplay-si/kb/updat
 
 //删除知识库
 export const deleteKnowledgeData = (knowledgeIds) =>  request('/H_roleplay-si/kb/delete',{},'POST',knowledgeIds);
+
+//新增知识库分类
+export const saveKnowledgeDataType = (params) =>  request('/H_roleplay-si/base/dict/saveByValue',{},'POST',params);
+
+//删除知识库分类
+export const deleteKnowledgeDataType = (typeIds) =>  request('/H_roleplay-si/base/dict/delete',{
+    id: typeIds
+},'POST');

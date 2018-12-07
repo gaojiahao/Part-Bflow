@@ -19,15 +19,24 @@
                 </Col>
                 <Col span="11">
                     <FormItem prop="type" label="分类:">
-                         <Select v-model="knowledgeForm.type" :transfer="false" style="width:300px">
-                            <Option v-for="item in typeList" :value="item.value" :key="item.id">{{ item.name }}</Option>
+                         <Select ref="typeSelect" v-model="knowledgeForm.type" :transfer="false" style="width:300px">
+                            <Option v-for="(item,index) in typeList" :value="item.value" :key="item.id">
+                              {{ item.name }}
+                              <span class="type-edit" @click.stop="deleteType(item,index)"><Icon type="md-close"/></span>
+                              <span class="type-edit" @click.stop="editType(item,index)"><Icon type="ios-create-outline"></Icon></span>
+                            </Option>
+                            <Option value="addType">
+                                <span class="add-type" @click="showAddTypeModal">
+                                  <Icon type="md-add" />
+                                </span>
+                            </Option>
                          </Select>
                     </FormItem>
                 </Col>
             </Row>
             </FormItem>
             <FormItem label="内容:" prop="content" style="margin-bottom: 65px;">
-                <div ref="editor" style="height:400px"></div>
+                <div ref="editor" style="height:400px;padding-right:20%;"></div>
             </FormItem>
           </Form>
         </Row>
@@ -36,6 +45,18 @@
             <span class="knowledge-save-btn" @click="saveKnowledge">保存并继续添加</span>
             <span class="knowledge-save-btn" @click="goBack">返回</span>
         </Row>
+        <!-- modal -->
+        <Modal v-model="showModal" title="添加分类" :styles="{top: '20px'}" :transfer="false">
+            <Form ref="typeValidate" :model="typeValidate" :rules="typeRuleValidate" :label-width="80">
+                <FormItem label="名称" prop="name">
+                    <Input v-model="typeValidate.name" autofocus></Input>
+                </FormItem>
+            </Form>
+            <div slot="footer">
+                <Button type="primary" @click="confirmAdd">确定</Button>
+                <Button type="default" @click="cancelAdd">取消</Button>
+            </div>
+        </Modal>
     </div>
 </template>
 
@@ -44,7 +65,9 @@ import {
   updateKnowledgeData, 
   getKnowledgeTypeDataById,
   getKnowledgeTypeData,
-  saveKnowledgeData
+  saveKnowledgeData,
+  saveKnowledgeDataType,
+  deleteKnowledgeDataType
   } from "@/services/knowledgeBaseService.js";
   import E from 'wangeditor';
 
@@ -55,6 +78,16 @@ export default {
     return {
       knowledgeId: this.$route.params.id,
       isEdit: false,
+      showModal: false,
+      typeValidate: {
+        name: "",
+        value: ""
+      },
+      typeRuleValidate: {
+        name: [
+          { required: true, message: "请输入名称", trigger: "blur" }
+        ]
+      },
       knowledgeForm: {
         title: '',
         type: '',
@@ -75,6 +108,73 @@ export default {
     };
   },
   methods: {
+    showAddTypeModal() {
+      this.showModal = true;
+      this.$refs["typeValidate"].resetFields();
+      this.typeValidate.edit = false;
+    },
+    cancelAdd() {
+      this.showModal = false;
+    },
+    //添加分类
+    confirmAdd() {
+      let newType = {};
+      this.$refs["typeValidate"].validate(v => {
+        if (v) {
+          if(this.typeValidate.edit){
+            newType = {
+              name: this.typeValidate.name,
+              value: 'KnowledgeBaseType',
+              id: this.typeValidate.id
+            };
+          }else{
+            newType = {
+              name: this.typeValidate.name,
+              value: 'KnowledgeBaseType'
+            };
+          }
+          if(newType){
+              saveKnowledgeDataType(newType).then(res => {
+                if(res.success){
+                  this.$Message.success(res.message);
+                  this.getAllKnowledgeTypeData();
+                }
+              }).catch(error => {
+                this.$Message.error(error.data.message);
+              });
+          }
+          this.showModal = false;
+        }
+      });
+    },
+    //修改分类
+    editType(item,index) {
+      this.$refs['typeSelect'].hideMenu();
+      this.typeValidate.id = item.id;
+      this.typeValidate.name = item.name;
+      this.typeValidate.edit = true;
+      this.showModal = true;
+    },
+    //删除分类
+    deleteType(item,index) {
+      this.$refs['typeSelect'].hideMenu();
+      this.$Modal.confirm({
+        title: "确认",
+        content: "确认删除<b style=color:#e4393c;>"+item.name+"</b>么？",
+        onOk: () => {
+          deleteKnowledgeDataType(item.id)
+          .then(res => {
+            if (res.success) {
+              this.$Message.success(res.message);
+              this.getAllKnowledgeTypeData();
+            }
+          })
+          .catch(error => {
+            this.$Message.error(error.data.message);
+          });
+        }
+      });
+    },
     goBack() {
       this.$router.push({path:'/knowledge/list'});
     },
@@ -96,7 +196,7 @@ export default {
                 if(isSave === 'save'){
                     this.$router.push({path:'/knowledge/list'});
                 }else{
-                  this.knowledgeId = null;
+                  this.knowledgeId = false;
                   this.knowledgeForm.content = '';
                   this.$refs['formValidate'].resetFields();
                   this.editor.txt.html('');
@@ -150,6 +250,7 @@ export default {
         this.knowledgeForm.content = html
       }
       this.editor.customConfig.uploadImgShowBase64 = true;
+      this.editor.customConfig.zIndex = 100
       this.editor.create();
       this.editor.$textContainerElem[0].style.height = '400px';
       this.editor.txt.html(knowledgeContent);

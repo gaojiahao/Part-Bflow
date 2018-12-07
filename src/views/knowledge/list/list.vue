@@ -29,7 +29,7 @@
               </Col>
               <Col :span="knowledge.img?'2':'0'">
                 <div class="knowledge-img">
-                  <div v-html="knowledge.img"></div>
+                  <img :src="knowledge.img" />
                 </div>
               </Col>
           </Row>
@@ -144,9 +144,9 @@ export default {
       if(str){
         if(str.indexOf('img') > -1){
           firstIndex = str.indexOf('img');
-          firstString = str.slice(firstIndex-1);
-          secondIndex = firstString.indexOf('>');
-          resultStr = firstString.slice(0,secondIndex+1);
+          firstString = str.slice(firstIndex+9);
+          secondIndex = firstString.indexOf('"');
+          resultStr = firstString.slice(0,secondIndex);
         }else{
           resultStr = '';
         }

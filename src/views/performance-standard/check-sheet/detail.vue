@@ -29,7 +29,7 @@
               </Input>
             </div>
           </div>
-            <Table :columns="columns" height=269 :data="data" size="small"></Table>
+            <Table :columns="columns" :height="tableHeight" :data="data" size="small"></Table>
         </Row>
         <Row class="check-detail-save">
             <span class="check-detail-save-btn" @click="saveCheckSheet('save')">保存</span>
@@ -66,6 +66,7 @@ export default {
   data() {
     return {
       checkSheetId: this.$route.params.id,
+      tableHeight: 0,
       currentPage: 1,
       pageSize: 10000,
       checkSheetName: "",
@@ -184,6 +185,7 @@ export default {
                     this.checkSheetName = "";
                     this.checkSheetDesc = "";
                     this.data = [];
+                    this.checkSheetId = false;
                   }
                 }
               })
@@ -266,6 +268,12 @@ export default {
       this.getCheckSheetItemData();
     }else{
       this.columns.push(actionColumn);
+    }
+
+    this.tableHeight = document.body.clientHeight-220;
+
+    window.onresize = () =>{
+        this.tableHeight = document.body.clientHeight-220;
     }
   }
 };

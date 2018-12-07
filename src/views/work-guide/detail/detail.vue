@@ -19,18 +19,18 @@
         </Row>
         <Row class="workguide-read">
             <img v-for="(data,idx) of workGuideData.workStepList" :key="idx" :src="data.image"/>
-            <router-link :to="{ name:'wokdGuideStep',params:{id: workGuideData.id}}">
-                <div v-if="workGuideData.workStepList.length>0" class="workguide-read-go">
-                    <Icon type="ios-arrow-forward" />分布阅读
-                </div>
-            </router-link>
         </Row>
         <Row class="workguide-content">
-            <div @click="addStep" class="workguide-content-add">添加步骤</div>
+            <div class="workguide-content-add">
+                <span @click="addStep" class="workguide-content-add-btn">添加步骤</span>
+                <b v-show="workGuideData.workStepList.length>0">拖动下方列表可排序</b>
+            </div>
            <Timeline>
                 <draggable v-model="workGuideData.workStepList" :options="dragOptions" :move="onMove">
                     <TimelineItem v-for="(list,index) of workGuideData.workStepList" :key="index">
+                        <div class="step-num" slot="dot">{{index+1}}</div>
                         <div class="step-detail">
+                            <i class=""></i>
                             <h4>{{list.title}}</h4>
                             <div @click="deleteStep(list,index)" class="workguide-content-delete">删除</div>
                             <div @click="editStep(list,index)" class="workguide-content-delete">修改</div>
@@ -54,10 +54,10 @@
                 <FormItem label="标题" prop="title">
                     <Input v-model="formValidate.title"></Input>
                 </FormItem>
-                <FormItem label="描述" prop="comment">
+                <FormItem label="描述">
                     <Input v-model="formValidate.comment" type="textarea"></Input>
                 </FormItem>
-                <FormItem label="图片：" prop="logo" :label-width="91">
+                <FormItem label="图片：" :label-width="91">
                     <Upload ref="upload"  
                         :show-upload-list="false" 
                         :on-success="handleSuccess" 
@@ -121,12 +121,6 @@ export default {
         ruleValidate: {
             title: [
             { required: true, message: "请输入标题", trigger: "blur" }
-            ],
-            comment: [
-            { required: true, message: "请输入描述", trigger: "blur" }
-            ],
-            logo: [
-            { required: true, message: " ", trigger: "blur" }
             ]
         },
         workGuideData: {
@@ -142,17 +136,18 @@ export default {
         animation: 500,
         group: "description",
         disabled: false,
+        handle: ".step-detail",
         ghostClass: "ghost"
       };
     }
   },
   methods: {
       onMove({ relatedContext, draggedContext }) {
-      const relatedElement = relatedContext.element;
-      const draggedElement = draggedContext.element;
-      return (
-        (!relatedElement || !relatedElement.fixed) && !draggedElement.fixed
-      );
+        const relatedElement = relatedContext.element;
+        const draggedElement = draggedContext.element;
+        return (
+            (!relatedElement || !relatedElement.fixed) && !draggedElement.fixed
+        );
     },
     //保存
     saveWorkguide(save) {
@@ -187,11 +182,8 @@ export default {
                         if(save === 'save'){
                             this.$router.push({path:'/wokdGuide/list'});
                         }else{
-                            this.workGuideData = {
-                                title: '',
-                                comment: '',
-                                workStepList: []
-                            };
+                            this.$router.push({path:'/wokdGuide/add'});
+                            window.location.reload();
                         }
                     }
                 }).catch(error => {
@@ -214,6 +206,7 @@ export default {
         this.showModal = true;
         this.$refs['formValidate'].resetFields();
         this.formValidate.logo = '';
+        this.formValidate.comment = '';
         this.formValidate.edit = false;
     },
     //删除步骤
@@ -233,26 +226,22 @@ export default {
         this.showModal = false;
     },
     confirmAdd() {
-        if(this.formValidate.logo === ''){
-            this.$Message.error('请插入图片！');
-        }else{
-            this.$refs["formValidate"].validate(v => {
-                if (v) {
-                    if(this.formValidate.edit){
-                        this.workGuideData.workStepList[this.formValidate.currentIndex].title = this.formValidate.title;
-                        this.workGuideData.workStepList[this.formValidate.currentIndex].comment = this.formValidate.comment;
-                        this.workGuideData.workStepList[this.formValidate.currentIndex].image = this.formValidate.logo;
-                    }else{
-                        this.workGuideData.workStepList.unshift({
-                        title: this.formValidate.title,
-                        comment: this.formValidate.comment,
-                        image: this.formValidate.logo
-                        });
-                    }
-                this.showModal = false;
+        this.$refs["formValidate"].validate(v => {
+            if (v) {
+                if(this.formValidate.edit){
+                    this.workGuideData.workStepList[this.formValidate.currentIndex].title = this.formValidate.title;
+                    this.workGuideData.workStepList[this.formValidate.currentIndex].comment = this.formValidate.comment;
+                    this.workGuideData.workStepList[this.formValidate.currentIndex].image = this.formValidate.logo;
+                }else{
+                    this.workGuideData.workStepList.push({
+                    title: this.formValidate.title,
+                    comment: this.formValidate.comment,
+                    image: this.formValidate.logo
+                    });
                 }
-            });
-        }
+            this.showModal = false;
+            }
+        });
     },
     //上传图片
     handleSuccess(res, file) {

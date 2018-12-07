@@ -19,7 +19,7 @@
             <img v-for="(list,index) of workguideData.workStepList" :key="index" :src="list.image"/>
             <router-link :to="{ name:'wokdGuideStep',params:{id: workguideData.id}}">
                 <div class="workguide-read-go">
-                    分布阅读<Icon type="ios-arrow-forward" style="font-size:23px;margin-bottom:4px;" />
+                    步骤阅读<Icon type="ios-arrow-forward" style="font-size:23px;margin-bottom:4px;" />
                 </div>
             </router-link>
         </Row>
@@ -29,7 +29,7 @@
                   <div class="step-num" slot="dot">{{idx+1}}</div>
                   <div class="step-detail">
                         <h2>{{ data.title }}</h2>
-                        <div>{{ data.comment }}</div>
+                        <div class="step-detail-comment">{{ data.comment }}</div>
                         <img :src="data.image"/>
                   </div>
                 </TimelineItem>

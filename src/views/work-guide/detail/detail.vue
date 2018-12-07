@@ -23,7 +23,7 @@
         <Row class="workguide-content">
             <div class="workguide-content-add">
                 <span @click="addStep" class="workguide-content-add-btn">添加步骤</span>
-                <b>拖动下方列表可排序</b>
+                <b v-show="workGuideData.workStepList.length>0">拖动下方列表可排序</b>
             </div>
            <Timeline>
                 <draggable v-model="workGuideData.workStepList" :options="dragOptions" :move="onMove">
@@ -54,10 +54,10 @@
                 <FormItem label="标题" prop="title">
                     <Input v-model="formValidate.title"></Input>
                 </FormItem>
-                <FormItem label="描述" prop="comment">
+                <FormItem label="描述">
                     <Input v-model="formValidate.comment" type="textarea"></Input>
                 </FormItem>
-                <FormItem label="图片：" prop="logo" :label-width="91">
+                <FormItem label="图片：" :label-width="91">
                     <Upload ref="upload"  
                         :show-upload-list="false" 
                         :on-success="handleSuccess" 
@@ -121,12 +121,6 @@ export default {
         ruleValidate: {
             title: [
             { required: true, message: "请输入标题", trigger: "blur" }
-            ],
-            comment: [
-            { required: true, message: "请输入描述", trigger: "blur" }
-            ],
-            logo: [
-            { required: true, message: " ", trigger: "blur" }
             ]
         },
         workGuideData: {
@@ -149,11 +143,11 @@ export default {
   },
   methods: {
       onMove({ relatedContext, draggedContext }) {
-      const relatedElement = relatedContext.element;
-      const draggedElement = draggedContext.element;
-      return (
-        (!relatedElement || !relatedElement.fixed) && !draggedElement.fixed
-      );
+        const relatedElement = relatedContext.element;
+        const draggedElement = draggedContext.element;
+        return (
+            (!relatedElement || !relatedElement.fixed) && !draggedElement.fixed
+        );
     },
     //保存
     saveWorkguide(save) {
@@ -212,6 +206,7 @@ export default {
         this.showModal = true;
         this.$refs['formValidate'].resetFields();
         this.formValidate.logo = '';
+        this.formValidate.comment = '';
         this.formValidate.edit = false;
     },
     //删除步骤
@@ -231,26 +226,22 @@ export default {
         this.showModal = false;
     },
     confirmAdd() {
-        if(this.formValidate.logo === ''){
-            this.$Message.error('请插入图片！');
-        }else{
-            this.$refs["formValidate"].validate(v => {
-                if (v) {
-                    if(this.formValidate.edit){
-                        this.workGuideData.workStepList[this.formValidate.currentIndex].title = this.formValidate.title;
-                        this.workGuideData.workStepList[this.formValidate.currentIndex].comment = this.formValidate.comment;
-                        this.workGuideData.workStepList[this.formValidate.currentIndex].image = this.formValidate.logo;
-                    }else{
-                        this.workGuideData.workStepList.unshift({
-                        title: this.formValidate.title,
-                        comment: this.formValidate.comment,
-                        image: this.formValidate.logo
-                        });
-                    }
-                this.showModal = false;
+        this.$refs["formValidate"].validate(v => {
+            if (v) {
+                if(this.formValidate.edit){
+                    this.workGuideData.workStepList[this.formValidate.currentIndex].title = this.formValidate.title;
+                    this.workGuideData.workStepList[this.formValidate.currentIndex].comment = this.formValidate.comment;
+                    this.workGuideData.workStepList[this.formValidate.currentIndex].image = this.formValidate.logo;
+                }else{
+                    this.workGuideData.workStepList.push({
+                    title: this.formValidate.title,
+                    comment: this.formValidate.comment,
+                    image: this.formValidate.logo
+                    });
                 }
-            });
-        }
+            this.showModal = false;
+            }
+        });
     },
     //上传图片
     handleSuccess(res, file) {

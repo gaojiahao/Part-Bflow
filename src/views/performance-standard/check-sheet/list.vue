@@ -10,7 +10,7 @@
                 type="primary" 
                 @click="goAddCheckSheet">
                 新增</span>
-              <div class="app-search">
+              <div class="check-list-toolbar-search">
                 <Input 
                   @on-search="checkSheetFilter" 
                   :search="true" 
@@ -108,7 +108,7 @@ export default {
                   click: () => {
                     this.$router.push({
                       name: "checkSheetDetail",
-                      path: "/checkSheet/detail",
+                      path: "/checkSheet/detail/"+params.row.id,
                       params: { id: params.row.id }
                     });
                   }

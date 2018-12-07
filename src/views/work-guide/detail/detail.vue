@@ -19,18 +19,18 @@
         </Row>
         <Row class="workguide-read">
             <img v-for="(data,idx) of workGuideData.workStepList" :key="idx" :src="data.image"/>
-            <router-link :to="{ name:'wokdGuideStep',params:{id: workGuideData.id}}">
-                <div v-if="workGuideData.workStepList.length>0" class="workguide-read-go">
-                    <Icon type="ios-arrow-forward" />分布阅读
-                </div>
-            </router-link>
         </Row>
         <Row class="workguide-content">
-            <div @click="addStep" class="workguide-content-add">添加步骤</div>
+            <div class="workguide-content-add">
+                <span @click="addStep" class="workguide-content-add-btn">添加步骤</span>
+                <b>拖动下方列表可排序</b>
+            </div>
            <Timeline>
                 <draggable v-model="workGuideData.workStepList" :options="dragOptions" :move="onMove">
                     <TimelineItem v-for="(list,index) of workGuideData.workStepList" :key="index">
+                        <div class="step-num" slot="dot">{{index+1}}</div>
                         <div class="step-detail">
+                            <i class=""></i>
                             <h4>{{list.title}}</h4>
                             <div @click="deleteStep(list,index)" class="workguide-content-delete">删除</div>
                             <div @click="editStep(list,index)" class="workguide-content-delete">修改</div>
@@ -142,6 +142,7 @@ export default {
         animation: 500,
         group: "description",
         disabled: false,
+        handle: ".step-detail",
         ghostClass: "ghost"
       };
     }
@@ -187,11 +188,8 @@ export default {
                         if(save === 'save'){
                             this.$router.push({path:'/wokdGuide/list'});
                         }else{
-                            this.workGuideData = {
-                                title: '',
-                                comment: '',
-                                workStepList: []
-                            };
+                            this.$router.push({path:'/wokdGuide/add'});
+                            window.location.reload();
                         }
                     }
                 }).catch(error => {

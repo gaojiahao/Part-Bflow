@@ -4,7 +4,15 @@
 <template>
     <div class="message">
         <div class="message-sider">
-            <div class="message-sider-header">消息通知</div>
+            <div class="message-sider-header">
+                消息通知
+                
+                <Tooltip content="工作流任务" >
+                    <router-link :to="{ name:'flowtask'}">
+                        <Icon type="md-repeat" size=24  />
+                    </router-link>
+                </Tooltip>
+            </div>
             <div class="message-sider-list ">
                 <navigation></navigation>
             </div>

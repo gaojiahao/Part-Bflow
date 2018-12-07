@@ -184,6 +184,7 @@ export default {
                     this.checkSheetName = "";
                     this.checkSheetDesc = "";
                     this.data = [];
+                    this.checkSheetId = false;
                   }
                 }
               })

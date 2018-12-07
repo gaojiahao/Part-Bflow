@@ -20,6 +20,14 @@ export const  checkSheetRouter = {
                 title: '点检列表详情',
             },
             component: () => import('@/views/performance-standard/check-sheet/detail.vue')
+        },
+        {
+            path: 'add',
+            name: 'checkSheetAdd',
+            meta: {
+                title: '点检列表详情',
+            },
+            component: () => import('@/views/performance-standard/check-sheet/detail.vue')
         }
     ]
 }   

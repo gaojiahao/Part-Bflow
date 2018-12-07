@@ -5,6 +5,7 @@
 <template>
   <div class="view-container">
     <Spin size="large" fix v-if="spinShow"></Spin>
+     <config-table></config-table>
     <header class="header">
       <span>{{title}}</span>
       <span>配置</span>
@@ -17,22 +18,23 @@
           </marker>
         </defs>
         
-        <!-- 行绘制 -->
-        <g v-for="(item,index) in stageList" :key="index">
-          <text :x="item.xAxion" y="20" class="top-process">
-            {{item.title}}
-          </text>
+        <!-- 列绘制 -->
+        <g v-for="item in stageList" :key="item.rowAnchorPoint">
+            <text :x="item.xAxion" y="20" class="top-process">
+              {{item.title}}
+            </text>
           <line :x1="item.xAxionLine" y1="0" :x2="item.xAxionLine" :y2="svgHeight" style="stroke:#eceef6;stroke-width:2" />
         </g>
         <line x1="40" y1="0" x2="40" :y2="svgHeight" style="stroke:#eceef6;stroke-width:2" />
         
-        <!-- 列绘制 -->
-        <g v-for="(item,index) in positionList" :key="item.id">
-          <text x="30" :y="topSpace+(defaultHeight/2)*(2*index+1)" class="top-process left-slide">
-            {{item.title}}
+        <!-- 行绘制 -->
+        <g v-for="(item,index) in positionList" :key="item.columnAnchorPoint">
+          <text x="30" :y="topSpace+(defaultHeight/2)*(2*index+1)"  class="top-process left-slide">
+              {{item.title.replace(/（/g,"(").split('(')[0]}}
           </text>
           <line x1="0" :y1="topSpace+defaultHeight*index" :x2="topSpace+svgWidth" :y2="topSpace+defaultHeight*index" style="stroke:#eceef6;stroke-width:2" />
         </g>
+       
         <line x1="0" :y1="svgHeight" :x2="topSpace+svgWidth" :y2="svgHeight" style="stroke:#eceef6;stroke-width:2" />
 
         <!-- 节点绘制 -->
@@ -69,15 +71,13 @@
           </g>
       </svg>
     </div>
-
-    <config-table></config-table>
   </div>
 </template>
 
 <script>
 import { getMockData,getBusinessModuleById } from "@/services/flowService";
 import Shape from "@/components/Shape";
-import ConfigTable from "./config"
+import ConfigTable from "./BusinessModuleConfig"
 export default {
   components: {
     Shape,
@@ -132,7 +132,7 @@ export default {
         key = "";
       for (let j = 0; j < pos.length; j++) {
         for (let i = 0; i < pro.length; i++) {
-          key = pro[i].id + "_" + pos[j].id;
+          key = pro[i].columnAnchorPoint + "_" + pos[j].rowAnchorPoint;
           xAxion = pro[i].xAxionLine - pro[i].length * this.defaultWidth;
           yAxion = this.topSpace + (this.defaultHeight / 2) * (2 * j + 1);
           localPoint[key] = xAxion + "," + yAxion;
@@ -169,7 +169,7 @@ export default {
        nodePointAxion ={},
        localPoint = this.localPoint,
        preNodeXAion = 0;
-      let firstProcessId = this.stageList[0].id;
+      let firstProcessId = this.stageList[0].columnAnchorPoint;
       let flag = false;
       group.forEach(item => {
         //给流程节点为一的里面区域内节点向右多偏移一个单位
@@ -178,7 +178,7 @@ export default {
           let f = item['arr'].filter(node=>{
             return node.id === '-2';
           })
-          flag = f.length>0?false:true;
+          flag = f.length>0?true:false;
         }
 
         item['arr'].forEach((node,index) =>{

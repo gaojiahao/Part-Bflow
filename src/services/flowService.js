@@ -160,7 +160,7 @@ export const getAllAppList = (currentPage,pageSize=8,withoutListId="-1",search="
  * @author TanGuoZheng
  * @description 获取应用模板脉动图数据
  */
-export const getBusinessModuleById = () => request('/H_roleplay-si/trans/getBusinessModuleById?moduleId=8');
+export const getBusinessModuleById = () => request('/H_roleplay-si/trans/getBusinessModuleById?moduleId=14');
 
 
 /**

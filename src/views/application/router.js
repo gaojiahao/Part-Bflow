@@ -60,7 +60,7 @@ export const  applicationRouter = {
                     meta: {
                         title: 'BPG',
                     },
-                    component: () => import('@/views/application/detail/connection/bpg/bpg.vue'),
+                    component: () => import('@/views/application/detail/connection/bpg/BusinessModuleGraph.vue'),
                 }
             ]
         },{

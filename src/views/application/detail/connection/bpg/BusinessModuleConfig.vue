@@ -66,7 +66,7 @@
                 <Input v-model="NodeDetailFrom.title" />
             </FormItem>
             <FormItem label="下级节点" :labelWidth="60" prop="nextNode">
-              <Select multiple v-model="NodeDetailFrom.nextNode" >
+              <Select multiple v-model="NodeDetailFrom.nextNode" clearable>
                 <Option v-for="item in appNodes" v-if="item.uniqueId !== NodeDetailFrom.uniqueId" :value="item.uniqueId" :key="item.uniqueId">{{item.title}}</Option>
               </Select>
             </FormItem>
@@ -81,8 +81,8 @@
             <div style="margin-top:10px;">
                 <Form :model="jobsFormItem" :labelWidth="60" ref="jobsFormItem" prop="id">
                      <FormItem label="名称:" style="font-size:16px">
-                        <Select  v-model="jobsFormItem.id" @on-change="handleJobModalNameChage" :label-in-value="true">
-                          <Option v-for="item in joblist" :value="item.id" :key="item.id" :label="item.name">{{item.name}}</Option>
+                        <Select  v-model="jobsFormItem.id" @on-change="handleJobModalNameChage" :label-in-value="true" multiple clearable transfer>
+                          <Option v-for="item in joblist" :value="item.id" :key="item.id" :label="item.name" :disabled="item.disabled?true:false">{{item.name}}</Option>
                         </Select>
                       </FormItem>
                 </Form>
@@ -157,6 +157,8 @@ import AddNodeModal from "@/components/modal/Modal";
 
 import {getAllRoleData,getAllAppList,saveBusinessModule} from "@/services/flowService";
 export default {
+  name:'BusinessModuleConfig',
+
   components: {
     AddJobsModal,
     AddProcessModal,
@@ -177,8 +179,8 @@ export default {
       },
 
       jobsFormItem: {
-        id:"",
-        name: ""
+        id:[],
+        name: []
       },
 
       processFormItem: {
@@ -229,8 +231,9 @@ export default {
                     },
                     on:{
                         click:()=>{
-                            let positionId = params.row.positionId;
-                            this.handleRowDelete(positionId);
+                            let positionId = params.row.positionId,
+                                id = params.row.id;
+                            this.handleRowDelete(positionId,id);
                         }
                     }
                 }),
@@ -268,8 +271,8 @@ export default {
 
     addJobs() {
       this.isShowAddJobsModal = true;
-      this.jobsFormItem.name = "";
-      this.jobsFormItem.id = "";
+      this.jobsFormItem.name =[];
+      this.jobsFormItem.id = [];
     },
 
     addProcess() {
@@ -318,6 +321,7 @@ export default {
         }
         nodeList.push({
             name:this.appNodes[nodeId].title,
+            listKey:this.appNodes[nodeId].id,
             nextNode:nextNodeId.join(','),
             listId:this.appNodes[nodeId].uniqueId,
             rowAnchorPoint:this.appNodes[nodeId].rowId,
@@ -328,7 +332,7 @@ export default {
       configDetailData['nodeList'] = nodeList;
       configDetailData['stageList'] = stageList;
       configDetailData['positionList'] = positionList;
-      configDetailData['title'] = "业务2号";
+      configDetailData['title'] = "业务3号";
 
       
       saveBusinessModule(configDetailData).then(res=>{
@@ -423,9 +427,7 @@ export default {
                       that.onPageSelection = [];
                       
                       for(let keyId in that.appNodes){
-                        if(that.appNodes[keyId].columnId===that.nodeProcssId && that.appNodes[keyId].rowId === that.nodePositionId){
-                            unId.push(that.appNodes[keyId].id);
-                        }
+                        unId.push(that.appNodes[keyId].id);
                       }
                       that.withoutListId = unId.join(',')
 
@@ -503,10 +505,20 @@ export default {
      * 添加职位-行
     */
     addJobsZColumn() {
-      this.columnDatas.push({
-        positionId: this.getRandomCode(),
-        positionName: this.jobsFormItem.name
-      });
+      let name = this.jobsFormItem.name,
+          id = this.jobsFormItem.id;
+      for(let i =0;i<id.length;i++){
+        this.columnDatas.push({
+          id:id[i],
+          positionId: this.getRandomCode(),
+          positionName:name[i]
+        });
+        this.joblist.forEach(item=>{  //当职位已经被添加之后，下次不允许再次添加
+          if(item.id === id[i]){
+            this.$set(item,'disabled',true)
+          }
+        })
+      }
       this.isShowAddJobsModal = false;
     },
 
@@ -515,7 +527,11 @@ export default {
     */
     handleJobModalNameChage(value){
       if(value){
-        this.jobsFormItem.name = value.label;
+        let names =[];
+        value.map(m=>{
+          names.push(m.label)
+        })
+        this.jobsFormItem.name = names;
       }
     },
 
@@ -534,23 +550,69 @@ export default {
     /** 
      * 删除职位-行
     */
-    handleRowDelete(positionId){
-        let f = this.columnDatas.filter(f=>{
-            return f.positionId != positionId;
-        });
+    handleRowDelete(positionId,id){
+      let f = this.columnDatas.filter(f=>{
+          return f.positionId != positionId;
+      });
+      this.columnDatas = f;
 
-        this.columnDatas = f;
+      this.joblist.forEach(item=>{  //取消已经被添加的职位禁用效果
+        if(item.id === id){
+          this.$set(item,'disabled',false)
+        }
+      })
+
+      let deleteNodesId = []
+      for(let nodeId in this.appNodes){
+        let nextNodeId = [];
+        if(this.appNodes[nodeId].rowId === positionId){  //判断是否存在下级节点
+          deleteNodesId.push(this.appNodes[nodeId].uniqueId);
+          delete this.appNodes[nodeId]  
+        }
+      }
+
+      if(deleteNodesId.length>0){
+        let ids = deleteNodesId.join(',');
+        for(let nodeId in this.appNodes){
+          let nextNodeArr = this.appNodes[nodeId].nextNode;
+          if(nextNodeArr && nextNodeArr.length>0){  //判断是否存在下级节点
+            this.appNodes[nodeId].nextNode = nextNodeArr.filter(f=>{
+              return !(~ids.indexOf(f.uniqueId))
+            })
+          }
+        }
+      }
     },
 
     /** 
      * 删除流程-列
     */
     handleColumnDelete(columnId){
-        let f = this.columns.filter(f=>{
-            return f.columnId != columnId;
-        });
+      let f = this.columns.filter(f=>{
+          return f.columnId != columnId;
+      });
+      this.columns = f;
 
-        this.columns = f;
+      let deleteNodesId = []
+      for(let nodeId in this.appNodes){
+        let nextNodeId = [];
+        if(this.appNodes[nodeId].columnId === columnId){  //判断是否存在下级节点
+          deleteNodesId.push(this.appNodes[nodeId].uniqueId);
+          delete this.appNodes[nodeId]  
+        }
+      }
+
+      if(deleteNodesId.length>0){
+        let ids = deleteNodesId.join(',');
+        for(let nodeId in this.appNodes){
+          let nextNodeArr = this.appNodes[nodeId].nextNode;
+          if(nextNodeArr && nextNodeArr.length>0){  //判断是否存在下级节点
+            this.appNodes[nodeId].nextNode = nextNodeArr.filter(f=>{
+              return !(~ids.indexOf(f.uniqueId))
+            })
+          }
+        }
+      }
     },
 
     /** 

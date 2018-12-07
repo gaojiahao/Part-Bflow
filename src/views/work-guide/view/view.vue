@@ -24,7 +24,7 @@
             </router-link>
         </Row>
         <Row class="workguide-content">
-            <Timeline >
+            <Timeline>
                 <TimelineItem  v-for="(data,idx) of workguideData.workStepList" :key="idx">
                   <div class="step-num" slot="dot">{{idx+1}}</div>
                   <div class="step-detail">
@@ -33,8 +33,8 @@
                         <img :src="data.image"/>
                   </div>
                 </TimelineItem>
-                
             </Timeline>
+            <work-comments></work-comments>
         </Row>
         <Row class="workguide-toolbar">
             <router-link :to="{ name:'wokdGuideDetail',params:{id: workguideData.id}}">
@@ -49,10 +49,11 @@
 
 <script>
 import { getworkDataById } from "@/services/workGuideService.js";
+import WorkComments from './work-comments';
 
 export default {
   name: "wokdGuideView",
-  components: {},
+  components: { WorkComments },
   data() {
     return {
       workguideId: this.$route.params.id,

@@ -1,5 +1,5 @@
 <style lang="less" scoped>
-@import "./comments.less";
+@import "./knowledge-comments.less";
 </style>
 
 <template>

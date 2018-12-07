@@ -31,7 +31,7 @@ import {
   getKnowledgeTypeData,
   saveKnowledgeData
   } from "@/services/knowledgeBaseService.js";
-  import KnowledgeComments from './comments.vue';
+  import KnowledgeComments from './knowledge-comments.vue';
 
 export default {
   name: "KnowledgeView",

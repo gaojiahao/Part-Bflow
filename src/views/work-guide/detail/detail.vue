@@ -241,7 +241,7 @@ export default {
                         this.workGuideData.workStepList[this.formValidate.currentIndex].comment = this.formValidate.comment;
                         this.workGuideData.workStepList[this.formValidate.currentIndex].image = this.formValidate.logo;
                     }else{
-                        this.workGuideData.workStepList.unshift({
+                        this.workGuideData.workStepList.push({
                         title: this.formValidate.title,
                         comment: this.formValidate.comment,
                         image: this.formValidate.logo

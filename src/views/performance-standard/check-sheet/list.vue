@@ -21,7 +21,7 @@
               </div>
           </div>
           <div class="check-list-table">
-              <Table :columns="columns" :data="data" size="small"></Table>
+              <Table :columns="columns" :height="tableHeight" :data="data" size="small"></Table>
               <div class="user-page">
                   <div style="float: right;">
                       <Page 
@@ -63,8 +63,9 @@ export default {
   data() {
     return {
       currentPage: 1,
-      pageSize: 15,
+      pageSize: 20,
       total: 0,
+      tableHeight: 0,
       showModal: false,
       searchValue: '',
       itemColumns: [
@@ -199,7 +200,7 @@ export default {
     //进入点检列表详情
     goAddCheckSheet() {
       this.$router.push({
-        path: "/checkSheet/detail"
+        path: "/checkSheet/add"
       });
     },
     //删除点检表某一条数据
@@ -231,6 +232,11 @@ export default {
   },
   mounted() {
     this.getCheckSheetData();
+    this.tableHeight = document.body.clientHeight-150;
+
+    window.onresize = () =>{
+        this.tableHeight = document.body.clientHeight-150;
+    }
   }
 };
 </script>

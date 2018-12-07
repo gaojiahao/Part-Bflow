@@ -196,7 +196,7 @@ export default {
                 if(isSave === 'save'){
                     this.$router.push({path:'/knowledge/list'});
                 }else{
-                  this.knowledgeId = null;
+                  this.knowledgeId = false;
                   this.knowledgeForm.content = '';
                   this.$refs['formValidate'].resetFields();
                   this.editor.txt.html('');

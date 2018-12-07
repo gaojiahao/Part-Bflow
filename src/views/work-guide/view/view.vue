@@ -29,7 +29,7 @@
                   <div class="step-num" slot="dot">{{idx+1}}</div>
                   <div class="step-detail">
                         <h2>{{ data.title }}</h2>
-                        <div>{{ data.comment }}</div>
+                        <div class="step-detail-comment">{{ data.comment }}</div>
                         <img :src="data.image"/>
                   </div>
                 </TimelineItem>

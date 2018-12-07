@@ -23,7 +23,7 @@
         <Row class="workguide-content">
             <div class="workguide-content-add">
                 <span @click="addStep" class="workguide-content-add-btn">添加步骤</span>
-                <b>拖动下方列表可排序</b>
+                <b v-show="workGuideData.workStepList.length>0">拖动下方列表可排序</b>
             </div>
            <Timeline>
                 <draggable v-model="workGuideData.workStepList" :options="dragOptions" :move="onMove">

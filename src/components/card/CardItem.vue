@@ -25,7 +25,7 @@
         <Tooltip :content="appinfo.text" placement="top-start">
           <h5 @click="redirectTo(appinfo)">{{appinfo.text}}</h5>
         </Tooltip>
-        <a @click.stop="goAppSetting(appinfo)" class="content-title-detail">详情</a>
+        <a @click.stop="goAppSetting(appinfo)" class="content-title-detail"  v-if="this.appinfo.type !== 'system'">详情</a>
       </div>
       <div class="content-instance">
         <span class="content-instance-name">{{appinfo.administrator?appinfo.transName:appinfo.transName}}</span>

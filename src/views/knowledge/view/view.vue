@@ -14,11 +14,12 @@
             <span class="knowledge-desc-crtTime">{{ knowledgeForm.crtTime }}</span>
         </Row>
         <Row class="knowledge-content">
-            <span v-html="knowledgeForm.content"></span>
+            <div v-html="knowledgeForm.content" class="knowledge-content-desc"></div>
+            <knowledge-comments></knowledge-comments>
         </Row>
-        <Row class="knowledge-save">
-            <span class="knowledge-save-btn" @click="editKnowledge">编辑</span>
-            <span class="knowledge-save-btn" @click="goBack">返回</span>
+        <Row class="knowledge-toolbar">
+            <span class="knowledge-toolbar-btn" @click="editKnowledge">编辑</span>
+            <span class="knowledge-toolbar-btn" @click="goBack">返回</span>
         </Row>
     </div>
 </template>
@@ -30,11 +31,11 @@ import {
   getKnowledgeTypeData,
   saveKnowledgeData
   } from "@/services/knowledgeBaseService.js";
-  import E from 'wangeditor';
+  import KnowledgeComments from './knowledge-comments.vue';
 
 export default {
   name: "KnowledgeView",
-  components: {},
+  components: { KnowledgeComments },
   data() {
     return {
       knowledgeId: this.$route.params.id,

@@ -23,7 +23,7 @@
                             <Option v-for="(item,index) in typeList" :value="item.value" :key="item.id">
                               {{ item.name }}
                               <span class="type-edit" @click.stop="deleteType(item,index)"><Icon type="md-close"/></span>
-                              <span class="type-edit" @click.stop="editType(item,index)"><Icon type="ios-create-outline"></Icon></span>
+                              <!-- <span class="type-edit" @click.stop="editType(item,index)"><Icon type="ios-create-outline"></Icon></span> -->
                             </Option>
                             <Option value="addType">
                                 <span class="add-type" @click="showAddTypeModal">
@@ -166,6 +166,9 @@ export default {
           .then(res => {
             if (res.success) {
               this.$Message.success(res.message);
+              if(this.knowledgeForm.type === item.value){
+                this.knowledgeForm.type = '';
+              }
               this.getAllKnowledgeTypeData();
             }
           })

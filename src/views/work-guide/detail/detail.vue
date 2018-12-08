@@ -41,11 +41,11 @@
                 </draggable>
             </Timeline>
         </Row>
-        <Row class="workguide-save">
-            <span class="workguide-save-btn" @click="saveWorkguide('save')">保存</span>
-            <span class="workguide-save-btn" @click="saveWorkguide">保存并继续添加</span>
+        <Row class="workguide-toolbar">
+            <span class="workguide-toolbar-btn" @click="saveWorkguide('save')">保存</span>
+            <span class="workguide-toolbar-btn" @click="saveWorkguide">保存并继续添加</span>
             <router-link :to="{ name:'wokdGuideList'}">
-                <span class="workguide-save-btn">返回</span>
+                <span class="workguide-toolbar-btn">返回</span>
             </router-link>
         </Row>
         <!-- modal -->

@@ -39,5 +39,17 @@ export const getUserByRelationKey = (params) => request('/H_roleplay-si/comment/
  */
 export const judgeIsSubscribeByRelationKey = (prarms) => request('/H_roleplay-si/comment/isSubscribeByRelationKey', prarms)
 
+/**
+ * @author XiaoYing
+ * @description 订阅用户
+ */
+export const addSubscribeUsers = (data) => request('/H_roleplay-si/comment/subscribeBatchByRelationKey', data, 'POST')
+
+/**
+ * @author XiaoYing
+ * @description 退订用户
+ */
+export const deleteSubscribeUsers = (data) => request('/H_roleplay-si/comment/unsubscribeBatchByRelationKey', data, 'POST')
+
 
 

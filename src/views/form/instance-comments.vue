@@ -32,11 +32,16 @@
                     </span>
 
                     <span>
-                        <Dropdown style="margin-left: 20px" placement="bottom-end" trigger="click" >
+                        <Dropdown style="margin-left: 20px" @on-click="addSubscribeUsers" trigger="click" >
                          <Icon type="md-person" size=18  /> {{subscribeInfo.subscribeNum}}
+                         <Icon type="ios-arrow-down"></Icon>
                         <DropdownMenu slot="list">
+                            <DropdownItem name="add">
+                               添加关注者
+                            </DropdownItem>
                             <DropdownItem  v-for="(user,index) in  subscribeInfo.subscribeUsers" :key="index">
                                {{user.nickname}}
+                               <span @click.stop="deleteSubscribeUsers(user.userId,user.nickname)" class="delete-user"><Icon type="md-close"/></span>
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
@@ -66,6 +71,13 @@
                 next-text="下一页" 
                 @on-change="handlePageChange"/>
        </Row>
+       <!-- 用户modal -->
+        <user-selector 
+            :showUserSelector="showUserModal" 
+            :isInstance="isInstance"
+            @emitUserModal="emitUserModal" 
+            @userModalData="getUserModalData">
+        </user-selector>
   </div>
 </template>
 
@@ -76,18 +88,22 @@ import {
     subscribeApp,
     unsubscribeAppByRelationKey,
     getUserByRelationKey ,
-    judgeIsSubscribeByRelationKey
+    judgeIsSubscribeByRelationKey,
+    addSubscribeUsers,
+    deleteSubscribeUsers
 } from "@/services/subscribeService";
 
 import comments from "@/components/discussion/comments";
 import commentPublish from "@/components/discussion/publish";
+import UserSelector from '@/views/application/detail/permission/custom-datasource/user-selector';
 
 
 export default {
   name: "userComments",
   components: {
     comments,
-    commentPublish
+    commentPublish,
+    UserSelector
   },
   props: {
 
@@ -105,6 +121,8 @@ export default {
         },
         unsubcribeVisible:false,
         subcribeVisible:true,
+        showUserModal: false,
+        isInstance: false,
         subscribeInfo:{
             isSubscribe:0,
             subscribeNum:0,
@@ -114,6 +132,58 @@ export default {
   },
  
   methods: {
+    emitUserModal() {
+      this.showUserModal = false;
+      this.isInstance = false;
+    },
+    getUserModalData(value) {
+        let userIds = [],
+            data = {};
+        value.forEach(val => {
+            userIds.push(val.userId);
+        });
+        if(userIds.length > 0){
+            data = {
+                relationKey: this.transCode,
+                type: this.type,
+                userIds: userIds.join(',')
+            };
+            addSubscribeUsers(data).then(res => {
+                if(res.success){
+                    this.$Message.success(res.message);
+                    this.refreshSubscribeInfo();
+                }
+            }).catch(error => {
+                this.$Message.error(error.data.message);
+            });
+        }
+    },
+    addSubscribeUsers(name) {
+        if(name === 'add'){
+            this.showUserModal = true;
+            this.isInstance = true;
+        }
+    },
+    deleteSubscribeUsers(userId,nickname) {
+        let data = {
+            relationKey: this.transCode,
+            userIds: userId
+        };
+        this.$Modal.confirm({
+        title: "确认",
+        content: "确认退订<b style=color:#e4393c;>"+nickname+"</b>么？",
+        onOk: () => {
+          deleteSubscribeUsers(data).then(res => {
+                if(res.success){
+                    this.$Message.success(res.message);
+                    this.refreshSubscribeInfo();
+                }
+            }).catch(error => {
+                this.$Message.error(error.data.message);
+            });
+        }
+      });
+    },
     handlePublish:function (content,uploadList) {
         let comment ={
             type:this.type,       

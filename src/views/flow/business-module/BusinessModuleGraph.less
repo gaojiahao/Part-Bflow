@@ -1,0 +1,40 @@
+.view-container{
+    width: 98%;
+    min-height: 512px;
+    margin: 0px auto;
+    background-color: #fff;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.header{
+    height: 40px;
+    width: 100%;
+    line-height: 40px;
+    padding: 0 15px;
+    border-bottom: 1px solid #ddd;
+    span{
+        font-size: 14px;
+        color: #4672c4;
+    }
+}
+
+.svg-board{
+    overflow: hidden;
+    .top-process{
+        text-anchor: middle;
+        baseline-shift: sub;
+        font-size:14px;
+        fill:#4672c4;
+        font-family: sans-serif;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        -o-text-overflow:ellipsis;
+        white-space:nowrap;
+        width:100%;
+    }
+
+    .left-slide{
+        writing-mode:vertical-lr;
+    }
+}

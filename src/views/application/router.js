@@ -53,15 +53,7 @@ export const  applicationRouter = {
                         title: '连接',
                     },
                     component: () => import('@/views/application/detail/connection/connection-layout.vue'),
-                },
-                {
-                    path: 'BPG',
-                    name: 'BPG',
-                    meta: {
-                        title: 'BPG',
-                    },
-                    component: () => import('@/views/application/detail/connection/bpg/BusinessModuleGraph.vue'),
-                }
+                }   
             ]
         },{
             path: 'list',

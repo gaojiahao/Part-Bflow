@@ -71,13 +71,6 @@
                 next-text="下一页" 
                 @on-change="handlePageChange"/>
        </Row>
-       <!-- 用户modal -->
-        <user-selector 
-            :showUserSelector="showUserModal" 
-            :isInstance="isInstance"
-            @emitUserModal="emitUserModal" 
-            @userModalData="getUserModalData">
-        </user-selector>
   </div>
 </template>
 
@@ -95,15 +88,13 @@ import {
 
 import comments from "@/components/discussion/comments";
 import commentPublish from "@/components/discussion/publish";
-import UserSelector from '@/views/application/detail/permission/custom-datasource/user-selector';
 
 
 export default {
   name: "userComments",
   components: {
     comments,
-    commentPublish,
-    UserSelector
+    commentPublish
   },
   props: {
 
@@ -111,6 +102,7 @@ export default {
   data() {
     return {
         transCode:this.$route.params.transCode,
+        selectusers: '', 
         type:'instance',
         comments:[],
         commentsCount:0,
@@ -130,13 +122,15 @@ export default {
         }
     };
   },
+  watch: {
+      selectusers: function(data) {
+          console.log(JSON.parse(data))
+          this.addUserData(JSON.parse(data));
+      }
+  },
  
   methods: {
-    emitUserModal() {
-      this.showUserModal = false;
-      this.isInstance = false;
-    },
-    getUserModalData(value) {
+    addUserData(value) {
         let userIds = [],
             data = {};
         value.forEach(val => {
@@ -160,8 +154,9 @@ export default {
     },
     addSubscribeUsers(name) {
         if(name === 'add'){
-            this.showUserModal = true;
-            this.isInstance = true;
+            if(window.top.viewInsCommentsUserModal){
+                window.top.viewInsCommentsUserModal();
+            }
         }
     },
     deleteSubscribeUsers(userId,nickname) {

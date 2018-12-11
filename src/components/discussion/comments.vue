@@ -57,7 +57,7 @@
                 <div class="comments-content-item-content-bar" >
                     <span  class="comments-content-item-content-bar-left">
                         <span>
-                            {{`${comment.times} 前`}}
+                            {{comment.times}}
                         </span>
                         <span 
                             class="cursor-pointer"

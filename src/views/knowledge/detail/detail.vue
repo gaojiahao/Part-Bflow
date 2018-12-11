@@ -12,12 +12,12 @@
             :rules="ruleValidate">
             <FormItem label="">
               <Row>
-                <Col span="11" style="margin-left:-121px;">
+                <Col span="12" style="margin-left:-121px;">
                     <FormItem prop="title" label="标题:">
                         <Input v-model="knowledgeForm.title" style="width: 300px" />
                     </FormItem>
                 </Col>
-                <Col span="11">
+                <Col span="12">
                     <FormItem prop="type" label="分类:">
                          <Select ref="typeSelect" v-model="knowledgeForm.type" :transfer="false" style="width:300px">
                             <Option v-for="(item,index) in typeList" :value="item.value" :key="item.id">
@@ -202,7 +202,7 @@ export default {
                   this.knowledgeId = false;
                   this.knowledgeForm.content = '';
                   this.$refs['formValidate'].resetFields();
-                  this.editor.txt.html('');
+                  this.editor.txt.html('<span></span>');
                 }
               }
             }).catch(error => {
@@ -217,7 +217,7 @@ export default {
                 }else{
                   this.knowledgeForm.content = '';
                   this.$refs['formValidate'].resetFields();
-                  this.editor.txt.html('');
+                  this.editor.txt.html('<span></span>');
                 }
               }
             }).catch(error => {
@@ -250,13 +250,13 @@ export default {
       let knowledgeContent = content?content:'';
       this.editor = new E(this.$refs.editor)
       this.editor.customConfig.onchange = (html) => {
-        this.knowledgeForm.content = html
+        this.knowledgeForm.content = html;
       }
       this.editor.customConfig.uploadImgShowBase64 = true;
       this.editor.customConfig.zIndex = 100
       this.editor.create();
       this.editor.$textContainerElem[0].style.height = '400px';
-      this.editor.txt.html(knowledgeContent);
+      this.editor.txt.html('<span>'+knowledgeContent+'</span>');
     }
   },
   mounted() {

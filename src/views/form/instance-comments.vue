@@ -260,7 +260,7 @@ export default {
         this.refreshComments();
         this.refreshSubscribeInfo();
         this.judgeIsSubscribeByRelationKey();
-        
+        window.top.addUserData = this.addUserData;
   }
 };
 </script>

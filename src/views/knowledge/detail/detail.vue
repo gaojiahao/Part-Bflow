@@ -202,7 +202,7 @@ export default {
                   this.knowledgeId = false;
                   this.knowledgeForm.content = '';
                   this.$refs['formValidate'].resetFields();
-                  this.editor.txt.html('');
+                  this.editor.txt.html('<span></span>');
                 }
               }
             }).catch(error => {
@@ -217,7 +217,7 @@ export default {
                 }else{
                   this.knowledgeForm.content = '';
                   this.$refs['formValidate'].resetFields();
-                  this.editor.txt.html('');
+                  this.editor.txt.html('<span></span>');
                 }
               }
             }).catch(error => {

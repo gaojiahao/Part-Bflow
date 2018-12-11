@@ -32,7 +32,7 @@
                     </span>
 
                     <span>
-                        <Dropdown style="margin-left: 20px" @on-click="addSubscribeUsers" trigger="click" >
+                        <Dropdown style="margin-left: 20px" @on-click="addSubUsers" trigger="click" >
                          <Icon type="md-person" size=18  /> {{subscribeInfo.subscribeNum}}
                          <Icon type="ios-arrow-down"></Icon>
                         <DropdownMenu slot="list">
@@ -152,7 +152,7 @@ export default {
             });
         }
     },
-    addSubscribeUsers(name) {
+    addSubUsers(name) {
         if(name === 'add'){
             if(window.top.viewInsCommentsUserModal){
                 window.top.viewInsCommentsUserModal();

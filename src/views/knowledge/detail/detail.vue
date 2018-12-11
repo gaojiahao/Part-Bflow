@@ -250,13 +250,13 @@ export default {
       let knowledgeContent = content?content:'';
       this.editor = new E(this.$refs.editor)
       this.editor.customConfig.onchange = (html) => {
-        this.knowledgeForm.content = html
+        this.knowledgeForm.content = html;
       }
       this.editor.customConfig.uploadImgShowBase64 = true;
       this.editor.customConfig.zIndex = 100
       this.editor.create();
       this.editor.$textContainerElem[0].style.height = '400px';
-      this.editor.txt.html(knowledgeContent);
+      this.editor.txt.html('<span>'+knowledgeContent+'</span>');
     }
   },
   mounted() {

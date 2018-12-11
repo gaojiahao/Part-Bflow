@@ -12,12 +12,12 @@
             :rules="ruleValidate">
             <FormItem label="">
               <Row>
-                <Col span="11" style="margin-left:-121px;">
+                <Col span="12" style="margin-left:-121px;">
                     <FormItem prop="title" label="标题:">
                         <Input v-model="knowledgeForm.title" style="width: 300px" />
                     </FormItem>
                 </Col>
-                <Col span="11">
+                <Col span="12">
                     <FormItem prop="type" label="分类:">
                          <Select ref="typeSelect" v-model="knowledgeForm.type" :transfer="false" style="width:300px">
                             <Option v-for="(item,index) in typeList" :value="item.value" :key="item.id">

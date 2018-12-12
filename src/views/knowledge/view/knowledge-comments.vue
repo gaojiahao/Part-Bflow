@@ -112,7 +112,7 @@ export default {
   },
   data() {
     return {
-        knowledgeId: '000007',
+        knowledgeId: this.$route.params.id,
         type:'knowledge',
         comments:[],
         commentsCount:0,

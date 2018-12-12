@@ -592,7 +592,8 @@ export const subscribeApp = (relationKey) => request('/H_roleplay-si/comment/sub
  * @description 流程管理-关注
  */
 export const unsubscribeAppByRelationKey = (processStatusId) => request('/H_roleplay-si/comment/unsubscribeAppByRelationKey', {
-  relationKey: processStatusId
+  relationKey: processStatusId,
+  type: "processStatus"
 }, "POST")
 
 /**

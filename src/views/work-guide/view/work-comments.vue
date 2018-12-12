@@ -112,7 +112,7 @@ export default {
   },
   data() {
     return {
-        workGuideId:'000005',
+        workGuideId: this.$route.params.id,
         type:'workGuide',
         comments:[],
         commentsCount:0,

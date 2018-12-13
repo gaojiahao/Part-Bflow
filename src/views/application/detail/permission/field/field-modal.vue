@@ -20,8 +20,8 @@
         <div class="field-toolbar">
             <Button @click="addNewField" type="info" shape="circle" style="margin-bottom:5px;">新增字段</Button>
             <i-switch v-model="isBlack" @on-change="changeBlackWhiteList" size="large" class="black-white">
-                <span slot="open">白名单</span>
-                <span slot="close">黑名单</span>
+                <span slot="close">白名单</span>
+                <span slot="open">黑名单</span>
             </i-switch>
         </div>
         <Table ref="actionRef" stripe height="200" :columns="fieldColumns" size="small" no-data-text="请添加新字段" :data="fieldData"></Table>
@@ -144,7 +144,7 @@ export default {
 
       showPermissionModal: false,
       isModalDisabled: true,
-      isBlack: false,
+      isBlack: true,
       //已经配置的应用字段数据
       fieldData: [],
       //所有字段数据=>用于选择字段
@@ -251,7 +251,7 @@ export default {
     //监听权限modal确定按钮的禁用启用状态
     fieldData: function(value){
       if(value.length > 0){
-          this.isBlack = value[0].isBlackList;
+          this.isBlack = value[0].isBlacklist;
         if(this.userSelectData.length>0 || 
           this.orgSelectData.length>0 || 
           this.departmentSelectData.length>0 ||
@@ -262,7 +262,7 @@ export default {
           this.isModalDisabled = true;
         }
       }else{
-        this.isBlack = false;
+        this.isBlack = true;
         this.isModalDisabled = true;
       }
     },
@@ -336,7 +336,7 @@ export default {
     },
     //新增字段
     addNewField() {
-      this.fieldData.push({fieldName: '',isBlackList: false,fieldCode: ''});
+      this.fieldData.push({fieldName: '',isBlacklist: this.isBlack,fieldCode: ''});
     },
     //取消添加权限
     cancelAddPermission() {
@@ -346,11 +346,11 @@ export default {
     changeBlackWhiteList(status) {
         if(status){
             this.fieldData.forEach(val => {
-                val.isBlackList = true;
+                val.isBlacklist = true;
             })
         }else{
             this.fieldData.forEach(val => {
-                val.isBlackList = false;
+                val.isBlacklist = false;
             })
         }
     },

@@ -1,12 +1,29 @@
 <style lang="less">
-  
+  .field-toolbar{
+      overflow: hidden;
+      .black-white{
+          float: right;
+      }
+      .ivu-switch-large{
+          width: 70px;
+      }
+      .ivu-switch-checked:after{
+            left: 50px !important;
+        }
+  }
 </style>
 
 <template>
-  <Modal v-model="showPermissionModal" title="自定义数据源" width="1000" :transfer="false" :styles="{top: '15px'}" :mask-closable="false" @on-visible-change="modalVisibleChange">
+  <Modal v-model="showPermissionModal" title="字段权限" width="1000" :transfer="false" :styles="{top: '15px'}" :mask-closable="false" @on-visible-change="modalVisibleChange">
     <div>
       <Row :gutter="8" style="margin-bottom:10px;">
-        <Button @click="addNewField" type="info" shape="circle" style="margin-bottom:5px;">新增字段</Button>
+        <div class="field-toolbar">
+            <Button @click="addNewField" type="info" shape="circle" style="margin-bottom:5px;">新增字段</Button>
+            <i-switch v-model="isBlack" @on-change="changeBlackWhiteList" size="large" class="black-white">
+                <span slot="open">白名单</span>
+                <span slot="close">黑名单</span>
+            </i-switch>
+        </div>
         <Table ref="actionRef" stripe height="200" :columns="fieldColumns" size="small" no-data-text="请添加新字段" :data="fieldData"></Table>
       </Row>
       <Row :gutter="8" style="margin-bottom:10px;">
@@ -98,17 +115,17 @@
 
 <script>
 import {
-  saveCustomDatasource,
+  saveFieldPermission,
   getFieldResorce,
-  getResourceDetailList,
-  updateCustomDatasource
+  getFieldDetailList,
+  updateFieldPermission
 } from "@/services/appService.js";
-import UserSelector from './user-selector';
-import GroupSelector from './group-selector';
-import RoleSelector from './role-selector';
+import UserSelector from '../custom-datasource/user-selector';
+import GroupSelector from '../custom-datasource/group-selector';
+import RoleSelector from '../custom-datasource/role-selector';
 
 export default {
-  name: "permissionModal",
+  name: "FieldModal",
   components: {
       UserSelector,
       GroupSelector,
@@ -127,6 +144,7 @@ export default {
 
       showPermissionModal: false,
       isModalDisabled: true,
+      isBlack: false,
       //已经配置的应用字段数据
       fieldData: [],
       //所有字段数据=>用于选择字段
@@ -155,90 +173,6 @@ export default {
                 on: {
                   'on-change': value => {
                     this.fieldData[params.index].fieldCode = value;
-                  }
-                }
-              },renderData)
-            ]);
-          }
-        },
-        {
-          title: "规则",
-          key: "rule",
-          render: (h,params) => {
-            let data = [
-              {name: '大于',value: 'gt'},
-              {name: '小于',value: 'lt'},
-              {name: '等于',value: 'eq'},
-              {name: '小于等于',value: 'le'},
-              {name: '大于等于',value: 'ge'},
-              {name: '不等于',value: 'ne'},
-              {name: '包含',value: 'like'},
-              {name: '不包含',value: 'nlike'}],
-            renderData = [];
-            data.forEach(val => {
-              renderData.push(
-                h('Option',{
-                    props: {
-                      value: val.value
-                    }
-                  },val.name)
-              )
-            })
-            return h('div',[
-              h('Select',{
-                props: {
-                  value: params.row.operator
-                },
-                on: {
-                  'on-change': value => {
-                    this.fieldData[params.index].operator = value;
-                  }
-                }
-              },renderData)
-            ]);
-          }
-        },
-        {
-          title: "值",
-          key: "value",
-          render: (h,params) => {
-            return h('div',[
-              h('Input',{
-                props: {
-                  value: params.row.value
-                },
-                on: {
-                  'on-blur': value => {
-                    this.fieldData[params.index].value = value.target.value;
-                  }
-                }
-              })
-            ]);
-          }
-        },
-        {
-          title: "且/或",
-          key: "or",
-          render: (h,params) => {
-            let data = [{name: '且',value: 'and'},{name: '或',value: 'or'}],
-            renderData = [];
-            data.forEach(val => {
-              renderData.push(
-                h('Option',{
-                    props: {
-                      value: val.value
-                    }
-                  },val.name)
-              )
-            })
-            return h('div',[
-              h('Select',{
-                props: {
-                  value: params.row.logicOperator
-                },
-                on: {
-                  'on-change': value => {
-                    this.fieldData[params.index].logicOperator = value;
                   }
                 }
               },renderData)
@@ -286,7 +220,7 @@ export default {
         this.userSelectData = [];
         this.orgSelectData = [];
         this.departmentSelectData = [];
-        getResourceDetailList(this.appListId,this.resourceId).then(res => {
+        getFieldDetailList(this.appListId,this.resourceId).then(res => {
           this.fieldData = res.resource;
           res.instance.forEach(val => {
             let pushData = {};
@@ -317,6 +251,7 @@ export default {
     //监听权限modal确定按钮的禁用启用状态
     fieldData: function(value){
       if(value.length > 0){
+          this.isBlack = value[0].isBlackList;
         if(this.userSelectData.length>0 || 
           this.orgSelectData.length>0 || 
           this.departmentSelectData.length>0 ||
@@ -327,6 +262,7 @@ export default {
           this.isModalDisabled = true;
         }
       }else{
+        this.isBlack = false;
         this.isModalDisabled = true;
       }
     },
@@ -400,11 +336,23 @@ export default {
     },
     //新增字段
     addNewField() {
-      this.fieldData.push({fieldName: '',parentCode: '',fieldCode: '',operator:'',value:'',logicOperator:''});
+      this.fieldData.push({fieldName: '',isBlackList: false,fieldCode: ''});
     },
     //取消添加权限
     cancelAddPermission() {
       this.showPermissionModal = false;
+    },
+    //黑白名单状态切换事件
+    changeBlackWhiteList(status) {
+        if(status){
+            this.fieldData.forEach(val => {
+                val.isBlackList = true;
+            })
+        }else{
+            this.fieldData.forEach(val => {
+                val.isBlackList = false;
+            })
+        }
     },
     //提交权限
     submitPermission() {
@@ -430,7 +378,7 @@ export default {
         };
         if (params) {
           if(this.isEdit){
-            updateCustomDatasource(JSON.stringify(params)).then(res => {
+            updateFieldPermission(JSON.stringify(params)).then(res => {
               if (res.success) {
                 this.$Message.success(res.message);
                 this.showPermissionModal = false;
@@ -441,7 +389,7 @@ export default {
               this.$Message.error(err.data.message);
             });
           }else{
-            saveCustomDatasource(JSON.stringify(params)).then(res => {
+            saveFieldPermission(JSON.stringify(params)).then(res => {
               if (res.success) {
                 this.$Message.success(res.message);
                 this.showPermissionModal = false;

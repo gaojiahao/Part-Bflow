@@ -13,7 +13,8 @@
     :styles="{top: '20px'}">
     <Row :gutter="8">
       <Col span="12">
-      <h4 class="flow-title">所有工作流
+      <div class="flow-title">
+        <b>所有工作流</b>
         <div class="app-search">
           <Input 
             @on-search="workflowFilter" 
@@ -23,14 +24,13 @@
             style="width: 300px">
           </Input>
         </div>
-      </h4>
+      </div>
       <Table 
         @on-row-dblclick="addWorkflowData" 
         :loading="loadingAll" 
         stripe height="350" 
         :columns="allWorkFlowColumns" 
-        :data="allWorkFlowData"
-        style="margin-top:15px"></Table>
+        :data="allWorkFlowData"></Table>
       <div class="workflow-page">
         <div style="float: right;">
           <Page 
@@ -43,7 +43,9 @@
       </div>
       </Col>
       <Col span="12">
-      <h4 class="flow-title">已关联的工作流</h4>
+      <div class="flow-title">
+        <b>已关联的工作流</b>
+      </div>
       <Table
         :loading="loadingRelative" 
         stripe height="350" 

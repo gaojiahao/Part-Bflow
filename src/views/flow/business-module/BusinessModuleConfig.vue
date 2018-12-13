@@ -773,15 +773,10 @@ export default {
     handleSaveNodeDetail(event){
       let that = this;
       let nodeId = that.NodeDetailFrom.uniqueId;
+       that.appNodes[nodeId].nextNode=[];
       if(that.NodeDetailFrom.nextNode[0]){
-        that.appNodes[nodeId].nextNode = that.appNodes[nodeId].nextNode?that.appNodes[nodeId].nextNode:[];
         that.NodeDetailFrom.nextNode.forEach(nextNodeId=>{
-          let f = that.appNodes[nodeId].nextNode.filter(f=>{
-            return f.uniqueId === nextNodeId
-          })
-          if(f.length !== 0){
-            that.appNodes[nodeId].nextNode.push(that.appNodes[nextNodeId])
-          }
+          that.appNodes[nodeId].nextNode.push(that.appNodes[nextNodeId])
         })
       }
       this.$Message.success('保存成功!')

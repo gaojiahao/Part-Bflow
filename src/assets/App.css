@@ -26,6 +26,12 @@
     padding: 0 15px;
     line-height: 1;
   }
+  .ivu-form-item-error .ivu-input {
+    border: none !important;
+    border-bottom: 1px solid !important;
+    box-shadow: none !important;
+    border-color: #e0101a !important;
+}
 
   .ivu-input {
     border-top-style: none;

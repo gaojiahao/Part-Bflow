@@ -1,10 +1,11 @@
 .view-container{
-    width: 98%;
+    width: 100%;
     min-height: 512px;
     margin: 0px auto;
     background-color: #fff;
     overflow-x: auto;
     overflow-y: hidden;
+    margin-bottom: 50px;
 }
 
 .header{
@@ -13,10 +14,7 @@
     line-height: 40px;
     padding: 0 15px;
     border-bottom: 1px solid #ddd;
-    span{
-        font-size: 14px;
-        color: #4672c4;
-    }
+    font-size: 14px;
 }
 
 .svg-board{
@@ -38,3 +36,27 @@
         writing-mode:vertical-lr;
     }
 }
+
+.config-action {
+    position: fixed;
+    height: 50px;
+    line-height: 50px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+  
+    &-submit{
+      background-color: rgb(0, 150, 136);
+      color:#fff;
+      outline: none;
+      font-weight: bold;
+      cursor: pointer;
+      border: 1px solid transparent;
+      padding: 6px 20px;
+      line-height: 1.5;
+    }
+  
+  }

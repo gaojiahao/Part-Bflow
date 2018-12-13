@@ -127,6 +127,17 @@ export const BusinessModuleConfig = {
     import('@/views/flow/business-module/BusinessModuleConfig.vue')
 };
 
+export const BusinessModuleConfigDetails = {
+  path: '/BusinessModuleConfig/:moduleId',
+  name: 'BusinessModuleConfig',
+
+  meta: {
+    title: 'BusinessModuleConfig - 应用模块配置'
+  },
+  component: () =>
+    import('@/views/flow/business-module/BusinessModuleConfig.vue')
+};
+
 export const BusinessModuleGraph = {
   path: '/BusinessModuleGraph/:moduleId',
   name: 'BusinessModuleGraph',
@@ -152,6 +163,7 @@ export const routers = [
   addressBookRouter,
   technologyRouter,
   BusinessModuleConfig,
+  BusinessModuleConfigDetails,
   BusinessModuleGraph,
   bigProcess,
   fieldChangeHistoryRouter,

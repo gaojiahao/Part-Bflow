@@ -37,6 +37,30 @@
   }
 }
 
+.config-action {
+  position: fixed;
+  height: 50px;
+  line-height: 50px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  background-color: #fff;
+  border-top: 1px solid #ddd;
+
+  &-submit{
+    background-color: rgb(49, 85, 165);
+    color:#fff;
+    outline: none;
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid transparent;
+    padding: 6px 20px;
+    line-height: 1.5;
+  }
+
+}
+
 .page-selection-warp {
   width: 100%;
   height: 100%;
@@ -50,15 +74,23 @@
 
 <template>
     <div>
-        <div class="" style="padding:20px">
-            <div style="font-size:16px">
-                <a @click="addJobs">添加职位</a>
-                <a @click="addProcess">添加阶段</a>
-                <a @click="saveAppConfig" style="float: right;">保存</a>
+        <div class="" style="padding:20px;background-color:#fff">
+            <div style="font-size:16px;width:30%">
+               <Form :model="moduleFromItem" ref="moduleFromItem"  :rules="ruleValidate" :labelWidth="100">
+                    <FormItem label="业务模块名称" style="font-size:16px" prop="moduleName" >
+                        <Input v-model="moduleFromItem.moduleName" />
+                    </FormItem>
+                </Form>
             </div>
             <div>
                 <Table :columns="columns" :data="columnDatas" size="small" border ></Table>
             </div>
+        </div>
+        <div class="config-action" @click="handleSubmitBoxs">
+          <input type='submit' value="添加职位"  class="config-action-submit" id="addJob" />
+          <input type='submit' value="添加阶段" class="config-action-submit" id="addProcess"  />
+          <input type='submit' value="保存" style="background-color:rgb(0, 150, 136)" class="config-action-submit" id="save" />
+          <input type='submit' value="返回" style="background-color:rgb(0, 150, 136)" class="config-action-submit" id="back" v-if="moduleId"/>
         </div>
         <Drawer title="节点详情" v-model="drawerVisable" :mask-closable="false" closable transfer>
           <Form :model="NodeDetailFrom" :labelWidth="60" ref="NodeDetailFrom" >
@@ -155,7 +187,7 @@ import AddJobsModal from "@/components/modal/Modal";
 import AddProcessModal from "@/components/modal/Modal";
 import AddNodeModal from "@/components/modal/Modal";
 
-import {getAllRoleData,getAllAppList,saveBusinessModule} from "@/services/flowService";
+import {getAllRoleData,getAllAppList,saveBusinessModule,getBusinessModuleById} from "@/services/flowService";
 export default {
   name:'BusinessModuleConfig',
 
@@ -171,6 +203,20 @@ export default {
       isShowAddProcessModal: false,
       isShowAddNodeModal: false,
       drawerVisable:false,
+      moduleId:"", //应用模块ID
+
+      moduleFromItem:{
+        moduleName:''
+      },
+      ruleValidate: {
+        moduleName: [
+          {
+            required: true,
+            message: "请输入应用模板名称",
+            trigger: "blur"
+          }
+        ],
+      },
 
       NodeDetailFrom:{
         uniqueId:"",
@@ -213,7 +259,6 @@ export default {
      
       nodePositionId: "", //当前添加应用节点的职位ID
       nodeProcssId: "", //当前添加应用节点的阶段ID
-
       columns: [
         {
           title: " ",
@@ -232,8 +277,8 @@ export default {
                     on:{
                         click:()=>{
                             let positionId = params.row.positionId,
-                                id = params.row.id;
-                            this.handleRowDelete(positionId,id);
+                                jobId = params.row.jobId;
+                            this.handleRowDelete(positionId,jobId);
                         }
                     }
                 }),
@@ -269,77 +314,142 @@ export default {
       }
     },
 
-    addJobs() {
-      this.isShowAddJobsModal = true;
-      this.jobsFormItem.name =[];
-      this.jobsFormItem.id = [];
-    },
-
-    addProcess() {
-      this.isShowAddProcessModal = true;
-      this.$refs["processFormItem"].resetFields();
+    //事件委托
+    handleSubmitBoxs(event){
+      let target = event.target || event.srcElement;
+      if(target.nodeName.toLocaleLowerCase() === 'input'){
+        switch(target.id){
+          case 'addJob':
+            this.isShowAddJobsModal = true;
+            this.jobsFormItem.name =[];
+            this.jobsFormItem.id = [];
+            break;
+          case 'addProcess':
+            this.isShowAddProcessModal = true;
+            this.$refs["processFormItem"].resetFields();
+            break;
+          case 'save':
+            this.saveAppConfig();
+            break;
+          case 'back':
+            this.$router.push({path:`/BusinessModuleGraph/${this.moduleId}`})
+            break;
+        }
+      }
     },
 
     /** 
      * 保存配置信息
     */
     saveAppConfig(){
-      let configDetailData = {},
-          nodeList = [],
-          positionList = [],
-          stageList = [];
+       this.$refs["moduleFromItem"].validate(valid => {
+         if(valid){
+            let configDetailData = {},
+                nodeList = [],
+                positionList = [],
+                stageList = [];
       
-      //构造列数据
-      this.columns.forEach((column,index)=>{
-        if(column.key !== "positionName"){
-          let {columnId,key,title} = column;
-          stageList.push({
-            title:title,
-            key:key,
-            sort:index,
-            columnAnchorPoint:columnId
-          })
-        }
-      })
+            //构造列数据
+            this.columns.forEach((column,index)=>{
+              if(column.key !== "positionName"){
+                let {columnId,key,title,editId} = column;
+                if(editId){
+                  stageList.push({
+                    id:editId,
+                    title:title,
+                    key:key,
+                    sort:index,
+                    columnAnchorPoint:columnId
+                  })
+                }else{
+                   stageList.push({
+                    title:title,
+                    key:key,
+                    sort:index,
+                    columnAnchorPoint:columnId
+                  })  
+                }
+              }
+            })
 
-      //构造行数据
-      this.columnDatas.forEach((data,index)=>{
-        positionList.push({
-          title:data.positionName,
-          rowAnchorPoint:data.positionId,
-          sort:index
-        })
-      })
+            //构造行数据
+            this.columnDatas.forEach((data,index)=>{
+              if(data.id){
+                positionList.push({
+                  title:data.positionName,
+                  rowAnchorPoint:data.positionId,
+                  sort:index,
+                  id:data.id
+                })
+              }else{
+                positionList.push({
+                  title:data.positionName,
+                  rowAnchorPoint:data.positionId,
+                  sort:index
+                })
+              }
+            })
 
-      //构造应用节点数据
-      for(let nodeId in this.appNodes){
-        let nextNodeId = [];
-        if(this.appNodes[nodeId].nextNode && this.appNodes[nodeId].nextNode.length>0){  //判断是否存在下级节点
-           this.appNodes[nodeId].nextNode.forEach(next=>{
-             nextNodeId.push(next.id);
-           })  
-        }
-        nodeList.push({
-            name:this.appNodes[nodeId].title,
-            listKey:this.appNodes[nodeId].id,
-            nextNode:nextNodeId.join(','),
-            listId:this.appNodes[nodeId].uniqueId,
-            rowAnchorPoint:this.appNodes[nodeId].rowId,
-            columnAnchorPoint:this.appNodes[nodeId].columnId
-          })
-      }
+            //构造应用节点数据
+            for(let nodeId in this.appNodes){
+              let nextNodeId = [];
+              if(this.appNodes[nodeId].nextNode && this.appNodes[nodeId].nextNode.length>0){  //判断是否存在下级节点
+                this.appNodes[nodeId].nextNode.forEach(next=>{
+                  nextNodeId.push(next.id);
+                })  
+              }
+              if(this.appNodes[nodeId].editId){
+                nodeList.push({
+                  id:this.appNodes[nodeId].editId,
+                  name:this.appNodes[nodeId].title,
+                  listKey:this.appNodes[nodeId].id,
+                  nextNode:nextNodeId.join(','),
+                  listId:this.appNodes[nodeId].uniqueId,
+                  rowAnchorPoint:this.appNodes[nodeId].rowId,
+                  columnAnchorPoint:this.appNodes[nodeId].columnId
+                })
+              }else{
+                nodeList.push({
+                  name:this.appNodes[nodeId].title,
+                  listKey:this.appNodes[nodeId].id,
+                  nextNode:nextNodeId.join(','),
+                  listId:this.appNodes[nodeId].uniqueId,
+                  rowAnchorPoint:this.appNodes[nodeId].rowId,
+                  columnAnchorPoint:this.appNodes[nodeId].columnId
+                })
+              }
+            }
 
-      configDetailData['nodeList'] = nodeList;
-      configDetailData['stageList'] = stageList;
-      configDetailData['positionList'] = positionList;
-      configDetailData['title'] = "业务5号";
+            configDetailData['nodeList'] = nodeList;
+            configDetailData['stageList'] = stageList;
+            configDetailData['positionList'] = positionList;
+            configDetailData['title'] = this.moduleFromItem.moduleName;
+            configDetailData['configColumns'] = JSON.stringify(this.columns.slice(1));
+            configDetailData['configColumnDatas'] = JSON.stringify(this.columnDatas);
+            
+            if(this.moduleId){
+               configDetailData['id'] = this.moduleId;
+            }
+            saveBusinessModule(configDetailData).then(res=>{
+              if(res.success){
+                let seconde = 5;
+                setTimeout(()=>{
+                  this.$router.push({path:`/BusinessModuleGraph/${res.moduleId}`})
+                },5000)
+                this.$Message.success({
+                  content:`${res.message}, ${seconde}秒后将自动离开当前页面`,
+                  duration:1
+                })
+              }
+            }).catch(error=>{
+              this.$Message.error(error.data.message)
+            });
+         }else{
 
-      
-      saveBusinessModule(configDetailData).then(res=>{
-        this.$Message.success(res.message)
-      }).catch(error=>{
-        this.$Message.error(error.message)
-      })
+         }
+       })
+
+
     },
 
     /** 
@@ -506,15 +616,15 @@ export default {
     */
     addJobsZColumn() {
       let name = this.jobsFormItem.name,
-          id = this.jobsFormItem.id;
-      for(let i =0;i<id.length;i++){
+          jobId = this.jobsFormItem.id;
+      for(let i =0;i<jobId.length;i++){
         this.columnDatas.push({
-          id:id[i],
+          jobId:jobId[i],
           positionId: this.getRandomCode(),
           positionName:name[i]
         });
         this.joblist.forEach(item=>{  //当职位已经被添加之后，下次不允许再次添加
-          if(item.id === id[i]){
+          if(item.id === jobId[i]){
             this.$set(item,'disabled',true)
           }
         })
@@ -550,14 +660,14 @@ export default {
     /** 
      * 删除职位-行
     */
-    handleRowDelete(positionId,id){
+    handleRowDelete(positionId,jobId){
       let f = this.columnDatas.filter(f=>{
           return f.positionId != positionId;
       });
       this.columnDatas = f;
 
       this.joblist.forEach(item=>{  //取消已经被添加的职位禁用效果
-        if(item.id === id){
+        if(item.id === jobId){
           this.$set(item,'disabled',false)
         }
       })
@@ -669,7 +779,7 @@ export default {
           let f = that.appNodes[nodeId].nextNode.filter(f=>{
             return f.uniqueId === nextNodeId
           })
-          if(f.length === 0){
+          if(f.length !== 0){
             that.appNodes[nodeId].nextNode.push(that.appNodes[nextNodeId])
           }
         })
@@ -776,13 +886,175 @@ export default {
       }).catch(error=>{
         this.$Message.error(error.message)
       })  
+    },
+
+    getAllRoleData(){
+      getAllRoleData().then(res=>{
+        let that = this;
+        this.joblist = res.tableContent;
+        if(this.columnDatas.length>0){
+          this.columnDatas.forEach(data=>{
+          this.joblist.forEach(c=>{
+                if(data.positionName === c.name){
+                  this.$set(c,'disabled',true);
+                }
+            })
+          })
+        }
+      })
     }
   },
 
   mounted(){
-    getAllRoleData().then(res=>{
-      this.joblist = res.tableContent;
-    })
+    this.moduleId = this.$route.params.moduleId;
+    //判断是配置页面还是修改页面
+    if(this.moduleId){
+      getBusinessModuleById(this.moduleId).then(res => {
+        let configColumns = JSON.parse(res.configColumns);
+        configColumns.forEach(c=>{
+          let editId = "";
+          if(!c.editId){
+            editId = res.stageList.filter(f=>{
+              return f.columnAnchorPoint === c.columnId;
+            })[0].id;
+          }
+          this.columns.push({
+            align: c.align,
+            columnId: c.columnId,
+            key: c.key,
+            title: c.title,
+            editId:c.editId?c.editId:editId,
+            renderHeader:(h,p)=>{
+                return h('div',[
+                    h('span',p.column.title.trim()),
+                    h('Icon',{
+                        class:"column-icon-delete",
+                        props:{
+                            type:"md-trash"
+                        },
+                        on:{
+                            click:()=>{
+                                let columnId = p.column.columnId;
+                                this.handleColumnDelete(columnId);
+                            }
+                        }
+                    })
+                ])
+            },
+            render: (h, params) => {
+              let rerderData = [];
+              if (
+                params.row[params.column.key] &&
+                params.row[params.column.key].length > 0
+              ) {
+                params.row[params.column.key].forEach(item => {
+                  let pushdata = h(
+                        "Tag",
+                        {
+                          attrs:{
+                              uniqueId:item.uniqueId,
+                              rowId:item.rowId,
+                              columnId:item.columnId
+                          },
+                          props: {
+                            color: "primary",
+                            closable: true
+                          },
+                          on:{
+                              "on-close":(event)=>{
+                                let target = event.target.parentNode || event.srcElement.parentNode;
+                                this.handleDeleteNode(target.getAttribute('uniqueId'),target.getAttribute('rowId'),target.getAttribute('columnId'));
+                              }
+                          }
+                        },
+                        [
+                          h(
+                            "span",
+                            {
+                              on:{
+                                click:(e)=>{
+                                  e.preventDefault();
+                                  let nodeId = e.target.parentNode.parentNode.getAttribute('uniqueId');
+                                  this.handleEditNode(nodeId)
+                                }
+                              },
+                            },
+                            item.title
+                          )
+                        ],
+                      );  
+                  rerderData.push(pushdata);
+                });
+              };
+              rerderData.push(h(
+                  "a",
+                  {
+                    on: {
+                      click: e => {
+                        let that = this,
+                            unId =[];
+                            that.nodePositionId = params.row.positionId;
+                            that.nodeProcssId = params.column.columnId;
+
+                          that.isShowAddNodeModal = true;
+                          that.onPageSelection = [];
+                          that.searchValue = "";
+                          for(let keyId in that.appNodes){
+                            unId.push(that.appNodes[keyId].id);
+                          }
+                          that.withoutListId = unId.join(',')
+
+                          that.getAllAppList(that.appListCurrentPage,that.pageSize,that.withoutListId)
+                      
+                      }
+                    }
+                  },
+                  "添加"
+                ))
+              return h("div", rerderData);
+            }
+          })
+        })
+        res.nodeList.forEach(n=>{
+          let nextNodeArr = [],
+              nextNodeIdArr = [];
+          if(n.nextNode){ //判断是否配置了下级节点
+            nextNodeIdArr = n.nextNode.split(',');
+            nextNodeIdArr.forEach(nextNodeId=>{
+              let f = res.nodeList.filter(f=>{
+                return f.listKey === nextNodeId;
+              });
+              if(f.length ===1){
+                nextNodeArr.push({
+                  title:f[0].name,
+                  id:f[0].listKey,
+                  uniqueId:f[0].listId,
+                  rowId:f[0].rowAnchorPoint,
+                  columnId:f[0].columnAnchorPoint,
+                });
+              }
+            })
+          }
+          this.appNodes[n.listId] ={
+            title:n.name,
+            id:n.listKey,
+            uniqueId:n.listId,
+            rowId:n.rowAnchorPoint,
+            columnId:n.columnAnchorPoint,
+            nextNode:nextNodeArr,
+            editId:n.id,
+          }
+        })
+        this.columnDatas = JSON.parse(res.configColumnDatas);
+        this.moduleFromItem.moduleName = res.title;
+
+        this.getAllRoleData();
+      })
+    } else{
+      this.getAllRoleData();
+    }
+
+  
   }
 };
 </script>

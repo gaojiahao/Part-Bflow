@@ -6,8 +6,8 @@
   <div class="view-container">
     <Spin size="large" fix v-if="spinShow"></Spin>
     <header class="header">
+      <label>模板名称:</label>
       <span>{{title}}</span>
-      <span>配置</span>
     </header>
     <div class="svg-board">
       <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%">
@@ -39,36 +39,53 @@
         <!-- 节点绘制 -->
         <g v-for="item in nodeList" :key="item.id">
             <!-- <shape v-if="item.id=='-2'||item.id=='end'" :xAxion="item.xAxion+nodeWidth/2" :yAxion="item.yAxion" color="#7da87b"  ></shape> -->
-            <polygon 
+            <!-- <polygon 
               v-if="item.type ==='branch'" 
               :points="(item.xAxion+nodeWidth/2)+','+(item.yAxion-nodeHeight/2)+' '
                       +(item.xAxion+nodeWidth)+','+item.yAxion+' '
                       +(item.xAxion+nodeWidth/2)+','+(item.yAxion+nodeHeight/2)+' '
                       +item.xAxion+','+item.yAxion" 
               style="fill: #4672c4;stroke: #4672c4;stroke-width:1"
-            />
+            /> -->
+            <ellipse 
+              v-if="item.listId==='-2'||item.listId=='-3'" 
+              :cx="item.xAxion+nodeWidth/2" :cy="item.yAxion" :rx="nodeWidth/2" :ry="nodeHeight/2" style="fill:#cd5334;stroke:cd5334;stroke-width:1" />
             <rect v-else
               :x="item.xAxion" 
               :y="item.yAxion-nodeHeight/2" 
               :width="nodeWidth" 
               :height="nodeHeight" 
-              :stroke="item.id==='-3'||item.id==='-2'?'#cd5334':'#df8931'"
-              :fill ="item.id ==='-3'||item.id==='-2'?'#cd5334':'#df8931'"
+              stroke="#df8931"
+              fill ="#df8931"
               stroke-width="1"
               />
-            <text 
+            <foreignObject 
+              :x="item.xAxion" 
+              :y="item.yAxion-nodeHeight/2"
+              :height="nodeHeight" 
+              :width="nodeWidth">
+                <body xmlns="http://www.w3.org/2000/svg" style=" background-color: transparent;">
+                  <div style="color:#fff;font-size:12px;position: absolute;top: 50%;left: 50%;transform: translate(-50%,-50%);width: 100%;text-align:center">
+                    {{item.name}}
+                  </div>
+                </body>
+            </foreignObject>
+            <!-- <text 
               :x="item.xAxion+nodeWidth/2"
               :y="item.yAxion-5"
               fill="#fff" 
               style="font-size:12px; text-anchor: middle;baseline-shift: sub; font-family: sans-serif;">
                 {{item.name}}
-            </text> 
+            </text>  -->
         </g>
 
          <g v-for="(line,index) in polyLineList" :key="line.id+'_'+index">
             <polyline :points="line.value" marker-end='url(#arrow)' style="fill:none;stroke:#4672c4;stroke-width:2" />
-          </g>
+          </g>Z
       </svg>
+    </div>
+    <div class="config-action">
+      <input type='submit' value="编辑"  class="config-action-submit" @click="handleEditGraph"/>
     </div>
   </div>
 </template>
@@ -129,6 +146,12 @@ export default {
       this.spinShow = false;
     });
   },
+
+    handleEditGraph(event){
+      this.$router.push({
+        path:`/BusinessModuleConfig/${this.moduleId}`
+      })
+    },
 
     handleProcssData(stageList) {
       let preWidth = 40;

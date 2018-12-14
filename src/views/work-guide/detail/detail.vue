@@ -246,8 +246,8 @@ export default {
     //上传图片
     handleSuccess(res, file) {
       this.formValidate.logo =
-        "/H_roleplay-si/ds/download?width=300&height=300&url=" +
-        res.data[0].attacthment;
+        `/H_roleplay-si/ds/download?width=300&height=300&url=
+        ${res.data[0].attacthment}`;
     },
     //判断上传头像大小
     handleMaxSize(file) {

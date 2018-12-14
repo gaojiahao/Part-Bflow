@@ -99,7 +99,7 @@ export default {
     deleteKnowledge(workguide,index) {
       this.$Modal.confirm({
         title: "确认",
-        content: "确认删除<b style=color:#e4393c;>"+workguide.title+"</b>么？",
+        content: `确认删除<b style=color:#e4393c;>${workguide.title}</b>么？`,
         onOk: () => {
           deleteWorkGuideData(workguide.id)
           .then(res => {

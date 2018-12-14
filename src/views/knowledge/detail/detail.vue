@@ -160,7 +160,7 @@ export default {
       this.$refs['typeSelect'].hideMenu();
       this.$Modal.confirm({
         title: "确认",
-        content: "确认删除<b style=color:#e4393c;>"+item.name+"</b>么？",
+        content: `确认删除<b style=color:#e4393c;>${item.name}</b>么？`,
         onOk: () => {
           deleteKnowledgeDataType(item.id)
           .then(res => {
@@ -256,7 +256,7 @@ export default {
       this.editor.customConfig.zIndex = 100
       this.editor.create();
       this.editor.$textContainerElem[0].style.height = '400px';
-      this.editor.txt.html('<span>'+knowledgeContent+'</span>');
+      this.editor.txt.html(`<span>${knowledgeContent}</span>`);
     }
   },
   mounted() {

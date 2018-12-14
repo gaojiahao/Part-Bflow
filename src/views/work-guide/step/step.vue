@@ -47,7 +47,7 @@ export default {
   },
   methods: {
       goBack() {
-        this.$router.push({path:'/wokdGuide/view/'+this.stepsData.id});
+        this.$router.push({path:`/wokdGuide/view/${this.stepsData.id}`});
       },
       getStepsData(){
           if(this.$route.params.id){

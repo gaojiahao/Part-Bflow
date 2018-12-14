@@ -112,7 +112,7 @@ export default {
     editKnowledgeData(data,index){
       this.$router.push({
         name: "knowledgeView",
-        path: "/knowledge/view/"+data.id,
+        path: `/knowledge/view/${data.id}`,
         params: {id: data.id}
       });
     },
@@ -121,7 +121,7 @@ export default {
       let knowledgeIds = [];
       this.$Modal.confirm({
         title: "确认",
-        content: "确认删除<b style=color:#e4393c;>"+knowledge.title+"</b>么？",
+        content: `确认删除<b style=color:#e4393c;>${knowledge.title}</b>么？`,
         onOk: () => {
           knowledgeIds.push(knowledge.id);
           deleteKnowledgeData(knowledgeIds)

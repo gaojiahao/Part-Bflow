@@ -207,7 +207,7 @@ export default {
     deleteCheckSheetData(params) {
       this.$Modal.confirm({
         title: "确认",
-        content: "确认删除<b style=color:#e4393c;>"+params.row.name+"</b>么？",
+        content: `确认删除<b style=color:#e4393c;>${params.row.name}</b>么？`,
         onOk: () => {
           deleteCheckKeyTable(params.row.id)
           .then(res => {

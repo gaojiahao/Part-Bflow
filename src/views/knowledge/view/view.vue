@@ -55,7 +55,7 @@ export default {
     editKnowledge() {
       this.$router.push({
         name: "knowledgeDetail",
-        path:'/knowledge/detail/'+this.$route.params.id,
+        path:`/knowledge/detail/${this.$route.params.id}`,
         params: {id: this.$route.params.id}
       });
     },

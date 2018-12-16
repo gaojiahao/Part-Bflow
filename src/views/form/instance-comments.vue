@@ -241,6 +241,7 @@ export default {
     refreshSubscribeInfo(){
         this.$forceUpdate();
         getUserByRelationKey({
+           type:'instance',
            relationKey:this.transCode,
            type: this.type,
            limit:10,

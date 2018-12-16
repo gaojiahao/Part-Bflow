@@ -165,7 +165,8 @@ export default {
     deleteSubscribeUsers(userId,nickname) {
         let data = {
             relationKey: this.listId,
-            userIds: userId
+            userIds: userId,
+            type:'list',
         };
         this.$Modal.confirm({
         title: "确认",
@@ -230,6 +231,7 @@ export default {
     },
     handleUnsubscribeApp:function (params) {
         unsubscribeAppByRelationKey({
+            type:'list',
             relationKey:this.listId
         }).then(res=>{
             this.subscribeInfo.isSubscribe = 0;
@@ -240,9 +242,10 @@ export default {
     refreshSubscribeInfo(){
         this.$forceUpdate();
         getUserByRelationKey({
-           relationKey:this.listId,
-           limit:10,
-           page:1
+            type:'list',
+            relationKey:this.listId,
+            limit:10,
+            page:1
         }).then(res=>{
             this.subscribeInfo.subscribeUsers = res.tableContent;
             this.subscribeInfo.subscribeNum = res.dataCount;
@@ -250,7 +253,8 @@ export default {
     },
     judgeIsSubscribeByRelationKey:function (params) {
         judgeIsSubscribeByRelationKey({
-           relationKey:this.listId
+            type:'list',
+            relationKey:this.listId
         }).then(res=>{
             this.subscribeInfo.isSubscribe = res;
         });

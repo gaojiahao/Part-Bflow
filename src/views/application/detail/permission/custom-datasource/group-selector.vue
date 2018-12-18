@@ -118,6 +118,7 @@ export default {
               this.selectOrgModal();
               this.orgSelection = [];
               this.orgSelectData = [];
+              this.searchOrgValue = '';
           }
       }
   },

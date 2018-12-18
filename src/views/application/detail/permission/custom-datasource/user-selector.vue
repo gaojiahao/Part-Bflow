@@ -146,6 +146,7 @@ export default {
               this.selectUserModal();
               this.userSelection = [];
               this.userSelectData = [];
+              this.searchUserValue = '';
           }
       },
       isInstance: function(value){

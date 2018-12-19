@@ -207,6 +207,7 @@ export default {
                                 title: fieldName[key],
                                 key: key,
                                 hidden: true,
+                                width:25*fieldName[key].length,
                                 align: "center"
                               });
                             }
@@ -341,6 +342,7 @@ export default {
                               this.changeColumns.push({
                                 title: fieldName[key],
                                 key: key,
+                                width:25*fieldName[key].length,
                                 hidden: true,
                                 align: "center"
                               });

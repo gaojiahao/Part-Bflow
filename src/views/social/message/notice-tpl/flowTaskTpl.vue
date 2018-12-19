@@ -5,9 +5,10 @@
     <div class="msg-comment">
         <div class="msg-comment-title">
             <Icon type="ios-notifications-outline" :size=18 color="red"/>
-            <span v-if="data.noticeSource=='taskCreate'"> 工作流-新任务通知</span>
-            <span v-if="data.noticeSource=='taskTransfer'">工作流-转办任务通知</span>
-            <span v-if="data.noticeSource.includes('taskComplete')">工作流-任务已办<span  v-if="data.noticeSource.includes('taskInformed')">知会</span>通知</span>
+            <span v-if="data.noticeSource.includes('taskCreate')"> 工作流-新任务通知</span>
+            <span v-if="data.noticeSource.includes('taskTransfer')">工作流-转办任务通知</span>
+            <span v-if="data.noticeSource.includes('taskComplete')">工作流-任务已办通知</span>
+            <span v-if="data.noticeSource.includes('taskInformed')">知会通知</span>
             <span v-if="data.noticeSource=='taskRetract' || data.noticeSource=='taskStop'">工作流-任务取消通知</span>
             
         </div>

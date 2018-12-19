@@ -118,6 +118,7 @@ export default {
               this.selectPositionModal();
               this.departmentSelection = [];
               this.departmentSelectData = [];
+              this.searchDepValue = '';
           }
       }
   },

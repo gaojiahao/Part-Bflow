@@ -92,14 +92,22 @@
           <input type='submit' value="保存" style="background-color:rgb(0, 150, 136)" class="config-action-submit" id="save" />
           <input type='submit' value="返回" style="background-color:rgb(0, 150, 136)" class="config-action-submit" id="back" v-if="moduleId"/>
         </div>
-        <Drawer title="节点详情" v-model="drawerVisable" :mask-closable="false" closable transfer>
+       
+        <Drawer title="节点详情" v-model="drawerVisable" transfer>
           <Form :model="NodeDetailFrom" :labelWidth="60" ref="NodeDetailFrom" >
             <FormItem label="名称:" style="font-size:16px" prop="title">
                 <Input v-model="NodeDetailFrom.title" disabled/>
             </FormItem>
             <FormItem label="下级节点" :labelWidth="60" prop="nextNode">
               <Select multiple v-model="NodeDetailFrom.nextNode" clearable>
-                <Option v-for="item in appNodes" v-if="item.uniqueId !== NodeDetailFrom.uniqueId" :value="item.uniqueId" :key="item.uniqueId">{{item.title}}</Option>
+                <Option 
+                  v-for="item in appNodes" 
+                  :key="item.uniqueId"
+                  v-if="item.uniqueId !== NodeDetailFrom.uniqueId" 
+                  :value="item.uniqueId" 
+                  >
+                  {{item.title}}
+                </Option>
               </Select>
             </FormItem>
           </Form>
@@ -1053,4 +1061,3 @@ export default {
   }
 };
 </script>
-

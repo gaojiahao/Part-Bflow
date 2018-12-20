@@ -1,6 +1,6 @@
 <template>
   <div class="card ">
-    <Poptip class="badge-custom" width="660" placement="right-end" @on-popper-show="popperShow" v-if="type!=='subject'" :transfer="true">
+    <Poptip trigger="hover" class="badge-custom" width="660" placement="right-end" @on-popper-show="popperShow" v-if="type!=='subject'" :transfer="true">
       <Badge :count="taskCount"></Badge>
       <div slot="title">
         <h3>{{appinfo.text+' - 待办任务'}}</h3>

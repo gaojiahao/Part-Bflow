@@ -14,7 +14,8 @@
             <span class="knowledge-desc-crtTime">{{ knowledgeForm.crtTime }}</span>
         </Row>
         <Row class="knowledge-content">
-            <div ref="editor" class="knowledge-content-desc"></div>
+            <div ref="toolbar" style="display:none"></div>
+            <div ref="text" style="display:none"></div>
             <div v-html="knowledgeForm.content" class="w-e-text"></div>
             <knowledge-comments></knowledge-comments>
         </Row>
@@ -65,7 +66,7 @@ export default {
     getKnowledgeDataById() {
       getKnowledgeTypeDataById(this.knowledgeId).then(res => {
         this.knowledgeForm = res
-        this.editor = new E(this.$refs.editor)
+        this.editor = new E(this.$refs.toolbar,this.$refs.text)
         this.editor.create();
       })
     }

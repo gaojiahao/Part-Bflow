@@ -16,6 +16,8 @@
               </Input>
           </div>
         </div>
+        <div ref="toolbar" style="display:none"></div>
+        <div ref="text" style="display:none"></div>
         <div class="knowledge-list" id="knowledgeList">
           <Row class="knowledge-list-item"  v-for="(knowledge,index) of knowledgeData":key="index" :gutter="8">
               <Col :span="knowledge.img?'22':'24'">
@@ -24,7 +26,6 @@
                   <span @click="deleteKnowledge(knowledge,index)" class="knowledge-delete">删除</span>
                 </div>
                 <p v-html="knowledge.content"  class="w-e-text"></p>
-                <p ref="editor" style="display:none;"></p>
                 <span>{{ knowledge.creator }}</span>
                 <span>{{ knowledge.crtTime }}</span>
               </Col>
@@ -101,9 +102,6 @@ export default {
             }
           });
         }
-        this.editor = new E(this.$refs.editor);
-        this.editor.toolbarSelector = '';
-        this.editor.create();
       })
     },
     //新增知识库数据
@@ -177,9 +175,12 @@ export default {
     }
   },
   mounted() {
-    this.getAllKnowledgeData();
     this.handleScroll();
-    
+    this.editor = new E(this.$refs.toolbar,this.$refs.text)
+    this.editor.create();
+  },
+  created() {
+    this.getAllKnowledgeData();
   }
 };
 </script>

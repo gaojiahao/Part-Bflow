@@ -179,7 +179,11 @@ export default {
       });
     },
     goBack() {
-      this.$router.push({path:'/knowledge/list'});
+      if(this.knowledgeId){
+        this.$router.push({path:`/knowledge/view/${this.knowledgeId}`});
+      }else{
+        this.$router.push({path:`/knowledge/list`});
+      }
     },
     //保存
     saveKnowledge(isSave) {

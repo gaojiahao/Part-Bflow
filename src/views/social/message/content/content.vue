@@ -44,6 +44,8 @@
                     <change-log-notice :data="n" v-if="n.type=='appChangeLog'"></change-log-notice>
 
                     <instance-change-notice :data="n" v-if="n.type=='instanceStatusChange'"></instance-change-notice>
+
+                    <export-import-notice :data="n" v-if="n.type=='fileOut'"></export-import-notice>
                     
                 </div>
             </Col>
@@ -63,6 +65,7 @@ import ProStatusTpl from "@/views/social/message/notice-tpl/pro-status-tpl";
 import InstanceCreateNotice from "@/views/social/message/notice-tpl/instance-create-notice";
 import ChangeLogNotice from "@/views/social/message/notice-tpl/change-log-notice";
 import InstanceChangeNotice from "@/views/social/message/notice-tpl/instance-change-notice";
+import ExportImportNotice from "@/views/social/message/notice-tpl/export-import-notice";
 
 import Messageistory from "@/views/social/message/content/messageistory";
 
@@ -79,7 +82,8 @@ export default {
         InstanceCreateNotice,
         ChangeLogNotice,
         InstanceChangeNotice,
-        Messageistory
+        Messageistory,
+        ExportImportNotice
     },
     data(){
         return {

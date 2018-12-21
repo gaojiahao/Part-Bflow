@@ -33,7 +33,7 @@
         <my-pop-tip :userInfo="userInfo" trigger="click">
           <div @click="showUserInfo" slot="userCard" class="content-instance-admin">{{appinfo.administrator}}</div>
         </my-pop-tip>
-        <Tooltip content="创建实例" :transfer="true" style="margin-left: 7px;;float: right;">
+        <Tooltip content="创建实例" :transfer="true" style="margin-left: 7px;float: right;">
           <i 
             class="iconfont content-instance-add" 
             @click="handlerAddInstance" 

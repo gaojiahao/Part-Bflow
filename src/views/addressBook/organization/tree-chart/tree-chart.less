@@ -1,0 +1,40 @@
+@org_item_width:180px;
+
+    .tree-container{
+        min-height: 500px;
+
+        .edge{
+          display:none;
+        }
+
+        .orgchart {
+          width: 100%;
+          background: #eee;
+          .node{
+            width: @org_item_width+10px;
+          }  
+        }
+    }
+
+.org-item{
+        width: @org_item_width;
+    height: 60px;
+    border: 1px solid #ddd;
+    position: relative;
+    background-color: #fff;
+    &-img{
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    }
+
+    &-content{
+    position: absolute;
+    top: 50%;
+    left: 50px;
+    transform: translateY(-50%);
+        }
+}

@@ -16,7 +16,7 @@
             <p>{{ workguideData.comment }}</p>
         </Row>
         <Row class="workguide-read">
-            <img v-for="(list,index) of workguideData.workStepList" :key="index" :src="list.image"/>
+            <img v-for="(list,index) of workguideData.workStepList" :key="index" :src="list.image" @click="goAnchor(index)"/>
             <router-link :to="{ name:'wokdGuideStep',params:{id: workguideData.id}}">
                 <div class="workguide-read-go">
                     步骤阅读<Icon type="ios-arrow-forward" style="font-size:23px;margin-bottom:4px;" />
@@ -25,8 +25,8 @@
         </Row>
         <Row class="workguide-content">
             <Timeline>
-                <TimelineItem  v-for="(data,idx) of workguideData.workStepList" :key="idx">
-                  <div class="step-num" slot="dot">{{idx+1}}</div>
+                <TimelineItem  v-for="(data,idx) of workguideData.workStepList" :key="idx" :id="`anchor${idx}`">
+                  <div :class="{'step-num':true,'step-num-anchor': idx === isAnchor}" slot="dot">{{idx+1}}</div>
                   <div class="step-detail">
                         <h2>{{ data.title }}</h2>
                         <div class="step-detail-comment">{{ data.comment }}</div>
@@ -57,6 +57,7 @@ export default {
   data() {
     return {
       workguideId: this.$route.params.id,
+      isAnchor: -1,
       workguideData: {}
     };
   },
@@ -68,6 +69,10 @@ export default {
         }).catch(error => {
             this.$Message.error(error.data.message);
         });
+    },
+    goAnchor(index) {
+        this.isAnchor = index;
+        document.querySelector(".workguide").scrollTop = this.$el.querySelector(`#anchor${index}`).offsetTop;
     }
   },
   created() {

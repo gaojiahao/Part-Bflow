@@ -30,8 +30,8 @@ export default {
               <div class="org-item-content">
                 <a href="/dist/#/addressBook/organization/detail/${data.groupId}" target="_blank">${data.groupName}</a>
                 <div>
-                  <a href="/dist/#/addressBook/user/detail/${data.creatorId}" target="_blank">
-                    ${data.creator?data.creator:" "}
+                  <a href="/dist/#/addressBook/user/detail/${data.principal}" target="_blank">
+                    ${data.principalName?data.principalName:" "}
                   </a>
                 </div>
               </div>

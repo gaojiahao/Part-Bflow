@@ -6,6 +6,14 @@ import 'iview/dist/styles/iview.css';
 import fontIcon from './assets/App.css';
 import { deepstream } from './plugin/deepstream';
 
+import './plugin/jquery-vender.js'
+import './plugin/jqorg/js/jquery.min.js'
+import './plugin/jqorg/js/jquery.orgchart.js'
+
+import "./plugin/jqorg/css/font-awesome.min.css"
+import "./plugin/jqorg/css/jquery.orgchart.css"
+import "./plugin/jqorg/css/style.css"
+
 require('@/directive/index');
 require('@/filter/index');
 require('./assets/App.css');

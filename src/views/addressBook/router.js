@@ -59,6 +59,14 @@ export const addressBookRouter = {
           component: () =>
             import('@/views/addressBook/organization/board/board.vue')
         }, {
+            path: 'chart',
+            name: 'org-chart',
+            meta: {
+              title: '组织树图'
+            },
+            component: () =>
+              import('@/views/addressBook/organization/tree-chart/tree-chart.vue')
+          }, {
           path: 'detail/:groupId',
           name: 'org-detail',
           meta: {

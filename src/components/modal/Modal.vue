@@ -20,7 +20,7 @@
           <footer class="modal-content-footer" :class="inputAlign" v-show="!footerHide">
             <slot name="footer">
               <input type="submit" value="取消" class="input-submit-cancel" @click.prevent="cancel" />
-              <input type="submit" value="确定" class="input-submit-ok" @click.prevent="ok" />
+              <input type="submit" value="确定" class="input-submit-ok" @click.prevent="ok" @keyup.enter="keyup"/>
             </slot>
           </footer>
         </div>
@@ -125,6 +125,10 @@ export default {
     ok() {
       this.$emit("on-ok");
       // this.$emit('input', false);
+    },
+
+    keyup(){
+      this.$emit('on-key-up');
     }
   },
 

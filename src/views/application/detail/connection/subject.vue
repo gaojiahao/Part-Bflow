@@ -46,6 +46,23 @@ export default {
           }
         },
         {
+          title: "子科目",
+          key: "accountName",
+          align: "left"
+        },
+        {
+          title: "子科目状态",
+          key: "accountName",
+          align: "left",
+          render: (h, params) => {
+            if (params.row.classify === 1) {
+              return h("span", {}, "");
+            } else {
+              return h("span", {}, "启用");
+            }
+          }
+        },
+        {
           title: "数据归集",
           key: "dataCollection",
           align: "left",
@@ -78,6 +95,65 @@ export default {
             }
           }
         },
+        {
+          title: "关系管理",
+          key: "classify",
+          align: "left",
+          render: (h, params) => {
+            return h('Checkbox', {
+              props: {
+                value: true
+              },
+              on: {
+                'on-change': (status) => {
+                  console.log(status);
+                }
+              }
+            }, '启用');
+          }
+        },
+        {
+          title: "核销方式",
+          key: "classify",
+          align: "left",
+          render: (h, params) => {
+            if (params.row.classify === 1){
+              return h('span',{},'');
+            }else{
+              return h('Checkbox', {
+                props: {
+                  value: true
+                },
+                on: {
+                  'on-change': (status) => {
+                    console.log(status);
+                  }
+                }
+              }, '按单核销');
+            }
+          }
+        },
+        {
+          title: "余额校验",
+          key: "classify",
+          align: "left",
+          render: (h, params) => {
+            if (params.row.classify === 1){
+              return h('span',{},'');
+            }else{
+              return h('Checkbox', {
+                props: {
+                  value: true
+                },
+                on: {
+                  'on-change': (status) => {
+                    console.log(status);
+                  }
+                }
+              }, '启用');
+            }
+          }
+        }
       ],
       subjects: []
     };

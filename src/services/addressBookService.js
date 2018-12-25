@@ -176,11 +176,8 @@ export const getAllRoleData = (pageSize, currentPage, filter) => request('/H_rol
  * @author XiaoYing
  * @description 获取所用权限数据
  */
-export const getAllPermissionData = (parentId,limit,currentPage,filter) => request('/H_roleplay-si/ds/getPermissionListByParentId', {
-  parentId: parentId,
-  limit: limit,
-  page: currentPage,
-  filter: filter
+export const getAllPermissionData = (parentCode) => request('/H_roleplay-si/ds/getInventoryBom', {
+  parentCode: parentCode
 });
 
 /**

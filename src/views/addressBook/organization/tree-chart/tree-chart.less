@@ -1,20 +1,21 @@
 @org_item_width:180px;
 @lines_rgba:rgba(162, 214, 244, 0.8);
-    .tree-container{
-        min-height: 500px;
+.tree-container{
+    min-height: 500px;
+    .edge{
+        display:none;
+    }
 
-        .edge{
-          display:none;
-        }
-
-        .orgchart {
-          background: #fff;
-          .node{
+    .orgchart{
+        background: #fff;
+        .node{
             width: @org_item_width+10px;
           } 
-          
+        .node:hover{
+            background-color: transparent !important;
         }
     }
+}
 
 .orgchart{
     .lines{
@@ -32,14 +33,18 @@
             border-top: 2px solid @lines_rgba !important;
         }
     }
+    
+}
+
+.orgchart .node.focused{
+    background-color: transparent !important; 
 }
 
 .org-item{
     width: @org_item_width;
     height: 64px;
-    border: 1px solid #ddd;
     position: relative;
-    background-color: #eee;
+    background-color: #4791b0;
     box-shadow: 4px 4px 10px #bbb8b8;
     border-radius: 3px;
     &-img{
@@ -52,11 +57,19 @@
     }
 
     &-content{
-    position: absolute;
-    top: 50%;
-    left: 50px;
-    transform: translateY(-50%);
+        position: absolute;
+        top: 50%;
+        left: 50px;
+        transform: translateY(-50%);
+
+        a{
+            color: #fff;
         }
+
+        a:hover{
+            color: #0a4279;
+        }
+    }
 }
 
 .node:hover .icon-pos{
@@ -68,7 +81,7 @@
     position: absolute;
     top: 48px;
     left: 85px;
-    color: #407ebe;
+    color: #014764;
 }
 
 .icon-rotate{

@@ -4,16 +4,17 @@
 <template>
     <div class="message">
         <div class="message-sider">
-            <div class="message-sider-header">消息通知</div>
-            <div class="message-sider-list">
-                <router-link :to="{ name:'todo'}">
+            <div class="message-sider-header">
+                消息通知
                 
-                    <div class="message-sider-list-item" v-bind:class="{ 'active':$route.name=='todo' }">
-                        <Icon type="ios-cloud" color="#e76838" size=30 />
-                        所有待办
-                    </div>
-                </router-link>
-               
+                <Tooltip content="工作流任务" >
+                    <router-link :to="{ name:'flowtask'}">
+                        <Icon type="md-repeat" size=24  />
+                    </router-link>
+                </Tooltip>
+            </div>
+            <div class="message-sider-list ">
+                <navigation></navigation>
             </div>
         </div>
         <div class="message-content">
@@ -22,8 +23,12 @@
     </div>
 </template>
 <script>
+import Navigation from './navigation/navigation';
 export default {
     name:'MessageLayout',
+    components:{
+        Navigation
+    },
     data(){
         return {
         }
@@ -32,6 +37,11 @@ export default {
        
     },
     mounted(){
+        let activeNavigatioIdOfNotice = localStorage.getItem('activeNavigatioIdOfNotice');
+
+        if(activeNavigatioIdOfNotice){
+            this.$router.push('/social/message/list/' + activeNavigatioIdOfNotice);
+        }
     }
 }
 </script>

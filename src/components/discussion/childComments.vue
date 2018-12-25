@@ -30,7 +30,9 @@
                 <span v-html="comment.content"></span>
             </p>
             <p >
-                 <span v-overTimeDirective="{startTime:comment.crtTime,describe:'前' }" />
+                <span>
+                    {{comment.times}}
+                </span>
                 <span class="fr">
                     <span  class="cursor-pointer" @click="handleShowReply(comment)">回复</span>
                     

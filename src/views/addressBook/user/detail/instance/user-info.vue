@@ -290,15 +290,17 @@ export default {
           userCode: [
           {
             required: true,
-            message: "请输入用户工号",
-            trigger: "blur"
+            message: "用户工号只能包含字母或数字或汉字或下划线",
+            trigger: "blur",
+            pattern: /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/
           }
         ],
         nickname: [
           {
             required: true,
-            message: "请输入用户名称",
-            trigger: "blur"
+            message: "用户名称只能包含字母或数字或汉字或下划线",
+            trigger: "blur",
+            pattern: /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/
           }
         ],
         entityName: [
@@ -319,7 +321,7 @@ export default {
             required: true,
             message: "手机号输入不合法",
             trigger: "blur",
-            pattern: /^[1][3,4,5,7,8][0-9]{9}$/
+            pattern: /^[1][3,4,5,7,8,9][0-9]{9}$/
           }
         ],
         email: [

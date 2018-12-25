@@ -105,16 +105,17 @@ export const getTaskCountFilter = (type,technicsCode,filter) => request('/H_role
 });
 
 /** 
- * 获取工序任务数量
- * 
- */
-export const getProcedureInfoFilter = (procedureCode,type,currentPage,pageSize=6,filter="") => request('/H_roleplay-si/objTechnicsProcessRel/getProcedureInfoFilter',{
+* 获取工序任务数量
+* 
+*/
+export const getProcedureInfoFilter = (procedureCode,processRouteCode,type,currentPage,pageSize=6,filter="") => request('/H_roleplay-si/objTechnicsProcessRel/getProcedureInfoFilter',{
   procedureCode: procedureCode,
+  technicsCode: processRouteCode,
   type:type,
   page:currentPage,
   limit:pageSize,
   filter:filter
-});
+  });
 
 /** 
  * 获取表单视图

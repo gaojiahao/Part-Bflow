@@ -51,7 +51,7 @@
           @on-select-cancel="selectUserCancel" 
           @on-select-all="onUserSelectAll" 
           @on-selection-change="selectUserClick" 
-          height="400" 
+          :height="tableHeight" 
           stripe size="small" 
           :loading="userLoading" 
           :columns="userColumns" 
@@ -94,6 +94,9 @@ export default {
   props: {
       showUserSelector: {
           type: Boolean
+      },
+      isInstance: {
+        type: Boolean
       }
   },
   data() {
@@ -102,6 +105,7 @@ export default {
       userTotal: 0,
       userCurrentPage: 1,
       pageSize: 10,
+      tableHeight: 400,
       userLoading: true,
       showUserModal: false,
       userColumns: [
@@ -142,7 +146,18 @@ export default {
               this.selectUserModal();
               this.userSelection = [];
               this.userSelectData = [];
+              this.searchUserValue = '';
           }
+      },
+      isInstance: function(value){
+        if(value){
+          this.userColumns = [
+            { type: "selection", width: 60, align: "center" },
+            { title: "姓名", key: "nickname" },
+            { title: "工号", key: "userCode" }
+          ];
+          this.tableHeight = 200;
+        }
       }
   },
   methods: {

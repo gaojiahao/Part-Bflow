@@ -1,6 +1,6 @@
 <template>
   <div class="card ">
-    <Poptip class="badge-custom" width="660" placement="right-end" @on-popper-show="popperShow" v-if="type!=='subject'" :transfer="true">
+    <Poptip trigger="hover" class="badge-custom" width="660" placement="right-end" @on-popper-show="popperShow" v-if="type!=='subject'" :transfer="true">
       <Badge :count="taskCount"></Badge>
       <div slot="title">
         <h3>{{appinfo.text+' - 待办任务'}}</h3>
@@ -22,8 +22,10 @@
     <img :src="appinfo.icon" :class="'img-radius-'+this.appinfo.type" />
     <div class="content">
       <div class="content-title">
-        <h5 @click="redirectTo(appinfo)">{{appinfo.text}}</h5>
-        <a @click.stop="goAppSetting(appinfo)" class="content-title-detail">详情</a>
+        <Tooltip :content="appinfo.text" placement="top-start">
+          <h5 @click="redirectTo(appinfo)">{{appinfo.text}}</h5>
+        </Tooltip>
+        <a @click.stop="goAppSetting(appinfo)" class="content-title-detail"  v-if="this.appinfo.type !== 'system'">详情</a>
       </div>
       <div class="content-instance">
         <span class="content-instance-name">{{appinfo.administrator?appinfo.transName:appinfo.transName}}</span>
@@ -31,7 +33,7 @@
         <my-pop-tip :userInfo="userInfo" trigger="click">
           <div @click="showUserInfo" slot="userCard" class="content-instance-admin">{{appinfo.administrator}}</div>
         </my-pop-tip>
-        <Tooltip content="创建实例" :transfer="true" style="margin-left: 7px;;float: right;">
+        <Tooltip content="创建实例" :transfer="true" style="margin-left: 7px;float: right;">
           <i 
             class="iconfont content-instance-add" 
             @click="handlerAddInstance" 
@@ -323,6 +325,7 @@ export default {
         position: relative;
         width: 120px;
         cursor: pointer;
+        color: #000;
         font-size: 16px;
         text-overflow: ellipsis;
         overflow: hidden;

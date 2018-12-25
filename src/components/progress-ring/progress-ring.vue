@@ -58,16 +58,20 @@ export default {
     },
 
     watch:{
-        progress(){
+       progress(){
             this.percent = 0;
-            const interval = setInterval(() => {
-                this.percent += 1;
-                if (this.progress === this.percent){
-                    clearInterval(interval);
-                }else if(this.progress === 0){
-                    clearInterval(interval);
-                }
-            }, 10);
+            if(this.progress){
+                const interval = setInterval(() => {
+                    this.percent += 1;
+                    if (this.progress === this.percent){
+                        clearInterval(interval);
+                    }else if(this.progress === 0){
+                        clearInterval(interval);
+                    }
+                }, 10);
+            }else{
+                this.progress = 0;
+            }
         }
     },
     data() {

@@ -532,8 +532,8 @@ export const getCompanyList = (groupId, target, currentPage, pageSize) => reques
  */
 export const getGroupUser = (groupId, currentPage, pageSize,text) => request('/H_roleplay-si/sysGroup/getGroupUser', {
   groupId: groupId,
-  currentPage: currentPage,
-  pageSize: pageSize,
+  page: currentPage,
+  limit: pageSize,
   search: text 
 })
 /**

@@ -131,9 +131,10 @@ export default {
               title: val.text,
               id: val.id,
               loading: false,
-              children: [],
+              indeterminate: val.halfSelected,
               leaf: val.leaf,
-              checked: val.check
+              checked: val.check,
+              children: []
             });
           }
         })

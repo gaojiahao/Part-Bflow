@@ -287,6 +287,7 @@ export default {
           property: "name"
         }
       ]);
+      this.currentPage = 1;
       this.getDirPermissionData(filter);
     }
   },

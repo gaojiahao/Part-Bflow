@@ -50,7 +50,8 @@
 <script>
 import {
   getAllPermissionData,
-  addPermission
+  addPermission,
+  deletePermission
 } from "@/services/addressBookService.js";
 
 export default {
@@ -121,6 +122,16 @@ export default {
     //选择树节点
     onCheckChange(selectArray, currentSelect) {
       this.selectPermission = selectArray;
+      if(!currentSelect.checked){
+        deletePermission(this.target.targetId,currentSelect.id,this.target.type).then(res => {
+          if (res.success) {
+            this.$Message.success("删除成功");
+            this.$emit("permissionChange");
+          }
+        }).catch(error => {
+            this.$Message.error(error.data.message);
+        });
+      }
     },
     //加载所有权限数据
     getAllPermissionDatas(id, callback) {

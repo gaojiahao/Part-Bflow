@@ -122,6 +122,7 @@ export default {
     },
     //权限过滤
     permissionFilter() {
+      this.currentPage = 1;
       this.getIndirPermissionData(this.searchValue);
     }
   },

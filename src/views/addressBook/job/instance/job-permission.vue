@@ -152,7 +152,7 @@ export default {
       reload: false,
       searchValue: "",
       target: {
-        type: 'sys_role_permission',
+        type: 'role',
         targetId: this.jobId
       }
     };

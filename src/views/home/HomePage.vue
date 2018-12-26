@@ -84,15 +84,17 @@ export default {
   mounted() {
     this.subscribeMessage();
 
-    getMyFavorite().then(res => {
-      if (res.tableContent.length > 0) {
-        this.favoriteMenu.children = res.tableContent;
-      }
-    });
-
-    //获取当前用户所有待办任务
-    getCurrentUserAllTasks().then(res => {
-      this.allTaskCount = res.tableContent;
+    // getMyFavorite().then(res => {
+    //   if (res.tableContent.length > 0) {
+    //     this.favoriteMenu.children = res.tableContent;
+    //   }
+    // });
+    let cache = window.sessionStorage.getItem('roletask.com.r2.cache');
+    if(cache){
+      cache = cache?JSON.parse(cache):{};
+      this.menuList = cache['/ds/getMenu'];
+      this.spinShow = false;
+    }else{
       //获取菜单信息
       getMenu().then(res => {
         this.urlMd5(res);
@@ -104,6 +106,11 @@ export default {
         }
         this.spinShow = false;
       });
+    }
+
+    //获取当前用户所有待办任务
+    getCurrentUserAllTasks().then(res => {
+      this.allTaskCount = res.tableContent;
     });
 
     getPulsationDiagramCase().then(res => {

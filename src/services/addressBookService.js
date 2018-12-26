@@ -24,10 +24,10 @@ export const getListById = (listId) => request('/H_roleplay-si/ds/list/getListBy
  * @author XiaoYing
  * @description 添加权限
  */
-export const addPermission = (list,single, multi) => request('/H_roleplay-si/ps/updatePermissionRelation', {
-  list: list,
-  multi: multi,
-  single: single
+export const addPermission = (permissionIds,menuIds, objId,type) => request(`/H_roleplay-si/ps/${type}/save`, {
+  permissionIds: permissionIds,
+  menuIds: menuIds,
+  objId: objId
 }, 'POST');
 
 /************  用户  **************/
@@ -176,11 +176,9 @@ export const getAllRoleData = (pageSize, currentPage, filter) => request('/H_rol
  * @author XiaoYing
  * @description 获取所用权限数据
  */
-export const getAllPermissionData = (parentId,limit,currentPage,filter) => request('/H_roleplay-si/ds/getPermissionListByParentId', {
+export const getAllPermissionData = (parentId,objId,type) => request(`/H_roleplay-si/ps/${type}/getChildNode`, {
   parentId: parentId,
-  limit: limit,
-  page: currentPage,
-  filter: filter
+  objId: objId
 });
 
 /**

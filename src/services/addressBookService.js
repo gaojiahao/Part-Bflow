@@ -30,6 +30,15 @@ export const addPermission = (permissionIds,menuIds, objId,type) => request(`/H_
   objId: objId
 }, 'POST');
 
+/**
+ * @author XiaoYing
+ * @description 删除权限
+ */
+export const deletePermission = (objId,nodeId,type) => request(`/H_roleplay-si/ps/${type}/delete`, {
+  nodeId: nodeId,
+  objId: objId
+}, 'POST');
+
 /************  用户  **************/
 
 /**

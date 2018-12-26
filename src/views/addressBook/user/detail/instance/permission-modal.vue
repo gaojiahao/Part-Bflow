@@ -3,8 +3,9 @@
     height: 500px;
     overflow: hidden;
     overflow-y: auto;
+    overflow-x: auto;
     .ivu-tree-arrow i{
-      font-size: 20px;
+      font-size: 18px;
     }
   }
   /*滚动条样式*/
@@ -116,7 +117,7 @@ export default {
     getAllPermissionDatas(id,callback) {
       let treeData = [],
           parentId = id ? id : 'root';
-      getAllPermissionData(parentId,this.target.type).then(res => {
+      getAllPermissionData(parentId,this.target.targetId,this.target.type).then(res => {
         res.forEach(val => {
           if(val.leaf){
             treeData.push({

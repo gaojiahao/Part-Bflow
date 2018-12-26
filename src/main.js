@@ -23,28 +23,45 @@ import { getCurrentUserInfo } from "@/services/flowService";
 Vue.config.productionTip = false;
 
 Vue.use(iView);
-
-getCurrentUserInfo().then(async (res) => {
-  if (res) {
-
-    let user = res;
-        user.isAdmin =false;
-
-    user.isSysRoleList.map(role=>{
-      if(role.id === 1){
-        user.isAdmin = true;
-      }
-    });
-    Vue.prototype.$currentUser = res;
-    
-    Vue.prototype.$deepstream = await deepstream(res);
-    /* eslint-disable no-new */
+let cache = window.sessionStorage.getItem('roletask.com.r2.cache');
+ if(cache){
+    init(cache);
     new Vue({
       el: '#app',
       router,
       components: { App },
       template: '<App/>'
     })
-  }
-})
+  }else{
+  getCurrentUserInfo().then(async (res) => {
+    if (res) {
+  
+      let user = res;
+          user.isAdmin =false;
+  
+      user.isSysRoleList.map(role=>{
+        if(role.id === 1){
+          user.isAdmin = true;
+        }
+      });
+      Vue.prototype.$currentUser = res;
+      
+      Vue.prototype.$deepstream = await deepstream(res);
+      /* eslint-disable no-new */
+      new Vue({
+        el: '#app',
+        router,
+        components: { App },
+        template: '<App/>'
+      })
+    }
+  })
+}
+
+async function init(cache){
+      let  data = cache?JSON.parse(cache):{};
+      Vue.prototype.$currentUser = data['currentUser'];
+      Vue.prototype.$deepstream = await deepstream(data['currentUser']);
+}
+
 

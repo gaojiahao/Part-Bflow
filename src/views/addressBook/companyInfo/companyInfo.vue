@@ -19,7 +19,7 @@
   <div class="content-wrap">
     <Row class="detail-com-header">
       <div class="detail-com-header-bread">
-        <span class="detail-com-header-bread-user">公司</span>
+        <span @click="goCompanyList" class="detail-com-header-bread-user">公司</span>
         <span class="detail-com-header-bread-others">/</span>
         <span class="detail-com-header-bread-others">{{ (companyInformation&&companyInformation.groupName)?companyInformation.groupName:'创建'}}</span>
       </div>
@@ -113,6 +113,9 @@ export default {
     };
   },
   methods: {
+    goCompanyList() {
+      location.href = '/Site/index.html#page/companys';
+    },
     //切换tab
     onClickTab(currentIndex) {
       this.relativeInstance.forEach((val, k) => {

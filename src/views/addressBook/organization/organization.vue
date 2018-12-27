@@ -5,7 +5,7 @@
 <template>
   <div class="organization-wrap">
     <header class="organization-wrap-header">
-      <span class="organization-wrap-header-org">组织</span>
+      <span @click="goOrgList" class="organization-wrap-header-org">组织</span>
       <span class="organization-wrap-header-others">/</span>
       <span v-show="groupId" class="organization-wrap-header-others">{{name}}</span>
       <span v-show="!groupId" class="organization-wrap-header-others">创建</span>
@@ -467,6 +467,9 @@ export default {
   },
 
   methods: {
+    goOrgList() {
+        location.href = '/Site/index.html#page/origanizations';
+    },
     /** 
      * 切换相关实例
     */

@@ -5,7 +5,7 @@
 <template>
   <div class="job-wrap">
     <header class="job-wrap-header">
-      <span class="job-wrap-header-job">职位</span>
+      <span @click="goRoleList" class="job-wrap-header-job">职位</span>
       <span class="job-wrap-header-others">/</span>
       <span v-show="jobId" class="job-wrap-header-others">{{name}}</span>
       <span v-show="!jobId" class="job-wrap-header-others">创建</span>
@@ -184,6 +184,9 @@ export default {
   },
 
   methods: {
+    goRoleList() {
+        location.href = '/Site/index.html#page/jobs';
+    },
     handlerViewChange(index) {
       this.actionIndex = index;
     },

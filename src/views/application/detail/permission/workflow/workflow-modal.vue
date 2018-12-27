@@ -201,8 +201,9 @@ export default {
     },
     //所有工作流表格分页按钮点击事件
     onPageChange(currentPage) {
+      let filter = JSON.stringify([{operator:"like",value:this.searchValue,property:"processName"}]);
       this.allCurrentPage = currentPage;
-      this.getAllWorkflowData();
+      this.getAllWorkflowData(filter);
     },
     //已关联工作流表格分页按钮点击事件
     onRelativePageChange(currentPage) {

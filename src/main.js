@@ -57,7 +57,6 @@ let cache = window.sessionStorage.getItem('roletask.com.r2.cache');
     }
   })
 }
-
 async function init(cache){
       let  data = cache?JSON.parse(cache):{};
       Vue.prototype.$currentUser = data['currentUser'];

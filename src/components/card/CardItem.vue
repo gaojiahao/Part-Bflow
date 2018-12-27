@@ -1,12 +1,30 @@
 <template>
   <div class="card ">
-    <Poptip trigger="hover" class="badge-custom" width="660" placement="right-end" @on-popper-show="popperShow" v-if="type!=='subject'" :transfer="true">
+    <Poptip trigger="hover" class="badge-custom" width="720" placement="right-end" @on-popper-show="popperShow" v-if="type!=='subject'" :transfer="true">
       <Badge :count="taskCount"></Badge>
       <div slot="title">
-        <h3>{{appinfo.text+' - 待办任务'}}</h3>
+        <label>{{appinfo.text+' - 待办任务'}}</label>
+        <Button 
+            type="primary" 
+            style="height:28px;" 
+            :disabled="onPageSelection.length === 0"
+            @click="handleBatchApproval"
+            >
+            批量审批
+        </Button>
       </div>
       <div slot="content" class="api">
-        <Table :columns="columns" :data="columnData" size="small"></Table>
+        <Table 
+          :loading ="loading"
+          :columns="columns" 
+          :data="columnData" 
+          size="small"
+          ref="selection" 
+          @on-select-all="onSelectAll" 
+          @on-selection-change="handerSelectionChange" 
+          @on-select-cancel="onSelectCancel"
+          >
+        </Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
             <Page :total="pageTotal" :current="currentPage" size="small" :page-size="pageSize" @on-change="changeCurrentPage" show-total></Page>
@@ -19,7 +37,10 @@
       <Badge :count="taskCount" v-if="type==='subject'" type="primary"></Badge>
     </div>
 
-    <img :src="appinfo.icon" :class="'img-radius-'+this.appinfo.type" />
+    <img 
+      :src="appinfo.icon" 
+      :class="'img-radius-'+this.appinfo.type"
+      onerror='this.src="resources/images/icon/img-loading-error.png"'/>
     <div class="content">
       <div class="content-title">
         <Tooltip :content="appinfo.text" placement="top-start">
@@ -47,7 +68,7 @@
 </template>
 
 <script>
-import { getAppTaskCount, getFormViews } from "@/services/flowService";
+import { getAppTaskCount, getFormViews,commitBatchTask } from "@/services/flowService";
 import { getUserInfoByUserId } from "@/services/appService.js";
 import MyPopTip from "@/components/poptip/MyPopTip";
 export default {
@@ -59,7 +80,14 @@ export default {
     return {
       taskCount: 0,
       type: this.appinfo.url.split("/")[0],
+      onPageSelection:[],
       columns: [
+         {
+          type: 'selection',
+          width: 60,
+          align: 'center',
+          key:'unableEdit',
+        },
         {
           title: "交易号",
           key: "transCode",
@@ -123,7 +151,7 @@ export default {
         }
       ],
       columnData: [],
-      loading: true,
+      loading: false,
       pageTotal: 0, //table总数
       pageSize: 10,
       currentPage: 1, //table当前页
@@ -206,6 +234,8 @@ export default {
         listId: this.pageListId,
         limit: this.pageSize
       };
+      this.onPageSelection = [];
+        this.loading = true;
       getAppTaskCount(params).then(res => {
         this.pageTotal = res.total;
         if (res.tableContent.length > 0) {
@@ -229,6 +259,19 @@ export default {
       getAppTaskCount(params).then(res => {
         if (res.tableContent.length > 0) {
           this.columnData = res.tableContent;
+
+          this.columnData.forEach(item=>{
+            if(this.onPageSelection.length>0){
+                this.onPageSelection.forEach(sel=>{
+                    if(sel.listId === item.listId){
+                    item._checked = true;
+                }
+                })
+            }
+            if(!item.unableEdit){
+                item._disabled = true;
+            }
+          })
           this.loading = false;
         }
       });
@@ -262,7 +305,92 @@ export default {
           this.$Message.info("表单模板为空");
         }
       });
-    }
+    },
+
+     //批量审批任务
+        handleBatchApproval(){
+            this.$Modal.confirm({
+                title: '审批',
+                content: '<p></p>',
+                closable:true,
+                okText:"同意",
+                cancelText:"不同意",
+                onOk: () => {
+                    let selection = this.onPageSelection;
+                    let data = [];
+                    selection.forEach(sel=>{
+                        data.push({
+                            taskId:sel.taskId,
+                            transCode:sel.transCode,
+                            result:1,
+                            comment:""
+                        })
+                    })
+                    commitBatchTask(data).then(res=>{
+                        this.$Message.success(res.message)
+                    })
+                },
+                onCancel: () => {
+                    let selection = this.onPageSelection;
+                    let data = [];
+                    selection.forEach(sel=>{
+                        data.push({
+                            taskId:sel.taskId,
+                            transCode:sel.transCode,
+                            result:0,
+                            comment:""
+                        })
+                    })
+                    commitBatchTask(data).then(res=>{
+                        this.$Message.success(res.message)
+                    })
+                }
+            })
+
+        },
+
+        //全选
+        onSelectAll(selection) {
+            let obj = {};
+            //触发全选事件
+            //全选
+            this.onPageSelection.push(...selection);
+            //数组去重
+            this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+                obj[next.listId] ? "" : (obj[next.listId] = true && cur.push(next));
+                return cur;
+            }, []);
+        },
+
+        //保存分页选中
+        handerSelectionChange(selection) {
+            //取消全选
+            if (selection.length === 0) {
+                let s = this.$refs.selection.data;
+                let p = this.onPageSelection;
+                s.map(item => {
+                p = p.filter(f => {
+                    return f.listId !== item.listId;
+                });
+                });
+                this.onPageSelection = p;
+            } else {
+                let obj = {};
+                this.onPageSelection.push(...selection);
+                //数组去重
+                this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+                obj[next.listId] ? "" : (obj[next.listId] = true && cur.push(next));
+                return cur;
+                }, []);
+            }
+        },
+
+        //单选取消
+        onSelectCancel(selection, row) {
+            this.onPageSelection = this.onPageSelection.filter(f => {
+                return f.listId !== row.listId;
+            });
+        },
   }
 };
 </script>

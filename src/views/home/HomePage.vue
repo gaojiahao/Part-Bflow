@@ -81,8 +81,8 @@ export default {
       model: "apps"
     };
   },
-  mounted() {
-    this.subscribeMessage();
+  created() {
+   
 
     // getMyFavorite().then(res => {
     //   if (res.tableContent.length > 0) {
@@ -94,7 +94,7 @@ export default {
       cache = cache?JSON.parse(cache):{};
       this.menuList = cache['/ds/getMenu'];
       this.spinShow = false;
-    }else{
+      }else{
       //获取菜单信息
       getMenu().then(res => {
         this.urlMd5(res);
@@ -108,7 +108,13 @@ export default {
       });
     }
 
-    //获取当前用户所有待办任务
+  
+  },
+
+  mounted(){
+     this.subscribeMessage();
+
+       //获取当前用户所有待办任务
     getCurrentUserAllTasks().then(res => {
       this.allTaskCount = res.tableContent;
     });
@@ -138,10 +144,14 @@ export default {
     subscribeMessage: function() {
       let deepstream = this.$deepstream;
       let token = getToken();
-      //消息订阅
-      deepstream.event.subscribe("taskChange/" + this.$currentUser.userId, msg => {
-        this.allTaskCount = msg.tableContent;
-      });
+      this.spinShow = false;
+
+      if(deepstream.event){
+        //消息订阅
+        deepstream.event.subscribe("taskChange/" + this.$currentUser.userId, msg => {
+          this.allTaskCount = msg.tableContent;
+        });
+      }
     },
 
     //处理链接过长时

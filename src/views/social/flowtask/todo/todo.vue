@@ -159,7 +159,7 @@ export default {
                         }
                         })
                     }
-                    if(item.unableEdit){
+                    if(!item.unableEdit){
                         item._disabled = true;
                     }
                 })

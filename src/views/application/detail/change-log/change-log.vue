@@ -34,7 +34,7 @@
         </FormItem>
         
         <FormItem>
-          <input type='button' value="提交" class="timeline-box-form-submit" @click="submitLog" />
+          <Button class="timeline-box-form-submit" @click="submitLog">提交</Button>
         </FormItem>
       </Form>
     </div>

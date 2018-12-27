@@ -57,11 +57,10 @@ let cache = window.sessionStorage.getItem('roletask.com.r2.cache');
     }
   })
 }
-
-async function init(cache){
+ function init(cache){
       let  data = cache?JSON.parse(cache):{};
       Vue.prototype.$currentUser = data['currentUser'];
-      Vue.prototype.$deepstream = await deepstream(data['currentUser']);
+      Vue.prototype.$deepstream =  deepstream(data['currentUser']);
 }
 
 

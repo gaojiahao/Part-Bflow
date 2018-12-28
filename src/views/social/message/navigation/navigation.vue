@@ -11,7 +11,8 @@
                     <div style="color: #5c7893;"><p v-html="nav.comment"></p></div>
                 </div>
 
-                 <div class="navigation-list-item-msgcount" v-if="nav.unreadNum>0">{{nav.unreadNum}}</div>
+                <Badge class="navigation-list-item-msgcount" :count="nav.unreadNum" overflow-count="99" >
+                </Badge>
             </li>
         </router-link>
     </ul>

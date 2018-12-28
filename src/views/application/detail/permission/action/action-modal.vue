@@ -128,22 +128,7 @@ export default {
       isModalDisabled: true,
       allPermissionData: [],
       permissionSelectDatas: [],
-      allPermissionColumns: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
-          title: "动作名称",
-          key: "name",
-          width: 100
-        },
-        {
-          title: "说明",
-          key: "desc"
-        }
-      ],
+      allPermissionColumns: [],
       userSelectData: [],
       orgSelectData: [],
       departmentSelectData: [],
@@ -431,8 +416,36 @@ export default {
       let listId = this.appListId;
       //获取应用权限数据
       if(this.modalName === 'action'){
+        this.allPermissionColumns = [{
+          type: "selection",
+          width: 60,
+          align: "center"
+        },
+        {
+          title: "动作名称",
+          key: "name",
+          width: 100
+        },
+        {
+          title: "说明",
+          key: "desc"
+        }];
         this.getActionPerData(listId);
       }else{
+        this.allPermissionColumns = [{
+          type: "selection",
+          width: 60,
+          align: "center"
+        },
+        {
+          title: "数据源名称",
+          key: "name",
+          width: 100
+        },
+        {
+          title: "说明",
+          key: "desc"
+        }];
         this.getResPerData(listId);
       }
     },

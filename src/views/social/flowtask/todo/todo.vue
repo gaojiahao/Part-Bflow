@@ -142,6 +142,7 @@ export default {
 
             loading:false,
             onPageSelection:[],
+            batchComment:''
         }
     },
     methods:{
@@ -207,12 +208,26 @@ export default {
 
         //批量审批任务
         handleBatchApproval(){
+            this.batchComment = "";
             this.$Modal.confirm({
-                title: '审批',
+                title: '系统提示',
                 content: '<p></p>',
                 closable:true,
                 okText:"同意",
                 cancelText:"不同意",
+                render:(h) => {
+                    return h('Input', {
+                        props: {
+                            value: this.batchComment,
+                            autofocus: true,
+                        },
+                        on: {
+                            input: (val) => {
+                                this.batchComment = val;
+                            }
+                        }
+                    })
+                },
                 onOk: () => {
                     let selection = this.onPageSelection;
                     let data = [];
@@ -221,11 +236,18 @@ export default {
                             taskId:sel.taskId,
                             transCode:sel.businessKey,
                             result:1,
-                            comment:""
+                            comment:this.batchComment
                         })
                     })
                     commitBatchTask(data).then(res=>{
-                        this.$Message.success(res.message)
+                        if(res.success){
+                            this.onPageSelection = [];
+                        }
+                        this.$Message.success({
+                            content:res.message,
+                            closable:true,
+                            duration:0
+                        })
                     })
                 },
                 onCancel: () => {
@@ -236,11 +258,18 @@ export default {
                             taskId:sel.taskId,
                             transCode:sel.businessKey,
                             result:0,
-                            comment:""
+                            comment:this.batchComment
                         })
                     })
                     commitBatchTask(data).then(res=>{
-                        this.$Message.success(res.message)
+                        if(res.success){
+                            this.onPageSelection = [];
+                        }
+                        this.$Message.success({
+                            content:res.message,
+                            closable:true,
+                            duration:0
+                        })
                     })
                 }
             })

@@ -1,6 +1,6 @@
 <template>
   <div class="card ">
-    <Poptip trigger="hover" class="badge-custom" width="720" placement="right-end" @on-popper-show="popperShow" v-if="type!=='subject'" :transfer="true">
+    <Poptip class="badge-custom" width="720" placement="right-end" @on-popper-show="popperShow" v-if="type!=='subject'" >
       <Badge :count="taskCount"></Badge>
       <div slot="title">
         <label>{{appinfo.text+' - 待办任务'}}</label>
@@ -81,6 +81,7 @@ export default {
       taskCount: 0,
       type: this.appinfo.url.split("/")[0],
       onPageSelection:[],
+      batchComment:"",//审批意见
       columns: [
          {
           type: 'selection',
@@ -240,6 +241,12 @@ export default {
         this.pageTotal = res.total;
         if (res.tableContent.length > 0) {
           this.columnData = res.tableContent;
+
+          this.columnData.forEach(item=>{
+            if(!item.unableEdit){
+                item._disabled = true;
+            }
+          })
           this.loading = false;
         }
       });
@@ -307,90 +314,115 @@ export default {
       });
     },
 
-     //批量审批任务
-        handleBatchApproval(){
-            this.$Modal.confirm({
-                title: '审批',
-                content: '<p></p>',
-                closable:true,
-                okText:"同意",
-                cancelText:"不同意",
-                onOk: () => {
-                    let selection = this.onPageSelection;
-                    let data = [];
-                    selection.forEach(sel=>{
-                        data.push({
-                            taskId:sel.taskId,
-                            transCode:sel.transCode,
-                            result:1,
-                            comment:""
-                        })
+    //批量审批任务
+    handleBatchApproval(){
+      this.batchComment = "";
+        this.$Modal.confirm({
+            title: '审批',
+            content: '<p></p>',
+            closable:true,
+            okText:"同意",
+            cancelText:"不同意",
+            transfer:true,
+            render:(h) => {
+                return h('Input', {
+                    props: {
+                        value: this.batchComment,
+                        autofocus: true,
+                    },
+                    on: {
+                        input: (val) => {
+                            this.batchComment = val;
+                        }
+                    }
+                })
+            },
+            onOk: () => {
+                let selection = this.onPageSelection;
+                let data = [];
+                selection.forEach(sel=>{
+                    data.push({
+                        taskId:sel.taskId,
+                        transCode:sel.transCode,
+                        result:1,
+                        comment:this.batchComment
                     })
-                    commitBatchTask(data).then(res=>{
-                        this.$Message.success(res.message)
+                })
+                commitBatchTask(data).then(res=>{
+                  this.onPageSelection = [];
+                  this.$Message.success({
+                    content:res.message,
+                    closable:true,
+                    duration:0
+                  })
+                })
+            },
+            onCancel: () => {
+                let selection = this.onPageSelection;
+                let data = [];
+                selection.forEach(sel=>{
+                    data.push({
+                        taskId:sel.taskId,
+                        transCode:sel.transCode,
+                        result:0,
+                        comment:this.batchComment
                     })
-                },
-                onCancel: () => {
-                    let selection = this.onPageSelection;
-                    let data = [];
-                    selection.forEach(sel=>{
-                        data.push({
-                            taskId:sel.taskId,
-                            transCode:sel.transCode,
-                            result:0,
-                            comment:""
-                        })
+                })
+                commitBatchTask(data).then(res=>{
+                  this.onPageSelection = [];
+                   this.$Message.success({
+                      content:res.message,
+                      closable:true,
+                      duration:0
                     })
-                    commitBatchTask(data).then(res=>{
-                        this.$Message.success(res.message)
-                    })
-                }
-            })
+                })
+            }
+        })
 
-        },
+    },
 
+    //全选
+    onSelectAll(selection) {
+        let obj = {};
+        //触发全选事件
         //全选
-        onSelectAll(selection) {
+        this.onPageSelection.push(...selection);
+        //数组去重
+        this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+            obj[next.listId] ? "" : (obj[next.listId] = true && cur.push(next));
+            return cur;
+        }, []);
+    },
+
+    //保存分页选中
+    handerSelectionChange(selection) {
+        //取消全选
+        if (selection.length === 0) {
+            let s = this.$refs.selection.data;
+            let p = this.onPageSelection;
+            s.map(item => {
+            p = p.filter(f => {
+                return f.listId !== item.listId;
+            });
+            });
+            this.onPageSelection = p;
+        } else {
             let obj = {};
-            //触发全选事件
-            //全选
             this.onPageSelection.push(...selection);
             //数组去重
             this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
-                obj[next.listId] ? "" : (obj[next.listId] = true && cur.push(next));
-                return cur;
+            obj[next.listId] ? "" : (obj[next.listId] = true && cur.push(next));
+            return cur;
             }, []);
-        },
+        }
+    },
 
-        //保存分页选中
-        handerSelectionChange(selection) {
-            //取消全选
-            if (selection.length === 0) {
-                let s = this.$refs.selection.data;
-                let p = this.onPageSelection;
-                s.map(item => {
-                p = p.filter(f => {
-                    return f.listId !== item.listId;
-                });
-                });
-                this.onPageSelection = p;
-            } else {
-                let obj = {};
-                this.onPageSelection.push(...selection);
-                //数组去重
-                this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
-                obj[next.listId] ? "" : (obj[next.listId] = true && cur.push(next));
-                return cur;
-                }, []);
-            }
-        },
-
-        //单选取消
-        onSelectCancel(selection, row) {
-            this.onPageSelection = this.onPageSelection.filter(f => {
-                return f.listId !== row.listId;
-            });
-        },
+    //单选取消
+    onSelectCancel(selection, row) {
+        this.onPageSelection = this.onPageSelection.filter(f => {
+            return f.listId !== row.listId;
+        });
+    },
   }
 };
 </script>

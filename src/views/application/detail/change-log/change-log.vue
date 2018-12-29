@@ -180,8 +180,10 @@ export default {
           });
           this.logData = res.tableContent;
           this.dataCount = res.dataCount;
-          this.createEditor();
         }
+        setTimeout(() => {
+          this.createEditor();
+        },1000)
       });
     },
 

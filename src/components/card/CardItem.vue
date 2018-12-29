@@ -319,16 +319,22 @@ export default {
       this.batchComment = "";
         this.$Modal.confirm({
             title: '审批',
-            content: '<p></p>',
+            content: '<p>审批意见</p>',
             closable:true,
             okText:"同意",
             cancelText:"不同意",
             transfer:true,
             render:(h) => {
-                return h('Input', {
+              return h('div', [ 
+                h('label','审批意见: '),
+                h('Input',{
                     props: {
                         value: this.batchComment,
                         autofocus: true,
+                    },
+                    style:{
+                        width:'75%',
+                        marginLeft:'10px'
                     },
                     on: {
                         input: (val) => {
@@ -336,6 +342,7 @@ export default {
                         }
                     }
                 })
+              ])
             },
             onOk: () => {
                 let selection = this.onPageSelection;
@@ -428,7 +435,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "./common.less";
+@card-text-font-size:16px;
 
 .card {
   height: 70px;

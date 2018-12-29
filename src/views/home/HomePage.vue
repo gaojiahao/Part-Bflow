@@ -1,9 +1,8 @@
 <template>
 
-  <div class="wrap bg_ff">
+  <div class="wrap">
     <Spin size="large" fix v-if="spinShow"></Spin>
     <div class="main-header bg_ff">
-      <div class="main-header-nav">
         <Row>
           <Col span="24">
           <ButtonGroup class="fr">
@@ -19,22 +18,22 @@
           </ButtonGroup>
           </Col>
         </Row>
-      </div>
     </div>
     <div v-if="cutView&&caseId==='apps'">
-      <section v-for="(menuList,i) in menuList" :key="i" class="bg-white-lighter">
+      <section v-for="(menuItem,i) in menuList" :key="i" class="bg-white-lighter">
 
         <row class="menu-group">
           <row>
-            <h3 class="menu-group-title">{{menuList.text}}</h3>
+            <h3 class="menu-group-title">{{menuItem.text}}</h3>
           </row>
 
-          <row :gutter="16">
-            <Col v-if="item.leaf" v-for="(item,j) in menuList.children" :key="j" span="4">
-            <card-item v-if="item.leaf" :appinfo="item" :allTaskCount="allTaskCount"></card-item>
+          <row :gutter="16" >
+            <Col  v-if="item.leaf" v-for="(item,j) in menuItem.children" :key="j" span="4">
+              <card-item v-if="item.leaf" :appinfo="item" :allTaskCount="allTaskCount"></card-item>
             </Col>
             <card-list v-else :menuItem="item" :index='j' :allTaskCount="allTaskCount"></card-list>
           </row>
+          
         </row>
       </section>
     </div>
@@ -82,8 +81,6 @@ export default {
     };
   },
   created() {
-   
-
     // getMyFavorite().then(res => {
     //   if (res.tableContent.length > 0) {
     //     this.favoriteMenu.children = res.tableContent;
@@ -107,8 +104,6 @@ export default {
         this.spinShow = false;
       });
     }
-
-  
   },
 
   mounted(){
@@ -123,6 +118,7 @@ export default {
       this.pulseGraphLlistr = res.tableContent;
     });
   },
+
 
   methods: {
     changeView(caseId) {
@@ -182,10 +178,6 @@ export default {
 .fr {
   float: right;
 }
-.menuTitle {
-  font-size: 28;
-  font-weight: 400;
-}
 
 @media screen and (max-width: 646px) {
   .ivu-col-span-4 {
@@ -242,13 +234,6 @@ export default {
 .wrap {
   top: 40px;
   position: relative;
-  height: 100%;
-  width: 100%;
-}
-
-.bg-gray-lighter {
-  background-color: #f0f0f0;
-  padding: 0 8%;
 }
 
 .bg-white-lighter {
@@ -280,20 +265,9 @@ export default {
   padding: 0 10%;
   z-index: 997;
   padding: 5px;
-  &-nav {
-    button {
-      cursor: pointer;
-      -webkit-box-align: center;
-      align-items: center;
-      font-size: 14px;
-      text-align: center;
-      border-radius: 0px;
-    }
-
-    .ivu-select-selected-value {
-      font-size: 14px !important;
-      font-weight: bold;
-    }
+  .ivu-select-selected-value {
+    font-size: 14px !important;
+    font-weight: bold;
   }
 }
 &-container {

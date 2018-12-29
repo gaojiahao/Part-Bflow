@@ -3,7 +3,7 @@
     <label>{{menuItem.text}}</label>
 
     <Col span="4" v-for="(item,j) in menuItem.children" :key="j" >
-    <card-item :appinfo="item" :allTaskCount="allTaskCount">
+      <card-item :appinfo="item" :allTaskCount="allTaskCount">
     </card-item>
     </Col>
 
@@ -24,8 +24,7 @@ export default {
 </script>
 
 <style lang ='less' scoped>
-@import './common.less';
-
+@card-text-font-size:16px;
 
 @media screen and (max-width: 646px) {
   .ivu-col-span-4 {

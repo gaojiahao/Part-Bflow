@@ -128,11 +128,6 @@ export default {
       } else {
         this.isAdminTrue = false;
       }
-    },
-    logData: function() {
-      if(!this.logeditor){
-        this.createEditor();
-      }
     }
   },
 
@@ -185,6 +180,7 @@ export default {
           });
           this.logData = res.tableContent;
           this.dataCount = res.dataCount;
+          this.createEditor();
         }
       });
     },

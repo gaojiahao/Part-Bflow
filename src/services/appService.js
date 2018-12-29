@@ -558,10 +558,19 @@ export const updateFieldPermission = (param) => request('/H_roleplay-si/resource
 
 /**
  * @author XiaoYing
- * @description 获取字段数据源
+ * @description 获取字段权限字段数据源
  * @param {String} listId
  */
-export const getFieldResorce = (listId) => request('/H_roleplay-si/resource/getAppField', {
+export const getFieldResorce = (listId) => request('/H_roleplay-si/resource/getFormField', {
+  listId: listId
+})
+
+/**
+ * @author XiaoYing
+ * @description 获取自定义数据字段数据源
+ * @param {String} listId
+ */
+export const getCustomFieldResorce = (listId) => request('/H_roleplay-si/resource/getAppField', {
   listId: listId
 })
 

@@ -138,10 +138,10 @@ export default {
     submitLog(event) {
       //校验提交的数据是否为空
       let valid;
-      if (this.editor.txt.html() === "<span></span>") {
+      if (this.logeditor.txt.html() === "<span></span>") {
         this.$Message.error("必填项请输入！");
       } else {
-        this.modalFormData.content = this.editor.txt.html();
+        this.modalFormData.content = this.logeditor.txt.html();
       }
 
       this.$refs["formValidate"].validate(v => {
@@ -156,7 +156,7 @@ export default {
         saveAppLog(listId, scope, spendTime, content).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
-            this.editor.txt.html(`<span></span>`);
+            this.logeditor.txt.html(`<span></span>`);
             this.$refs["formValidate"].resetFields();
             this.getChangeLog();
           } else {
@@ -171,7 +171,6 @@ export default {
      */
     getChangeLog() {
       let listId = this.listId;
-
       getChangeLog(listId).then(res => {
         if (res.tableContent) {
           res.tableContent.map(item => {
@@ -181,8 +180,6 @@ export default {
           });
           this.logData = res.tableContent;
           this.dataCount = res.dataCount;
-        }
-        if(!this.editor){
           this.createEditor();
         }
       });
@@ -203,12 +200,12 @@ export default {
     },
     //create富文本编辑器
     createEditor() {
-      this.editor = new E(this.$refs.logeditor)
-      this.editor.customConfig.onchange = (html) => {
+      this.logeditor = new E(this.$refs.logeditor)
+      this.logeditor.customConfig.onchange = (html) => {
         this.modalFormData.content = html;
       }
-      this.editor.customConfig.zIndex = 100
-      this.editor.customConfig.menus = [
+      this.logeditor.customConfig.zIndex = 100
+      this.logeditor.customConfig.menus = [
         'head',  // 标题
         'bold',  // 粗体
         'fontSize',  // 字号
@@ -227,8 +224,8 @@ export default {
         'undo',  // 撤销
         'redo'  // 重复
       ]
-      this.editor.create();
-      this.editor.txt.html(`<span></span>`);
+      this.logeditor.create();
+      this.logeditor.txt.html(`<span></span>`);
     }
   },
   created() {

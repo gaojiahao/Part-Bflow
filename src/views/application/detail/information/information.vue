@@ -217,7 +217,7 @@ export default {
     editAppinfo() {
       if(this.isAdmin){
         this.showEditAppInfo = !this.showEditAppInfo;
-        this.editor.txt.html(this.appData.comment);
+        this.infoeditor.txt.html(this.appData.comment);
       }
       //只有企业管理员可编辑应用管理员
       if(this.isCompanyAdmin){
@@ -228,7 +228,7 @@ export default {
           uniqueId: this.appData.uniqueId,
           title: this.appData.title,
           administrator: this.appData.userId,
-          comment: this.$refs.infoeditor?this.editor.txt.html():''
+          comment: this.$refs.infoeditor?this.infoeditor.txt.html():''
         };
         saveAppInformation(params).then(res => {
           if (res.success) {
@@ -269,7 +269,7 @@ export default {
         this.adminData = res.tableContent; 
         this.total = res.dataCount;
         this.adminLoading = false;
-        if(!this.editor){
+        if(!this.infoeditor){
           this.createEditor();
         }
       });
@@ -328,12 +328,12 @@ export default {
     },
     //create富文本编辑器
     createEditor() {
-      this.editor = new E(this.$refs.infoeditor)
-      this.editor.customConfig.onchange = (html) => {
+      this.infoeditor = new E(this.$refs.infoeditor)
+      this.infoeditor.customConfig.onchange = (html) => {
         this.appData.comment = html;
       }
-      this.editor.customConfig.zIndex = 100;
-      this.editor.customConfig.menus = [
+      this.infoeditor.customConfig.zIndex = 100;
+      this.infoeditor.customConfig.menus = [
         'head',  // 标题
         'bold',  // 粗体
         'fontSize',  // 字号
@@ -352,8 +352,8 @@ export default {
         'undo',  // 撤销
         'redo'  // 重复
       ]
-      this.editor.create();
-      this.editor.txt.html(`<span></span>`);
+      this.infoeditor.create();
+      this.infoeditor.txt.html(`<span></span>`);
     }
   },
   mounted() {

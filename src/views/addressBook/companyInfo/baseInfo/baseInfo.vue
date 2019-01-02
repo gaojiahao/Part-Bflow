@@ -48,38 +48,30 @@
           </FormItem>
         </Form>
       </div>
-      <div style="margin-top:5px; background: #fff; padding: 50px 110px 10px 118px;">
+      <div v-if="isAdd&&isEdit" style="margin-top:5px; background: #fff; padding: 50px 110px 10px 118px;">
         <Form :label-width="80">
-          <FormItem label="公司状态:">
-            <Select v-model="baseInfoItem.status" v-if="!isEdit" :disabled="isEdit">
-              <Option value="3">草稿</Option>
-              <Option value="2">未使用</Option>
-              <Option value="1">使用中</Option>
-              <Option value="-1">停用</Option>
-            </Select>
-            <span v-else style="margin-left:5px;">{{baseInfoItem.statusText}}</span>
-          </FormItem>
-          <FormItem label="创建者:" v-if="isAdd&&isEdit">
+          <FormItem label="创建者:" >
             <span style="margin-left:5px;">{{baseInfoItem.creator}}</span>
           </FormItem>
-          <FormItem label="创建时间:" v-if="isAdd&&isEdit">
+          <FormItem label="创建时间:">
             <span style="margin-left:5px;">{{baseInfoItem.crtTime}}</span>
           </FormItem>
-          <FormItem label="修改者:" v-if="isAdd&&isEdit">
+          <FormItem label="修改者:">
             <span style="margin-left:5px;">{{baseInfoItem.modifier}}</span>
           </FormItem>
-          <FormItem label="修改时间:" v-if="isAdd&&isEdit">
+          <FormItem label="修改时间:">
             <span style="margin-left:5px;">{{baseInfoItem.modTime}}</span>
           </FormItem>
         </Form>
       </div>
     </div>
     <Row class="info-btn">
-      <Button @click="toCompanyLst" class="radius0" style="background-color: rgb(81, 90, 110) !important;color:#fff;font-weight:bold;padding: 6px 15px;">关闭</Button>
-      <Button v-if="isAdd && isPermission" @click="isEditCompanyInfo" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">{{isEdit?'编辑':'放弃编辑'}}</Button>
-      <Button v-if="baseInfoItem.groupId&&!isEdit" @click="updateCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">保存</Button>
-      <Button v-else-if="!isEdit&&!isAdd" @click="addCompanyData" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">保存</Button>
-      <Button v-if="!baseInfoItem.groupId&&!isEdit&&!isAdd" @click="saveAndAddCompany" class="radius0" style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">保存并新建</Button>
+      <Button @click="toCompanyLst" class="radius0 close-company">关闭</Button>
+      <Button v-if="isAdd && isPermission" @click="isEditCompanyInfo" class="radius0 add-btn">{{isEdit?'编辑':'放弃编辑'}}</Button>
+      <Button v-if="!isEdit" @click="addCompanyData" class="radius0 add-btn">保存</Button>
+      <Button v-if="!isEdit && baseInfoItem.status === 1" @click="addCompanyData('file')" class="radius0 add-btn">归档</Button>
+      <Button v-if="!groupId" @click="saveAndAddCompany" class="radius0 add-btn">保存并新建</Button>
+      <Button v-if="!isEdit || !groupId" @click="addCompanyData('draft')" class="radius0 add-btn">保存草稿</Button>
     </Row>
   </div>
 </template>
@@ -100,6 +92,7 @@ export default {
   },
   data() {
     return {
+      groupId: this.$route.params.groupId,
       httpHeaders: {
         Authorization: getToken()
       },
@@ -113,7 +106,7 @@ export default {
         groupName: "",
         groupShortName: "",
         companyType: "",
-        status: "1"
+        status: -3
       },
       ruleValidate: {
         groupName: [
@@ -174,33 +167,57 @@ export default {
       });
     },
     //保存公司基本信息
-    addCompanyData() {
-      let baseInfo = this.baseInfoItem;
-      let data = {
-        groupName: baseInfo.groupName,
-        groupShortName: baseInfo.groupShortName,
-        companyType: baseInfo.companyType,
-        status: baseInfo.status,
-        groupCode: this.guid(),
-        groupPic: this.logo
-      };
+    addCompanyData(saveType) {
+      let baseInfo = this.baseInfoItem,
+          groupId = this.$route.name == "company-add" ? "add" : this.$route.params.groupId,
+          data = {
+            groupName: baseInfo.groupName,
+            groupShortName: baseInfo.groupShortName,
+            companyType: baseInfo.companyType,
+            status: baseInfo.status,
+            groupPic: this.logo
+        };
+      
+      if(saveType === 'draft'){
+        data.status = 0;
+      }else if(saveType === 'file'){
+        data.status = -2;
+      }else{
+        data.status = 1;
+      }
+
+      if(this.groupId){
+        data.groupId = groupId;
+      }else{
+        data.groupCode = this.guid();
+      }
+
       this.$refs["baseInfoItem"].validate(valid => {
         if (valid) {
-          saveCompanyInfo(data).then(res => {
-            let groupId =
-              this.$route.name == "company-add"
-                ? "add"
-                : this.$route.params.groupId;
-            if (res[0].groupId) {
-              this.$Message.success("保存成功");
-              this.$router.push({
-                path: "/addressBook/companyInfo/baseInfo/" + res[0].groupId
-              });
-              window.location.reload();
-            } else {
-              this.$Message.error(res.message);
-            }
-          });
+          if(this.groupId){
+            updateConpanyInfo(data).then(res => {
+              if (res.success) {
+                this.$Message.success("更新成功");
+                window.location.reload();
+              } else {
+                this.$Message.error(res.message);
+              }
+            }).catch(error => {
+                this.$Message.error(error.data.message);
+            });
+          }else{
+            saveCompanyInfo(data).then(res => {
+              if (res[0].groupId) {
+                this.$Message.success("保存成功");
+                this.$router.push({
+                  path: "/addressBook/companyInfo/baseInfo/" + res[0].groupId
+                });
+                window.location.reload();
+              } else {
+                this.$Message.error(res.message);
+              }
+            });
+          }
         }
       });
     },
@@ -212,20 +229,7 @@ export default {
           this.logo = res[0].groupPic;
           this.cacheShortName = res[0].groupShortName;
           this.cacheGroupName = res[0].groupName;
-          this.baseInfoItem.status = String(this.baseInfoItem.status);
-          switch (this.baseInfoItem.status) {
-            case "1":
-              this.baseInfoItem.statusText = "使用中";
-              break;
-            case "-1":
-              this.baseInfoItem.statusText = "停用";
-              break;
-            case "2":
-              this.baseInfoItem.statusText = "未使用";
-              break;
-            default:
-              this.baseInfoItem.statusText = "草稿";
-          }
+          this.baseInfoItem.status = this.baseInfoItem.status;
         }
       });
     },
@@ -258,7 +262,7 @@ export default {
         groupName: baseInfo.groupName,
         groupShortName: baseInfo.groupShortName,
         companyType: baseInfo.companyType,
-        status: baseInfo.status,
+        status: 1,
         groupCode: this.guid(),
         groupPic: this.logo
       };
@@ -275,39 +279,12 @@ export default {
               this.logo = "";
               this.baseInfoItem.groupName = "";
               this.baseInfoItem.groupShortName = "";
-              this.baseInfoItem.status = "1";
+              this.baseInfoItem.status = -3;
               this.baseInfoItem.companyType = "";
               this.$refs["upload"].fileList.splice(
                 0,
                 this.$refs["upload"].fileList.length
               );
-            } else {
-              this.$Message.error(res.message);
-            }
-          }).catch(error => {
-              this.$Message.error(error.data.message);
-          });
-        }
-      });
-    },
-    updateCompanyData() {
-      let baseInfo = this.baseInfoItem;
-      let groupId =
-        this.$route.name == "company-add" ? "add" : this.$route.params.groupId;
-      let data = {
-        groupName: baseInfo.groupName,
-        groupShortName: baseInfo.groupShortName,
-        companyType: baseInfo.companyType,
-        status: baseInfo.status,
-        groupId: groupId,
-        groupPic: this.logo
-      };
-      this.$refs["baseInfoItem"].validate(valid => {
-        if (valid) {
-          updateConpanyInfo(data).then(res => {
-            if (res.success) {
-              this.$Message.success("更新成功");
-              window.location.reload();
             } else {
               this.$Message.error(res.message);
             }
@@ -371,14 +348,11 @@ export default {
     }
   },
   mounted() {
-    let groupId =
-      this.$route.name == "company-add" ? "add" : this.$route.params.groupId;
-    if ("add" == groupId) {
+    if (!this.groupId) {
       this.isEdit = false;
       this.isAdd = false;
-      return;
     }
-    this.getCompanyInfo(groupId);
+    this.getCompanyInfo(this.groupId);
   }
 };
 </script>

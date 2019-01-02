@@ -50,6 +50,7 @@
                 next-text="下一页" 
                 @on-page-size-change='handlePageSizeChange'
                 @on-change="handlePageChange"/>
+                <i class="iconfont icon-refresh" @click="getFlowTodoTasks">&#xe783;</i>
             </div >
         </div>
     </div>

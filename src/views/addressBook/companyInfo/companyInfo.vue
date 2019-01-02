@@ -23,7 +23,7 @@
         <span class="detail-com-header-bread-others">/</span>
         <span class="detail-com-header-bread-others">{{ (companyInformation&&companyInformation.groupName)?companyInformation.groupName:'创建'}}</span>
       </div>
-      <Tag v-show="companyInformation.status" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:companyInformation.status}"></Tag>
+      <Tag class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:companyInformation.status}"></Tag>
     </Row>
     <Row class="detail-tabs">
       <div @click="onClickTab(index)" v-if="groupId?item.isShow:item.isShowAcive" :class="{'detail-tabs-child':true,'active-item':item.isShowAcive}" v-for="(item,index) of relativeInstance" :key="index">

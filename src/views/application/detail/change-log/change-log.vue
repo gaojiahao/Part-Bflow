@@ -183,8 +183,7 @@ export default {
         }
         setTimeout(() => {
           this.createEditor();
-        },500)
-        // this.createEditor();
+        },10)
       });
     },
 

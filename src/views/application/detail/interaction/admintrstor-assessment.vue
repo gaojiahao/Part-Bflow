@@ -155,9 +155,9 @@ export default {
     },
     //添加管理员自评
     submitAdminAssess() {
-      if(this.opporeditor.txt.html() === '<span></span>'){
+      if(this.opporeditor.txt.html() === '<div></div>'){
         this.$Message.error('必填项请输入！');
-      }else if(this.resulteditor.txt.html() === '<span></span>'){
+      }else if(this.resulteditor.txt.html() === '<div></div>'){
         this.$Message.error('必填项请输入！');
       }else{
         this.adminAssessData.opportunity = this.opporeditor.txt.html();
@@ -183,8 +183,8 @@ export default {
             this.getAssessmentData();
             this.showAssessModal = false;
             this.$refs["formValidate"].resetFields();
-            this.resulteditor.txt.html(`<span></span>`);
-            this.opporeditor.txt.html(`<span></span>`);
+            this.resulteditor.txt.html(`<div></div>`);
+            this.opporeditor.txt.html(`<div></div>`);
             this.isEdit = "";
           } else {
             this.$Message.error(res.message);
@@ -254,7 +254,7 @@ export default {
         'redo'  // 重复
       ]
       this.resulteditor.create();
-      this.resulteditor.txt.html(`<span></span>`);
+      this.resulteditor.txt.html(`<div></div>`);
 
       this.opporeditor = new E(this.$refs.opporeditor)
       this.opporeditor.customConfig.onchange = (html) => {
@@ -281,7 +281,7 @@ export default {
         'redo'  // 重复
       ]
       this.opporeditor.create();
-      this.opporeditor.txt.html(`<span></span>`);
+      this.opporeditor.txt.html(`<div></div>`);
     }
   },
   created() {

@@ -104,15 +104,6 @@
                         v-model="formItem.termOfValidity">
                     </DatePicker>
                 </FormItem>
-                <FormItem label="状态：">
-                    <Select v-if="!isEdit" v-model="formItem.status" style="width:60%">
-                        <Option value="1">使用中</Option>
-                        <Option value="3">草稿</Option>
-                        <Option value="-1">停用</Option>
-                        <Option value="2">未使用</Option>
-                    </Select>
-                    <span v-else>{{ userInfo.statusText }}</span>
-                </FormItem>
                 <FormItem label="邮箱：" prop="email">
                     <Input 
                         :class="{'info-edit':isEdit}" 
@@ -137,33 +128,12 @@
             </Form>
         </Row>
         <Row class="info-btn">
-            <Button 
-                @click="goUserList" 
-                class="radius0" 
-                style="background-color: rgb(81, 90, 110) !important;color:#fff;font-weight:bold;padding: 6px 15px;">
-                关闭
-            </Button>
-            <Button 
-                v-if="isAdd" 
-                @click="editUserInfo"  
-                class="radius0" 
-                style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">
-                {{ isEdit?'编辑':'放弃编辑'}}
-            </Button>
-            <Button 
-                v-if="!isEdit" 
-                @click="updateUserData"  
-                class="radius0" 
-                style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">
-                保存
-            </Button>
-            <Button 
-                v-if="!userId" 
-                @click="saveAndAddUser" 
-                class="radius0" 
-                style="background-color: rgb(0, 150, 136) !important;color:#fff;font-weight:bold;padding: 6px 15px;">
-                保存并新建
-            </Button>
+            <Button @click="goUserList" class="radius0 close-user">关闭</Button>
+            <Button v-if="isAdd" @click="editUserInfo" class="radius0 add-btn">{{ isEdit?'编辑':'放弃编辑'}}</Button>
+            <Button v-if="!isEdit" @click="updateUserData"  class="radius0 add-btn">保存</Button>
+            <Button v-if="!isEdit && formItem.status === 1" @click="updateUserData('file')" class="radius0 add-btn">归档</Button>
+            <Button v-if="!userId"  @click="saveAndAddUser" class="radius0 add-btn">保存并新建</Button>
+            <Button v-if="!isEdit || !userId" @click="updateUserData('draft')" class="radius0 add-btn">保存草稿</Button>
         </Row>
         <Modal
             v-model="showCompanyModal"
@@ -279,7 +249,7 @@ export default {
         mobile: "",
         officePhone: "",
         email: "",
-        status: "1",
+        status: -3,
         gender: "1",
         termOfValidity: "",
         userType: "1",
@@ -344,7 +314,7 @@ export default {
                 this.formItem.email = this.userInfo.email;
                 this.formItem.termOfValidity = this.userInfo.termOfValidity;
                 this.formItem.gender = String(this.userInfo.gender);
-                this.formItem.status = String(this.userInfo.status);
+                this.formItem.status = this.userInfo.status;
                 this.formItem.userType = String(this.userInfo.userType);
                 this.logo = this.userInfo.photo;
                 this.formItem.entityId = this.userInfo.entityId;
@@ -420,12 +390,21 @@ export default {
         this.isEdit = !this.isEdit;
     },
     //更新用户详情信息
-    updateUserData() {
+    updateUserData(saveType) {
         this.$refs["formItem"].validate(valid => {
             if(valid){
                 if(this.checkout){
                     this.formItem.photo = this.logo;
                     this.formItem.status = Number(this.formItem.status);
+
+                    if(saveType === 'draft'){
+                        this.formItem.status = 0;
+                    }else if(saveType === 'file'){
+                        this.formItem.status = -2;
+                    }else{
+                        this.formItem.status = 1;
+                    }
+
                     if(this.formItem.termOfValidity){
                         this.formItem.termOfValidity = this.formatDate(this.formItem.termOfValidity);
                     }
@@ -441,13 +420,13 @@ export default {
                             this.$Message.error(error.data.message);
                         })
                     }else{
-                    addUser(this.formItem).then(res => {
-                        if(res){
-                            this.$Message.success('保存成功');
-                            this.$router.push({ path: '/addressBook/user/detail/'+res.user_id});
-                            window.location.reload();
-                        }
-                    }).catch(error => {
+                        addUser(this.formItem).then(res => {
+                            if(res){
+                                this.$Message.success('保存成功');
+                                this.$router.push({ path: '/addressBook/user/detail/'+res.user_id});
+                                window.location.reload();
+                            }
+                        }).catch(error => {
                             this.$Message.error(error.data.message);
                         })
                     }
@@ -506,7 +485,7 @@ export default {
             if(valid){
                 if(this.checkout){
                     this.formItem.photo = this.logo;
-                    this.formItem.status = Number(this.formItem.status);
+                    this.formItem.status = 1;
                     if(this.formItem.termOfValidity){
                         this.formItem.termOfValidity = this.formatDate(this.formItem.termOfValidity);
                     }
@@ -531,7 +510,7 @@ export default {
                                 this.logo = '';
                                 this.formItem.photo = '';
                                 this.formItem.gender = "1";
-                                this.formItem.status = "1";
+                                this.formItem.status = -3;
                                 this.formItem.userType = "1";
                                 this.$refs['upload'].fileList.splice(0,this.$refs['upload'].fileList.length);
                             }

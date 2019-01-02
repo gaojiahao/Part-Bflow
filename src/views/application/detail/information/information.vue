@@ -353,7 +353,7 @@ export default {
         'redo'  // 重复
       ]
       this.infoeditor.create();
-      this.infoeditor.txt.html(`<span></span>`);
+      this.infoeditor.txt.html(`<div></div>`);
     }
   },
   mounted() {

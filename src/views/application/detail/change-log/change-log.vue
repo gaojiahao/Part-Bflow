@@ -138,7 +138,7 @@ export default {
     submitLog(event) {
       //校验提交的数据是否为空
       let valid;
-      if (this.logeditor.txt.html() === "<span></span>") {
+      if (this.logeditor.txt.html() === "<div></div>") {
         this.$Message.error("必填项请输入！");
       } else {
         this.modalFormData.content = this.logeditor.txt.html();
@@ -156,7 +156,7 @@ export default {
         saveAppLog(listId, scope, spendTime, content).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
-            this.logeditor.txt.html(`<span></span>`);
+            this.logeditor.txt.html(`<div></div>`);
             this.$refs["formValidate"].resetFields();
             this.getChangeLog();
           } else {
@@ -183,8 +183,7 @@ export default {
         }
         setTimeout(() => {
           this.createEditor();
-        },500)
-        // this.createEditor();
+        },10)
       });
     },
 
@@ -228,7 +227,7 @@ export default {
         'redo'  // 重复
       ]
       this.logeditor.create();
-      this.logeditor.txt.html(`<span></span>`);
+      this.logeditor.txt.html(`<div></div>`);
     }
   },
   created() {

@@ -19,7 +19,6 @@
                     <Button 
                         type="primary" 
                         style="float:right;height:29px;" 
-                        :disabled="onPageSelection.length === 0"
                         @click="handleBatchApproval"
                         >
                         批量审批
@@ -51,6 +50,7 @@
                 next-text="下一页" 
                 @on-page-size-change='handlePageSizeChange'
                 @on-change="handlePageChange"/>
+                <i class="iconfont icon-refresh" @click="getFlowTodoTasks">&#xe783;</i>
             </div >
         </div>
     </div>
@@ -211,22 +211,29 @@ export default {
             this.batchComment = "";
             this.$Modal.confirm({
                 title: '系统提示',
-                content: '<p></p>',
+                content: '<p>审批意见</p>',
                 closable:true,
                 okText:"同意",
                 cancelText:"不同意",
                 render:(h) => {
-                    return h('Input', {
-                        props: {
-                            value: this.batchComment,
-                            autofocus: true,
-                        },
-                        on: {
-                            input: (val) => {
-                                this.batchComment = val;
+                    return h('div', [ 
+                        h('label','审批意见: '),
+                        h('Input',{
+                            props: {
+                                value: this.batchComment,
+                                autofocus: true,
+                            },
+                            style:{
+                                width:'75%',
+                                marginLeft:'10px'
+                            },
+                            on: {
+                                input: (val) => {
+                                    this.batchComment = val;
+                                }
                             }
-                        }
-                    })
+                        })
+                    ])
                 },
                 onOk: () => {
                     let selection = this.onPageSelection;
@@ -241,6 +248,7 @@ export default {
                     })
                     commitBatchTask(data).then(res=>{
                         if(res.success){
+                               this.getFlowTodoTasks();
                             this.onPageSelection = [];
                         }
                         this.$Message.success({
@@ -263,6 +271,7 @@ export default {
                     })
                     commitBatchTask(data).then(res=>{
                         if(res.success){
+                               this.getFlowTodoTasks();
                             this.onPageSelection = [];
                         }
                         this.$Message.success({

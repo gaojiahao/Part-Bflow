@@ -92,7 +92,7 @@ export default {
     if(cache){
       cache = cache?JSON.parse(cache):{};
       this.menuList = cache['/ds/getMenu'];
-      this.menu = this.menuList.slice(0,4);
+      this.menu = this.menuList.slice(0,6);
       this.spinShow = false;
       }else{
       //获取菜单信息
@@ -105,8 +105,8 @@ export default {
           this.menuList = res;
         }
         
-        if(this.menuList.length>4){
-          this.menu = this.menuList.slice(0,4);
+        if(this.menuList.length>6){
+          this.menu = this.menuList.slice(0,6);
         }else{
           this.menu = menuList;
         }
@@ -127,6 +127,7 @@ export default {
       this.pulseGraphLlistr = res.tableContent;
     });
 
+    //滚动加载菜单栏
     window.onscroll = ()=>{
       if(this.menu.length<this.menuList.length){
         //获取文档完整的高度 
@@ -145,7 +146,7 @@ export default {
         } else if(document.body) {
             scrollTop = document.body.scrollTop;
         }
-        if(scrollTop + clientHeight > bodyHeight -70){
+        if(scrollTop + clientHeight > bodyHeight -150){
           let menuItem = this.menuList.slice(this.menu.length,this.menu.length+1)[0]
           this.menu.push(menuItem)
         }

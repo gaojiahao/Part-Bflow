@@ -20,7 +20,7 @@
         </Row>
     </div>
     <div v-if="cutView&&caseId==='apps'">
-      <section v-for="(menuItem,i) in menuList" :key="i" class="bg-white-lighter">
+      <section v-for="(menuItem,i) in menu" :key="i" class="bg-white-lighter">
 
         <row class="menu-group">
           <row>
@@ -28,10 +28,11 @@
           </row>
 
           <row :gutter="16" >
+            
             <Col  v-if="item.leaf" v-for="(item,j) in menuItem.children" :key="j" span="4">
               <card-item v-if="item.leaf" :appinfo="item" :allTaskCount="allTaskCount"></card-item>
             </Col>
-            <card-list v-else :menuItem="item" :index='j' :allTaskCount="allTaskCount"></card-list>
+           <card-list v-else :menuItem="item" :index='j' :allTaskCount="allTaskCount"></card-list>
           </row>
           
         </row>
@@ -67,6 +68,7 @@ export default {
       spinShow: true,
       cutView: true,
       menuList: [],
+      menu:[],
       favoriteMenu: {
         leaf: false,
         text: "常用应用",
@@ -90,6 +92,7 @@ export default {
     if(cache){
       cache = cache?JSON.parse(cache):{};
       this.menuList = cache['/ds/getMenu'];
+      this.menu = this.menuList.slice(0,6);
       this.spinShow = false;
       }else{
       //获取菜单信息
@@ -100,6 +103,12 @@ export default {
           this.menuList = [this.favoriteMenu, ...res];
         } else {
           this.menuList = res;
+        }
+        
+        if(this.menuList.length>6){
+          this.menu = this.menuList.slice(0,6);
+        }else{
+          this.menu = menuList;
         }
         this.spinShow = false;
       });
@@ -117,6 +126,32 @@ export default {
     getPulsationDiagramCase().then(res => {
       this.pulseGraphLlistr = res.tableContent;
     });
+
+    //滚动加载菜单栏
+    window.onscroll = ()=>{
+      if(this.menu.length<this.menuList.length){
+        //获取文档完整的高度 
+        let bodyHeight =  Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+        //获取当前可视范围的高度  
+        let clientHeight = 0;
+        if(document.body.clientHeight && document.documentElement.clientHeight) {
+            clientHeight = Math.min(document.body.clientHeight, document.documentElement.clientHeight);
+        } else {
+            clientHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
+        }
+        //获取滚动条当前的位置
+        let scrollTop = 0;
+        if(document.documentElement && document.documentElement.scrollTop) {
+            scrollTop = document.documentElement.scrollTop;
+        } else if(document.body) {
+            scrollTop = document.body.scrollTop;
+        }
+        if(scrollTop + clientHeight > bodyHeight -150){
+          let menuItem = this.menuList.slice(this.menu.length,this.menu.length+1)[0]
+          this.menu.push(menuItem)
+        }
+      }
+    }
   },
 
 

@@ -19,6 +19,7 @@
                     <Button 
                         type="primary" 
                         style="float:right;height:29px;" 
+                        :disabled="onPageSelection.length===0"
                         @click="handleBatchApproval"
                         >
                         批量审批
@@ -248,7 +249,7 @@ export default {
                     })
                     commitBatchTask(data).then(res=>{
                         if(res.success){
-                               this.getFlowTodoTasks();
+                            this.getFlowTodoTasks();
                             this.onPageSelection = [];
                         }
                         this.$Message.success({
@@ -271,7 +272,7 @@ export default {
                     })
                     commitBatchTask(data).then(res=>{
                         if(res.success){
-                               this.getFlowTodoTasks();
+                            this.getFlowTodoTasks();
                             this.onPageSelection = [];
                         }
                         this.$Message.success({

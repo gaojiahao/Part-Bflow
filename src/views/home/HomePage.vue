@@ -30,9 +30,9 @@
           <row :gutter="16" >
             
             <Col  v-if="item.leaf" v-for="(item,j) in menuItem.children" :key="j" span="4">
-              <card-item v-if="item.leaf" :appinfo="item" :allTaskCount="allTaskCount"></card-item>
+              <menu-item v-if="item.leaf" :appinfo="item" :allTaskCount="allTaskCount"></menu-item>
             </Col>
-           <card-list v-else :menuItem="item" :index='j' :allTaskCount="allTaskCount"></card-list>
+           <menu-list v-else :menuItem="item" :index='j' :allTaskCount="allTaskCount"></menu-list>
           </row>
           
         </row>
@@ -45,8 +45,8 @@
 </template>
 
 <script>
-import CardList from "@/components/card/CardList";
-import CardItem from "@/components/card/CardItem";
+import MenuList from "./card/MenuList";
+import MenuItem from "./card/MenuItem";
 import { getToken } from "@/utils/utils";
 import PulseGraph from "@/views/flow/pulseGraph";
 import {
@@ -59,8 +59,8 @@ import {
 
 export default {
   components: {
-    CardList,
-    CardItem,
+    MenuList,
+    MenuItem,
     PulseGraph
   },
   data() {

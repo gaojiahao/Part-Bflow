@@ -5,7 +5,12 @@
 <template>
     <div class="info">
         <Row class="info-detail">
-            <Form :model="formItem" ref="formItem" :rules="ruleValidate" :label-width="107" :class="{'is-required':isEdit}">
+            <Form 
+                :model="formItem" 
+                ref="formItem" 
+                :rules="ruleValidate" 
+                :label-width="107" 
+                :class="{'is-required':isEdit,'info-form': true}">
                 <FormItem label="头像：">
                     <Upload v-if="!isEdit" ref="upload"  
                         :show-upload-list="false" 
@@ -16,13 +21,13 @@
                         :on-exceeded-size="handleMaxSize" 
                         type="drag"
                         action="/H_roleplay-si/ds/upload" 
-                        style="display: inline-block;width:128px;vertical-align: middle;" 
+                        class="info-upload"
                         :headers="httpHeaders">
-                        <div style="width: 128px;height:128px;line-height: 128px;" v-if="!logo">
+                        <div class="info-upload-container" v-if="!logo">
                             <img v-if="logo" :src="logo">
                             <i v-if="!logo" class="iconfont">&#xe63b;</i>
                         </div>
-                        <div style="width: 128px;height:128px;line-height: 128px;" class="demo-upload-list" v-if="logo">
+                        <div class="demo-upload-list info-upload-container" v-if="logo">
                             <img :src="logo">
                             <div class="demo-upload-list-cover">
                                 <Icon type="ios-eye-outline" color="#fff" size="30" @click.stop="handleView"></Icon>
@@ -112,7 +117,7 @@
                         style="width:60%">
                     </Input>
                 </FormItem>
-                <div class="info-line"></div>
+                <div v-if="isAdd && isEdit" class="info-line"></div>
                 <FormItem v-if="isAdd && isEdit" label="创建者：">
                     <span>{{ userInfo.creatorName }}</span>
                 </FormItem>
@@ -277,7 +282,7 @@ export default {
           {
             required: true,
             message: "请选择公司主体",
-            trigger: "blur"
+            trigger: "change"
           }
         ],
         termOfValidity: [

@@ -8,13 +8,25 @@
         <Form :model="baseInfoItem" ref="baseInfoItem" :label-width="100" :rules="ruleValidate" :class="{'is-required':isEdit}">
           <FormItem label="公司照片:">
             <div class="uploadImg">
-              <Upload v-if="!isEdit" ref="upload" :show-upload-list="false" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" multiple type="drag" action="/H_roleplay-si/ds/upload" :headers="httpHeaders" style="display: inline-block;width:128px;vertical-align: middle;">
-                <div style="width: 128px;height:128px;line-height: 128px;" v-if="!logo">
+              <Upload 
+                v-if="!isEdit" 
+                ref="upload" 
+                :show-upload-list="false" 
+                :on-success="handleSuccess" 
+                :format="['jpg','jpeg','png']" 
+                :max-size="2048" 
+                :on-format-error="handleFormatError" 
+                :on-exceeded-size="handleMaxSize" 
+                multiple type="drag" 
+                action="/H_roleplay-si/ds/upload" 
+                :headers="httpHeaders" 
+                class="uploadImg-upload">
+                <div class="img-container" v-if="!logo">
                   <img v-if="logo" :src="logo">
                   <i v-if="!logo" class="iconfont">&#xe63b;</i>
                 </div>
-                <div style="width: 128px;height:128px;line-height: 128px;" class="demo-upload-list" v-if="logo">
-                  <img :src="logo">
+                <div class="demo-upload-list" v-if="logo">
+                  <img class="img-container" :src="logo">
                   <div class="demo-upload-list-cover">
                     <Icon type="ios-eye-outline" color="#fff" size="30" @click.stop="handleView"></Icon>
                     <Icon type="ios-trash-outline" color="#fff" size="30" @click.stop="handleRemove"></Icon>
@@ -48,7 +60,7 @@
           </FormItem>
         </Form>
       </div>
-      <div v-if="isAdd&&isEdit" style="margin-top:5px; background: #fff; padding: 50px 110px 10px 118px;">
+      <div v-if="isAdd && isEdit" class="info-person">
         <Form :label-width="80">
           <FormItem label="创建者:" >
             <span style="margin-left:5px;">{{baseInfoItem.creator}}</span>

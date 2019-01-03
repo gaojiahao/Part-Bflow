@@ -27,7 +27,7 @@
         </FormItem>
         
         <FormItem>
-          <Button class="timeline-box-form-submit" @click="submitLog">提交</Button>
+          <input type="button" class="timeline-box-form-submit" @click="submitLog" value="提交"></input>
         </FormItem>
       </Form>
     </div>

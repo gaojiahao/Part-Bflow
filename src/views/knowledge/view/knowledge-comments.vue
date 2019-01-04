@@ -32,11 +32,16 @@
                 </span>
 
                 <span>
-                    <Dropdown style="margin-left: 20px" placement="bottom-end" trigger="click" >
+                    <Dropdown style="margin-left: 20px" @on-click="addSubscribeUsers" trigger="click" >
                          <Icon type="md-person" size=18  /> {{subscribeInfo.subscribeNum}}
+                         <Icon type="ios-arrow-down"></Icon>
                         <DropdownMenu slot="list">
+                            <DropdownItem name="add">
+                               添加关注者
+                            </DropdownItem>
                             <DropdownItem  v-for="(user,index) in  subscribeInfo.subscribeUsers" :key="index">
                                {{user.nickname}}
+                               <span @click.stop="deleteSubscribeUsers(user.userId,user.nickname)" class="delete-user"><Icon type="md-close"/></span>
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
@@ -66,6 +71,12 @@
             next-text="下一页" 
             @on-change="handlePageChange"/>
     </Row>
+    <!-- 用户modal -->
+    <user-selector 
+        :showUserSelector="showUserModal" 
+        @emitUserModal="emitUserModal" 
+        @userModalData="getUserModalData">
+    </user-selector>
   </div>
 </template>
 
@@ -75,12 +86,15 @@ import {
     saveComment,
     getComments 
 } from "@/services/appService.js";
+import UserSelector from '@/views/application/detail/permission/custom-datasource/user-selector';
 
 import { 
     subscribeApp,
     unsubscribeAppByRelationKey,
     getUserByRelationKey ,
-    judgeIsSubscribeByRelationKey
+    judgeIsSubscribeByRelationKey,
+    addSubscribeUsers,
+    deleteSubscribeUsers
 } from "@/services/subscribeService";
 
 import comments from "@/components/discussion/comments";
@@ -90,14 +104,15 @@ export default {
   name: "KnowledgeComments",
   components: {
     comments,
-    commentPublish
+    commentPublish,
+    UserSelector
   },
   props: {
      
   },
   data() {
     return {
-        knowledgeId:this.$route.params.id,
+        knowledgeId: this.$route.params.id,
         type:'knowledge',
         comments:[],
         commentsCount:0,
@@ -108,6 +123,7 @@ export default {
         },
         unsubcribeVisible:false,
         subcribeVisible:true,
+        showUserModal: false,
         subscribeInfo:{
             isSubscribe:0,
             subscribeNum:0,
@@ -116,6 +132,57 @@ export default {
     };
   },
   methods: {
+    emitUserModal() {
+      this.showUserModal = false;
+    },
+    getUserModalData(value) {
+        let userIds = [],
+            data = {};
+        value.forEach(val => {
+            userIds.push(val.userId);
+        });
+        if(userIds.length > 0){
+            data = {
+                relationKey: this.knowledgeId,
+                type: this.type,
+                userIds: userIds.join(',')
+            };
+            addSubscribeUsers(data).then(res => {
+                if(res.success){
+                    this.$Message.success(res.message);
+                    this.refreshSubscribeInfo();
+                }
+            }).catch(error => {
+                this.$Message.error(error.data.message);
+            });
+        }
+    },
+    addSubscribeUsers(name) {
+        if(name === 'add'){
+            this.showUserModal = true;
+        }
+    },
+    deleteSubscribeUsers(userId,nickname) {
+        let data = {
+            relationKey: this.knowledgeId,
+            userIds: userId,
+            type: this.type,
+        };
+        this.$Modal.confirm({
+        title: "确认",
+        content: "确认退订<b style=color:#e4393c;>"+nickname+"</b>么？",
+        onOk: () => {
+          deleteSubscribeUsers(data).then(res => {
+                if(res.success){
+                    this.$Message.success(res.message);
+                    this.refreshSubscribeInfo();
+                }
+            }).catch(error => {
+                this.$Message.error(error.data.message);
+            });
+        }
+      });
+    },
     handlePublish:function (content,uploadList) {
         let comment ={
             type:this.type,       
@@ -164,7 +231,8 @@ export default {
     },
     handleUnsubscribeApp:function (params) {
         unsubscribeAppByRelationKey({
-            relationKey:this.knowledgeId
+            relationKey:this.knowledgeId,
+            type: this.type
         }).then(res=>{
             this.subscribeInfo.isSubscribe = 0;
             this.refreshSubscribeInfo();
@@ -175,6 +243,7 @@ export default {
         this.$forceUpdate();
         getUserByRelationKey({
            relationKey:this.knowledgeId,
+           type: this.type,
            limit:10,
            page:1
         }).then(res=>{
@@ -184,7 +253,8 @@ export default {
     },
     judgeIsSubscribeByRelationKey:function (params) {
         judgeIsSubscribeByRelationKey({
-           relationKey:this.knowledgeId
+           relationKey:this.knowledgeId,
+           type: this.type,
         }).then(res=>{
             this.subscribeInfo.isSubscribe = res;
         });

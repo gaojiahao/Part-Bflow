@@ -32,11 +32,16 @@
                     </span>
 
                     <span>
-                        <Dropdown style="margin-left: 20px" placement="bottom-end" trigger="click" >
+                        <Dropdown style="margin-left: 20px" @on-click="addSubUsers" trigger="click" >
                          <Icon type="md-person" size=18  /> {{subscribeInfo.subscribeNum}}
+                         <Icon type="ios-arrow-down"></Icon>
                         <DropdownMenu slot="list">
+                            <DropdownItem name="add">
+                               添加关注者
+                            </DropdownItem>
                             <DropdownItem  v-for="(user,index) in  subscribeInfo.subscribeUsers" :key="index">
                                {{user.nickname}}
+                               <span @click.stop="deleteSubscribeUsers(user.userId,user.nickname)" class="delete-user"><Icon type="md-close"/></span>
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
@@ -76,7 +81,9 @@ import {
     subscribeApp,
     unsubscribeAppByRelationKey,
     getUserByRelationKey ,
-    judgeIsSubscribeByRelationKey
+    judgeIsSubscribeByRelationKey,
+    addSubscribeUsers,
+    deleteSubscribeUsers
 } from "@/services/subscribeService";
 
 import comments from "@/components/discussion/comments";
@@ -95,6 +102,7 @@ export default {
   data() {
     return {
         transCode:this.$route.params.transCode,
+        selectusers: '', 
         type:'instance',
         comments:[],
         commentsCount:0,
@@ -105,6 +113,8 @@ export default {
         },
         unsubcribeVisible:false,
         subcribeVisible:true,
+        showUserModal: false,
+        isInstance: false,
         subscribeInfo:{
             isSubscribe:0,
             subscribeNum:0,
@@ -112,8 +122,64 @@ export default {
         }
     };
   },
+  watch: {
+      selectusers: function(data) {
+          console.log(JSON.parse(data))
+          this.addUserData(JSON.parse(data));
+      }
+  },
  
   methods: {
+    addUserData(value) {
+        let userIds = [],
+            data = {};
+        value.forEach(val => {
+            userIds.push(val.userId);
+        });
+        if(userIds.length > 0){
+            data = {
+                relationKey: this.transCode,
+                type: this.type,
+                userIds: userIds.join(',')
+            };
+            addSubscribeUsers(data).then(res => {
+                if(res.success){
+                    this.$Message.success(res.message);
+                    this.refreshSubscribeInfo();
+                }
+            }).catch(error => {
+                this.$Message.error(error.data.message);
+            });
+        }
+    },
+    addSubUsers(name) {
+        if(name === 'add'){
+            if(window.top.viewInsCommentsUserModal){
+                window.top.viewInsCommentsUserModal();
+            }
+        }
+    },
+    deleteSubscribeUsers(userId,nickname) {
+        let data = {
+            relationKey: this.transCode,
+            userIds: userId,
+            type: this.type
+        };
+        this.$Modal.confirm({
+        title: "确认",
+        content: "确认退订<b style=color:#e4393c;>"+nickname+"</b>么？",
+        onOk: () => {
+          deleteSubscribeUsers(data).then(res => {
+                if(res.success){
+                    this.$Message.success(res.message);
+                    this.refreshSubscribeInfo();
+                }
+            }).catch(error => {
+                this.$Message.error(error.data.message);
+            });
+        }
+      });
+    },
     handlePublish:function (content,uploadList) {
         let comment ={
             type:this.type,       
@@ -165,7 +231,8 @@ export default {
     },
     handleUnsubscribeApp:function (params) {
         unsubscribeAppByRelationKey({
-            relationKey:this.transCode
+            relationKey:this.transCode,
+            type: this.type
         }).then(res=>{
             this.subscribeInfo.isSubscribe = 0;
             this.refreshSubscribeInfo();
@@ -174,7 +241,9 @@ export default {
     refreshSubscribeInfo(){
         this.$forceUpdate();
         getUserByRelationKey({
+           type:'instance',
            relationKey:this.transCode,
+           type: this.type,
            limit:10,
            page:1
         }).then(res=>{
@@ -184,7 +253,8 @@ export default {
     },
     judgeIsSubscribeByRelationKey:function (params) {
         judgeIsSubscribeByRelationKey({
-           relationKey:this.transCode
+           relationKey:this.transCode,
+           type: this.type
         }).then(res=>{
             this.subscribeInfo.isSubscribe = res;
         });
@@ -195,7 +265,7 @@ export default {
         this.refreshComments();
         this.refreshSubscribeInfo();
         this.judgeIsSubscribeByRelationKey();
-        
+        window.top.addUserData = this.addUserData;
   }
 };
 </script>

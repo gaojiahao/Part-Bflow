@@ -16,9 +16,28 @@
                         v-model="searchkeywords" 
                         class="todotask-content-container-toolbar-search" 
                         placeholder="输入交易号查询" />
+                    <Button 
+                        type="primary" 
+                        style="float:right;height:29px;" 
+                        :disabled="onPageSelection.length===0"
+                        @click="handleBatchApproval"
+                        >
+                        批量审批
+                    </Button>
                 </div>
 
-                <Table :columns="columns" :data="data" :height="tableHeight"  class="todotask-content-table"></Table>
+                <Table 
+                    :loading="loading" 
+                    :columns="columns" 
+                    :data="data" 
+                    :height="tableHeight"  
+                    class="todotask-content-table"
+                    ref="selection" 
+                    @on-select-all="onSelectAll" 
+                    @on-selection-change="handerSelectionChange" 
+                    @on-select-cancel="onSelectCancel"
+                    >
+                </Table>
                 <Page 
                 class="todotask-content-page"
                 :total="pageInfo.total" 
@@ -32,17 +51,24 @@
                 next-text="下一页" 
                 @on-page-size-change='handlePageSizeChange'
                 @on-change="handlePageChange"/>
+                <i class="iconfont icon-refresh" @click="getFlowTodoTasks">&#xe783;</i>
             </div >
         </div>
     </div>
 </template>
 <script>
-import {getFlowTodoTasks} from "@/services/socialService";
+import {getFlowTodoTasks,commitBatchTask} from "@/services/socialService";
 export default {
     name:'FlowtaskToDo',
     data () {
         return {
             columns: [
+                {
+                    type: 'selection',
+                    width: 60,
+                    align: 'center',
+                    key:'unableEdit',
+                },
                 {
                     title: '任务编号',
                     key: 'taskId',
@@ -113,14 +139,33 @@ export default {
                 filter:[]
             },
             searchkeywords:'',
-            tableHeight:1
+            tableHeight:1,
+
+            loading:false,
+            onPageSelection:[],
+            batchComment:''
         }
     },
     methods:{
         getFlowTodoTasks:function () {
+            this.loading = true;
             getFlowTodoTasks(this.pageInfo).then(res=>{
                 this.data = res.tableContent;
                 this.pageInfo.total = res.dataCount;
+
+                this.data.forEach(item=>{
+                    if(this.onPageSelection.length>0){
+                        this.onPageSelection.forEach(sel=>{
+                            if(sel.taskId === item.taskId){
+                            item._checked = true;
+                        }
+                        })
+                    }
+                    if(!item.unableEdit){
+                        item._disabled = true;
+                    }
+                })
+                this.loading = false;
             });
         },
         handlePageChange:function (page) {
@@ -160,7 +205,138 @@ export default {
             deepstream.event.subscribe("taskChange/" + this.$currentUser.userId, msg => {
                 this.getFlowTodoTasks();
             });
-        }
+        },
+
+        //批量审批任务
+        handleBatchApproval(){
+            this.batchComment = "";
+            this.$Modal.confirm({
+                title: '系统提示',
+                content: '<p>审批意见</p>',
+                closable:true,
+                okText:"同意",
+                cancelText:"不同意",
+                render:(h) => {
+                    return h('div', [ 
+                        h('label','审批意见: '),
+                        h('Input',{
+                            props: {
+                                value: this.batchComment,
+                                autofocus: true,
+                            },
+                            style:{
+                                width:'75%',
+                                marginLeft:'10px'
+                            },
+                            on: {
+                                input: (val) => {
+                                    this.batchComment = val;
+                                }
+                            }
+                        })
+                    ])
+                },
+                onOk: () => {
+                    let selection = this.onPageSelection;
+                    let data = [];
+                    selection.forEach(sel=>{
+                        data.push({
+                            taskId:sel.taskId,
+                            transCode:sel.businessKey,
+                            result:1,
+                            comment:this.batchComment
+                        })
+                    })
+                    commitBatchTask(data).then(res=>{
+                        if(res.success){
+                            this.getFlowTodoTasks();
+                            this.onPageSelection = [];
+                            this.$Notice.success({
+                                title:'提示',
+                                desc:res.message,
+                            })
+                        }else{
+                            this.$Notice.error({
+                                title:'提示',
+                                desc:res.message,
+                            })
+                        }
+                    })
+                },
+                onCancel: () => {
+                    let selection = this.onPageSelection;
+                    let data = [];
+                    selection.forEach(sel=>{
+                        data.push({
+                            taskId:sel.taskId,
+                            transCode:sel.businessKey,
+                            result:0,
+                            comment:this.batchComment
+                        })
+                    })
+                    commitBatchTask(data).then(res=>{
+                        if(res.success){
+                            this.getFlowTodoTasks();
+                            this.onPageSelection = [];
+                            this.$Notice.success({
+                                title:'提示',
+                                desc:res.message,
+                            })
+                        }else{
+                            this.$Notice.error({
+                                title:'提示',
+                                desc:res.message,
+                            })
+                        }
+                    })
+                }
+            })
+
+        },
+
+        //全选
+        onSelectAll(selection) {
+            let obj = {};
+            //触发全选事件
+            //全选
+            this.onPageSelection.push(...selection);
+            //数组去重
+            this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+                obj[next.taskId] ? "" : (obj[next.taskId] = true && cur.push(next));
+                return cur;
+            }, []);
+        },
+
+        //保存分页选中
+        handerSelectionChange(selection) {
+            //取消全选
+            if (selection.length === 0) {
+                let s = this.$refs.selection.data;
+                let p = this.onPageSelection;
+                s.map(item => {
+                p = p.filter(f => {
+                    return f.taskId !== item.taskId;
+                });
+                });
+                this.onPageSelection = p;
+            } else {
+                let obj = {};
+                this.onPageSelection.push(...selection);
+                //数组去重
+                this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
+                obj[next.taskId] ? "" : (obj[next.taskId] = true && cur.push(next));
+                return cur;
+                }, []);
+            }
+        },
+
+        //单选取消
+        onSelectCancel(selection, row) {
+            this.onPageSelection = this.onPageSelection.filter(f => {
+                return f.taskId !== row.taskId;
+            });
+        },
+     
     },
     mounted(){
         this.getFlowTodoTasks();

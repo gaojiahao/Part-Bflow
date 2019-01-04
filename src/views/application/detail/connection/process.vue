@@ -63,6 +63,7 @@ export default {
   data() {
     return {
       listId: this.$route.params.listId,
+      type:'list',
       loading: false,
       columns: [
         {

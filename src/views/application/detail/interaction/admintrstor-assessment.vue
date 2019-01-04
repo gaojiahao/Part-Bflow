@@ -25,22 +25,24 @@
               </DatePicker>
             </FormItem>
             <FormItem label="效率与成本改进成果:" prop="result" style="margin-bottom: 65px;">
-              <vue-wangeditor 
+              <!-- <vue-wangeditor 
                 ref="result" 
                 id="editorResult" 
                 :menus="menu" 
                 height="143" 
                 width="100%"
                  class="editor-result">
-                 </vue-wangeditor>
+                 </vue-wangeditor> -->
+                 <div ref="resulteditor"></div>
             </FormItem>
             <FormItem label="效率与成本改进机会:" prop="opportunity" style="margin-bottom: 40px;">
-              <vue-wangeditor 
+              <!-- <vue-wangeditor 
                 ref="oppor" id="editorOppor" 
                 :menus="menu" 
                 height="143" 
                 width="100%">
-                </vue-wangeditor>
+                </vue-wangeditor> -->
+                <div ref="opporeditor"></div>
             </FormItem>
           </Form>
           <div style="text-align:right;margin-bottom:5px;">
@@ -90,16 +92,13 @@ import {
   getAssessmentByListId,
   saveAssessment
 } from "@/services/appService.js";
-import vueWangeditor from 'vue-wangeditor';
-import EditTable from "@/components/table/edit-table";
+import E from 'wangeditor';
 import AssessModal from "@/components/modal/Modal";
 
 export default {
   name: "admintrstorAssessment",
   components: {
-    AssessModal,
-    EditTable,
-    vueWangeditor
+    AssessModal
   },
   props: {
     isAdmin: {
@@ -145,33 +144,7 @@ export default {
           }
         ]
       },
-      assessments: [],
-      menu: [
-        'source',	// 源码模式
-        '|',
-        'bold',	// 粗体
-        'underline',	// 下划线
-        'italic',	// 斜体
-        'strikethrough',	// 中线
-        'eraser',	// 清空格式
-        'forecolor',	// 文字颜色
-        'bgcolor',	// 背景颜色
-        '|',
-        'quote',	// 引用
-        'fontfamily',	// 字体
-        'fontsize',	// 字号
-        'head',	// 标题
-        'unorderlist',	// 无序列表
-        'orderlist',	// 有序列表
-        'alignleft',	// 左对齐
-        'aligncenter',	// 居中
-        'alignright',	// 右对齐
-        '|',
-        'emotion',	// 表情
-        '|',
-        'undo',	// 撤销
-        'redo'	// 重做
-      ]
+      assessments: []
     };
   },
   methods: {
@@ -182,13 +155,13 @@ export default {
     },
     //添加管理员自评
     submitAdminAssess() {
-      if(this.$refs.result.getHtml() === '<p><br></p>'){
+      if(this.opporeditor.txt.html() === '<div></div>'){
         this.$Message.error('必填项请输入！');
-      }else if(this.$refs.oppor.getHtml() === '<p><br></p>'){
+      }else if(this.resulteditor.txt.html() === '<div></div>'){
         this.$Message.error('必填项请输入！');
       }else{
-        this.adminAssessData.opportunity = document.getElementById('editorOppor').innerHTML;
-        this.adminAssessData.result = document.getElementById('editorResult').innerHTML;
+        this.adminAssessData.opportunity = this.opporeditor.txt.html();
+        this.adminAssessData.result = this.resulteditor.txt.html();
       }
       let params = {
         listId: this.listId,
@@ -210,8 +183,8 @@ export default {
             this.getAssessmentData();
             this.showAssessModal = false;
             this.$refs["formValidate"].resetFields();
-            document.getElementById('editorOppor').innerHTML = '';
-            document.getElementById('editorResult').innerHTML = '';
+            this.resulteditor.txt.html(`<div></div>`);
+            this.opporeditor.txt.html(`<div></div>`);
             this.isEdit = "";
           } else {
             this.$Message.error(res.message);
@@ -228,6 +201,9 @@ export default {
           this.isPage = false;
         }else{
           this.isPage = true;
+        }
+        if(!this.resulteditor){
+          this.createEditor();
         }
       });
     },
@@ -250,6 +226,62 @@ export default {
         relDate = year + "-" + month + "-1";
       }
       return relDate;
+    },
+    //create富文本编辑器
+    createEditor() {
+      this.resulteditor = new E(this.$refs.resulteditor)
+      this.resulteditor.customConfig.onchange = (html) => {
+        this.modalFormData.content = html;
+      }
+      this.resulteditor.customConfig.zIndex = 100
+      this.resulteditor.customConfig.menus = [
+        'head',  // 标题
+        'bold',  // 粗体
+        'fontSize',  // 字号
+        'fontName',  // 字体
+        'italic',  // 斜体
+        'underline',  // 下划线
+        'strikeThrough',  // 删除线
+        'foreColor',  // 文字颜色
+        'backColor',  // 背景颜色
+        'link',  // 插入链接
+        'list',  // 列表
+        'justify',  // 对齐方式
+        'quote',  // 引用
+        'emoticon',  // 表情
+        'code',  // 插入代码
+        'undo',  // 撤销
+        'redo'  // 重复
+      ]
+      this.resulteditor.create();
+      this.resulteditor.txt.html(`<div></div>`);
+
+      this.opporeditor = new E(this.$refs.opporeditor)
+      this.opporeditor.customConfig.onchange = (html) => {
+        this.modalFormData.content = html;
+      }
+      this.opporeditor.customConfig.zIndex = 100
+      this.opporeditor.customConfig.menus = [
+        'head',  // 标题
+        'bold',  // 粗体
+        'fontSize',  // 字号
+        'fontName',  // 字体
+        'italic',  // 斜体
+        'underline',  // 下划线
+        'strikeThrough',  // 删除线
+        'foreColor',  // 文字颜色
+        'backColor',  // 背景颜色
+        'link',  // 插入链接
+        'list',  // 列表
+        'justify',  // 对齐方式
+        'quote',  // 引用
+        'emoticon',  // 表情
+        'code',  // 插入代码
+        'undo',  // 撤销
+        'redo'  // 重复
+      ]
+      this.opporeditor.create();
+      this.opporeditor.txt.html(`<div></div>`);
     }
   },
   created() {

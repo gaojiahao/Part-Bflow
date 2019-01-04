@@ -6,7 +6,7 @@
   <Row class="detail">
     <Row class="detail-user-header">
       <div class="detail-header-bread">
-        <span class="detail-user-header-bread-user">用户</span>
+        <span @click="goUserList" class="detail-user-header-bread-user">用户</span>
         <span class="detail-user-header-bread-others">/</span>
         <span 
           v-if="userInformation.nickname?true:false" 
@@ -14,8 +14,8 @@
           {{ userInformation.nickname }}
         </span>
         <span class="detail-user-header-bread-others">{{ userInformation.userCode?'':'创建' }}</span>
-        <Tag 
-          v-show="userInformation.status?showTag:!showTag" 
+        <Tag
+          v-show="userId"
           class="radius10 marlr10 color_fff" 
           v-instanceStateDirective="{status:userInformation.status}">
         </Tag>
@@ -111,6 +111,9 @@ export default {
   },
   created() {},
   methods: {
+    goUserList() {
+        location.href = '/Site/index.html#page/users';
+    },
     //切换tab
     onClickTab(currentIndex) {
       this.relativeInstance.forEach((val,k) => {
@@ -128,15 +131,6 @@ export default {
       if(this.userId){
         getUserInfoById(this.userId).then(res => {
           this.userInformation = res.tableContent[0];
-          if(this.userInformation.status === 1){
-            this.userInformation.statusText = '使用中';
-          }else if(this.userInformation.status === -1){
-            this.userInformation.statusText = '停用';
-          }else if(this.userInformation.status === 3){
-            this.userInformation.statusText = '草稿';
-          }else{
-            this.userInformation.statusText = '未使用';
-          }
         });
       }
     },

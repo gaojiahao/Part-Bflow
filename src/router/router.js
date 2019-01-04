@@ -116,6 +116,38 @@ export const dictionaryManage = {
     import('@/views/dictionaryManage/dictionaryManage.vue')
 }
 
+export const BusinessModuleConfig = {
+  path: '/BusinessModuleConfig',
+  name: 'BusinessModuleConfig',
+
+  meta: {
+    title: 'BusinessModuleConfig - 应用模块配置'
+  },
+  component: () =>
+    import('@/views/flow/business-module/BusinessModuleConfig.vue')
+};
+
+export const BusinessModuleConfigDetails = {
+  path: '/BusinessModuleConfig/:moduleId',
+  name: 'BusinessModuleConfig',
+
+  meta: {
+    title: 'BusinessModuleConfig - 应用模块配置'
+  },
+  component: () =>
+    import('@/views/flow/business-module/BusinessModuleConfig.vue')
+};
+
+export const BusinessModuleGraph = {
+  path: '/BusinessModuleGraph/:moduleId',
+  name: 'BusinessModuleGraph',
+
+  meta: {
+    title: 'BusinessModuleGraph - 应用模块图'
+  },
+  component: () =>
+    import('@/views/flow/business-module/BusinessModuleGraph.vue')
+};
 
 //应用模块
 import { applicationRouter} from '@/views/application/router';
@@ -137,6 +169,9 @@ export const routers = [
   homepageRouter,
   addressBookRouter,
   technologyRouter,
+  BusinessModuleConfig,
+  BusinessModuleConfigDetails,
+  BusinessModuleGraph,
   bigProcess,
   fieldChangeHistoryRouter,
   instanceCommetns,

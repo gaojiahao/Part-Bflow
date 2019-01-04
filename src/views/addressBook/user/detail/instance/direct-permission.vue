@@ -131,7 +131,7 @@ export default {
       userId: this.$route.params.userId,
       searchValue: "",
       target: {
-        type: 'sys_user_permission',
+        type: 'user',
         targetId: this.$route.params.userId
       },
       total: 0,
@@ -287,6 +287,7 @@ export default {
           property: "name"
         }
       ]);
+      this.currentPage = 1;
       this.getDirPermissionData(filter);
     }
   },

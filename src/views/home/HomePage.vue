@@ -1,9 +1,13 @@
 <template>
 
-  <div class="wrap bg_ff">
+  <div class="wrap">
     <Spin size="large" fix v-if="spinShow"></Spin>
+<<<<<<< HEAD
     <!-- <div class="main-header bg_ff">
       <div class="main-header-nav">
+=======
+    <div class="main-header bg_ff">
+>>>>>>> develop
         <Row>
           <Col span="24">
           <ButtonGroup class="fr">
@@ -19,22 +23,28 @@
           </ButtonGroup>
           </Col>
         </Row>
+<<<<<<< HEAD
       </div>
     </div> -->
+=======
+    </div>
+>>>>>>> develop
     <div v-if="cutView&&caseId==='apps'">
-      <section v-for="(menuList,i) in menuList" :key="i" class="bg-white-lighter">
+      <section v-for="(menuItem,i) in menu" :key="i" class="bg-white-lighter">
 
         <row class="menu-group">
           <row>
-            <h3 class="menu-group-title">{{menuList.text}}</h3>
+            <h3 class="menu-group-title">{{menuItem.text}}</h3>
           </row>
 
-          <row :gutter="16">
-            <Col v-if="item.leaf" v-for="(item,j) in menuList.children" :key="j" span="4">
-            <card-item v-if="item.leaf" :appinfo="item" :allTaskCount="allTaskCount"></card-item>
+          <row :gutter="16" >
+            
+            <Col  v-if="item.leaf" v-for="(item,j) in menuItem.children" :key="j" span="4">
+              <menu-item v-if="item.leaf" :appinfo="item" :allTaskCount="allTaskCount"></menu-item>
             </Col>
-            <card-list v-else :menuItem="item" :index='j' :allTaskCount="allTaskCount"></card-list>
+           <menu-list v-else :menuItem="item" :index='j' :allTaskCount="allTaskCount"></menu-list>
           </row>
+          
         </row>
       </section>
     </div>
@@ -45,8 +55,8 @@
 </template>
 
 <script>
-import CardList from "@/components/card/CardList";
-import CardItem from "@/components/card/CardItem";
+import MenuList from "./card/MenuList";
+import MenuItem from "./card/MenuItem";
 import { getToken } from "@/utils/utils";
 import PulseGraph from "@/views/flow/pulseGraph";
 import {
@@ -59,8 +69,8 @@ import {
 
 export default {
   components: {
-    CardList,
-    CardItem,
+    MenuList,
+    MenuItem,
     PulseGraph
   },
   data() {
@@ -68,6 +78,7 @@ export default {
       spinShow: true,
       cutView: true,
       menuList: [],
+      menu:[],
       favoriteMenu: {
         leaf: false,
         text: "常用应用",
@@ -81,18 +92,19 @@ export default {
       model: "apps"
     };
   },
-  mounted() {
-    this.subscribeMessage();
-
-    getMyFavorite().then(res => {
-      if (res.tableContent.length > 0) {
-        this.favoriteMenu.children = res.tableContent;
-      }
-    });
-
-    //获取当前用户所有待办任务
-    getCurrentUserAllTasks().then(res => {
-      this.allTaskCount = res.tableContent;
+  created() {
+    // getMyFavorite().then(res => {
+    //   if (res.tableContent.length > 0) {
+    //     this.favoriteMenu.children = res.tableContent;
+    //   }
+    // });
+    let cache = window.sessionStorage.getItem('roletask.com.r2.cache');
+    if(cache){
+      cache = cache?JSON.parse(cache):{};
+      this.menuList = cache['/ds/getMenu'];
+      this.menu = this.menuList.slice(0,6);
+      this.spinShow = false;
+      }else{
       //获取菜单信息
       getMenu().then(res => {
         this.urlMd5(res);
@@ -102,14 +114,56 @@ export default {
         } else {
           this.menuList = res;
         }
+        
+        if(this.menuList.length>6){
+          this.menu = this.menuList.slice(0,6);
+        }else{
+          this.menu = menuList;
+        }
         this.spinShow = false;
       });
+    }
+  },
+
+  mounted(){
+     this.subscribeMessage();
+
+       //获取当前用户所有待办任务
+    getCurrentUserAllTasks().then(res => {
+      this.allTaskCount = res.tableContent;
     });
 
     getPulsationDiagramCase().then(res => {
       this.pulseGraphLlistr = res.tableContent;
     });
+
+    //滚动加载菜单栏
+    window.onscroll = ()=>{
+      if(this.menu.length<this.menuList.length){
+        //获取文档完整的高度 
+        let bodyHeight =  Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+        //获取当前可视范围的高度  
+        let clientHeight = 0;
+        if(document.body.clientHeight && document.documentElement.clientHeight) {
+            clientHeight = Math.min(document.body.clientHeight, document.documentElement.clientHeight);
+        } else {
+            clientHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
+        }
+        //获取滚动条当前的位置
+        let scrollTop = 0;
+        if(document.documentElement && document.documentElement.scrollTop) {
+            scrollTop = document.documentElement.scrollTop;
+        } else if(document.body) {
+            scrollTop = document.body.scrollTop;
+        }
+        if(scrollTop + clientHeight > bodyHeight -150){
+          let menuItem = this.menuList.slice(this.menu.length,this.menu.length+1)[0]
+          this.menu.push(menuItem)
+        }
+      }
+    }
   },
+
 
   methods: {
     changeView(caseId) {
@@ -131,10 +185,14 @@ export default {
     subscribeMessage: function() {
       let deepstream = this.$deepstream;
       let token = getToken();
-      //消息订阅
-      deepstream.event.subscribe("taskChange/" + this.$currentUser.userId, msg => {
-        this.allTaskCount = msg.tableContent;
-      });
+      this.spinShow = false;
+
+      if(deepstream.event){
+        //消息订阅
+        deepstream.event.subscribe("taskChange/" + this.$currentUser.userId, msg => {
+          this.allTaskCount = msg.tableContent;
+        });
+      }
     },
 
     //处理链接过长时
@@ -164,10 +222,6 @@ export default {
 <style lang="less" scoped>
 .fr {
   float: right;
-}
-.menuTitle {
-  font-size: 28;
-  font-weight: 400;
 }
 
 @media screen and (max-width: 646px) {
@@ -225,13 +279,6 @@ export default {
 .wrap {
   top: 40px;
   position: relative;
-  height: 100%;
-  width: 100%;
-}
-
-.bg-gray-lighter {
-  background-color: #f0f0f0;
-  padding: 0 8%;
 }
 
 .bg-white-lighter {
@@ -263,20 +310,9 @@ export default {
   padding: 0 10%;
   z-index: 997;
   padding: 5px;
-  &-nav {
-    button {
-      cursor: pointer;
-      -webkit-box-align: center;
-      align-items: center;
-      font-size: 14px;
-      text-align: center;
-      border-radius: 0px;
-    }
-
-    .ivu-select-selected-value {
-      font-size: 14px !important;
-      font-weight: bold;
-    }
+  .ivu-select-selected-value {
+    font-size: 14px !important;
+    font-weight: bold;
   }
 }
 &-container {

@@ -521,12 +521,20 @@ export const updateProcessStatus = (param) => request('/H_roleplay-si/listProces
 export const addProcessStatus = (param) => request('/H_roleplay-si/listProcessStatusRel/save', {}, "POST", param)
 
 /**
-<<<<<<< HEAD
  * @author XiaoYing
  * @description 保存自定义数据源
  * @param {*} param 
  */
 export const saveCustomDatasource = (param) => request('/H_roleplay-si/resource/save', {
+  data: param
+}, "POST")
+
+/**
+ * @author XiaoYing
+ * @description 保存字段权限
+ * @param {*} param 
+ */
+export const saveFieldPermission = (param) => request('/H_roleplay-si/resource/f/save', {
   data: param
 }, "POST")
 
@@ -541,19 +549,46 @@ export const updateCustomDatasource = (param) => request('/H_roleplay-si/resourc
 
 /**
  * @author XiaoYing
- * @description 获取字段数据源
+ * @description 修改字段权限
+ * @param {*} param 
+ */
+export const updateFieldPermission = (param) => request('/H_roleplay-si/resource/f/update', {
+  data: param
+}, "POST")
+
+/**
+ * @author XiaoYing
+ * @description 获取字段权限字段数据源
  * @param {String} listId
  */
-export const getFieldResorce = (listId) => request('/H_roleplay-si/resource/getAppField', {
+export const getFieldResorce = (listId) => request('/H_roleplay-si/resource/getFormField', {
   listId: listId
 })
 
 /**
  * @author XiaoYing
- * @description 获取字段数据源列表
+ * @description 获取自定义数据字段数据源
+ * @param {String} listId
+ */
+export const getCustomFieldResorce = (listId) => request('/H_roleplay-si/resource/getAppField', {
+  listId: listId
+})
+
+/**
+ * @author XiaoYing
+ * @description 获取自定义数据源列表
  * @param {String} listId
  */
 export const getResorceList = (listId) => request('/H_roleplay-si/resource/getResourceList', {
+  listId: listId
+})
+
+/**
+ * @author XiaoYing
+ * @description 获取字段权限列表
+ * @param {String} listId
+ */
+export const getFieldList = (listId) => request('/H_roleplay-si/resource/getFieldList', {
   listId: listId
 })
 
@@ -570,13 +605,33 @@ export const getResourceDetailList = (listId, resourceId) => request('/H_rolepla
 
 /**
  * @author XiaoYing
- * @description 删除已授权的自定义数据源
+ * @description 获取修改回显字段权限数据
  * @param {String} listId
+ * @param {String} resourceId
+ */
+export const getFieldDetailList = (listId, resourceId) => request('/H_roleplay-si/resource/getFieldDetailList', {
+  listId: listId,
+  resourceId: resourceId
+})
+
+/**
+ * @author XiaoYing
+ * @description 删除已授权的自定义数据源
  * @param {String} resourceId
  */
 export const deleteCustomDatasource = (resourceId) => request('/H_roleplay-si/resource/delete', {
   resourceId: resourceId
 }, "POST")
+
+/**
+ * @author XiaoYing
+ * @description 删除已授权的字段权限
+ * @param {String} resourceId
+ */
+export const deleteFieldPermission = (resourceId) => request('/H_roleplay-si/resource/f/delete', {
+  resourceId: resourceId
+}, "POST")
+
 /*
  * @author guozheng
  * @description 流程管理-取消关注
@@ -592,7 +647,8 @@ export const subscribeApp = (relationKey) => request('/H_roleplay-si/comment/sub
  * @description 流程管理-关注
  */
 export const unsubscribeAppByRelationKey = (processStatusId) => request('/H_roleplay-si/comment/unsubscribeAppByRelationKey', {
-  relationKey: processStatusId
+  relationKey: processStatusId,
+  type: "processStatus"
 }, "POST")
 
 /**

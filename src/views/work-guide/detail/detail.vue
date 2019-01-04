@@ -18,7 +18,7 @@
             <Input v-model="workGuideData.comment" type="textarea" />
         </Row>
         <Row class="workguide-read">
-            <img v-for="(data,idx) of workGuideData.workStepList" :key="idx" :src="data.image"/>
+            <img v-for="(data,idx) of workGuideData.workStepList" :key="idx" :src="data.image" @click="goAnchor(idx)"/>
         </Row>
         <Row class="workguide-content">
             <div class="workguide-content-add">
@@ -27,8 +27,8 @@
             </div>
            <Timeline>
                 <draggable v-model="workGuideData.workStepList" :options="dragOptions" :move="onMove">
-                    <TimelineItem v-for="(list,index) of workGuideData.workStepList" :key="index">
-                        <div class="step-num" slot="dot">{{index+1}}</div>
+                    <TimelineItem v-for="(list,index) of workGuideData.workStepList" :key="index" :id="`anchor${index}`">
+                        <div :class="{'step-num':true,'step-num-anchor': index === isAnchor}" slot="dot">{{index+1}}</div>
                         <div class="step-detail">
                             <i class=""></i>
                             <h4>{{list.title}}</h4>
@@ -110,6 +110,7 @@ export default {
         workguideId: this.$route.params.id,
         showModal: false,
         visible: false,
+        isAnchor: -1,
         httpHeaders: {
             Authorization: getToken()
         },
@@ -246,7 +247,7 @@ export default {
     //上传图片
     handleSuccess(res, file) {
       this.formValidate.logo =
-        "/H_roleplay-si/ds/download?width=300&height=300&url=" +
+        "/H_roleplay-si/ds/download?width=300&height=300&url="+
         res.data[0].attacthment;
     },
     //判断上传头像大小
@@ -280,6 +281,10 @@ export default {
         }).catch(error => {
             this.$Message.error(error.data.message);
         });
+    },
+    goAnchor(index) {
+        this.isAnchor = index;
+        document.querySelector(".workguide").scrollTop = this.$el.querySelector(`#anchor${index}`).offsetTop;
     }
   },
   created() {

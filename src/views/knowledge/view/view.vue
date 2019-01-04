@@ -14,7 +14,9 @@
             <span class="knowledge-desc-crtTime">{{ knowledgeForm.crtTime }}</span>
         </Row>
         <Row class="knowledge-content">
-            <div v-html="knowledgeForm.content" class="knowledge-content-desc"></div>
+            <div ref="toolbar" style="display:none"></div>
+            <div ref="text" style="display:none"></div>
+            <div v-html="knowledgeForm.content" class="w-e-text"></div>
             <knowledge-comments></knowledge-comments>
         </Row>
         <Row class="knowledge-toolbar">
@@ -31,7 +33,8 @@ import {
   getKnowledgeTypeData,
   saveKnowledgeData
   } from "@/services/knowledgeBaseService.js";
-  import KnowledgeComments from './knowledge-comments.vue';
+import KnowledgeComments from './knowledge-comments.vue';
+import E from 'wangeditor';
 
 export default {
   name: "KnowledgeView",
@@ -55,7 +58,7 @@ export default {
     editKnowledge() {
       this.$router.push({
         name: "knowledgeDetail",
-        path:'/knowledge/detail/'+this.$route.params.id,
+        path:`/knowledge/detail/${this.$route.params.id}`,
         params: {id: this.$route.params.id}
       });
     },
@@ -63,6 +66,8 @@ export default {
     getKnowledgeDataById() {
       getKnowledgeTypeDataById(this.knowledgeId).then(res => {
         this.knowledgeForm = res
+        this.editor = new E(this.$refs.toolbar,this.$refs.text)
+        this.editor.create();
       })
     }
   },

@@ -2,7 +2,7 @@
 
   <div class="wrap bg_ff">
     <Spin size="large" fix v-if="spinShow"></Spin>
-    <div class="main-header bg_ff">
+    <!-- <div class="main-header bg_ff">
       <div class="main-header-nav">
         <Row>
           <Col span="24">
@@ -20,7 +20,7 @@
           </Col>
         </Row>
       </div>
-    </div>
+    </div> -->
     <div v-if="cutView&&caseId==='apps'">
       <section v-for="(menuList,i) in menuList" :key="i" class="bg-white-lighter">
 

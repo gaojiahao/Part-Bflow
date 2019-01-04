@@ -74,6 +74,11 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         to: 'resources',
         ignore: ['.*']
       },
+      {
+        from: path.resolve(__dirname, '../src/plugin/mxgraph-flow'),
+        to: 'mxgraph-flow',
+        ignore: ['.*']
+      }
     ])
   ]
 })

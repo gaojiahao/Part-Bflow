@@ -2,33 +2,6 @@
 
   <div class="wrap">
     <Spin size="large" fix v-if="spinShow"></Spin>
-<<<<<<< HEAD
-    <!-- <div class="main-header bg_ff">
-      <div class="main-header-nav">
-=======
-    <div class="main-header bg_ff">
->>>>>>> develop
-        <Row>
-          <Col span="24">
-          <ButtonGroup class="fr">
-            <Icon :type="model==='apps'?'ios-apps':'md-share'" size="16" />
-            <Select v-model="model" class="input-select" @on-change="changeView" placeholder="请选择业务单元" style="width:230px;font-size:16px">
-              <Option value="apps">
-                <Icon type="ios-apps" size="16" /> 所有应用看板
-              </Option>
-              <Option v-for="item in pulseGraphLlistr" :value="item.id" :key="item.id">
-                <Icon type="md-share" size="16" /> {{ item.name }}
-              </Option>
-            </Select>
-          </ButtonGroup>
-          </Col>
-        </Row>
-<<<<<<< HEAD
-      </div>
-    </div> -->
-=======
-    </div>
->>>>>>> develop
     <div v-if="cutView&&caseId==='apps'">
       <section v-for="(menuItem,i) in menu" :key="i" class="bg-white-lighter">
 
@@ -47,9 +20,6 @@
           
         </row>
       </section>
-    </div>
-    <div v-for="(pulseGraph,index) in pulseGraphLlistr" :key="index" v-if="!cutView && pulseGraph.id === caseId">
-      <pulse-graph :caseId="pulseGraph.id"></pulse-graph>
     </div>
   </div>
 </template>
@@ -85,7 +55,6 @@ export default {
         children: []
       },
       caseId: "apps",
-      pulseGraphLlistr: [],
       allTaskCount: [],
       books$$: null,
       isAdmin: this.$currentUser.isAdmin,
@@ -131,10 +100,6 @@ export default {
        //获取当前用户所有待办任务
     getCurrentUserAllTasks().then(res => {
       this.allTaskCount = res.tableContent;
-    });
-
-    getPulsationDiagramCase().then(res => {
-      this.pulseGraphLlistr = res.tableContent;
     });
 
     //滚动加载菜单栏

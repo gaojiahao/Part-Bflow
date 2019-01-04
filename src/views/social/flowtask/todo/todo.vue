@@ -251,12 +251,16 @@ export default {
                         if(res.success){
                             this.getFlowTodoTasks();
                             this.onPageSelection = [];
+                            this.$Notice.success({
+                                title:'提示',
+                                desc:res.message,
+                            })
+                        }else{
+                            this.$Notice.error({
+                                title:'提示',
+                                desc:res.message,
+                            })
                         }
-                        this.$Message.success({
-                            content:res.message,
-                            closable:true,
-                            duration:0
-                        })
                     })
                 },
                 onCancel: () => {
@@ -274,12 +278,16 @@ export default {
                         if(res.success){
                             this.getFlowTodoTasks();
                             this.onPageSelection = [];
+                            this.$Notice.success({
+                                title:'提示',
+                                desc:res.message,
+                            })
+                        }else{
+                            this.$Notice.error({
+                                title:'提示',
+                                desc:res.message,
+                            })
                         }
-                        this.$Message.success({
-                            content:res.message,
-                            closable:true,
-                            duration:0
-                        })
                     })
                 }
             })

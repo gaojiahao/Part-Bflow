@@ -3,21 +3,22 @@
     <label>{{menuItem.text}}</label>
 
     <Col span="4" v-for="(item,j) in menuItem.children" :key="j" >
-      <card-item :appinfo="item" :allTaskCount="allTaskCount">
-    </card-item>
+      <menu-item :appinfo="item" :allTaskCount="allTaskCount"></menu-item>
     </Col>
 
   </row>
 </template>
 
 <script>
-import CardItem from "@/components/card/CardItem";
+import MenuItem from "./MenuItem";
 
 export default {
+  name:'MenuList',
+
   props: ["menuItem", "allTaskCount"],
 
   components: {
-    CardItem
+    MenuItem
   },
   created() {}
 };

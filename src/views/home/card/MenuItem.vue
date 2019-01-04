@@ -72,6 +72,8 @@ import { getAppTaskCount, getFormViews,commitBatchTask } from "@/services/flowSe
 import { getUserInfoByUserId } from "@/services/appService.js";
 import MyPopTip from "@/components/poptip/MyPopTip";
 export default {
+  name: "MenuItem",
+
   props: ["appinfo", "allTaskCount"],
   components: {
     MyPopTip
@@ -157,7 +159,6 @@ export default {
       pageSize: 10,
       currentPage: 1, //table当前页
       pageListId: "",
-
       userInfo: {}
     };
   },
@@ -269,20 +270,21 @@ export default {
 
           this.columnData.forEach(item=>{
             if(this.onPageSelection.length>0){
-                this.onPageSelection.forEach(sel=>{
-                    if(sel.listId === item.listId){
-                    item._checked = true;
+              this.onPageSelection.forEach(sel=>{
+                if(sel.taskId === item.taskId){
+                  item._checked = true;
                 }
-                })
+              })
             }
             if(!item.unableEdit){
-                item._disabled = true;
+              item._disabled = true;
             }
           })
           this.loading = false;
         }
       });
     },
+
     goAppSetting(list) {
       let url = "appSetting/" + list.listId;
       window.top.postMessage(
@@ -357,11 +359,17 @@ export default {
                 })
                 commitBatchTask(data).then(res=>{
                   this.onPageSelection = [];
-                  this.$Message.success({
-                    content:res.message,
-                    closable:true,
-                    duration:0
-                  })
+                  if(res.success){
+                    this.$Notice.success({
+                      title:'提示',
+                      desc:res.message,
+                    })
+                  }else{
+                    this.$Notice.error({
+                      title:'提示',
+                      desc:res.message,
+                    })
+                  }
                 })
             },
             onCancel: () => {
@@ -377,11 +385,17 @@ export default {
                 })
                 commitBatchTask(data).then(res=>{
                   this.onPageSelection = [];
-                   this.$Message.success({
-                      content:res.message,
-                      closable:true,
-                      duration:0
+                  if(res.success){
+                    this.$Notice.success({
+                      title:'提示',
+                      desc:res.message,
                     })
+                  }else{
+                    this.$Notice.error({
+                      title:'提示',
+                      desc:res.message,
+                    })
+                  }
                 })
             }
         })
@@ -396,7 +410,7 @@ export default {
         this.onPageSelection.push(...selection);
         //数组去重
         this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
-            obj[next.listId] ? "" : (obj[next.listId] = true && cur.push(next));
+            obj[next.taskId] ? "" : (obj[next.taskId] = true && cur.push(next));
             return cur;
         }, []);
     },
@@ -409,7 +423,7 @@ export default {
             let p = this.onPageSelection;
             s.map(item => {
             p = p.filter(f => {
-                return f.listId !== item.listId;
+                return f.taskId !== item.taskId;
             });
             });
             this.onPageSelection = p;
@@ -418,7 +432,7 @@ export default {
             this.onPageSelection.push(...selection);
             //数组去重
             this.onPageSelection = this.onPageSelection.reduce((cur, next) => {
-            obj[next.listId] ? "" : (obj[next.listId] = true && cur.push(next));
+            obj[next.taskId] ? "" : (obj[next.taskId] = true && cur.push(next));
             return cur;
             }, []);
         }
@@ -427,7 +441,7 @@ export default {
     //单选取消
     onSelectCancel(selection, row) {
         this.onPageSelection = this.onPageSelection.filter(f => {
-            return f.listId !== row.listId;
+            return f.taskId !== row.taskId;
         });
     },
   }
@@ -554,15 +568,9 @@ export default {
   box-shadow: 0 15px 10px 0 rgba(0, 0, 0, 0.1), 0 2px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
-// .ivu-card {
-//   background: #fff;
-//   font-size: 16px;
-//   position: relative;
-//   transition: all 0.2s ease-in-out;
-// }
-// .ivu-card-bordered {
-//   border: 1px solid #dddee1;
-//   border-color: #e9eaec;
-//   box-shadow: 4px 4px 10px #bbb8b8;
-// }
+.vertical-center-modal{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 </style>

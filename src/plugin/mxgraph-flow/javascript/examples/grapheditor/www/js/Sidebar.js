@@ -986,21 +986,6 @@ Sidebar.prototype.addBasicPalette = function(dir)
 };
 
 Sidebar.prototype.addRoletaskAppPalette = function (expand) {
-	// var apps = [
-	// 		this.addEntry('销售订单', mxUtils.bind(this, function () {
-	// 		var cell = new mxCell(
-	// 			'销售订单', 
-	// 			new mxGeometry(0, 0, 50, 50), 
-	// 			'shape=image;html=1;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;imageAspect=0;image=http://www.clavier.com/javascript/examples/grapheditor/www/stencils/clipart/outsource-processing-unpicking.png'
-	// 			);
-
-	// 		cell.vertex = true;
-	// 		this.graph.setAttributeForCell(cell, 'placeholders', '1');
-	// 		this.graph.setAttributeForCell(cell, 'listId','111');
-				
-	// 		return this.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height);
-	// 	})),
-	// ];
 	var sb = this;
 	var apps = [];
 	$._rfd_http('/H_roleplay-si/ds/getTplListInfo', 'GET', {}, true, function (res) {
@@ -1010,7 +995,7 @@ Sidebar.prototype.addRoletaskAppPalette = function (expand) {
 					var cell = new mxCell(
 						list.title,
 						new mxGeometry(0, 0, 60, 60),
-						'shape=image;html=1;fontSize=14;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;imageAspect=0;image=/' + list.icon
+						'shape=image;html=1;fontSize=18;font-weight:bold;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;imageAspect=0;image=/' + list.icon
 					);
 
 					cell.vertex = true;

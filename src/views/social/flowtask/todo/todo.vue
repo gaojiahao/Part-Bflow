@@ -91,7 +91,6 @@ export default {
                 {
                     title: '交易号',
                     key: 'businessKey',
-                    width:140,
                     render: (h,params) => {
                         return h('a',{
                             on: {
@@ -105,12 +104,10 @@ export default {
                 {
                     title: '操作名称',
                     key: 'nodeName',
-                    width:140
                 },
                 {
                     title: '应用名称',
                     key: 'title',
-                    width:140
                 },
                 {
                     title: '发起人',

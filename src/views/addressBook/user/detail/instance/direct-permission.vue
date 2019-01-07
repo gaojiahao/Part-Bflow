@@ -83,7 +83,7 @@
           :data="dirPermissionData">
         </Table>
         <div class="user-page">
-          <div style="float: right;">
+          <div style="float: right;padding-bottom: 5px;">
             <Page 
               size="small" 
               @on-page-size-change="onPageSizeChange" 

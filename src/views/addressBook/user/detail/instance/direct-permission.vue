@@ -236,8 +236,15 @@ export default {
     },
     //点击切换每页显示条数
     onPageSizeChange(size) {
+      let filter = JSON.stringify([
+        {
+          operator: "like",
+          value: this.searchValue,
+          property: "name"
+        }
+      ]);
       this.pageSize = size;
-      this.getDirPermissionData();
+      this.getDirPermissionData(filter);
     },
     //删除权限
     deletePermission() {

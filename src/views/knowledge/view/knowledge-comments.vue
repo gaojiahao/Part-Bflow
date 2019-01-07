@@ -249,7 +249,7 @@ export default {
         getUserByRelationKey({
            relationKey:this.knowledgeId,
            type: this.type,
-           limit:10,
+           limit:1000,
            page:1
         }).then(res=>{
             this.subscribeInfo.subscribeUsers = res.tableContent;

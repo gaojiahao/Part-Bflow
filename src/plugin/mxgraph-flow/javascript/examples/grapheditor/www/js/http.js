@@ -29,7 +29,7 @@
 				data:data ? data : {},
 				beforeSend:function (xhr){
 					var token = $.parseJSON(window.top.localStorage.getItem("roleplay-token")).token;
-					// var token = '8OqhBMogi6ogOLNVyD1w/E/AYpztvjW/SJlzjOAzG2zPq33StzuKfPGS8+ntacug/SrNGztlusLAVHq20KNoiTMCd/86gn4raQuCpW9gdh+7y9GiBgl0hXgs1mXw27OkYX9yi/lWsFU=';
+					// var token = 'opa1BhdAjRKhPhKG5psUpTmvpWRue+K6xFcDIhnzyZWikpPzCqVRacmfcnfhnnBw0gggjclwxE+nrY/+ELxRFKXb2ObtYtAnFAu3t4ijvXUsMIgX+7C7tZPuisomgblTH9izgF38enU=';
 					xhr.setRequestHeader('Authorization', token);
 				},
 				success: function (data){

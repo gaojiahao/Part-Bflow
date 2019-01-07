@@ -9,6 +9,10 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
+const HappyPack = require('happypack')
+const vueLoaderConfig = require('./vue-loader.conf')
+
+const HappyPackThreadPool = HappyPack.ThreadPool({ size: 5 })
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
@@ -45,6 +49,21 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     }
   },
   plugins: [
+    new HappyPack({
+      id: 'vue',
+      loaders: [
+        {
+          loader: 'vue-loader',
+          options: vueLoaderConfig
+        }
+      ],
+      threadPool: HappyPackThreadPool
+    }),
+    new HappyPack({
+      id: 'babel',
+      loaders: ['babel-loader?cacheDirectory'],
+      threadPool: HappyPackThreadPool
+    }),
     new webpack.DefinePlugin({
       'process.env': require('../config/dev.env')
     }),

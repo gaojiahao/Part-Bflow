@@ -49,17 +49,17 @@ module.exports = {
       ...(config.dev.useEslint ? [createLintingRule()] : []),
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
-        options: vueLoaderConfig
+        use: ['happypack/loader?id=vue'],
       },
       {
         test: /iview\/.*?js$/,
         loader: 'babel-loader'
-    },
+      },
       {
         test: /\.js$/,
-        loader: 'babel-loader',
-        include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
+        use: ['happypack/loader?id=babel'],
+        include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')],
+        exclude:path.resolve(__dirname,'node_modules')
       },
       {
         test: /\.less$/,
@@ -75,9 +75,6 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
         }
-        // loader: ['url-loader?limit=10000&name='+utils.assetsPath('img/[name].[hash:7].[ext]'),
-        // 'image-webpack-loader'
-        // ]
       },
       {
         test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,

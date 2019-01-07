@@ -995,7 +995,7 @@ Sidebar.prototype.addRoletaskAppPalette = function (expand) {
 					var cell = new mxCell(
 						list.title,
 						new mxGeometry(0, 0, 60, 60),
-						'shape=image;html=1;fontSize=18;font-weight:bold;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;imageAspect=0;image=/' + list.icon
+						'shape=image;html=1;fontSize=16;font-weight:bold;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;imageAspect=0;image=/' + list.icon
 					);
 
 					cell.vertex = true;

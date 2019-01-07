@@ -85,7 +85,7 @@ Sidebar.prototype.init = function()
 {
 	var dir = STENCIL_PATH;
 	
-	this.addSearchPalette(true);
+	// this.addSearchPalette(true);
 	// this.addGeneralPalette(true);
 	this.addRoletaskAppPalette(true);
 	// this.addMiscPalette(true);
@@ -160,12 +160,12 @@ Sidebar.prototype.gearImage = STENCIL_PATH + '/clipart/Gear_128x128.png';
 /**
  * Specifies the width of the thumbnails.
  */
-Sidebar.prototype.thumbWidth = 36;
+Sidebar.prototype.thumbWidth = 50;
 
 /**
  * Specifies the height of the thumbnails.
  */
-Sidebar.prototype.thumbHeight = 36;
+Sidebar.prototype.thumbHeight = 50;
 
 /**
  * Specifies the padding for the thumbnails. Default is 3.
@@ -987,38 +987,69 @@ Sidebar.prototype.addBasicPalette = function(dir)
 
 Sidebar.prototype.addRoletaskAppPalette = function (expand) {
 	var sb = this;
-	var apps = [];
-	$._rfd_http('/H_roleplay-si/ds/getTplListInfo', 'GET', {}, true, function (res) {
-		res.tableContent.map(function (list) {
-			apps.push(
-				sb.addEntry(list.title, mxUtils.bind(sb, function () {
+	var palettesMap = {};
+
+	var buildPalettes = function (menu,parent) {
+		if(!menu.leaf){
+			if(parent){
+				menu.text = parent.text + '-' +  menu.text;
+			}
+			menu.children.map(function (m) {
+				if (!m.leaf) {
+					buildPalettes(m,menu);
+				}else{
+					putInPalettesMap(m,menu);
+				}
+			});
+		}else{
+			if(parent){
+				putInPalettesMap(menu,parent);
+			}
+		}
+	},
+	putInPalettesMap = function (menu,parent) {
+		if (palettesMap[parent.id]){
+			palettesMap[parent.id].menus.push(menu);
+		}else{
+			palettesMap[parent.id] = {
+				paletteId: parent.id,
+				paletteText: parent.text,
+				menus: [menu]
+			}
+		}
+	}
+	$._rfd_http('/H_roleplay-si/ds/getMenu', 'GET', {}, true, function (res) {
+
+		res.map(function (m) {
+			buildPalettes(m);
+		});
+
+		for (var key in palettesMap){
+			var lists = [];
+			palettesMap[key].menus.map(function (list) {
+				lists.push(
+					sb.addEntry(list.text, mxUtils.bind(sb, function () {
 					var cell = new mxCell(
-						list.title,
+						list.text,
 						new mxGeometry(0, 0, 60, 60),
-						'shape=image;html=1;fontSize=16;font-weight:bold;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;imageAspect=0;image=/' + list.icon
+						'shape=image;html=1;fontSize=20;font-weight:bold;verticalLabelPosition=bottom;labelBackgroundColor=#f5f5f5;verticalAlign=top;imageAspect=0;image=/' + list.icon
 					);
 
 					cell.vertex = true;
 					sb.graph.setAttributeForCell(cell, 'placeholders', '1');
-					sb.graph.setAttributeForCell(cell, 'listId', list.uniqueId);
+					sb.graph.setAttributeForCell(cell, 'listId', list.listId);
 					sb.graph.setAttributeForCell(cell, 'listType', list.type);
 
 					return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height);
-				}))
-			);
-		});
+				})));
+			});
 
-		sb.addPaletteFunctions('misc', mxResources.get('misc'), (expand != null) ? expand : true, apps);
+			sb.addPaletteFunctions(palettesMap[key].paletteId, palettesMap[key].paletteText, false, lists);
+		}
 	});
-	
-
-	
 };
 
-Sidebar.prototype.createRoletaskAppShapes = function () {
-	var sb = this;
-	
-},
+
 
 /**
  * Adds the general palette to the sidebar.

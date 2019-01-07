@@ -50,6 +50,7 @@ export default {
                 {
                     title: '交易号',
                     key: 'transId',
+                     width:160,
                      render: (h,params) => {
                         return h('a',{
                             on: {
@@ -63,10 +64,12 @@ export default {
                 {
                     title: '操作名称',
                     key: 'nodeName',
+                     width:160,
                 },
                 {
                     title: '应用名称',
                     key: 'title',
+                     width:160,
                 },
                 {
                     title: '经办人',

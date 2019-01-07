@@ -91,6 +91,7 @@ export default {
                 {
                     title: '交易号',
                     key: 'businessKey',
+                    width:165,
                     render: (h,params) => {
                         return h('a',{
                             on: {
@@ -104,10 +105,12 @@ export default {
                 {
                     title: '操作名称',
                     key: 'nodeName',
+                    width:165
                 },
                 {
                     title: '应用名称',
                     key: 'title',
+                    width:165
                 },
                 {
                     title: '发起人',
@@ -119,14 +122,15 @@ export default {
                     key:'crtTime',
                     width:150
                 },
-                 {
-                title: "已过时间",
-                key: "crtTime",
-                render: (h,params) => {
-                        let outTime = this.calcLeadTime(params.row.crtTime);
-                        return h('span',{},outTime);
+                {
+                    title: "已过时间",
+                    key: "crtTime",
+                    width:150,
+                    render: (h,params) => {
+                            let outTime = this.calcLeadTime(params.row.crtTime);
+                            return h('span',{},outTime);
+                        }
                     }
-                }
             ],
             data: [],
             pageInfo:{

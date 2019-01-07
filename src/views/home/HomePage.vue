@@ -2,7 +2,6 @@
 
   <div class="wrap">
     <Spin size="large" fix v-if="spinShow"></Spin>
-    <div v-if="cutView&&caseId==='apps'">
       <section v-for="(menuItem,i) in menu" :key="i" class="bg-white-lighter">
         <row class="menu-group">
           <row>
@@ -17,7 +16,6 @@
           
         </row>
       </section>
-    </div>
   </div>
 </template>
 
@@ -25,25 +23,19 @@
 import MenuList from "./card/MenuList";
 import MenuItem from "./card/MenuItem";
 import { getToken } from "@/utils/utils";
-import PulseGraph from "@/views/flow/pulseGraph";
 import {
   getMenu,
-  getPulsationDiagramCase,
   getCurrentUserAllTasks,
-  getPulseGraph,
-  getMyFavorite
 } from "@/services/flowService";
 
 export default {
   components: {
     MenuList,
     MenuItem,
-    PulseGraph
   },
   data() {
     return {
       spinShow: true,
-      cutView: true,
       menuList: [],
       menu:[],
       favoriteMenu: {
@@ -51,7 +43,6 @@ export default {
         text: "常用应用",
         children: []
       },
-      caseId: "apps",
       allTaskCount: [],
       books$$: null,
       isAdmin: this.$currentUser.isAdmin,
@@ -59,11 +50,7 @@ export default {
     };
   },
   created() {
-    // getMyFavorite().then(res => {
-    //   if (res.tableContent.length > 0) {
-    //     this.favoriteMenu.children = res.tableContent;
-    //   }
-    // });
+  
     let cache = window.sessionStorage.getItem('roletask.com.r2.cache');
     if(cache){
       cache = cache?JSON.parse(cache):{};
@@ -74,13 +61,7 @@ export default {
       //获取菜单信息
       getMenu().then(res => {
         this.urlMd5(res);
-
-        if (this.favoriteMenu.children.length > 0) {
-          this.menuList = [this.favoriteMenu, ...res];
-        } else {
-          this.menuList = res;
-        }
-        
+        this.menuList = res;
         if(this.menuList.length>6){
           this.menu = this.menuList.slice(0,6);
         }else{
@@ -128,17 +109,6 @@ export default {
 
 
   methods: {
-    changeView(caseId) {
-      if (!caseId) return;
-      if (caseId === "apps") {
-        this.cutView = true;
-        this.caseId = caseId;
-      } else {
-        this.cutView = false;
-        this.caseId = Number(caseId);
-      }
-    },
-
     goAppManage() {
       window.top.location.hash = "#page/AppSetting";
     },

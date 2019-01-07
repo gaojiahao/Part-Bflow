@@ -4,18 +4,15 @@
     <Spin size="large" fix v-if="spinShow"></Spin>
     <div v-if="cutView&&caseId==='apps'">
       <section v-for="(menuItem,i) in menu" :key="i" class="bg-white-lighter">
-
         <row class="menu-group">
           <row>
             <h3 class="menu-group-title">{{menuItem.text}}</h3>
           </row>
-
           <row :gutter="16" >
-            
-            <Col  v-if="item.leaf" v-for="(item,j) in menuItem.children" :key="j" span="4">
-              <menu-item v-if="item.leaf" :appinfo="item" :allTaskCount="allTaskCount"></menu-item>
+            <Col v-for="(item,j) in menuItem.children" :key="j"   v-if="item.leaf"  span="4">
+              <menu-item :appinfo="item" :allTaskCount="allTaskCount"></menu-item>
             </Col>
-           <menu-list v-else :menuItem="item" :index='j' :allTaskCount="allTaskCount"></menu-list>
+            <menu-list v-else :menuItem="item" :index='j' :allTaskCount="allTaskCount"></menu-list>
           </row>
           
         </row>
@@ -242,7 +239,6 @@ export default {
   }
 }
 .wrap {
-  top: 40px;
   position: relative;
 }
 
@@ -267,24 +263,6 @@ export default {
   }
 }
 
-.main-header {
-  position: fixed;
-  top: 0px;
-  height: 40px;
-  width: 100%;
-  padding: 0 10%;
-  z-index: 997;
-  padding: 5px;
-  .ivu-select-selected-value {
-    font-size: 14px !important;
-    font-weight: bold;
-  }
-}
-&-container {
-  background: #fff;
-  margin: 80px auto 15px;
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
-}
 &-content {
   padding: 20px 25px;
   position: relative;
@@ -297,17 +275,5 @@ export default {
   border-color: #2d8cf0;
 }
 
-// .input-select {
-//   width: 160px !important;
-//   margin: 0 5px !important;
-// }
-
-//下拉选择器修改自带样式
-.main-header-nav {
-  .ivu-select-selection {
-    height: 30px !important;
-    border-radius: 0px !important;
-  }
-}
 </style>
 

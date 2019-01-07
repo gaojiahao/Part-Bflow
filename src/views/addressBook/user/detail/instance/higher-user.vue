@@ -80,7 +80,7 @@
               :data="userData">
             </Table>
             <div class="user-page">
-                <div class="fr">
+                <div class="fr" style="padding-bottom: 5px;">
                   <Page 
                     @on-page-size-change="onAllUserPageSizeChange" 
                     :total="highUser.usertotal" 

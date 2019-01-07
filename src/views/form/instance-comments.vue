@@ -32,7 +32,7 @@
                     </span>
 
                     <span>
-                        <Dropdown style="margin-left: 20px" @on-click="addSubUsers" trigger="click" >
+                        <Dropdown class="instance-dropdown" @on-click="addSubUsers" trigger="click" >
                          <Icon type="md-person" size=18  /> {{subscribeInfo.subscribeNum}}
                          <Icon type="ios-arrow-down"></Icon>
                         <DropdownMenu slot="list">

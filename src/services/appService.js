@@ -89,6 +89,18 @@ export const getAllUserData = (currentPage, pageSize, filter) => request('/H_rol
 
 /**
  * @author XiaoYing
+ * @description 获取评论关注用户数据
+ */
+export const getAllUserCommentData = (currentPage, pageSize, filter,relationkey,type) => request('/H_roleplay-si/ds/listUserWithoutSubcribeByRelationKey', {
+  page: currentPage,
+  limit: pageSize,
+  filter: filter,
+  relationkey: relationkey,
+  type: type
+});
+
+/**
+ * @author XiaoYing
  * @description 获取用户数据
  */
 export const getAllUsers = (currentPage, pageSize, filter) => request('/H_roleplay-si/ds/getAllUsers', {

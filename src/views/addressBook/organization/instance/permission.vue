@@ -163,7 +163,7 @@ export default {
       reload: false,
       searchValue: "",
       target: {
-        type: "sys_group_permission",
+        type: "group",
         targetId: this.groupId
       }
     };

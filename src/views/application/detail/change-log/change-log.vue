@@ -23,18 +23,11 @@
           <span style="margin-left:10px;">单位/时</span>
         </FormItem>
         <FormItem label="更新内容:" prop="content">
-          <vue-wangeditor 
-            ref="editor" 
-            id="editor" 
-            v-model="modalFormData.content" 
-            :menus="menu" 
-            height="143"
-             width="100%">
-            </vue-wangeditor>
+           <div ref="logeditor"></div>
         </FormItem>
         
         <FormItem>
-          <input type='button' value="提交" class="timeline-box-form-submit" @click="submitLog" />
+          <input type="button" class="timeline-box-form-submit" @click="submitLog" value="提交"></input>
         </FormItem>
       </Form>
     </div>
@@ -76,13 +69,11 @@
 
 <script>
 import { getChangeLog, saveAppLog } from "@/services/appService.js";
-import vueWangeditor from "vue-wangeditor";
+import E from 'wangeditor';
 
 export default {
   name: "ChangeLog",
-  components: {
-    vueWangeditor
-  },
+  components: {},
   props: {
     listId: {
       type: String
@@ -124,32 +115,6 @@ export default {
           }
         ]
       },
-      menu: [
-        "source", // 源码模式
-        "|",
-        "bold", // 粗体
-        "underline", // 下划线
-        "italic", // 斜体
-        "strikethrough", // 中线
-        "eraser", // 清空格式
-        "forecolor", // 文字颜色
-        "bgcolor", // 背景颜色
-        "|",
-        "quote", // 引用
-        "fontfamily", // 字体
-        "fontsize", // 字号
-        "head", // 标题
-        "unorderlist", // 无序列表
-        "orderlist", // 有序列表
-        "alignleft", // 左对齐
-        "aligncenter", // 居中
-        "alignright", // 右对齐
-        "|",
-        "emotion", // 表情
-        "|",
-        "undo", // 撤销
-        "redo" // 重做
-      ],
 
       dataCount:0,
       currentPage: 1
@@ -173,12 +138,10 @@ export default {
     submitLog(event) {
       //校验提交的数据是否为空
       let valid;
-      if (this.$refs.editor.getHtml() === "<p><br></p>") {
+      if (this.logeditor.txt.html() === "<div></div>") {
         this.$Message.error("必填项请输入！");
       } else {
-        this.modalFormData.content = document.getElementById(
-          "editor"
-        ).innerHTML;
+        this.modalFormData.content = this.logeditor.txt.html();
       }
 
       this.$refs["formValidate"].validate(v => {
@@ -193,7 +156,7 @@ export default {
         saveAppLog(listId, scope, spendTime, content).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
-            document.getElementById("editor").innerHTML = "";
+            this.logeditor.txt.html(`<div></div>`);
             this.$refs["formValidate"].resetFields();
             this.getChangeLog();
           } else {
@@ -208,7 +171,6 @@ export default {
      */
     getChangeLog() {
       let listId = this.listId;
-
       getChangeLog(listId).then(res => {
         if (res.tableContent) {
           res.tableContent.map(item => {
@@ -219,6 +181,9 @@ export default {
           this.logData = res.tableContent;
           this.dataCount = res.dataCount;
         }
+        setTimeout(() => {
+          this.createEditor();
+        },10)
       });
     },
 
@@ -235,12 +200,39 @@ export default {
         }
       });
     },
-  
+    //create富文本编辑器
+    createEditor() {
+      this.logeditor = new E(this.$refs.logeditor)
+      this.logeditor.customConfig.onchange = (html) => {
+        this.modalFormData.content = html;
+      }
+      this.logeditor.customConfig.zIndex = 100
+      this.logeditor.customConfig.menus = [
+        'head',  // 标题
+        'bold',  // 粗体
+        'fontSize',  // 字号
+        'fontName',  // 字体
+        'italic',  // 斜体
+        'underline',  // 下划线
+        'strikeThrough',  // 删除线
+        'foreColor',  // 文字颜色
+        'backColor',  // 背景颜色
+        'link',  // 插入链接
+        'list',  // 列表
+        'justify',  // 对齐方式
+        'quote',  // 引用
+        'emoticon',  // 表情
+        'code',  // 插入代码
+        'undo',  // 撤销
+        'redo'  // 重复
+      ]
+      this.logeditor.create();
+      this.logeditor.txt.html(`<div></div>`);
+    }
   },
-
   created() {
     this.getChangeLog();
-  },
+  }
 };
 </script>
 

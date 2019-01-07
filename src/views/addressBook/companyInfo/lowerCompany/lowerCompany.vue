@@ -43,7 +43,7 @@
       <br>
       <Table ref="selection" :columns="columns" :loading="lowerLoading" :data="lowerCompanyData" @on-selection-change="delCompanyChange"></Table>
       <div style="margin: 10px;overflow: hidden">
-        <div class="fr">
+        <div class="fr" style="padding-bottom: 5px;">
           <Page @on-page-size-change="onPageSizeChange" :total="lowerCompanyTotal" show-elevator show-sizer :current="lowerCompanyCurrentPage" :page-size="lowerCompanyPageSize" @on-change="onPageChange" size="small" show-total></Page>
         </div>
       </div>
@@ -55,7 +55,7 @@
       </div>
       <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" @on-select-all="onSelectAll" @on-select-cancel="onSelectCancel" height="400" :loading="companyLoading" :columns="columns1" :data="companyData"></Table>
       <div style="margin: 10px;overflow: hidden">
-        <div class="fr">
+        <div class="fr" style="padding-bottom: 5px;">
           <Page @on-page-size-change="onAllCompanyPageSizeChange" :total="companyTotal" show-elevator show-sizer :current="companyCurrentPage" :page-size="companyPageSize" @on-change="onCompanyPageChange" size="small" show-total></Page>
         </div>
       </div>

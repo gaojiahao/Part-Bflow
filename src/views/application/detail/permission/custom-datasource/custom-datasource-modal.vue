@@ -99,7 +99,7 @@
 <script>
 import {
   saveCustomDatasource,
-  getFieldResorce,
+  getCustomFieldResorce,
   getResourceDetailList,
   updateCustomDatasource
 } from "@/services/appService.js";
@@ -534,7 +534,7 @@ export default {
     }
   },
   created() {
-    getFieldResorce(this.appListId).then(res => {
+    getCustomFieldResorce(this.appListId).then(res => {
       this.allFieldData = res;
     })
   },

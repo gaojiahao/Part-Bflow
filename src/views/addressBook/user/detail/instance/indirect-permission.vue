@@ -46,7 +46,7 @@
               :data="indirPermissionData">
             </Table>
             <div class="user-page">
-                <div style="float: right;">
+                <div style="float: right;padding-bottom: 5px;">
                   <Page 
                     @on-page-size-change="onPageSizeChange" 
                     :total="total" 
@@ -122,6 +122,7 @@ export default {
     },
     //权限过滤
     permissionFilter() {
+      this.currentPage = 1;
       this.getIndirPermissionData(this.searchValue);
     }
   },

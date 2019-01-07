@@ -89,6 +89,18 @@ export const getAllUserData = (currentPage, pageSize, filter) => request('/H_rol
 
 /**
  * @author XiaoYing
+ * @description 获取评论关注用户数据
+ */
+export const getAllUserCommentData = (currentPage, pageSize, filter,relationkey,type) => request('/H_roleplay-si/ds/listUserWithoutSubcribeByRelationKey', {
+  page: currentPage,
+  limit: pageSize,
+  filter: filter,
+  relationkey: relationkey,
+  type: type
+});
+
+/**
+ * @author XiaoYing
  * @description 获取用户数据
  */
 export const getAllUsers = (currentPage, pageSize, filter) => request('/H_roleplay-si/ds/getAllUsers', {
@@ -558,10 +570,19 @@ export const updateFieldPermission = (param) => request('/H_roleplay-si/resource
 
 /**
  * @author XiaoYing
- * @description 获取字段数据源
+ * @description 获取字段权限字段数据源
  * @param {String} listId
  */
-export const getFieldResorce = (listId) => request('/H_roleplay-si/resource/getAppField', {
+export const getFieldResorce = (listId) => request('/H_roleplay-si/resource/getFormField', {
+  listId: listId
+})
+
+/**
+ * @author XiaoYing
+ * @description 获取自定义数据字段数据源
+ * @param {String} listId
+ */
+export const getCustomFieldResorce = (listId) => request('/H_roleplay-si/resource/getAppField', {
   listId: listId
 })
 

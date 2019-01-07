@@ -20,7 +20,7 @@
       <Table style="margin-top:10px;" :loading="memberLoading" :columns="columns1" :data="memberData" @on-selection-change="onMemberSelectionChange">
       </Table>
       <div style="margin: 10px;overflow: hidden">
-        <div class="fr">
+        <div class="fr" style="padding-bottom: 5px;">
           <Page :total="pageTotal" @on-page-size-change="memberPageSizeChange" :current="memberCurrentPage" :page-size="memberPageSize" size="small" @on-change="pageChange" show-sizer show-elevator show-total/>
         </div>
       </div>

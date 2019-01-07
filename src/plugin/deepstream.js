@@ -10,11 +10,16 @@ function getDeepstream() {
     })
 }
 
-export async function deepstream(currentUser) {
-    let address = await getDeepstream(),
-        deeps = ds(`wss://${address}`),
-        token = getToken(),
-        name = currentUser.name ? currentUser.name : currentUser.nickname;
+export async function deepstream(currentUser,address) {
+    let deepstreamAddress = '';
+    if(address){
+       deepstreamAddress =JSON.parse(address)['deepstream.uri2'];
+    }else{
+        deepstreamAddress = await getDeepstream();
+    }
+    let deeps = ds(`wss://${deepstreamAddress}`),
+    token = getToken(),
+    name = currentUser.name ? currentUser.name : currentUser.nickname;
 
     
     if (name && currentUser.userId) {

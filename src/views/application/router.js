@@ -53,7 +53,7 @@ export const  applicationRouter = {
                         title: '连接',
                     },
                     component: () => import('@/views/application/detail/connection/connection-layout.vue'),
-                }
+                }   
             ]
         },{
             path: 'list',

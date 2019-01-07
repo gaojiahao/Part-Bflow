@@ -8,11 +8,11 @@
 
   @font-face {
     font-family: 'iconfont';  /* project id 677305 */
-    src: url('//at.alicdn.com/t/font_677305_089y0w6zq9.eot');
-    src: url('//at.alicdn.com/t/font_677305_089y0w6zq9.eot?#iefix') format('embedded-opentype'),
-    url('//at.alicdn.com/t/font_677305_089y0w6zq9.woff') format('woff'),
-    url('//at.alicdn.com/t/font_677305_089y0w6zq9.ttf') format('truetype'),
-    url('//at.alicdn.com/t/font_677305_089y0w6zq9.svg#iconfont') format('svg');
+    src: url('//at.alicdn.com/t/font_677305_38qndqy7yc8.eot');
+    src: url('//at.alicdn.com/t/font_677305_38qndqy7yc8.eot?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_677305_38qndqy7yc8.woff') format('woff'),
+    url('//at.alicdn.com/t/font_677305_38qndqy7yc8.ttf') format('truetype'),
+    url('//at.alicdn.com/t/font_677305_38qndqy7yc8.svg#iconfont') format('svg');
   }
   
   .ivu-modal-header{
@@ -26,6 +26,12 @@
     padding: 0 15px;
     line-height: 1;
   }
+  .ivu-form-item-error .ivu-input {
+    border: none !important;
+    border-bottom: 1px solid !important;
+    box-shadow: none !important;
+    border-color: #e0101a !important;
+}
 
   .ivu-input {
     border-top-style: none;

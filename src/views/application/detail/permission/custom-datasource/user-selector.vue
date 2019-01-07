@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import { getAllUserData } from "@/services//appService.js";
+import { getAllUserData,getAllUserCommentData } from "@/services//appService.js";
 
 export default {
   name: "UserSelector",
@@ -97,6 +97,9 @@ export default {
       },
       isInstance: {
         type: Boolean
+      },
+      commentData: {
+        type: Object
       }
   },
   data() {
@@ -180,21 +183,45 @@ export default {
     //用户数据加载
     selectUserModal(filter,currentPageFilter) {
       this.userLoading = true;
-      getAllUserData(currentPageFilter?currentPageFilter:this.userCurrentPage, this.pageSize, filter).then(res => {
-        this.userData = res.tableContent;
-        this.userTotal = res.dataCount;
-        this.userLoading = false;
+      if(this.commentData){
+        getAllUserCommentData(
+          currentPageFilter?currentPageFilter:this.userCurrentPage, 
+          this.pageSize, 
+          filter,
+          this.commentData.relationkey,
+          this.commentData.type).then(res => {
+          this.userData = res.tableContent;
+          this.userTotal = res.dataCount;
+          this.userLoading = false;
 
-        if (this.userSelection.length > 0) {
-            this.userData.map(item => {
-              this.userSelection.map(sel => {
-                if (item.userId == sel.userId) {
-                  item._checked = true;
-                }
+          if (this.userSelection.length > 0) {
+              this.userData.map(item => {
+                this.userSelection.map(sel => {
+                  if (item.userId == sel.userId) {
+                    item._checked = true;
+                  }
+                });
               });
-            });
-          }
-      });
+            }
+        });
+      }else{
+        getAllUserData(currentPageFilter?currentPageFilter:this.userCurrentPage, this.pageSize, filter).then(res => {
+          this.userData = res.tableContent;
+          this.userTotal = res.dataCount;
+          this.userLoading = false;
+
+          if (this.userSelection.length > 0) {
+              this.userData.map(item => {
+                this.userSelection.map(sel => {
+                  if (item.userId == sel.userId) {
+                    item._checked = true;
+                  }
+                });
+              });
+            }
+        });
+      }
+      
     },
     //选择用户
     selectUserClick(selection, row) {

@@ -91,7 +91,7 @@ export default {
         },
         {
           title: "关系管理",
-          key: "classify",
+          key: "status",
           align: "left",
           render: (h, params) => {
             let isDisabled = false;
@@ -100,7 +100,7 @@ export default {
             }
             return h('Checkbox', {
               props: {
-                value: true,
+                value: params.row.status === 1?true:false,
                 disabled: isDisabled
               },
               on: {
@@ -135,28 +135,6 @@ export default {
         },
         {
           title: "余额校验",
-          key: "verification",
-          align: "left",
-          render: (h, params) => {
-            let isDisabled = false;
-            if (params.row.accountStatus === 0){
-              isDisabled = true;
-            }
-            return h('Checkbox', {
-              props: {
-                value: params.row.verification,
-                disabled: isDisabled
-              },
-              on: {
-                'on-change': (status) => {
-                  this.updateAccountRelation(status,params,'verification');
-                }
-              }
-            }, '启用');
-          }
-        },
-         {
-          title: "主动核销",
           key: "allowedNegative",
           align: "left",
           render: (h, params) => {
@@ -172,6 +150,28 @@ export default {
               on: {
                 'on-change': (status) => {
                   this.updateAccountRelation(status,params,'allowedNegative');
+                }
+              }
+            }, '启用');
+          }
+        },
+         {
+          title: "主动核销",
+          key: "verification",
+          align: "left",
+          render: (h, params) => {
+            let isDisabled = false;
+            if (params.row.accountStatus === 0){
+              isDisabled = true;
+            }
+            return h('Checkbox', {
+              props: {
+                value: params.row.verification,
+                disabled: isDisabled
+              },
+              on: {
+                'on-change': (status) => {
+                  this.updateAccountRelation(status,params,'verification');
                 }
               }
             }, '启用');
@@ -216,12 +216,8 @@ export default {
             data.matchType = 1;
           }
           break;
-        case 'verification': 
-          if(status){
-            data.verification = 1;
-          }else{
-            data.verification = 0;
-          }
+        case 'verification':
+            data.verification = status;
           break;
         case 'allowedNegative': 
           if(status){

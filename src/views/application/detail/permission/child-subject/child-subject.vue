@@ -57,19 +57,17 @@ export default {
                     startSubAccountData(params.row.calcRelCode).then(res => {
                       if(res.success){
                         this.$Message.success(res.message);
+                      }else{
+                        this.$Message.error(res.message);
                       }
-                    })
-                    .catch(error => {
-                      this.$Message.error(error.data.message);
                     });
                   }else{
                     blockSubAccountData(params.row.calcRelCode).then(res => {
                       if(res.success){
                         this.$Message.success(res.message);
+                      }else{
+                        this.$Message.error(res.message);
                       }
-                    })
-                    .catch(error => {
-                      this.$Message.error(error.data.message);
                     });
                   }
                 }

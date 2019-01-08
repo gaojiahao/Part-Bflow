@@ -73,7 +73,7 @@ export default {
           key: "dataCollection",
           align: "left",
           render: (h, params) => {
-            //区分科目类型 【会计类、非会计类】
+            //区分科目类型 【会计类1、非会计类0】
             if (params.row.accountType === 1) {
               if (params.row.checkDirection === 1) {
                 return h("span", {}, "借方");
@@ -142,7 +142,7 @@ export default {
             if (params.row.accountStatus === 0 || params.row.accountType === 1){
               isDisabled = true;
             }
-            if(params.row.accountType === 1){
+            if(params.row.accountType === 0){
               if(params.row.checkDirection === 1){
                 isDisabled = true;
               }
@@ -180,6 +180,11 @@ export default {
             let isDisabled = false;
             if (params.row.accountStatus === 0 || params.row.accountType === 1){
               isDisabled = true;
+            }
+            if(params.row.accountType === 0){
+              if(params.row.checkDirection === 0){
+                isDisabled = true;
+              }
             }
             return h('Checkbox', {
               props: {
@@ -244,10 +249,9 @@ export default {
         if(res.success){
           this.$Message.success(res.message);
           this.getAllAppSubjectData();
+        }else{
+          this.$Message.error(res.message);
         }
-      })
-      .catch(error => {
-        this.$Message.error(error.data.message);
       });
     },
     getAllAppSubjectData() {
@@ -263,6 +267,8 @@ export default {
       getAppSubjectData(this.listId,transType).then(res => {
         if (res.success) {
           this.subjects = res.obj;
+        }else{
+          this.$Message.error(res.message);
         }
       });
     }

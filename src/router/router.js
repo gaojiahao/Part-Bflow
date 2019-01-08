@@ -163,6 +163,9 @@ import { knowledgeBaseRouter } from '@/views/knowledge/router';
 //作业指导模块
 import { wrokGuideRouter } from '@/views/work-guide/router';
 
+//文件柜
+import { fileCabinetRouter } from '@/views/file-cabinet/router';
+
 export const routers = [
   loginRouter,
   flowRouter,
@@ -184,5 +187,6 @@ export const routers = [
   checkSheetRouter,
   knowledgeBaseRouter,
   wrokGuideRouter,
+  fileCabinetRouter,
   ...appRouter
 ];

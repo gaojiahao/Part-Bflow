@@ -95,13 +95,13 @@ export default {
           align: "left",
           render: (h, params) => {
             let isDisabled = false;
-            if(params.row.accountStatus === 0){
+            if(params.row.accountStatus === 0 || params.row.accountType === 1){
               isDisabled = true;
             }
             return h('Checkbox', {
               props: {
                 value: params.row.status === 1?true:false,
-                disabled: isDisabled
+                disabled: !this.isAdmin?true:isDisabled
               },
               on: {
                 'on-change': (status) => {
@@ -117,13 +117,13 @@ export default {
           align: "left",
           render: (h, params) => {
             let isDisabled = false;
-            if (params.row.accountStatus === 0){
+            if (params.row.accountStatus === 0 || params.row.accountType === 1){
               isDisabled = true;
             }
               return h('Checkbox', {
                 props: {
                   value: params.row.matchType === 2?true:false,
-                  disabled: isDisabled
+                  disabled: !this.isAdmin?true:isDisabled
                 },
                 on: {
                   'on-change': (status) => {
@@ -138,21 +138,38 @@ export default {
           key: "allowedNegative",
           align: "left",
           render: (h, params) => {
-            let isDisabled = false;
-            if (params.row.accountStatus === 0){
+            let isDisabled = false,data,renderData = [];
+            if (params.row.accountStatus === 0 || params.row.accountType === 1){
               isDisabled = true;
             }
-            return h('Checkbox', {
-              props: {
-                value: params.row.allowedNegative === 1?true:false,
-                disabled: isDisabled
-              },
-              on: {
-                'on-change': (status) => {
-                  this.updateAccountRelation(status,params,'allowedNegative');
-                }
+            if(params.row.accountType === 1){
+              if(params.row.checkDirection === 1){
+                isDisabled = true;
               }
-            }, '启用');
+            }
+            data = [{name: '允许大于余额',value: 1},{name: '不允许大于余额',value: 0},{name: '允许一次大于余额',value: -1}];
+            data.forEach(val => {
+              renderData.push(
+                h('Option',{
+                    props: {
+                      value: val.value
+                    }
+                  },val.name)
+              )
+            })
+            return h('div',[
+              h('Select',{
+                props: {
+                  value: params.row.allowedNegative,
+                  disabled: !this.isAdmin?true:isDisabled
+                },
+                on: {
+                  'on-change': value => {
+                    this.updateAccountRelation(value,params,'allowedNegative');
+                  }
+                }
+              },renderData)
+            ]);
           }
         },
          {
@@ -161,13 +178,13 @@ export default {
           align: "left",
           render: (h, params) => {
             let isDisabled = false;
-            if (params.row.accountStatus === 0){
+            if (params.row.accountStatus === 0 || params.row.accountType === 1){
               isDisabled = true;
             }
             return h('Checkbox', {
               props: {
                 value: params.row.verification,
-                disabled: isDisabled
+                disabled: !this.isAdmin?true:isDisabled
               },
               on: {
                 'on-change': (status) => {
@@ -220,38 +237,39 @@ export default {
             data.verification = status;
           break;
         case 'allowedNegative': 
-          if(status){
-            data.allowedNegative = 1;
-          }else{
-            data.allowedNegative = 0;
-          }
+            data.allowedNegative = status;
           break;
       }
       updateAccountRel(data).then(res => {
         if(res.success){
           this.$Message.success(res.message);
+          this.getAllAppSubjectData();
         }
       })
       .catch(error => {
         this.$Message.error(error.data.message);
       });
+    },
+    getAllAppSubjectData() {
+      let transType;
+      if(this.appTransType){
+        transType = this.appTransType;
+      }else{
+        transType = localStorage.getItem('appTransType');
+      }
+      
+      localStorage.setItem('appTransType', this.appTransType);
+
+      getAppSubjectData(this.listId,transType).then(res => {
+        if (res.success) {
+          this.subjects = res.obj;
+        }
+      });
     }
   },
   created() {
-    let transType;
-    if(this.appTransType){
-      transType = this.appTransType;
-    }else{
-      transType = localStorage.getItem('appTransType');
-    }
+    this.getAllAppSubjectData();
     
-    localStorage.setItem('appTransType', this.appTransType);
-
-    getAppSubjectData(this.listId,transType).then(res => {
-      if (res.success) {
-        this.subjects = res.obj;
-      }
-    });
   }
 };
 </script>

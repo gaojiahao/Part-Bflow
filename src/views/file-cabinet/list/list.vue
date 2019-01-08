@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import {  } from "@/services/workGuideService.js";
+import { getFileData } from "@/services/fileCabinetService.js";
 
 export default {
   name: "fileCabinetList",
@@ -45,26 +45,35 @@ export default {
           slot: 'name'
         },{
           title: "权限",
-          key: "content",
+          key: "authority",
           width: 400
         },{
           title: "管理员",
-          key: "menderName"
+          key: "creator"
         },{
           title: "时间",
-          key: "time"
+          key: "crtTime"
         }
       ],
-      data: [{name:'全员分区',content:'仅浏览',menderName:'merry',time:'17/7/27'}]
+      data: []
     };
   },
   methods: {
     openMenu() {
 
     },
-    openSubarea() {}
+    openSubarea() {
+      // this.$route.push({path: `fileCabinet/detail${}`});
+    },
+    //获取分区数据
+    getAllFileData() {
+      getFileData('root').then(res => {
+        this.data = res;
+      })
+    }
   },
   mounted() {
+    this.getAllFileData();
   }
 };
 </script>

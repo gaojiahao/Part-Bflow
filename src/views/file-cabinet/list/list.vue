@@ -13,7 +13,19 @@
                 <template slot-scope="{ row }" slot="name">
                     <Icon class="subarea-icon" type="ios-grid" />
                     <strong>{{ row.name }}</strong>
-                    <Icon class="subarea-more" type="ios-arrow-dropright-circle" />
+                    <Poptip content="" placement="right-start" style="float:right;">
+                        <span @click="openMenu" class="subarea-more">
+                          <Icon type="ios-arrow-dropright-circle" />
+                        </span>
+                        <div slot="content">
+                          <ul class="subarea-menu">
+                            <li @click="openSubarea">打开</li>
+                            <li>置顶分区</li>
+                            <li>分区信息</li>
+                            <li>退出</li>
+                          </ul>
+                        </div>
+                    </Poptip>
                 </template>
             </Table>
         </div>
@@ -47,6 +59,10 @@ export default {
     };
   },
   methods: {
+    openMenu() {
+
+    },
+    openSubarea() {}
   },
   mounted() {
   }

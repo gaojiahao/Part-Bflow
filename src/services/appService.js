@@ -307,9 +307,7 @@ export const getAppSubjectData = (listId,transType) => request('/H_roleplay-si/c
  * @author XiaoYing
  * 启用禁用应用科目
  */
-export const openOrForbiddenSubject = (componentId) => request('/corebiz-api/calc/calcConfig/editStatus', {
-  componentId: componentId
-}, 'POST');
+export const updateAccountRel = (data) => request('/corebiz-api/calc/app/updateAccountRel', data, 'POST');
 
 /** 
  * @author XiaoYing

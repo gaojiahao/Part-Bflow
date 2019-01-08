@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { getAppSubjectData,openOrForbiddenSubject } from "@/services/appService.js";
+import { getAppSubjectData,updateAccountRel } from "@/services/appService.js";
 
 export default {
   name: "appSubject",
@@ -105,7 +105,7 @@ export default {
               },
               on: {
                 'on-change': (status) => {
-                  console.log(status);
+                  this.updateAccountRelation(status,params,'relation');
                 }
               }
             }, '启用');
@@ -113,44 +113,68 @@ export default {
         },
         {
           title: "核销方式",
-          key: "classify",
+          key: "matchType",
           align: "left",
           render: (h, params) => {
-            if (params.row.classify === 1){
-              return h('span',{},'');
-            }else{
+            let isDisabled = false;
+            if (params.row.accountStatus === 0){
+              isDisabled = true;
+            }
               return h('Checkbox', {
                 props: {
-                  value: true
+                  value: params.row.matchType === 2?true:false,
+                  disabled: isDisabled
                 },
                 on: {
                   'on-change': (status) => {
-                    console.log(status);
+                    this.updateAccountRelation(status,params,'matchType');
                   }
                 }
               }, '按单核销');
-            }
           }
         },
         {
           title: "余额校验",
-          key: "classify",
+          key: "verification",
           align: "left",
           render: (h, params) => {
-            if (params.row.classify === 1){
-              return h('span',{},'');
-            }else{
-              return h('Checkbox', {
-                props: {
-                  value: true
-                },
-                on: {
-                  'on-change': (status) => {
-                    console.log(status);
-                  }
-                }
-              }, '启用');
+            let isDisabled = false;
+            if (params.row.accountStatus === 0){
+              isDisabled = true;
             }
+            return h('Checkbox', {
+              props: {
+                value: params.row.verification,
+                disabled: isDisabled
+              },
+              on: {
+                'on-change': (status) => {
+                  this.updateAccountRelation(status,params,'verification');
+                }
+              }
+            }, '启用');
+          }
+        },
+         {
+          title: "主动核销",
+          key: "allowedNegative",
+          align: "left",
+          render: (h, params) => {
+            let isDisabled = false;
+            if (params.row.accountStatus === 0){
+              isDisabled = true;
+            }
+            return h('Checkbox', {
+              props: {
+                value: params.row.allowedNegative === 1?true:false,
+                disabled: isDisabled
+              },
+              on: {
+                'on-change': (status) => {
+                  this.updateAccountRelation(status,params,'allowedNegative');
+                }
+              }
+            }, '启用');
           }
         }
       ],
@@ -161,66 +185,73 @@ export default {
     
   },
   methods: {
-    //重新渲染科目启用禁用columns
-    rerenderSubjectColumns() {
-      this.columns[this.columns.length-1].render = (h,params) => {
-          let isDisabled = false,isChecked = false;
-          if(params.row.classify === 1){
-            isDisabled = true;
-          }
-          if(params.row.calcRels[0].status === 1){
-            isChecked = true;
-          }
-          return h('Checkbox',{
-            props: {
-              disabled: isDisabled,
-              value: isChecked
-            },
-            on: {
-              'on-change': (status) => {
-                this.renderMethod(status,params);
-              }
-            }
-          })
-        }
-    },
-    //启用禁用方法
-    renderMethod(status,params) {
-      let msgContent = '';
-      if(status){
-        msgContent = '确认启用该科目？'
+    updateAccountRelation(status,params,type) {
+      let data = {},transType;
+      if(this.appTransType){
+        transType = this.appTransType;
       }else{
-        msgContent = '确认禁用该科目？'
+        transType = localStorage.getItem('appTransType');
       }
-      this.$Modal.confirm({
-        title: '确认',
-        content: msgContent,
-        onOk: () => {
-          params.row.calcRels.forEach(val => {
-            openOrForbiddenSubject(val.componentId).then(res => {
-              if(res.status === 200){
-                this.$Message.success('更新成功！');
-              }
-            })
-          });
-        },
-        onCancel: () => {
-          this.rerenderSubjectColumns(); 
+      data.calcRelCode = params.row.calcRelCode;
+      data.componentId =  params.row.componentId;
+      data.transType = transType;
+      data.appId = this.listId;
+      data.verification = params.row.verification;
+      data.status = params.row.status;
+      data.allowedNegative = params.row.allowedNegative;
+      data.matchType = params.row.matchType;
+
+      switch(type) {
+        case 'relation': 
+          if(status){
+            data.status = 1;
+          }else{
+            data.status = 0;
+          }
+          break;
+        case 'matchType': 
+          if(status){
+            data.matchType = 2;
+          }else{
+            data.matchType = 1;
+          }
+          break;
+        case 'verification': 
+          if(status){
+            data.verification = 1;
+          }else{
+            data.verification = 0;
+          }
+          break;
+        case 'allowedNegative': 
+          if(status){
+            data.allowedNegative = 1;
+          }else{
+            data.allowedNegative = 0;
+          }
+          break;
+      }
+      updateAccountRel(data).then(res => {
+        if(res.success){
+          this.$Message.success(res.message);
         }
+      })
+      .catch(error => {
+        this.$Message.error(error.data.message);
       });
     }
   },
   created() {
-    let transCode;
+    let transType;
     if(this.appTransType){
-      transCode = this.appTransType;
+      transType = this.appTransType;
     }else{
-      transCode = localStorage.getItem('appTransType');
+      transType = localStorage.getItem('appTransType');
     }
     
     localStorage.setItem('appTransType', this.appTransType);
 
-    getAppSubjectData(this.listId,transCode).then(res => {
+    getAppSubjectData(this.listId,transType).then(res => {
       if (res.success) {
         this.subjects = res.obj;
       }

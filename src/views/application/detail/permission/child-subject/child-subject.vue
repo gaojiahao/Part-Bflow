@@ -7,7 +7,7 @@
         <Row class="app-action">
             <Row class="app-action-title">
                 <h3>管理子科目</h3>
-                <span class="warning-color marlr">（非会计类）管理子科目</span>
+                <span class="warning-color marlr">（科目）管理子科目</span>
             </Row>
             <div class="app-action-source">
                 <Row>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import {} from "@/services/appService.js";
+import { getSubAccountData,startSubAccountData,blockSubAccountData } from "@/services/appService.js";
 
 export default {
   name: "ChildSubject",
@@ -30,23 +30,48 @@ export default {
   data() {
     return {
       listId: this.$route.params.listId,
-      subjectData: [{childName:'待下单的加工',status: true},{childName:'待下单的销售合同',status: false}],
+      subjectData: [],
       columns: [
           {
           title: "子科目名称",
-          key: "childName"
+          key: "calcRelName"
         },
         {
           title: "状态",
           key: "status",
           render: (h, params) => {
+            let isDisabled = false;
+
+            if(params.accountType === 1){
+              isDisabled = true;
+            }
+
             return h('Checkbox', {
               props: {
-                value: params.row.status
+                value: params.row.status === 1? true : false,
+                disabled: isDisabled
               },
               on: {
                 'on-change': (status) => {
-                  console.log(status);
+                  if(status){
+                    startSubAccountData(params.row.calcRelCode).then(res => {
+                      if(res.success){
+                        this.$Message.success(res.message);
+                      }
+                    })
+                    .catch(error => {
+                      this.$Message.error(error.data.message);
+                    });
+                  }else{
+                    blockSubAccountData(params.row.calcRelCode).then(res => {
+                      if(res.success){
+                        this.$Message.success(res.message);
+                      }
+                    })
+                    .catch(error => {
+                      this.$Message.error(error.data.message);
+                    });
+                  }
                 }
               }
             }, '启用');
@@ -56,7 +81,16 @@ export default {
     };
   },
   methods: {
-    getChildSubjectData() {}
+    getChildSubjectData() {
+      getSubAccountData(this.listId).then(res => {
+        if(res.success){
+          this.subjectData = res.obj;
+        }
+      })
+      .catch(error => {
+        this.$Message.error(error.data.message);
+      });
+    }
   },
   mounted() {
     this.getChildSubjectData();

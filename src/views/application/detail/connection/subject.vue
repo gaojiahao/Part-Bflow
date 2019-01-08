@@ -22,7 +22,8 @@ export default {
   name: "appSubject",
   components: {},
   props: {
-    isAdmin: Boolean
+    isAdmin: Boolean,
+    appTransType: String
   },
   data() {
     return {
@@ -38,7 +39,7 @@ export default {
           key: "classify",
           align: "left",
           render: (h, params) => {
-            if (params.row.classify === 1) {
+            if (params.row.accountType === 1) {
               return h("span", {}, "会计类");
             } else {
               return h("span", {}, "非会计类");
@@ -47,16 +48,16 @@ export default {
         },
         {
           title: "子科目",
-          key: "accountName",
+          key: "calcRelName",
           align: "left"
         },
         {
           title: "子科目状态",
-          key: "accountName",
+          key: "accountStatus",
           align: "left",
           render: (h, params) => {
-            if (params.row.classify === 1) {
-              return h("span", {}, "");
+            if (params.row.accountStatus === 0) {
+              return h("span", {}, "禁用");
             } else {
               return h("span", {}, "启用");
             }
@@ -67,29 +68,17 @@ export default {
           key: "dataCollection",
           align: "left",
           render: (h, params) => {
-            let collectionStatus = [],
-              subject = params.row;
-
-            //获取到应用相对于科目的数据归集方向
-            subject.calcRels.forEach(val => {
-              collectionStatus.push(val.matchDirectionByDebit);
-            });
-
             //区分科目类型 【会计类、非会计类】
-            if (subject.classify === 1) {
-              if (collectionStatus.indexOf(1)>-1 && collectionStatus.indexOf(-1)>-1) {
-                return h("span", {}, "借方，贷方");
-              } else if (collectionStatus.indexOf(1)>-1) {
+            if (params.row.accountType === 1) {
+              if (params.row.checkDirection === 1) {
                 return h("span", {}, "借方");
-              } else if (collectionStatus.indexOf(-1)>-1) {
+              } else{
                 return h("span", {}, "贷方");
               }
             } else {
-              if (collectionStatus.indexOf(1)>-1 && collectionStatus.indexOf(-1)>-1) {
-                return h("span", {}, "增加，减少");
-              } else if (collectionStatus.indexOf(1)>-1) {
+              if (params.row.checkDirection === 1) {
                 return h("span", {}, "增加");
-              } else if (collectionStatus.indexOf(-1)>-1) {
+              } else{
                 return h("span", {}, "减少");
               }
             }
@@ -159,42 +148,7 @@ export default {
     };
   },
   watch: {
-    // isAdmin: function(value) {
-    //   const lastColumn = {
-    //       title: "操作",
-    //       key: "key",
-    //       align: "center",
-    //       render: (h,params) => {
-    //         let isDisabled = false,isChecked = false;
-    //         if(params.row.classify === 1){
-    //           isDisabled = true;
-    //         }
-    //         if(params.row.calcRels[0].status === 1){
-    //           isChecked = true;
-    //         }
-    //         return h('Checkbox',{
-    //           props: {
-    //             disabled: isDisabled,
-    //             value: isChecked
-    //           },
-    //           on: {
-    //             'on-change': (status) => {
-    //               this.renderMethod(status,params);
-    //             }
-    //           }
-    //         })
-    //       }
-    //   };
-    //   if(value){
-    //     if(this.columns[this.columns.length-1].title !== '操作'){
-    //       this.columns.push(lastColumn);
-    //     }
-    //   }else{
-    //     if(this.columns[this.columns.length-1].title === '操作'){
-    //       this.columns.splice(this.columns.length-1,1);
-    //     }
-    //   }
-    // }
+    
   },
   methods: {
     //重新渲染科目启用禁用columns
@@ -247,12 +201,18 @@ export default {
     }
   },
   created() {
-    getAppSubjectData(this.listId).then(res => {
-      if (res.status === 200) {
-        this.subjects = res.data;
-      } else {
-        //todo
-        //提示用户，请求失败
+    let transCode;
+    if(this.appTransType){
+      transCode = this.appTransType;
+    }else{
+      transCode = localStorage.getItem('appTransType');
+    }
+    
+    localStorage.setItem('appTransType', this.appTransType);
+
+    getAppSubjectData(3,'YW12-3').then(res => {
+      if (res.success) {
+        this.subjects = res.obj;
       }
     });
   }

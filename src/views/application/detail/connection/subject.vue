@@ -57,7 +57,12 @@ export default {
           align: "left",
           render: (h, params) => {
             if (params.row.accountStatus === 0) {
-              return h("span", {}, "禁用");
+              return h("span", {
+                style: {
+                  'font-weight': 'bold',
+                  color: '#adabab'
+                }
+              }, "禁用");
             } else {
               return h("span", {}, "启用");
             }
@@ -89,9 +94,14 @@ export default {
           key: "classify",
           align: "left",
           render: (h, params) => {
+            let isDisabled = false;
+            if(params.row.accountStatus === 0){
+              isDisabled = true;
+            }
             return h('Checkbox', {
               props: {
-                value: true
+                value: true,
+                disabled: isDisabled
               },
               on: {
                 'on-change': (status) => {
@@ -210,7 +220,7 @@ export default {
     
     localStorage.setItem('appTransType', this.appTransType);
 
-    getAppSubjectData(3,'YW12-3').then(res => {
+    getAppSubjectData(this.listId,transCode).then(res => {
       if (res.success) {
         this.subjects = res.obj;
       }

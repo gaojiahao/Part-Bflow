@@ -182,7 +182,7 @@ export default {
               isDisabled = true;
             }
             if(params.row.accountType === 0){
-              if(params.row.checkDirection === 0){
+              if(params.row.checkDirection === -1){
                 isDisabled = true;
               }
             }

@@ -12,14 +12,14 @@
         <FormItem label="标题:" prop="logTitle" width="300">
             <Input v-model="modalFormData.logTitle" placeholder="请输入任务日志标题" />
         </FormItem> 
-        <FormItem label="任务日期：">
+        <FormItem label="日期" prop="taskDate">
             <DatePicker type="date" format="yyyy-MM-dd" v-model="modalFormData.taskDate"></DatePicker>
         </FormItem>
-        <FormItem label="申报工时:" prop="logDeclarationHours">
+        <FormItem label="工时:" prop="logDeclarationHours">
           <InputNumber v-model="modalFormData.logDeclarationHours"  :min="0.1" :step="0.1"/>
           <span style="margin-left:10px;">单位/时</span>
         </FormItem>
-        <FormItem label="日志描述:" prop="comments">
+        <FormItem label="描述:" prop="comments">
              <Input v-model="modalFormData.comments" type="textarea" :autosize="{minRows: 2,maxRows: 5}" />
         </FormItem>
         
@@ -87,19 +87,19 @@ export default {
         },
         ruleValidate: {
             //变更日志表单校验
-            logTitle: [  
-            {
+            logTitle: [{
                 required: true,
                 message: "不允许为空" 
-            }
-            ],
-            logDeclarationHours: [ 
-            {
+            }],
+            logDeclarationHours: [{
                 required: true, 
                 message: "不允许为空",
                 type: "number"
-            }
-            ],
+            }],
+            taskDate: [{
+                required: true,
+                message: "不允许为空" 
+            }]
         },
 
         currentPage: 1,

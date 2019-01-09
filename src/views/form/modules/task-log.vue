@@ -31,7 +31,7 @@
 
     <div  class="timeline-box-log" v-show="logData.length===0?false:true">
       <ul class="timeline-box-log-item" v-for="(item,index) in logData" :key="index">
-        <img :src="item.photo?item.photo:'resources/images/icon/user.png'" class="head-portrait"/>
+        <img :src="item.photo?item.photo:'resources/images/icon/defaultUserPhoto.png'" class="head-portrait"/>
         <ul class="timeline-item-content-ul">
          
           <li>

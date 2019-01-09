@@ -676,3 +676,21 @@ export const serachProcess = (listId, currentPage, pageSize, filter) => request(
   limit: pageSize,
   filter: filter
 })
+
+/**
+ * @author guozheng
+ * @description 保存任务日志
+ * @param {*} param 
+ */
+export const saveTaskLog = (data) => request('/H_roleplay-si/jobLog/save', {}, "POST",data)
+
+/**
+ * @author guozheng
+ * @description 获取任务日志
+ * @param {*} param 
+ */
+export const getTaskLog = (transCode,currentPage,pageSize) => request('/H_roleplay-si/jobLog/findAllJobLog', {
+  transCode:transCode,
+  pageIndex:currentPage,
+  pageSize:pageSize
+})

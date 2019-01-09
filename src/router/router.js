@@ -66,6 +66,16 @@ export const instanceCommetns = {
     import('@/views/form/instance-comments.vue')
 }
 
+export const taskLog = {
+  path: '/taskLog/:transCode',
+  name: 'taskLog',
+  meta: {
+    title: 'RoleTask - 任务日志'
+  },
+  component: () =>
+    import('@/views/form/modules/task-log.vue')
+}
+
 
 
 export const appRouter = [{
@@ -174,6 +184,7 @@ export const routers = [
   BusinessModuleGraph,
   bigProcess,
   fieldChangeHistoryRouter,
+  taskLog,
   instanceCommetns,
   enterpriseInfo,
   notifications,

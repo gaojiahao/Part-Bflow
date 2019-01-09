@@ -146,8 +146,9 @@ export const deleteUser = (userId) => request('/H_roleplay-si/userInfo/updatePar
  * @author XiaoYing
  * @description 获取组织部门数据
  */
-export const getGroupData = (parentId) => request('/H_roleplay-si/ds/getUserGroupByParentId', {
-  parentId: parentId
+export const getGroupData = (parentId,filter) => request('/H_roleplay-si/ds/getUserGroupByParentId', {
+  parentId: parentId,
+  filter: filter
 });
 
 /**

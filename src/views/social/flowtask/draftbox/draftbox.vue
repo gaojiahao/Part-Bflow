@@ -59,7 +59,7 @@ export default {
                 {
                     title: '应用名称',
                     key: 'transType',
-                    width:140
+                    width:160
                 },
                 {
                     title: '经办人',
@@ -79,6 +79,7 @@ export default {
                 {
                     title:'创建时间',
                     key:'createdTime',
+                     width:150,
                 }
             ],
             data: [],

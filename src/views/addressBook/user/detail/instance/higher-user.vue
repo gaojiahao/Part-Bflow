@@ -80,7 +80,7 @@
               :data="userData">
             </Table>
             <div class="user-page">
-                <div class="fr">
+                <div class="fr" style="padding-bottom: 5px;">
                   <Page 
                     @on-page-size-change="onAllUserPageSizeChange" 
                     :total="highUser.usertotal" 
@@ -275,14 +275,14 @@ export default {
     //点击切换所有用户每页显示条数
     onAllUserPageSizeChange(size) {
       let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"},
-      {operator:"ne",value:this.userId,property:"userId"}
+      {operator:"ne",value:this.userId,property:"userId"},{operator:"ne",value:0,property:"status"},{operator:"ne",value:-2,property:"status"}
       ]);
       this.highUser.allUserpageSize = size;
       this.getAllUsersData(filter);
     },
     onUserPageChange(currentPage) {
       let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"},
-      {operator:"ne",value:this.userId,property:"userId"}
+      {operator:"ne",value:this.userId,property:"userId"},{operator:"ne",value:0,property:"status"},{operator:"ne",value:-2,property:"status"}
       ]);
       this.highUser.usercurrentPage = currentPage;
       this.getAllUsersData(filter);
@@ -328,7 +328,7 @@ export default {
     },
     //获取所有用户数据
     getAllUsersData(filter) {
-      let relFilter = filter?filter:JSON.stringify([{operator:"ne",value:this.userId,property:"userId"}]);
+      let relFilter = filter?filter:JSON.stringify([{operator:"ne",value:this.userId,property:"userId"},{operator:"ne",value:0,property:"status"},{operator:"ne",value:-2,property:"status"}]);
       this.userLoading = true;
       getAllUsers(this.highUser.allUserpageSize,this.highUser.usercurrentPage,relFilter).then(res => {
         this.userData = res.tableContent;
@@ -339,7 +339,7 @@ export default {
     //查询用户
     userFilter() {
       let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"},
-      {operator:"ne",value:this.userId,property:"userId"}
+      {operator:"ne",value:this.userId,property:"userId"},{operator:"ne",value:0,property:"status"},{operator:"ne",value:-2,property:"status"}
       ]);
       this,highUser.usercurrentPage = 1;
       this.getAllUsersData(filter);

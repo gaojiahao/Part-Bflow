@@ -91,7 +91,7 @@ export default {
                 {
                     title: '交易号',
                     key: 'businessKey',
-                    width:140,
+                    width:165,
                     render: (h,params) => {
                         return h('a',{
                             on: {
@@ -105,12 +105,12 @@ export default {
                 {
                     title: '操作名称',
                     key: 'nodeName',
-                    width:140
+                    width:165
                 },
                 {
                     title: '应用名称',
                     key: 'title',
-                    width:140
+                    width:165
                 },
                 {
                     title: '发起人',
@@ -122,14 +122,15 @@ export default {
                     key:'crtTime',
                     width:150
                 },
-                 {
-                title: "已过时间",
-                key: "crtTime",
-                render: (h,params) => {
-                        let outTime = this.calcLeadTime(params.row.crtTime);
-                        return h('span',{},outTime);
+                {
+                    title: "已过时间",
+                    key: "crtTime",
+                    width:150,
+                    render: (h,params) => {
+                            let outTime = this.calcLeadTime(params.row.crtTime);
+                            return h('span',{},outTime);
+                        }
                     }
-                }
             ],
             data: [],
             pageInfo:{
@@ -251,12 +252,16 @@ export default {
                         if(res.success){
                             this.getFlowTodoTasks();
                             this.onPageSelection = [];
+                            this.$Notice.success({
+                                title:'提示',
+                                desc:res.message,
+                            })
+                        }else{
+                            this.$Notice.error({
+                                title:'提示',
+                                desc:res.message,
+                            })
                         }
-                        this.$Message.success({
-                            content:res.message,
-                            closable:true,
-                            duration:0
-                        })
                     })
                 },
                 onCancel: () => {
@@ -274,12 +279,16 @@ export default {
                         if(res.success){
                             this.getFlowTodoTasks();
                             this.onPageSelection = [];
+                            this.$Notice.success({
+                                title:'提示',
+                                desc:res.message,
+                            })
+                        }else{
+                            this.$Notice.error({
+                                title:'提示',
+                                desc:res.message,
+                            })
                         }
-                        this.$Message.success({
-                            content:res.message,
-                            closable:true,
-                            duration:0
-                        })
                     })
                 }
             })

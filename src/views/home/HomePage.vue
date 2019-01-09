@@ -2,71 +2,40 @@
 
   <div class="wrap">
     <Spin size="large" fix v-if="spinShow"></Spin>
-    <div class="main-header bg_ff">
-        <Row>
-          <Col span="24">
-          <ButtonGroup class="fr">
-            <Icon :type="model==='apps'?'ios-apps':'md-share'" size="16" />
-            <Select v-model="model" class="input-select" @on-change="changeView" placeholder="请选择业务单元" style="width:230px;font-size:16px">
-              <Option value="apps">
-                <Icon type="ios-apps" size="16" /> 所有应用看板
-              </Option>
-              <Option v-for="item in pulseGraphLlistr" :value="item.id" :key="item.id">
-                <Icon type="md-share" size="16" /> {{ item.name }}
-              </Option>
-            </Select>
-          </ButtonGroup>
-          </Col>
-        </Row>
-    </div>
-    <div v-if="cutView&&caseId==='apps'">
       <section v-for="(menuItem,i) in menu" :key="i" class="bg-white-lighter">
-
         <row class="menu-group">
           <row>
             <h3 class="menu-group-title">{{menuItem.text}}</h3>
           </row>
-
           <row :gutter="16" >
-            
-            <Col  v-if="item.leaf" v-for="(item,j) in menuItem.children" :key="j" span="4">
-              <card-item v-if="item.leaf" :appinfo="item" :allTaskCount="allTaskCount"></card-item>
+            <Col v-for="(item,j) in menuItem.children" :key="j"   v-if="item.leaf"  span="4">
+              <menu-item :appinfo="item" :allTaskCount="allTaskCount"></menu-item>
             </Col>
-           <card-list v-else :menuItem="item" :index='j' :allTaskCount="allTaskCount"></card-list>
+            <menu-list v-else :menuItem="item" :index='j' :allTaskCount="allTaskCount"></menu-list>
           </row>
           
         </row>
       </section>
-    </div>
-    <div v-for="(pulseGraph,index) in pulseGraphLlistr" :key="index" v-if="!cutView && pulseGraph.id === caseId">
-      <pulse-graph :caseId="pulseGraph.id"></pulse-graph>
-    </div>
   </div>
 </template>
 
 <script>
-import CardList from "@/components/card/CardList";
-import CardItem from "@/components/card/CardItem";
+import MenuList from "./card/MenuList";
+import MenuItem from "./card/MenuItem";
 import { getToken } from "@/utils/utils";
-import PulseGraph from "@/views/flow/pulseGraph";
 import {
   getMenu,
-  getPulsationDiagramCase,
   getCurrentUserAllTasks,
-  getPulseGraph,
-  getMyFavorite
 } from "@/services/flowService";
 
 export default {
   components: {
-    CardList,
-    CardItem,
-    PulseGraph
+    MenuList,
+    MenuItem,
   },
   data() {
     return {
       spinShow: true,
-      cutView: true,
       menuList: [],
       menu:[],
       favoriteMenu: {
@@ -74,8 +43,6 @@ export default {
         text: "常用应用",
         children: []
       },
-      caseId: "apps",
-      pulseGraphLlistr: [],
       allTaskCount: [],
       books$$: null,
       isAdmin: this.$currentUser.isAdmin,
@@ -83,11 +50,7 @@ export default {
     };
   },
   created() {
-    // getMyFavorite().then(res => {
-    //   if (res.tableContent.length > 0) {
-    //     this.favoriteMenu.children = res.tableContent;
-    //   }
-    // });
+  
     let cache = window.sessionStorage.getItem('roletask.com.r2.cache');
     if(cache){
       cache = cache?JSON.parse(cache):{};
@@ -98,13 +61,7 @@ export default {
       //获取菜单信息
       getMenu().then(res => {
         this.urlMd5(res);
-
-        if (this.favoriteMenu.children.length > 0) {
-          this.menuList = [this.favoriteMenu, ...res];
-        } else {
-          this.menuList = res;
-        }
-        
+        this.menuList = res;
         if(this.menuList.length>6){
           this.menu = this.menuList.slice(0,6);
         }else{
@@ -121,10 +78,6 @@ export default {
        //获取当前用户所有待办任务
     getCurrentUserAllTasks().then(res => {
       this.allTaskCount = res.tableContent;
-    });
-
-    getPulsationDiagramCase().then(res => {
-      this.pulseGraphLlistr = res.tableContent;
     });
 
     //滚动加载菜单栏
@@ -156,17 +109,6 @@ export default {
 
 
   methods: {
-    changeView(caseId) {
-      if (!caseId) return;
-      if (caseId === "apps") {
-        this.cutView = true;
-        this.caseId = caseId;
-      } else {
-        this.cutView = false;
-        this.caseId = Number(caseId);
-      }
-    },
-
     goAppManage() {
       window.top.location.hash = "#page/AppSetting";
     },
@@ -267,7 +209,6 @@ export default {
   }
 }
 .wrap {
-  top: 40px;
   position: relative;
 }
 
@@ -292,24 +233,6 @@ export default {
   }
 }
 
-.main-header {
-  position: fixed;
-  top: 0px;
-  height: 40px;
-  width: 100%;
-  padding: 0 10%;
-  z-index: 997;
-  padding: 5px;
-  .ivu-select-selected-value {
-    font-size: 14px !important;
-    font-weight: bold;
-  }
-}
-&-container {
-  background: #fff;
-  margin: 80px auto 15px;
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
-}
 &-content {
   padding: 20px 25px;
   position: relative;
@@ -322,17 +245,5 @@ export default {
   border-color: #2d8cf0;
 }
 
-// .input-select {
-//   width: 160px !important;
-//   margin: 0 5px !important;
-// }
-
-//下拉选择器修改自带样式
-.main-header-nav {
-  .ivu-select-selection {
-    height: 30px !important;
-    border-radius: 0px !important;
-  }
-}
 </style>
 

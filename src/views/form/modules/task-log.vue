@@ -33,16 +33,17 @@
       <ul class="timeline-box-log-item" v-for="(item,index) in logData" :key="index">
         <img :src="item.photo?item.photo:'resources/images/icon/user.png'" class="head-portrait"/>
         <ul class="timeline-item-content-ul">
+         
           <li>
-            <span>{{`标题：${item.logTitle}`}}</span>
+            <span>{{item.handlerName}}</span>
+            <span>{{item.taskDate}}</span>
+            <span>{{`${item.logDeclarationHours} 小时`}}</span>
+          </li>
+           <li>
+            <span style="font-weight:600">{{item.logTitle}}</span>
           </li>
           <li>
-            <span>{{`任务执行者：${item.handlerName}`}}</span>
-            <span>{{`任务日期：${item.taskDate}`}}</span>
-            <span>{{`申报工时：${item.logDeclarationHours}`}}</span>
-          </li>
-          <li>
-            <span v-html="item.comment?`日志描述: ${item.logTitle}`:''"></span>
+            <span v-html="item.comment"></span>
           </li>
         </ul>
       </ul>

@@ -108,6 +108,17 @@ export default {
         {
           title: "已授权用户、组织或职位",
           key: "instance"
+        },
+         {
+          title: "名单类型",
+          key: "isBlacklist",
+          render: (h,params) => {
+            let isBlacklist = '黑名单';
+            if(!params.row.isBlacklist){
+              isBlacklist = '白名单';
+            }
+            return h('span',{},isBlacklist);
+          }
         }],
         optColumns = [ {
           title: "操作",

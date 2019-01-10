@@ -22,6 +22,14 @@ export const fileCabinetRouter = {
                 title: '文件柜分区详情',
             },
             component: () => import('@/views/file-cabinet/detail/detail.vue'),
+        },
+        {
+            path: 'test',
+            name: 'test',
+            meta: {
+                title: 'test',
+            },
+            component: () => import('@/views/file-cabinet/test.vue'),
         }
     ]
 }

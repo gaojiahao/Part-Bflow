@@ -4,6 +4,18 @@
 
 <template>
     <div class="file">
+      <div class="file-header">
+            <span>文件柜</span>
+            <div class="file-search">
+              <Input 
+                @on-search="fileFilter" 
+                :search="true" 
+                v-model="searchValue" 
+                placeholder="搜索" 
+                style="width: 300px">
+              </Input>
+            </div>
+        </div>
         <div class="toolbar">
             <span class="toolbar-bread">
               <span @click="goSubarea" class="toolbar-subarea">分区</span>
@@ -46,7 +58,7 @@
                           <ul class="subarea-menu">
                             <li v-if="!row.isFile" @click="openfile(row)">打开</li>
                             <li @click="downloadFiles(row)">下载</li>
-                            <li @click="copyFiles(row)">复制</li>
+                            <li @click="copyFiles(row)">复制到...</li>
                             <li @click="renameFile(row)">重命名</li>
                             <li @click="moveFiles(row)">移动到...</li>
                             <li @click="deleteFiles(row)">删除</li>
@@ -100,6 +112,7 @@ export default {
     return {
       subareaId: this.$route.params.id,
       subareaPath: "",
+      searchValue: "",
       httpHeaders: {
         Authorization: getToken()
       },
@@ -143,6 +156,8 @@ export default {
     };
   },
   methods: {
+    //过滤
+    fileFilter() {},
     handleSuccess(res, file) {
       if(res.success){
         this.$Message.success(res.message);

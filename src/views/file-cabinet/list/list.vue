@@ -4,6 +4,18 @@
 
 <template>
     <div class="file">
+      <div class="file-header">
+            <span>文件柜</span>
+            <div class="file-search">
+              <Input 
+                @on-search="fileFilter" 
+                :search="true" 
+                v-model="searchValue" 
+                placeholder="搜索" 
+                style="width: 300px">
+              </Input>
+            </div>
+        </div>
         <div class="toolbar">
             <span>分区</span>
             <Button @click="addNewSubarea" class="toolbar-btn">新建分区</Button>
@@ -63,6 +75,7 @@ export default {
     return {
       subareaName: "",
       filePath: "",
+      searchValue: "",
       modalTitle: '分区重命名',
       showModal: false,
       isAdd: true,
@@ -88,6 +101,8 @@ export default {
     };
   },
   methods: {
+    //过滤
+    fileFilter() {},
     openSubarea(row) {
       this.$router.push({path: `/fileCabinet/detail/${row.id}`});
     },

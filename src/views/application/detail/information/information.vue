@@ -60,15 +60,7 @@
           </Row>
           <Row class="pad5">
             <Col span="24">说明：<span v-if="showAppEditAdmin" v-html="appData.comment"></span>
-              <vue-wangeditor
-                v-else 
-                ref="editorInfo" 
-                id="editorInfo"
-                :menus="menu"
-                v-model="appData.comment"
-                height="100" 
-                width="100%">
-              </vue-wangeditor>
+              <div v-show="!showAppEditAdmin" ref="infoeditor"></div>
             </Col>
           </Row>
         </Col>
@@ -134,13 +126,11 @@ import {
   getAllPermissionData,
   enabledForbiddenApp
 } from "@/services/appService.js";
-import vueWangeditor from 'vue-wangeditor';
+import E from 'wangeditor';
 
 export default {
   name: "appInfo",
-  components: {
-    vueWangeditor
-  },
+  components: {},
   props: {
     listId: String,
     appData: Object,
@@ -158,9 +148,6 @@ export default {
       total: 0,
       currentPage: 1,
       pageSize: 10,
-      menu: [
-        '|',
-      ],
       adminColumns: [
         {
           title: "头像",
@@ -230,6 +217,7 @@ export default {
     editAppinfo() {
       if(this.isAdmin){
         this.showEditAppInfo = !this.showEditAppInfo;
+        this.infoeditor.txt.html(this.appData.comment);
       }
       //只有企业管理员可编辑应用管理员
       if(this.isCompanyAdmin){
@@ -240,7 +228,7 @@ export default {
           uniqueId: this.appData.uniqueId,
           title: this.appData.title,
           administrator: this.appData.userId,
-          comment: this.$refs.editorInfo?this.$refs.editorInfo.getHtml():''
+          comment: this.$refs.infoeditor?this.infoeditor.txt.html():''
         };
         saveAppInformation(params).then(res => {
           if (res.success) {
@@ -281,6 +269,9 @@ export default {
         this.adminData = res.tableContent; 
         this.total = res.dataCount;
         this.adminLoading = false;
+        if(!this.infoeditor){
+          this.createEditor();
+        }
       });
     },
     //启用禁用应用动作权限
@@ -334,6 +325,35 @@ export default {
         {operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
       ]);
       this.getAdmintrstorData(filter);
+    },
+    //create富文本编辑器
+    createEditor() {
+      this.infoeditor = new E(this.$refs.infoeditor)
+      this.infoeditor.customConfig.onchange = (html) => {
+        this.appData.comment = html;
+      }
+      this.infoeditor.customConfig.zIndex = 100;
+      this.infoeditor.customConfig.menus = [
+        'head',  // 标题
+        'bold',  // 粗体
+        'fontSize',  // 字号
+        'fontName',  // 字体
+        'italic',  // 斜体
+        'underline',  // 下划线
+        'strikeThrough',  // 删除线
+        'foreColor',  // 文字颜色
+        'backColor',  // 背景颜色
+        'link',  // 插入链接
+        'list',  // 列表
+        'justify',  // 对齐方式
+        'quote',  // 引用
+        'emoticon',  // 表情
+        'code',  // 插入代码
+        'undo',  // 撤销
+        'redo'  // 重复
+      ]
+      this.infoeditor.create();
+      this.infoeditor.txt.html(`<div></div>`);
     }
   },
   mounted() {

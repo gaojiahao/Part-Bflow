@@ -24,10 +24,19 @@ export const getListById = (listId) => request('/H_roleplay-si/ds/list/getListBy
  * @author XiaoYing
  * @description 添加权限
  */
-export const addPermission = (list,single, multi) => request('/H_roleplay-si/ps/updatePermissionRelation', {
-  list: list,
-  multi: multi,
-  single: single
+export const addPermission = (permissionIds,menuIds, objId,type) => request(`/H_roleplay-si/ps/${type}/save`, {
+  permissionIds: permissionIds,
+  menuIds: menuIds,
+  objId: objId
+}, 'POST');
+
+/**
+ * @author XiaoYing
+ * @description 删除权限
+ */
+export const deletePermission = (objId,nodeId,type) => request(`/H_roleplay-si/ps/${type}/delete`, {
+  nodeId: nodeId,
+  objId: objId
 }, 'POST');
 
 /************  用户  **************/
@@ -137,8 +146,9 @@ export const deleteUser = (userId) => request('/H_roleplay-si/userInfo/updatePar
  * @author XiaoYing
  * @description 获取组织部门数据
  */
-export const getGroupData = (parentId) => request('/H_roleplay-si/ds/getUserGroupByParentId', {
-  parentId: parentId
+export const getGroupData = (parentId,filter) => request('/H_roleplay-si/ds/getUserGroupByParentId', {
+  parentId: parentId,
+  filter: filter
 });
 
 /**
@@ -176,11 +186,9 @@ export const getAllRoleData = (pageSize, currentPage, filter) => request('/H_rol
  * @author XiaoYing
  * @description 获取所用权限数据
  */
-export const getAllPermissionData = (parentId,limit,currentPage,filter) => request('/H_roleplay-si/ds/getPermissionListByParentId', {
+export const getAllPermissionData = (parentId,objId,type) => request(`/H_roleplay-si/ps/${type}/getChildNode`, {
   parentId: parentId,
-  limit: limit,
-  page: currentPage,
-  filter: filter
+  objId: objId
 });
 
 /**
@@ -532,8 +540,8 @@ export const getCompanyList = (groupId, target, currentPage, pageSize) => reques
  */
 export const getGroupUser = (groupId, currentPage, pageSize,text) => request('/H_roleplay-si/sysGroup/getGroupUser', {
   groupId: groupId,
-  currentPage: currentPage,
-  pageSize: pageSize,
+  page: currentPage,
+  limit: pageSize,
   search: text 
 })
 /**

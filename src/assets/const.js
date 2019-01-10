@@ -2,7 +2,7 @@
 export const APP_ACTION = {
     'add': '创建本应用的实例',
     'delete': '删除本应用状态为草稿状态的实例、除了管理员、用户只能删除自己创建的实例',
-    'update': '编辑修改实例',
+    'update': '修改表单实例',
     'export': '把当前报表导出到EXCEL',
     'import': '通过Excel导入本应用的数据',
     'printer': '批量打印选中的实例的表单',

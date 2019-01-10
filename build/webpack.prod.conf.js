@@ -9,7 +9,14 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+// const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
+const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
+
+const HappyPack = require('happypack')
+
+const HappyPackThreadPool = HappyPack.ThreadPool({size:5})
+const vueLoaderConfig = require('./vue-loader.conf')
 
 const env = process.env.NODE_ENV === 'testing'
   ? require('../config/test.env')
@@ -30,18 +37,42 @@ const webpackConfig = merge(baseWebpackConfig, {
     chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
   },
   plugins: [
+    new HappyPack({
+      id:'vue',
+      loaders:[
+        {
+          loader:'vue-loader',
+          options: vueLoaderConfig
+        }
+      ],
+      threadPool:HappyPackThreadPool
+    }),
+    new HappyPack({
+      id: 'babel',
+      loaders: ['babel-loader?cacheDirectory'],
+      threadPool: HappyPackThreadPool
+    }),
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env': env
     }),
-    new UglifyJsPlugin({
-      uglifyOptions: {
-        compress: {
-          warnings: false
-        }
-      },
-      sourceMap: config.build.productionSourceMap,
-      parallel: true
+    // new UglifyJsPlugin({
+    //   uglifyOptions: {
+    //     compress: {
+    //       warnings: false
+    //     }
+    //   },
+    //   sourceMap: config.build.productionSourceMap,
+    //   parallel: true
+    // }),
+    new ParallelUglifyPlugin({
+      cacheDir:'.cache/',
+      uglifyJs:{
+        compress:{
+          warnings:false
+        },
+        sourceMap:true
+      }
     }),
     // extract css into its own file
     new ExtractTextPlugin({
@@ -122,7 +153,11 @@ const webpackConfig = merge(baseWebpackConfig, {
         from: path.resolve(__dirname, '../src/resources'),
         to: 'resources',
         ignore: ['.*']
-      },
+      }, {
+        from: path.resolve(__dirname, '../src/plugin/mxgraph-flow'),
+        to: 'mxgraph-flow',
+        ignore: ['.*']
+      }
     ])
   ]
 })

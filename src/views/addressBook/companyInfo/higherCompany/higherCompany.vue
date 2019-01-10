@@ -37,7 +37,7 @@
       <br>
       <Table ref="selection" :columns="columns1" :loading="higherLoading" :data="higherCompanyData"></Table>
       <div style="margin: 10px;overflow: hidden">
-        <div class="fr">
+        <div class="fr" style="padding-bottom: 5px;">
           <Page @on-page-size-change="onPageSizeChange" :total="higherCompanyTotal" show-elevator show-sizer :current="higherCompanyCurrentPage" :page-size="higherCompanyPageSize" @on-change="onPageChange" size="small" show-total></Page>
         </div>
       </div>

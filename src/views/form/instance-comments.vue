@@ -32,7 +32,7 @@
                     </span>
 
                     <span>
-                        <Dropdown style="margin-left: 20px" @on-click="addSubUsers" trigger="click" >
+                        <Dropdown class="instance-dropdown" @on-click="addSubUsers" trigger="click" >
                          <Icon type="md-person" size=18  /> {{subscribeInfo.subscribeNum}}
                          <Icon type="ios-arrow-down"></Icon>
                         <DropdownMenu slot="list">
@@ -244,7 +244,7 @@ export default {
            type:'instance',
            relationKey:this.transCode,
            type: this.type,
-           limit:10,
+           limit:1000,
            page:1
         }).then(res=>{
             this.subscribeInfo.subscribeUsers = res.tableContent;

@@ -19,11 +19,14 @@
   <div class="content-wrap">
     <Row class="detail-com-header">
       <div class="detail-com-header-bread">
-        <span class="detail-com-header-bread-user">公司</span>
+        <span @click="goCompanyList" class="detail-com-header-bread-user">公司</span>
         <span class="detail-com-header-bread-others">/</span>
         <span class="detail-com-header-bread-others">{{ (companyInformation&&companyInformation.groupName)?companyInformation.groupName:'创建'}}</span>
       </div>
-      <Tag v-show="companyInformation.status" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:companyInformation.status}"></Tag>
+      <Tag 
+        v-show="groupId"
+        class="radius10 marlr10 color_fff" 
+        v-instanceStateDirective="{status:companyInformation.status}"></Tag>
     </Row>
     <Row class="detail-tabs">
       <div @click="onClickTab(index)" v-if="groupId?item.isShow:item.isShowAcive" :class="{'detail-tabs-child':true,'active-item':item.isShowAcive}" v-for="(item,index) of relativeInstance" :key="index">
@@ -113,6 +116,9 @@ export default {
     };
   },
   methods: {
+    goCompanyList() {
+      location.href = '/Site/index.html#page/companys';
+    },
     //切换tab
     onClickTab(currentIndex) {
       this.relativeInstance.forEach((val, k) => {

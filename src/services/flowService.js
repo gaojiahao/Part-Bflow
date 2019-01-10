@@ -48,7 +48,7 @@ export const getMyFavorite = () => request('/H_roleplay-si/ds/getMyFavorite')
  */
 export const getAppTaskCount = (params) => request('/H_roleplay-si/trans/getAppTaskInfo', params)
 
-export const getMockData = () => request('../mock/flow/technologyGraph.json');
+export const getMockData = () => request('../mock/flow/bpg.json');
 
 /** 
  * 获取订单列表
@@ -137,3 +137,43 @@ export const getProp = () => request('/H_roleplay-si/ds/getProp', {
   key: 'deepstream.uri2',
 })
 export const getListChangeHistory = (data) => request('/H_roleplay-si/easy/transTypeHistoryApi/findAllHistory', data)
+
+
+
+/**
+ * @author TanGuoZheng
+ * @description 获取所有职位数据
+ */
+export const getAllRoleData = () => request('/H_roleplay-si/ds/getRoleList2');
+
+/**
+ * @author TanGuoZheng
+ * @description 获取所有应用信息
+ */
+export const getAllAppList = (currentPage,pageSize=8,withoutListId="-1",search="") => request('/H_roleplay-si/ds/getAllList',{
+  page:currentPage,
+  limit:pageSize,
+  withoutListId:withoutListId,
+  search:search,
+});
+
+/**
+ * @author TanGuoZheng
+ * @description 获取应用模板脉动图数据
+ */
+export const getBusinessModuleById = (moduleId) => request('/H_roleplay-si/trans/getBusinessModuleById',{
+  moduleId:moduleId
+});
+
+
+/**
+ * @author TanGuoZheng
+ * @description 保存应用模板脉动图数据
+ */
+export const saveBusinessModule = (data) => request('/H_roleplay-si/trans/saveBusinessModule', {}, 'POST',data);
+
+ /**
+ * @author guozheng
+ * @description 批量审批待办任务
+ */
+export const commitBatchTask = (data) => request('/H_roleplay-si/flow/commitBatchTask', {},"POST",data)   

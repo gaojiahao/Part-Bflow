@@ -30,6 +30,10 @@ export const getDraftData = (params) => request('/H_roleplay-si/ds/getRoughDraft
  */
 export const getFlowTaskStatistics = (params) => request('/H_roleplay-si/trans/getMyTaskStatistics', params)
 
-    
+ /**
+ * @author guozheng
+ * @description 批量审批待办任务
+ */
+export const commitBatchTask = (data) => request('/H_roleplay-si/flow/commitBatchTask', {},"POST",data)   
 
 

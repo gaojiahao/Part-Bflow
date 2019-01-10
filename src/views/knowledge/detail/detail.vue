@@ -36,7 +36,7 @@
             </Row>
             </FormItem>
             <FormItem label="内容:" prop="content" style="margin-bottom: 65px;">
-                <div ref="editor" style="height:400px;padding-right:20%;"></div>
+                <div ref="editor" class="knowledge-editor"></div>
             </FormItem>
           </Form>
         </Row>
@@ -179,7 +179,11 @@ export default {
       });
     },
     goBack() {
-      this.$router.push({path:'/knowledge/list'});
+      if(this.knowledgeId){
+        this.$router.push({path:`/knowledge/view/${this.knowledgeId}`});
+      }else{
+        this.$router.push({path:`/knowledge/list`});
+      }
     },
     //保存
     saveKnowledge(isSave) {

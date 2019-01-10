@@ -1,163 +1,117 @@
-<style lang="less" scoped>
-  .permission-page {
-    margin-top: 10px;
+<style lang="less">
+  .permission-tree{
+    height: 500px;
     overflow: hidden;
-  }
-  .app-table-search{
-    float: right;
-    .app-search-icon {
-      font-size: 1rem;
-      color: #fff;
-      display: inline-block;
-      cursor: pointer;
+    overflow-y: auto;
+    overflow-x: auto;
+    .ivu-tree-arrow i{
+      font-size: 18px;
     }
+  }
+  /*滚动条样式*/
+.permission-tree::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 4px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 4px;
 }
-.app-search {
-    margin-bottom: 5px;
-    .app-search-icon {
-      font-size: 1rem;
-      color: #39f;
-      display: inline-block;
-      cursor: pointer;
-    }
-  }
-.page-selection-warp {
-    width: 100%;
-    height: 100%;
-    min-height: 30px;
-    background-color: #e6e6e6;
-    margin-bottom: -8px;
-    padding: 1px 5px;
-  }
+.permission-tree::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(117, 112, 112, 0.2);
+    background: rgba(117, 112, 112, 0.2);
+}
+.permission-tree::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: #f4f6f8;
+}
 </style>
 
 <template>
-    <Modal 
-      v-model="showModal" 
-      title="权限列表" 
-      @on-ok="addPermissions" 
-      width="800" 
-      :styles="{top: '20px'}"
-      @on-visible-change="onVisibleChange">
-      <div class="app-search">
-          <Input 
-            @on-search="handleFilter" 
-            :search="true" 
-            v-model="searchValue" 
-            placeholder="搜索权限名称" 
-            style="width: 300px">
-          </Input>
-          <p @click="handleFilter" class="app-search-icon">
-              <Button type="primary" size="small">查询</Button>
-          </p>
-      </div>
-        <Table
-          @on-selection-change="onSelectionChange" 
-          @on-select-all="onSelectAll" 
-          @on-select-cancel="onSelectCancel"
-          ref="permissionTable" 
-          :data="data"
-          :columns="column"
-          :loading="loading"
-          height="400">
-        </Table>
-        <div class="permission-page">
-            <div style="float: right;">
-                <Page 
-                  @on-page-size-change="onPageSizeChange" 
-                  :total="total" 
-                  show-elevator show-sizer 
-                  :current="currentPage" 
-                  :page-size="pageSize" 
-                  @on-change="onPageChange" 
-                  size="small" 
-                  show-total>
-                </Page>
-            </div>
-        </div>
-        <div class="page-selection-warp" v-show="selectPermission[0] ">
-            <Tag 
-            v-for="(item,index) in selectPermission" 
-            :key="item.id" 
-            @on-close="deleteSelectPermission(item,index)" 
-            :userId="item.id" 
-            closable 
-            type="border" 
-            color="primary" 
-            size="small">
-            {{item.name}}
-            </Tag>
-        </div>
-    </Modal>
+  <Modal
+    v-model="showModal"
+    title="权限列表"
+    @on-ok="addPermissions"
+    width="400"
+    :styles="{top: '20px'}"
+    height="600"
+    @on-visible-change="onVisibleChange"
+  >
+    <Tree
+      ref="permissionTree"
+      @on-check-change="onCheckChange"
+      :data="data"
+      :load-data="loadData"
+      show-checkbox
+      class="permission-tree"
+    >
+    </Tree>
+  </Modal>
 </template>
 
 <script>
 import {
   getAllPermissionData,
-  addPermission
+  addPermission,
+  deletePermission
 } from "@/services/addressBookService.js";
 
 export default {
   name: "PermissionModal",
   components: {},
   props: {
-      target: {
-          type: Object
-      },
-      visible: {
-          type: Boolean
-      }
+    target: {
+      type: Object
+    },
+    visible: {
+      type: Boolean
+    }
   },
   data() {
     return {
-      searchValue: "",
-      pageSize: 10,
-      currentPage: 1,
-      total: 0,
-      loading: true,
+      loading: false,
       showModal: false,
-      column: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
-          title: "名称",
-          key: "name"
-        }
-      ],
       data: [],
       selectPermission: []
     };
   },
   watch: {
-      visible: function (value) {
-          if(value){
-              this.showModal = true;
-              this.searchValue = "";
-              this.getAllPermissionDatas();
-          }
+    visible: function(value) {
+      if (value) {
+        this.showModal = true;
+        this.getAllPermissionDatas();
       }
+    }
   },
   methods: {
     //modal状态发生改变
     onVisibleChange(status) {
-        if(!status) this.$emit('changeModalStatus');
+      if (!status) this.$emit("changeModalStatus");
     },
     //添加权限
     addPermissions() {
-      let multiId = [];
+      let permissionIds = [],
+          menuIds = [],
+          data = {};
+
       this.selectPermission.forEach(val => {
-        multiId.push(val.id);
+        if (val.leaf) {
+          permissionIds.push(val.id);
+        } else {
+          menuIds.push(val.id);
+        }
       });
-      if (multiId.length>0 && this.target) {
-        addPermission(this.target.type,this.target.targetId, multiId.join(","))
+      
+      if (this.selectPermission.length > 0 && this.target) {
+        addPermission(
+          JSON.stringify(permissionIds),
+          JSON.stringify(menuIds),
+          this.target.targetId,
+          this.target.type
+        )
           .then(res => {
             if (res.success) {
               this.selectPermission = [];
               this.$Message.success("更新成功");
-              this.$emit('permissionChange');
+              this.$emit("permissionChange");
             }
           })
           .catch(error => {
@@ -165,96 +119,63 @@ export default {
           });
       }
     },
-    
-    //加载所有权限数据
-    getAllPermissionDatas(filter) {
-      this.loading = true;
-      getAllPermissionData(0,this.pageSize,this.currentPage,filter).then(res => {
-        this.data = res.tableContent;
-        this.total = res.dataCount;
-        this.loading = false;
-
-        if (this.selectPermission.length > 0) {
-            this.data.map(item => {
-              this.selectPermission.map(sel => {
-                if (item.id === sel.id) {
-                  item._checked = true;
-                }
-              });
-            });
+    //选择树节点
+    onCheckChange(selectArray, currentSelect) {
+      this.selectPermission = selectArray;
+      if(!currentSelect.checked){
+        deletePermission(this.target.targetId,currentSelect.id,this.target.type).then(res => {
+          if (res.success) {
+            this.$Message.success("删除成功");
+            this.$emit("permissionChange");
           }
-      });
-    },
-    //选择权限列表权限
-    onSelectionChange(selection) {
-      //取消全选
-      if (selection.length === 0) {
-        let s = this.$refs.permissionTable.data;
-        let p = this.selectPermission;
-        s.map(item => {
-          p = p.filter(f => {
-            return f.id !== item.id;
-          });
+        }).catch(error => {
+            this.$Message.error(error.data.message);
         });
-        this.selectPermission = p;
-      } else {
-        let obj = {};
-        this.selectPermission.push(...selection);
-        //数组去重
-        this.selectPermission = this.selectPermission.reduce((cur, next) => {
-          obj[next.id] ? "" : (obj[next.id] = true && cur.push(next));
-          return cur;
-        }, []);
       }
     },
-    //全选
-    onSelectAll(selection) {
-      let obj = {};
-      //触发全选事件
-      //全选
-      this.selectPermission.push(...selection);
-      //数组去重
-      this.selectPermission = this.selectPermission.reduce((cur, next) => {
-        obj[next.id] ? "" : (obj[next.id] = true && cur.push(next));
-        return cur;
-      }, []);
-    },
-    //单选取消
-    onSelectCancel(selection, row) {
-      this.selectPermission = this.selectPermission.filter(f => {
-        return f.id !== row.id;
+    //加载所有权限数据
+    getAllPermissionDatas(id, callback) {
+      let treeData = [],
+        parentId = id ? id : "root";
+      getAllPermissionData(
+        parentId,
+        this.target.targetId,
+        this.target.type
+      ).then(res => {
+        res.forEach(val => {
+          if (val.leaf) {
+            treeData.push({
+              title: val.text,
+              id: val.id,
+              leaf: val.leaf,
+              checked: val.check
+            });
+          } else {
+            treeData.push({
+              title: val.text,
+              id: val.id,
+              loading: false,
+              indeterminate: val.halfSelected,
+              leaf: val.leaf,
+              checked: val.check,
+              children: []
+            });
+          }
+        });
+        if (callback) {
+          callback(treeData);
+        } else {
+          this.data = treeData;
+        }
       });
     },
-    //删除权限列表已选择的权限
-    deleteSelectPermission(item,index) {
-      this.selectPermission.splice(index,1);
-      this.$refs.permissionTable.data.forEach((data,i) => {
-        if(item.id === data.id){
-          this.$refs.permissionTable.toggleSelect(i);
-        }
-      })
-    },
-    //点击切换权限列表每页显示条数
-    onPageSizeChange(size) {
-      let filter = JSON.stringify([{ operator: "like", value: this.searchValue, property: "name" }]);
-      this.pageSize = size;
-      this.getAllPermissionDatas(filter);
-    },
-    //点击页码切换事件
-    onPageChange(currentPage) {
-      let filter = JSON.stringify([{ operator: "like", value: this.searchValue, property: "name" }]);
-      this.currentPage = currentPage;
-      this.getAllPermissionDatas(filter);
-    },
-    //权限列表过滤
-    handleFilter() {
-      let filter = JSON.stringify([{ operator: "like", value: this.searchValue, property: "name" }]);
-      this.currentPage = 1;
-      this.getAllPermissionDatas(filter);
+    //异步加载树形数据
+    loadData(item, callback) {
+      this.getAllPermissionDatas(item.id, callback);
     }
   },
   mounted() {
-      this.getAllPermissionDatas();
+    this.getAllPermissionDatas();
   }
 };
 </script>

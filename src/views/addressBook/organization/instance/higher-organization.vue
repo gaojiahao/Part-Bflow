@@ -140,6 +140,9 @@ export default {
               case "O":
                 depFunction = "运营";
                 break;
+              case "E":
+                depFunction = "工程";
+                break;
             }
             return h("span", depFunction);
           }
@@ -231,6 +234,9 @@ export default {
                 break;
               case "O":
                 depFunction = "运营";
+                break;
+              case "E":
+                depFunction = "工程";
                 break;
             }
             return h("span", depFunction);

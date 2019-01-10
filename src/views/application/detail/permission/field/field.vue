@@ -6,7 +6,7 @@
     <div class="app" style="margin-top:15px;">
         <Row class="app-action">
             <Row class="app-action-title">
-                <h3>字段<a v-if="isAdmin" @click="showModal" class="app-action-title-add">添加</a>
+                <h3>字段或字段组<a v-if="isAdmin" @click="showModal" class="app-action-title-add">添加</a>
                 </h3>
                 <span class="warning-color marlr">应用字段授权给用户或用户组</span>
             </Row>
@@ -99,7 +99,7 @@ export default {
     setColumns(){
       let defaultColumns = [
         {
-          title: '字段',
+          title: '字段或字段组',
           key: 'fields',
           render: (h,params) => {
             return h('div',{},params.row.fields);

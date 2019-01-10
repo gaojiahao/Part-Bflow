@@ -18,7 +18,7 @@
     <div>
         <div class="file-header">
             <span>文件柜</span>
-            <div class="file-search">
+            <!-- <div class="file-search">
               <Input 
                 @on-search="fileFilter" 
                 :search="true" 
@@ -26,7 +26,7 @@
                 placeholder="搜索" 
                 style="width: 300px">
               </Input>
-            </div>
+            </div> -->
         </div>
         <div>
             <router-view></router-view>

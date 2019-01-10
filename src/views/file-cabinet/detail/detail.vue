@@ -20,8 +20,7 @@
               :action="`/H_roleplay-si/filing/upload?directory=${subareaPath}&cover=false`"
               :show-upload-list="false" 
               :on-success="handleSuccess"
-              :headers="httpHeaders"
-              type="drag">
+              :headers="httpHeaders">
               <Button type="info" icon="ios-cloud-upload-outline">上传</Button>
             </Upload>
         </div>
@@ -38,7 +37,8 @@
                     <img v-if="row.isFile && row.suffix==='txt'" src="resources/images/file/txt.png" />
 
                     <label>{{ row.name }}</label>
-                    <Poptip trigger="hover" placement="right-start" style="float:right;">
+                    
+                    <Poptip ref="popMenu" trigger="hover" placement="right-start" style="float:right;width:25px;">
                         <span class="subarea-more">
                           <Icon type="ios-arrow-dropright-circle" />
                         </span>
@@ -48,11 +48,14 @@
                             <li @click="downloadFiles(row)">下载</li>
                             <li @click="copyFiles(row)">复制</li>
                             <li @click="renameFile(row)">重命名</li>
-                            <li>移动到...</li>
+                            <li @click="moveFiles(row)">移动到...</li>
                             <li @click="deleteFiles(row)">删除</li>
                           </ul>
                         </div>
                     </Poptip>
+                    <div @click="downloadFiles(row)" class="subarea-download">
+                      <Icon type="md-cloud-download" />
+                    </div>
                 </template>
             </Table>
         </div>
@@ -86,7 +89,9 @@ import {
   uploadFile,
   deleteFile,
   downloadFile,
-  getFileDataByPath } from "@/services/fileCabinetService.js";
+  getFileDataByPath,
+  copyFile,
+  moveFile } from "@/services/fileCabinetService.js";
 import { getToken } from "@/utils/utils";
 
 export default {
@@ -100,8 +105,11 @@ export default {
       },
       showModal: false,
       showActionModal: false,
+      isCopy: true,
       fileName: "",
       filePath: "",
+      //复制和移动的待移动文件路径
+      waitPath: "",
       modalTitle: '新建文件夹',
       actionModalTitle: '复制',
       isAdd: true,
@@ -111,10 +119,17 @@ export default {
           slot: 'name',
           width: 400
         },{
-          title: "权限",
-          key: "authority"
+          title: "大小",
+          key: "size",
+          render: (h,params) => {
+            if(params.row.size){
+              return h('span',{},params.row.size);
+            }else{
+              return h('span',{},'- -');
+            }
+          }
         },{
-          title: "管理员",
+          title: "来源",
           key: "creator"
         },{
           title: "时间",
@@ -123,7 +138,8 @@ export default {
       ],
       data: [],
       actionData: [],
-      breadHeader: []
+      breadHeader: [],
+      selectTreeItem: {}
     };
   },
   methods: {
@@ -199,6 +215,7 @@ export default {
               deleteFile(row.path).then(res => {
                 if(res.success){
                   this.$Message.success(res.message);
+                  this.getAllFileData();
                 }
               })
               .catch(error => {
@@ -217,10 +234,44 @@ export default {
     //打开复制modal
     copyFiles(row) {
       this.showActionModal = true;
+      this.selectTreeItem = {};
       this.getActionFileData('root');
+      this.isCopy = true;
+      this.waitPath = row.path;
+    },
+    //打开移动modal
+    moveFiles(row) {
+      this.showActionModal = true;
+      this.selectTreeItem = {};
+      this.getActionFileData('root');
+      this.isCopy = false;
+      this.waitPath = row.path;
     },
     //复制或移动文件或文件夹
-    copyMoveFile() {},
+    copyMoveFile() {
+      if(this.selectTreeItem.path){
+        if(this.isCopy){
+          copyFile(this.waitPath,this.selectTreeItem.path).then(res => {
+            if(res.success){
+              this.$Message.success(res.message);
+            }
+          })
+          .catch(error => {
+            this.$Message.error(error.data.message);
+          });
+        }else{
+          moveFile(this.waitPath,this.selectTreeItem.path).then(res => {
+            if(res.success){
+              this.$Message.success(res.message);
+              this.getAllFileData();
+            }
+          })
+          .catch(error => {
+            this.$Message.error(error.data.message);
+          });
+        }
+      }
+    },
     getAllFileData(path) {
       let filePath = path?path:this.subareaPath;
       getFileData(filePath).then(res => {
@@ -252,7 +303,7 @@ export default {
     },
     //选择树节点
     onSelectChange(currentArray,currentItem) {
-      
+      this.selectTreeItem = currentItem;
     },
     //获取当前文件信息
     getCurrentFileByPath() {

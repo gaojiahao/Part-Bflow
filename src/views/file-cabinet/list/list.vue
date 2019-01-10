@@ -9,7 +9,7 @@
             <Button @click="addNewSubarea" class="toolbar-btn">新建分区</Button>
         </div>
         <div class="subarea">
-            <Table :columns="columns" :data="data" @on-row-dblclick="openSubarea">
+            <Table :columns="columns" :data="data" @on-row-dblclick="openSubarea" highlight-row>
                 <template slot-scope="{ row }" slot="name">
                     <Icon class="subarea-icon" type="ios-grid" />
                     <strong>{{ row.name }}</strong>
@@ -153,6 +153,7 @@ export default {
               deleteFile(row.path).then(res => {
                 if(res.success){
                   this.$Message.success(res.message);
+                  this.getAllFileData();
                 }
               })
               .catch(error => {

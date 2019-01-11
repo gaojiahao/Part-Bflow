@@ -154,6 +154,7 @@ export default {
                 if(res.success){
                     this.$Message.success(res.message);
                     this.refreshSubscribeInfo();
+                    this.judgeIsSubscribeByRelationKey();
                 }
             }).catch(error => {
                 this.$Message.error(error.data.message);
@@ -179,6 +180,7 @@ export default {
                 if(res.success){
                     this.$Message.success(res.message);
                     this.refreshSubscribeInfo();
+                    this.judgeIsSubscribeByRelationKey();
                 }
             }).catch(error => {
                 this.$Message.error(error.data.message);

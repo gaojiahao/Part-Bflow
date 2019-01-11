@@ -5,7 +5,7 @@
 <template>
   <div class="job-wrap">
     <header class="job-wrap-header">
-      <span class="job-wrap-header-job">职位</span>
+      <span @click="goRoleList" class="job-wrap-header-job">职位</span>
       <span class="job-wrap-header-others">/</span>
       <span v-show="jobId" class="job-wrap-header-others">{{name}}</span>
       <span v-show="!jobId" class="job-wrap-header-others">创建</span>
@@ -56,19 +56,14 @@
           <FormItem label="修改时间：" v-if="jobId && isEdit">
             <span>{{ tableContent.modTime }}</span>
           </FormItem>
-          <div class="baseinfo-container-divider"></div>
-          <FormItem label="职位状态" :labelWidth="120" style="margin-top:20px">
-            <Select v-model="formItem.status" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
-              <Option v-for="(item,index) in statusRadio" :key="index" :value="item.value">{{item.name}}</Option>
-            </Select>
-          </FormItem>
-
         </Form>
         <div class="baseinfo-container-action" @click="handleSubmitBoxs">
           <input type='submit' value="关闭" style="background-color:rgb(81, 90, 110)" class="baseinfo-container-action-submit" id="close" />
           <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" id="edit" v-if="jobId && isPermission" />
           <input type='submit' value="保存" class="baseinfo-container-action-submit" id="save" v-show="!isEdit" />
+          <input type='submit' value="归档" class="baseinfo-container-action-submit" id="file" v-show="!isEdit && formItem.status === 1" />
           <input type='submit' value="保存并新建" class="baseinfo-container-action-submit" id="saveAndAdd" v-if="!jobId"/>
+          <input type='submit' value="保存草稿" class="baseinfo-container-action-submit" id="draft" v-show="!isEdit || !jobId" />
         </div>
       </section>
       <!-- 成员信息 -->
@@ -111,30 +106,12 @@ export default {
         name: "",
         type: "",
         describe: "",
-        status: 1
+        status: -3
       },
       tableContent:{},
       name: "",
       isEdit: true,
       editBtnName: "编辑",
-      statusRadio: [
-        {
-          name: "停用",
-          value: -1
-        },
-        {
-          name: "使用中",
-          value: 1
-        },
-        {
-          name: "未使用",
-          value: 2
-        },
-        {
-          name: "草稿",
-          value: 3
-        }
-      ],
 
       actionBtn: [
         {
@@ -184,6 +161,9 @@ export default {
   },
 
   methods: {
+    goRoleList() {
+        location.href = '/Site/index.html#page/jobs';
+    },
     handlerViewChange(index) {
       this.actionIndex = index;
     },
@@ -208,10 +188,20 @@ export default {
             this.editBtnName = this.isEdit ? "编辑" : "放弃编辑";
             break;
           case "save":
+            this.formItem.status = 1;
             this.save();
             break;
           case "saveAndAdd":
+            this.formItem.status = 1;
             this.saveAndAdd();
+            break;
+          case "file":
+            this.formItem.status = -2;
+            this.save();
+            break;
+          case "draft":
+            this.formItem.status = 0;
+            this.save();
             break;
         }
       }
@@ -230,7 +220,7 @@ export default {
                     name: "",
                     type: "",
                     describe: "",
-                    status: 1
+                    status: -3
                   };
               })
               .catch(errer => {

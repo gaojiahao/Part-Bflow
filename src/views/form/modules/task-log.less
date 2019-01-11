@@ -1,0 +1,62 @@
+.timeline-box {
+    &-form {
+      height: 100%;
+      background-color: #ffffff;
+      padding: 15px 40px 0 0;
+      border-bottom: 1px solid #dedede;
+      //form表单标签字体样式
+      .ivu-form-item-label {
+        font-size: 14px;
+      }
+  
+      &-submit {
+        background-color: rgb(0, 150, 136);
+        color: #fff;
+        outline: none;
+        font-weight: bold;
+        cursor: pointer;
+        border: 1px solid transparent;
+        padding: 6px 15px;
+        line-height: 1.5;
+        float: right;
+      }
+    }
+  
+    &-log {
+      margin: 0 0 15px 0;
+      background-color: #ffffff;
+      padding: 0 20px;
+      &-item {
+        padding: 15px 0px;
+        border-bottom: 1px solid #dedede;
+        position: relative;
+        .head-portrait{
+           height: 40px;
+           width: 40px;
+           border-radius: 50%;
+           position: absolute;
+        }
+
+        .timeline-item-content-ul {
+            margin-left: 50px;
+          font-size: 14px;
+          list-style: none;
+          display: inline-block;
+          span {
+            padding: 0 20px 0 0;
+          }
+        } 
+      }
+    }
+  
+    .loading-more {
+      line-height: 50px;
+      text-align: right;
+      padding: 0 30px;
+      background-color: #fff;
+    }
+  }
+  
+  .ivu-timeline-item-content {
+    top: -11px !important;
+  }

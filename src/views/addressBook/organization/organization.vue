@@ -5,7 +5,7 @@
 <template>
   <div class="organization-wrap">
     <header class="organization-wrap-header">
-      <span class="organization-wrap-header-org">组织</span>
+      <span @click="goOrgList" class="organization-wrap-header-org">组织</span>
       <span class="organization-wrap-header-others">/</span>
       <span v-show="groupId" class="organization-wrap-header-others">{{name}}</span>
       <span v-show="!groupId" class="organization-wrap-header-others">创建</span>
@@ -78,19 +78,14 @@
           <FormItem label="修改时间：" v-if="groupId && isEdit">
             <span>{{ tableContent.modTime }}</span>
           </FormItem>
-
-          <div class="baseinfo-container-divider"></div>
-          <FormItem label="组织状态" :labelWidth="120" style="margin-top:20px">
-            <Select v-model="formItem.status" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
-              <Option v-for="(item,index) in statusRadio" :key="index" :value="item.value">{{item.name}}</Option>
-            </Select>
-          </FormItem>
         </Form>
         <div class="baseinfo-container-action" @click="handleSubmitBoxs">
           <input type='submit' value="关闭" style="background-color:rgb(81, 90, 110)" class="baseinfo-container-action-submit" id="close" />
           <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" id="edit" v-if="groupId && isPermission" />
           <input type='submit' value="保存" class="baseinfo-container-action-submit" id="save" v-show="!isEdit" />
+          <input type='submit' value="归档" class="baseinfo-container-action-submit" id="file" v-show="!isEdit && formItem.status === 1" />
           <input type='submit' value="保存并新建" class="baseinfo-container-action-submit" id="saveAndAdd" v-if="!groupId" />
+          <input type='submit' value="保存草稿" class="baseinfo-container-action-submit" id="draft" v-show="!isEdit || !groupId" />
         </div>
       </section>
       <!-- 上级组织 -->
@@ -187,7 +182,7 @@ export default {
         groupName: "",
         groupType: "",
         depFunction: "",
-        status: 1,
+        status: -3,
         principal: "",
         principalName: "",
         highGroup: "",
@@ -199,25 +194,6 @@ export default {
       editBtnName: "编辑",
 
       hiddenInput: false,
-
-      statusRadio: [
-        {
-          name: "停用",
-          value: -1
-        },
-        {
-          name: "使用中",
-          value: 1
-        },
-        {
-          name: "未使用",
-          value: 2
-        },
-        {
-          name: "草稿",
-          value: 3
-        }
-      ],
 
       actionBtn: [
         {
@@ -329,6 +305,9 @@ export default {
               case "O":
                 depFunction = "运营";
                 break;
+              case "E":
+                depFunction = "工程";
+                break;
             }
             return h("span", depFunction);
           }
@@ -341,16 +320,19 @@ export default {
               value = "";
             switch (status) {
               case -1:
-                value = "停用";
+                value = "已失效";
                 break;
               case 1:
-                value = "使用中";
+                value = "已生效";
                 break;
               case 2:
-                value = "未使用";
+                value = "进行中";
                 break;
-              case 3:
+              case 0:
                 value = "草稿";
+                break;
+              case -2:
+                value = "已归档";
                 break;
             }
             return h(
@@ -467,6 +449,9 @@ export default {
   },
 
   methods: {
+    goOrgList() {
+        location.href = '/Site/index.html#page/origanizations';
+    },
     /** 
      * 切换相关实例
     */
@@ -494,10 +479,20 @@ export default {
             this.editBtnName = this.isEdit ? "编辑" : "放弃编辑";
             break;
           case "save":
+            this.formItem.status = 1;
             this.save();
             break;
           case "saveAndAdd":
+            this.formItem.status = 1;
             this.saveAndAdd();
+            break;
+          case "file":
+            this.formItem.status = -2;
+            this.save();
+            break;
+          case "draft":
+            this.formItem.status = 0;
+            this.save();
             break;
         }
       }
@@ -518,7 +513,7 @@ export default {
                 groupName: "",
                 groupType: "",
                 depFunction: "",
-                status: 1
+                status: -3
               };
           }).catch(error=>{
               this.$Message.error(error.data.message)

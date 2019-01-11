@@ -32,7 +32,7 @@
                 </span>
 
                 <span>
-                    <Dropdown style="margin-left: 20px" @on-click="addSubscribeUsers" trigger="click" >
+                    <Dropdown class="user-dropdown" @on-click="addSubscribeUsers" trigger="click" >
                          <Icon type="md-person" size=18  /> {{subscribeInfo.subscribeNum}}
                          <Icon type="ios-arrow-down"></Icon>
                         <DropdownMenu slot="list">
@@ -73,7 +73,8 @@
     </Row>
     <!-- 用户modal -->
     <user-selector 
-        :showUserSelector="showUserModal" 
+        :showUserSelector="showUserModal"
+        :commentData="commentData" 
         @emitUserModal="emitUserModal" 
         @userModalData="getUserModalData">
     </user-selector>
@@ -107,9 +108,7 @@ export default {
     commentPublish,
     UserSelector
   },
-  props: {
-     
-  },
+  props: {},
   data() {
     return {
         listId:this.$route.params.listId,
@@ -128,6 +127,10 @@ export default {
             isSubscribe:0,
             subscribeNum:0,
             subscribeUsers:[]
+        },
+        commentData: {
+            relationkey: this.listId,
+            type: this.type
         }
     };
   },
@@ -151,6 +154,7 @@ export default {
                 if(res.success){
                     this.$Message.success(res.message);
                     this.refreshSubscribeInfo();
+                    this.judgeIsSubscribeByRelationKey();
                 }
             }).catch(error => {
                 this.$Message.error(error.data.message);
@@ -176,6 +180,7 @@ export default {
                 if(res.success){
                     this.$Message.success(res.message);
                     this.refreshSubscribeInfo();
+                    this.judgeIsSubscribeByRelationKey();
                 }
             }).catch(error => {
                 this.$Message.error(error.data.message);
@@ -244,7 +249,7 @@ export default {
         getUserByRelationKey({
            relationKey:this.listId,
            type: this.type,
-           limit:10,
+           limit:1000,
            page:1
         }).then(res=>{
             this.subscribeInfo.subscribeUsers = res.tableContent;

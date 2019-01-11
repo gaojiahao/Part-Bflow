@@ -42,7 +42,7 @@
         </MenuItem>
       </router-link>
 
-      <router-link :to="{ name:'connection'}">
+      <router-link :to="{ name:'connection',params:{appTransType:appTransType}}">
         <MenuItem name="connection">
           连接&API
         </MenuItem>
@@ -54,7 +54,8 @@
       :listId="this.$route.params.listId" 
       :isAdmin="isAdmin"
       :isAddress="isAddress" 
-      :appType="appType" 
+      :appType="appType"
+      :appTransType="appTransType" 
       :isCompanyAdmin="isCompanyAdmin"
       :enabledForbidden="enabledForbidden">
     </router-view>
@@ -82,6 +83,7 @@ export default {
       isCompanyAdmin: false,  //企业管理员权限
       isAddress: false,   //通讯录权限
       appType: "",
+      appTransType: "",
       enabledForbidden: -1
     };
   },
@@ -102,6 +104,7 @@ export default {
       getListData(uniqueId).then(res => {
         this.appData = res[0];
         this.appType = this.appData.type;
+        this.appTransType = this.appData.transType;
 
         //获取当前登录用户角色id
         currentUser.isSysRoleList.forEach(val => {

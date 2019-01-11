@@ -14,6 +14,8 @@
     <custom-datasource :isAdmin="isAdmin"></custom-datasource>
     <!-- 字段权限管理 -->
     <field-permission :isAdmin="isAdmin"></field-permission>
+    <!-- （非会计类）子科目管理 -->
+    <child-subject v-if="appType === 'subject'" :isAdmin="isAdmin"></child-subject>
     <!-- 报表视图 -->
     <report-view :appType="appType" :isAdmin="isAdmin"></report-view>
     <!-- 表单 -->
@@ -32,6 +34,7 @@ import ActionManage from './action/action';
 import PermissionDataSource from './datasource/data-source';
 import CustomDatasource from './custom-datasource/custom-datasource';
 import FieldPermission from './field/field';
+import ChildSubject from './child-subject/child-subject';
 
 export default {
   name: "permissionSource",
@@ -43,7 +46,8 @@ export default {
     ActionManage,
     PermissionDataSource,
     CustomDatasource,
-    FieldPermission
+    FieldPermission,
+    ChildSubject
   },
   props: {
     listId: String,

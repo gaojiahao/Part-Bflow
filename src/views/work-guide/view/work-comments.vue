@@ -32,7 +32,7 @@
                 </span>
 
                 <span>
-                    <Dropdown style="margin-left: 20px" @on-click="addSubscribeUsers" trigger="click" >
+                    <Dropdown class="work-dropdown" @on-click="addSubscribeUsers" trigger="click" >
                          <Icon type="md-person" size=18  /> {{subscribeInfo.subscribeNum}}
                          <Icon type="ios-arrow-down"></Icon>
                         <DropdownMenu slot="list">
@@ -74,6 +74,7 @@
     <!-- 用户modal -->
     <user-selector 
         :showUserSelector="showUserModal" 
+        :commentData="commentData"
         @emitUserModal="emitUserModal" 
         @userModalData="getUserModalData">
     </user-selector>
@@ -128,6 +129,10 @@ export default {
             isSubscribe:0,
             subscribeNum:0,
             subscribeUsers:[]
+        },
+        commentData: {
+            relationkey: this.workGuideId,
+            type: this.type
         }
     };
   },
@@ -151,6 +156,7 @@ export default {
                 if(res.success){
                     this.$Message.success(res.message);
                     this.refreshSubscribeInfo();
+                    this.judgeIsSubscribeByRelationKey();
                 }
             }).catch(error => {
                 this.$Message.error(error.data.message);
@@ -176,6 +182,7 @@ export default {
                 if(res.success){
                     this.$Message.success(res.message);
                     this.refreshSubscribeInfo();
+                    this.judgeIsSubscribeByRelationKey();
                 }
             }).catch(error => {
                 this.$Message.error(error.data.message);
@@ -244,7 +251,7 @@ export default {
         getUserByRelationKey({
            relationKey:this.workGuideId,
            type: this.type,
-           limit:10,
+           limit:1000,
            page:1
         }).then(res=>{
             this.subscribeInfo.subscribeUsers = res.tableContent;

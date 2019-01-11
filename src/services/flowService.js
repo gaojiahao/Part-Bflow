@@ -171,3 +171,9 @@ export const getBusinessModuleById = (moduleId) => request('/H_roleplay-si/trans
  * @description 保存应用模板脉动图数据
  */
 export const saveBusinessModule = (data) => request('/H_roleplay-si/trans/saveBusinessModule', {}, 'POST',data);
+
+ /**
+ * @author guozheng
+ * @description 批量审批待办任务
+ */
+export const commitBatchTask = (data) => request('/H_roleplay-si/flow/commitBatchTask', {},"POST",data)   

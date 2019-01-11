@@ -26,41 +26,44 @@
 </style>
 
 <template>
-    <Modal 
-      v-model="showModal" 
-      title="权限列表" 
-      @on-ok="addPermissions" 
-      width="400" 
-      :styles="{top: '20px'}"
-      height="600"
-      @on-visible-change="onVisibleChange">
-        <Tree
-          ref="permissionTree"
-          @on-check-change="onCheckChange" 
-          :data="data"
-          :load-data="loadData"
-          show-checkbox
-          class="permission-tree">
-        </Tree>
-    </Modal>
+  <Modal
+    v-model="showModal"
+    title="权限列表"
+    @on-ok="addPermissions"
+    width="400"
+    :styles="{top: '20px'}"
+    height="600"
+    @on-visible-change="onVisibleChange"
+  >
+    <Tree
+      ref="permissionTree"
+      @on-check-change="onCheckChange"
+      :data="data"
+      :load-data="loadData"
+      show-checkbox
+      class="permission-tree"
+    >
+    </Tree>
+  </Modal>
 </template>
 
 <script>
 import {
   getAllPermissionData,
-  addPermission
+  addPermission,
+  deletePermission
 } from "@/services/addressBookService.js";
 
 export default {
   name: "PermissionModal",
   components: {},
   props: {
-      target: {
-          type: Object
-      },
-      visible: {
-          type: Boolean
-      }
+    target: {
+      type: Object
+    },
+    visible: {
+      type: Boolean
+    }
   },
   data() {
     return {
@@ -71,37 +74,44 @@ export default {
     };
   },
   watch: {
-      visible: function (value) {
-          if(value){
-              this.showModal = true;
-              this.getAllPermissionDatas();
-          }
+    visible: function(value) {
+      if (value) {
+        this.showModal = true;
+        this.getAllPermissionDatas();
       }
+    }
   },
   methods: {
     //modal状态发生改变
     onVisibleChange(status) {
-        if(!status) this.$emit('changeModalStatus');
+      if (!status) this.$emit("changeModalStatus");
     },
     //添加权限
     addPermissions() {
       let permissionIds = [],
           menuIds = [],
           data = {};
+
       this.selectPermission.forEach(val => {
-        if(val.leaf){
+        if (val.leaf) {
           permissionIds.push(val.id);
-        }else{
+        } else {
           menuIds.push(val.id);
         }
       });
-      if (this.selectPermission.length>0 && this.target) {
-        addPermission(JSON.stringify(permissionIds),JSON.stringify(menuIds),this.target.targetId,this.target.type)
+      
+      if (this.selectPermission.length > 0 && this.target) {
+        addPermission(
+          JSON.stringify(permissionIds),
+          JSON.stringify(menuIds),
+          this.target.targetId,
+          this.target.type
+        )
           .then(res => {
             if (res.success) {
               this.selectPermission = [];
               this.$Message.success("更新成功");
-              this.$emit('permissionChange');
+              this.$emit("permissionChange");
             }
           })
           .catch(error => {
@@ -112,21 +122,35 @@ export default {
     //选择树节点
     onCheckChange(selectArray, currentSelect) {
       this.selectPermission = selectArray;
+      if(!currentSelect.checked){
+        deletePermission(this.target.targetId,currentSelect.id,this.target.type).then(res => {
+          if (res.success) {
+            this.$Message.success("删除成功");
+            this.$emit("permissionChange");
+          }
+        }).catch(error => {
+            this.$Message.error(error.data.message);
+        });
+      }
     },
     //加载所有权限数据
-    getAllPermissionDatas(id,callback) {
+    getAllPermissionDatas(id, callback) {
       let treeData = [],
-          parentId = id ? id : 'root';
-      getAllPermissionData(parentId,this.target.targetId,this.target.type).then(res => {
+        parentId = id ? id : "root";
+      getAllPermissionData(
+        parentId,
+        this.target.targetId,
+        this.target.type
+      ).then(res => {
         res.forEach(val => {
-          if(val.leaf){
+          if (val.leaf) {
             treeData.push({
               title: val.text,
               id: val.id,
               leaf: val.leaf,
               checked: val.check
             });
-          }else{
+          } else {
             treeData.push({
               title: val.text,
               id: val.id,
@@ -137,21 +161,21 @@ export default {
               children: []
             });
           }
-        })
-        if(callback){
-          callback(treeData)
-        }else{
+        });
+        if (callback) {
+          callback(treeData);
+        } else {
           this.data = treeData;
         }
       });
     },
     //异步加载树形数据
     loadData(item, callback) {
-      this.getAllPermissionDatas(item.id,callback);
+      this.getAllPermissionDatas(item.id, callback);
     }
   },
   mounted() {
-      this.getAllPermissionDatas();
+    this.getAllPermissionDatas();
   }
 };
 </script>

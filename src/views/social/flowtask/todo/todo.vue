@@ -19,7 +19,7 @@
                     <Button 
                         type="primary" 
                         style="float:right;height:29px;" 
-                        :disabled="onPageSelection.length === 0"
+                        :disabled="onPageSelection.length===0"
                         @click="handleBatchApproval"
                         >
                         批量审批
@@ -51,6 +51,7 @@
                 next-text="下一页" 
                 @on-page-size-change='handlePageSizeChange'
                 @on-change="handlePageChange"/>
+                <i class="iconfont icon-refresh" @click="getFlowTodoTasks">&#xe783;</i>
             </div >
         </div>
     </div>
@@ -90,7 +91,7 @@ export default {
                 {
                     title: '交易号',
                     key: 'businessKey',
-                    width:140,
+                    width:165,
                     render: (h,params) => {
                         return h('a',{
                             on: {
@@ -104,12 +105,12 @@ export default {
                 {
                     title: '操作名称',
                     key: 'nodeName',
-                    width:140
+                    width:165
                 },
                 {
                     title: '应用名称',
                     key: 'title',
-                    width:140
+                    width:165
                 },
                 {
                     title: '发起人',
@@ -121,14 +122,15 @@ export default {
                     key:'crtTime',
                     width:150
                 },
-                 {
-                title: "已过时间",
-                key: "crtTime",
-                render: (h,params) => {
-                        let outTime = this.calcLeadTime(params.row.crtTime);
-                        return h('span',{},outTime);
+                {
+                    title: "已过时间",
+                    key: "crtTime",
+                    width:150,
+                    render: (h,params) => {
+                            let outTime = this.calcLeadTime(params.row.crtTime);
+                            return h('span',{},outTime);
+                        }
                     }
-                }
             ],
             data: [],
             pageInfo:{
@@ -142,6 +144,7 @@ export default {
 
             loading:false,
             onPageSelection:[],
+            batchComment:''
         }
     },
     methods:{
@@ -159,7 +162,7 @@ export default {
                         }
                         })
                     }
-                    if(item.unableEdit){
+                    if(!item.unableEdit){
                         item._disabled = true;
                     }
                 })
@@ -207,12 +210,33 @@ export default {
 
         //批量审批任务
         handleBatchApproval(){
+            this.batchComment = "";
             this.$Modal.confirm({
-                title: '审批',
-                content: '<p></p>',
+                title: '系统提示',
+                content: '<p>审批意见</p>',
                 closable:true,
                 okText:"同意",
                 cancelText:"不同意",
+                render:(h) => {
+                    return h('div', [ 
+                        h('label','审批意见: '),
+                        h('Input',{
+                            props: {
+                                value: this.batchComment,
+                                autofocus: true,
+                            },
+                            style:{
+                                width:'75%',
+                                marginLeft:'10px'
+                            },
+                            on: {
+                                input: (val) => {
+                                    this.batchComment = val;
+                                }
+                            }
+                        })
+                    ])
+                },
                 onOk: () => {
                     let selection = this.onPageSelection;
                     let data = [];
@@ -221,11 +245,23 @@ export default {
                             taskId:sel.taskId,
                             transCode:sel.businessKey,
                             result:1,
-                            comment:""
+                            comment:this.batchComment
                         })
                     })
                     commitBatchTask(data).then(res=>{
-                        this.$Message.success(res.message)
+                        if(res.success){
+                            this.getFlowTodoTasks();
+                            this.onPageSelection = [];
+                            this.$Notice.success({
+                                title:'提示',
+                                desc:res.message,
+                            })
+                        }else{
+                            this.$Notice.error({
+                                title:'提示',
+                                desc:res.message,
+                            })
+                        }
                     })
                 },
                 onCancel: () => {
@@ -236,11 +272,23 @@ export default {
                             taskId:sel.taskId,
                             transCode:sel.businessKey,
                             result:0,
-                            comment:""
+                            comment:this.batchComment
                         })
                     })
                     commitBatchTask(data).then(res=>{
-                        this.$Message.success(res.message)
+                        if(res.success){
+                            this.getFlowTodoTasks();
+                            this.onPageSelection = [];
+                            this.$Notice.success({
+                                title:'提示',
+                                desc:res.message,
+                            })
+                        }else{
+                            this.$Notice.error({
+                                title:'提示',
+                                desc:res.message,
+                            })
+                        }
                     })
                 }
             })

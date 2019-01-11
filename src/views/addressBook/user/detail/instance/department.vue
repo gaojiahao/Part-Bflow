@@ -43,7 +43,7 @@
               :data="departmentData">
             </Table>
             <div class="user-page">
-                <div style="float: right;">
+                <div style="float: right;padding-bottom: 5px;">
                   <Page 
                     @on-page-size-change="onPageSizeChange" 
                     :total="total" 
@@ -333,8 +333,9 @@ export default {
     },
     //获取所有组织部门数据
     getAllGroupData(parentId) {
+      let filter = JSON.stringify([{operator:"ne",value:0,property:"status"},{operator:"ne",value:-2,property:"status"}]);
       if(this.groupData.length === 0){
-        getGroupData(parentId).then(res => {
+        getGroupData(parentId,filter).then(res => {
           res.tableContent.forEach(val => {
             if(val.leaf === 0){
               this.groupData.push({
@@ -355,7 +356,8 @@ export default {
     },
     //异步加载组织数据
     loadData(item,callback) {
-      getGroupData(item.groupId).then(res => {
+      let filter = JSON.stringify([{operator:"ne",value:0,property:"status"},{operator:"ne",value:-2,property:"status"}]);
+      getGroupData(item.groupId,filter).then(res => {
         let data = [];
         res.tableContent.forEach(val => {
           if(val.leaf === 0){

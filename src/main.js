@@ -24,6 +24,8 @@ Vue.config.productionTip = false;
 
 Vue.use(iView);
 let cache = window.sessionStorage.getItem('roletask.com.r2.cache');
+let deepstreamAddress = window.localStorage.getItem('r2-cached-properties');
+
  if(cache){
     init(cache);
     new Vue({
@@ -46,7 +48,7 @@ let cache = window.sessionStorage.getItem('roletask.com.r2.cache');
       });
       Vue.prototype.$currentUser = res;
       
-      Vue.prototype.$deepstream = await deepstream(res);
+      Vue.prototype.$deepstream = await deepstream(res,deepstreamAddress);
       /* eslint-disable no-new */
       new Vue({
         el: '#app',
@@ -57,11 +59,10 @@ let cache = window.sessionStorage.getItem('roletask.com.r2.cache');
     }
   })
 }
-
 async function init(cache){
       let  data = cache?JSON.parse(cache):{};
       Vue.prototype.$currentUser = data['currentUser'];
-      Vue.prototype.$deepstream = await deepstream(data['currentUser']);
+      Vue.prototype.$deepstream = await deepstream(data['currentUser'],deepstreamAddress);
 }
 
 

@@ -102,7 +102,14 @@ export default {
           title: '字段或字段组',
           key: 'fields',
           render: (h,params) => {
-            return h('div',{},params.row.fields);
+            let express = params.row.fields.split('br'),
+                renderData = [];
+            express.forEach(val => {
+              renderData.push(
+                h('div',{},val)
+              );
+            });
+            return h('div',renderData);
           }
         },
         {

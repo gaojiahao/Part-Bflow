@@ -118,7 +118,7 @@ export const getAllUserData = (currentPage, pageSize, filter) => request('/H_rol
 export const getAllUserCommentData = (currentPage, pageSize, filter,relationkey,type) => request('/H_roleplay-si/ds/listUserWithoutSubcribeByRelationKey', {
   page: currentPage,
   limit: pageSize,
-  filter: filter,
+  search: filter,
   relationkey: relationkey,
   type: type
 });

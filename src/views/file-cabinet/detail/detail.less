@@ -1,0 +1,108 @@
+.file{
+    .file-header{
+        height: 50px;
+        background-color: #fff;
+        border-bottom: 1px solid #ddd;
+        line-height: 50px;
+        padding: 0 18px;
+        span{
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .file-search{
+            float: right;
+        }
+    }
+    .toolbar{
+        height: 50px;
+        padding: 0 18px;
+        background-color: #fff;
+        overflow: hidden;
+        &-bread{
+            line-height: 50px;
+        }
+        &-btn{
+            float: right;
+            margin-top: 7px;
+            margin-left: 2px;
+        }
+        .current-title{
+            font-weight: bold;
+        }
+        .bread-title:hover{
+            color: #39f;
+            cursor: pointer;
+        }
+    }
+    .toolbar-subarea:hover{
+        color: #39f;
+        cursor: pointer;
+    }
+    .subarea{
+        .ivu-table-row td:hover{
+                .subarea-more{
+                    display: inline-block;
+                }
+        }
+        &-download{
+            font-size: 16px;
+            color: #46a93a;
+            cursor: pointer;
+            float:right;
+            width: 25px;
+        }
+        &-icon{
+            font-size: 25px;
+            color: #e0b337;
+            margin-right: 10px;
+        }
+        img{
+            width: 23px;
+            height: 23px;
+            vertical-align: middle;
+            margin-right: 12px;
+        }
+        &-more{
+            font-size: 16px;
+            color: #46a93a;
+            cursor: pointer;
+            display: none;
+        }
+        label{
+            font-size: 13px;
+            font-weight: bold;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+        &-menu{
+            li{
+                padding: 5px 2px;
+            }
+            li:hover{
+                background-color: #95c9ff;
+                cursor: pointer;
+                color: #fff;
+                border-radius: 4px;
+            }
+        }
+    }
+}
+.area-icon{
+    font-size: 25px;
+    color: #6fb1f4;
+    margin-right: 10px;
+}
+.file-icon{
+    font-size: 25px;
+    color: #e0b337;
+    margin-right: 10px;
+}
+.file-tree{
+    height: 400px;
+    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: auto;
+    .ivu-tree-arrow i{
+        font-size: 18px;
+    }
+}

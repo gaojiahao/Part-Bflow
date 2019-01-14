@@ -169,11 +169,18 @@ export default {
                       title: "确认",
                       content: "确认删除此权限？",
                       onOk: () => {
+                        let filter = JSON.stringify([
+                            {
+                              operator: "like",
+                              value: this.searchValue,
+                              property: "name"
+                            }
+                          ]);
                         deleteIndirPermission(this.userId, params.row.id)
                           .then(res => {
                             if (res.success) {
                               this.$Message.success("删除成功！");
-                              this.getDirPermissionData();
+                              this.getDirPermissionData(filter);
                               this.$emit("changeInstance");
                             }
                           })
@@ -249,6 +256,13 @@ export default {
     //删除权限
     deletePermission() {
       let multiId = [];
+      let filter = JSON.stringify([
+          {
+            operator: "like",
+            value: this.searchValue,
+            property: "name"
+          }
+        ]);
       if (this.selectDeletePermission.length === 0) {
         this.$Message.warning("请先选择要删除的权限！");
       } else {
@@ -265,7 +279,7 @@ export default {
                   if (res.success) {
                     this.selectDeletePermission = [];
                     this.$Message.success("删除成功！");
-                    this.getDirPermissionData();
+                    this.getDirPermissionData(filter);
                     this.$emit("changeInstance");
                   }
                 })

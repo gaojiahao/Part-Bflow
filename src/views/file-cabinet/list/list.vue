@@ -6,7 +6,7 @@
     <div class="file">
       <div class="file-header">
             <span>文件柜</span>
-            <!-- <div class="file-search">
+            <div class="file-search">
               <Input 
                 @on-search="fileFilter" 
                 :search="true" 
@@ -14,30 +14,63 @@
                 placeholder="搜索" 
                 style="width: 300px">
               </Input>
-            </div> -->
+            </div>
         </div>
         <div class="toolbar">
-            <span>分区</span>
-            <Button @click="addNewSubarea" class="toolbar-btn">新建分区</Button>
+            <span class="toolbar-bread">
+              <span v-if="breadHeader.length>0">
+                <span @click="goBack" class="toolbar-back"><Icon type="md-arrow-round-back" /></span>
+                <span class="toolbar-line"> | </span>
+              </span>
+              <span @click="goSubarea" class="toolbar-subarea">分区</span>
+              <span v-for="(item,index) of breadHeader" :key="index">
+                <span> > </span>
+                <span @click="goClickFile(item,index)" v-if="breadHeader.length-1!==index" class="bread-title"> {{ item.name }} </span>
+                <span v-else class="current-title"> {{ item.name }} </span>
+              </span>
+            </span>
+            <Button v-if="filePath === 'root'" @click="addNewFile" class="toolbar-btn">新建分区</Button>
+            <Button v-if="filePath !== 'root'" @click="addNewFile" class="toolbar-btn">新建文件夹</Button>
+            <Upload 
+              v-if="filePath !== 'root'"
+              class="toolbar-btn" 
+              :action="`/H_roleplay-si/filing/upload?directory=${filePath}&cover=false`"
+              :show-upload-list="false" 
+              :on-success="handleSuccess"
+              :headers="httpHeaders">
+              <Button type="info" icon="ios-cloud-upload-outline">上传</Button>
+            </Upload>
         </div>
         <div class="subarea">
-            <Table :columns="columns" :data="data" @on-row-dblclick="openSubarea" highlight-row>
+            <Table :columns="columns" :data="data" @on-row-dblclick="openFile" highlight-row>
                 <template slot-scope="{ row }" slot="name">
-                    <Icon class="subarea-icon" type="ios-grid" />
-                    <strong>{{ row.name }}</strong>
+                    <Icon v-if="row.isSubregion" class="subarea-icon" type="ios-grid" />
+                    <Icon v-if="!row.isFile && !row.isSubregion" class="subarea-file-icon" type="md-albums" />
+                    <Icon v-if="row.isFile && row.suffix===null" class="subarea-icon" type="md-document" />
+                    <span v-for="(data,k) of iconData" :key="k">
+                      <img v-if="row.isFile && row.suffix===data.suffix" :src="data.src"/>
+                    </span>
+
+                    <label>{{ row.name }}</label>
                     <Poptip trigger="hover" placement="right-start" style="float:right;">
                         <span class="subarea-more">
                           <Icon type="ios-arrow-dropright-circle" />
                         </span>
                         <div slot="content">
                           <ul class="subarea-menu">
-                            <li @click="openSubarea(row)">打开</li>
-                            <li @click="renameSubarea(row)">重命名</li>
-                            <li @click="subareaInfo(row)">分区信息</li>
-                            <li @click="deleteSubarea(row)">删除</li>
+                            <li v-if="!row.isFile" @click="openFile(row)">打开</li>
+                            <li v-if="!row.isSubregion" @click="downloadFiles(row)">下载</li>
+                            <li v-if="!row.isSubregion" @click="copyFiles(row)">复制到...</li>
+                            <li @click="renameFile(row)">重命名</li>
+                            <li v-if="!row.isSubregion" @click="moveFiles(row)">移动到...</li>
+                            <li @click="subareaInfo(row)">详情...</li>
+                            <li @click="deleteFiles(row)">删除</li>
                           </ul>
                         </div>
                     </Poptip>
+                    <div v-if="row.isFile" @click="downloadFiles(row)" class="subarea-download">
+                      <Icon type="md-cloud-download" />
+                    </div>
                 </template>
             </Table>
         </div>
@@ -47,9 +80,9 @@
             :title="modalTitle"
             @on-ok="confirmRename">
             <span><b style="color:#e4393c;">*</b>名称：</span>
-            <Input v-model="subareaName" placeholder="请输入名称" autofocus style="width: 300px" />
+            <Input v-model="fileName" placeholder="请输入名称" autofocus style="width: 300px" />
         </Modal>
-        <!-- 新建和编辑分区 -->
+        <!-- 分区信息 -->
         <Modal v-model="showSubareaModal" width="300" title="分区信息">
             <ul class="subarea-info">
               <li>分区名称：{{ subareaInformation.name }}</li>
@@ -59,6 +92,16 @@
             </ul>
             <div slot="footer"></div>
         </Modal>
+        <!-- 复制或移动文件 -->
+        <Modal
+            v-model="showActionModal"
+            title="选择文件"
+            @on-ok="copyMoveFile"
+            :styles="{top: '20px'}"
+            height="600"
+            width="300">
+            <Tree :data="actionData"  :load-data="loadData" @on-select-change="onSelectChange" class="file-tree"></Tree>
+        </Modal>
     </div>
 </template>
 
@@ -67,19 +110,31 @@ import {
   getFileData,
   renameFile,
   createFileSubarea,
-  deleteFile } from "@/services/fileCabinetService.js";
+  deleteFile,
+  uploadFile,
+  downloadFile,
+  copyFile,
+  moveFile, } from "@/services/fileCabinetService.js";
+  import { getToken } from "@/utils/utils";
 
 export default {
   name: "fileCabinetList",
   data() {
     return {
-      subareaName: "",
+      httpHeaders: {
+        Authorization: getToken()
+      },
+      fileName: "",
       filePath: "",
+      renamePath: "",
       searchValue: "",
-      modalTitle: '分区重命名',
+      waitPath: "",
+      modalTitle: '重命名',
       showModal: false,
       isAdd: true,
       showSubareaModal: false,
+      showActionModal: false,
+      isCopy: true,
       columns: [
           {
           title: "名称",
@@ -97,59 +152,133 @@ export default {
         }
       ],
       data: [],
-      subareaInformation: {}
+      actionData: [],
+      breadHeader: [],
+      subareaInformation: {},
+      selectTreeItem: {},
+      iconData: [
+        {src:'resources/images/file/excel.png',suffix:'xls'},
+        {src:'resources/images/file/excel.png',suffix:'xlsx'},
+        {src:'resources/images/file/word.png',suffix:'doc'},
+        {src:'resources/images/file/word.png',suffix:'docx'},
+        {src:'resources/images/file/txt.png',suffix:'txt'}]
     };
   },
   methods: {
-    //过滤
-    fileFilter() {},
-    openSubarea(row) {
-      this.$router.push({path: `/fileCabinet/detail/${row.id}`});
+    //后退
+    goBack() {
+      let backPath = '';
+      this.breadHeader.splice(this.breadHeader.length-1,1);
+      if(this.breadHeader.length === 0){
+        backPath = 'root';
+      }else{
+        backPath = this.breadHeader[this.breadHeader.length-1].path;
+      }
+      this.getAllFileData(backPath);
     },
-    renameSubarea(row) {
+    //过滤
+    fileFilter() {
+      if(this.searchValue === ''){
+        this.getAllFileData(this.filePath);
+      }else{
+        this.getAllFileData('',this.searchValue);
+      }
+    },
+    openFile(row) {
+      if(!row.isFile){
+        this.columns[1] = {
+          title: "大小",
+          key: "size",
+          render: (h,params) => {
+            if(params.row.size){
+              return h('span',{},params.row.size);
+            }else{
+              return h('span',{},'- -');
+            }
+          }
+        };
+        this.columns[2] = {
+          title: "来源",
+          key: "creator"
+        };
+        this.getAllFileData(row.path);
+        this.breadHeader.push({path: row.path,name:row.name});
+        this.filePath = row.path;
+        this.$router.push({path:`/fileCabinet/list`,query:{path:row.path}});
+        sessionStorage.setItem('breadHeaderData',JSON.stringify(this.breadHeader));
+      }else{
+        this.downloadFiles(row);
+      }
+    },
+    goClickFile(item,index) {
+      this.breadHeader.splice(index+1,this.breadHeader.length-1);
+      this.getAllFileData(item.path);
+      this.filePath = item.path;
+      sessionStorage.setItem('breadHeaderData',JSON.stringify(this.breadHeader));
+      this.$router.push({path:`/fileCabinet/list`,query:{path:row.path}});
+    },
+    goSubarea() {
+      this.columns[1] = {
+        title: "权限",
+        key: "authority"
+      };
+      this.columns[2] = {
+        title: "管理员",
+        key: "creator"
+      };
+      this.filePath = 'root';
+      this.getAllFileData(this.filePath);
+      this.breadHeader = [];
+      this.$router.push({path:`/fileCabinet/list`});
+    },
+    handleSuccess(res, file) {
+      if(res.success){
+        this.$Message.success(res.message);
+        this.getAllFileData(this.filePath);
+      }
+    },
+    renameFile(row) {
       this.showModal = true;
-      this.subareaName = row.name;
-      this.modalTitle = '分区重命名';
+      this.fileName = row.name;
+      this.modalTitle = '重命名';
       this.isAdd = false;
-      this.filePath = row.path;
+      this.renamePath = row.path;
     },
     subareaInfo(row) {
       this.subareaInformation = row;
       this.showSubareaModal = true;
     },
     //新建分区
-    addNewSubarea() {
+    addNewFile() {
       this.showModal = true;
-      this.subareaName = "";
-      this.modalTitle = '新建分区';
+      this.fileName = "";
+      this.modalTitle = '新建';
       this.isAdd = true;
     },
-    //获取分区数据
-    getAllFileData() {
-      getFileData('root').then(res => {
-        this.data = res;
-      })
-      .catch(error => {
-        this.$Message.error(error.data.message);
-      });
-    },
     confirmRename() {
-      if(this.subareaName){
+      let addPath = '';
+      if(this.fileName){
         if(this.isAdd){
-          createFileSubarea(this.subareaName).then(res => {
+          if(this.filePath === 'root'){
+            addPath = this.fileName;
+          }else{
+            addPath = `${this.filePath}/${this.fileName}`;
+          }
+
+          createFileSubarea(addPath).then(res => {
             if(res.success){
               this.$Message.success(res.message);
-              this.getAllFileData();
+              this.getAllFileData(this.filePath);
             }
           })
           .catch(error => {
             this.$Message.error(error.data.message);
           });
         }else{
-          renameFile(this.filePath,this.subareaName).then(res => {
+          renameFile(this.renamePath,this.fileName).then(res => {
             if(res.success){
               this.$Message.success(res.message);
-              this.getAllFileData();
+              this.getAllFileData(this.filePath);
             }
           })
           .catch(error => {
@@ -158,8 +287,8 @@ export default {
         }
       }
     },
-    //删除分区
-    deleteSubarea(row) {
+    //删除文件
+    deleteFiles(row) {
       if(row.path){
         this.$Modal.confirm({
             title: "确认",
@@ -168,7 +297,7 @@ export default {
               deleteFile(row.path).then(res => {
                 if(res.success){
                   this.$Message.success(res.message);
-                  this.getAllFileData();
+                  this.getAllFileData(this.filePath);
                 }
               })
               .catch(error => {
@@ -177,10 +306,99 @@ export default {
             }
           });
       }
+    },
+    //打开复制modal
+    copyFiles(row) {
+      this.showActionModal = true;
+      this.selectTreeItem = {};
+      this.getActionFileData('root');
+      this.isCopy = true;
+      this.waitPath = row.path;
+    },
+    //打开移动modal
+    moveFiles(row) {
+      this.showActionModal = true;
+      this.selectTreeItem = {};
+      this.getActionFileData('root');
+      this.isCopy = false;
+      this.waitPath = row.path;
+    },
+    //复制或移动文件或文件夹
+    copyMoveFile() {
+      if(this.selectTreeItem.path){
+        if(this.isCopy){
+          copyFile(this.waitPath,this.selectTreeItem.path).then(res => {
+            if(res.success){
+              this.$Message.success(res.message);
+            }
+          })
+          .catch(error => {
+            this.$Message.error(error.data.message);
+          });
+        }else{
+          moveFile(this.waitPath,this.selectTreeItem.path).then(res => {
+            if(res.success){
+              this.$Message.success(res.message);
+              this.getAllFileData(this.filePath);
+            }
+          })
+          .catch(error => {
+            this.$Message.error(error.data.message);
+          });
+        }
+      }
+    },
+    //获取复制或移动modal数据
+    getActionFileData(filePath,callback) {
+      let treeData = [];
+      getFileData(filePath,true).then(res => {
+        res.forEach(val => {
+          treeData.push({
+            title: val.name,
+            path: val.path,
+            loading: false,
+            children: []
+          });
+        });
+        if(callback){
+          callback(treeData);
+        }else{
+          this.actionData = treeData;
+        }
+      })
+    },
+    //异步加载树形数据
+    loadData (item, callback) {
+      this.getActionFileData(item.path,callback);
+    },
+    //选择树节点
+    onSelectChange(currentArray,currentItem) {
+      this.selectTreeItem = currentItem;
+    },
+    //下载文件或文件夹
+    downloadFiles(row) {
+      if(row.path){
+        window.open(`/H_roleplay-si/filing/download?path=${row.path}`);
+      }
+    },
+    //获取分区数据
+    getAllFileData(path,searchValue) {
+      getFileData(path,false,searchValue).then(res => {
+        this.data = res;
+      })
+      .catch(error => {
+        this.$Message.error(error.data.message);
+      });
     }
   },
   mounted() {
-    this.getAllFileData();
+    if(this.$route.query.path){
+      this.filePath = this.$route.query.path;
+      this.breadHeader = JSON.parse(sessionStorage.getItem('breadHeaderData'));
+    }else{
+      this.filePath = 'root';
+    }
+    this.getAllFileData(this.filePath);
   }
 };
 </script>

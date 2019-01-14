@@ -15,24 +15,80 @@
     }
     .toolbar{
         height: 50px;
-        line-height: 50px;
         padding: 0 18px;
         background-color: #fff;
+        overflow: hidden;
+        &-line{
+            color: #ddd;
+            margin: 0px 5px;
+        }
+        &-back{
+            font-size: 16px;
+        }
+        &-back:hover{
+            color: #39f;
+            cursor: pointer;
+        }
+        &-bread{
+            line-height: 50px;
+        }
         &-btn{
             float: right;
             margin-top: 7px;
+            margin-left: 2px;
+        }
+        .current-title{
+            font-weight: bold;
+        }
+        .bread-title:hover{
+            color: #39f;
+            cursor: pointer;
         }
     }
+    .toolbar-subarea:hover{
+        color: #39f;
+        cursor: pointer;
+    }
     .subarea{
+        .ivu-table-row td:hover{
+            .subarea-more{
+                visibility:visible;
+            }
+        }
+        &-download{
+            font-size: 16px;
+            color: #46a93a;
+            cursor: pointer;
+            float:right;
+            width: 25px;
+        }
         &-icon{
             font-size: 25px;
             color: #6fb1f4;
             margin-right: 10px;
         }
+        &-file-icon{
+            font-size: 25px;
+            color: #e0b337;
+            margin-right: 10px;
+        }
+        img{
+            width: 23px;
+            height: 23px;
+            vertical-align: middle;
+            margin-right: 12px;
+        }
+        label{
+            font-size: 13px;
+            font-weight: bold;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
         &-more{
             font-size: 16px;
             color: #46a93a;
             cursor: pointer;
+            visibility:hidden;
         }
         strong{
             font-size: 13px;
@@ -54,5 +110,14 @@
     list-style: none;
     li{
         padding: 10px 10px;
+    }
+}
+.file-tree{
+    height: 400px;
+    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: auto;
+    .ivu-tree-arrow i{
+        font-size: 18px;
     }
 }

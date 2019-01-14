@@ -4,9 +4,10 @@ import {request} from './fetch'
  * @author XiaoYing
  * @description 获取文件夹数据
  */
-export const getFileData = (folderPath,isFile) =>  request('/H_roleplay-si/filing/query',{
+export const getFileData = (folderPath,isFile,search) =>  request('/H_roleplay-si/filing/query',{
     folderPath: folderPath,
-    dir: isFile
+    dir: isFile,
+    search: search
 });
 
 /**

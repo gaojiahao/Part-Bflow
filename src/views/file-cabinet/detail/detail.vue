@@ -6,7 +6,7 @@
     <div class="file">
       <div class="file-header">
             <span>文件柜</span>
-            <div class="file-search">
+            <!-- <div class="file-search">
               <Input 
                 @on-search="fileFilter" 
                 :search="true" 
@@ -14,7 +14,7 @@
                 placeholder="搜索" 
                 style="width: 300px">
               </Input>
-            </div>
+            </div> -->
         </div>
         <div class="toolbar">
             <span class="toolbar-bread">
@@ -225,7 +225,7 @@ export default {
       if(row.path){
         this.$Modal.confirm({
             title: "确认",
-            content: `确认删除${row.name}？`,
+            content: `确认删除<b>${row.name}</b>？`,
             onOk: () => {
               deleteFile(row.path).then(res => {
                 if(res.success){

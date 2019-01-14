@@ -6,7 +6,7 @@
     <div class="file">
       <div class="file-header">
             <span>文件柜</span>
-            <div class="file-search">
+            <!-- <div class="file-search">
               <Input 
                 @on-search="fileFilter" 
                 :search="true" 
@@ -14,7 +14,7 @@
                 placeholder="搜索" 
                 style="width: 300px">
               </Input>
-            </div>
+            </div> -->
         </div>
         <div class="toolbar">
             <span>分区</span>

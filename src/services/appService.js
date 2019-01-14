@@ -79,6 +79,30 @@ export const getAllResourcePermissionData = (listId) => request('/H_roleplay-si/
 
 /**
  * @author XiaoYing
+ * @description 获取科目下子科目
+ */
+export const getSubAccountData = (accountCode) => request('/H_roleplay-si/account/getSubAccount', {
+  account_code: accountCode
+});
+
+/**
+ * @author XiaoYing
+ * @description 启用科目下子科目
+ */
+export const startSubAccountData = (accountCode) => request('/H_roleplay-si/calc/calcRel/start', {
+  calc_rel_code: accountCode
+}, 'POST');
+
+/**
+ * @author XiaoYing
+ * @description 禁用科目下子科目
+ */
+export const blockSubAccountData = (accountCode) => request('/H_roleplay-si/calc/calcRel/block', {
+  calc_rel_code: accountCode
+}, 'POST');
+
+/**
+ * @author XiaoYing
  * @description 获取用户数据
  */
 export const getAllUserData = (currentPage, pageSize, filter) => request('/H_roleplay-si/ds/getUserList2', {
@@ -94,7 +118,7 @@ export const getAllUserData = (currentPage, pageSize, filter) => request('/H_rol
 export const getAllUserCommentData = (currentPage, pageSize, filter,relationkey,type) => request('/H_roleplay-si/ds/listUserWithoutSubcribeByRelationKey', {
   page: currentPage,
   limit: pageSize,
-  filter: filter,
+  search: filter,
   relationkey: relationkey,
   type: type
 });
@@ -274,17 +298,16 @@ export const getChangeLog = (listId, currentPage = 1) => request('/H_roleplay-si
  * @author XiaoYing
  * 获取应用科目
  */
-export const getAppSubjectData = (listId) => request('/corebiz-api/calc/calcRel/findAccountByAppId', {
-  app_id: listId
+export const getAppSubjectData = (listId,transType) => request('/H_roleplay-si/calc/app/getSubSubjectByTransTypeAndAppId', {
+  app_id: listId,
+  trans_type: transType
 });
 
 /** 
  * @author XiaoYing
  * 启用禁用应用科目
  */
-export const openOrForbiddenSubject = (componentId) => request('/corebiz-api/calc/calcConfig/editStatus', {
-  componentId: componentId
-}, 'POST');
+export const updateAccountRel = (data) => request('/H_roleplay-si/calc/app/updateAccountRel', data, 'POST');
 
 /** 
  * @author XiaoYing
@@ -675,4 +698,22 @@ export const serachProcess = (listId, currentPage, pageSize, filter) => request(
   page: currentPage,
   limit: pageSize,
   filter: filter
+})
+
+/**
+ * @author guozheng
+ * @description 保存任务日志
+ * @param {*} param 
+ */
+export const saveTaskLog = (data) => request('/H_roleplay-si/jobLog/save', {}, "POST",data)
+
+/**
+ * @author guozheng
+ * @description 获取任务日志
+ * @param {*} param 
+ */
+export const getTaskLog = (transCode,currentPage,pageSize) => request('/H_roleplay-si/jobLog/findAllJobLog', {
+  transCode:transCode,
+  pageIndex:currentPage,
+  pageSize:pageSize
 })

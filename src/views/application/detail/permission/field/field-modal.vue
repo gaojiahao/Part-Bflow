@@ -14,17 +14,17 @@
 </style>
 
 <template>
-  <Modal v-model="showPermissionModal" title="字段权限" width="1000" :transfer="false" :styles="{top: '15px'}" :mask-closable="false" @on-visible-change="modalVisibleChange">
+  <Modal v-model="showPermissionModal" title="字段或字段组权限" width="1000" :transfer="false" :styles="{top: '15px'}" :mask-closable="false" @on-visible-change="modalVisibleChange">
     <div>
       <Row :gutter="8" style="margin-bottom:10px;">
         <div class="field-toolbar">
-            <Button @click="addNewField" type="info" shape="circle" style="margin-bottom:5px;">新增字段</Button>
+            <Button @click="addNewField" type="info" shape="circle" style="margin-bottom:5px;">新增字段或字段组</Button>
             <i-switch v-model="isBlack" @on-change="changeBlackWhiteList" size="large" class="black-white">
                 <span slot="close">白名单</span>
                 <span slot="open">黑名单</span>
             </i-switch>
         </div>
-        <Table ref="actionRef" stripe height="200" :columns="fieldColumns" size="small" no-data-text="请添加新字段" :data="fieldData"></Table>
+        <Table ref="actionRef" stripe height="200" :columns="fieldColumns" size="small" no-data-text="请添加新字段或字段组" :data="fieldData"></Table>
       </Row>
       <Row :gutter="8" style="margin-bottom:10px;">
         <Col span="4">

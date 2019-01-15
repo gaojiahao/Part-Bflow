@@ -4,18 +4,6 @@
 
 <template>
     <div class="file">
-      <div class="file-header">
-            <span>文件柜</span>
-            <div class="file-search">
-              <Input 
-                @on-search="fileFilter" 
-                :search="true" 
-                v-model="searchValue" 
-                placeholder="搜索" 
-                style="width: 300px">
-              </Input>
-            </div>
-        </div>
         <div class="toolbar">
             <span class="toolbar-bread">
               <span v-if="breadHeader.length>0">
@@ -29,24 +17,36 @@
                 <span v-else class="current-title"> {{ item.name }} </span>
               </span>
             </span>
+            <div class="file-search">
+              <Input 
+                @on-search="fileFilter" 
+                :search="true" 
+                v-model="searchValue" 
+                placeholder="搜索" 
+                style="width: 200px">
+              </Input>
+            </div>
             <Button v-if="filePath === 'root'" @click="addNewFile" class="toolbar-btn">新建分区</Button>
             <Button v-if="filePath !== 'root'" @click="addNewFile" class="toolbar-btn">新建文件夹</Button>
             <Upload 
               v-if="filePath !== 'root'"
-              class="toolbar-btn" 
+              class="toolbar-upload" 
               :action="`/H_roleplay-si/filing/upload?directory=${filePath}&cover=false`"
               :show-upload-list="false" 
               :on-success="handleSuccess"
               :headers="httpHeaders">
-              <Button type="info" icon="ios-cloud-upload-outline">上传</Button>
+              <Button class="toolbar-btn" type="info">上传</Button>
             </Upload>
         </div>
         <div class="subarea">
-            <Table :columns="columns" :data="data" @on-row-dblclick="openFile" highlight-row>
+            <Table :columns="columns" :data="data" @on-row-dblclick="openFile"  :loading="loading">
                 <template slot-scope="{ row }" slot="name">
                     <Icon v-if="row.isSubregion" class="subarea-icon" type="ios-grid" />
                     <Icon v-if="!row.isFile && !row.isSubregion" class="subarea-file-icon" type="md-albums" />
                     <Icon v-if="row.isFile && row.suffix===null" class="subarea-icon" type="md-document" />
+                    <img 
+                    v-if="row.isFile && (row.suffix==='jpg'||row.suffix==='png'||row.suffix==='jepg'||row.suffix==='gif')" 
+                    :src="`/H_roleplay-si/filing/download?path=${row.path}`"/>
                     <span v-for="(data,k) of iconData" :key="k">
                       <img v-if="row.isFile && row.suffix===data.suffix" :src="data.src"/>
                     </span>
@@ -100,7 +100,7 @@
             :styles="{top: '20px'}"
             height="600"
             width="300">
-            <Tree :data="actionData"  :load-data="loadData" @on-select-change="onSelectChange" class="file-tree"></Tree>
+            <Tree :data="actionData" :load-data="loadData" @on-select-change="onSelectChange" empty-text=" " class="file-tree"></Tree>
         </Modal>
     </div>
 </template>
@@ -135,6 +135,7 @@ export default {
       showSubareaModal: false,
       showActionModal: false,
       isCopy: true,
+      loading: true,
       columns: [
           {
           title: "名称",
@@ -161,7 +162,9 @@ export default {
         {src:'resources/images/file/excel.png',suffix:'xlsx'},
         {src:'resources/images/file/word.png',suffix:'doc'},
         {src:'resources/images/file/word.png',suffix:'docx'},
-        {src:'resources/images/file/txt.png',suffix:'txt'}]
+        {src:'resources/images/file/txt.png',suffix:'txt'},
+        {src:'resources/images/file/pdf.jpg',suffix:'pdf'},
+        {src:'resources/images/file/ppt.jpg',suffix:'pptx'}]
     };
   },
   methods: {
@@ -171,6 +174,7 @@ export default {
       this.breadHeader.splice(this.breadHeader.length-1,1);
       if(this.breadHeader.length === 0){
         backPath = 'root';
+        this.filePath = 'root';
       }else{
         backPath = this.breadHeader[this.breadHeader.length-1].path;
       }
@@ -235,6 +239,8 @@ export default {
       if(res.success){
         this.$Message.success(res.message);
         this.getAllFileData(this.filePath);
+      }else{
+        this.$Message.error(res.message);
       }
     },
     renameFile(row) {
@@ -353,12 +359,19 @@ export default {
       let treeData = [];
       getFileData(filePath,true).then(res => {
         res.forEach(val => {
-          treeData.push({
-            title: val.name,
-            path: val.path,
-            loading: false,
-            children: []
-          });
+          if(val.leaf){
+            treeData.push({
+              title: val.name,
+              path: val.path
+            });
+          }else{
+            treeData.push({
+              title: val.name,
+              path: val.path,
+              loading: false,
+              children: []
+            });
+          }
         });
         if(callback){
           callback(treeData);
@@ -383,7 +396,9 @@ export default {
     },
     //获取分区数据
     getAllFileData(path,searchValue) {
+      this.loading = true;
       getFileData(path,false,searchValue).then(res => {
+        this.loading = false;
         this.data = res;
       })
       .catch(error => {

@@ -74,7 +74,7 @@
                 </template>
             </Table>
         </div>
-        <!-- 新建和编辑分区 -->
+        <!-- 新建和编辑文件 -->
         <Modal
             v-model="showModal"
             :title="modalTitle"
@@ -82,10 +82,10 @@
             <span><b style="color:#e4393c;">*</b>名称：</span>
             <Input v-model="fileName" placeholder="请输入名称" autofocus style="width: 300px" />
         </Modal>
-        <!-- 分区信息 -->
-        <Modal v-model="showSubareaModal" width="300" title="分区信息">
+        <!-- 详情信息 -->
+        <Modal v-model="showSubareaModal" width="300" title="详情信息">
             <ul class="subarea-info">
-              <li>分区名称：{{ subareaInformation.name }}</li>
+              <li>名称：{{ subareaInformation.name }}</li>
               <li>大小：{{ subareaInformation.size }}</li>
               <li>可用空间：{{ subareaInformation.size }}</li>
               <li>权限：{{ subareaInformation.authority }}</li>
@@ -152,6 +152,44 @@ export default {
           key: "crtTime"
         }
       ],
+      subareaColumns: [
+          {
+          title: "名称",
+          slot: 'name',
+          width: 400
+        },{
+          title: "权限",
+          key: "authority"
+        },{
+          title: "管理员",
+          key: "creator"
+        },{
+          title: "时间",
+          key: "crtTime"
+        }
+      ],
+      fileColumns: [
+        {
+          title: "名称",
+          slot: 'name',
+          width: 400
+        },{title: "大小",
+          key: "size",
+          render: (h,params) => {
+            if(params.row.size){
+              return h('span',{},params.row.size);
+            }else{
+              return h('span',{},'- -');
+            }
+          }
+        },{
+        title: "来源",
+          key: "creator"
+        },{
+          title: "时间",
+          key: "crtTime"
+        }
+      ],
       data: [],
       actionData: [],
       breadHeader: [],
@@ -175,6 +213,7 @@ export default {
       if(this.breadHeader.length === 0){
         backPath = 'root';
         this.filePath = 'root';
+        this.columns = this.subareaColumns;
       }else{
         backPath = this.breadHeader[this.breadHeader.length-1].path;
       }
@@ -182,6 +221,7 @@ export default {
     },
     //过滤
     fileFilter() {
+      this.columns = this.fileColumns;
       if(this.searchValue === ''){
         this.getAllFileData(this.filePath);
       }else{
@@ -190,25 +230,11 @@ export default {
     },
     openFile(row) {
       if(!row.isFile){
-        this.columns[1] = {
-          title: "大小",
-          key: "size",
-          render: (h,params) => {
-            if(params.row.size){
-              return h('span',{},params.row.size);
-            }else{
-              return h('span',{},'- -');
-            }
-          }
-        };
-        this.columns[2] = {
-          title: "来源",
-          key: "creator"
-        };
-        this.getAllFileData(row.path);
         this.breadHeader.push({path: row.path,name:row.name});
         this.filePath = row.path;
         this.$router.push({path:`/fileCabinet/list`,query:{path:row.path}});
+        this.columns = this.fileColumns;
+        this.getAllFileData(row.path);
         sessionStorage.setItem('breadHeaderData',JSON.stringify(this.breadHeader));
       }else{
         this.downloadFiles(row);
@@ -222,14 +248,7 @@ export default {
       this.$router.push({path:`/fileCabinet/list`,query:{path:row.path}});
     },
     goSubarea() {
-      this.columns[1] = {
-        title: "权限",
-        key: "authority"
-      };
-      this.columns[2] = {
-        title: "管理员",
-        key: "creator"
-      };
+      this.columns = this.subareaColumns;
       this.filePath = 'root';
       this.getAllFileData(this.filePath);
       this.breadHeader = [];

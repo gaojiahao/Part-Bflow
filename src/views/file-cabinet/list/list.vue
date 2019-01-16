@@ -4,18 +4,6 @@
 
 <template>
     <div class="file">
-      <div class="file-header">
-            <span>文件柜</span>
-            <div class="file-search">
-              <Input 
-                @on-search="fileFilter" 
-                :search="true" 
-                v-model="searchValue" 
-                placeholder="搜索" 
-                style="width: 300px">
-              </Input>
-            </div>
-        </div>
         <div class="toolbar">
             <span class="toolbar-bread">
               <span v-if="breadHeader.length>0">
@@ -29,24 +17,36 @@
                 <span v-else class="current-title"> {{ item.name }} </span>
               </span>
             </span>
+            <div class="file-search">
+              <Input 
+                @on-search="fileFilter" 
+                :search="true" 
+                v-model="searchValue" 
+                placeholder="搜索" 
+                style="width: 200px">
+              </Input>
+            </div>
             <Button v-if="filePath === 'root'" @click="addNewFile" class="toolbar-btn">新建分区</Button>
             <Button v-if="filePath !== 'root'" @click="addNewFile" class="toolbar-btn">新建文件夹</Button>
             <Upload 
               v-if="filePath !== 'root'"
-              class="toolbar-btn" 
+              class="toolbar-upload" 
               :action="`/H_roleplay-si/filing/upload?directory=${filePath}&cover=false`"
               :show-upload-list="false" 
               :on-success="handleSuccess"
               :headers="httpHeaders">
-              <Button type="info" icon="ios-cloud-upload-outline">上传</Button>
+              <Button class="toolbar-btn" type="info">上传</Button>
             </Upload>
         </div>
         <div class="subarea">
-            <Table :columns="columns" :data="data" @on-row-dblclick="openFile" highlight-row>
+            <Table :columns="columns" :data="data" @on-row-dblclick="openFile"  :loading="loading">
                 <template slot-scope="{ row }" slot="name">
                     <Icon v-if="row.isSubregion" class="subarea-icon" type="ios-grid" />
                     <Icon v-if="!row.isFile && !row.isSubregion" class="subarea-file-icon" type="md-albums" />
                     <Icon v-if="row.isFile && row.suffix===null" class="subarea-icon" type="md-document" />
+                    <img 
+                    v-if="row.isFile && (row.suffix==='jpg'||row.suffix==='png'||row.suffix==='jepg'||row.suffix==='gif')" 
+                    :src="`/H_roleplay-si/filing/download?path=${row.path}`"/>
                     <span v-for="(data,k) of iconData" :key="k">
                       <img v-if="row.isFile && row.suffix===data.suffix" :src="data.src"/>
                     </span>
@@ -74,7 +74,7 @@
                 </template>
             </Table>
         </div>
-        <!-- 新建和编辑分区 -->
+        <!-- 新建和编辑文件 -->
         <Modal
             v-model="showModal"
             :title="modalTitle"
@@ -82,10 +82,10 @@
             <span><b style="color:#e4393c;">*</b>名称：</span>
             <Input v-model="fileName" placeholder="请输入名称" autofocus style="width: 300px" />
         </Modal>
-        <!-- 分区信息 -->
-        <Modal v-model="showSubareaModal" width="300" title="分区信息">
+        <!-- 详情信息 -->
+        <Modal v-model="showSubareaModal" width="300" title="详情信息">
             <ul class="subarea-info">
-              <li>分区名称：{{ subareaInformation.name }}</li>
+              <li>名称：{{ subareaInformation.name }}</li>
               <li>大小：{{ subareaInformation.size }}</li>
               <li>可用空间：{{ subareaInformation.size }}</li>
               <li>权限：{{ subareaInformation.authority }}</li>
@@ -100,7 +100,7 @@
             :styles="{top: '20px'}"
             height="600"
             width="300">
-            <Tree :data="actionData"  :load-data="loadData" @on-select-change="onSelectChange" class="file-tree"></Tree>
+            <Tree :data="actionData" :load-data="loadData" @on-select-change="onSelectChange" empty-text=" " class="file-tree"></Tree>
         </Modal>
     </div>
 </template>
@@ -135,6 +135,7 @@ export default {
       showSubareaModal: false,
       showActionModal: false,
       isCopy: true,
+      loading: true,
       columns: [
           {
           title: "名称",
@@ -151,6 +152,44 @@ export default {
           key: "crtTime"
         }
       ],
+      subareaColumns: [
+          {
+          title: "名称",
+          slot: 'name',
+          width: 400
+        },{
+          title: "权限",
+          key: "authority"
+        },{
+          title: "管理员",
+          key: "creator"
+        },{
+          title: "时间",
+          key: "crtTime"
+        }
+      ],
+      fileColumns: [
+        {
+          title: "名称",
+          slot: 'name',
+          width: 400
+        },{title: "大小",
+          key: "size",
+          render: (h,params) => {
+            if(params.row.size){
+              return h('span',{},params.row.size);
+            }else{
+              return h('span',{},'- -');
+            }
+          }
+        },{
+        title: "来源",
+          key: "creator"
+        },{
+          title: "时间",
+          key: "crtTime"
+        }
+      ],
       data: [],
       actionData: [],
       breadHeader: [],
@@ -161,7 +200,9 @@ export default {
         {src:'resources/images/file/excel.png',suffix:'xlsx'},
         {src:'resources/images/file/word.png',suffix:'doc'},
         {src:'resources/images/file/word.png',suffix:'docx'},
-        {src:'resources/images/file/txt.png',suffix:'txt'}]
+        {src:'resources/images/file/txt.png',suffix:'txt'},
+        {src:'resources/images/file/pdf.jpg',suffix:'pdf'},
+        {src:'resources/images/file/ppt.jpg',suffix:'pptx'}]
     };
   },
   methods: {
@@ -171,6 +212,8 @@ export default {
       this.breadHeader.splice(this.breadHeader.length-1,1);
       if(this.breadHeader.length === 0){
         backPath = 'root';
+        this.filePath = 'root';
+        this.columns = this.subareaColumns;
       }else{
         backPath = this.breadHeader[this.breadHeader.length-1].path;
       }
@@ -178,6 +221,7 @@ export default {
     },
     //过滤
     fileFilter() {
+      this.columns = this.fileColumns;
       if(this.searchValue === ''){
         this.getAllFileData(this.filePath);
       }else{
@@ -186,25 +230,11 @@ export default {
     },
     openFile(row) {
       if(!row.isFile){
-        this.columns[1] = {
-          title: "大小",
-          key: "size",
-          render: (h,params) => {
-            if(params.row.size){
-              return h('span',{},params.row.size);
-            }else{
-              return h('span',{},'- -');
-            }
-          }
-        };
-        this.columns[2] = {
-          title: "来源",
-          key: "creator"
-        };
-        this.getAllFileData(row.path);
         this.breadHeader.push({path: row.path,name:row.name});
         this.filePath = row.path;
         this.$router.push({path:`/fileCabinet/list`,query:{path:row.path}});
+        this.columns = this.fileColumns;
+        this.getAllFileData(row.path);
         sessionStorage.setItem('breadHeaderData',JSON.stringify(this.breadHeader));
       }else{
         this.downloadFiles(row);
@@ -218,14 +248,7 @@ export default {
       this.$router.push({path:`/fileCabinet/list`,query:{path:row.path}});
     },
     goSubarea() {
-      this.columns[1] = {
-        title: "权限",
-        key: "authority"
-      };
-      this.columns[2] = {
-        title: "管理员",
-        key: "creator"
-      };
+      this.columns = this.subareaColumns;
       this.filePath = 'root';
       this.getAllFileData(this.filePath);
       this.breadHeader = [];
@@ -235,6 +258,8 @@ export default {
       if(res.success){
         this.$Message.success(res.message);
         this.getAllFileData(this.filePath);
+      }else{
+        this.$Message.error(res.message);
       }
     },
     renameFile(row) {
@@ -353,12 +378,19 @@ export default {
       let treeData = [];
       getFileData(filePath,true).then(res => {
         res.forEach(val => {
-          treeData.push({
-            title: val.name,
-            path: val.path,
-            loading: false,
-            children: []
-          });
+          if(val.leaf){
+            treeData.push({
+              title: val.name,
+              path: val.path
+            });
+          }else{
+            treeData.push({
+              title: val.name,
+              path: val.path,
+              loading: false,
+              children: []
+            });
+          }
         });
         if(callback){
           callback(treeData);
@@ -383,7 +415,9 @@ export default {
     },
     //获取分区数据
     getAllFileData(path,searchValue) {
+      this.loading = true;
       getFileData(path,false,searchValue).then(res => {
+        this.loading = false;
         this.data = res;
       })
       .catch(error => {

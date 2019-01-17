@@ -21,6 +21,7 @@
           @reGetData="reGetData" 
           :modalStatis="showActionModal"
           :isEdit="isEdit"
+          :isChildSubject="isChildSubject"
           :resourceId="resourceId"
           @emitPermissionModal="emitPermissionModal">
         </field-modal>
@@ -48,6 +49,7 @@ export default {
       isEdit: false,
       resourceId: '',
       showActionModal: false,
+      isChildSubject: false,
       //监听modal是否添加权限
       isModalConfirm: 1000,
       actionData: [],

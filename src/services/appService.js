@@ -87,6 +87,14 @@ export const getSubAccountData = (accountCode) => request('/H_roleplay-si/accoun
 
 /**
  * @author XiaoYing
+ * @description 获取科目下子科目授权数据
+ */
+export const getChildPermissionListByListId = (accountCode) => request('/H_roleplay-si/permission/getPermissionListByListId', {
+  calcRelCode: accountCode
+});
+
+/**
+ * @author XiaoYing
  * @description 启用科目下子科目
  */
 export const startSubAccountData = (accountCode) => request('/H_roleplay-si/calc/calcRel/start', {
@@ -575,6 +583,15 @@ export const saveFieldPermission = (param) => request('/H_roleplay-si/resource/f
 
 /**
  * @author XiaoYing
+ * @description 保存子科目权限
+ * @param {*} param 
+ */
+export const saveChildSubjectPermission = (param) => request('/H_roleplay-si/permission/saveFieldPermission', {
+  data: param
+}, "POST")
+
+/**
+ * @author XiaoYing
  * @description 修改自定义数据源
  * @param {*} param 
  */
@@ -588,6 +605,15 @@ export const updateCustomDatasource = (param) => request('/H_roleplay-si/resourc
  * @param {*} param 
  */
 export const updateFieldPermission = (param) => request('/H_roleplay-si/resource/f/update', {
+  data: param
+}, "POST")
+
+/**
+ * @author XiaoYing
+ * @description 修改子科目权限
+ * @param {*} param 
+ */
+export const updateChildSubjectPermission = (param) => request('/H_roleplay-si/permission/updateFieldPermission', {
   data: param
 }, "POST")
 

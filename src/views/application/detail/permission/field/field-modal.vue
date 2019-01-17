@@ -14,17 +14,17 @@
 </style>
 
 <template>
-  <Modal v-model="showPermissionModal" title="字段或字段组权限" width="1000" :transfer="false" :styles="{top: '15px'}" :mask-closable="false" @on-visible-change="modalVisibleChange">
+  <Modal v-model="showPermissionModal" :title="modalTitle" width="1000" :transfer="false" :styles="{top: '15px'}" :mask-closable="false" @on-visible-change="modalVisibleChange">
     <div>
       <Row :gutter="8" style="margin-bottom:10px;">
         <div class="field-toolbar">
-            <Button @click="addNewField" type="info" shape="circle" style="margin-bottom:5px;">新增字段或字段组</Button>
+            <Button @click="addNewField" type="info" shape="circle" style="margin-bottom:5px;">新增</Button>
             <i-switch v-model="isBlack" @on-change="changeBlackWhiteList" size="large" class="black-white">
                 <span slot="close">白名单</span>
                 <span slot="open">黑名单</span>
             </i-switch>
         </div>
-        <Table ref="actionRef" stripe height="200" :columns="fieldColumns" size="small" no-data-text="请添加新字段或字段组" :data="fieldData"></Table>
+        <Table ref="actionRef" stripe height="200" :columns="fieldColumns" size="small" no-data-text="请点击新增添加" :data="fieldData"></Table>
       </Row>
       <Row :gutter="8" style="margin-bottom:10px;">
         <Col span="4">
@@ -118,7 +118,9 @@ import {
   saveFieldPermission,
   getFieldResorce,
   getFieldDetailList,
-  updateFieldPermission
+  updateFieldPermission,
+  saveChildSubjectPermission,
+  updateChildSubjectPermission
 } from "@/services/appService.js";
 import UserSelector from '../custom-datasource/user-selector';
 import GroupSelector from '../custom-datasource/group-selector';
@@ -134,11 +136,13 @@ export default {
   props: {
     modalStatis: Boolean,
     resourceId: String,
-    isEdit: Boolean
+    isEdit: Boolean,
+    isChildSubject: Boolean
   },
   data() {
     return {
       appListId: this.$route.params.listId,
+      modalTitle: '字段或字段组权限',
       //监听数据变化刷新权限table
       emitChange: 0,
 
@@ -321,6 +325,13 @@ export default {
         }else{
           this.isModalDisabled = true;
         }
+      }
+    },
+    isChildSubject: function(value) {
+      if(value){
+        this.modalTitle = '子科目权限';
+      }else{
+        this.modalTitle = '字段或字段组权限';
       }
     }
   },

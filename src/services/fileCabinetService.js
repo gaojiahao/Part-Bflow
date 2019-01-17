@@ -12,6 +12,24 @@ export const getFileData = (folderPath,isFile,search) =>  request('/H_roleplay-s
 
 /**
  * @author XiaoYing
+ * @description 获取所有成员数据
+ */
+export const getAllMemberData = (limit,page,search) =>  request('/H_roleplay-si/filing/getUserList',{
+    limit: limit,
+    page: page,
+    search: search
+});
+
+/**
+ * @author XiaoYing
+ * @description 获取分区成员数据
+ */
+export const getSubareaAuthority = (subareaId) =>  request('/H_roleplay-si/filing/getSubareaAuthority',{
+    subareaId: subareaId
+});
+
+/**
+ * @author XiaoYing
  * @description 获取文件详情
  */
 export const getFileDataByPath = (id) =>  request('/H_roleplay-si/filing/info',{

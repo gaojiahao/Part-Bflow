@@ -26,10 +26,10 @@
                 style="width: 200px">
               </Input>
             </div>
-            <Button v-if="filePath === 'root'" @click="addNewFile" class="toolbar-btn">新建分区</Button>
-            <Button v-if="filePath !== 'root'" @click="addNewFile" class="toolbar-btn">新建文件夹</Button>
+            <Button v-if="filePath === 'root'" @click="subareaInfo" class="toolbar-btn">新建分区</Button>
+            <Button v-if="filePath !== 'root' && permissionSattus" @click="addNewFile" class="toolbar-btn">新建文件夹</Button>
             <Upload 
-              v-if="filePath !== 'root'"
+              v-if="filePath !== 'root' && permissionSattus"
               class="toolbar-upload" 
               :action="`/H_roleplay-si/filing/upload?directory=${filePath}&cover=false`"
               :show-upload-list="false" 
@@ -60,11 +60,12 @@
                           <ul class="subarea-menu">
                             <li v-if="!row.isFile" @click="openFile(row)">打开</li>
                             <li v-if="!row.isSubregion" @click="downloadFiles(row)">下载</li>
-                            <li v-if="!row.isSubregion" @click="copyFiles(row)">复制到...</li>
-                            <li @click="renameFile(row)">重命名</li>
-                            <li v-if="!row.isSubregion" @click="moveFiles(row)">移动到...</li>
-                            <li @click="subareaInfo(row)">详情...</li>
-                            <li @click="deleteFiles(row)">删除</li>
+                            <li v-if="!row.isSubregion && row.authority!=='仅浏览'" @click="copyFiles(row)">复制到...</li>
+                            <li v-if="row.authority!=='仅浏览'" @click="renameFile(row)">重命名</li>
+                            <li v-if="!row.isSubregion && row.authority!=='仅浏览'" @click="moveFiles(row)">移动到...</li>
+                            <li v-if="row.isSubregion" @click="subareaInfo(row)">分区信息</li>
+                            <li v-if="!row.isSubregion" @click="fileInfo(row)">详情...</li>
+                            <li v-if="row.authority!=='仅浏览'" @click="deleteFiles(row)">删除</li>
                           </ul>
                         </div>
                     </Poptip>
@@ -83,12 +84,12 @@
             <Input v-model="fileName" placeholder="请输入名称" autofocus style="width: 300px" />
         </Modal>
         <!-- 详情信息 -->
-        <Modal v-model="showSubareaModal" width="300" title="详情信息">
+        <Modal v-model="showFileModal" width="300" title="详情信息">
             <ul class="subarea-info">
-              <li>名称：{{ subareaInformation.name }}</li>
-              <li>大小：{{ subareaInformation.size }}</li>
-              <li>可用空间：{{ subareaInformation.size }}</li>
-              <li>权限：{{ subareaInformation.authority }}</li>
+              <li>名称：{{ fileInformation.name }}</li>
+              <li>大小：{{ fileInformation.size }}</li>
+              <li>可用空间：{{ fileInformation.size }}</li>
+              <li>权限：{{ fileInformation.authority }}</li>
             </ul>
             <div slot="footer"></div>
         </Modal>
@@ -102,6 +103,8 @@
             width="300">
             <Tree :data="actionData" :load-data="loadData" @on-select-change="onSelectChange" empty-text=" " class="file-tree"></Tree>
         </Modal>
+        <!-- 分区设置 -->
+        <subarea-setting ref="subareaSetting" :subareaDetail="subareaDetail"></subarea-setting>
     </div>
 </template>
 
@@ -116,9 +119,13 @@ import {
   copyFile,
   moveFile, } from "@/services/fileCabinetService.js";
   import { getToken } from "@/utils/utils";
+  import SubareaSetting from './subarea-setting.vue';
 
 export default {
   name: "fileCabinetList",
+  components: {
+    SubareaSetting
+  },
   data() {
     return {
       httpHeaders: {
@@ -132,10 +139,11 @@ export default {
       modalTitle: '重命名',
       showModal: false,
       isAdd: true,
-      showSubareaModal: false,
+      showFileModal: false,
       showActionModal: false,
       isCopy: true,
       loading: true,
+      permissionSattus: true,
       columns: [
           {
           title: "名称",
@@ -193,8 +201,9 @@ export default {
       data: [],
       actionData: [],
       breadHeader: [],
-      subareaInformation: {},
+      fileInformation: {},
       selectTreeItem: {},
+      subareaDetail: {},
       iconData: [
         {src:'resources/images/file/excel.png',suffix:'xls'},
         {src:'resources/images/file/excel.png',suffix:'xlsx'},
@@ -206,6 +215,12 @@ export default {
     };
   },
   methods: {
+    //打开分区信息
+    subareaInfo(row) {
+      this.$refs['subareaSetting'].showModal = true;
+      this.subareaDetail = row;
+      this.$refs['subareaSetting'].getSubareaMember(row.id);
+    },
     //后退
     goBack() {
       let backPath = '';
@@ -230,6 +245,11 @@ export default {
     },
     openFile(row) {
       if(!row.isFile){
+        if(row.isSubregion){
+          if(row.authority === '仅浏览'){
+            this.permissionSattus = false;
+          }
+        }
         this.breadHeader.push({path: row.path,name:row.name});
         this.filePath = row.path;
         this.$router.push({path:`/fileCabinet/list`,query:{path:row.path}});
@@ -269,9 +289,9 @@ export default {
       this.isAdd = false;
       this.renamePath = row.path;
     },
-    subareaInfo(row) {
-      this.subareaInformation = row;
-      this.showSubareaModal = true;
+    fileInfo(row) {
+      this.fileInformation = row;
+      this.showFileModal = true;
     },
     //新建分区
     addNewFile() {

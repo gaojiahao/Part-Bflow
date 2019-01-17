@@ -143,9 +143,7 @@ export default {
           let searchDatas = [];
           for(let val of this.searchData){
               val.edit = false;
-              if(val.name.indexOf(value) >= 0){
-                  searchDatas.push(val);
-              }
+              if(val.name.indexOf(value) >= 0) searchDatas.push(val);
           }
           this.data = searchDatas;
       }

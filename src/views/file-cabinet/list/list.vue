@@ -218,8 +218,10 @@ export default {
     //打开分区信息
     subareaInfo(row) {
       this.$refs['subareaSetting'].showModal = true;
-      this.subareaDetail = row;
-      this.$refs['subareaSetting'].getSubareaMember(row.id);
+      if(row.id){
+        this.subareaDetail = row;
+        this.$refs['subareaSetting'].getSubareaMember(row.id);
+      }
     },
     //后退
     goBack() {

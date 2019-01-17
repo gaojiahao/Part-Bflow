@@ -5,12 +5,12 @@
 <template>
     <div class="app" style="margin-top:15px;">
         <Row class="app-action">
-            <Row class="app-action-title">
-                <h3>字段或字段组<a v-if="isAdmin" @click="showModal" class="app-action-title-add">添加</a>
-                </h3>
+            <Row v-if="!row" class="app-action-title">
+                <h3>字段或字段组<a v-if="isAdmin" @click="showModal" class="app-action-title-add">添加</a></h3>
                 <span class="warning-color marlr">应用字段授权给用户或用户组</span>
             </Row>
-            <div class="app-action-source">
+            <div :class="{'app-action-source':!row}">
+                <h3 v-if="isAdmin" @click="showModal" class="app-action-title-add">添加</h3>
                 <Row>
                     <Table :columns="columns" :data="userSources" size="small"></Table>
                 </Row>
@@ -21,7 +21,7 @@
           @reGetData="reGetData" 
           :modalStatis="showActionModal"
           :isEdit="isEdit"
-          :isChildSubject="isChildSubject"
+          :row="row"
           :resourceId="resourceId"
           @emitPermissionModal="emitPermissionModal">
         </field-modal>
@@ -31,7 +31,8 @@
 <script>
 import {
   getFieldList,
-  deleteFieldPermission
+  deleteFieldPermission,
+  getFieldListByCalcRelCode
 } from "@/services/appService.js";
 import FieldModal from './field-modal';
 
@@ -41,7 +42,8 @@ export default {
     FieldModal
   },
   props: {
-    isAdmin: Boolean
+    isAdmin: Boolean,
+    row: Object
   },
   data() {
     return {
@@ -79,9 +81,17 @@ export default {
       this.showActionModal = false;
     },
     getFieldListData() {
-      getFieldList(this.listId).then(res => {
-        this.userSources = res;
-      });
+      if(this.row){
+        getFieldListByCalcRelCode(this.row.calcRelCode).then(res => {
+          if(res.success){
+            this.userSources = res.data;
+          }
+        })
+      }else{
+        getFieldList(this.listId).then(res => {
+          this.userSources = res;
+        });
+      }
     },
     //删除自定义数据源
     deleteDataSource(resourceId) {

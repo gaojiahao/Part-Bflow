@@ -586,7 +586,7 @@ export const saveFieldPermission = (param) => request('/H_roleplay-si/resource/f
  * @description 保存子科目权限
  * @param {*} param 
  */
-export const saveChildSubjectPermission = (param) => request('/H_roleplay-si/permission/saveFieldPermission', {
+export const saveChildSubjectPermission = (param) => request('/account-api/permission/saveFieldPermission', {
   data: param
 }, "POST")
 
@@ -605,7 +605,7 @@ export const updateCustomDatasource = (param) => request('/H_roleplay-si/resourc
  * @param {*} param 
  */
 export const updateFieldPermission = (param) => request('/H_roleplay-si/resource/f/update', {
-  data: param
+  data: paramgetFieldList
 }, "POST")
 
 /**
@@ -613,7 +613,7 @@ export const updateFieldPermission = (param) => request('/H_roleplay-si/resource
  * @description 修改子科目权限
  * @param {*} param 
  */
-export const updateChildSubjectPermission = (param) => request('/H_roleplay-si/permission/updateFieldPermission', {
+export const updateChildSubjectPermission = (param) => request('/account-api/permission/updateFieldPermission', {
   data: param
 }, "POST")
 
@@ -624,6 +624,15 @@ export const updateChildSubjectPermission = (param) => request('/H_roleplay-si/p
  */
 export const getFieldResorce = (listId) => request('/H_roleplay-si/resource/getFormField', {
   listId: listId
+})
+
+/**
+ * @author XiaoYing
+ * @description 获取子科目权限字段数据源
+ * @param {String} calcRelCode
+ */
+export const getChildSubjectField = (calcRelCode) => request('/account-api/permission/getCalcRelFieldModels', {
+  calcRelCode: calcRelCode
 })
 
 /**
@@ -651,6 +660,15 @@ export const getResorceList = (listId) => request('/H_roleplay-si/resource/getRe
  */
 export const getFieldList = (listId) => request('/H_roleplay-si/resource/getFieldList', {
   listId: listId
+})
+
+/**
+ * @author XiaoYing
+ * @description 获取子科目字段权限列表
+ * @param {String} calcRelCode
+ */
+export const getFieldListByCalcRelCode = (calcRelCode) => request('/account-api/permission/getPermissionListByCalcRelCode', {
+  calcRelCode: calcRelCode
 })
 
 /**

@@ -120,7 +120,8 @@ import {
   getFieldDetailList,
   updateFieldPermission,
   saveChildSubjectPermission,
-  updateChildSubjectPermission
+  updateChildSubjectPermission,
+  getChildSubjectField
 } from "@/services/appService.js";
 import UserSelector from '../custom-datasource/user-selector';
 import GroupSelector from '../custom-datasource/group-selector';
@@ -137,7 +138,7 @@ export default {
     modalStatis: Boolean,
     resourceId: String,
     isEdit: Boolean,
-    isChildSubject: Boolean
+    row: Object
   },
   data() {
     return {
@@ -387,29 +388,61 @@ export default {
           resourceId: this.resourceId,
           resource: this.fieldData
         };
+        if(this.row){
+          for(let k in params){
+            delete params['listId'];
+          }
+          params.calcRelCode = this.row.calcRelCode;
+        }
         if (params) {
           if(this.isEdit){
-            updateFieldPermission(JSON.stringify(params)).then(res => {
-              if (res.success) {
-                this.$Message.success(res.message);
-                this.showPermissionModal = false;
-                let Num = this.emitChange++;
-                this.$emit("reGetData", Num);
-              }
-            }).catch(err => {
-              this.$Message.error(err.data.message);
-            });
+            if(this.row){
+              updateChildSubjectPermission(JSON.stringify(params)).then(res => {
+                if (res.success) {
+                  this.$Message.success(res.message);
+                  this.showPermissionModal = false;
+                  let Num = this.emitChange++;
+                  this.$emit("reGetData", Num);
+                }
+              }).catch(err => {
+                this.$Message.error(err.data.message);
+              });
+            }else{
+              updateFieldPermission(JSON.stringify(params)).then(res => {
+                if (res.success) {
+                  this.$Message.success(res.message);
+                  this.showPermissionModal = false;
+                  let Num = this.emitChange++;
+                  this.$emit("reGetData", Num);
+                }
+              }).catch(err => {
+                this.$Message.error(err.data.message);
+              });
+            }
           }else{
-            saveFieldPermission(JSON.stringify(params)).then(res => {
-              if (res.success) {
-                this.$Message.success(res.message);
-                this.showPermissionModal = false;
-                let Num = this.emitChange++;
-                this.$emit("reGetData", Num);
-              }
-            }).catch(err => {
-              this.$Message.error(err.data.message);
-            });
+            if(this.row){
+              saveChildSubjectPermission(JSON.stringify(params)).then(res => {
+                if (res.success) {
+                  this.$Message.success(res.message);
+                  this.showPermissionModal = false;
+                  let Num = this.emitChange++;
+                  this.$emit("reGetData", Num);
+                }
+              }).catch(err => {
+                this.$Message.error(err.data.message);
+              });
+            }else{
+              saveFieldPermission(JSON.stringify(params)).then(res => {
+                if (res.success) {
+                  this.$Message.success(res.message);
+                  this.showPermissionModal = false;
+                  let Num = this.emitChange++;
+                  this.$emit("reGetData", Num);
+                }
+              }).catch(err => {
+                this.$Message.error(err.data.message);
+              });
+            }
           }
         }
     },
@@ -493,9 +526,17 @@ export default {
     }
   },
   created() {
-    getFieldResorce(this.appListId).then(res => {
-      this.allFieldData = res;
-    })
+    if(this.row){
+      getChildSubjectField(this.row.calcRelCode).then(res => {
+        if(res.success){
+          this.allFieldData = res.data;
+        }
+      })
+    }else{
+      getFieldResorce(this.appListId).then(res => {
+        this.allFieldData = res;
+      })
+    }
   },
   mounted() {
   }

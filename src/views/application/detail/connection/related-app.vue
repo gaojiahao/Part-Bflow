@@ -23,6 +23,7 @@
         </Col>
         </transition-group>
       </draggable>
+      <p v-if="relatedApps.length===0" style="text-align:center;">暂无相关应用</p>
     </Row>
   </div>
 </template>

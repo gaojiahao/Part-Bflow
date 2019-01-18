@@ -14,17 +14,17 @@
 </style>
 
 <template>
-  <Modal v-model="showPermissionModal" title="字段或字段组权限" width="1000" :transfer="false" :styles="{top: '15px'}" :mask-closable="false" @on-visible-change="modalVisibleChange">
+  <Modal v-model="showPermissionModal" :title="modalTitle" width="1000" :transfer="false" :styles="{top: '15px'}" :mask-closable="false" @on-visible-change="modalVisibleChange">
     <div>
       <Row :gutter="8" style="margin-bottom:10px;">
         <div class="field-toolbar">
-            <Button @click="addNewField" type="info" shape="circle" style="margin-bottom:5px;">新增字段或字段组</Button>
+            <Button @click="addNewField" type="info" shape="circle" style="margin-bottom:5px;">新增</Button>
             <i-switch v-model="isBlack" @on-change="changeBlackWhiteList" size="large" class="black-white">
                 <span slot="close">白名单</span>
                 <span slot="open">黑名单</span>
             </i-switch>
         </div>
-        <Table ref="actionRef" stripe height="200" :columns="fieldColumns" size="small" no-data-text="请添加新字段或字段组" :data="fieldData"></Table>
+        <Table ref="actionRef" stripe height="200" :columns="fieldColumns" size="small" no-data-text="请点击新增添加" :data="fieldData"></Table>
       </Row>
       <Row :gutter="8" style="margin-bottom:10px;">
         <Col span="4">
@@ -118,7 +118,11 @@ import {
   saveFieldPermission,
   getFieldResorce,
   getFieldDetailList,
-  updateFieldPermission
+  updateFieldPermission,
+  saveChildSubjectPermission,
+  updateChildSubjectPermission,
+  getChildSubjectField,
+  getChildSubjectDetailList
 } from "@/services/appService.js";
 import UserSelector from '../custom-datasource/user-selector';
 import GroupSelector from '../custom-datasource/group-selector';
@@ -134,11 +138,13 @@ export default {
   props: {
     modalStatis: Boolean,
     resourceId: String,
-    isEdit: Boolean
+    isEdit: Boolean,
+    row: Object
   },
   data() {
     return {
       appListId: this.$route.params.listId,
+      modalTitle: '字段或字段组权限',
       //监听数据变化刷新权限table
       emitChange: 0,
 
@@ -220,25 +226,47 @@ export default {
         this.userSelectData = [];
         this.orgSelectData = [];
         this.departmentSelectData = [];
-        getFieldDetailList(this.appListId,this.resourceId).then(res => {
-          this.fieldData = res.resource;
-          res.instance.forEach(val => {
-            let pushData = {};
-            if(val.substanceType === 'U'){
-              pushData.nickname = val.substanceName;
-              pushData.userId = val.substanceId;
-              this.userSelectData.push(pushData);
-            }else if(val.substanceType === 'G'){
-              pushData.name = val.substanceName;
-              pushData.id = val.substanceId;
-              this.orgSelectData.push(pushData);
-            }else if(val.substanceType === 'R'){
-              pushData.name = val.substanceName;
-              pushData.id = val.substanceId;
-              this.departmentSelectData.push(pushData);
-            }
+        if(this.row){
+          getChildSubjectDetailList(this.row.calcRelCode,this.resourceId).then(res => {
+            this.fieldData = res.data.resource;
+            res.data.instance.forEach(val => {
+              let pushData = {};
+              if(val.objectType === 'U'){
+                pushData.nickname = val.objectName;
+                pushData.userId = val.objectId;
+                this.userSelectData.push(pushData);
+              }else if(val.objectType === 'G'){
+                pushData.name = val.objectName;
+                pushData.id = val.objectId;
+                this.orgSelectData.push(pushData);
+              }else if(val.objectType === 'R'){
+                pushData.name = val.objectName;
+                pushData.id = val.objectId;
+                this.departmentSelectData.push(pushData);
+              }
+            })
           })
-        })
+        }else{
+          getFieldDetailList(this.appListId,this.resourceId).then(res => {
+            this.fieldData = res.resource;
+            res.instance.forEach(val => {
+              let pushData = {};
+              if(val.substanceType === 'U'){
+                pushData.nickname = val.substanceName;
+                pushData.userId = val.substanceId;
+                this.userSelectData.push(pushData);
+              }else if(val.substanceType === 'G'){
+                pushData.name = val.substanceName;
+                pushData.id = val.substanceId;
+                this.orgSelectData.push(pushData);
+              }else if(val.substanceType === 'R'){
+                pushData.name = val.substanceName;
+                pushData.id = val.substanceId;
+                this.departmentSelectData.push(pushData);
+              }
+            })
+          })
+        }
       }else{
         this.fieldData = [];
         this.userSelectData = [];
@@ -322,6 +350,13 @@ export default {
           this.isModalDisabled = true;
         }
       }
+    },
+    isChildSubject: function(value) {
+      if(value){
+        this.modalTitle = '子科目权限';
+      }else{
+        this.modalTitle = '字段或字段组权限';
+      }
     }
   },
   methods: {
@@ -376,29 +411,61 @@ export default {
           resourceId: this.resourceId,
           resource: this.fieldData
         };
+        if(this.row){
+          for(let k in params){
+            delete params['listId'];
+          }
+          params.calcRelCode = this.row.calcRelCode;
+        }
         if (params) {
           if(this.isEdit){
-            updateFieldPermission(JSON.stringify(params)).then(res => {
-              if (res.success) {
-                this.$Message.success(res.message);
-                this.showPermissionModal = false;
-                let Num = this.emitChange++;
-                this.$emit("reGetData", Num);
-              }
-            }).catch(err => {
-              this.$Message.error(err.data.message);
-            });
+            if(this.row){
+              updateChildSubjectPermission(JSON.stringify(params)).then(res => {
+                if (res.success) {
+                  this.$Message.success(res.message);
+                  this.showPermissionModal = false;
+                  let Num = this.emitChange++;
+                  this.$emit("reGetData", Num);
+                }
+              }).catch(err => {
+                this.$Message.error(err.data.message);
+              });
+            }else{
+              updateFieldPermission(JSON.stringify(params)).then(res => {
+                if (res.success) {
+                  this.$Message.success(res.message);
+                  this.showPermissionModal = false;
+                  let Num = this.emitChange++;
+                  this.$emit("reGetData", Num);
+                }
+              }).catch(err => {
+                this.$Message.error(err.data.message);
+              });
+            }
           }else{
-            saveFieldPermission(JSON.stringify(params)).then(res => {
-              if (res.success) {
-                this.$Message.success(res.message);
-                this.showPermissionModal = false;
-                let Num = this.emitChange++;
-                this.$emit("reGetData", Num);
-              }
-            }).catch(err => {
-              this.$Message.error(err.data.message);
-            });
+            if(this.row){
+              saveChildSubjectPermission(JSON.stringify(params)).then(res => {
+                if (res.success) {
+                  this.$Message.success(res.message);
+                  this.showPermissionModal = false;
+                  let Num = this.emitChange++;
+                  this.$emit("reGetData", Num);
+                }
+              }).catch(err => {
+                this.$Message.error(err.data.message);
+              });
+            }else{
+              saveFieldPermission(JSON.stringify(params)).then(res => {
+                if (res.success) {
+                  this.$Message.success(res.message);
+                  this.showPermissionModal = false;
+                  let Num = this.emitChange++;
+                  this.$emit("reGetData", Num);
+                }
+              }).catch(err => {
+                this.$Message.error(err.data.message);
+              });
+            }
           }
         }
     },
@@ -482,9 +549,17 @@ export default {
     }
   },
   created() {
-    getFieldResorce(this.appListId).then(res => {
-      this.allFieldData = res;
-    })
+    if(this.row){
+      getChildSubjectField(this.row.calcRelCode).then(res => {
+        if(res.success){
+          this.allFieldData = res.data;
+        }
+      })
+    }else{
+      getFieldResorce(this.appListId).then(res => {
+        this.allFieldData = res;
+      })
+    }
   },
   mounted() {
   }

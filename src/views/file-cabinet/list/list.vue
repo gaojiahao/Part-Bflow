@@ -104,7 +104,11 @@
             <Tree :data="actionData" :load-data="loadData" @on-select-change="onSelectChange" empty-text=" " class="file-tree"></Tree>
         </Modal>
         <!-- 分区设置 -->
-        <subarea-setting ref="subareaSetting" :subareaDetail="subareaDetail"></subarea-setting>
+        <subarea-setting 
+          ref="subareaSetting" 
+          :subareaDetail="subareaDetail"
+          @refresh="refresh">
+        </subarea-setting>
     </div>
 </template>
 
@@ -215,12 +219,18 @@ export default {
     };
   },
   methods: {
+    //刷新
+    refresh() {
+      this.getAllFileData('root');
+    },
     //打开分区信息
     subareaInfo(row) {
       this.$refs['subareaSetting'].showModal = true;
       if(row.id){
         this.subareaDetail = row;
         this.$refs['subareaSetting'].getSubareaMember(row.id);
+      }else{
+        this.subareaDetail = {add:true};
       }
     },
     //后退

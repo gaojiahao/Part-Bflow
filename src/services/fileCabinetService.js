@@ -79,3 +79,9 @@ export const moveFile = (path, toPath) =>  request('/H_roleplay-si/filing/move',
     toPath: toPath
 },'POST');
 
+/**
+ * @author XiaoYing
+ * @description 分区权限保存
+ */
+export const saveSubareaPermission = (data) =>  request('/H_roleplay-si/filing/au/save',{},'POST',data);
+

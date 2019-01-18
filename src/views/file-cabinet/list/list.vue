@@ -86,10 +86,11 @@
         <!-- 详情信息 -->
         <Modal v-model="showFileModal" width="300" title="详情信息">
             <ul class="subarea-info">
-              <li>名称：{{ fileInformation.name }}</li>
-              <li>大小：{{ fileInformation.size }}</li>
-              <li>可用空间：{{ fileInformation.size }}</li>
-              <li>权限：{{ fileInformation.authority }}</li>
+              <li>名称：<b>{{ fileInformation.name }}</b></li>
+              <li>大小：<b>{{ fileInformation.size }}</b></li>
+              <li>剩余空间：<b>{{ fileInformation.resiSpace }}</b></li>
+              <li>可用空间：<b>{{ fileInformation.usedSpace }}</b></li>
+              <li>权限：<b>{{ fileInformation.authority }}</b></li>
             </ul>
             <div slot="footer"></div>
         </Modal>

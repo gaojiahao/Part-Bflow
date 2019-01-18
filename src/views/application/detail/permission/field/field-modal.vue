@@ -121,7 +121,8 @@ import {
   updateFieldPermission,
   saveChildSubjectPermission,
   updateChildSubjectPermission,
-  getChildSubjectField
+  getChildSubjectField,
+  getChildSubjectDetailList
 } from "@/services/appService.js";
 import UserSelector from '../custom-datasource/user-selector';
 import GroupSelector from '../custom-datasource/group-selector';
@@ -225,25 +226,47 @@ export default {
         this.userSelectData = [];
         this.orgSelectData = [];
         this.departmentSelectData = [];
-        getFieldDetailList(this.appListId,this.resourceId).then(res => {
-          this.fieldData = res.resource;
-          res.instance.forEach(val => {
-            let pushData = {};
-            if(val.substanceType === 'U'){
-              pushData.nickname = val.substanceName;
-              pushData.userId = val.substanceId;
-              this.userSelectData.push(pushData);
-            }else if(val.substanceType === 'G'){
-              pushData.name = val.substanceName;
-              pushData.id = val.substanceId;
-              this.orgSelectData.push(pushData);
-            }else if(val.substanceType === 'R'){
-              pushData.name = val.substanceName;
-              pushData.id = val.substanceId;
-              this.departmentSelectData.push(pushData);
-            }
+        if(this.row){
+          getChildSubjectDetailList(this.row.calcRelCode,this.resourceId).then(res => {
+            this.fieldData = res.data.resource;
+            res.data.instance.forEach(val => {
+              let pushData = {};
+              if(val.objectType === 'U'){
+                pushData.nickname = val.objectName;
+                pushData.userId = val.objectId;
+                this.userSelectData.push(pushData);
+              }else if(val.objectType === 'G'){
+                pushData.name = val.objectName;
+                pushData.id = val.objectId;
+                this.orgSelectData.push(pushData);
+              }else if(val.objectType === 'R'){
+                pushData.name = val.objectName;
+                pushData.id = val.objectId;
+                this.departmentSelectData.push(pushData);
+              }
+            })
           })
-        })
+        }else{
+          getFieldDetailList(this.appListId,this.resourceId).then(res => {
+            this.fieldData = res.resource;
+            res.instance.forEach(val => {
+              let pushData = {};
+              if(val.substanceType === 'U'){
+                pushData.nickname = val.substanceName;
+                pushData.userId = val.substanceId;
+                this.userSelectData.push(pushData);
+              }else if(val.substanceType === 'G'){
+                pushData.name = val.substanceName;
+                pushData.id = val.substanceId;
+                this.orgSelectData.push(pushData);
+              }else if(val.substanceType === 'R'){
+                pushData.name = val.substanceName;
+                pushData.id = val.substanceId;
+                this.departmentSelectData.push(pushData);
+              }
+            })
+          })
+        }
       }else{
         this.fieldData = [];
         this.userSelectData = [];

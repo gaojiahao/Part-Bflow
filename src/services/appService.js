@@ -605,7 +605,7 @@ export const updateCustomDatasource = (param) => request('/H_roleplay-si/resourc
  * @param {*} param 
  */
 export const updateFieldPermission = (param) => request('/H_roleplay-si/resource/f/update', {
-  data: paramgetFieldList
+  data: param
 }, "POST")
 
 /**
@@ -695,12 +695,32 @@ export const getFieldDetailList = (listId, resourceId) => request('/H_roleplay-s
 
 /**
  * @author XiaoYing
+ * @description 获取修改回显子科目权限数据
+ * @param {String} calcRelCode
+ * @param {String} resourceId
+ */
+export const getChildSubjectDetailList = (calcRelCode, resourceId) => request('/account-api/permission/getFieldModelsByResourceIdAndCalcRelCode', {
+  calcRelCode: calcRelCode,
+  resourceId: resourceId
+})
+
+/**
+ * @author XiaoYing
  * @description 删除已授权的自定义数据源
  * @param {String} resourceId
  */
 export const deleteCustomDatasource = (resourceId) => request('/H_roleplay-si/resource/delete', {
   resourceId: resourceId
 }, "POST")
+
+/**
+ * @author XiaoYing
+ * @description 删除已授权的子科目字段权限
+ * @param {String} resourceId
+ */
+export const deletePermissionByResourceId = (resourceId) => request('/account-api/permission/deletePermissionByResourceId', {
+  resourceId: resourceId
+})
 
 /**
  * @author XiaoYing

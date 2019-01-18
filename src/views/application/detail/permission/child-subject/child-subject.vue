@@ -63,6 +63,9 @@ export default {
             if(params.accountType === 1){
               isDisabled = true;
             }
+            if(!this.isAdmin){
+              isDisabled = true;
+            }
             return h('Checkbox', {
               props: {
                 value: params.row.status === 1? true : false,

@@ -37,7 +37,7 @@
           <li>
             <span>{{item.handlerName}}</span>
             <span>{{item.taskDate}}</span>
-            <span>{{`${item.logDeclarationHours} 小时`}}</span>
+            <span v-html="`${item.logDeclarationHours} 小时`"></span>
           </li>
            <li>
             <span style="font-weight:600">{{item.logTitle}}</span>
@@ -77,6 +77,7 @@ export default {
   data() {
     return {
         transCode:"",
+        referenceId:"",
         logData: [],
         modalFormData: {
             //变更日志表单数据
@@ -143,8 +144,7 @@ export default {
                     logTitle: this.modalFormData.logTitle,
                     taskDate:FormatDate(this.modalFormData.taskDate,'yyyy-MM-dd'),
                     logDeclarationHours: this.modalFormData.logDeclarationHours,
-                    projectTaskName:'测试',
-                    projectTaskCode:this.transCode,
+                    projectPlanTaskId:this.referenceId,
                 },
                 comment:{
                     biComment:this.modalFormData.comments
@@ -180,6 +180,7 @@ export default {
   },
   created() {
     this.transCode = this.$route.params.transCode; 
+    this.referenceId = this.$route.params.referenceId;
     this.getTaskLog();
   }
 };

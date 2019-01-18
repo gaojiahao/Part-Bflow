@@ -144,7 +144,7 @@ export default {
                     logTitle: this.modalFormData.logTitle,
                     taskDate:FormatDate(this.modalFormData.taskDate,'yyyy-MM-dd'),
                     logDeclarationHours: this.modalFormData.logDeclarationHours,
-                    projectPlanTaskId:this.referenceId,
+                    projectReferenceId:this.referenceId,
                 },
                 comment:{
                     biComment:this.modalFormData.comments

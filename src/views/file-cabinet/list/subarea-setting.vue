@@ -107,7 +107,7 @@ export default {
       searchValue: "",
       subareaName: "",
       showModal: false,
-      loading: false,
+      loading: true,
       isEditSubarea: false,
       columns: [],
       data: [],
@@ -215,7 +215,9 @@ export default {
     },
     //获取分区成员
     getSubareaMember(subareaId) {
+        this.loading = true;
         getSubareaAuthority(subareaId).then(res => {
+            this.loading = false;
             this.data = res;
             this.searchData = res;
         }).catch(error => {

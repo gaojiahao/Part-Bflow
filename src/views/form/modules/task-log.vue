@@ -20,7 +20,7 @@
           <span style="margin-left:10px;">单位/时</span>
         </FormItem>
         <FormItem label="描述:" prop="comments">
-             <Input v-model="modalFormData.comments" type="textarea" :autosize="{minRows: 2,maxRows: 5}" />
+             <Input v-model="modalFormData.comments" type="textarea" :autosize="{minRows: 2,maxRows: 3}" />
         </FormItem>
         
         <FormItem>
@@ -151,11 +151,11 @@ export default {
                 }
             } 
         };
+          
         saveTaskLog(formdata).then(res => {
             if (res.success) {
                 window.top.Ext.toast(res.message)
-                this.modalFormData.logTitle="";
-                this.modalFormData.comments="";
+                 this.$refs['formValidate'].resetFields();
                 this.getTaskLog(this.transCode);
             }else{
                    window.top.Ext.toast(res.message)

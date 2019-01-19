@@ -20,7 +20,7 @@
           <span style="margin-left:10px;">单位/时</span>
         </FormItem>
         <FormItem label="描述:" prop="comments">
-             <Input v-model="modalFormData.comments" type="textarea" :autosize="{minRows: 2,maxRows: 5}" />
+             <Input v-model="modalFormData.comments" type="textarea" :autosize="{minRows: 2,maxRows: 3}" />
         </FormItem>
         
         <FormItem>
@@ -77,7 +77,7 @@ export default {
   data() {
     return {
         transCode:"",
-        referenceId:"",
+        projectTaskId:"",
         logData: [],
         modalFormData: {
             //变更日志表单数据
@@ -144,18 +144,21 @@ export default {
                     logTitle: this.modalFormData.logTitle,
                     taskDate:FormatDate(this.modalFormData.taskDate,'yyyy-MM-dd'),
                     logDeclarationHours: this.modalFormData.logDeclarationHours,
-                    projectPlanTaskId:this.referenceId,
+                    projectTaskId:this.projectTaskId,
                 },
                 comment:{
                     biComment:this.modalFormData.comments
                 }
             } 
         };
+          
         saveTaskLog(formdata).then(res => {
             if (res.success) {
-                this.$Message.success(res.message);
-                this.$refs["formValidate"].resetFields();
+                window.top.Ext.toast(res.message)
+                 this.$refs['formValidate'].resetFields();
                 this.getTaskLog(this.transCode);
+            }else{
+                   window.top.Ext.toast(res.message)
             }
         });
     }, 
@@ -165,8 +168,8 @@ export default {
      */
     getTaskLog() {
       getTaskLog(this.transCode,this.currentPage,this.pageSize).then(res => {
-          this.pageTotal = res.dataCount;
-          this.logData = res.tableContent;
+        this.pageTotal = res.dataCount;
+        this.logData = res.tableContent;
       }).then(res=>{
             window.top.setTaskLogIframeHeight();
         });;
@@ -180,7 +183,7 @@ export default {
   },
   created() {
     this.transCode = this.$route.params.transCode; 
-    this.referenceId = this.$route.params.referenceId;
+    this.projectTaskId = this.$route.params.projectTaskId;
     this.getTaskLog();
   }
 };

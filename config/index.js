@@ -18,6 +18,10 @@ module.exports = {
       '/corebiz-api': {
         target: 'http://192.168.3.172:8888',
         changeOrigin: true
+      },
+      '/account-api': {
+        target: 'http://192.168.3.172:8888',
+        changeOrigin: true
       }
 
     },

@@ -132,6 +132,7 @@ export default {
         {
           title: "已授权用户、组织或职位",
           key: "objNames",
+          width: 200,
           render: (h, params) => {
             let objNames = params.row.objNames,
                 renderData = [];

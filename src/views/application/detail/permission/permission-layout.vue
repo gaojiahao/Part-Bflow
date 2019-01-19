@@ -11,9 +11,9 @@
     <!-- 数据源管理 -->
     <permission-data-source v-if="appType !== 'subject'" :isAdmin="isAdmin"></permission-data-source>
     <!-- 自定义数据源管理 -->
-    <custom-datasource :isAdmin="isAdmin"></custom-datasource>
+    <custom-datasource v-if="appType !== 'subject'" :isAdmin="isAdmin"></custom-datasource>
     <!-- 字段权限管理 -->
-    <field-permission :isAdmin="isAdmin"></field-permission>
+    <field-permission v-if="appType !== 'subject'" :isAdmin="isAdmin"></field-permission>
     <!-- （非会计类）子科目管理 -->
     <child-subject v-if="appType === 'subject'" :isAdmin="isAdmin"></child-subject>
     <!-- 报表视图 -->

@@ -5,12 +5,12 @@
 <template>
     <div class="app" style="margin-top:15px;">
         <Row class="app-action">
-            <Row class="app-action-title">
-                <h3>字段或字段组<a v-if="isAdmin" @click="showModal" class="app-action-title-add">添加</a>
-                </h3>
+            <Row v-if="!row" class="app-action-title">
+                <h3>字段或字段组<a v-if="isAdmin" @click="showModal" class="app-action-title-add">添加</a></h3>
                 <span class="warning-color marlr">应用字段授权给用户或用户组</span>
             </Row>
-            <div class="app-action-source">
+            <div :class="{'app-action-source':!row}">
+                <h3 v-if="isAdmin && row" @click="showModal" class="app-action-title-add"><Icon type="md-add" />添加</h3>
                 <Row>
                     <Table :columns="columns" :data="userSources" size="small"></Table>
                 </Row>
@@ -21,6 +21,7 @@
           @reGetData="reGetData" 
           :modalStatis="showActionModal"
           :isEdit="isEdit"
+          :row="row"
           :resourceId="resourceId"
           @emitPermissionModal="emitPermissionModal">
         </field-modal>
@@ -30,7 +31,9 @@
 <script>
 import {
   getFieldList,
-  deleteFieldPermission
+  deleteFieldPermission,
+  getFieldListByCalcRelCode,
+  deletePermissionByResourceId
 } from "@/services/appService.js";
 import FieldModal from './field-modal';
 
@@ -40,7 +43,8 @@ export default {
     FieldModal
   },
   props: {
-    isAdmin: Boolean
+    isAdmin: Boolean,
+    row: Object
   },
   data() {
     return {
@@ -48,6 +52,7 @@ export default {
       isEdit: false,
       resourceId: '',
       showActionModal: false,
+      isChildSubject: false,
       //监听modal是否添加权限
       isModalConfirm: 1000,
       actionData: [],
@@ -77,22 +82,43 @@ export default {
       this.showActionModal = false;
     },
     getFieldListData() {
-      getFieldList(this.listId).then(res => {
-        this.userSources = res;
-      });
+      if(this.row){
+        getFieldListByCalcRelCode(this.row.calcRelCode).then(res => {
+          if(res.success){
+            this.userSources = res.data;
+          }
+        })
+      }else{
+        getFieldList(this.listId).then(res => {
+          this.userSources = res;
+        });
+      }
     },
-    //删除自定义数据源
-    deleteDataSource(resourceId) {
+    //删除字段权限
+    deleteFieldSource(resourceId) {
       this.$Modal.confirm({
         title: "确认",
         content: "确认删除此数据源权限？",
         onOk: () => {
-          deleteFieldPermission(resourceId).then(res => {
-            if (res.success) {
-              this.$Message.success(res.message);
-              this.getFieldListData();
-            }
-          });
+          if(this.row){
+            deletePermissionByResourceId(resourceId).then(res => {
+              if (res.success) {
+                this.$Message.success(res.message);
+                this.getFieldListData();
+              }
+            }).catch(err => {
+              this.$Message.error(err.data.message);
+            });
+          }else{
+            deleteFieldPermission(resourceId).then(res => {
+              if (res.success) {
+                this.$Message.success(res.message);
+                this.getFieldListData();
+              }
+            }).catch(err => {
+              this.$Message.error(err.data.message);
+            });
+          }
         }
       });
     },
@@ -101,6 +127,7 @@ export default {
         {
           title: '字段或字段组',
           key: 'fields',
+          width: 200,
           render: (h,params) => {
             let express = params.row.fields.split('br'),
                 renderData = [];
@@ -138,7 +165,7 @@ export default {
                 {
                   on: {
                     click: () => {
-                      this.deleteDataSource(params.row.resourceId);
+                      this.deleteFieldSource(params.row.resourceId);
                     }
                   }
                 },

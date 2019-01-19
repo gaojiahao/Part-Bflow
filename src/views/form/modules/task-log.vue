@@ -37,7 +37,7 @@
           <li>
             <span>{{item.handlerName}}</span>
             <span>{{item.taskDate}}</span>
-            <span>{{`${item.logDeclarationHours} 小时`}}</span>
+            <span v-html="`${item.logDeclarationHours} 小时`"></span>
           </li>
            <li>
             <span style="font-weight:600">{{item.logTitle}}</span>
@@ -77,6 +77,7 @@ export default {
   data() {
     return {
         transCode:"",
+        projectTaskId:"",
         logData: [],
         modalFormData: {
             //变更日志表单数据
@@ -143,8 +144,7 @@ export default {
                     logTitle: this.modalFormData.logTitle,
                     taskDate:FormatDate(this.modalFormData.taskDate,'yyyy-MM-dd'),
                     logDeclarationHours: this.modalFormData.logDeclarationHours,
-                    projectTaskName:'测试',
-                    projectTaskCode:this.transCode,
+                    projectTaskId:this.projectTaskId,
                 },
                 comment:{
                     biComment:this.modalFormData.comments
@@ -153,9 +153,12 @@ export default {
         };
         saveTaskLog(formdata).then(res => {
             if (res.success) {
-                this.$Message.success(res.message);
-                this.$refs["formValidate"].resetFields();
+                window.top.Ext.toast(res.message)
+                this.modalFormData.logTitle="";
+                this.modalFormData.comments="";
                 this.getTaskLog(this.transCode);
+            }else{
+                   window.top.Ext.toast(res.message)
             }
         });
     }, 
@@ -165,8 +168,8 @@ export default {
      */
     getTaskLog() {
       getTaskLog(this.transCode,this.currentPage,this.pageSize).then(res => {
-          this.pageTotal = res.dataCount;
-          this.logData = res.tableContent;
+        this.pageTotal = res.dataCount;
+        this.logData = res.tableContent;
       }).then(res=>{
             window.top.setTaskLogIframeHeight();
         });;
@@ -180,6 +183,7 @@ export default {
   },
   created() {
     this.transCode = this.$route.params.transCode; 
+    this.projectTaskId = this.$route.params.projectTaskId;
     this.getTaskLog();
   }
 };

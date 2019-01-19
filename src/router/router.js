@@ -67,7 +67,7 @@ export const instanceCommetns = {
 }
 
 export const taskLog = {
-  path: '/taskLog/:transCode/:referenceId',
+  path: '/taskLog/:transCode/:projectTaskId',
   name: 'taskLog',
   meta: {
     title: 'RoleTask - 任务日志'

@@ -11,6 +11,21 @@
             left: 50px !important;
         }
   }
+  .hidden-field{
+    display: none;
+    list-style: none;
+    background-color: #fff;
+    padding: 5px;
+    margin-top: 8px;
+    li{
+      padding: 5px 0px 5px 20px;
+    }
+  }
+  .ivu-select-item:hover{
+    .hidden-field{
+      display: block;
+    }
+  }
 </style>
 
 <template>
@@ -24,7 +39,18 @@
                 <span slot="open">黑名单</span>
             </i-switch>
         </div>
-        <Table ref="actionRef" stripe height="200" :columns="fieldColumns" size="small" no-data-text="请点击新增添加" :data="fieldData"></Table>
+        <Table ref="actionRef" stripe height="200" :columns="fieldColumns" size="small" no-data-text="请点击新增添加" :data="fieldData">
+          <template slot-scope="{ row,index }" slot="fieldName">
+            <Select :value="row.fieldCode" @on-change="fieldSelectChange($event,index)" style="width:300px">
+                <Option v-for="(item,idx) of allFieldData" :label="item.fieldName" :value="item.fieldCode" :key="idx">
+                    <span class="select-field">{{ item.fieldName }}</span>
+                    <ul v-if="item.fieldAlias" class="hidden-field">
+                      <li v-for="(alia,k) of item.fieldAlias" :key="k">{{ `${alia.view}—${alia.alias}` }}</li>
+                    </ul>
+                </Option>
+            </Select>
+          </template>
+        </Table>
       </Row>
       <Row :gutter="8" style="margin-bottom:10px;">
         <Col span="4">
@@ -158,32 +184,7 @@ export default {
       fieldColumns: [
         {
           title: "字段",
-          key: "fieldName",
-          render: (h,params) => {
-              let renderData = [];
-              this.allFieldData.forEach(val => {
-                renderData.push(
-                  h('Option',{
-                      props: {
-                        value: val.fieldCode,
-                        parentCode: val.parentCode
-                      }
-                    },val.fieldName)
-                )
-              });
-            return h('div',[
-              h('Select',{
-                props: {
-                  value: params.row.fieldCode
-                },
-                on: {
-                  'on-change': value => {
-                    this.fieldData[params.index].fieldCode = value;
-                  }
-                }
-              },renderData)
-            ]);
-          }
+          slot: "fieldName"
         },
         {
           title: "操作",
@@ -360,6 +361,9 @@ export default {
     }
   },
   methods: {
+    fieldSelectChange(value,index) {
+      this.fieldData[index].fieldCode = value;
+    },
     emitUserModal() {
         this.showSelector.showUserSelector = false;
     },

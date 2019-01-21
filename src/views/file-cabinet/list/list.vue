@@ -87,7 +87,7 @@
         <!-- 详情信息 -->
         <Modal v-model="showFileModal" width="300" title="详情信息">
             <ul class="subarea-info">
-              <li>名称：<b>{{ fileInformation.name }}</b></li>
+              <li>名称：<b style="width:270px;word-break:break-all;">{{ fileInformation.name }}</b></li>
               <li>大小：<b>{{ fileInformation.size }}</b></li>
               <li>剩余空间：<b>{{ fileInformation.resiSpace }}</b></li>
               <li>可用空间：<b>{{ fileInformation.usedSpace }}</b></li>
@@ -451,9 +451,7 @@ export default {
     },
     //下载文件或文件夹
     downloadFiles(row) {
-      if(row.url){
-        window.open(row.url);
-      }
+      if(row.url) window.open(row.url);
     },
     //获取附件数据
     getAttachmentDatas() {

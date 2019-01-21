@@ -43,15 +43,16 @@
                 <template slot-scope="{ row }" slot="name">
                     <Icon v-if="row.isSubregion" class="subarea-icon" type="ios-grid" />
                     <Icon v-if="!row.isFile && !row.isSubregion" class="subarea-file-icon" type="md-albums" />
-                    <Icon v-if="row.isFile && row.suffix===null" class="subarea-icon" type="md-document" />
+                    <Icon v-if="row.isFile && !row.suffix" class="subarea-icon" type="md-document" />
                     <img 
-                    v-if="row.isFile && (row.suffix==='jpg'||row.suffix==='png'||row.suffix==='jepg'||row.suffix==='gif')" 
-                    :src="`/H_roleplay-si/filing/download?path=${row.path}`"/>
+                      v-if="row.isFile && (row.suffix==='jpg'||row.suffix==='png'||row.suffix==='jepg'||row.suffix==='gif')" 
+                      :src="row.url"/>
                     <span v-for="(data,k) of iconData" :key="k">
                       <img v-if="row.isFile && row.suffix===data.suffix" :src="data.src"/>
                     </span>
 
-                    <label>{{ row.name }}</label>
+                    <label v-if="row.type !== 'instance'">{{ row.name }}</label>
+                    <label v-else><b class="attach-instance" @click="goInstance(row)">{{ row.name }}</b></label>
                     <Poptip trigger="hover" placement="right-start" style="float:right;">
                         <span class="subarea-more">
                           <Icon type="ios-arrow-dropright-circle" />
@@ -59,7 +60,7 @@
                         <div slot="content">
                           <ul class="subarea-menu">
                             <li v-if="!row.isFile" @click="openFile(row)">打开</li>
-                            <li v-if="!row.isSubregion" @click="downloadFiles(row)">下载</li>
+                            <li v-if="!row.isSubregion && row.authority!=='仅浏览'" @click="downloadFiles(row)">下载</li>
                             <li v-if="!row.isSubregion && row.authority!=='仅浏览'" @click="copyFiles(row)">复制到...</li>
                             <li v-if="row.authority!=='仅浏览'" @click="renameFile(row)">重命名</li>
                             <li v-if="!row.isSubregion && row.authority!=='仅浏览'" @click="moveFiles(row)">移动到...</li>
@@ -86,7 +87,7 @@
         <!-- 详情信息 -->
         <Modal v-model="showFileModal" width="300" title="详情信息">
             <ul class="subarea-info">
-              <li>名称：<b>{{ fileInformation.name }}</b></li>
+              <li>名称：<b style="width:270px;word-break:break-all;">{{ fileInformation.name }}</b></li>
               <li>大小：<b>{{ fileInformation.size }}</b></li>
               <li>剩余空间：<b>{{ fileInformation.resiSpace }}</b></li>
               <li>可用空间：<b>{{ fileInformation.usedSpace }}</b></li>
@@ -122,7 +123,7 @@ import {
   uploadFile,
   downloadFile,
   copyFile,
-  moveFile, } from "@/services/fileCabinetService.js";
+  moveFile } from "@/services/fileCabinetService.js";
   import { getToken } from "@/utils/utils";
   import SubareaSetting from './subarea-setting.vue';
 
@@ -247,6 +248,10 @@ export default {
       }
       this.getAllFileData(backPath);
     },
+    //实例跳转
+    goInstance(row) {
+      window.open(`/Form/index.html?data=${row.link}`);
+    },
     //过滤
     fileFilter() {
       this.columns = this.fileColumns;
@@ -261,13 +266,17 @@ export default {
         if(row.isSubregion){
           if(row.authority === '仅浏览'){
             this.permissionSattus = false;
+          }else{
+            this.permissionSattus = true;
           }
         }
+          
         this.breadHeader.push({path: row.path,name:row.name});
         this.filePath = row.path;
         this.$router.push({path:`/fileCabinet/list`,query:{path:row.path}});
-        this.columns = this.fileColumns;
         this.getAllFileData(row.path);
+        this.columns = this.fileColumns;
+        
         sessionStorage.setItem('breadHeaderData',JSON.stringify(this.breadHeader));
       }else{
         this.downloadFiles(row);
@@ -278,7 +287,7 @@ export default {
       this.getAllFileData(item.path);
       this.filePath = item.path;
       sessionStorage.setItem('breadHeaderData',JSON.stringify(this.breadHeader));
-      this.$router.push({path:`/fileCabinet/list`,query:{path:row.path}});
+      this.$router.push({path:`/fileCabinet/list`,query:{path:item.path}});
     },
     goSubarea() {
       this.columns = this.subareaColumns;
@@ -442,9 +451,13 @@ export default {
     },
     //下载文件或文件夹
     downloadFiles(row) {
-      if(row.path){
-        window.open(`/H_roleplay-si/filing/download?path=${row.path}`);
-      }
+      if(row.url) window.open(row.url);
+    },
+    //获取附件数据
+    getAttachmentDatas() {
+      getAttachmentData().then(res => {
+        console.log(res);
+      })
     },
     //获取分区数据
     getAllFileData(path,searchValue) {

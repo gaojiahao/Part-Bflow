@@ -12,7 +12,6 @@
         }
   }
   .hidden-field{
-    display: none;
     list-style: none;
     background-color: #fff;
     padding: 5px;
@@ -21,122 +20,124 @@
       padding: 5px 0px 5px 20px;
     }
   }
-  .ivu-select-item:hover{
-    .hidden-field{
-      display: block;
-    }
-  }
 </style>
 
 <template>
-  <Modal v-model="showPermissionModal" :title="modalTitle" width="1000" :transfer="false" :styles="{top: '15px'}" :mask-closable="false" @on-visible-change="modalVisibleChange">
-    <div>
-      <Row :gutter="8" style="margin-bottom:10px;">
-        <div class="field-toolbar">
-            <Button @click="addNewField" type="info" shape="circle" style="margin-bottom:5px;">新增</Button>
-            <i-switch v-model="isBlack" @on-change="changeBlackWhiteList" size="large" class="black-white">
-                <span slot="close">白名单</span>
-                <span slot="open">黑名单</span>
-            </i-switch>
-        </div>
-        <Table ref="actionRef" stripe height="200" :columns="fieldColumns" size="small" no-data-text="请点击新增添加" :data="fieldData">
-          <template slot-scope="{ row,index }" slot="fieldName">
-            <Select :value="row.fieldCode" @on-change="fieldSelectChange($event,index)" style="width:300px">
-                <Option v-for="(item,idx) of allFieldData" :label="item.fieldName" :value="item.fieldCode" :key="idx">
-                    <span class="select-field">{{ item.fieldName }}</span>
-                    <ul v-if="item.fieldAlias" class="hidden-field">
-                      <li v-for="(alia,k) of item.fieldAlias" :key="k">{{ `${alia.view}—${alia.alias}` }}</li>
-                    </ul>
-                </Option>
-            </Select>
-          </template>
-        </Table>
-      </Row>
-      <Row :gutter="8" style="margin-bottom:10px;">
-        <Col span="4">
-        <Button @click="selectUserModal" type="info" shape="circle">选择用户</Button>
-        </Col>
-        <Col span="4">
-        <Button @click="selectGroupModal" type="info" shape="circle">选择组织</Button>
-        </Col>
-        <Col span="4">
-        <Button @click="selectRoleModal" type="info" shape="circle">选择职位</Button>
-        </Col>
-        <Col v-if="false" span="3">
-        <Button type="info" shape="circle">选择公司</Button>
-        </Col>
-      </Row>
-      <Row :gutter="8">
-        <Col span="24" class="permission-tab">
-          <Row style="margin-top:10px">
-            <Col span="3">
-              <b class="permission-title">用户</b>
-            </Col>
-            <Col span="21" class="member-body">
-              <Tag @on-close="deleteUser" v-for="(userData, index) of userSelectData" :key="index" :userId="userData.userId" closable color="warning">
-                {{ userData.nickname }}
+  <div>
+    <Modal v-model="showPermissionModal" :title="modalTitle" width="1000" :transfer="false" :styles="{top: '15px'}" :mask-closable="false" @on-visible-change="modalVisibleChange">
+      <div>
+        <Row :gutter="8" style="margin-bottom:10px;">
+          <div class="field-toolbar">
+              <Button @click="addNewField" type="info" shape="circle" style="margin-bottom:5px;">新增</Button>
+              <i-switch v-model="isBlack" @on-change="changeBlackWhiteList" size="large" class="black-white">
+                  <span slot="close">白名单</span>
+                  <span slot="open">黑名单</span>
+              </i-switch>
+          </div>
+          <Table ref="actionRef" stripe height="200" :columns="fieldColumns" size="small" no-data-text="请点击新增添加" :data="fieldData">
+            <template slot-scope="{ row,index }" slot="fieldName">
+              <Select ref="selectMenu" :value="row.fieldCode" @on-change="fieldSelectChange($event,index)" style="width:300px">
+                  <Option v-for="(item,idx) of allFieldData" :label="item.fieldName" :value="item.fieldCode" :key="idx">
+                      <span class="select-field">{{ item.fieldName }}</span>
+                      <span v-if="item.fieldAlias" @click.stop="showMoreField(item.fieldAlias)" style="float:right;color: #39f;"><Icon type="md-help" /></span>
+                  </Option>
+              </Select>
+            </template>
+          </Table>
+        </Row>
+        <Row :gutter="8" style="margin-bottom:10px;">
+          <Col span="4">
+          <Button @click="selectUserModal" type="info" shape="circle">选择用户</Button>
+          </Col>
+          <Col span="4">
+          <Button @click="selectGroupModal" type="info" shape="circle">选择组织</Button>
+          </Col>
+          <Col span="4">
+          <Button @click="selectRoleModal" type="info" shape="circle">选择职位</Button>
+          </Col>
+          <Col v-if="false" span="3">
+          <Button type="info" shape="circle">选择公司</Button>
+          </Col>
+        </Row>
+        <Row :gutter="8">
+          <Col span="24" class="permission-tab">
+            <Row style="margin-top:10px">
+              <Col span="3">
+                <b class="permission-title">用户</b>
+              </Col>
+              <Col span="21" class="member-body">
+                <Tag @on-close="deleteUser" v-for="(userData, index) of userSelectData" :key="index" :userId="userData.userId" closable color="warning">
+                  {{ userData.nickname }}
+                </Tag>
+              </Col>
+            </Row>
+            <Row class="permission-line"></Row>
+            <Row>
+              <Col span="3">
+              <b class="permission-title">组织</b>
+              </Col>
+              <Col span="21" class="member-body">
+              <Tag @on-close="deleteOrg" v-for="(orgData, index) of orgSelectData" :key="index" :orgId="orgData.id" closable color="success">
+                {{ orgData.name }}
               </Tag>
-            </Col>
-          </Row>
-          <Row class="permission-line"></Row>
-          <Row>
-            <Col span="3">
-            <b class="permission-title">组织</b>
-            </Col>
-            <Col span="21" class="member-body">
-            <Tag @on-close="deleteOrg" v-for="(orgData, index) of orgSelectData" :key="index" :orgId="orgData.id" closable color="success">
-              {{ orgData.name }}
-            </Tag>
-            </Col>
-          </Row>
-          <Row class="permission-line"></Row>
-          <Row>
-            <Col span="3">
-            <b class="permission-title">职位</b>
-            </Col>
-            <Col span="21" class="member-body">
-            <Tag @on-close="deleteDepartment" v-for="(departmentData, index) of departmentSelectData" :key="index" :depId="departmentData.id" closable color="primary">
-              {{ departmentData.name }}
-            </Tag>
-            </Col>
-          </Row>
-          <!-- <Row class="permission-line"></Row> -->
-          <Row v-if="false">
-            <Col span="3">
-            <b class="permission-title">公司</b>
-            </Col>
-            <Col span="21" class="member-body">
-            <Tag @on-close="deleteCompany" v-for="(companyData, index) of companySelectData" :key="index" :comId="companyData.groupId" closable color="primary">
-              {{ companyData.groupName }}
-            </Tag>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-      <!-- 用户modal -->
-      <user-selector 
-        :showUserSelector="showSelector.showUserSelector" 
-        @emitUserModal="emitUserModal" 
-        @userModalData="getUserModalData">
-      </user-selector>
-      <!-- 组织modal -->
-      <group-selector 
-        :showGroupSelector="showSelector.showGroupSelector" 
-        @emitGroupModal="emitGroupModal"
-        @groupModalData="getGroupModalData">
-      </group-selector>
-      <!-- 职位modal -->
-      <role-selector 
-        :showRoleSelector="showSelector.showRoleSelector" 
-        @emitRoleModal="emitRoleModal"
-        @roleModalData="getRoleModalData">
-      </role-selector>
-    </div>
-    <div slot="footer">
-        <Button type="default" @click="cancelAddPermission">取消</Button>
-        <Button type="primary" :disabled="isModalDisabled" @click="submitPermission">确定</Button>
-    </div>
-  </Modal>
+              </Col>
+            </Row>
+            <Row class="permission-line"></Row>
+            <Row>
+              <Col span="3">
+              <b class="permission-title">职位</b>
+              </Col>
+              <Col span="21" class="member-body">
+              <Tag @on-close="deleteDepartment" v-for="(departmentData, index) of departmentSelectData" :key="index" :depId="departmentData.id" closable color="primary">
+                {{ departmentData.name }}
+              </Tag>
+              </Col>
+            </Row>
+            <!-- <Row class="permission-line"></Row> -->
+            <Row v-if="false">
+              <Col span="3">
+              <b class="permission-title">公司</b>
+              </Col>
+              <Col span="21" class="member-body">
+              <Tag @on-close="deleteCompany" v-for="(companyData, index) of companySelectData" :key="index" :comId="companyData.groupId" closable color="primary">
+                {{ companyData.groupName }}
+              </Tag>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+        <!-- 用户modal -->
+        <user-selector 
+          :showUserSelector="showSelector.showUserSelector" 
+          @emitUserModal="emitUserModal" 
+          @userModalData="getUserModalData">
+        </user-selector>
+        <!-- 组织modal -->
+        <group-selector 
+          :showGroupSelector="showSelector.showGroupSelector" 
+          @emitGroupModal="emitGroupModal"
+          @groupModalData="getGroupModalData">
+        </group-selector>
+        <!-- 职位modal -->
+        <role-selector 
+          :showRoleSelector="showSelector.showRoleSelector" 
+          @emitRoleModal="emitRoleModal"
+          @roleModalData="getRoleModalData">
+        </role-selector>
+      </div>
+      <div slot="footer">
+          <Button type="default" @click="cancelAddPermission">取消</Button>
+          <Button type="primary" :disabled="isModalDisabled" @click="submitPermission">确定</Button>
+      </div>
+    </Modal>
+    <!-- 字段详情信息 -->
+    <Modal v-model="showFieldDetailModal" @on-cancel="cancel" width="300" title="对应视图的字段名称">
+        <ul class="hidden-field">
+          <li v-for="(alia,k) of fieldAlias" :key="k">{{ `${alia.view}—${alia.alias}` }}</li>
+        </ul>
+        <div slot="footer"></div>
+    </Modal>
+  </div>
 </template>
 
 <script>
@@ -177,8 +178,10 @@ export default {
       showPermissionModal: false,
       isModalDisabled: true,
       isBlack: true,
+      showFieldDetailModal: false,
       //已经配置的应用字段数据
       fieldData: [],
+      fieldAlias: [],
       //所有字段数据=>用于选择字段
       allFieldData: [],
       fieldColumns: [
@@ -361,6 +364,14 @@ export default {
     }
   },
   methods: {
+    cancel() {
+      this.$refs['selectMenu'].toggleMenu(false);
+    },
+    showMoreField(data) {
+      this.fieldAlias = data;
+      this.showFieldDetailModal = true;
+      this.$refs['selectMenu'].toggleMenu(false);
+    },
     fieldSelectChange(value,index) {
       this.fieldData[index].fieldCode = value;
     },

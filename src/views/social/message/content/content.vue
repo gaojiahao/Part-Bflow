@@ -46,6 +46,8 @@
                     <instance-change-notice :data="n" v-if="n.type=='instanceStatusChange'"></instance-change-notice>
 
                     <export-import-notice :data="n" v-if="n.type=='fileOut'"></export-import-notice>
+
+                    <project-task :data="n" v-if="n.type=='projectType'"></project-task>
                     
                 </div>
             </Col>
@@ -66,6 +68,7 @@ import InstanceCreateNotice from "@/views/social/message/notice-tpl/instance-cre
 import ChangeLogNotice from "@/views/social/message/notice-tpl/change-log-notice";
 import InstanceChangeNotice from "@/views/social/message/notice-tpl/instance-change-notice";
 import ExportImportNotice from "@/views/social/message/notice-tpl/export-import-notice";
+import ProjectTask from "@/views/social/message/notice-tpl/project-task";
 
 import Messageistory from "@/views/social/message/content/messageistory";
 
@@ -83,7 +86,8 @@ export default {
         ChangeLogNotice,
         InstanceChangeNotice,
         Messageistory,
-        ExportImportNotice
+        ExportImportNotice,
+        ProjectTask
     },
     data(){
         return {

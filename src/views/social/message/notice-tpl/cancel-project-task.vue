@@ -9,7 +9,7 @@
         <div>
             <span class="message-container-content">
                 <span class="message-container-creator notice-creator">路塔</span>
-                <span>:您有新的项目任务</span>
+                <span>:您的项目任务已取消</span>
                 <a @click="handleViewDetail">{{data.tempContent.transCode}}</a>
                 <span>项目名称</span>
                 【<strong>{{ data.tempContent.projectName }}</strong>】
@@ -24,7 +24,7 @@
 
 <script>
 export default {
-    name:'ProjectTask',
+    name:'CancelProjectTask',
     props:{
         data:'',
     },

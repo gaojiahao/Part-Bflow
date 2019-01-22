@@ -48,6 +48,8 @@
                     <export-import-notice :data="n" v-if="n.type=='fileOut'"></export-import-notice>
 
                     <project-task :data="n" v-if="n.type=='projectType'"></project-task>
+
+                    <cancel-project-task :data="n" v-if="n.type=='projectTaskRecall'"></cancel-project-task>
                     
                 </div>
             </Col>
@@ -69,6 +71,7 @@ import ChangeLogNotice from "@/views/social/message/notice-tpl/change-log-notice
 import InstanceChangeNotice from "@/views/social/message/notice-tpl/instance-change-notice";
 import ExportImportNotice from "@/views/social/message/notice-tpl/export-import-notice";
 import ProjectTask from "@/views/social/message/notice-tpl/project-task";
+import CancelProjectTask from "@/views/social/message/notice-tpl/cancel-project-task";
 
 import Messageistory from "@/views/social/message/content/messageistory";
 
@@ -87,7 +90,8 @@ export default {
         InstanceChangeNotice,
         Messageistory,
         ExportImportNotice,
-        ProjectTask
+        ProjectTask,
+        CancelProjectTask
     },
     data(){
         return {

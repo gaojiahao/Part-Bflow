@@ -17,7 +17,7 @@
     padding: 5px;
     margin-top: 8px;
     li{
-      padding: 5px 0px 5px 20px;
+      padding: 5px 0px;
     }
   }
 </style>
@@ -39,7 +39,14 @@
               <Select ref="selectMenu" :value="row.fieldCode" @on-change="fieldSelectChange($event,index)" style="width:300px">
                   <Option v-for="(item,idx) of allFieldData" :label="item.fieldName" :value="item.fieldCode" :key="idx">
                       <span class="select-field">{{ item.fieldName }}</span>
-                      <span v-if="item.fieldAlias" @click.stop="showMoreField(item.fieldAlias)" style="float:right;color: #39f;"><Icon type="md-help" /></span>
+                      <Poptip v-if="item.fieldAlias" trigger="hover" style="float:right;" transfer title="对应视图字段名称" placement="right">
+                        <span style="color: #39f;"><Icon type="md-help" /></span>
+                        <div slot="content">
+                          <ul class="hidden-field">
+                            <li v-for="(alia,k) of item.fieldAlias" :key="k">{{ `${alia.view}—${alia.alias}` }}</li>
+                          </ul>
+                        </div>
+                      </Poptip>
                   </Option>
               </Select>
             </template>
@@ -129,13 +136,6 @@
           <Button type="default" @click="cancelAddPermission">取消</Button>
           <Button type="primary" :disabled="isModalDisabled" @click="submitPermission">确定</Button>
       </div>
-    </Modal>
-    <!-- 字段详情信息 -->
-    <Modal v-model="showFieldDetailModal" @on-cancel="cancel" width="300" title="对应视图的字段名称">
-        <ul class="hidden-field">
-          <li v-for="(alia,k) of fieldAlias" :key="k">{{ `${alia.view}—${alia.alias}` }}</li>
-        </ul>
-        <div slot="footer"></div>
     </Modal>
   </div>
 </template>

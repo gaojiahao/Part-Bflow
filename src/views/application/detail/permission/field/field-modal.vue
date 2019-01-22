@@ -178,10 +178,8 @@ export default {
       showPermissionModal: false,
       isModalDisabled: true,
       isBlack: true,
-      showFieldDetailModal: false,
       //已经配置的应用字段数据
       fieldData: [],
-      fieldAlias: [],
       //所有字段数据=>用于选择字段
       allFieldData: [],
       fieldColumns: [
@@ -364,14 +362,6 @@ export default {
     }
   },
   methods: {
-    cancel() {
-      this.$refs['selectMenu'].toggleMenu(false);
-    },
-    showMoreField(data) {
-      this.fieldAlias = data;
-      this.showFieldDetailModal = true;
-      this.$refs['selectMenu'].toggleMenu(false);
-    },
     fieldSelectChange(value,index) {
       this.fieldData[index].fieldCode = value;
     },

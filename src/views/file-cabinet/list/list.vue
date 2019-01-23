@@ -30,6 +30,7 @@
             <Button v-if="filePath !== 'root' && permissionSattus" @click="addNewFile" class="toolbar-btn">新建文件夹</Button>
             <Upload 
               v-if="filePath !== 'root' && permissionSattus"
+              multiple
               class="toolbar-upload" 
               :action="`/H_roleplay-si/filing/upload?directory=${filePath}&cover=false`"
               :show-upload-list="false" 

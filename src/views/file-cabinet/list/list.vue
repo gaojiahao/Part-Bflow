@@ -256,9 +256,11 @@ export default {
     fileFilter() {
       this.columns = this.fileColumns;
       if(this.searchValue === ''){
-        this.getAllFileData(this.filePath);
+        this.getAllFileData('');
+        this.breadHeader = [{path: 'search',name:'搜索结果'}]
       }else{
         this.getAllFileData('',this.searchValue);
+        this.breadHeader = [{path: 'search',name:'搜索结果'}]
       }
     },
     openFile(row) {
@@ -270,8 +272,18 @@ export default {
             this.permissionSattus = true;
           }
         }
-          
-        this.breadHeader.push({path: row.path,name:row.name});
+        
+        if(this.breadHeader.length === 1){
+          if(this.breadHeader[0].path === 'search'){
+            this.breadHeader = [];
+            this.breadHeader.push({path: row.path,name:row.name});
+          }else{
+            this.breadHeader.push({path: row.path,name:row.name});
+          }
+        }else{
+          this.breadHeader.push({path: row.path,name:row.name});
+        }
+        
         this.filePath = row.path;
         this.$router.push({path:`/fileCabinet/list`,query:{path:row.path}});
         this.getAllFileData(row.path);

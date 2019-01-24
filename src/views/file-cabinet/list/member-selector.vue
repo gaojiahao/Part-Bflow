@@ -124,7 +124,6 @@ export default {
               });
             }
         });
-      
     },
     //选择用户
     selectUserClick(selection, row) {

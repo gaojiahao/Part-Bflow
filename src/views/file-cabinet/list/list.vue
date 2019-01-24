@@ -27,9 +27,10 @@
               </Input>
             </div>
             <Button v-if="filePath === 'root'" @click="subareaInfo" class="toolbar-btn">新建分区</Button>
-            <Button v-if="filePath !== 'root' && permissionSattus" @click="addNewFile" class="toolbar-btn">新建文件夹</Button>
+            <Button v-if="(filePath !== 'root' && filePath !== 'search') && permissionSattus" @click="addNewFile" class="toolbar-btn">新建文件夹</Button>
             <Upload 
-              v-if="filePath !== 'root' && permissionSattus"
+              v-if="(filePath !== 'root' && filePath !== 'search') && permissionSattus"
+              multiple
               class="toolbar-upload" 
               :action="`/H_roleplay-si/filing/upload?directory=${filePath}&cover=false`"
               :show-upload-list="false" 
@@ -241,11 +242,11 @@ export default {
       this.breadHeader.splice(this.breadHeader.length-1,1);
       if(this.breadHeader.length === 0){
         backPath = 'root';
-        this.filePath = 'root';
         this.columns = this.subareaColumns;
       }else{
         backPath = this.breadHeader[this.breadHeader.length-1].path;
       }
+      this.filePath = backPath;
       this.getAllFileData(backPath);
     },
     //实例跳转
@@ -255,10 +256,13 @@ export default {
     //过滤
     fileFilter() {
       this.columns = this.fileColumns;
+      this.filePath = 'search';
       if(this.searchValue === ''){
-        this.getAllFileData(this.filePath);
+        this.getAllFileData('');
+        this.breadHeader = [{path: 'search',name:'搜索结果'}];
       }else{
         this.getAllFileData('',this.searchValue);
+        this.breadHeader = [{path: 'search',name:'搜索结果'}];
       }
     },
     openFile(row) {
@@ -270,8 +274,18 @@ export default {
             this.permissionSattus = true;
           }
         }
-          
-        this.breadHeader.push({path: row.path,name:row.name});
+        
+        if(this.breadHeader.length === 1){
+          if(this.breadHeader[0].path === 'search'){
+            this.breadHeader = [];
+            this.breadHeader.push({path: row.path,name:row.name});
+          }else{
+            this.breadHeader.push({path: row.path,name:row.name});
+          }
+        }else{
+          this.breadHeader.push({path: row.path,name:row.name});
+        }
+        
         this.filePath = row.path;
         this.$router.push({path:`/fileCabinet/list`,query:{path:row.path}});
         this.getAllFileData(row.path);
@@ -315,7 +329,7 @@ export default {
       this.fileInformation = row;
       this.showFileModal = true;
     },
-    //新建分区
+    //新建文件夹
     addNewFile() {
       this.showModal = true;
       this.fileName = "";

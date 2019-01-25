@@ -36,7 +36,7 @@
           </div>
           <Table ref="actionRef" stripe height="200" :columns="fieldColumns" size="small" no-data-text="请点击新增添加" :data="fieldData">
             <template slot-scope="{ row,index }" slot="fieldName">
-              <Select ref="selectMenu" :value="row.fieldCode" @on-change="fieldSelectChange($event,index)" style="width:300px">
+              <Select ref="selectMenu" :value="row.fieldCode" filterable @on-change="fieldSelectChange($event,index)" style="width:300px">
                   <Option v-for="(item,idx) of allFieldData" :label="item.fieldName" :value="item.fieldCode" :key="idx">
                       <span class="select-field">{{ item.fieldName }}</span>
                       <Poptip v-if="item.fieldAlias" trigger="hover" style="float:right;" transfer title="对应视图字段名称" placement="right">

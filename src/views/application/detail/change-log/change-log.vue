@@ -9,6 +9,7 @@
       </div>
     <div class="timeline-box-form" v-if="isAdmin">
       <Form ref="formValidate" :label-width="120" :model="modalFormData" :rules="ruleValidate">
+        <b class="change-star" style="color:#e4393c;">*</b>
         <FormItem label="更新范围:" prop="scope" width="300">
           <Select multiple v-model="modalFormData.scope">
             <Option value="表单">表单</Option>
@@ -94,13 +95,6 @@ export default {
       },
       ruleValidate: {
         //变更日志表单校验
-        scope: [  
-          {
-            type: "array",
-            required: true,
-            message: "不允许为空" 
-          }
-        ],
         spendTime: [ 
           {
             required: true, 
@@ -138,7 +132,7 @@ export default {
     submitLog(event) {
       //校验提交的数据是否为空
       let valid;
-      if (this.logeditor.txt.html() === "<div></div>") {
+      if (this.logeditor.txt.html() === "<div></div>" || this.modalFormData.scope.length === 0) {
         this.$Message.error("必填项请输入！");
       } else {
         this.modalFormData.content = this.logeditor.txt.html();
@@ -159,8 +153,6 @@ export default {
             this.logeditor.txt.html(`<div></div>`);
             this.$refs["formValidate"].resetFields();
             this.getChangeLog();
-          } else {
-            //faild todo
           }
         });
       }

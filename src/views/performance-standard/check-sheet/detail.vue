@@ -129,19 +129,22 @@ export default {
     //添加新检查项目
     confirmAdd() {
       let updateData = {},saveData = [];
+      let valid ;
       this.$refs["formValidate"].validate(v => {
-        if (v) {
+          valid = v;
+      });
+
+       if (valid) {
           if(this.checkSheetId){
             updateData = {
               checkTableId: this.checkSheetId,
               orderNumber: this.data.length+1,
               title: this.formValidate.name,
-              content: this.formValidate.content,
-              id: this.data[this.formValidate.currentIndex].id
+              content: this.formValidate.content
             };
-
             if(this.formValidate.edit){
               updateData.orderNumber = this.formValidate.currentIndex;
+              updateData.id = this.data[this.formValidate.currentIndex].id;
               updateCheckItem(updateData).then(res => {
                 if(res.success){
                   this.$Message.success(res.message);
@@ -177,7 +180,6 @@ export default {
           }
           this.showModal = false;
         }
-      });
     },
     //保存新增点检表
     saveCheckSheet(isSave) {

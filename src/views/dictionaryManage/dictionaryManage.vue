@@ -223,7 +223,7 @@ export default {
     getDictionarybyParentId(parentId) {
       this.loading = true;
       getMenuByParentId(parentId).then(res => {
-        this.dictionaryData = res;
+        this.dictionaryData = res.tableContent;
         this.loading = false;
       });
     },

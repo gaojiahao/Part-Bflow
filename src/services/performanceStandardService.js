@@ -31,7 +31,7 @@ export const saveCheckContent = (data) =>  request('/H_roleplay-si/check/saveChe
  * @author XiaoYing
  * @description 修改点检表
  */
-export const updateCheckContent = (data) =>  request('/H_roleplay-si/check/updateCheckTableAndCheckItem',{},'POST',data);
+export const updateCheckContent = (data) =>  request('/H_roleplay-si/check/updateCheckTable',{},'POST',data);
 
 /**
  * @author XiaoYing
@@ -40,3 +40,15 @@ export const updateCheckContent = (data) =>  request('/H_roleplay-si/check/updat
 export const deleteCheckKeyTable = (checkKeyTableId) =>  request('/H_roleplay-si/check/deleteCheckTable',{
     checkTableId: checkKeyTableId
 },'POST');
+
+/**
+ * @author XiaoYing
+ * @description 保存新增点检表
+ */
+export const saveCheckItem = (data) =>  request('/H_roleplay-si/check/saveCheckItem',{},'POST',data);
+
+/**
+ * @author XiaoYing
+ * @description 修改新增点检表
+ */
+export const updateCheckItem = (data) =>  request('/H_roleplay-si/check/updateCheckContent',{},'POST',data);

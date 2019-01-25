@@ -19,7 +19,7 @@
         <Row class="check-detail-table">
           <div style="margin-bottom:15px">
             <span class="check-detail-btn" @click="addCheckItem">新增</span>
-            <div class="app-search">
+            <div v-if="checkSheetId" class="app-search">
               <Input 
                 @on-search="checkSheetItemFilter" 
                 :search="true" 
@@ -57,7 +57,9 @@
 import {
   listCheckContent,
   saveCheckContent,
-  updateCheckContent
+  updateCheckContent,
+  saveCheckItem,
+  updateCheckItem
 } from "@/services/performanceStandardService.js";
 
 export default {
@@ -126,16 +128,52 @@ export default {
     },
     //添加新检查项目
     confirmAdd() {
+      let updateData = {},saveData = [];
       this.$refs["formValidate"].validate(v => {
         if (v) {
-          if(this.formValidate.edit){
-            this.data[this.formValidate.currentIndex].title = this.formValidate.name;
-            this.data[this.formValidate.currentIndex].content = this.formValidate.content;
-          }else{
-            this.data.unshift({
+          if(this.checkSheetId){
+            updateData = {
+              checkTableId: this.checkSheetId,
+              orderNumber: this.data.length+1,
               title: this.formValidate.name,
-              content: this.formValidate.content
-            });
+              content: this.formValidate.content,
+              id: this.data[this.formValidate.currentIndex].id
+            };
+
+            if(this.formValidate.edit){
+              updateData.orderNumber = this.formValidate.currentIndex;
+              updateCheckItem(updateData).then(res => {
+                if(res.success){
+                  this.$Message.success(res.message);
+                  this.getCheckSheetItemData();
+                  this.searchValue = '';
+                }
+              })
+              .catch(error => {
+                this.$Message.error(error.data.message);
+              });
+            }else{
+              saveData.push(updateData);
+              saveCheckItem(saveData).then(res => {
+                if(res.success){
+                  this.$Message.success(res.message);
+                  this.getCheckSheetItemData();
+                  this.searchValue = '';
+                }
+              }).catch(error => {
+                this.$Message.error(error.data.message);
+              });
+            }
+          }else{
+            if(this.formValidate.edit){
+              this.data[this.formValidate.currentIndex].title = this.formValidate.name;
+              this.data[this.formValidate.currentIndex].content = this.formValidate.content;
+            }else{
+              this.data.unshift({
+                title: this.formValidate.name,
+                content: this.formValidate.content
+              });
+            }
           }
           this.showModal = false;
         }
@@ -172,8 +210,7 @@ export default {
             data = {
               id: this.checkSheetId,
               name: this.checkSheetName,
-              comment: this.checkSheetDesc,
-              jopCheckItemList: this.data
+              comment: this.checkSheetDesc
             };
             updateCheckContent(data)
               .then(res => {

@@ -244,11 +244,11 @@ export default {
       updateMenuItem(data).then(res => {
         if (res.success === true) {
           this.$Message.info("保存成功");
+          this.$set(row, "$isEdit", false);
         } else {
           this.$Message.error(res.message);
         }
       });
-      this.$set(row, "$isEdit", false);
     },
     deleteMenuItem(id) {
       this.$Modal.confirm({

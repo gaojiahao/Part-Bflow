@@ -278,13 +278,10 @@ export default {
         if(this.breadHeader.length === 1){
           if(this.breadHeader[0].path === 'search'){
             this.breadHeader = [];
-            this.breadHeader.push({path: row.path,name:row.name});
-          }else{
-            this.breadHeader.push({path: row.path,name:row.name});
           }
-        }else{
-          this.breadHeader.push({path: row.path,name:row.name});
         }
+
+        this.breadHeader.push({path: row.path,name:row.name});
         
         this.filePath = row.path;
         this.$router.push({path:`/fileCabinet/list`,query:{path:row.path}});

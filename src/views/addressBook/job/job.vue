@@ -37,7 +37,7 @@
           <FormItem label="职能类型:" :labelWidth="120" prop="functionType">
             <Select 
               v-model="formItem.functionType" 
-              @on-open-change="getFunctionType($event,'functionType')"
+              @on-change="onHandleFunctionValueChange"
               placeholder="请选择职能类型" 
               :disabled="isEdit" 
               :class="isEdit?'input-status-isedit':''"
@@ -59,7 +59,7 @@
            <FormItem label="职级通道:" :labelWidth="120" prop="rankPass">
             <Select 
               v-model="formItem.rankPass" 
-                @on-open-change="getFunctionType($event,'rankPass')"
+              @on-change="onHandleRankValueChange"
               placeholder="请选择职位类型" 
               :disabled="isEdit" 
               :class="isEdit?'input-status-isedit':''"
@@ -80,10 +80,10 @@
             </Select>
           </FormItem>
             <FormItem :labelWidth="120" label="小时成本" prop="hourCost"  style="font-size:16px">
-              <InputNumber v-model="formItem.hourCost" :step="0.1" :min="0.1"></InputNumber>
+              <InputNumber v-model="formItem.hourCost" :step="0.1" :min="0.1" :readonly="isEdit"></InputNumber>
           </FormItem>
             <FormItem :labelWidth="120" label="职责描述" style="font-size:16px">
-             <Input v-model="formItem.describe" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="职位描述"></Input>
+             <Input v-model="formItem.describe" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="职位描述" :readonly="isEdit" ></Input>
           </FormItem>
           <div class="baseinfo-container-divider" v-if="jobId && isEdit"></div>
           <FormItem label="创建者:" v-if="jobId && isEdit">
@@ -102,7 +102,7 @@
         <div class="baseinfo-container-action" @click="handleSubmitBoxs">
           <input type='submit' value="关闭" style="background-color:rgb(81, 90, 110)" class="baseinfo-container-action-submit" id="close" />
           <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" id="edit" v-if="jobId && isPermission" />
-          <input type='submit' value="保存" class="baseinfo-container-action-submit" id="save" v-show="!isEdit" />
+          <input type='submit' value="保存" style="background-color:rgb(31, 94, 197)" class="baseinfo-container-action-submit" id="save" v-show="!isEdit" />
           <input type='submit' value="归档" class="baseinfo-container-action-submit" id="file" v-show="!isEdit && formItem.status === 1" />
           <input type='submit' value="保存并新建" class="baseinfo-container-action-submit" id="saveAndAdd" v-if="!jobId"/>
           <input type='submit' value="保存草稿" class="baseinfo-container-action-submit" id="draft" v-show="!isEdit || !jobId" />
@@ -249,20 +249,27 @@ export default {
       this.actionIndex = index;
     },
 
+    onHandleFunctionValueChange(value){
+      if(!this.isEdit){
+        this.formItem.function ="";
+      }
+    },
+     onHandleRankValueChange(value){
+      if(!this.isEdit){
+        this.formItem.rank ="";
+      }
+     },
+
     //获取职能类型
     getFunctionType:function(value,type){
       if(!value){  //下拉框收起时
         return;
       }
       let action = new Map([
-        ['functionType',()=>{ this.formItem.function = "";}],
         ['function',()=>{return this.formItem.functionType}],
-        ['rankPass',()=>{this.formItem.rank = ""}],
         ['rank',()=>{return this.formItem.rankPass}],
       ]);
       let params = action.get(type)();
-      let isRequest = this.functionList[0]&&this.rankList[0]?false:true;
-
       if(type==='function'&& !params){
         this.$Message.error('职能类型不能为空');
         return;
@@ -273,7 +280,7 @@ export default {
       }
 
 
-      if(params && isRequest){
+      if(params){
         getFunctionType(params).then(res=>{
           switch(type){
             case 'function':

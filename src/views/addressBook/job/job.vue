@@ -102,8 +102,8 @@
         <div class="baseinfo-container-action" @click="handleSubmitBoxs">
           <input type='submit' value="关闭" style="background-color:rgb(81, 90, 110)" class="baseinfo-container-action-submit" id="close" />
           <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" id="edit" v-if="jobId && isPermission" />
-          <input type='submit' value="保存" style="background-color:rgb(31, 94, 197)" class="baseinfo-container-action-submit" id="save" v-show="!isEdit" />
-          <input type='submit' value="归档" class="baseinfo-container-action-submit" id="file" v-show="!isEdit && formItem.status === 1" />
+          <input type='submit' value="保存"  class="baseinfo-container-action-submit" id="save" v-show="!isEdit" />
+          <input type='submit' value="归档" style="background-color:rgb(31, 94, 197)" class="baseinfo-container-action-submit" id="file" v-show="!isEdit && formItem.status === 1" />
           <input type='submit' value="保存并新建" class="baseinfo-container-action-submit" id="saveAndAdd" v-if="!jobId"/>
           <input type='submit' value="保存草稿" class="baseinfo-container-action-submit" id="draft" v-show="!isEdit || !jobId" />
         </div>

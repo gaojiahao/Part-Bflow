@@ -34,26 +34,68 @@
           <FormItem label="职位名称:" style="font-size:16px" prop="name">
             <Input v-model="formItem.name" @on-blur="onGroupNameOutBlur" :readonly="isEdit" :class="isEdit?'input-status-isedit':''" />
           </FormItem>
-          <FormItem label="职位类型" :labelWidth="120" prop="type">
-            <Select v-model="formItem.type" placeholder="请选择职位类型" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
-              <Option value="M">管理类</Option>
-              <Option value="Y">营销类</Option>
-              <Option value="J">技术类</Option>
-              <Option value="Z">专业类</Option>
-              <Option value="C">操作类</Option>
+          <FormItem label="职能类型:" :labelWidth="120" prop="functionType">
+            <Select 
+              v-model="formItem.functionType" 
+              @on-open-change="getFunctionType($event,'functionType')"
+              placeholder="请选择职能类型" 
+              :disabled="isEdit" 
+              :class="isEdit?'input-status-isedit':''"
+              >
+              <Option v-for="(type, index) in functionTypeList" :value="type.value" :key="index+'_'+type.value">{{type.name}}</Option>
             </Select>
           </FormItem>
+          <FormItem label="职能:" :labelWidth="120" prop="function">
+            <Select 
+              v-model="formItem.function" 
+              @on-open-change="getFunctionType($event,'function')"
+              placeholder="请选择职能" 
+              :disabled="isEdit" 
+              :class="isEdit?'input-status-isedit':''"
+              >
+              <Option v-for="(type, index) in functionList" :value="type.value" :key="index+'_'+type.value">{{type.name}}</Option>
+            </Select>
+          </FormItem>
+           <FormItem label="职级通道:" :labelWidth="120" prop="rankPass">
+            <Select 
+              v-model="formItem.rankPass" 
+                @on-open-change="getFunctionType($event,'rankPass')"
+              placeholder="请选择职位类型" 
+              :disabled="isEdit" 
+              :class="isEdit?'input-status-isedit':''"
+              >
+                <Option v-for="(rankPass, index) in rankPassList" :value="rankPass.value" :key="index+'_'+rankPass.valeu">{{rankPass.name}}</Option>
+            </Select>
+           
+          </FormItem>
+            <FormItem label="职级:" :labelWidth="120" prop="rank">
+             <Select 
+              v-model="formItem.rank" 
+              @on-open-change="getFunctionType($event,'rank')"
+              placeholder="请选择职位类型" 
+              :disabled="isEdit" 
+              :class="isEdit?'input-status-isedit':''"
+              >
+                <Option v-for="(rank, index) in rankList" :value="rank.value" :key="index+'_'+rank.valeu">{{rank.name}}</Option>
+            </Select>
+          </FormItem>
+            <FormItem :labelWidth="120" label="小时成本" prop="hourCost"  style="font-size:16px">
+              <InputNumber v-model="formItem.hourCost" :step="0.1" :min="0.1"></InputNumber>
+          </FormItem>
+            <FormItem :labelWidth="120" label="职责描述" style="font-size:16px">
+             <Input v-model="formItem.describe" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="职位描述"></Input>
+          </FormItem>
           <div class="baseinfo-container-divider" v-if="jobId && isEdit"></div>
-          <FormItem label="创建者：" v-if="jobId && isEdit">
+          <FormItem label="创建者:" v-if="jobId && isEdit">
             <span>{{ tableContent.creator}}</span>
           </FormItem>
-          <FormItem label="创建时间：" v-if="jobId && isEdit">
+          <FormItem label="创建时间:" v-if="jobId && isEdit">
             <span>{{ tableContent.crtTime }}</span>
           </FormItem>
-          <FormItem label="修改者：" v-if="jobId && isEdit">
+          <FormItem label="修改者:" v-if="jobId && isEdit">
             <span>{{ tableContent.modifier}}</span>
           </FormItem>
-          <FormItem label="修改时间：" v-if="jobId && isEdit">
+          <FormItem label="修改时间:" v-if="jobId && isEdit">
             <span>{{ tableContent.modTime }}</span>
           </FormItem>
         </Form>
@@ -86,6 +128,7 @@ import {
   updateRoleBaseInfo,
   getObjDetailsCountByRoleId,
   checkoutFieldIsOnly,
+  getFunctionType,
   getListById
 } from "@/services/addressBookService.js";
 import MemberModal from "@/components/modal/Modal";
@@ -104,10 +147,20 @@ export default {
     return {
       formItem: {
         name: "",
-        type: "",
-        describe: "",
+        functionType: "",
+        function: "",
+        rank:"",
+        rankPass:"",
+        hourCost:0.1,
+        describe:"",
         status: -3
       },
+      functionTypeList:[],  //职能类型
+      functionList:[],  //职能
+      rankPassList:[],  //职级通道
+      rankList:[],  //职级
+
+
       tableContent:{},
       name: "",
       isEdit: true,
@@ -145,11 +198,39 @@ export default {
             trigger: "blur"
           }
         ],
-        type: [
+        functionType: [
           {
             required: true,
-            message: "请选择职位类型",
+            message: "请选择职能类型",
             trigger: "change"
+          }
+        ],
+        function: [
+          {
+            required: true,
+            message: "请选择职能",
+            trigger: "change"
+          }
+        ],
+        rankPass: [
+          {
+            required: true,
+            message: "请选择职级通道",
+            trigger: "change"
+          }
+        ],
+        rank: [
+          {
+            required: true,
+            message: "请选择职级",
+            trigger: "change"
+          }
+        ],
+        hourCost: [
+          {
+            required: true,
+            message: "请选择小时成本",
+               type: "number"
           }
         ]
       },
@@ -166,6 +247,44 @@ export default {
     },
     handlerViewChange(index) {
       this.actionIndex = index;
+    },
+
+    //获取职能类型
+    getFunctionType:function(value,type){
+      if(!value){  //下拉框收起时
+        return;
+      }
+      let action = new Map([
+        ['functionType',()=>{ this.formItem.function = "";}],
+        ['function',()=>{return this.formItem.functionType}],
+        ['rankPass',()=>{this.formItem.rank = ""}],
+        ['rank',()=>{return this.formItem.rankPass}],
+      ]);
+      let params = action.get(type)();
+      let isRequest = this.functionList[0]&&this.rankList[0]?false:true;
+
+      if(type==='function'&& !params){
+        this.$Message.error('职能类型不能为空');
+        return;
+      }
+       if(type==='rank'&& !params){
+        this.$Message.error('职级通道不能为空');
+        return;
+      }
+
+
+      if(params && isRequest){
+        getFunctionType(params).then(res=>{
+          switch(type){
+            case 'function':
+              this.functionList = res; 
+              break;
+            case 'rank':
+              this.rankList = res; 
+              break;
+          }
+        })
+      }
     },
 
     //按钮事件委托给父元素处理
@@ -345,11 +464,25 @@ export default {
         if (res.tableContent[0]) {
           let tableContent = res.tableContent[0];
           this.name = tableContent.name;
-           that.formItem.name = tableContent.name;
+          that.formItem.name = tableContent.name;
           that.formItem.type = tableContent.type;
           that.formItem.status = tableContent.status;
+          that.formItem.function = tableContent.function;
+          that.formItem.functionType = tableContent.functionType;
+          that.formItem.rank = tableContent.rank;
+           that.formItem.rankPass = tableContent.rankPass;
+          that.formItem.hourCost = tableContent.hourCost;
           that.formItem.describe = tableContent.describe;
           this.tableContent = tableContent;
+          
+          //获取职级
+          getFunctionType(tableContent.functionType).then(res=>{
+            this.functionList = res; 
+          })
+          //获取职能
+          getFunctionType(tableContent.rankPass).then(res=>{
+            this.rankList = res; 
+          })
         }
       });
       this.getObjDetailsCountByRoleId(this.jobId);
@@ -366,7 +499,17 @@ export default {
         if(!res[0].action.update){
           this.isPermission = false;
         }
-      });
+    });
+
+    //获取职能类型
+    getFunctionType('functionType').then(res=>{
+      this.functionTypeList = res; 
+    });
+
+     //获取职级通道
+    getFunctionType('functionPass').then(res=>{
+      this.rankPassList = res; 
+    })
   }
 };
 </script>

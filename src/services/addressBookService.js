@@ -435,6 +435,14 @@ export const updateRoleBaseInfo = (data) => request('/H_roleplay-si/sysRole/upda
 
 /**
  * @author GuoZheng
+ * @description 获取职能类型
+ */
+export const getFunctionType = (value) => request('/H_roleplay-si/base/dict/getListByValue', {
+  value: value,
+});
+
+/**
+ * @author GuoZheng
  * @description 添加职位成员
  */
 export const saveBatchChildRole = (roleId, userId) => request('/H_roleplay-si/ps/updateRelation', {

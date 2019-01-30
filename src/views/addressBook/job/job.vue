@@ -507,7 +507,7 @@ export default {
     });
 
      //获取职级通道
-    getFunctionType('functionPass').then(res=>{
+    getFunctionType('rankPass').then(res=>{
       this.rankPassList = res; 
     })
   }

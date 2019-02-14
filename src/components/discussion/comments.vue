@@ -278,7 +278,6 @@ export default {
                 this.imgName = img;
                 this.imgModalVisible = true;
             }
-            
         },
         handleViewFile:function (file) {
           window.open(file.attachment)  

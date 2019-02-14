@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <div class="bg_ff ">
+  <div class="bg_ff" style="padding:5px;">
        <Row class="app-resource-group-title">
             <h3>评论 
                 <b class="fr subscribe-bar">

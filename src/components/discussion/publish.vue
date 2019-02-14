@@ -37,7 +37,7 @@
             <Poptip 
                 v-show="allowFile"
                 placement="bottom-start" 
-                width="230" >
+                width="200" word-wrap >
                     <Icon 
                     type="md-images" 
                     class="choice-img"  
@@ -102,10 +102,11 @@
             <Poptip 
                 
                 v-show="allowFile"
+                transfer
                 placement="bottom-start" >
                 <Icon type="md-attach" size=24  class="choice-file" />文件
                  <span v-if="uploadFileList.length>0">({{uploadFileList.length}})</span>
-                <div slot="content">
+                <div slot="content" style="max-height:200px;max-width:280px;">
                     <p class="lh25 marbottom10" style="min-width:230px;">
                         <span>共{{uploadFileList.length}}份,您还能上传{{9-uploadFileList.length}}份</span>
                         <Button 
@@ -238,8 +239,12 @@ export default {
             this.uploadFileList = this.$refs.uploadFile.fileList;
         },
         handleView (name) {
-            this.imgName = name;
-            this.visible = true;
+            if(window.top.viewInsCommentsImg){
+                window.top.viewInsCommentsImg('/H_roleplay-si/ds/download?url='+name);
+            }else{
+                this.imgName = name;
+                this.visible = true;
+            }
         },
         handleRemove (file) {
             const fileList = this.$refs.upload.fileList;
@@ -277,7 +282,7 @@ export default {
             const check = this.uploadFileList.length < 9;
             if (!check) {
                 this.$Notice.warning({
-                    title: '您最多可以上传九分文件。 '
+                    title: '您最多可以上传九份文件。 '
                 });
             }
             return check;

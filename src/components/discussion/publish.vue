@@ -25,7 +25,7 @@
                     class="choice-face" 
                     type="ios-happy-outline"  
                     size=24 />表情
-                    <div class="api" slot="content">
+                    <div class="api-emotion" slot="content">
                         <img 
                             :src="n" 
                             width=24 v-for="n in faces" :key="n" 
@@ -45,7 +45,7 @@
                     <span v-if="uploadList.length>0">({{uploadList.length}})</span>
                     <div class="api" slot="content" >
                         <p class="lh25 marbottom10">
-                            <span>共{{uploadList.length}}张,您还能上传{{9-uploadList.length}}张</span>
+                            <span>共{{uploadList.length}}张,您还能上传<span style="color:#e4393c;">{{9-uploadList.length}}</span>张</span>
                             <Button class="fr" type="warning" v-if="uploadList.length>0" @click="handleClearImg">清空全部</Button>
                         </p>
                         <div 
@@ -102,13 +102,12 @@
             <Poptip 
                 
                 v-show="allowFile"
-                transfer
                 placement="bottom-start" >
                 <Icon type="md-attach" size=24  class="choice-file" />文件
                  <span v-if="uploadFileList.length>0">({{uploadFileList.length}})</span>
                 <div slot="content" style="max-height:200px;max-width:280px;">
                     <p class="lh25 marbottom10" style="min-width:230px;">
-                        <span>共{{uploadFileList.length}}份,您还能上传{{9-uploadFileList.length}}份</span>
+                        <span>共{{uploadFileList.length}}份,您还能上传<span style="color:#e4393c;">{{9-uploadFileList.length}}</span>份</span>
                         <Button 
                             class="fr" 
                             v-if="uploadFileList.length>0"
@@ -258,16 +257,10 @@ export default {
             file.url ='/H_roleplay-si/ds/download?url=' +  res.data[0].attacthment;
         },
         handleFormatError (file) {
-            this.$Notice.warning({
-                title: '系统提示',
-                desc: '图片 ' + file.name + '格式不支持, 请选择格式为jpg或者png的图片'
-            });
+            window.top.limitNotice('系统提示','图片 ' + file.name + '格式不支持, 请选择格式为jpg或者png的图片');
         },
         handleMaxSize (file) {
-            this.$Notice.warning({
-                title: '超过文件大小限制',
-                desc: '文件  ' + file.name + '太大,最多支持2M.'
-            });
+            window.top.limitNotice('超过文件大小限制','文件  ' + file.name + '太大,最多支持2M.');
         },
         handleBeforeImgUpload () {
             const check = this.uploadList.length < 9;
@@ -275,15 +268,14 @@ export default {
                 this.$Notice.warning({
                     title: '您最多可以上传九张图片。 '
                 });
+                window.top.limitNotice('提示','您最多可以上传九张图片。');
             }
             return check;
         },
         handleBeforeFileUpload () {
             const check = this.uploadFileList.length < 9;
             if (!check) {
-                this.$Notice.warning({
-                    title: '您最多可以上传九份文件。 '
-                });
+                window.top.limitNotice('提示','您最多可以上传九份文件。 ');
             }
             return check;
         },

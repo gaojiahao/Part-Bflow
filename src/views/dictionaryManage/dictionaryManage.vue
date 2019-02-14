@@ -62,7 +62,7 @@ export default {
                 domProps: {
                   value: params.row.shortName
                 },
-                style: { width: "120px" },
+                style: { width: "100px" },
                 on: {
                   input: function(event) {
                     params.row.shortName = event.target.value;
@@ -84,7 +84,7 @@ export default {
                 domProps: {
                   value: params.row.dictCode
                 },
-                style: { width: "100px" },
+                style: { width: "80px" },
                 on: {
                   input: function(event) {
                     params.row.dictCode = event.target.value;
@@ -106,7 +106,7 @@ export default {
                 domProps: {
                   value: params.row.value
                 },
-                style: { width: "150px" },
+                style: { width: "130px" },
                 on: {
                   input: function(event) {
                     params.row.value = event.target.value;
@@ -121,7 +121,7 @@ export default {
         {
           title: "类型",
           key: "type",
-          width: 150,
+          //width: 125,
           render: (h, params) => {
             if (params.row.$isEdit) {
               return h("input", {
@@ -244,11 +244,11 @@ export default {
       updateMenuItem(data).then(res => {
         if (res.success === true) {
           this.$Message.info("保存成功");
+          this.$set(row, "$isEdit", false);
         } else {
           this.$Message.error(res.message);
         }
       });
-      this.$set(row, "$isEdit", false);
     },
     deleteMenuItem(id) {
       this.$Modal.confirm({

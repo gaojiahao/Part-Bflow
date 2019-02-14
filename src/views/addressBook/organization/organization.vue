@@ -35,7 +35,7 @@
             <Input v-model="formItem.groupName" @on-blur="onGroupNameOutBlur" :readonly="isEdit" :class="isEdit?'input-status-isedit':''" />
           </FormItem>
 
-          <FormItem label="组织类型" :labelWidth="120" prop="groupType">
+          <FormItem label="组织类型:" :labelWidth="120" prop="groupType">
             <Select  v-model="formItem.groupType" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
               <Option value="M">管理层</Option>
               <Option value="A">事业部</Option>
@@ -45,7 +45,7 @@
               <Option value="G">小组</Option>
             </Select>
           </FormItem>
-          <FormItem label="组织职能" :labelWidth="120" prop="depFunction">
+          <FormItem label="组织职能:" :labelWidth="120" prop="depFunction">
             <Select v-model="formItem.depFunction" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
               <Option value="M">管理</Option>
               <Option value="S">销售</Option>
@@ -56,26 +56,26 @@
             </Select>
           </FormItem>
           <div class="baseinfo-container-divider"></div>
-          <FormItem label="组织负责人" :labelWidth="120" prop="principalName" style="margin-top:20px">
+          <FormItem label="组织负责人:" :labelWidth="120" prop="principalName" style="margin-top:20px">
             <Input @on-click="selectPrincipalModal" v-model="formItem.principalName" icon="md-arrow-dropdown" placeholder="选择用户" :readonly="isEdit" :class="isEdit?'input-status-isedit':''"></Input>
           </FormItem>
-          <FormItem label="上级组织" :labelWidth="120" prop="highGroup" style="margin-top:20px">
+          <FormItem label="上级组织:" :labelWidth="120" prop="highGroup" style="margin-top:20px">
             <Input @on-click="selectHighOrgModal" v-model="formItem.highGroup" icon="md-arrow-dropdown" placeholder="选择上级组织" :readonly="isEdit" :class="isEdit?'input-status-isedit':''"></Input>
           </FormItem>
           <FormItem v-if="hiddenInput" label="上级组织parentId" style="font-size:16px">
             <Input v-model="formItem.parentId" />
           </FormItem>
           <div class="baseinfo-container-divider" v-if="groupId && isEdit"></div>
-          <FormItem label="创建者：" v-if="groupId && isEdit">
+          <FormItem label="创建者:" v-if="groupId && isEdit">
             <span>{{ tableContent.creator}}</span>
           </FormItem>
-          <FormItem label="创建时间：" v-if="groupId && isEdit">
+          <FormItem label="创建时间:" v-if="groupId && isEdit">
             <span>{{ tableContent.crtTime }}</span>
           </FormItem>
-          <FormItem label="修改者：" v-if="groupId && isEdit">
+          <FormItem label="修改者:" v-if="groupId && isEdit">
             <span>{{ tableContent.modifier}}</span>
           </FormItem>
-          <FormItem label="修改时间：" v-if="groupId && isEdit">
+          <FormItem label="修改时间:" v-if="groupId && isEdit">
             <span>{{ tableContent.modTime }}</span>
           </FormItem>
         </Form>

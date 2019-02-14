@@ -37,7 +37,7 @@
             <Poptip 
                 v-show="allowFile"
                 placement="bottom-start" 
-                width="200" word-wrap >
+                width="235">
                     <Icon 
                     type="md-images" 
                     class="choice-img"  

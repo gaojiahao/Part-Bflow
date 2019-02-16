@@ -228,11 +228,15 @@ export default {
           maxWidth: 150,
           align: 'center',
           render: (h,params) => {
+            let isDefault = false;
+            if (params.row.isDefault === 1) {
+              isDefault = true;
+            }
             return h('Button',{
               props: {
                 type: 'error',
                 size: 'small',
-                disabled: !this.isUpdate
+                disabled: !this.isUpdate || isDefault
               },
               on: {
                 click: () => {
@@ -353,6 +357,11 @@ export default {
         this.loading = true;
         getRoleData(this.userId,this.rolePage.pageSize,this.rolePage.currentPage).then(res => {
           this.roleData = res.tableContent;
+
+           this.roleData.forEach(val => {
+            if(val.isDefault === 1) val._disabled = true;
+          });
+
           this.rolePage.total = res.dataCount;
           this.loading = false;
         })

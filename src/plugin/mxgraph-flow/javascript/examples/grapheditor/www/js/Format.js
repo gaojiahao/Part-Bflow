@@ -5654,6 +5654,12 @@ SubjectFormatPanel.prototype.addSubjects = function (container)
 	
 };
 
+
+SubjectFormatPanel.prototype.updateAccountRel = function (relation) {
+	$._rfd_http('/H_roleplay-si/calc/app/updateAccountRel', 'POST', JSON.stringify(relation), true, function (res) {
+		console.log(res);
+	});
+};
 /**
  * 添加科目描述信息
  */
@@ -5662,12 +5668,13 @@ SubjectFormatPanel.prototype.addSubject = function (relation,div)
 	var ui = this.editorUi;
 	var editor = ui.editor;
 	var graph = editor.graph;
+	var sb = this;
 
-	var updateAccountRel = function (relation) {
-		$._rfd_http('/H_roleplay-si/calc/app/updateAccountRel', 'POST', JSON.stringify(relation), true, function (res) {
-			console.log(res);
-		});
-	};
+	// var updateAccountRel = function (relation) {
+	// 	$._rfd_http('/H_roleplay-si/calc/app/updateAccountRel', 'POST', JSON.stringify(relation), true, function (res) {
+	// 		console.log(res);
+	// 	});
+	// };
 
 	//科目标题
 	div.appendChild(this.addSubjectTitle(relation,div));
@@ -5679,25 +5686,25 @@ SubjectFormatPanel.prototype.addSubject = function (relation,div)
 	}, function (checked) 
 	{
 		relation.status = checked?1:0;
-		updateAccountRel(relation);
+		sb.updateAccountRel(relation);
 	}));
 
 	// 核销方式
 	div.appendChild(this.createOption('启用按单核销', function () 
 	{
-		return relation.matchType === 1;
+		return relation.matchType === 2;
 	}, function (checked) {
-		relation.matchType = checked ? 1 : 0;
-		updateAccountRel(relation);
+		relation.matchType = checked ? 2 : 1;
+		sb.updateAccountRel(relation);
 	}));
 
 	//主动核销
 	div.appendChild(this.createOption('启用主动核销', function () 
 	{
-		return relation.verification === 1;
+		return relation.verification;
 	}, function (checked) {
-		relation.verification = checked ? 1 : 0;
-		updateAccountRel(relation);
+		relation.verification = checked;
+		sb.updateAccountRel(relation);
 	}));
 
 	//余额校验
@@ -5741,6 +5748,8 @@ SubjectFormatPanel.prototype.addSubjectTitle = function (relation,div)
  */
 SubjectFormatPanel.prototype.addAllowedNegativePanel = function (relation, div)
  {
+	var sb = this;
+	
 	// Label 余额校验
 	var allowedNegativePanel = div.cloneNode(false);
 	allowedNegativePanel.style.marginLeft = '0px';
@@ -5776,6 +5785,7 @@ SubjectFormatPanel.prototype.addAllowedNegativePanel = function (relation, div)
 
 	mxEvent.addListener(allowedNegativeSelect,'change', function (evt) {
 		relation.allowedNegative = allowedNegativeSelect.value;
+		sb.updateAccountRel(relation);
 		mxEvent.consume(evt);
 	});
 

@@ -93,7 +93,7 @@ Sidebar.prototype.init = function()
 	// this.addBasicPalette(dir);
 	// this.addStencilPalette('arrows', mxResources.get('arrows'), dir + '/arrows.xml',
 	// 	';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
-	// this.addUmlPalette(false);
+	this.addUmlPalette(false);
 	// this.addBpmnPalette(dir, false);
 	// this.addStencilPalette('flowchart', 'Flowchart', dir + '/flowchart.xml',
 	// 	';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
@@ -1017,9 +1017,34 @@ Sidebar.prototype.addRoletaskAppPalette = function (expand) {
 				menus: [menu]
 			}
 		}
-	}
-	$._rfd_http('/H_roleplay-si/ds/getMenu', 'GET', {}, true, function (res) {
+	};
 
+	$._rfd_http('/H_roleplay-si/ds/getListCalcConfig', 'GET', {}, true, function (res) {
+		// var listArray = [];
+		// res.map(function (list) {
+		// 	listArray.push(
+		// 			sb.addEntry(list.text, mxUtils.bind(sb, function () {
+		// 			var cell = new mxCell(
+		// 				list.transName,
+		// 				new mxGeometry(0, 0, 50, 50),
+		// 				'shape=image;html=1;fontSize=14;font-weight:bold;verticalLabelPosition=bottom;labelBackgroundColor=#f5f5f5;verticalAlign=top;imageAspect=0;image=/' + list.icon
+		// 			);
+		// 			cell.vertex = true;
+		// 			//设置业务属性
+		// 			sb.graph.setAttributeForCell(cell, 'placeholders', '1');
+		// 			sb.graph.setAttributeForCell(cell, 'listId', list.listId);
+		// 			sb.graph.setAttributeForCell(cell, 'listType', list.transType);
+		// 			sb.graph.setAttributeForCell(cell, 'templateId', list.templateId);
+		// 				cell.sbjRelation = list.calcConfig;
+
+		// 			return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height);
+		// 		}))
+		// 		);
+		// 	});
+		// sb.addPaletteFunctions('111', 'asdsad', false, listArray);
+		// });
+
+	
 		res.map(function (m) {
 			buildPalettes(m);
 		});
@@ -1031,14 +1056,20 @@ Sidebar.prototype.addRoletaskAppPalette = function (expand) {
 					sb.addEntry(list.text, mxUtils.bind(sb, function () {
 					var cell = new mxCell(
 						list.text,
-						new mxGeometry(0, 0, 60, 60),
-						'shape=image;html=1;fontSize=20;font-weight:bold;verticalLabelPosition=bottom;labelBackgroundColor=#f5f5f5;verticalAlign=top;imageAspect=0;image=/' + list.icon
+						new mxGeometry(0, 0, 50, 50),
+						'shape=image;html=1;fontSize=14;font-weight:bold;verticalLabelPosition=bottom;labelBackgroundColor=#f5f5f5;verticalAlign=top;imageAspect=0;image=/' + list.icon
 					);
-
 					cell.vertex = true;
+					//设置业务属性
 					sb.graph.setAttributeForCell(cell, 'placeholders', '1');
 					sb.graph.setAttributeForCell(cell, 'listId', list.listId);
 					sb.graph.setAttributeForCell(cell, 'listType', list.type);
+					sb.graph.setAttributeForCell(cell, 'transType', list.transType);
+					
+					// if (list.calcConfig){
+					// 	cell.sbjRelation = list.calcConfig;
+					// }
+					
 
 					return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height);
 				})));

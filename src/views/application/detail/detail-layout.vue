@@ -103,6 +103,7 @@ export default {
       //请求应用详情信息
       getListData(uniqueId).then(res => {
         this.appData = res[0];
+        this.appData.comment = this.appData.comment.replace(/<br>/g,'\r\n'); 
         this.appType = this.appData.type;
         this.appTransType = this.appData.transType;
 

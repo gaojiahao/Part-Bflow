@@ -8,7 +8,6 @@
                 <img width="40" :src="nav.icon" >
                 <div class="navigation-list-item-appinfo">
                     <div class="font14"> {{nav.listName}}</div>
-                    <div style="color: #5c7893;"><p v-html="nav.comment"></p></div>
                 </div>
 
                 <Badge class="navigation-list-item-msgcount" :count="nav.unreadNum" overflow-count="99" >
@@ -36,7 +35,6 @@ export default {
         refreshNavListByMessage:function (params) {
               getNavListByMessage(this.params).then(res=>{
                 this.navs = res.tableContent;
-                
             });
         },
         //订阅消息

@@ -10,7 +10,7 @@
                 <span v-if="appInfo.administrator">管理员:{{appInfo.administrator}}</span>
                  <Icon class="fr" @click="handleExpend" type="ios-more" size="40" style="font-size: 40px;cursor: pointer;"/>
             </div>
-           <p class="content-header-comment" v-html="appInfo.comment"></p>
+           <pre class="content-header-comment">{{appInfo.comment}}</pre>
         </div>
         <Row class="content-container" >
             <Col :span="$route.name !='list'?'16':'24'" class="content-container-msglist messagescrollbar" id='msgList'>
@@ -154,6 +154,9 @@ export default {
         refreshAppInfo(){
             getListData(this.listId).then(res =>{
                 this.appInfo = res[0];
+                debugger
+                this.appInfo.comment = this.appInfo.comment.replace(/<br>/g,'\r\n');
+                console.log(this.appInfo);
             });
         },
         handleViewDetail:function () {

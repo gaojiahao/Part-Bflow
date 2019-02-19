@@ -59,8 +59,9 @@
             <Col span="6">修改时间： <span>{{ appData.modTime }}</span></Col>
           </Row>
           <Row class="pad5">
-            <Col span="24">说明：<span v-if="showAppEditAdmin" v-html="appData.comment"></span>
-              <div v-show="!showAppEditAdmin" ref="infoeditor"></div>
+            <Col span="24">说明：
+              <pre v-if="showAppEditAdmin">{{appData.comment}}</pre>
+              <Input v-show="!showAppEditAdmin" v-model="appData.comment" type="textarea" />
             </Col>
           </Row>
         </Col>
@@ -217,19 +218,20 @@ export default {
     editAppinfo() {
       if(this.isAdmin){
         this.showEditAppInfo = !this.showEditAppInfo;
-        this.infoeditor.txt.html(this.appData.comment);
       }
       //只有企业管理员可编辑应用管理员
       if(this.isCompanyAdmin){
         this.showAppEditAdmin = false;
       }
       if (!this.showEditBtn) {
+
         let params = {
           uniqueId: this.appData.uniqueId,
           title: this.appData.title,
           administrator: this.appData.userId,
-          comment: this.$refs.infoeditor?this.infoeditor.txt.html():''
+          comment: this.appData.comment.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>').replace(/\s/g, ' ')
         };
+
         saveAppInformation(params).then(res => {
           if (res.success) {
             this.$Message.success('更新成功!');
@@ -270,7 +272,7 @@ export default {
         this.total = res.dataCount;
         this.adminLoading = false;
         if(!this.infoeditor){
-          this.createEditor();
+          // this.createEditor();
         }
       });
     },

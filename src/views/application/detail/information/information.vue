@@ -127,7 +127,6 @@ import {
   getAllPermissionData,
   enabledForbiddenApp
 } from "@/services/appService.js";
-import E from 'wangeditor';
 
 export default {
   name: "appInfo",
@@ -271,9 +270,6 @@ export default {
         this.adminData = res.tableContent; 
         this.total = res.dataCount;
         this.adminLoading = false;
-        if(!this.infoeditor){
-          // this.createEditor();
-        }
       });
     },
     //启用禁用应用动作权限
@@ -327,35 +323,6 @@ export default {
         {operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
       ]);
       this.getAdmintrstorData(filter);
-    },
-    //create富文本编辑器
-    createEditor() {
-      this.infoeditor = new E(this.$refs.infoeditor)
-      this.infoeditor.customConfig.onchange = (html) => {
-        this.appData.comment = html;
-      }
-      this.infoeditor.customConfig.zIndex = 100;
-      this.infoeditor.customConfig.menus = [
-        'head',  // 标题
-        'bold',  // 粗体
-        'fontSize',  // 字号
-        'fontName',  // 字体
-        'italic',  // 斜体
-        'underline',  // 下划线
-        'strikeThrough',  // 删除线
-        'foreColor',  // 文字颜色
-        'backColor',  // 背景颜色
-        'link',  // 插入链接
-        'list',  // 列表
-        'justify',  // 对齐方式
-        'quote',  // 引用
-        'emoticon',  // 表情
-        'code',  // 插入代码
-        'undo',  // 撤销
-        'redo'  // 重复
-      ]
-      this.infoeditor.create();
-      this.infoeditor.txt.html(`<div></div>`);
     }
   },
   mounted() {

@@ -83,6 +83,9 @@
 
         function main(container) {
             
+            var currentUser = JSON.parse(sessionStorage.getItem('roletask.com.r2.cache')).currentUser;
+
+
             var graph = new mxGraph(container);
             graph.panningHandler.ignoreCell = true;
             graph.setEnabled(false);
@@ -104,7 +107,7 @@
 
             ds.login({
                 token: token,
-                username: ['黄孝辉', '28'].join('|')
+                username: [currentUser.nickname, currentUser.userId].join('|')
             }, function (success, data) { 
                 if (success) {
                     console.log('///');
@@ -113,7 +116,7 @@
                 }
             });
 
-            ds.event.subscribe("taskChange/" + '28', res => {
+            ds.event.subscribe("taskChange/" + currentUser.userId, res => {
                 res.tableContent.map(function (r) {
                     setAppTaskBadge(graph,r.listId,r.total);
                 });
@@ -163,6 +166,10 @@
             
             //mxEvent.DOUBLE_CLICK
             graph.addListener(mxEvent.DOUBLE_CLICK, function (sender, evt) {
+                
+            });
+
+            graph.addListener(mxEvent.CLICK, function (sender, evt) {
                 var e = evt.getProperty('event'); // mouse event
                 var cell = evt.getProperty('cell'); // cell may be null
 
@@ -170,16 +177,13 @@
                     // Do something useful with cell and consume the event
                     evt.consume();
 
-                    if(cell.isEdge()) return;
+                    if (cell.isEdge()) return;
 
                     var listId = cell.getAttribute('listId');
                     var listType = cell.getAttribute('listType');
                     window.top.changeToAppMain(listType, listId);
 
                 }
-            });
-
-            graph.addListener(mxEvent.CLICK, function (sender, evt) {
             });
 
               // Shows icons if the mouse is over a cell

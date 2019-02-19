@@ -262,7 +262,7 @@ export default {
                 if(!res.success){
                     this.$Notice.warning({
                         title: '系统提示',
-                        desc: '添加回复,请联系企业管理员!'
+                        desc: res.message
                     });
                     return;
                 }
@@ -278,7 +278,6 @@ export default {
                 this.imgName = img;
                 this.imgModalVisible = true;
             }
-            
         },
         handleViewFile:function (file) {
           window.open(file.attachment)  

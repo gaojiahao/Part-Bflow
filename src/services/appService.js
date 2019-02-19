@@ -315,7 +315,7 @@ export const getAppSubjectData = (listId,transType) => request('/H_roleplay-si/c
  * @author XiaoYing
  * 启用禁用应用科目
  */
-export const updateAccountRel = (data) => request('/H_roleplay-si/calc/app/updateAccountRel', data, 'POST');
+export const updateAccountRel = (data) => request('/H_roleplay-si/calc/app/updateAccountRel', {}, 'POST', data);
 
 /** 
  * @author XiaoYing

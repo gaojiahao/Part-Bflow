@@ -384,32 +384,32 @@ Format.prototype.refresh = function()
 		// Adds button to hide the format panel since
 		// people don't seem to find the toolbar button
 		// and the menu item in the format menu
-		if (this.showCloseButton)
-		{
-			var img = document.createElement('img');
-			img.setAttribute('border', '0');
-			img.setAttribute('src', Dialog.prototype.closeImage);
-			img.setAttribute('title', mxResources.get('hide'));
-			img.style.position = 'absolute';
-			img.style.display = 'block';
-			img.style.right = '0px';
-			img.style.top = '8px';
-			img.style.cursor = 'pointer';
-			img.style.marginTop = '1px';
-			img.style.marginRight = '17px';
-			img.style.border = '1px solid transparent';
-			img.style.padding = '1px';
-			img.style.opacity = 0.5;
-			label.appendChild(img)
+		// if (this.showCloseButton)
+		// {
+		// 	var img = document.createElement('img');
+		// 	img.setAttribute('border', '0');
+		// 	img.setAttribute('src', Dialog.prototype.closeImage);
+		// 	img.setAttribute('title', mxResources.get('hide'));
+		// 	img.style.position = 'absolute';
+		// 	img.style.display = 'block';
+		// 	img.style.right = '0px';
+		// 	img.style.top = '8px';
+		// 	img.style.cursor = 'pointer';
+		// 	img.style.marginTop = '1px';
+		// 	img.style.marginRight = '17px';
+		// 	img.style.border = '1px solid transparent';
+		// 	img.style.padding = '1px';
+		// 	img.style.opacity = 0.5;
+		// 	label.appendChild(img)
 			
-			mxEvent.addListener(img, 'click', function()
-			{
-				ui.actions.get('formatPanel').funct();
-			});
-		}
+		// 	mxEvent.addListener(img, 'click', function()
+		// 	{
+		// 		ui.actions.get('formatPanel').funct();
+		// 	});
+		// }
 		
-		div.appendChild(label);
-		this.panels.push(new DiagramFormatPanel(this, ui, div));
+		// div.appendChild(label);
+		// this.panels.push(new DiagramFormatPanel(this, ui, div));
 	}
 	else if (graph.isEditing())
 	{
@@ -5623,18 +5623,43 @@ SubjectFormatPanel.prototype.addSubjects = function (container)
 	var editor = ui.editor;
 	var graph = editor.graph;
 	var selCell = graph.getSelectionCell();
+	var listId = selCell.getAttribute('listId');
+	var transType = selCell.getAttribute('transType');
+
+	var sb = this;
 
 	if(!selCell) return;
+	$._rfd_http('/H_roleplay-si/calc/app/getSubSubjectByTransTypeAndAppId', 'GET', {
+		app_id:listId,
+		trans_type:transType
+	}, true, function (res) {
+		console.log(res);
+		if (res.success && res.obj){
+			selCell.sbjRelation = res.obj;
 
-	var sbjRelation = selCell.sbjRelation;
+			var sbjRelation = selCell.sbjRelation;
 
-	if(!sbjRelation) return;
-	var sb = this;
-	sbjRelation.map(function (relation) {
-		sb.container.appendChild(sb.addSubject(relation,sb.createPanel()));
+			if (!sbjRelation) return;
+
+			sbjRelation.map(function (s) {
+				s.transType = transType;
+				s.appId = listId;
+			});
+			
+			sbjRelation.map(function (relation) {
+				sb.container.appendChild(sb.addSubject(relation, sb.createPanel()));
+			});
+		}
 	});
+	
 };
 
+
+SubjectFormatPanel.prototype.updateAccountRel = function (relation) {
+	$._rfd_http('/H_roleplay-si/calc/app/updateAccountRel', 'POST', JSON.stringify(relation), true, function (res) {
+		console.log(res);
+	});
+};
 /**
  * 添加科目描述信息
  */
@@ -5643,6 +5668,13 @@ SubjectFormatPanel.prototype.addSubject = function (relation,div)
 	var ui = this.editorUi;
 	var editor = ui.editor;
 	var graph = editor.graph;
+	var sb = this;
+
+	// var updateAccountRel = function (relation) {
+	// 	$._rfd_http('/H_roleplay-si/calc/app/updateAccountRel', 'POST', JSON.stringify(relation), true, function (res) {
+	// 		console.log(res);
+	// 	});
+	// };
 
 	//科目标题
 	div.appendChild(this.addSubjectTitle(relation,div));
@@ -5654,22 +5686,25 @@ SubjectFormatPanel.prototype.addSubject = function (relation,div)
 	}, function (checked) 
 	{
 		relation.status = checked?1:0;
+		sb.updateAccountRel(relation);
 	}));
 
 	// 核销方式
 	div.appendChild(this.createOption('启用按单核销', function () 
 	{
-		return relation.matchType === 1;
+		return relation.matchType === 2;
 	}, function (checked) {
-		relation.matchType = checked ? 1 : 0;
+		relation.matchType = checked ? 2 : 1;
+		sb.updateAccountRel(relation);
 	}));
 
 	//主动核销
 	div.appendChild(this.createOption('启用主动核销', function () 
 	{
-		return relation.verification === 1;
+		return relation.verification;
 	}, function (checked) {
-		relation.verification = checked ? 1 : 0;
+		relation.verification = checked;
+		sb.updateAccountRel(relation);
 	}));
 
 	//余额校验
@@ -5713,6 +5748,8 @@ SubjectFormatPanel.prototype.addSubjectTitle = function (relation,div)
  */
 SubjectFormatPanel.prototype.addAllowedNegativePanel = function (relation, div)
  {
+	var sb = this;
+	
 	// Label 余额校验
 	var allowedNegativePanel = div.cloneNode(false);
 	allowedNegativePanel.style.marginLeft = '0px';
@@ -5748,6 +5785,7 @@ SubjectFormatPanel.prototype.addAllowedNegativePanel = function (relation, div)
 
 	mxEvent.addListener(allowedNegativeSelect,'change', function (evt) {
 		relation.allowedNegative = allowedNegativeSelect.value;
+		sb.updateAccountRel(relation);
 		mxEvent.consume(evt);
 	});
 

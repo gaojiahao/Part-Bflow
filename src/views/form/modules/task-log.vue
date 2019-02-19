@@ -175,10 +175,12 @@ export default {
       getTaskLog(this.transCode,this.currentPage,this.pageSize).then(res => {
         this.pageTotal = res.dataCount;
         this.logData = res.tableContent;
-
+        
+        if(!this.logeditor){
           setTimeout(() => {
-          this.createEditor();
-        },10)
+            this.createEditor();
+          },10)
+        }
       }).then(res=>{
             window.top.setTaskLogIframeHeight();
         });;

@@ -1019,137 +1019,7 @@ Sidebar.prototype.addRoletaskAppPalette = function (expand) {
 		}
 	};
 
-
-	var listDfc= {
-		'626c7662-a666-4a85-8781-e4674fe1479e': [
-			{
-				"accountStatus": 1,
-				"accountCode": "8800",
-				"calcRelCode": "8801",
-				"componentId": 993,
-				"accountName": "待交付",
-				"matchType": 1,
-				"accountType": 0,
-				"calcRelName": "待交付的订单",
-				"allowedNegative": 1,
-				"checkDirection": 1,
-				"verification": false,
-				"status": 1
-			},
-			{
-				"accountStatus": 1,
-				"accountCode": "7000",
-				"calcRelCode": "7001",
-				"componentId": 1394,
-				"accountName": "待计划",
-				"matchType": 1,
-				"accountType": 0,
-				"calcRelName": "待计划的订单",
-				"allowedNegative": 1,
-				"checkDirection": 1,
-				"verification": true,
-				"status": 1
-			},
-			{
-				"accountStatus": 1,
-				"accountCode": "2400",
-				"calcRelCode": "2401",
-				"componentId": 1533,
-				"accountName": "待收预收款",
-				"matchType": 1,
-				"accountType": 0,
-				"calcRelName": "待收预收款",
-				"allowedNegative": 1,
-				"checkDirection": 1,
-				"verification": false,
-				"status": 1
-			}],
-		'867e0b4f-548f-4e08-873a-1b8e54333630': [{
-			"accountStatus": 1,
-			"accountCode": "7000",
-			"calcRelCode": "7001",
-			"componentId": 1004,
-			"accountName": "待计划",
-			"matchType": 2,
-			"accountType": 0,
-			"calcRelName": "待计划的订单",
-			"allowedNegative": 0,
-			"checkDirection": -1,
-			"verification": true,
-			"status": 1
-		},
-		{
-			"accountStatus": 1,
-			"accountCode": "1400",
-			"calcRelCode": "1406",
-			"componentId": 1077,
-			"accountName": "存货",
-			"matchType": 1,
-			"accountType": 1,
-			"calcRelName": "存货",
-			"allowedNegative": 1,
-			"checkDirection": 1,
-			"verification": false,
-			"status": 1
-		},
-		{
-			"accountStatus": 1,
-			"accountCode": "1400",
-			"calcRelCode": "1406",
-			"componentId": 1078,
-			"accountName": "存货",
-			"matchType": 1,
-			"accountType": 1,
-			"calcRelName": "存货",
-			"allowedNegative": 0,
-			"checkDirection": -1,
-			"verification": true,
-			"status": 1
-		},
-		{
-			"accountStatus": 1,
-			"accountCode": "8500",
-			"calcRelCode": "8501",
-			"componentId": 1229,
-			"accountName": "待验收",
-			"matchType": 1,
-			"accountType": 0,
-			"calcRelName": "待验收加工订单",
-			"allowedNegative": 0,
-			"checkDirection": -1,
-			"verification": true,
-			"status": 1
-		},
-		{
-			"accountStatus": 1,
-			"accountCode": "8500",
-			"calcRelCode": "8501",
-			"componentId": 1230,
-			"accountName": "待验收",
-			"matchType": 1,
-			"accountType": 0,
-			"calcRelName": "待验收加工订单",
-			"allowedNegative": 1,
-			"checkDirection": 1,
-			"verification": false,
-			"status": 1
-		},
-		{
-			"accountStatus": 1,
-			"accountCode": "8700",
-			"calcRelCode": "8701",
-			"componentId": 1232,
-			"accountName": "需求",
-			"matchType": 1,
-			"accountType": 0,
-			"calcRelName": "主计划需求",
-			"allowedNegative": 1,
-			"checkDirection": 1,
-			"verification": false,
-			"status": 1
-		}]
-	}
-	$._rfd_http('/H_roleplay-si/ds/getMenu', 'GET', {}, true, function (res) {
+	$._rfd_http('/H_roleplay-si/ds/getListCalcConfig', 'GET', {}, true, function (res) {
 		// var listArray = [];
 		// res.map(function (list) {
 		// 	listArray.push(
@@ -1194,7 +1064,12 @@ Sidebar.prototype.addRoletaskAppPalette = function (expand) {
 					sb.graph.setAttributeForCell(cell, 'placeholders', '1');
 					sb.graph.setAttributeForCell(cell, 'listId', list.listId);
 					sb.graph.setAttributeForCell(cell, 'listType', list.type);
-					cell.sbjRelation = listDfc[list.listId];
+					sb.graph.setAttributeForCell(cell, 'transType', list.transType);
+					
+					// if (list.calcConfig){
+					// 	cell.sbjRelation = list.calcConfig;
+					// }
+					
 
 					return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height);
 				})));

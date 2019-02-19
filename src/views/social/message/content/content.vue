@@ -51,6 +51,7 @@
 
                     <cancel-project-task :data="n" v-if="n.type=='projectTaskRecall'"></cancel-project-task>
                     
+                    <business-opportunity-task  :data="n" v-if="n.type=='processStatusTime'"></business-opportunity-task>
                 </div>
             </Col>
             <Col span="8" v-if="$route.name !='list'" class="content-container-history" >
@@ -72,6 +73,7 @@ import InstanceChangeNotice from "@/views/social/message/notice-tpl/instance-cha
 import ExportImportNotice from "@/views/social/message/notice-tpl/export-import-notice";
 import ProjectTask from "@/views/social/message/notice-tpl/project-task";
 import CancelProjectTask from "@/views/social/message/notice-tpl/cancel-project-task";
+import BusinessOpportunityTask from "@/views/social/message/notice-tpl/business-opportunity-notice";
 
 import Messageistory from "@/views/social/message/content/messageistory";
 
@@ -91,7 +93,8 @@ export default {
         Messageistory,
         ExportImportNotice,
         ProjectTask,
-        CancelProjectTask
+        CancelProjectTask,
+        BusinessOpportunityTask
     },
     data(){
         return {
@@ -154,7 +157,6 @@ export default {
         refreshAppInfo(){
             getListData(this.listId).then(res =>{
                 this.appInfo = res[0];
-                debugger
                 this.appInfo.comment = this.appInfo.comment.replace(/<br>/g,'\r\n');
                 console.log(this.appInfo);
             });

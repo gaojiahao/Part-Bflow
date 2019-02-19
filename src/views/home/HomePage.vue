@@ -4,7 +4,7 @@
     <Spin size="large" fix v-if="spinShow"></Spin>
       <section v-for="(menuItem,i) in menu" :key="i" class="bg-white-lighter">
         <row class="menu-group">
-          <row>
+          <row v-if="menuItem.children.length>0">
             <h3 class="menu-group-title">{{menuItem.text}}</h3>
           </row>
           <row :gutter="16" >

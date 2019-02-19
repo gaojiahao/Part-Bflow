@@ -1,6 +1,6 @@
 <template>
   <row class="menu-field-set" :gutter="16">
-    <label>{{menuItem.text}}</label>
+    <label v-if="menuItem.children.length>0">{{menuItem.text}}</label>
 
     <Col span="4" v-for="(item,j) in menuItem.children" :key="j" >
       <menu-item :appinfo="item" :allTaskCount="allTaskCount"></menu-item>

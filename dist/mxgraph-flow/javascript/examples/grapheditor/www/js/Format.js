@@ -5670,12 +5670,6 @@ SubjectFormatPanel.prototype.addSubject = function (relation,div)
 	var graph = editor.graph;
 	var sb = this;
 
-	// var updateAccountRel = function (relation) {
-	// 	$._rfd_http('/H_roleplay-si/calc/app/updateAccountRel', 'POST', JSON.stringify(relation), true, function (res) {
-	// 		console.log(res);
-	// 	});
-	// };
-
 	//科目标题
 	div.appendChild(this.addSubjectTitle(relation,div));
 
@@ -5749,7 +5743,7 @@ SubjectFormatPanel.prototype.addSubjectTitle = function (relation,div)
 SubjectFormatPanel.prototype.addAllowedNegativePanel = function (relation, div)
  {
 	var sb = this;
-	
+
 	// Label 余额校验
 	var allowedNegativePanel = div.cloneNode(false);
 	allowedNegativePanel.style.marginLeft = '0px';
@@ -5826,6 +5820,7 @@ AppEdgeFormatPanel.prototype.addEdgeTyle = function ()
 	var sb = this;
 	var div = this.createPanel();
 
+
 	//title
 	div.appendChild(this.createTitle('类型'));
 
@@ -5872,7 +5867,6 @@ AppEdgeFormatPanel.prototype.addEdgeTyle = function ()
 	div.appendChild(subjectLineCheckBox);
 
 	mxEvent.addListener(quoteLineSpan, 'click', function (evt) {
-		console.log(sb);
 		quoteLineCheckBox.checked = true;
 		selCell.edgeType = 'quoteLine';
 		$('#subjectSelectPanel').remove();
@@ -5882,9 +5876,9 @@ AppEdgeFormatPanel.prototype.addEdgeTyle = function ()
 	mxEvent.addListener(quoteLineCheckBox, 'change', function (evt) {
 		quoteLineCheckBox.checked = true;
 		selCell.edgeType = 'quoteLine';
+		$('#subjectSelectPanel').remove();
 		mxEvent.consume(evt);
 	});
-
 
 	mxEvent.addListener(subjectLineSpan, 'click', function (evt) {
 		subjectLineCheckBox.checked = true;

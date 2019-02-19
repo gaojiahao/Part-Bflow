@@ -543,7 +543,7 @@ export default {
       if (value) {
         filter = JSON.stringify([
           {
-            property: "a.orderCode",
+            property: "t1.processCode",
             value: value,
             operator: "eq"
           }
@@ -620,7 +620,7 @@ export default {
       this.visible = false;
       let filter = JSON.stringify([
         {
-          property: "a.orderCode",
+          property: "t1.processCode",
           value: row.transCode,
           operator: "eq"
         }
@@ -689,7 +689,7 @@ export default {
      
       if (this.orderCode) {
         filter = JSON.stringify([
-          { operator: "eq", value: this.orderCode, property: "a.orderCode" }
+          { operator: "eq", value: this.orderCode, property: "t1.processCode" }
         ]);
       }
       getProcedureInfoFilter(

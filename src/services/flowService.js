@@ -54,7 +54,7 @@ export const getMockData = () => request('../mock/flow/bpg.json');
  * 获取订单列表
  * 
  */
-export const getOrders = (currentPage, filter) => request('/H_roleplay-si/ds/getOrders', {
+export const getOrders = (currentPage, filter) => request('/H_roleplay-si/ds/getProcessOrders', {
   page: currentPage,
   start: 0,
   limit: 6,

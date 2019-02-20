@@ -491,7 +491,7 @@ export default {
                 percent[item.procedureCode] = 0;
               } else {
                 percent[item.procedureCode] = Math.round(
-                  (item["myTodo"] / item["mytask"]) * 100
+                  (item["myToDo"] / item["mytask"]) * 100
                 );
               }
             });

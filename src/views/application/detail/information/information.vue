@@ -257,6 +257,8 @@ export default {
         window.top.location.href = '/Site/index.html#page/jobs';
       }else if(this.appData.uniqueId === '000004'){
         window.top.location.href = '/Site/index.html#page/companys';
+      }else if(this.appData.type === 'subject'){
+        window.top.location.href = '/Site/index.html#subject/'+this.appData.uniqueId;
       }else{
         window.top.location.href = '/Site/index.html#list/'+this.appData.uniqueId;
       }

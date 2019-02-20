@@ -25,55 +25,55 @@ Actions.prototype.init = function()
 	};
 
 	// File actions
-	this.addAction('new...', function() { graph.openLink(ui.getUrl()); });
-	this.addAction('open...', function()
-	{
-		window.openNew = true;
-		window.openKey = 'open';
+	// this.addAction('new...', function() { graph.openLink(ui.getUrl()); });
+	// this.addAction('open...', function()
+	// {
+	// 	window.openNew = true;
+	// 	window.openKey = 'open';
 		
-		ui.openFile();
-	});
-	this.addAction('import...', function()
-	{
-		window.openNew = false;
-		window.openKey = 'import';
+	// 	ui.openFile();
+	// });
+	// this.addAction('import...', function()
+	// {
+	// 	window.openNew = false;
+	// 	window.openKey = 'import';
 		
-		// Closes dialog after open
-		window.openFile = new OpenFile(mxUtils.bind(this, function()
-		{
-			ui.hideDialog();
-		}));
+	// 	// Closes dialog after open
+	// 	window.openFile = new OpenFile(mxUtils.bind(this, function()
+	// 	{
+	// 		ui.hideDialog();
+	// 	}));
 		
-		window.openFile.setConsumer(mxUtils.bind(this, function(xml, filename)
-		{
-			try
-			{
-				var doc = mxUtils.parseXml(xml);
-				editor.graph.setSelectionCells(editor.graph.importGraphModel(doc.documentElement));
-			}
-			catch (e)
-			{
-				mxUtils.alert(mxResources.get('invalidOrMissingFile') + ': ' + e.message);
-			}
-		}));
+	// 	window.openFile.setConsumer(mxUtils.bind(this, function(xml, filename)
+	// 	{
+	// 		try
+	// 		{
+	// 			var doc = mxUtils.parseXml(xml);
+	// 			editor.graph.setSelectionCells(editor.graph.importGraphModel(doc.documentElement));
+	// 		}
+	// 		catch (e)
+	// 		{
+	// 			mxUtils.alert(mxResources.get('invalidOrMissingFile') + ': ' + e.message);
+	// 		}
+	// 	}));
 
-		// Removes openFile if dialog is closed
-		ui.showDialog(new OpenDialog(this).container, 320, 220, true, true, function()
-		{
-			window.openFile = null;
-		});
-	}).isEnabled = isGraphEnabled;
+	// 	// Removes openFile if dialog is closed
+	// 	ui.showDialog(new OpenDialog(this).container, 320, 220, true, true, function()
+	// 	{
+	// 		window.openFile = null;
+	// 	});
+	// }).isEnabled = isGraphEnabled;
 	this.addAction('save', function() { ui.saveRoletaskBizGroup(false); }, null, null, Editor.ctrlKey + '+S').isEnabled = isGraphEnabled;
-	this.addAction('saveAs...', function() { ui.saveFile(true); }, null, null, Editor.ctrlKey + '+Shift+S').isEnabled = isGraphEnabled;
-	this.addAction('export...', function() { ui.showDialog(new ExportDialog(ui).container, 300, 230, true, true); });
+	// this.addAction('saveAs...', function() { ui.saveFile(true); }, null, null, Editor.ctrlKey + '+Shift+S').isEnabled = isGraphEnabled;
+	// this.addAction('export...', function() { ui.showDialog(new ExportDialog(ui).container, 300, 230, true, true); });
 	this.addAction('editDiagram...', function()
 	{
 		var dlg = new EditDiagramDialog(ui);
 		ui.showDialog(dlg.container, 620, 420, true, false);
 		dlg.init();
 	});
-	this.addAction('pageSetup...', function() { ui.showDialog(new PageSetupDialog(ui).container, 320, 220, true, true); }).isEnabled = isGraphEnabled;
-	this.addAction('print...', function() { ui.showDialog(new PrintDialog(ui).container, 300, 180, true, true); }, null, 'sprite-print', Editor.ctrlKey + '+P');
+	// this.addAction('pageSetup...', function() { ui.showDialog(new PageSetupDialog(ui).container, 320, 220, true, true); }).isEnabled = isGraphEnabled;
+	// this.addAction('print...', function() { ui.showDialog(new PrintDialog(ui).container, 300, 180, true, true); }, null, 'sprite-print', Editor.ctrlKey + '+P');
 	this.addAction('preview', function() { mxUtils.show(graph, null, 10, 10); });
 	
 	// Edit actions

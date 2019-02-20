@@ -181,7 +181,17 @@
 
                     var listId = cell.getAttribute('listId');
                     var listType = cell.getAttribute('listType');
-                    window.top.changeToAppMain(listType, listId);
+
+                     $._rfd_http('/H_roleplay-si/ds/list/getListById', 'GET', {
+                        uniqueId: listId
+                     }, true, function (res) {
+                        if(res[0].action.view){
+                            window.top.changeToAppMain(listType, listId);
+                        }else{
+                            alert('您暂无权限访问此应用!如果访问,请联系企业管理员');
+                        }
+                    });
+
 
                 }
             });

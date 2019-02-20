@@ -5763,6 +5763,8 @@ SubjectFormatPanel.prototype.addAllowedNegativePanel = function (relation, div)
 	allowedNegativeSelect.style.borderRadius = '5px';
 	allowedNegativeSelect.style.height = '25px';
 
+	allowedNegativeSelect.disabled = relation.accountType===1;
+
 	var balanceChecks  = [
 		{ name: '允许大于余额', value: 1 }, 
 		{ name: '不允许大于余额', value: 0 }, 

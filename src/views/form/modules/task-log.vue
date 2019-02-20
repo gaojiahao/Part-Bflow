@@ -21,7 +21,7 @@
         </FormItem>
 
          <FormItem label="备注:" prop="comments">
-           <div ref="logeditor"></div>
+          <Input  v-model="modalFormData.comments" type="textarea" />
         </FormItem>
 
         <FormItem>
@@ -44,7 +44,7 @@
             <span style="font-weight:600">{{item.logTitle}}</span>
           </li>
           <li>
-            <span v-html="item.comment"></span>
+            <pre>{{item.comment}}</pre>
           </li>
         </ul>
       </ul>
@@ -66,7 +66,6 @@
 <script>
 import { getTaskLog, saveTaskLog } from "@/services/appService.js";
 import { FormatDate } from "@/utils/utils";
-import E from 'wangeditor';
 export default {
   name: "TaskLog",
   components: {},
@@ -118,15 +117,13 @@ export default {
     submitLog(event) {
         //校验提交的数据是否为空
         let valid;
-
-        this.modalFormData.comments= this.logeditor.txt.html();
-
         this.$refs["formValidate"].validate(v => {
             valid = v;
         });
         if(!valid) {return;}
        
         let currentUser = this.$currentUser;
+        this.modalFormData.comments.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>').replace(/\s/g, ' ')
         let formdata = {
             listId: '2750a13d-295d-4776-9673-290c51bfc568',
             wfParam:null,
@@ -159,8 +156,7 @@ export default {
         saveTaskLog(formdata).then(res => {
             if (res.success) {
                 window.top.Ext.toast(res.message);
-                  this.logeditor.txt.html(`<div></div>`);
-                 this.$refs['formValidate'].resetFields();
+                this.$refs['formValidate'].resetFields();
                 this.getTaskLog(this.transCode);
             }else{
                    window.top.Ext.toast(res.message)
@@ -175,45 +171,12 @@ export default {
       getTaskLog(this.transCode,this.currentPage,this.pageSize).then(res => {
         this.pageTotal = res.dataCount;
         this.logData = res.tableContent;
-        
-        if(!this.logeditor){
-          setTimeout(() => {
-            this.createEditor();
-          },10)
-        }
+        this.logData.forEach(item=>{
+          item.comment.replace(/<br>/g,'\r\n'); 
+        })
       }).then(res=>{
             window.top.setTaskLogIframeHeight();
         });;
-    },
-
-     //create富文本编辑器
-    createEditor() {
-      this.logeditor = new E(this.$refs.logeditor)
-      this.logeditor.customConfig.onchange = (html) => {
-        this.modalFormData.content = html;
-      }
-      this.logeditor.customConfig.zIndex = 100;
-     
-      this.logeditor.customConfig.menus = [
-        'head',  // 标题
-        'bold',  // 粗体
-        'fontSize',  // 字号
-        'fontName',  // 字体
-        'italic',  // 斜体
-        'underline',  // 下划线
-        'strikeThrough',  // 删除线
-        'foreColor',  // 文字颜色
-        'backColor',  // 背景颜色
-        'link',  // 插入链接
-        'list',  // 列表
-        'justify',  // 对齐方式
-        'quote',  // 引用
-        'code',  // 插入代码
-        'undo',  // 撤销
-        'redo'  // 重复
-      ]
-      this.logeditor.create();
-      this.logeditor.$textContainerElem[0].style.height = '100px';
     },
 
     changeCurrentPage(currentPage) {

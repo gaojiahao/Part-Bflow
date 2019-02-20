@@ -22,7 +22,7 @@
       <div :class="[prefixCls+'-dropdown-select']">
         <Poptip content="content" width="560" v-model="visible">
           <span style="margin-left:10px" :class="[prefixCls+'dropdown-select-item']" @click="getSaleOrderList">
-            <Tag closable color="primary" @on-close='onHandleClearOrderTag'>{{orderCode?orderCode:'销售订单'}}</Tag>
+            <Tag closable color="primary" @on-close='onHandleClearOrderTag'>{{orderCode?orderCode:'加工订单'}}</Tag>
             <Icon type="ios-arrow-down"></Icon>
           </span>
           <div slot="content">
@@ -491,7 +491,7 @@ export default {
                 percent[item.procedureCode] = 0;
               } else {
                 percent[item.procedureCode] = Math.round(
-                  (item["myTodo"] / item["mytask"]) * 100
+                  (item["myToDo"] / item["mytask"]) * 100
                 );
               }
             });

@@ -234,7 +234,8 @@ export const saveAppInformation = (params) => request('/H_roleplay-si/app/update
   uniqueId: params.uniqueId,
   title: params.title,
   administrator: params.administrator,
-  comment: params.comment
+  comment: params.comment,
+  customIcon: params.customIcon
 }, 'POST');
 
 /**

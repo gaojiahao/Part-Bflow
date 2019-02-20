@@ -13,12 +13,37 @@
       </Breadcrumb>
     </header>
 
-    <Row class="font14">
-        <Col span="2" class="pad15">
-          <img :src="appData.icon" class="appIcon" />
-        </Col>
-        <Col span="21" class="pad15">
-          <h3> 
+    <Row class="font14" style="height:220px;">
+        <div class="app-left">
+          <Upload v-if="!showEditBtn" ref="upload"  
+              :show-upload-list="false" 
+              :on-success="handleSuccess" 
+              :format="['jpg','jpeg','png']" 
+              :max-size="2048" 
+              :on-format-error="handleFormatError" 
+              :on-exceeded-size="handleMaxSize" 
+              type="drag"
+              action="/H_roleplay-si/ds/upload" 
+              class="info-upload"
+              :headers="httpHeaders">
+              <div class="info-upload-container" v-if="!appData.icon">
+                  <img v-if="appData.icon" :src="appData.icon">
+                  <i v-if="!appData.icon" class="iconfont">&#xe63b;</i>
+              </div>
+              <div class="demo-upload-list info-upload-container" v-if="appData.icon">
+                  <img :src="appData.icon">
+                  <div class="demo-upload-list-cover">
+                      <Icon type="ios-trash-outline" color="#fff" size="30" @click.stop="handleRemove"></Icon>
+                      <Poptip trigger="hover" transfer content="还原为默认图标" placement="right">
+                        <Icon type="md-share-alt" color="#fff" size="30" @click.stop="handleReview" />
+                      </Poptip>
+                  </div>
+              </div>
+          </Upload>
+          <img v-else :src="appData.icon?appData.icon:false" class="appIcon">
+        </div>
+        <div class="app-middle">
+          <h3 style="padding-left:5px;"> 
             <span 
               @click="goList" 
               class="app-detail-title">{{ appData.title?appData.title:'待加载' }}
@@ -60,12 +85,12 @@
           </Row>
           <Row class="pad5">
             <Col span="24">说明：
-              <pre v-if="showAppEditAdmin">{{appData.comment}}</pre>
+              <pre class="app-pre" v-if="showAppEditAdmin">{{appData.comment}}</pre>
               <Input v-show="!showAppEditAdmin" v-model="appData.comment" type="textarea" />
             </Col>
           </Row>
-        </Col>
-        <Col span="1">
+        </div>
+        <div class="app-right">
           <Dropdown @on-click="changeAppStatus" class="app-dropdown">
                 <a href="javascript:void(0)">
                     操作
@@ -76,7 +101,7 @@
                     <DropdownItem name="forbidden">停用</DropdownItem>
                 </DropdownMenu>
             </Dropdown>
-        </Col>
+        </div>
     </Row>
     <!-- 应用管理员modal -->
     <Modal v-model="showAdminModal" title="请选择管理员" @on-ok="confirmModal" width="800">
@@ -127,6 +152,7 @@ import {
   getAllPermissionData,
   enabledForbiddenApp
 } from "@/services/appService.js";
+import { getToken } from "@/utils/utils";
 
 export default {
   name: "appInfo",
@@ -139,6 +165,9 @@ export default {
   },
   data() {
     return {
+      httpHeaders: {
+        Authorization: getToken()
+      },
       showEditAppInfo: true,
       showAppEditAdmin: true,
       showEditBtn: true,
@@ -190,6 +219,35 @@ export default {
     };
   },
   methods: {
+     //还原默认图标
+    handleReview() {
+        this.appData.icon = this.appData.defaultIcon;
+    },
+    //删除图标
+    handleRemove() {
+        this.appData.icon = '';
+        this.$refs['upload'].fileList.splice(0,this.$refs['upload'].fileList.length);
+    },
+    handleSuccess(res, file) {
+      this.appData.icon =
+        "/H_roleplay-si/ds/download?width=100&height=100&url=" +
+        res.data[0].attacthment;
+    },
+    //判断上传头像大小
+    handleMaxSize(file) {
+      this.$Notice.warning({
+        title: "文件大小超出范围",
+        desc: "文件大小最大为2M"
+      });
+    },
+
+    //判断上传图片格式是否有误
+    handleFormatError(file) {
+      this.$Notice.warning({
+        title: "文件格式不对",
+        desc: "请上传格式为png 或者 jpg 的图片"
+      });
+    },
     goList() {
       if(this.appData.uniqueId === '000001'){
         window.top.location.href = '/Site/index.html#page/users';
@@ -228,7 +286,8 @@ export default {
           uniqueId: this.appData.uniqueId,
           title: this.appData.title,
           administrator: this.appData.userId,
-          comment: this.appData.comment.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>').replace(/\s/g, ' ')
+          comment: this.appData.comment.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>').replace(/\s/g, ' '),
+          customIcon: this.appData.icon
         };
 
         saveAppInformation(params).then(res => {

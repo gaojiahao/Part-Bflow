@@ -12,8 +12,7 @@
       :isAdmin="isAdmin" 
       :isCompanyAdmin="isCompanyAdmin" 
       :appData="appData" 
-      @reloadData="reloadData" 
-      @changeAdmin="changeAdmin" 
+      @reloadData="reloadData"
       @enabledForbiddenAppPermission="enabledForbiddenAppPermission">
     </app-info>
 
@@ -91,9 +90,6 @@ export default {
     //通知应用启用禁用动作权限
     enabledForbiddenAppPermission() {
       this.enabledForbidden++;
-    },
-    changeAdmin() {
-      this.getAppInfoDatas();
     },
     //获取应用详情信息
     getAppInfoDatas() {

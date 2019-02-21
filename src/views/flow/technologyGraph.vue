@@ -394,7 +394,7 @@ export default {
           xCount--;
         }
 
-        this.defaultDisplayTask[data[i].procedureCode] = data[i].myTodo;
+        this.defaultDisplayTask[data[i].procedureCode] = data[i].myToDo;
       }
 
       data.forEach((item, itemIndex) => {

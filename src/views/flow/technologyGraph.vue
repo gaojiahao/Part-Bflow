@@ -681,7 +681,7 @@ export default {
       this.modalTitle = `任务列表 (${this.defaultDisplayTask[item.procedureCode]})`
       this.taskTableLoading = true;
       this.taskModalPage.procedureCode = item.procedureCode;
-      this.taskModalPage.currentPage = 0;
+      this.taskModalPage.currentPage = 1;
       //判断当前是已办任务还是待办任务
       if (~type.toLowerCase().indexOf("todo")) {
         this.taskTableColumns = [...this.todoColumns]

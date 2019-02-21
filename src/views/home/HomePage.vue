@@ -60,7 +60,7 @@ export default {
       }else{
       //获取菜单信息
       getMenu().then(res => {
-        this.urlMd5(res);
+      //  this.urlMd5(res);
         this.menuList = res;
         if(this.menuList.length>6){
           this.menu = this.menuList.slice(0,6);
@@ -80,30 +80,35 @@ export default {
       this.allTaskCount = res.tableContent;
     });
 
+    let canRun = false; 
     //滚动加载菜单栏
     window.onscroll = ()=>{
-      if(this.menu.length<this.menuList.length){
-        //获取文档完整的高度 
-        let bodyHeight =  Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-        //获取当前可视范围的高度  
-        let clientHeight = 0;
-        if(document.body.clientHeight && document.documentElement.clientHeight) {
-            clientHeight = Math.min(document.body.clientHeight, document.documentElement.clientHeight);
-        } else {
-            clientHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
+      clearTimeout(canRun); // 清除未执行的代码，重置回初始化状态
+			canRun = setTimeout(()=>{
+        if(this.menu.length<this.menuList.length){
+          //获取文档完整的高度 
+          let bodyHeight =  Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+          //获取当前可视范围的高度  
+          let clientHeight = 0;
+          if(document.body.clientHeight && document.documentElement.clientHeight) {
+              clientHeight = Math.min(document.body.clientHeight, document.documentElement.clientHeight);
+          } else {
+              clientHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
+          }
+          //获取滚动条当前的位置
+          let scrollTop = 0;
+          if(document.documentElement && document.documentElement.scrollTop) {
+              scrollTop = document.documentElement.scrollTop;
+          } else if(document.body) {
+              scrollTop = document.body.scrollTop;
+          }
+          if(scrollTop + clientHeight > bodyHeight -150){
+            let menuItem = this.menuList.slice(this.menu.length,this.menu.length+1)[0]
+            this.menu.push(menuItem)
+          }
         }
-        //获取滚动条当前的位置
-        let scrollTop = 0;
-        if(document.documentElement && document.documentElement.scrollTop) {
-            scrollTop = document.documentElement.scrollTop;
-        } else if(document.body) {
-            scrollTop = document.body.scrollTop;
-        }
-        if(scrollTop + clientHeight > bodyHeight -150){
-          let menuItem = this.menuList.slice(this.menu.length,this.menu.length+1)[0]
-          this.menu.push(menuItem)
-        }
-      }
+			
+      }, 300);
     }
   },
 

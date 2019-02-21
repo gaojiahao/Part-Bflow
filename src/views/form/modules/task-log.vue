@@ -135,10 +135,10 @@ export default {
             formData:{
                 baseinfo:{
                     handlerName: currentUser.nickname,
-                    handlerUnitName: currentUser.depts?currentUser.depts[0].name:'',
+                    handlerUnitName: currentUser.depts&&currentUser.depts[0] ? currentUser.depts[0].name:'',
                     handlerRoleName: currentUser.isSysRoleList[0].name,
                     handler: currentUser.userId,
-                    handlerUnit:  currentUser.depts?currentUser.depts[0].id:'',
+                    handlerUnit:  currentUser.depts&&currentUser.depts[0]?currentUser.depts[0].id:'',
                     handlerRole: currentUser.isSysRoleList[0].id,
                     creator: currentUser.userId,
                     modifer: currentUser.userId,

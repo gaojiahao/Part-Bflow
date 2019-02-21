@@ -92,7 +92,7 @@
             <g v-if="defaultDisplayTask[item.procedureCode]>0">
               <circle :cx="item.pointX" :cy="item.pointY" r="12" stroke-width="1" fill="red" />
               <text :x="item.pointX" :y="item.pointY-4" fill="#fff" class="svg-text-common-style" style="font-size:10px;font-weight:bold" @click="openTask(item)">
-                {{defaultDisplayTask[item.procedureCode]}}
+                {{defaultDisplayTask[item.procedureCode]>=100?'99+':defaultDisplayTask[item.procedureCode]}}
               </text>
             </g>
 
@@ -105,7 +105,7 @@
       </div>
     </main>
 
-    <task-detail-modal v-model="modalVisable" width="721" footerBtnAlign="right" title="任务列表" :footerHide="true">
+    <task-detail-modal v-model="modalVisable" width="721" footerBtnAlign="right" :title="modalTitle" :footerHide="true">
       <div style="margin-top: 10px">
         <Table :loading="taskTableLoading" :data="taskTableData" :columns="taskTableColumns" size="small" stripe></Table>
         <div style="margin: 10px;overflow: hidden">
@@ -205,7 +205,7 @@ export default {
       ordersPageSize: 6,
 
       modalVisable: false,
-
+      modalTitle:'',
       taskTableLoading: false,
       taskTableColumns: [],
       todoColumns: [
@@ -394,7 +394,7 @@ export default {
           xCount--;
         }
 
-        this.defaultDisplayTask[data[i].procedureCode] = data[i].myTodo;
+        this.defaultDisplayTask[data[i].procedureCode] = data[i].myToDo;
       }
 
       data.forEach((item, itemIndex) => {
@@ -678,6 +678,7 @@ export default {
       let type = this.type,
           filter = "";
       this.modalVisable = true;
+      this.modalTitle = `任务列表 (${this.defaultDisplayTask[item.procedureCode]})`
       this.taskTableLoading = true;
       this.taskModalPage.procedureCode = item.procedureCode;
       //判断当前是已办任务还是待办任务

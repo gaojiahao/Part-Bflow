@@ -13,7 +13,7 @@
             <Input v-model="modalFormData.logTitle" placeholder="请输入任务日志标题" />
         </FormItem> 
         <FormItem label="日期" prop="taskDate">
-            <DatePicker type="date" format="yyyy-MM-dd" v-model="modalFormData.taskDate"></DatePicker>
+            <DatePicker type="date" :options="disabledDate" format="yyyy-MM-dd" v-model="modalFormData.taskDate"></DatePicker>
         </FormItem>
         <FormItem label="申报工时:" prop="logDeclarationHours">
           <InputNumber v-model="modalFormData.logDeclarationHours"  :min="0.1" :step="0.1"/>
@@ -85,6 +85,11 @@ export default {
             taskDate:FormatDate(new Date(),"yyyy-MM-dd"),
             logDeclarationHours: 1,
             comments: ""
+        },
+        disabledDate: {
+          disabledDate (date) {
+              return date && date.valueOf() > Date.now() ;
+          }
         },
         ruleValidate: {
             //变更日志表单校验

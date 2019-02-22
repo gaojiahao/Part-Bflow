@@ -185,7 +185,8 @@ export default {
     setColumns(){
       let defaultColumns = [{
           title: "报表名称",
-          key: "title"
+          key: "title",
+          width: 200,
         },
         {
           title: "已授权用户、组织或职位",
@@ -233,7 +234,6 @@ export default {
           key: "list",
           align: "center",
           render: (h, params) => {
-            console.log(this.appType);
             return h("div", [
               h(
                 "a",

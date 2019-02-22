@@ -455,7 +455,7 @@ export default {
       getListChangeHistory(data).then(res => {
         this.fieldDetail = res.tableContent;
         this.dataTotal = res.dataCount;
-        let extColumns = res.tableContent[0].extColumns;
+        let extColumns = res.tableContent[0] ? res.tableContent[0].extColumns : [];
         if (extColumns.length > 0 && firstCloumn) {
           extColumns.forEach(function(e) {
             for (let key1 in e) {

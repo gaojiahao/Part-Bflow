@@ -245,7 +245,7 @@ export default {
     handleFormatError(file) {
       this.$Notice.warning({
         title: "文件格式不对",
-        desc: "请上传格式为png 或者 jpg 的图片"
+        desc: "请上传格式为png 、jpeg 或者 jpg 的图片"
       });
     },
     goList() {

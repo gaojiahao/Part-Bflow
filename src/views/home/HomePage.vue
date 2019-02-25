@@ -55,15 +55,15 @@ export default {
     if(cache){
       cache = cache?JSON.parse(cache):{};
       this.menuList = cache['/ds/getMenu'];
-      this.menu = this.menuList.slice(0,6);
+      this.menu = this.menuList.slice(0,7);
       this.spinShow = false;
       }else{
       //获取菜单信息
       getMenu().then(res => {
       //  this.urlMd5(res);
         this.menuList = res;
-        if(this.menuList.length>6){
-          this.menu = this.menuList.slice(0,6);
+        if(this.menuList.length>7){
+          this.menu = this.menuList.slice(0,7);
         }else{
           this.menu = menuList;
         }
@@ -107,7 +107,6 @@ export default {
             this.menu.push(menuItem)
           }
         }
-			
       }, 300);
     }
   },

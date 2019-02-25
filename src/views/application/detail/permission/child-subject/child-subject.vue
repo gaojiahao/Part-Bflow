@@ -19,11 +19,18 @@
 </template>
 
 <script>
-import { getSubAccountData,startSubAccountData,blockSubAccountData } from "@/services/appService.js";
+import { 
+  getSubAccountData,
+  startSubAccountData,
+  blockSubAccountData,
+  getChildPermissionListByListId } from "@/services/appService.js";
+import FieldPermission from '../field/field';
 
 export default {
   name: "ChildSubject",
-  components: {},
+  components: {
+    FieldPermission
+  },
   props: {
     isAdmin: Boolean
   },
@@ -32,43 +39,56 @@ export default {
       listId: this.$route.params.listId,
       subjectData: [],
       columns: [
-          {
+         {
+            type: 'expand',
+            width: 50,
+            render: (h, params) => {
+                return h(FieldPermission, {
+                    props: {
+                        row: params.row,
+                        isAdmin: this.isAdmin
+                    }
+                })
+            }
+        },
+        {
           title: "子科目名称",
           key: "calcRelName"
         },
         {
           title: "状态",
           key: "status",
-          render: (h, params) => {
+          render: (h,params) => {
             let isDisabled = false;
-
             if(params.accountType === 1){
               isDisabled = true;
             }
-
+            if(!this.isAdmin){
+              isDisabled = true;
+            }
             return h('Checkbox', {
               props: {
                 value: params.row.status === 1? true : false,
                 disabled: isDisabled
               },
               on: {
-                'on-change': (status) => {
-                  if(status){
+                'on-change': status => {
+                  if(status) {
                     startSubAccountData(params.row.calcRelCode).then(res => {
-                      if(res.success){
+                      if(res.success) {
                         this.$Message.success(res.message);
                       }else{
                         this.$Message.error(res.message);
                       }
-                    });
+                    })
                   }else{
                     blockSubAccountData(params.row.calcRelCode).then(res => {
-                      if(res.success){
+                      if(res.success) {
                         this.$Message.success(res.message);
                       }else{
                         this.$Message.error(res.message);
                       }
-                    });
+                    })
                   }
                 }
               }

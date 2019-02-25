@@ -101,6 +101,7 @@ export default {
         {
           title: '字段过滤',
           key: 'expression',
+          width: 200,
           render: (h,params) => {
             let express = params.row.expression.split('br'),
                 renderData = [];

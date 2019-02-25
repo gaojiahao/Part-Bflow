@@ -1,0 +1,130 @@
+.file{
+    .file-search{
+        float: right;
+        margin-left: 10px;
+        line-height: 50px;
+    }
+    .toolbar{
+        height: 50px;
+        padding: 0 18px;
+        background-color: #fff;
+        overflow: hidden;
+        &-line{
+            color: #ddd;
+            margin: 0px 5px;
+        }
+        &-back{
+            font-size: 16px;
+        }
+        &-back:hover{
+            color: #39f;
+            cursor: pointer;
+        }
+        &-bread{
+            line-height: 50px;
+        }
+        &-btn{
+            float: right;
+            margin-top: 9px;
+            margin-left: 2px;
+            background-color: rgb(0, 150, 136);
+            border-radius: 0px;
+            color: #fff;
+        }
+        &-upload{
+            float: right;
+            margin-left: 2px; 
+        }
+        .current-title{
+            font-weight: bold;
+        }
+        .bread-title:hover{
+            color: #39f;
+            cursor: pointer;
+        }
+    }
+    .toolbar-subarea:hover{
+        color: #39f;
+        cursor: pointer;
+    }
+    .subarea{
+        .attach-instance{
+            width: 240px;
+            height: 16px;
+            display: inline-block;
+            overflow: hidden;
+            color: #39f;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .ivu-table-row td:hover{
+            .subarea-more{
+                visibility:visible;
+            }
+        }
+        &-download{
+            font-size: 16px;
+            color: #46a93a;
+            cursor: pointer;
+            float:right;
+            width: 25px;
+        }
+        &-icon{
+            font-size: 25px;
+            color: #6fb1f4;
+            margin-right: 10px;
+        }
+        &-file-icon{
+            font-size: 25px;
+            color: #e0b337;
+            margin-right: 10px;
+        }
+        img{
+            width: 23px;
+            height: 23px;
+            vertical-align: middle;
+            margin-right: 12px;
+        }
+        label{
+            font-size: 13px;
+            font-weight: bold;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+        &-more{
+            font-size: 16px;
+            color: #46a93a;
+            cursor: pointer;
+            visibility:hidden;
+        }
+        strong{
+            font-size: 13px;
+        }
+        &-menu{
+            li{
+                padding: 5px 2px;
+            }
+            li:hover{
+                background-color: #95c9ff;
+                cursor: pointer;
+                color: #fff;
+                border-radius: 4px;
+            }
+        }
+    }
+}
+.subarea-info{
+    list-style: none;
+    li{
+        padding: 10px 10px;
+    }
+}
+.file-tree{
+    height: 400px;
+    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: auto;
+    .ivu-tree-arrow i{
+        font-size: 18px;
+    }
+}

@@ -3,6 +3,21 @@
     width: 100%;
     background-color: #fff;
   }
+  .app-left{
+    position: absolute;
+    top: 10px;
+    left: 20px;
+  }
+  .app-middle{
+    position: absolute;
+    top: 10px;
+    left: 140px;
+    width: 90%;
+    margin-right: 10%;
+  }
+  .app-right{
+    float: right;
+  }
   
   .app-header {
     height: 40px;
@@ -13,26 +28,48 @@
     color: #39f;
   }
   .appIcon{
-    width: 100%;
+    width: 100px;
+    height:100px;
+  }
+  .info-upload{
+    display: inline-block;
+    width:100px;
+    vertical-align: middle;
+    .info-upload-container{
+      width: 100px;
+      height:100px;
+      line-height: 100px;
+    }
+  }
+  .demo-upload-list-cover {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.53);
+  }
+  .demo-upload-list:hover .demo-upload-list-cover {
+    display: block;
+  }
+  .demo-upload-list-cover i {
+    cursor: pointer;
+  }
+  .demo-upload-list{
+    width: 100px;
+    img{
+      width: 100px;
+    }
   }
   .app-main {
     height: 178px;
     position: relative;
-    img {
-      // position: absolute;
-      // top: 50%;
-      // left: 15px;
-      // -webkit-transform: translateY(-50%);
-      // transform: translateY(-50%);
-      // height: 53%;
-      // width: 100%;
-    }
     .app-main-content {
       width: 94%;
       position: absolute;
       top: 8%;
       left: 10%;
-      // transform: translateY(-50%);
       .app-content-section {
         display: inline-block;
         width: 310px;
@@ -71,6 +108,14 @@
         font-size: 14px;
       }
     }
+  }
+  .app-pre{
+    width: 87%;
+    overflow-y: auto;
+    text-overflow: ellipsis;
+    white-space: pre-wrap;
+    height: 80px;
+    word-wrap: break-word;
   }
   .ivu-select-single .ivu-select-selection {
     border-top: none;

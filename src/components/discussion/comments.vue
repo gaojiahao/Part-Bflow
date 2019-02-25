@@ -16,7 +16,7 @@
                     <img   
                     @click="showUserInfo(comment.creator)" 
                     onerror="src='resources/images/icon/defaultUserPhoto.jpg'"
-                    slot="userCard" :src="comment.photo?comment.photo:'resources/images/icon/contactor.png'">
+                    slot="userCard" :src="comment.photo?comment.photo:'resources/images/icon/defaultUserPhoto.jpg'">
                 </my-pop-tip>
             </Col>
 
@@ -262,7 +262,7 @@ export default {
                 if(!res.success){
                     this.$Notice.warning({
                         title: '系统提示',
-                        desc: '添加回复,请联系企业管理员!'
+                        desc: res.message
                     });
                     return;
                 }
@@ -278,7 +278,6 @@ export default {
                 this.imgName = img;
                 this.imgModalVisible = true;
             }
-            
         },
         handleViewFile:function (file) {
           window.open(file.attachment)  

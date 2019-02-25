@@ -12,8 +12,7 @@
       :isAdmin="isAdmin" 
       :isCompanyAdmin="isCompanyAdmin" 
       :appData="appData" 
-      @reloadData="reloadData" 
-      @changeAdmin="changeAdmin" 
+      @reloadData="reloadData"
       @enabledForbiddenAppPermission="enabledForbiddenAppPermission">
     </app-info>
 
@@ -92,9 +91,6 @@ export default {
     enabledForbiddenAppPermission() {
       this.enabledForbidden++;
     },
-    changeAdmin() {
-      this.getAppInfoDatas();
-    },
     //获取应用详情信息
     getAppInfoDatas() {
       let uniqueId = this.listId,
@@ -103,6 +99,9 @@ export default {
       //请求应用详情信息
       getListData(uniqueId).then(res => {
         this.appData = res[0];
+        if(this.appData.comment){
+          this.appData.comment = this.appData.comment.replace(/<br>/g,'\r\n'); 
+        } 
         this.appType = this.appData.type;
         this.appTransType = this.appData.transType;
 

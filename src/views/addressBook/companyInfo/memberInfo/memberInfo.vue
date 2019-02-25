@@ -289,7 +289,7 @@ export default {
               if (res.success) {
                 this.$Message.success("删除成功!");
                 this.$emit("getInstanceCount");
-                this.getCompanyMember();
+                this.getCompanyMember(this.searchTableValue);
               }
             }).catch(error => {
                 this.$Message.error(error.data.message);
@@ -311,7 +311,7 @@ export default {
             if (res.success) {
               this.$Message.success("删除成功!");
               this.$emit("getInstanceCount");
-              this.getCompanyMember();
+              this.getCompanyMember(this.searchTableValue);
             }
           }).catch(error => {
               this.$Message.error(error.data.message);
@@ -393,7 +393,7 @@ export default {
     },
     memberPageSizeChange(pageSize) {
       this.memberPageSize = pageSize;
-      this.getCompanyMember();
+      this.getCompanyMember(this.searchTableValue);
     },
     //新增公司成员
     addCompanyMember() {
@@ -406,7 +406,7 @@ export default {
           if (res.success) {
             this.$Message.success("更新成功");
             this.$emit("getInstanceCount");
-            this.getCompanyMember();
+            this.getCompanyMember(this.searchTableValue);
           }
         }).catch(error => {
             this.$Message.error(error.data.message);

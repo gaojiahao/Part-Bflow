@@ -5,8 +5,8 @@
 <template>
   <div class="bg_ff ">
     <Row class="app-resource-group-title">
-        <h3>评论 
-            <b class="fr subscribe-bar">
+        <div class="commnet-title">评论 
+            <span class="fr subscribe-bar">
                <span > 
                     <span 
                         class="subcribeing" 
@@ -33,7 +33,7 @@
 
                 <span>
                     <Dropdown class="user-dropdown" @on-click="addSubscribeUsers" trigger="click" >
-                         <Icon type="md-person" size=18  /> {{subscribeInfo.subscribeNum}}
+                         <Icon type="md-person" size=18  /> <b>{{subscribeInfo.subscribeNum}}</b>
                          <Icon type="ios-arrow-down"></Icon>
                         <DropdownMenu slot="list">
                             <DropdownItem name="add">
@@ -46,8 +46,8 @@
                         </DropdownMenu>
                     </Dropdown>
                 </span>
-            </b>
-        </h3>
+            </span>
+        </div>
     </Row>
 
     <Row class="user-comment">
@@ -154,6 +154,7 @@ export default {
                 if(res.success){
                     this.$Message.success(res.message);
                     this.refreshSubscribeInfo();
+                    this.judgeIsSubscribeByRelationKey();
                 }
             }).catch(error => {
                 this.$Message.error(error.data.message);
@@ -179,6 +180,7 @@ export default {
                 if(res.success){
                     this.$Message.success(res.message);
                     this.refreshSubscribeInfo();
+                    this.judgeIsSubscribeByRelationKey();
                 }
             }).catch(error => {
                 this.$Message.error(error.data.message);
@@ -199,7 +201,7 @@ export default {
             if(!res.success){
                 this.$Notice.warning({
                     title: '系统提示',
-                    desc: '添加评论失败,请联系企业管理员!'
+                    desc: res.message
                 });
                 return;
             }

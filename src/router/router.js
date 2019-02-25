@@ -66,6 +66,16 @@ export const instanceCommetns = {
     import('@/views/form/instance-comments.vue')
 }
 
+export const taskLog = {
+  path: '/taskLog/:transCode/:projectTaskId',
+  name: 'taskLog',
+  meta: {
+    title: 'RoleTask - 任务日志'
+  },
+  component: () =>
+    import('@/views/form/modules/task-log.vue')
+}
+
 
 
 export const appRouter = [{
@@ -163,6 +173,9 @@ import { knowledgeBaseRouter } from '@/views/knowledge/router';
 //作业指导模块
 import { wrokGuideRouter } from '@/views/work-guide/router';
 
+//文件柜
+import { fileCabinetRouter } from '@/views/file-cabinet/router';
+
 export const routers = [
   loginRouter,
   flowRouter,
@@ -174,6 +187,7 @@ export const routers = [
   BusinessModuleGraph,
   bigProcess,
   fieldChangeHistoryRouter,
+  taskLog,
   instanceCommetns,
   enterpriseInfo,
   notifications,
@@ -184,5 +198,6 @@ export const routers = [
   checkSheetRouter,
   knowledgeBaseRouter,
   wrokGuideRouter,
+  fileCabinetRouter,
   ...appRouter
 ];

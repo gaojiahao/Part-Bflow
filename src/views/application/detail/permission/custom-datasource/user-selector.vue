@@ -187,7 +187,7 @@ export default {
         getAllUserCommentData(
           currentPageFilter?currentPageFilter:this.userCurrentPage, 
           this.pageSize, 
-          filter,
+          this.searchUserValue,
           this.commentData.relationkey,
           this.commentData.type).then(res => {
           this.userData = res.tableContent;

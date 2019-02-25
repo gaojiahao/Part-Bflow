@@ -384,32 +384,32 @@ Format.prototype.refresh = function()
 		// Adds button to hide the format panel since
 		// people don't seem to find the toolbar button
 		// and the menu item in the format menu
-		if (this.showCloseButton)
-		{
-			var img = document.createElement('img');
-			img.setAttribute('border', '0');
-			img.setAttribute('src', Dialog.prototype.closeImage);
-			img.setAttribute('title', mxResources.get('hide'));
-			img.style.position = 'absolute';
-			img.style.display = 'block';
-			img.style.right = '0px';
-			img.style.top = '8px';
-			img.style.cursor = 'pointer';
-			img.style.marginTop = '1px';
-			img.style.marginRight = '17px';
-			img.style.border = '1px solid transparent';
-			img.style.padding = '1px';
-			img.style.opacity = 0.5;
-			label.appendChild(img)
+		// if (this.showCloseButton)
+		// {
+		// 	var img = document.createElement('img');
+		// 	img.setAttribute('border', '0');
+		// 	img.setAttribute('src', Dialog.prototype.closeImage);
+		// 	img.setAttribute('title', mxResources.get('hide'));
+		// 	img.style.position = 'absolute';
+		// 	img.style.display = 'block';
+		// 	img.style.right = '0px';
+		// 	img.style.top = '8px';
+		// 	img.style.cursor = 'pointer';
+		// 	img.style.marginTop = '1px';
+		// 	img.style.marginRight = '17px';
+		// 	img.style.border = '1px solid transparent';
+		// 	img.style.padding = '1px';
+		// 	img.style.opacity = 0.5;
+		// 	label.appendChild(img)
 			
-			mxEvent.addListener(img, 'click', function()
-			{
-				ui.actions.get('formatPanel').funct();
-			});
-		}
+		// 	mxEvent.addListener(img, 'click', function()
+		// 	{
+		// 		ui.actions.get('formatPanel').funct();
+		// 	});
+		// }
 		
-		div.appendChild(label);
-		this.panels.push(new DiagramFormatPanel(this, ui, div));
+		// div.appendChild(label);
+		// this.panels.push(new DiagramFormatPanel(this, ui, div));
 	}
 	else if (graph.isEditing())
 	{
@@ -419,7 +419,23 @@ Format.prototype.refresh = function()
 	}
 	else
 	{
-		var containsLabel = this.getSelectionState().containsLabel;
+
+		if (graph.getSelectionCells().length === 1){
+			var selCell = graph.getSelectionCell();
+
+			if (selCell.isEdge()){
+				mxUtils.write(label, '数据流关系');
+				div.appendChild(label);
+				this.panels.push(new AppEdgeFormatPanel(this, ui, div));
+			}else{
+				mxUtils.write(label, '科目关系');
+				div.appendChild(label);
+				this.panels.push(new SubjectFormatPanel(this, ui, div));
+			}
+		}
+		
+
+		/* var containsLabel = this.getSelectionState().containsLabel;
 		var currentLabel = null;
 		var currentPanel = null;
 		
@@ -486,12 +502,15 @@ Format.prototype.refresh = function()
 		label.style.width = (containsLabel) ? '50%' : '33.3%';
 		var label2 = label.cloneNode(false);
 		var label3 = label2.cloneNode(false);
+		
 
 		// Workaround for ignored background in IE
 		label2.style.backgroundColor = this.inactiveTabBackgroundColor;
 		label3.style.backgroundColor = this.inactiveTabBackgroundColor;
 		
-		// Style
+		
+		
+		Style
 		if (containsLabel)
 		{
 			label2.style.borderLeftWidth = '0px';
@@ -510,7 +529,7 @@ Format.prototype.refresh = function()
 			addClickHandler(label, stylePanel, idx++);
 		}
 		
-		// Text
+		//Text
 		mxUtils.write(label2, mxResources.get('text'));
 		div.appendChild(label2);
 
@@ -527,9 +546,10 @@ Format.prototype.refresh = function()
 		arrangePanel.style.display = 'none';
 		this.panels.push(new ArrangePanel(this, ui, arrangePanel));
 		this.container.appendChild(arrangePanel);
-		
+
+
 		addClickHandler(label2, textPanel, idx++);
-		addClickHandler(label3, arrangePanel, idx++);
+		addClickHandler(label3, arrangePanel, idx++); */
 	}
 };
 
@@ -5574,3 +5594,395 @@ DiagramFormatPanel.prototype.destroy = function()
 		this.gridEnabledListener = null;
 	}
 };
+
+
+/**
+ * 科目关系面板
+ */
+SubjectFormatPanel = function (format, editorUi, container) 
+{
+	BaseFormatPanel.call(this, format, editorUi, container);
+	this.init();
+};
+
+mxUtils.extend(SubjectFormatPanel,BaseFormatPanel);
+
+SubjectFormatPanel.prototype.init = function ()
+{
+	this.container.style.borderBottom = 'none';
+	this.addSubjects(this.container);
+};
+
+
+/**
+ * Adds the label menu items to the given menu and parent.
+ */
+SubjectFormatPanel.prototype.addSubjects = function (container) 
+{
+	var ui = this.editorUi;
+	var editor = ui.editor;
+	var graph = editor.graph;
+	var selCell = graph.getSelectionCell();
+	var listId = selCell.getAttribute('listId');
+	var transType = selCell.getAttribute('transType');
+
+	var sb = this;
+
+	if(!selCell) return;
+	$._rfd_http('/H_roleplay-si/calc/app/getSubSubjectByTransTypeAndAppId', 'GET', {
+		app_id:listId,
+		trans_type:transType
+	}, true, function (res) {
+		console.log(res);
+		if (res.success && res.obj){
+			selCell.sbjRelation = res.obj;
+
+			var sbjRelation = selCell.sbjRelation;
+
+			if (!sbjRelation) return;
+
+			sbjRelation.map(function (s) {
+				s.transType = transType;
+				s.appId = listId;
+			});
+			
+			sbjRelation.map(function (relation) {
+				sb.container.appendChild(sb.addSubject(relation, sb.createPanel()));
+			});
+		}
+	});
+	
+};
+
+
+SubjectFormatPanel.prototype.updateAccountRel = function (relation) {
+	$._rfd_http('/H_roleplay-si/calc/app/updateAccountRel', 'POST', JSON.stringify(relation), true, function (res) {
+		console.log(res);
+	});
+};
+/**
+ * 添加科目描述信息
+ */
+SubjectFormatPanel.prototype.addSubject = function (relation,div) 
+{
+	var ui = this.editorUi;
+	var editor = ui.editor;
+	var graph = editor.graph;
+	var sb = this;
+
+	//科目标题
+	div.appendChild(this.addSubjectTitle(relation,div));
+
+	// 关系管理
+	div.appendChild(this.createOption('启用关系', function () 
+	{
+		return relation.status===1;
+	}, function (checked) 
+	{
+		relation.status = checked?1:0;
+		sb.updateAccountRel(relation);
+	}));
+
+	// 核销方式
+	div.appendChild(this.createOption('启用按单核销', function () 
+	{
+		return relation.matchType === 2;
+	}, function (checked) {
+		relation.matchType = checked ? 2 : 1;
+		sb.updateAccountRel(relation);
+	}));
+
+	//主动核销
+	div.appendChild(this.createOption('启用主动核销', function () 
+	{
+		return relation.verification;
+	}, function (checked) {
+		relation.verification = checked;
+		sb.updateAccountRel(relation);
+	}));
+
+	//余额校验
+	div.appendChild(this.addAllowedNegativePanel(relation,div));
+
+	return div;
+};
+
+/**
+ * 科目标题信息
+ */
+SubjectFormatPanel.prototype.addSubjectTitle = function (relation,div)
+{
+	var titlePanel = div.cloneNode(false);
+	titlePanel.style.padding = 0;
+	titlePanel.appendChild(this.createTitle(relation.calcRelName));
+
+	var descriptionPanel = document.createElement('div');
+	var accountTypeText = relation.accountType === 1 ? '会计类' : '非会计类';
+	var checkDirectionText;
+	var statusText = relation.accountStatus === 1 ? '已启用' : '已禁用';
+
+	if (relation.accountType === 1) {
+		checkDirectionText = relation.checkDirection === 1 ? '借方' : '贷方';
+	} else {
+		checkDirectionText = relation.checkDirection === 1 ? '增加方' : '减少方';
+	}
+
+	descriptionPanel.style.marginLeft = '0px';
+	descriptionPanel.style.paddingBottom = '4px';
+	descriptionPanel.style.fontWeight = 'normal';
+	descriptionPanel.style.borderWidth = '0px';
+	mxUtils.write(descriptionPanel, accountTypeText + '、' + checkDirectionText + '、' + statusText);
+	titlePanel.appendChild(descriptionPanel);
+
+	return titlePanel;
+};
+
+/**
+ * 科目余额校验
+ */
+SubjectFormatPanel.prototype.addAllowedNegativePanel = function (relation, div)
+ {
+	var sb = this;
+
+	// Label 余额校验
+	var allowedNegativePanel = div.cloneNode(false);
+	allowedNegativePanel.style.marginLeft = '0px';
+	allowedNegativePanel.style.paddingTop = '8px';
+	allowedNegativePanel.style.paddingBottom = '4px';
+	allowedNegativePanel.style.fontWeight = 'normal';
+	allowedNegativePanel.style.borderWidth = '0px';
+
+	mxUtils.write(allowedNegativePanel, '余额校验');
+
+	// Adds label position options
+	var allowedNegativeSelect = document.createElement('select');
+	allowedNegativeSelect.style.position = 'absolute';
+	allowedNegativeSelect.style.right = '20px';
+	allowedNegativeSelect.style.width = '120px';
+	allowedNegativeSelect.style.marginTop = '-2px';
+	allowedNegativeSelect.style.borderRadius = '5px';
+	allowedNegativeSelect.style.height = '25px';
+
+	allowedNegativeSelect.disabled = relation.accountType===1;
+
+	var balanceChecks  = [
+		{ name: '允许大于余额', value: 1 }, 
+		{ name: '不允许大于余额', value: 0 }, 
+		{ name: '允许一次大于余额', value: -1 }];
+
+
+	for (var i = 0; i < balanceChecks.length; i++) {
+		var allowedNegativeOption = document.createElement('option');
+		allowedNegativeOption.setAttribute('value', balanceChecks[i].value);
+		mxUtils.write(allowedNegativeOption, balanceChecks[i].name);
+		allowedNegativeSelect.appendChild(allowedNegativeOption);
+	}
+	$(allowedNegativeSelect).val(relation.allowedNegative);
+
+	mxEvent.addListener(allowedNegativeSelect,'change', function (evt) {
+		relation.allowedNegative = allowedNegativeSelect.value;
+		sb.updateAccountRel(relation);
+		mxEvent.consume(evt);
+	});
+
+	allowedNegativePanel.appendChild(allowedNegativeSelect);
+
+	return allowedNegativePanel;
+};
+
+
+/*
+ *应用间连接线信息
+ */
+AppEdgeFormatPanel = function (format, editorUi, container) 
+{
+	BaseFormatPanel.call(this, format, editorUi, container);
+	this.init();
+};
+
+mxUtils.extend(AppEdgeFormatPanel, BaseFormatPanel);
+
+/*
+ *连线信息
+ */
+AppEdgeFormatPanel.prototype.init = function () {
+	this.addEdgeTyle();
+	this.container.style.borderBottom = 'none';
+};
+
+/**
+ * 连线类型
+ */
+AppEdgeFormatPanel.prototype.addEdgeTyle = function () 
+{
+	var ui = this.editorUi;
+	var editor = ui.editor;
+	var graph = editor.graph;
+	var selCell = graph.getSelectionCell();
+	var sb = this;
+	var div = this.createPanel();
+
+
+	//title
+	div.appendChild(this.createTitle('类型'));
+
+	var quoteLineSpan = document.createElement('span');
+	quoteLineSpan.style.maxWidth = '100px';
+	mxUtils.write(quoteLineSpan, '引用线');
+
+	var quoteLineCheckBox = document.createElement('input');
+	quoteLineCheckBox.setAttribute('name', 'edgeType');
+	quoteLineCheckBox.setAttribute('type', 'radio');
+	quoteLineCheckBox.setAttribute('value', 'quoteLine');
+
+	//span
+	var subjectLineSpan = document.createElement('span');
+	subjectLineSpan.style.width = '100px';
+	mxUtils.write(subjectLineSpan, '科目线');
+
+	//checkBox
+	var subjectLineCheckBox = document.createElement('input');
+	subjectLineCheckBox.setAttribute('name', 'edgeType');
+	subjectLineCheckBox.setAttribute('type', 'radio');
+	subjectLineCheckBox.setAttribute('value', 'subjectLine');
+
+	if (selCell.edgeType === undefined) 
+	{
+		selCell.edgeType = 'quoteLine';
+	}
+
+	if (selCell.edgeType === 'quoteLine')
+	{
+		quoteLineCheckBox.checked = true;
+	} else if (selCell.edgeType === 'subjectLine')
+	{
+		subjectLineCheckBox.checked = true;
+
+	}
+
+	//引用线
+	div.appendChild(quoteLineSpan);
+	div.appendChild(quoteLineCheckBox);
+
+	//科目线
+	div.appendChild(subjectLineSpan)
+	div.appendChild(subjectLineCheckBox);
+
+	mxEvent.addListener(quoteLineSpan, 'click', function (evt) {
+		quoteLineCheckBox.checked = true;
+		selCell.edgeType = 'quoteLine';
+		$('#subjectSelectPanel').remove();
+		mxEvent.consume(evt);
+	});
+
+	mxEvent.addListener(quoteLineCheckBox, 'change', function (evt) {
+		quoteLineCheckBox.checked = true;
+		selCell.edgeType = 'quoteLine';
+		$('#subjectSelectPanel').remove();
+		mxEvent.consume(evt);
+	});
+
+	mxEvent.addListener(subjectLineSpan, 'click', function (evt) {
+		subjectLineCheckBox.checked = true;
+		selCell.edgeType = 'subjectLine'
+		sb.addEdgeSubjectSelect();
+		mxEvent.consume(evt);
+	});
+
+	mxEvent.addListener(subjectLineCheckBox, 'change', function (evt) {
+		subjectLineCheckBox.checked = true;
+		selCell.edgeType = 'subjectLine'
+		sb.addEdgeSubjectSelect();
+		mxEvent.consume(evt);
+	});
+
+	this.container.appendChild(div);
+
+
+	if (subjectLineCheckBox.checked){
+		sb.addEdgeSubjectSelect();
+	}
+
+
+};
+
+
+AppEdgeFormatPanel.prototype.addEdgeSubjectSelect = function () {
+
+	if ($('#subjectSelectPanel').length === 1) return;
+
+	var ui = this.editorUi;
+	var editor = ui.editor;
+	var graph = editor.graph;
+	var selCell = graph.getSelectionCell();
+	var sourceCell = selCell.source;
+	var targetCell = selCell.target;
+
+	if (!sourceCell || !targetCell) return;
+
+	
+	var sourceCellSbjRelation = sourceCell.sbjRelation.filter(function (i) {
+		return i.checkDirection === 1;
+	});
+
+	var targetCellSbjRelation = targetCell.sbjRelation.filter(function (i) {
+		return i.checkDirection === -1
+	});
+
+	var commonSbjRelation = [];
+	
+	sourceCellSbjRelation.filter(function (s) {
+		targetCellSbjRelation.map(function (t) {
+			if (s.calcRelCode === t.calcRelCode){
+				commonSbjRelation.push(s);
+			}
+		});
+	});
+
+
+	var div = this.createPanel();
+	div.setAttribute('id','subjectSelectPanel');
+	div.appendChild(this.createTitle('科目'));
+
+	var subjectSelectPanel = div.cloneNode(false);
+	subjectSelectPanel.style.marginLeft = '0px';
+	subjectSelectPanel.style.padding = '8px 0px 4px 0px';
+	subjectSelectPanel.style.fontWeight = 'normal';
+	subjectSelectPanel.style.borderWidth = '0px';
+
+	mxUtils.write(subjectSelectPanel, '科目');
+
+	var subjectSelect = document.createElement('select');
+	subjectSelect.style.position = 'absolute';
+	subjectSelect.style.right = '20px';
+	subjectSelect.style.width = '150px';
+	subjectSelect.style.marginTop = '-2px';
+	subjectSelect.style.borderRadius = '5px';
+	subjectSelect.style.height = '25px';
+
+	commonSbjRelation.map(function (s) {
+		var subjectsOption = document.createElement('option');
+		subjectsOption.setAttribute('value', s.calcRelCode);
+		mxUtils.write(subjectsOption, s.calcRelName);
+		subjectSelect.appendChild(subjectsOption);
+	});
+	
+	if (commonSbjRelation.length === 1 && !selCell.calcRelCode){
+		$(subjectSelect).val(commonSbjRelation[0].calcRelCode);
+	} else if (selCell.calcRelCode){
+		$(subjectSelect).val(selCell.calcRelCode);
+	}
+	
+
+	mxEvent.addListener(subjectSelect, 'change', function (evt) {
+		mxEvent.consume(evt);
+	});
+
+	subjectSelectPanel.appendChild(subjectSelect);
+
+	div.appendChild(subjectSelectPanel);
+
+	return this.container.appendChild(div);
+};
+
+

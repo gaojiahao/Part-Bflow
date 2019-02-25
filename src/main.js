@@ -60,9 +60,16 @@ let deepstreamAddress = window.localStorage.getItem('r2-cached-properties');
   })
 }
 async function init(cache){
-      let  data = cache?JSON.parse(cache):{};
-      Vue.prototype.$currentUser = data['currentUser'];
-      Vue.prototype.$deepstream = await deepstream(data['currentUser'],deepstreamAddress);
+  let data = cache?JSON.parse(cache):{},
+      currentUser = data['currentUser'];
+  currentUser.isAdmin =false;
+  currentUser.isSysRoleList.map(role=>{
+    if(role.id === 1){
+        currentUser.isAdmin = true;
+    }
+  });
+  Vue.prototype.$currentUser =  currentUser;
+  Vue.prototype.$deepstream = await deepstream(data['currentUser'],deepstreamAddress);
 }
 
 

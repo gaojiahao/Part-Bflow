@@ -11,106 +11,133 @@
             left: 50px !important;
         }
   }
+  .hidden-field{
+    list-style: none;
+    background-color: #fff;
+    padding: 5px;
+    margin-top: 8px;
+    li{
+      padding: 5px 0px;
+    }
+  }
 </style>
 
 <template>
-  <Modal v-model="showPermissionModal" title="字段权限" width="1000" :transfer="false" :styles="{top: '15px'}" :mask-closable="false" @on-visible-change="modalVisibleChange">
-    <div>
-      <Row :gutter="8" style="margin-bottom:10px;">
-        <div class="field-toolbar">
-            <Button @click="addNewField" type="info" shape="circle" style="margin-bottom:5px;">新增字段</Button>
-            <i-switch v-model="isBlack" @on-change="changeBlackWhiteList" size="large" class="black-white">
-                <span slot="close">白名单</span>
-                <span slot="open">黑名单</span>
-            </i-switch>
-        </div>
-        <Table ref="actionRef" stripe height="200" :columns="fieldColumns" size="small" no-data-text="请添加新字段" :data="fieldData"></Table>
-      </Row>
-      <Row :gutter="8" style="margin-bottom:10px;">
-        <Col span="4">
-        <Button @click="selectUserModal" type="info" shape="circle">选择用户</Button>
-        </Col>
-        <Col span="4">
-        <Button @click="selectGroupModal" type="info" shape="circle">选择组织</Button>
-        </Col>
-        <Col span="4">
-        <Button @click="selectRoleModal" type="info" shape="circle">选择职位</Button>
-        </Col>
-        <Col v-if="false" span="3">
-        <Button type="info" shape="circle">选择公司</Button>
-        </Col>
-      </Row>
-      <Row :gutter="8">
-        <Col span="24" class="permission-tab">
-          <Row style="margin-top:10px">
-            <Col span="3">
-              <b class="permission-title">用户</b>
-            </Col>
-            <Col span="21" class="member-body">
-              <Tag @on-close="deleteUser" v-for="(userData, index) of userSelectData" :key="index" :userId="userData.userId" closable color="warning">
-                {{ userData.nickname }}
+  <div>
+    <Modal v-model="showPermissionModal" :title="modalTitle" width="1000" :transfer="false" :styles="{top: '15px'}" :mask-closable="false" @on-visible-change="modalVisibleChange">
+      <div>
+        <Row :gutter="8" style="margin-bottom:10px;">
+          <div class="field-toolbar">
+              <Button @click="addNewField" type="info" shape="circle" style="margin-bottom:5px;">新增</Button>
+              <i-switch v-model="isBlack" @on-change="changeBlackWhiteList" size="large" class="black-white">
+                  <span slot="close">白名单</span>
+                  <span slot="open">黑名单</span>
+              </i-switch>
+          </div>
+          <Table ref="actionRef" stripe height="200" :columns="fieldColumns" size="small" no-data-text="请点击新增添加" :data="fieldData">
+            <template slot-scope="{ row,index }" slot="fieldName">
+              <Select ref="selectMenu" :value="row.fieldCode" filterable @on-change="fieldSelectChange($event,index)" style="width:300px">
+                  <Option v-for="(item,idx) of allFieldData" :label="item.fieldName" :value="item.fieldCode" :key="idx">
+                      <span class="select-field">{{ item.fieldName }}</span>
+                      <Poptip v-if="item.fieldAlias" trigger="hover" style="float:right;" transfer title="对应视图字段名称" placement="right">
+                        <span style="color: #39f;"><Icon type="md-help" /></span>
+                        <div slot="content">
+                          <ul class="hidden-field">
+                            <li v-for="(alia,k) of item.fieldAlias" :key="k">{{ `${alia.view}—${alia.alias}` }}</li>
+                          </ul>
+                        </div>
+                      </Poptip>
+                  </Option>
+              </Select>
+            </template>
+          </Table>
+        </Row>
+        <Row :gutter="8" style="margin-bottom:10px;">
+          <Col span="4">
+          <Button @click="selectUserModal" type="info" shape="circle">选择用户</Button>
+          </Col>
+          <Col span="4">
+          <Button @click="selectGroupModal" type="info" shape="circle">选择组织</Button>
+          </Col>
+          <Col span="4">
+          <Button @click="selectRoleModal" type="info" shape="circle">选择职位</Button>
+          </Col>
+          <Col v-if="false" span="3">
+          <Button type="info" shape="circle">选择公司</Button>
+          </Col>
+        </Row>
+        <Row :gutter="8">
+          <Col span="24" class="permission-tab">
+            <Row style="margin-top:10px">
+              <Col span="3">
+                <b class="permission-title">用户</b>
+              </Col>
+              <Col span="21" class="member-body">
+                <Tag @on-close="deleteUser" v-for="(userData, index) of userSelectData" :key="index" :userId="userData.userId" closable color="warning">
+                  {{ userData.nickname }}
+                </Tag>
+              </Col>
+            </Row>
+            <Row class="permission-line"></Row>
+            <Row>
+              <Col span="3">
+              <b class="permission-title">组织</b>
+              </Col>
+              <Col span="21" class="member-body">
+              <Tag @on-close="deleteOrg" v-for="(orgData, index) of orgSelectData" :key="index" :orgId="orgData.id" closable color="success">
+                {{ orgData.name }}
               </Tag>
-            </Col>
-          </Row>
-          <Row class="permission-line"></Row>
-          <Row>
-            <Col span="3">
-            <b class="permission-title">组织</b>
-            </Col>
-            <Col span="21" class="member-body">
-            <Tag @on-close="deleteOrg" v-for="(orgData, index) of orgSelectData" :key="index" :orgId="orgData.id" closable color="success">
-              {{ orgData.name }}
-            </Tag>
-            </Col>
-          </Row>
-          <Row class="permission-line"></Row>
-          <Row>
-            <Col span="3">
-            <b class="permission-title">职位</b>
-            </Col>
-            <Col span="21" class="member-body">
-            <Tag @on-close="deleteDepartment" v-for="(departmentData, index) of departmentSelectData" :key="index" :depId="departmentData.id" closable color="primary">
-              {{ departmentData.name }}
-            </Tag>
-            </Col>
-          </Row>
-          <!-- <Row class="permission-line"></Row> -->
-          <Row v-if="false">
-            <Col span="3">
-            <b class="permission-title">公司</b>
-            </Col>
-            <Col span="21" class="member-body">
-            <Tag @on-close="deleteCompany" v-for="(companyData, index) of companySelectData" :key="index" :comId="companyData.groupId" closable color="primary">
-              {{ companyData.groupName }}
-            </Tag>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-      <!-- 用户modal -->
-      <user-selector 
-        :showUserSelector="showSelector.showUserSelector" 
-        @emitUserModal="emitUserModal" 
-        @userModalData="getUserModalData">
-      </user-selector>
-      <!-- 组织modal -->
-      <group-selector 
-        :showGroupSelector="showSelector.showGroupSelector" 
-        @emitGroupModal="emitGroupModal"
-        @groupModalData="getGroupModalData">
-      </group-selector>
-      <!-- 职位modal -->
-      <role-selector 
-        :showRoleSelector="showSelector.showRoleSelector" 
-        @emitRoleModal="emitRoleModal"
-        @roleModalData="getRoleModalData">
-      </role-selector>
-    </div>
-    <div slot="footer">
-        <Button type="default" @click="cancelAddPermission">取消</Button>
-        <Button type="primary" :disabled="isModalDisabled" @click="submitPermission">确定</Button>
-    </div>
-  </Modal>
+              </Col>
+            </Row>
+            <Row class="permission-line"></Row>
+            <Row>
+              <Col span="3">
+              <b class="permission-title">职位</b>
+              </Col>
+              <Col span="21" class="member-body">
+              <Tag @on-close="deleteDepartment" v-for="(departmentData, index) of departmentSelectData" :key="index" :depId="departmentData.id" closable color="primary">
+                {{ departmentData.name }}
+              </Tag>
+              </Col>
+            </Row>
+            <!-- <Row class="permission-line"></Row> -->
+            <Row v-if="false">
+              <Col span="3">
+              <b class="permission-title">公司</b>
+              </Col>
+              <Col span="21" class="member-body">
+              <Tag @on-close="deleteCompany" v-for="(companyData, index) of companySelectData" :key="index" :comId="companyData.groupId" closable color="primary">
+                {{ companyData.groupName }}
+              </Tag>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+        <!-- 用户modal -->
+        <user-selector 
+          :showUserSelector="showSelector.showUserSelector" 
+          @emitUserModal="emitUserModal" 
+          @userModalData="getUserModalData">
+        </user-selector>
+        <!-- 组织modal -->
+        <group-selector 
+          :showGroupSelector="showSelector.showGroupSelector" 
+          @emitGroupModal="emitGroupModal"
+          @groupModalData="getGroupModalData">
+        </group-selector>
+        <!-- 职位modal -->
+        <role-selector 
+          :showRoleSelector="showSelector.showRoleSelector" 
+          @emitRoleModal="emitRoleModal"
+          @roleModalData="getRoleModalData">
+        </role-selector>
+      </div>
+      <div slot="footer">
+          <Button type="default" @click="cancelAddPermission">取消</Button>
+          <Button type="primary" :disabled="isModalDisabled" @click="submitPermission">确定</Button>
+      </div>
+    </Modal>
+  </div>
 </template>
 
 <script>
@@ -118,7 +145,11 @@ import {
   saveFieldPermission,
   getFieldResorce,
   getFieldDetailList,
-  updateFieldPermission
+  updateFieldPermission,
+  saveChildSubjectPermission,
+  updateChildSubjectPermission,
+  getChildSubjectField,
+  getChildSubjectDetailList
 } from "@/services/appService.js";
 import UserSelector from '../custom-datasource/user-selector';
 import GroupSelector from '../custom-datasource/group-selector';
@@ -134,11 +165,13 @@ export default {
   props: {
     modalStatis: Boolean,
     resourceId: String,
-    isEdit: Boolean
+    isEdit: Boolean,
+    row: Object
   },
   data() {
     return {
       appListId: this.$route.params.listId,
+      modalTitle: '字段或字段组权限',
       //监听数据变化刷新权限table
       emitChange: 0,
 
@@ -152,32 +185,7 @@ export default {
       fieldColumns: [
         {
           title: "字段",
-          key: "fieldName",
-          render: (h,params) => {
-              let renderData = [];
-              this.allFieldData.forEach(val => {
-                renderData.push(
-                  h('Option',{
-                      props: {
-                        value: val.fieldCode,
-                        parentCode: val.parentCode
-                      }
-                    },val.fieldName)
-                )
-              });
-            return h('div',[
-              h('Select',{
-                props: {
-                  value: params.row.fieldCode
-                },
-                on: {
-                  'on-change': value => {
-                    this.fieldData[params.index].fieldCode = value;
-                  }
-                }
-              },renderData)
-            ]);
-          }
+          slot: "fieldName"
         },
         {
           title: "操作",
@@ -220,25 +228,47 @@ export default {
         this.userSelectData = [];
         this.orgSelectData = [];
         this.departmentSelectData = [];
-        getFieldDetailList(this.appListId,this.resourceId).then(res => {
-          this.fieldData = res.resource;
-          res.instance.forEach(val => {
-            let pushData = {};
-            if(val.substanceType === 'U'){
-              pushData.nickname = val.substanceName;
-              pushData.userId = val.substanceId;
-              this.userSelectData.push(pushData);
-            }else if(val.substanceType === 'G'){
-              pushData.name = val.substanceName;
-              pushData.id = val.substanceId;
-              this.orgSelectData.push(pushData);
-            }else if(val.substanceType === 'R'){
-              pushData.name = val.substanceName;
-              pushData.id = val.substanceId;
-              this.departmentSelectData.push(pushData);
-            }
+        if(this.row){
+          getChildSubjectDetailList(this.row.calcRelCode,this.resourceId).then(res => {
+            this.fieldData = res.data.resource;
+            res.data.instance.forEach(val => {
+              let pushData = {};
+              if(val.objectType === 'U'){
+                pushData.nickname = val.objectName;
+                pushData.userId = val.objectId;
+                this.userSelectData.push(pushData);
+              }else if(val.objectType === 'G'){
+                pushData.name = val.objectName;
+                pushData.id = val.objectId;
+                this.orgSelectData.push(pushData);
+              }else if(val.objectType === 'R'){
+                pushData.name = val.objectName;
+                pushData.id = val.objectId;
+                this.departmentSelectData.push(pushData);
+              }
+            })
           })
-        })
+        }else{
+          getFieldDetailList(this.appListId,this.resourceId).then(res => {
+            this.fieldData = res.resource;
+            res.instance.forEach(val => {
+              let pushData = {};
+              if(val.substanceType === 'U'){
+                pushData.nickname = val.substanceName;
+                pushData.userId = val.substanceId;
+                this.userSelectData.push(pushData);
+              }else if(val.substanceType === 'G'){
+                pushData.name = val.substanceName;
+                pushData.id = val.substanceId;
+                this.orgSelectData.push(pushData);
+              }else if(val.substanceType === 'R'){
+                pushData.name = val.substanceName;
+                pushData.id = val.substanceId;
+                this.departmentSelectData.push(pushData);
+              }
+            })
+          })
+        }
       }else{
         this.fieldData = [];
         this.userSelectData = [];
@@ -322,9 +352,19 @@ export default {
           this.isModalDisabled = true;
         }
       }
+    },
+    isChildSubject: function(value) {
+      if(value){
+        this.modalTitle = '子科目权限';
+      }else{
+        this.modalTitle = '字段或字段组权限';
+      }
     }
   },
   methods: {
+    fieldSelectChange(value,index) {
+      this.fieldData[index].fieldCode = value;
+    },
     emitUserModal() {
         this.showSelector.showUserSelector = false;
     },
@@ -376,29 +416,61 @@ export default {
           resourceId: this.resourceId,
           resource: this.fieldData
         };
+        if(this.row){
+          for(let k in params){
+            delete params['listId'];
+          }
+          params.calcRelCode = this.row.calcRelCode;
+        }
         if (params) {
           if(this.isEdit){
-            updateFieldPermission(JSON.stringify(params)).then(res => {
-              if (res.success) {
-                this.$Message.success(res.message);
-                this.showPermissionModal = false;
-                let Num = this.emitChange++;
-                this.$emit("reGetData", Num);
-              }
-            }).catch(err => {
-              this.$Message.error(err.data.message);
-            });
+            if(this.row){
+              updateChildSubjectPermission(JSON.stringify(params)).then(res => {
+                if (res.success) {
+                  this.$Message.success(res.message);
+                  this.showPermissionModal = false;
+                  let Num = this.emitChange++;
+                  this.$emit("reGetData", Num);
+                }
+              }).catch(err => {
+                this.$Message.error(err.data.message);
+              });
+            }else{
+              updateFieldPermission(JSON.stringify(params)).then(res => {
+                if (res.success) {
+                  this.$Message.success(res.message);
+                  this.showPermissionModal = false;
+                  let Num = this.emitChange++;
+                  this.$emit("reGetData", Num);
+                }
+              }).catch(err => {
+                this.$Message.error(err.data.message);
+              });
+            }
           }else{
-            saveFieldPermission(JSON.stringify(params)).then(res => {
-              if (res.success) {
-                this.$Message.success(res.message);
-                this.showPermissionModal = false;
-                let Num = this.emitChange++;
-                this.$emit("reGetData", Num);
-              }
-            }).catch(err => {
-              this.$Message.error(err.data.message);
-            });
+            if(this.row){
+              saveChildSubjectPermission(JSON.stringify(params)).then(res => {
+                if (res.success) {
+                  this.$Message.success(res.message);
+                  this.showPermissionModal = false;
+                  let Num = this.emitChange++;
+                  this.$emit("reGetData", Num);
+                }
+              }).catch(err => {
+                this.$Message.error(err.data.message);
+              });
+            }else{
+              saveFieldPermission(JSON.stringify(params)).then(res => {
+                if (res.success) {
+                  this.$Message.success(res.message);
+                  this.showPermissionModal = false;
+                  let Num = this.emitChange++;
+                  this.$emit("reGetData", Num);
+                }
+              }).catch(err => {
+                this.$Message.error(err.data.message);
+              });
+            }
           }
         }
     },
@@ -482,9 +554,17 @@ export default {
     }
   },
   created() {
-    getFieldResorce(this.appListId).then(res => {
-      this.allFieldData = res;
-    })
+    if(this.row){
+      getChildSubjectField(this.row.calcRelCode).then(res => {
+        if(res.success){
+          this.allFieldData = res.data;
+        }
+      })
+    }else{
+      getFieldResorce(this.appListId).then(res => {
+        this.allFieldData = res;
+      })
+    }
   },
   mounted() {
   }

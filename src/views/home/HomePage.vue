@@ -100,6 +100,7 @@ export default {
 
   methods: {
 
+    //滚动加载
     loadMenuByScroll(){
       if(this.menu.length<this.menuList.length){
           //获取文档完整的高度 

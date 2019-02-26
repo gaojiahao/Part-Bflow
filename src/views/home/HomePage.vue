@@ -82,10 +82,27 @@ export default {
 
     let canRun = false; 
     //滚动加载菜单栏
+    let timer =null;
+    let previous = 0;
     window.onscroll = ()=>{
-      clearTimeout(canRun); // 清除未执行的代码，重置回初始化状态
-			canRun = setTimeout(()=>{
-        if(this.menu.length<this.menuList.length){
+       let now = Date.now(),
+            remaining = 300 - (now-previous);//距离规定时间,还剩多少时间
+       clearTimeout(timer); //清除之前设置的定时器
+       if(remaining<=0){
+         this.loadMenuByScroll()
+         previous = Date.now();
+       }else{
+         timer = setTimeout(this.loadMenuByScroll,remaining) //因为上面添加的clearTimeout.实际这个定时器只有最后一次才会执行
+       }
+    }
+  },
+
+
+  methods: {
+
+    //滚动加载
+    loadMenuByScroll(){
+      if(this.menu.length<this.menuList.length){
           //获取文档完整的高度 
           let bodyHeight =  Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
           //获取当前可视范围的高度  
@@ -107,12 +124,7 @@ export default {
             this.menu.push(menuItem)
           }
         }
-      }, 300);
-    }
-  },
-
-
-  methods: {
+    },
     goAppManage() {
       window.top.location.hash = "#page/AppSetting";
     },

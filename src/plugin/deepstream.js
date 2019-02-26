@@ -17,7 +17,7 @@ export async function deepstream(currentUser,address) {
     }else{
         deepstreamAddress = await getDeepstream();
     }
-    let deeps = ds(`ws://${deepstreamAddress}`),
+    let deeps = ds(`wss://${deepstreamAddress}`),
     token = getToken(),
     name = currentUser.name ? currentUser.name : currentUser.nickname;
 

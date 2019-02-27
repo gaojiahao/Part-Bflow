@@ -100,7 +100,7 @@
             graph.getStylesheet().getDefaultVertexStyle()[mxConstants.STYLE_SHADOW] = true;
            
             //r2-cached-properties
-            var dsUri = 'ws://' + JSON.parse(sessionStorage.getItem('r2-cached-properties'))['deepstream.uri2'];
+            var dsUri = 'wss://' + JSON.parse(sessionStorage.getItem('r2-cached-properties'))['deepstream.uri2'];
             var ds = deepstream(dsUri);
             var token = JSON.parse(localStorage.getItem('roleplay-token')).token;
 

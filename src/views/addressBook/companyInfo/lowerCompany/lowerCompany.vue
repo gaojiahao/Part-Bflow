@@ -72,8 +72,7 @@
 import {
   getCompanyList,
   addLowerCompany,
-  removeCompany,
-  searchCompany
+  removeCompany
 } from "@/services/addressBookService.js";
 export default {
   props: {
@@ -182,7 +181,8 @@ export default {
         this.groupId,
         target,
         this.companyCurrentPage,
-        this.companyPageSize
+        this.companyPageSize,
+        this.groupName
       ).then(res => {
         this.companyData = res.tableContent;
         this.companyTotal = res.dataCount;
@@ -348,10 +348,7 @@ export default {
       this.deleteCompanyData = selection;
     },
     search() {
-      searchCompany(this.groupName).then(res => {
-        this.companyData = res.tableContent;
-        this.companyTotal = res.dataCount;
-      });
+      this.getAllCompanyList();
     }
   },
   mounted() {

@@ -482,11 +482,11 @@ export const deleteRolePermission = (single, multi) => request('/H_roleplay-si/p
  * @author zhaohuai
  * 根据公司Id获取所属成员信息
  */
-export const getAllUser = (currentPage, pageSize) => request('/H_roleplay-si/ds/listUsers', {
+export const getAllUser = (currentPage, pageSize,filter) => request('/H_roleplay-si/ds/listUsers', {
   entityId: 20000,
   page: currentPage,
   limit: pageSize,
-  start: 0,
+  filter: filter
 });
 
 /**
@@ -536,11 +536,12 @@ export const saveCompanyInfo = (data) => {
  * 获取公司列表信息
  * 
  */
-export const getCompanyList = (groupId, target, currentPage, pageSize) => request('/H_roleplay-si/sysGroup/getCompanyList', {
+export const getCompanyList = (groupId, target, currentPage, pageSize,search) => request('/H_roleplay-si/sysGroup/getCompanyList', {
   groupId: groupId,
   target: target,
   currentPage: currentPage,
-  pageSize: pageSize
+  pageSize: pageSize,
+  search: search
 });
 /**
  * @author zhaohuai
@@ -670,13 +671,6 @@ export const updateConpanyInfo = (data) => {
     groupPic: groupPic
   }])
 }
-/**
- * @author zhaohuai
- * 搜索公司
- */
-export const searchCompany = (groupName) => request('/H_roleplay-si/sysGroup/getCompanyList', {
-  search: groupName
-});
 /**
  * @author zhaohuai
  * 唯一校验

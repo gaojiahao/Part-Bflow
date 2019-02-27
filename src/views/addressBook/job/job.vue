@@ -60,7 +60,7 @@
             <Select 
               v-model="formItem.rankPass" 
               @on-change="onHandleRankValueChange"
-              placeholder="请选择职位类型" 
+              placeholder="请选择职级通道" 
               :disabled="isEdit" 
               :class="isEdit?'input-status-isedit':''"
               >
@@ -72,7 +72,7 @@
              <Select 
               v-model="formItem.rank" 
               @on-open-change="getFunctionType($event,'rank')"
-              placeholder="请选择职位类型" 
+              placeholder="请选择职级" 
               :disabled="isEdit" 
               :class="isEdit?'input-status-isedit':''"
               >
@@ -83,7 +83,7 @@
               <InputNumber v-model="formItem.hourCost" :step="0.1" :min="0.1" :readonly="isEdit"></InputNumber>
           </FormItem>
             <FormItem :labelWidth="120" label="职责描述" style="font-size:16px">
-             <Input v-model="formItem.describe" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="职位描述" :readonly="isEdit" ></Input>
+             <Input v-model="formItem.describe" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="职责描述" :readonly="isEdit" ></Input>
           </FormItem>
           <div class="baseinfo-container-divider" v-if="jobId && isEdit"></div>
           <FormItem label="创建者:" v-if="jobId && isEdit">

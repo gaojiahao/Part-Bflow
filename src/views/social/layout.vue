@@ -42,12 +42,9 @@
 </template>
 <script>
 
-import notifications from  '@/views/notifications/notifications.vue'
 export default {
     name:"SocialLayout",
     components:{
-        notifications
     }
-    
 }
 </script>

@@ -117,8 +117,10 @@
                     <Upload
                     multiple
                     ref="uploadFile"
+                    :max-size="10240"
                     :headers="httpHeaders"
                     :on-success="handleFileSuccess"
+                    :on-exceeded-size="handleFileMaxSize"
                     :default-file-list="defaultFileList"
                     :before-upload="handleBeforeFileUpload"
                     action="/H_roleplay-si/ds/upload">
@@ -262,6 +264,11 @@ export default {
         handleMaxSize (file) {
             window.top.limitNotice('超过文件大小限制','文件  ' + file.name + '太大,最多支持2M.');
         },
+
+        handleFileMaxSize (file) {
+            window.top.limitNotice('超过文件大小限制','文件  ' + file.name + '太大,最多支持10M.');
+        },
+
         handleBeforeImgUpload () {
             const check = this.uploadList.length < 9;
             if (!check) {

@@ -1,4 +1,4 @@
-<style lang="less" scoped >
+<style lang="less" >
 @import "./comments.less";
 </style>
 <template>

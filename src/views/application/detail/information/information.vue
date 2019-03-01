@@ -382,6 +382,7 @@ export default {
       let filter = JSON.stringify([
         {operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
       ]);
+      this.currentPage = 1;
       this.getAdmintrstorData(filter);
     }
   },

@@ -229,7 +229,7 @@ export default {
 
             this.pageInfo.total = res.dataCount;
         }).then(res=>{
-            // window.top.setInstaceCommentsIframeHeight();
+            window.top.setInstaceCommentsIframeHeight();
         });
     },
 

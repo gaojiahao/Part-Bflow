@@ -1,0 +1,555 @@
+[33mcommit 85153b8b47e6b0530c9dd11061c8d19a63f5299d[m[33m ([m[1;36mHEAD -> [m[1;32mdevelop[m[33m, [m[1;31morigin/develop[m[33m)[m
+Merge: 74bec5b4 a9ee7259
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Sat Mar 2 16:40:29 2019 +0800
+
+    合并冲突
+
+[33mcommit 74bec5b485839ea78a919de85e71fda67ec8c368[m
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Sat Mar 2 16:37:12 2019 +0800
+
+    修改bug
+
+[33mcommit a9ee72595eef1f12b82a654077e0a63525537712[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Sat Mar 2 14:38:14 2019 +0800
+
+    修改表单评论样式
+
+[33mcommit cd818bd2259b0308291d48aeee1c76fd4cb863eb[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Fri Mar 1 18:29:38 2019 +0800
+
+    修改应用管理员添加搜索问题
+
+[33mcommit cfaccb9d01ca7d3c60fd5e00f0b6483175dcb42c[m
+Merge: d1365af1 5f88bd50
+Author: snack.huang <snack.huang@refordom.com>
+Date:   Fri Mar 1 18:01:11 2019 +0800
+
+    fixbug:删除业务上不使用的模块
+
+[33mcommit d1365af16589417d3bef73dbb33a404615257225[m
+Author: snack.huang <snack.huang@refordom.com>
+Date:   Fri Mar 1 17:55:07 2019 +0800
+
+    fixbug:删除业务上不使用的模块
+
+[33mcommit 5f88bd5091f3d89ece1aadf5a8b51b252ae4a331[m
+Merge: 86ca7e7e fdbb7cea
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Fri Mar 1 17:36:09 2019 +0800
+
+    合并冲突
+
+[33mcommit 86ca7e7ea80630919d12990605ad60217b9dc8b1[m
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Fri Mar 1 17:07:16 2019 +0800
+
+    评论附件限制文件大小
+
+[33mcommit fdbb7cea7c88c567b5a8f744f3a9aba56c6636b1[m
+Author: snack.huang <snack.huang@refordom.com>
+Date:   Fri Mar 1 16:07:31 2019 +0800
+
+    优化样式
+
+[33mcommit 5cdc1521698839061a552e2b5565edc16b38bdf5[m
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Fri Mar 1 15:01:04 2019 +0800
+
+    移动端评论发送表情后，PC回显不正常
+
+[33mcommit 8c1a37b02c8e07d724d0f009fe2d2fe55daf39cd[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Fri Mar 1 09:49:54 2019 +0800
+
+    修改应用详情相关科目显示值
+
+[33mcommit f11571ff32b821a3b9a622e7195c77d726c8774a[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Wed Feb 27 19:21:06 2019 +0800
+
+    修改公司成员搜索分页问题
+
+[33mcommit ff61d71baf1e852d4204e46329baa47b52a04266[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Wed Feb 27 16:42:09 2019 +0800
+
+    修改通讯录公司logo
+
+[33mcommit ba468bdb04ebf90f2983246feefcb04077668102[m
+Author: snack.huang <snack.huang@refordom.com>
+Date:   Wed Feb 27 15:24:53 2019 +0800
+
+    解决大流程图无法显示的bug
+
+[33mcommit 69cbfd07aec795a8a36a383e1745ef0302a2255d[m
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Tue Feb 26 19:31:22 2019 +0800
+
+    修改职位输入框提示问题
+
+[33mcommit 70563d7edc02a1b966e7868405c92f9019c846c0[m
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Tue Feb 26 15:27:52 2019 +0800
+
+    新增任务日志图片
+
+[33mcommit 03461fff2dea631219634f9e2f98c4f3274c53eb[m
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Tue Feb 26 15:00:55 2019 +0800
+
+    修改deepstream地址
+
+[33mcommit 5d935c925cda81b24ba18a7f4d6e09da90ae59ba[m
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Tue Feb 26 14:47:09 2019 +0800
+
+    优化首页滚动加载
+
+[33mcommit 825e547d0ec40c009699080e50f38f2876ca63be[m
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Mon Feb 25 20:03:28 2019 +0800
+
+    设置应用菜单栏首页加载数量
+
+[33mcommit 9717d2195dd4df7db5404d95507ec8c10e51d33a[m
+Author: snack.huang <snack.huang@refordom.com>
+Date:   Mon Feb 25 16:29:36 2019 +0800
+
+    fixbug:大流程图增加权限控制
+
+[33mcommit 95576db71610b79d91ba525b9b6b722df21a4d8a[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Fri Feb 22 17:06:14 2019 +0800
+
+    打包
+
+[33mcommit 7985dfbdf22d28cbe93c8c748972a2dcf7581713[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Fri Feb 22 17:03:24 2019 +0800
+
+    优化代码
+
+[33mcommit ca7d553b565e41ed3953d53161f365a96f1c99ab[m
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Thu Feb 21 17:12:58 2019 +0800
+
+    修改工艺路线图无法打开任务列表
+
+[33mcommit df993142802a24d2c20af3d809713ff33b8b7cb7[m
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Thu Feb 21 16:57:11 2019 +0800
+
+    优化应用首页-滚动加载流畅度，提高性能
+
+[33mcommit 52bc31095525c8f687dec391dad6f68453140b64[m
+Merge: a599277e beac743b
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Thu Feb 21 16:03:07 2019 +0800
+
+    合并冲突
+
+[33mcommit a599277e2e6a4705441abbe91151fd7c45a64206[m
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Thu Feb 21 15:54:28 2019 +0800
+
+    修改工艺路线图bug
+
+[33mcommit beac743b4ba73c05eaef609bae57c78720199df0[m
+Merge: 8e1b6a04 5ddc2e5b
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Thu Feb 21 14:15:08 2019 +0800
+
+    解决
+
+[33mcommit 8e1b6a046e7dff6f9a5e1eef6809b31aac483087[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Thu Feb 21 14:12:17 2019 +0800
+
+    修改评论显示默认头像
+
+[33mcommit 5ddc2e5b283f2277b11f5c097ff326e96fdee879[m
+Merge: 58a4acdf 613458eb
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Thu Feb 21 11:40:23 2019 +0800
+
+    合并冲突
+
+[33mcommit 58a4acdf1cae5fc8c792d7e7d6ae01a3d961f640[m
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Thu Feb 21 11:36:44 2019 +0800
+
+    修改工艺路线图bug
+
+[33mcommit 613458ebd26fd099b6a475ae3807cd9986f30122[m
+Author: snack.huang <snack.huang@refordom.com>
+Date:   Thu Feb 21 10:37:50 2019 +0800
+
+    添加容错代码
+
+[33mcommit 1982d98b26be5adad199a9a8662075f7294d6d8c[m
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Thu Feb 21 10:21:16 2019 +0800
+
+    修改任务日志-日期选择限制
+
+[33mcommit 2639206635879d140424c61fb85f0c110c799204[m
+Merge: 6f0b4214 3455e244
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Wed Feb 20 20:04:40 2019 +0800
+
+    解决冲突
+
+[33mcommit 6f0b42144e9827656b9107cadd438d6f30aba115[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Wed Feb 20 20:02:01 2019 +0800
+
+    修改应用详情title跳转
+
+[33mcommit 3455e2446bf2672eae68048a1ea101c3e2da12e1[m
+Author: snack.huang <snack.huang@refordom.com>
+Date:   Wed Feb 20 19:04:57 2019 +0800
+
+    优化代码
+
+[33mcommit 989dfe6fc80047a6f0fcd8c83067fa1c22da37e7[m
+Author: snack.huang <snack.huang@refordom.com>
+Date:   Wed Feb 20 18:06:26 2019 +0800
+
+    修改获取deepstram数据的方式
+
+[33mcommit fc920bb061bfc9d65de5a2ae2a857f9a00fef20d[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Wed Feb 20 16:01:27 2019 +0800
+
+    删除无用代码
+
+[33mcommit 3f79739938566ebbb8e4d7a828f653d60f61d5c4[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Wed Feb 20 15:54:11 2019 +0800
+
+    打包
+
+[33mcommit 85babf5f04619a8beac6d81fcebb1f7aff00aae3[m
+Merge: ea53d154 64a22b55
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Wed Feb 20 15:46:49 2019 +0800
+
+    解决冲突
+
+[33mcommit ea53d15433129f7cedf1a84cc4b7dc758614a2c3[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Wed Feb 20 15:46:03 2019 +0800
+
+    应用详情自定义icon功能提交
+
+[33mcommit 64a22b55dc4fb5e9114afb1f753db92654cd8708[m
+Merge: 5088a228 15bc434a
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Wed Feb 20 15:27:51 2019 +0800
+
+    Merge branch 'develop' into release
+
+[33mcommit 15bc434ad315ee90d1012eaafc8854d1f4459b36[m
+Merge: db6c5f10 b6ae4add
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Wed Feb 20 15:27:15 2019 +0800
+
+    合并冲突
+
+[33mcommit db6c5f10a89b894d1ee2a51f931aea7143938884[m
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Wed Feb 20 15:23:59 2019 +0800
+
+    修改工艺路线图计算问题
+
+[33mcommit b6ae4add3a72bfa19fc67e89a91339782063ff47[m
+Merge: d13f055f 43231757
+Author: snack.huang <snack.huang@refordom.com>
+Date:   Wed Feb 20 14:22:09 2019 +0800
+
+    优化代码
+
+[33mcommit 43231757e8d3659f0eb89192436d0f8bd6bf69f0[m
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Wed Feb 20 10:47:35 2019 +0800
+
+    任务日志备注富文本编辑器改成多行文本
+
+[33mcommit d13f055ffcb572d8bfef4f91dbe6bfca4dded63c[m
+Author: snack.huang <snack.huang@refordom.com>
+Date:   Tue Feb 19 20:08:14 2019 +0800
+
+    会计类科目余额校验禁用
+
+[33mcommit c08dbba803377fa26eec887ce16268aaa7378c39[m
+Author: snack.huang <snack.huang@refordom.com>
+Date:   Tue Feb 19 17:40:06 2019 +0800
+
+    端到端流程图应用权限控制
+
+[33mcommit 5088a228ddd14affe53a5caba184e58de1c67fcb[m
+Merge: ec6af7fa 6a97dea0
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Tue Feb 19 17:18:40 2019 +0800
+
+    Merge branch 'develop' into release
+
+[33mcommit 6a97dea09dbd5e875b453b4eff426b113710384c[m
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Tue Feb 19 17:18:19 2019 +0800
+
+    修改工艺路线图筛选标题
+
+[33mcommit ec6af7faafbbc63592e0cec2b321e8d9c222416b[m
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Tue Feb 19 17:13:41 2019 +0800
+
+    修改工艺路线图刷选名称
+
+[33mcommit 47f8c0eeec5208f5e7b112ebc915adc341f1f9d1[m
+Merge: 686d5be5 33a5e018
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Tue Feb 19 17:05:28 2019 +0800
+
+    Merge branch 'develop' into release
+
+[33mcommit 33a5e018d8e16ae292f3db70cc1b2527b514d5cc[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Tue Feb 19 17:03:43 2019 +0800
+
+    提交bug
+
+[33mcommit 92669578890048311e38b5e3591b591e4b4ea3ef[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Tue Feb 19 16:57:05 2019 +0800
+
+    提交
+
+[33mcommit 8a9ebc2f84a053950009141cee7aae84aece0410[m
+Merge: 878dfbe3 1d6fded3
+Author: snack.huang <snack.huang@refordom.com>
+Date:   Tue Feb 19 16:54:42 2019 +0800
+
+    Merge branch 'develop' of http://192.168.3.185/roleplay/Part-Bflow into develop
+
+[33mcommit 878dfbe3ec96b04bd7e6c6ca3b88127486194a7b[m
+Author: snack.huang <snack.huang@refordom.com>
+Date:   Tue Feb 19 16:53:09 2019 +0800
+
+    注释部分操作
+
+[33mcommit 686d5be556d766abf4d24d1b6ff3bdb7fee13274[m
+Merge: 311a93c2 1d6fded3
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Tue Feb 19 16:15:22 2019 +0800
+
+    Merge branch 'develop' into release
+
+[33mcommit 1d6fded36d2640cd9da2b5f2275aac2d69b528da[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Tue Feb 19 16:14:31 2019 +0800
+
+    增加商机流程状态消息
+
+[33mcommit 311a93c2043b3e2722072db33484d83cca65742e[m
+Merge: 70f121d2 fa87e324
+Author: snack.huang <snack.huang@refordom.com>
+Date:   Tue Feb 19 15:32:14 2019 +0800
+
+    Merge branch 'develop' into 'release'
+    
+    优化代码
+    
+    See merge request !266
+
+[33mcommit fa87e32456c1f9cbd5ab113009ea97e1d03bb4c4[m
+Author: snack.huang <snack.huang@refordom.com>
+Date:   Tue Feb 19 15:05:09 2019 +0800
+
+    优化代码
+
+[33mcommit 70f121d2d0a4a3578da2dd9cc515f702d2a2df2c[m
+Merge: ef3baa15 113c0993
+Author: snack.huang <snack.huang@refordom.com>
+Date:   Tue Feb 19 14:39:20 2019 +0800
+
+    端到端流程图
+
+[33mcommit ef3baa15f8a4c1095a759003fb614420c720abf6[m
+Merge: 526fb7e8 1ee11b6f
+Author: snack.huang <snack.huang@refordom.com>
+Date:   Tue Feb 19 14:32:18 2019 +0800
+
+     fixbug:优化代码
+
+[33mcommit 113c09936843217e3b7348908b3b019f17d0ead1[m
+Merge: f4f5f587 60fe99e4
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Tue Feb 19 11:22:47 2019 +0800
+
+    合并冲突
+
+[33mcommit f4f5f58710d9647b3741f9bae463b3bfa9795845[m
+Author: 谭国正 <zheng.tan@refordom.com>
+Date:   Tue Feb 19 11:20:14 2019 +0800
+
+    修改工艺路线图接口参数
+
+[33mcommit 60fe99e42fe32915c3bb9887fe0afab39d22ec4e[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Tue Feb 19 09:53:24 2019 +0800
+
+    修改消息描述布局
+
+[33mcommit 526fb7e8a85238fb0109ae90e0feac33181ff8d7[m
+Author: snack.huang <snack.huang@refordom.com>
+Date:   Mon Feb 18 19:17:12 2019 +0800
+
+    修改计算配置功能
+
+[33mcommit c82dfae4b308be57eb7c2ba31bb431af3b81ddfc[m
+Author: snack.huang <snack.huang@refordom.com>
+Date:   Mon Feb 18 17:53:20 2019 +0800
+
+    优化代码
+
+[33mcommit 1ee11b6fad913655103898a79181fccabcc9d9fc[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Sat Feb 16 18:24:47 2019 +0800
+
+    修改评论为空提示信息和样式
+
+[33mcommit b175e9c204bad44418df56a6a7cd9381e6f40b06[m
+Merge: c5b264fa cb8bd585
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Sat Feb 16 10:29:24 2019 +0800
+
+    Merge branch 'address-default' into 'develop'
+    
+    通讯录默认组织和职位不可删除
+    
+    See merge request !264
+
+[33mcommit cb8bd58541dd56bfd80b421f37b02b08fc40e99b[m[33m ([m[1;31morigin/address-default[m[33m)[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Sat Feb 16 10:28:35 2019 +0800
+
+    通讯录默认组织和职位不可删除
+
+[33mcommit c5b264fab9f447a60ccb1de60ca27901752db618[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Fri Feb 15 14:02:37 2019 +0800
+
+    修改点检表新增项目删除为后端删除
+
+[33mcommit 0fdcda54209cc757e6132a57baee378f1c795335[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Fri Feb 15 11:08:12 2019 +0800
+
+    修改应用详情数据分析样式
+
+[33mcommit 8544f3be9ac2f5d55709003a233899517e2e1687[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Thu Feb 14 15:54:44 2019 +0800
+
+    修改布局
+
+[33mcommit 2db7070b4209435022a4e287dd55f5244c520bb9[m
+Merge: 4abe3dc0 252d9804
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Thu Feb 14 15:43:50 2019 +0800
+
+    Merge branch 'develop' of http://192.168.3.185/roleplay/Part-Bflow into develop
+
+[33mcommit 252d980448272e3774460670f7a49d6bc2949e6f[m
+Merge: 86c1d45a 3a1dfa68
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Thu Feb 14 15:43:33 2019 +0800
+
+    Merge branch 'solve-task-log' into 'develop'
+    
+    表单评论全局提示修改兼容EXT
+    
+    See merge request !263
+
+[33mcommit 3a1dfa68282c101ac961e0761a02bb78eb0a7e85[m[33m ([m[1;31morigin/solve-task-log[m[33m)[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Thu Feb 14 15:42:46 2019 +0800
+
+    表单评论全局提示修改兼容EXT
+
+[33mcommit 4abe3dc06a13fc327f7649bf36c2807541adea7e[m
+Merge: ce0f006f 86c1d45a
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Thu Feb 14 14:13:14 2019 +0800
+
+    Merge branch 'develop' of http://192.168.3.185/roleplay/Part-Bflow into develop
+
+[33mcommit 86c1d45a43e72d5031e3c85be6a7c4f122ab6c4d[m
+Merge: 3913b53d 9ebd5f87
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Thu Feb 14 14:12:19 2019 +0800
+
+    Merge branch 'solve-task-log' into 'develop'
+    
+    修改表单评论上传图片宽度
+    
+    See merge request !262
+
+[33mcommit 9ebd5f87e1a561eb299b15c36e134f646b2034b1[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Thu Feb 14 14:12:00 2019 +0800
+
+    修改表单评论上传图片宽度
+
+[33mcommit 3913b53de3791acab5be0c6d628e45ee52246782[m
+Merge: 9f83e33f b45ca83c
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Thu Feb 14 14:06:07 2019 +0800
+
+    Merge branch 'solve-task-log' into 'develop'
+    
+    修改表单评论图片上传和文件样式
+    
+    See merge request !261
+
+[33mcommit b45ca83c354fc17079903a352c09170d1e2ea866[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Thu Feb 14 14:05:42 2019 +0800
+
+    修改表单评论图片上传和文件样式
+
+[33mcommit ce0f006f265079f01811a6d528d6a2e2cd76ad10[m
+Merge: 9f83e33f 4db5c73d
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Thu Feb 14 11:04:37 2019 +0800
+
+    Merge branch 'release' into develop
+
+[33mcommit 4db5c73d987b46249a6a98ed74d048e8e4c850f5[m
+Merge: 3994607e 27a738e8
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Thu Feb 14 11:04:11 2019 +0800
+
+    Merge branch 'develop' into release
+
+[33mcommit 9f83e33f2efabdbc025900d55bc7e54f0e40e630[m
+Merge: c5b1c66b cb273f64
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Thu Feb 14 11:02:29 2019 +0800
+
+    Merge branch 'solve-task-log' into 'develop'
+    
+    解决任务日志按钮不显示问题和提交后编辑器重置问题
+    
+    See merge request !260
+
+[33mcommit cb273f64b7202852ec35b1e6dfdfd607f2fcb5dd[m
+Author: wangxiaoying <cherry.wang@refordom.com>
+Date:   Thu Feb 14 11:01:49 2019 +0800
+
+    解决任务日志按钮不显示问题和提交后编辑器重置问题

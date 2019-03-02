@@ -100,6 +100,7 @@ import {
 
 import comments from "@/components/discussion/comments";
 import commentPublish from "@/components/discussion/publish";
+import { EMOTION } from "@/assets/const";
 
 export default {
   name: "KnowledgeComments",

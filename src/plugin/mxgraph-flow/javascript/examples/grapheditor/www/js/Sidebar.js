@@ -1032,7 +1032,7 @@ Sidebar.prototype.addRoletaskAppPalette = function (expand) {
 					var cell = new mxCell(
 						list.text,
 						new mxGeometry(0, 0, 50, 50),
-						'shape=image;html=1;fontSize=14;font-weight:bold;verticalLabelPosition=bottom;labelBackgroundColor=#f5f5f5;verticalAlign=top;imageAspect=0;image=/' + list.icon
+						'shape=image;html=1;fontSize=14;font-weight:bold;verticalLabelPosition=bottom;labelBackgroundColor=#f5f5f5;verticalAlign=top;imageAspect=0;image=' + list.icon
 					);
 					cell.vertex = true;
 					//设置业务属性

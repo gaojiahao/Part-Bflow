@@ -15,7 +15,6 @@
                 trigger="click">
                     <img   
                     @click="showUserInfo(comment.creator)" 
-                    onerror="src='resources/images/icon/defaultUserPhoto.jpg'"
                     slot="userCard" :src="comment.photo?comment.photo:'resources/images/icon/defaultUserPhoto.jpg'">
                 </my-pop-tip>
             </Col>

@@ -100,6 +100,7 @@ import {
 import comments from "@/components/discussion/comments";
 import commentPublish from "@/components/discussion/publish";
 import UserSelector from '@/views/application/detail/permission/custom-datasource/user-selector';
+import { EMOTION } from "@/assets/const";
 
 export default {
   name: "userComments",

@@ -8,7 +8,7 @@
             <h2>{{ workguideData.title }}</h2>
         </Row>
         <Row class="workguide-type">
-            <img :src="workguideData.creatorImage"/>
+            <img @error="errorimg" :src="workguideData.creatorImage?workguideData.creatorImage:'resources/images/icon/defaultUserPhoto.png'"/>
             <span class="workguide-type-worktype">{{ workguideData.creatorName }}</span>
             <span class="workguide-type-crtTime">{{ workguideData.crtTime }}</span>
         </Row>
@@ -62,6 +62,9 @@ export default {
     };
   },
   methods: {
+    errorimg() {
+        this.workguideData.creatorImage = 'resources/images/icon/defaultUserPhoto.png';
+    },
     //查询作业指导数据
     getWorkGuideDataById() {
         getworkDataById(this.$route.params.id).then(res => {

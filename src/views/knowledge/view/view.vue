@@ -8,7 +8,7 @@
             <span>{{ knowledgeForm.title }}</span>
         </Row>
         <Row class="knowledge-desc">
-            <img :src="knowledgeForm.photo"/>
+            <img @error="errorimg" :src="knowledgeForm.photo?knowledgeForm.photo:'resources/images/icon/defaultUserPhoto.png'"/>
             <span class="knowledge-desc-type">{{ knowledgeForm.typeName }}</span>
             <span class="knowledge-desc-creator">{{ knowledgeForm.creator }}</span>
             <span class="knowledge-desc-crtTime">{{ knowledgeForm.crtTime }}</span>
@@ -52,6 +52,9 @@ export default {
     };
   },
   methods: {
+    errorimg() {
+          this.knowledgeForm.photo = 'resources/images/icon/defaultUserPhoto.png';
+      },
     goBack() {
       this.$router.push({path:'/knowledge/list'});
     },

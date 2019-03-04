@@ -48,6 +48,8 @@
 <script>
 import { getListFeildChangeHistory } from "@/services/flowService";
 import ChangeDetail from "@/components/modal/Modal";
+import { getToken } from "@/utils/utils";
+
 export default {
   components: {
     ChangeDetail
@@ -421,11 +423,12 @@ export default {
     subscribeMessage: function() {
       let deepstream = this.$deepstream;
       let token = getToken();
-      let autoRefresh = this.getChangeHistoryData();
 
       if(deepstream.event){
         //消息订阅
-        deepstream.event.subscribe("transHistoryChange/" + this.$route.params.transCode, autoRefresh);
+        deepstream.event.subscribe("transHistoryChange/" + this.$route.params.transCode, msg => {
+         this.getChangeHistoryData();
+        });
       }
     },
     //获取变更历史数据

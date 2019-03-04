@@ -18,7 +18,7 @@ export async function deepstream(currentUser,address) {
     }else{
         deepstreamAddress = await getDeepstream();
     }
-    let protocol = window.top.location.protocol.indexOf('https') != -1 ? "wss://" : 'ws://';
+    let protocol = window.top.location.protocol.indexOf('https') != -1 ? "wss" : 'ws';
     let deeps = ds(`${protocol}://${deepstreamAddress}`),
         token = getToken(),
         name = currentUser.name ? currentUser.name : currentUser.nickname;

@@ -119,9 +119,11 @@ export default {
     isAdmin: function(value) {
       if (value) {
         this.isAdminTrue = true;
+        if(!this.logeditor){
           setTimeout(() => {
             this.createEditor();
           },10)
+        }
       } else {
         this.isAdminTrue = false;
       }
@@ -189,6 +191,11 @@ export default {
               item["CHANGE_RANGE"] = item["CHANGE_RANGE"].split(",");
             }
             this.logData.push(item);
+            if(!this.logeditor){
+              setTimeout(() => {
+                this.createEditor();
+              },10)
+            }
           });
         }
       });

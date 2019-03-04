@@ -416,6 +416,25 @@ export default {
           return "table-column-detele";
         }
       }
+    },
+    //订阅消息
+    subscribeMessage: function() {
+      let deepstream = this.$deepstream;
+      let token = getToken();
+      let autoRefresh = this.getChangeHistoryData();
+
+      if(deepstream.event){
+        //消息订阅
+        deepstream.event.subscribe("transHistoryChange/" + this.$route.params.transCode, autoRefresh);
+      }
+    },
+    //获取变更历史数据
+    getChangeHistoryData() {
+      this.loading = true;
+      getListFeildChangeHistory(transCode).then(res => {
+        this.loading = false;
+        this.fieldDetail = res;
+      });
     }
   },
 
@@ -429,11 +448,8 @@ export default {
 
   mounted() {
     let transCode = this.$route.params.transCode;
-    this.loading = true;
-    getListFeildChangeHistory(transCode).then(res => {
-      this.loading = false;
-      this.fieldDetail = res;
-    });
+    this.getChangeHistoryData();
+    this.subscribeMessage();
   }
 };
 </script>

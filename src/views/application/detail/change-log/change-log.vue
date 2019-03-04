@@ -173,9 +173,12 @@ export default {
           this.logData = res.tableContent;
           this.dataCount = res.dataCount;
         }
-        setTimeout(() => {
-          this.createEditor();
-        },10)
+        if(this.isAdmin){
+          setTimeout(() => {
+            this.createEditor();
+          },10)
+        }
+
       });
     },
 

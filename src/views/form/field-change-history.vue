@@ -430,6 +430,7 @@ export default {
     },
     //获取变更历史数据
     getChangeHistoryData() {
+      let transCode = this.$route.params.transCode;
       this.loading = true;
       getListFeildChangeHistory(transCode).then(res => {
         this.loading = false;
@@ -447,7 +448,6 @@ export default {
   },
 
   mounted() {
-    let transCode = this.$route.params.transCode;
     this.getChangeHistoryData();
     this.subscribeMessage();
   }

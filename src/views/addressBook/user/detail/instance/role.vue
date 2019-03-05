@@ -172,32 +172,28 @@ export default {
           key: "name"
         },
         {
-          title: "职位类型",
-          key: "type",
-          render: (h,params) => {
-              let type = '';
-              switch(params.row.type){
-                case 'Y': 
-                  type = '营销类';
-                  break;
-                case 'C': 
-                  type = '操作类';
-                  break;
-                case 'J': 
-                  type = '技术类';
-                  break;
-                case 'M': 
-                  type = '管理类';
-                  break;
-                case 'Z': 
-                  type = '专职类';
-                  break;
-              }
-              return h('span',{},type);
-          }
+          title: "职能类型",
+          key: "functionType",
+        },
+         {
+          title: "职能",
+          key: "function",
+        },
+         {
+          title: "职级通道",
+          key: "rankPass",
+        },
+         {
+          title: "职级",
+          key: "rank",
+       
+        },
+         {
+          title: "小时成本",
+          key: "hourCost",
         },
         {
-          title: "说明",
+          title: "职责描述",
           key: "describe"
         },
         {
@@ -272,32 +268,11 @@ export default {
           key: "name"
         },
         {
-          title: "职位类型",
-          key: "type",
-          render: (h,params) => {
-              let type = '';
-              switch(params.row.type){
-                case 'Y': 
-                  type = '营销类';
-                  break;
-                case 'C': 
-                  type = '操作类';
-                  break;
-                case 'J': 
-                  type = '技术类';
-                  break;
-                case 'M': 
-                  type = '管理类';
-                  break;
-                case 'Z': 
-                  type = '专职类';
-                  break;
-              }
-              return h('span',{},type);
-          }
+          title: "职能类型",
+          key: "functionType",
         },
         {
-          title: "说明",
+          title: "职责描述",
           key: "describe"
         }
       ],

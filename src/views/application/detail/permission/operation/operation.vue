@@ -25,7 +25,7 @@
                         </Col>
 
                         <Col span="21" class="app-action-source-item-content">
-                            <h3>{{ list.name }}</h3>
+                            <h4>{{ list.name }}</h4>
                             <div class="app-action-source-item-desc">{{ list.desc }}</div>
                         </Col>
                     </Col>

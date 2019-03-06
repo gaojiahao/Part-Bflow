@@ -13,7 +13,7 @@
             <Input v-model="modalFormData.logTitle" placeholder="请输入任务日志标题" />
         </FormItem> 
         <FormItem label="日期" prop="taskDate">
-            <DatePicker type="date" :options="disabledDate" format="yyyy-MM-dd" v-model="modalFormData.taskDate"></DatePicker>
+            <DatePicker type="date" :options="disabledDate" format="yyyy-MM-dd" :clearable="false" v-model="modalFormData.taskDate"></DatePicker>
         </FormItem>
         <FormItem label="申报工时:" prop="logDeclarationHours">
           <InputNumber v-model="modalFormData.logDeclarationHours"  :min="0.1" :step="0.1"/>

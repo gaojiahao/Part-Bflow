@@ -15,7 +15,7 @@
                 trigger="click">
                     <img   
                     @click="showUserInfo(comment.creator)"
-                    @error="errorimg" 
+                    @error="errorimg(comment)" 
                     slot="userCard" :src="comment.photo?comment.photo:'resources/images/icon/defaultUserPhoto.jpg'">
                 </my-pop-tip>
             </Col>
@@ -169,8 +169,8 @@ export default {
         
     },
     methods: {
-        errorimg() {
-            this.comment.photo = 'resources/images/icon/defaultUserPhoto.png';
+        errorimg(comment) {
+            comment.photo = 'resources/images/icon/defaultUserPhoto.png';
         },
         handlerShowThumbsUpInfo:function (comment) {
             this.$forceUpdate();

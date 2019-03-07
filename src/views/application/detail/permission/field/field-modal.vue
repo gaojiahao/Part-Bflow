@@ -14,8 +14,6 @@
   .hidden-field{
     list-style: none;
     background-color: #fff;
-    padding: 5px;
-    margin-top: 8px;
     li{
       padding: 5px 0px;
     }

@@ -9,7 +9,7 @@
         <!-- 管理员自评 -->
         <admintrstor-assessment :isAdmin="isAdmin"></admintrstor-assessment>
         <!-- 用户评论 -->
-        <user-comments></user-comments>
+        <user-comments :listId="this.$route.params.listId" :type="'list'"></user-comments>
     </div>
 </template>
 

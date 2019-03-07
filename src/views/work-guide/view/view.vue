@@ -34,7 +34,7 @@
                   </div>
                 </TimelineItem>
             </Timeline>
-            <work-comments></work-comments>
+            <user-comments :listId="workguideId" :type="'workGuide'"></user-comments>
         </Row>
         <Row class="workguide-toolbar">
             <router-link :to="{ name:'wokdGuideDetail',params:{id: workguideData.id}}">
@@ -49,11 +49,11 @@
 
 <script>
 import { getworkDataById } from "@/services/workGuideService.js";
-import WorkComments from './work-comments';
+import UserComments from '@/views/application/detail/interaction/user-comments.vue';
 
 export default {
   name: "wokdGuideView",
-  components: { WorkComments },
+  components: { UserComments },
   data() {
     return {
       workguideId: this.$route.params.id,

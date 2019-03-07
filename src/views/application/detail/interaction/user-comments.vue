@@ -109,11 +109,18 @@ export default {
     commentPublish,
     UserSelector
   },
-  props: {},
+  props: {
+      listId: {
+          type: String,
+          default: ''
+      },
+      type: {
+          type: String,
+          default: ''
+      }
+  },
   data() {
     return {
-        listId:this.$route.params.listId,
-        type:'list',
         comments:[],
         commentsCount:0,
         pageInfo:{
@@ -242,7 +249,7 @@ export default {
     },
     handleSubscribeApp:function () {
         subscribeApp({
-            type:'list',
+            type: this.type,
             relationKey:this.listId
         }).then(res=>{
             this.subscribeInfo.isSubscribe = 1;

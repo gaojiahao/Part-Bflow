@@ -248,7 +248,6 @@ export default {
           if (res.tableContent[0]) {
             this.allMemberData = res.tableContent;
             this.allMemberTotal = res.summary.total;
-            this.allMemberLoading = false;
             if (this.onPageSelection.length > 0) {
               this.allMemberData.map(item => {
                 this.onPageSelection.map(sel => {
@@ -259,6 +258,7 @@ export default {
               });
             }
           }
+          this.allMemberLoading = false;
         }
       );
     },

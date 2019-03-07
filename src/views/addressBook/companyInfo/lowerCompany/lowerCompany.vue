@@ -348,6 +348,7 @@ export default {
       this.deleteCompanyData = selection;
     },
     search() {
+      this.companyCurrentPage = 1;
       this.getAllCompanyList();
     }
   },

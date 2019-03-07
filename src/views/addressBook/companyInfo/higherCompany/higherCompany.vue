@@ -247,6 +247,7 @@ export default {
       });
     },
     search() {
+      this.companyCurrentPage = 1;
       this.getAllCompanyList();
     },
     onRowdbclick(selection, index) {

@@ -245,9 +245,9 @@ export default {
       this.allMemberLoading = true;
       getAllUser(this.allMemberCurrentPage, this.allMemberPageSize,filter).then(
         res => {
-          if (res.tableContent[0]) {
             this.allMemberData = res.tableContent;
             this.allMemberTotal = res.summary.total;
+            this.allMemberLoading = false;
             if (this.onPageSelection.length > 0) {
               this.allMemberData.map(item => {
                 this.onPageSelection.map(sel => {
@@ -257,8 +257,6 @@ export default {
                 });
               });
             }
-          }
-          this.allMemberLoading = false;
         }
       );
     },
@@ -418,9 +416,11 @@ export default {
       }
     },
     search() {
+      this.allMemberCurrentPage = 1;
       this.getAllUser();
     },
     tableSearch() {
+      this.memberCurrentPage = 1;
       this.getCompanyMember(this.searchTableValue);
     }
   },

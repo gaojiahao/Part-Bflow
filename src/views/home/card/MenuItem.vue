@@ -178,6 +178,7 @@ export default {
   watch: {
     allTaskCount: {
       handler: function(val, oldValue) {
+        debugger
         let listId = this.appinfo.url.split("/")[1];
         let f = val.filter(f => {
           return f.listId === listId;

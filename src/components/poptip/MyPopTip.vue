@@ -19,7 +19,7 @@
         <div slot="content">
             <div class="userInfo">
                 <div class="userInfo-top">
-                    <img class="userInfo-img" :src="userInfo.photo" onerror="src='resources/images/icon/defaultUserPhoto.jpg'">
+                    <img class="userInfo-img" :src="userInfo.photo" onerror='this.src="resources/images/icon/img-loading-error.png"'>
                     <div class="userInfo-right">
                         <b class="font14">{{userInfo.nickname}}</b>
                         <i class="iconfont" style="color:#2d8cf0">&#xe601;</i>

@@ -333,7 +333,7 @@ export default {
         this.handlerSubscribeMsg();
         getCurrentUserAllTasks().then(res => {
             res.tableContent.map(item=>{
-                this.allTaskCount[item.listId] = item.total;
+                  this.$set(this.allTaskCount,item.listId,item.total);
             });
         });
 

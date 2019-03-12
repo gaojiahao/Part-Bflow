@@ -3,21 +3,19 @@
 </style>
 <template>
     <div class="menu-section-list-item-container">
-
-        <Badge 
-            :count="taskCount" 
-            class="task-badge"
-            v-if="menu.type==='subject'" type="primary">
-        </Badge>
-     
-        <span  @click="showTaskCount">
+        <div class="badge-custom" @click="redirectTo(menu)"  v-if="menu.type==='subject'">
+            <Badge 
+                :count="taskCount" 
+                type="primary">
+            </Badge>
+        </div>
+        <div  class="badge-custom" @click="showTaskCount"  v-if="menu.type !== 'subject'">
             <Badge 
                 class="task-badge" 
                 :count="taskCount" 
-                v-if="menu.type != 'subject'"
                 >
             </Badge>
-        </span>
+        </div>
         <img 
             class="menu-section-list-item-icon" 
             v-bind:class="{ 'obj-icon': menu.type=='obj' ||  menu.type=='hr', 'subject-icon': menu.type=='subject' }"
@@ -169,7 +167,7 @@ export default {
       
     },
     mounted(){
-        this.taskCount = this.allTaskCount[this.menu.listId];
+        this.taskCount = this.allTaskCount[this.menu.listId]?this.allTaskCount[this.menu.listId]:0;
     }
 }
 </script>

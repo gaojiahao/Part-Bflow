@@ -8,7 +8,7 @@
             <span>{{ knowledgeForm.title }}</span>
         </Row>
         <Row class="knowledge-desc">
-            <img :src="knowledgeForm.photo"/>
+            <img @error="errorimg" :src="knowledgeForm.photo?knowledgeForm.photo:'resources/images/icon/defaultUserPhoto.png'"/>
             <span class="knowledge-desc-type">{{ knowledgeForm.typeName }}</span>
             <span class="knowledge-desc-creator">{{ knowledgeForm.creator }}</span>
             <span class="knowledge-desc-crtTime">{{ knowledgeForm.crtTime }}</span>
@@ -17,7 +17,7 @@
             <div ref="toolbar" style="display:none"></div>
             <div ref="text" style="display:none"></div>
             <div v-html="knowledgeForm.content" class="w-e-text"></div>
-            <knowledge-comments></knowledge-comments>
+            <user-comments :listId="knowledgeId" :type="'knowledge'"></user-comments>
         </Row>
         <Row class="knowledge-toolbar">
             <span class="knowledge-toolbar-btn" @click="editKnowledge">编辑</span>
@@ -33,12 +33,12 @@ import {
   getKnowledgeTypeData,
   saveKnowledgeData
   } from "@/services/knowledgeBaseService.js";
-import KnowledgeComments from './knowledge-comments.vue';
+import UserComments from '@/views/application/detail/interaction/user-comments.vue';
 import E from 'wangeditor';
 
 export default {
   name: "KnowledgeView",
-  components: { KnowledgeComments },
+  components: { UserComments },
   data() {
     return {
       knowledgeId: this.$route.params.id,
@@ -52,6 +52,9 @@ export default {
     };
   },
   methods: {
+    errorimg() {
+          this.knowledgeForm.photo = 'resources/images/icon/defaultUserPhoto.png';
+      },
     goBack() {
       this.$router.push({path:'/knowledge/list'});
     },

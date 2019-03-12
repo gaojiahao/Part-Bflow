@@ -240,10 +240,11 @@ export default {
   methods: {
     //获取所有公司成员信息
     getAllUser() {
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      ]);
       this.allMemberLoading = true;
-      getAllUser(this.allMemberCurrentPage, this.allMemberPageSize).then(
+      getAllUser(this.allMemberCurrentPage, this.allMemberPageSize,filter).then(
         res => {
-          if (res.tableContent[0]) {
             this.allMemberData = res.tableContent;
             this.allMemberTotal = res.summary.total;
             this.allMemberLoading = false;
@@ -256,7 +257,6 @@ export default {
                 });
               });
             }
-          }
         }
       );
     },
@@ -416,14 +416,11 @@ export default {
       }
     },
     search() {
-      filterUser(this.searchValue).then(res => {
-        if (res) {
-          this.allMemberData = res;
-          this.allMemberTotal = res.length;
-        }
-      });
+      this.allMemberCurrentPage = 1;
+      this.getAllUser();
     },
     tableSearch() {
+      this.memberCurrentPage = 1;
       this.getCompanyMember(this.searchTableValue);
     }
   },

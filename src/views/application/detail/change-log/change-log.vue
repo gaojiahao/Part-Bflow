@@ -119,6 +119,9 @@ export default {
     isAdmin: function(value) {
       if (value) {
         this.isAdminTrue = true;
+          setTimeout(() => {
+            this.createEditor();
+          },10)
       } else {
         this.isAdminTrue = false;
       }
@@ -173,9 +176,13 @@ export default {
           this.logData = res.tableContent;
           this.dataCount = res.dataCount;
         }
-        setTimeout(() => {
-          this.createEditor();
-        },10)
+
+        if(!this.logeditor){
+              setTimeout(() => {
+                this.createEditor();
+              },10)
+            }
+       
       });
     },
 

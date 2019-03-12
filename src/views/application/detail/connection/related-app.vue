@@ -16,7 +16,7 @@
             <img class="card-img" :src="app.icon" />
             <div class="card-right">
               <p class="card-name">{{ app.listName }}</p>
-              <p class="card-type">{{ app.transName }}</p>
+              <p class="card-type">{{ app.appName }}</p>
             </div>
             <Checkbox @on-change="changeAppStatus(app,app.sort)" class="card-check" :disabled="!isAdmin" :value="app.STATUS===1?true:false"></Checkbox>
           </Card>

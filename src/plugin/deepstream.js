@@ -1,6 +1,7 @@
 import * as ds from "deepstream.io-client-js";
 import { getToken } from "@/utils/utils";
 import { getProp } from "@/services/flowService";
+import { lstat } from "fs";
 
 function getDeepstream() {
     return getProp().then(res => {
@@ -17,9 +18,10 @@ export async function deepstream(currentUser,address) {
     }else{
         deepstreamAddress = await getDeepstream();
     }
-    let deeps = ds(`wss://${deepstreamAddress}`),
-    token = getToken(),
-    name = currentUser.name ? currentUser.name : currentUser.nickname;
+    let protocol = window.top.location.protocol.indexOf('https') != -1 ? "wss" : 'ws';
+    let deeps = ds(`${protocol}://${deepstreamAddress}`),
+        token = getToken(),
+        name = currentUser.name ? currentUser.name : currentUser.nickname;
 
     
     if (name && currentUser.userId) {

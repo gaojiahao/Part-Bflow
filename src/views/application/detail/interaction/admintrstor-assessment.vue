@@ -147,6 +147,15 @@ export default {
       assessments: []
     };
   },
+  watch: {
+    isAdmin: function(value) {
+      if (value) {
+          setTimeout(() => {
+            this.createEditor();
+          },10)
+      }
+    }
+  },
   methods: {
     //展示管理员自评
     addAssess() {

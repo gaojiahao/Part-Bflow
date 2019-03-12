@@ -6,7 +6,7 @@
     <div class="baseInfo-warp">
       <div class="baseInfo-body">
         <Form :model="baseInfoItem" ref="baseInfoItem" :label-width="100" :rules="ruleValidate" :class="{'is-required':isEdit}">
-          <FormItem label="公司照片:">
+          <FormItem label="公司logo:">
             <div class="uploadImg">
               <Upload 
                 v-if="!isEdit" 
@@ -34,7 +34,7 @@
                 </div>
               </Upload>
               <img v-else :src="logo?logo:false">
-              <Modal title="查看头像" v-model="visible">
+              <Modal title="查看" v-model="visible">
                 <img :src="logo" v-if="visible" style="width: 100%">
               </Modal>
             </div>

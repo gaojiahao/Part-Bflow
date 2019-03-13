@@ -41,8 +41,20 @@ export const homepageRouter = {
     title: 'homepage - 首页导航'
   },
   component: () =>
-    import('@/views/home/HomePage.vue')
+    import('@/views/home/home.vue')
 };
+
+
+export const home = {
+  path: '/home',
+  name: 'home',
+  meta: {
+    title: 'home - 首页导航'
+  },
+  component: () =>
+    import('@/views/home/home.vue')
+};
+
 
 
 
@@ -139,6 +151,7 @@ import { fileCabinetRouter } from '@/views/file-cabinet/router';
 export const routers = [
   loginRouter,
   flowRouter,
+  home,
   homepageRouter,
   addressBookRouter,
   technologyRouter,

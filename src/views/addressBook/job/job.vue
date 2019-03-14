@@ -113,8 +113,8 @@
         <member-info :isPermission="isPermission" :jobId="jobId" @on-member-info-change='handleChangeObjDetailsCount'></member-info>
       </section>
       <!-- 权限 -->
-      <section class="permission-container rfd-tab-container-common" v-if="actionIndex===0">
-        <permission :isPermission="isPermission" :jobId="jobId" @on-permission-change='handleChangeObjDetailsCount'></permission>
+      <section class="permission-container" v-if="actionIndex===0">
+        <permission :target="target" :isPermission="isPermission" :jobId="jobId" @on-permission-change='handleChangeObjDetailsCount'></permission>
       </section>
     </div>
 
@@ -133,7 +133,7 @@ import {
 } from "@/services/addressBookService.js";
 import MemberModal from "@/components/modal/Modal";
 import MemberInfo from "./instance/job-member-info";
-import Permission from "./instance/job-permission";
+import Permission from "../user/detail/instance/direct-permission";
 export default {
   name: "job",
 
@@ -237,7 +237,11 @@ export default {
       checkout: true,
 
       jobId: this.$route.params.jobId,
-      isPermission: true
+      isPermission: true,
+      target: {
+        type: 'role',
+        targetId: this.$route.params.jobId
+      }
     };
   },
 

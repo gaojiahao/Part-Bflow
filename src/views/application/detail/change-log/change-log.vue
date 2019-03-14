@@ -17,6 +17,7 @@
             <Option value="报表">报表</Option>
             <Option value="工作流">工作流</Option>
             <Option value="权限">权限</Option>
+            <Option value="其他">其他</Option>
           </Select>
         </FormItem>
         <FormItem label="耗用时间:" prop="spendTime">

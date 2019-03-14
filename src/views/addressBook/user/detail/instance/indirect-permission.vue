@@ -51,7 +51,8 @@
           ref="permissionTree"
           :data="data"
           :load-data="loadData"
-          class="permission-tree">
+          class="permission-tree"
+          empty-text="">
         </Tree>
       </div>
     </div>

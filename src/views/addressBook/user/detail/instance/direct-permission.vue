@@ -54,6 +54,7 @@
           :load-data="loadData"
           show-checkbox
           class="permission-tree"
+          empty-text=""
         >
         </Tree>
       </div>

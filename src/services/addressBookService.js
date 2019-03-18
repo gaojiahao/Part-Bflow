@@ -193,6 +193,15 @@ export const getAllPermissionData = (parentId,objId,type) => request(`/H_rolepla
 
 /**
  * @author XiaoYing
+ * @description 获取间接权限数据
+ */
+export const getIndirectData = (parentId,objId) => request('/H_roleplay-si/ps/user/indirectAuthority', {
+  parentId: parentId,
+  objId: objId
+});
+
+/**
+ * @author XiaoYing
  * @description 删除权限
  */
 export const deleteIndirPermission = (single, multi) => request('/H_roleplay-si/ps/deletePermissionRelation', {

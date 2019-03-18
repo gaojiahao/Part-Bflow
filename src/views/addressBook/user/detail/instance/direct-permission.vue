@@ -35,7 +35,7 @@
 <template>
   <div class="direct">
     <div class="direct-detail" id="directHeight">
-      <div class="direct-header">
+      <!-- <div class="direct-header">
         <div class="app-table-search">
           <Input 
             @on-search="permissionFilter" 
@@ -45,7 +45,7 @@
             style="width: 300px">
           </Input>
         </div>
-      </div>
+      </div> -->
       <div class="direct-table">
         <Tree
           ref="permissionTree"
@@ -54,7 +54,7 @@
           :load-data="loadData"
           show-checkbox
           class="permission-tree"
-          empty-text=""
+          :empty-text="emptyText"
         >
         </Tree>
       </div>
@@ -85,6 +85,7 @@ export default {
       userId: this.$route.params.userId,
       loading: false,
       searchValue: "",
+      emptyText: '',
       data: [],
       selectPermission: [],
       
@@ -153,30 +154,34 @@ export default {
         this.target.targetId,
         this.target.type
       ).then(res => {
-        res.forEach(val => {
-          if (val.leaf) {
-            treeData.push({
-              title: val.text,
-              id: val.id,
-              leaf: val.leaf,
-              checked: val.check
-            });
+        if(res.length > 0){
+          res.forEach(val => {
+            if (val.leaf) {
+              treeData.push({
+                title: val.text,
+                id: val.id,
+                leaf: val.leaf,
+                checked: val.check
+              });
+            } else {
+              treeData.push({
+                title: val.text,
+                id: val.id,
+                loading: false,
+                indeterminate: val.halfSelected,
+                leaf: val.leaf,
+                checked: val.check,
+                children: []
+              });
+            }
+          });
+          if (callback) {
+            callback(treeData);
           } else {
-            treeData.push({
-              title: val.text,
-              id: val.id,
-              loading: false,
-              indeterminate: val.halfSelected,
-              leaf: val.leaf,
-              checked: val.check,
-              children: []
-            });
+            this.data = treeData;
           }
-        });
-        if (callback) {
-          callback(treeData);
-        } else {
-          this.data = treeData;
+        }else{
+          this.emptyText = '暂无数据';
         }
       });
     },

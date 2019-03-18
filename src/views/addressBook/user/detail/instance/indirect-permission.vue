@@ -35,7 +35,7 @@
 <template>
   <div class="direct">
     <div class="direct-detail" id="directHeight">
-      <div class="direct-header">
+      <!-- <div class="direct-header">
         <div class="app-table-search">
           <Input 
             @on-search="permissionFilter" 
@@ -45,14 +45,15 @@
             style="width: 300px">
           </Input>
         </div>
-      </div>
+      </div> -->
       <div class="direct-table">
         <Tree
           ref="permissionTree"
           :data="data"
           :load-data="loadData"
           class="permission-tree"
-          empty-text="">
+          :empty-text="emptyText"
+          show-checkbox>
         </Tree>
       </div>
     </div>
@@ -60,7 +61,7 @@
 </template>
 
 <script>
-import { getAllPermissionData } from "@/services/addressBookService.js";
+import { getIndirectData } from "@/services/addressBookService.js";
 
 export default {
   name: "indirectPermission",
@@ -69,8 +70,8 @@ export default {
       userId: this.$route.params.userId,
       loading: false,
       searchValue: "",
+      emptyText: '',
       data: []
-      
     };
   },
   methods: {
@@ -78,35 +79,38 @@ export default {
     getAllPermissionDatas(id, callback) {
       let treeData = [],
         parentId = id ? id : "root";
-      getAllPermissionData(
+      getIndirectData(
         parentId,
-        this.userId,
-        'user'
+        this.userId
       ).then(res => {
-        res.forEach(val => {
-          if (val.leaf) {
-            treeData.push({
-              title: val.text,
-              id: val.id,
-              leaf: val.leaf,
-              checked: val.check
-            });
+        if(res.length > 0){
+          res.forEach(val => {
+            if (val.leaf) {
+              treeData.push({
+                title: val.text,
+                id: val.id,
+                leaf: val.leaf,
+                checked: val.check
+              });
+            } else {
+              treeData.push({
+                title: val.text,
+                id: val.id,
+                loading: false,
+                indeterminate: val.halfSelected,
+                leaf: val.leaf,
+                checked: val.check,
+                children: []
+              });
+            }
+          });
+          if (callback) {
+            callback(treeData);
           } else {
-            treeData.push({
-              title: val.text,
-              id: val.id,
-              loading: false,
-              indeterminate: val.halfSelected,
-              leaf: val.leaf,
-              checked: val.check,
-              children: []
-            });
+            this.data = treeData;
           }
-        });
-        if (callback) {
-          callback(treeData);
-        } else {
-          this.data = treeData;
+        }else{
+          this.emptyText = '暂无数据';
         }
       });
     },

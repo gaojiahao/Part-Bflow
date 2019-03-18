@@ -155,11 +155,10 @@ export const getGroupData = (parentId,filter) => request('/H_roleplay-si/ds/getU
  * @author XiaoYing
  * @description 添加组织或职位
  */
-export const addMember = (list, groupId, userId) => request('/H_roleplay-si/ps/updateRelation', {
+export const addMember = (list, groupId, userId) => request('/H_roleplay-si/userInfo/addRelation', {
   list: list,
   single: groupId,
-  multi: userId,
-  status: 0
+  userId: userId
 }, 'POST');
 
 /**

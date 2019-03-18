@@ -325,7 +325,7 @@ export default {
         this.selectGroup.forEach(val => {
           groupIds.push(val.groupId);
         });
-        addMember('sys_group_user',groupIds.join(','),this.userId).then(res => {
+        addMember('group',groupIds.join(','),this.userId).then(res => {
           if(res.success){
             this.selectGroup = [];
             this.$Message.success('更新成功');

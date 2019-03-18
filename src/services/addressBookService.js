@@ -157,7 +157,7 @@ export const getGroupData = (parentId,filter) => request('/H_roleplay-si/ds/getU
  */
 export const addMember = (list, groupId, userId) => request('/H_roleplay-si/userInfo/addRelation', {
   list: list,
-  single: groupId,
+  multi: groupId,
   userId: userId
 }, 'POST');
 

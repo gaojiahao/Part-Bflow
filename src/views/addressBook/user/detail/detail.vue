@@ -48,7 +48,7 @@
       <!-- 职位 -->
       <role-member @changeInstance="getInstanceCount" v-if="whichShow.role" :isUpdate="isUpdate"></role-member>
       <!-- 直接权限 -->
-      <direct-permission @changeInstance="getInstanceCount" v-if="whichShow.dirper" :isUpdate="isUpdate"></direct-permission>
+      <direct-permission @changeInstance="getInstanceCount" v-if="whichShow.dirper" :target="target" :isUpdate="isUpdate"></direct-permission>
       <!-- 间接权限 -->
       <indirect-permission v-if="whichShow.indirper"></indirect-permission>
       <!-- 工作流任务 -->
@@ -95,6 +95,10 @@ export default {
         dirper: false,
         indirper: false,
         workflow: false
+      },
+      target: {
+        type: 'user',
+        targetId: this.$route.params.userId
       },
       userInformation: {},
       relativeInstance: [

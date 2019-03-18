@@ -1,12 +1,8 @@
 <style lang="less" scoped>
     .direct{
-      &-header{
-        overflow:hidden;
-        margin-bottom:-8px;
-      }
       &-detail{
         background-color: #fff;
-        width: 75%;
+        width: 35%;
         margin: 0 auto;
         padding: 26px 50px;
         box-shadow: 0px 1px 10px #ddd;
@@ -19,12 +15,8 @@
         }
       }
   }
-  .user-page {
-    margin-top: 10px;
-    overflow: hidden;
-  }
   .app-table-search{
-    float: right;
+    margin-bottom: 5px;
     .app-search-icon {
       font-size: 1rem;
       color: #fff;
@@ -32,35 +24,18 @@
       cursor: pointer;
     }
 }
-.app-search {
-    margin-bottom: 5px;
-    .app-search-icon {
-      font-size: 1rem;
-      color: #39f;
-      display: inline-block;
-      cursor: pointer;
+
+.permission-tree{
+    .ivu-tree-arrow i{
+      font-size: 18px;
     }
-  }
-.page-selection-warp {
-    width: 100%;
-    height: 100%;
-    min-height: 30px;
-    background-color: #e6e6e6;
-    margin-bottom: -8px;
-    padding: 1px 5px;
   }
 </style>
 
 <template>
   <div class="direct">
     <div class="direct-detail" id="directHeight">
-      <div class="direct-header">
-        <div v-if="isUpdate" style="display:inline;">
-          <b @click="showAddPermission" class="direct-detail-btn">添加权限</b>
-          <span style="color: #7a7676;">-添加直接权限</span>
-          <b @click="deletePermission" class="direct-detail-btn">删除权限</b>
-          <span style="color: #7a7676;">-删除直接权限</span>
-        </div>
+      <!-- <div class="direct-header">
         <div class="app-table-search">
           <Input 
             @on-search="permissionFilter" 
@@ -69,251 +44,158 @@
             placeholder="搜索权限名称" 
             style="width: 300px">
           </Input>
-          <a @click="permissionFilter" class="app-search-icon">
-            <Button type="primary" size="small">查询</Button>
-          </a>
         </div>
-      </div>
+      </div> -->
       <div class="direct-table">
-        <Table 
-          style="margin-top:10px;"  
-          @on-selection-change="onSelectionChange" 
-          :columns="columns" 
-          :loading="loading" 
-          :data="dirPermissionData">
-        </Table>
-        <div class="user-page">
-          <div style="float: right;padding-bottom: 5px;">
-            <Page 
-              size="small" 
-              @on-page-size-change="onPageSizeChange" 
-              :total="total" 
-              :current="currentPage" 
-              :page-size="pageSize"
-              @on-change="onPageChange" 
-              show-total 
-              show-elevator 
-              show-sizer>
-            </Page>
-          </div>
-        </div>
+        <Tree
+          ref="permissionTree"
+          @on-check-change="onCheckChange"
+          :data="data"
+          :load-data="loadData"
+          show-checkbox
+          class="permission-tree"
+          :empty-text="emptyText"
+        >
+        </Tree>
       </div>
     </div>
-    <!-- 权限modal -->
-    <permission-modal 
-      :target="target"
-      :visible="showModal" 
-      @changeModalStatus="changeModalStatus"
-      @permissionChange="permissionChange">
-    </permission-modal>
   </div>
 </template>
 
 <script>
 import {
-  getDirectPermissionData,
-  deleteIndirPermission
+  getAllPermissionData,
+  addPermission,
+  deletePermission
 } from "@/services/addressBookService.js";
-import PermissionModal from './permission-modal';
 
 export default {
   name: "directPermission",
-  components: {
-    PermissionModal
-  },
+  components: {},
   props: {
     isUpdate: {
-          type: Boolean
+        type: Boolean
+    },
+    target: {
+        type: Object
       }
   },
   data() {
     return {
       userId: this.$route.params.userId,
+      loading: false,
       searchValue: "",
-      target: {
-        type: 'user',
-        targetId: this.$route.params.userId
-      },
-      total: 0,
-      currentPage: 1,
-      pageSize: 10,
-      loading: true,
-      showModal: false,
-      columns: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
-          title: "名称",
-          key: "name"
-        },
-        {
-          title: "操作",
-          key: "action",
-          width: 150,
-          align: "center",
-          render: (h, params) => {
-            return h(
-              "Button",
-              {
-                props: {
-                  type: "error",
-                  size: "small",
-                  disabled: !this.isUpdate
-                },
-                on: {
-                  click: () => {
-                    this.$Modal.confirm({
-                      title: "确认",
-                      content: "确认删除此权限？",
-                      onOk: () => {
-                        let filter = JSON.stringify([
-                            {
-                              operator: "like",
-                              value: this.searchValue,
-                              property: "name"
-                            }
-                          ]);
-                        deleteIndirPermission(this.userId, params.row.id)
-                          .then(res => {
-                            if (res.success) {
-                              this.$Message.success("删除成功！");
-                              this.getDirPermissionData(filter);
-                              this.$emit("changeInstance");
-                            }
-                          })
-                          .catch(error => {
-                            this.$Message.error(error.data.message);
-                          });
-                      }
-                    });
-                  }
-                }
-              },
-              "删除"
-            );
-          }
-        }
-      ],
-      dirPermissionData: [],
-      selectDeletePermission: []
+      emptyText: '',
+      data: [],
+      selectPermission: [],
+      
     };
   },
   methods: {
-    //添加权限后更新数据
-    permissionChange() {
-      this.getDirPermissionData();
-      this.$emit("changeInstance");
-    },
-    // //监听modal状态变化
-    changeModalStatus() {
-      this.showModal = false;
-    },
-    //获取直接权限数据
-    getDirPermissionData(filter) {
-      if (this.userId) {
-        this.loading = true;
-        getDirectPermissionData(
-          this.userId,
-          this.pageSize,
-          this.currentPage,
-          filter
-        ).then(res => {
-          this.dirPermissionData = res.tableContent;
-          this.total = res.dataCount;
-          this.loading = false;
-        });
-      } else {
-        this.loading = false;
+    //添加权限
+    addPermissions() {
+      let permissionIds = [],
+          menuIds = [],
+          data = {};
+
+      this.selectPermission.forEach(val => {
+        if (val.leaf) {
+          permissionIds.push(val.id);
+        } else {
+          menuIds.push(val.id);
+        }
+      });
+      
+      if (this.selectPermission.length > 0 && this.target) {
+          addPermission(
+            JSON.stringify(permissionIds),
+            JSON.stringify(menuIds),
+            this.target.targetId,
+            this.target.type
+          )
+          .then(res => {
+            if (res.success) {
+              this.selectPermission = [];
+              this.$Message.success("更新成功");
+              if(this.target.type === 'user'){
+                this.$emit("changeInstance");
+              }else{
+                this.$emit("on-permission-change", true);
+              }
+            }
+          })
+          .catch(error => {
+            this.$Message.error(error.data.message);
+          });
       }
     },
-    //点击分页
-    onPageChange(currentPage) {
-      let filter = JSON.stringify([
-        {
-          operator: "like",
-          value: this.searchValue,
-          property: "name"
-        }
-      ]);
-      this.currentPage = currentPage;
-      this.getDirPermissionData(filter);
-    },
-    //点击切换每页显示条数
-    onPageSizeChange(size) {
-      let filter = JSON.stringify([
-        {
-          operator: "like",
-          value: this.searchValue,
-          property: "name"
-        }
-      ]);
-      this.pageSize = size;
-      this.getDirPermissionData(filter);
-    },
-    //删除权限
-    deletePermission() {
-      let multiId = [];
-      let filter = JSON.stringify([
-          {
-            operator: "like",
-            value: this.searchValue,
-            property: "name"
+    //选择树节点
+    onCheckChange(selectArray, currentSelect) {
+      if(!currentSelect.checked){
+        deletePermission(this.target.targetId,currentSelect.id,this.target.type).then(res => {
+          if (res.success) {
+            this.$Message.success("删除成功");
+            this.$emit("permissionChange");
           }
-        ]);
-      if (this.selectDeletePermission.length === 0) {
-        this.$Message.warning("请先选择要删除的权限！");
-      } else {
-        this.selectDeletePermission.forEach(val => {
-          multiId.push(val.id);
+        }).catch(error => {
+            this.$Message.error(error.data.message);
         });
-        if (multiId && this.userId) {
-          this.$Modal.confirm({
-            title: "确认",
-            content: "确认删除已选的权限？",
-            onOk: () => {
-              deleteIndirPermission(this.userId, multiId.join(","))
-                .then(res => {
-                  if (res.success) {
-                    this.selectDeletePermission = [];
-                    this.$Message.success("删除成功！");
-                    this.getDirPermissionData(filter);
-                    this.$emit("changeInstance");
-                  }
-                })
-                .catch(error => {
-                  this.$Message.error(error.data.message);
-                });
+      }else{
+        this.selectPermission = selectArray;
+        this.addPermissions();
+      }
+    },
+    //加载所有权限数据
+    getAllPermissionDatas(id, callback) {
+      let treeData = [],
+        parentId = id ? id : "root";
+      getAllPermissionData(
+        parentId,
+        this.target.targetId,
+        this.target.type
+      ).then(res => {
+        if(res.length > 0){
+          res.forEach(val => {
+            if (val.leaf) {
+              treeData.push({
+                title: val.text,
+                id: val.id,
+                leaf: val.leaf,
+                checked: val.check
+              });
+            } else {
+              treeData.push({
+                title: val.text,
+                id: val.id,
+                loading: false,
+                indeterminate: val.halfSelected,
+                leaf: val.leaf,
+                checked: val.check,
+                children: []
+              });
             }
           });
+          if (callback) {
+            callback(treeData);
+          } else {
+            this.data = treeData;
+          }
+        }else{
+          this.emptyText = '暂无数据';
         }
-      }
+      });
     },
-    //选择要删除的权限
-    onSelectionChange(selection) {
-      this.selectDeletePermission = selection;
-    },
-    //展示添加权限modal
-    showAddPermission() {
-      this.showModal = true;
+    //异步加载树形数据
+    loadData(item, callback) {
+      this.getAllPermissionDatas(item.id, callback);
     },
     //权限过滤
     permissionFilter() {
-      let filter = JSON.stringify([
-        {
-          operator: "like",
-          value: this.searchValue,
-          property: "name"
-        }
-      ]);
-      this.currentPage = 1;
-      this.getDirPermissionData(filter);
+      this.getAllPermissionDatas();
     }
   },
   mounted() {
-    this.getDirPermissionData();
+    this.getAllPermissionDatas();
   }
 };
 </script>

@@ -105,8 +105,8 @@
         <member-info :isPermission="isPermission" :groupId="groupId" @on-member-info-change='handleChangeObjDetailsCount'></member-info>
       </section>
       <!-- 权限 -->
-      <section class="permission-container rfd-tab-container-common" v-if="actionIndex===0">
-        <permission :isPermission="isPermission" :groupId="groupId" @on-permission-change='handleChangeObjDetailsCount'></permission>
+      <section class="permission-container" v-if="actionIndex===0">
+        <permission :isPermission="isPermission" :target="target" :groupId="groupId" @on-permission-change='handleChangeObjDetailsCount'></permission>
       </section>
     </div>
 
@@ -162,7 +162,7 @@ import HighOrganization from "./instance/higher-organization";
 import LowerOrganization from "./instance/lower-origanization";
 import MemberInfo from "./instance/member-info";
 import Principal from "./instance/principal";
-import Permission from "./instance/permission";
+import Permission from "../user/detail/instance/direct-permission";
 export default {
   name: "organization",
 
@@ -430,7 +430,11 @@ export default {
       checkout: true,
 
       groupId: this.$route.params.groupId,
-      isPermission: true
+      isPermission: true,
+      target: {
+        type: 'group',
+        targetId: this.$route.params.groupId
+      }
     };
   },
 

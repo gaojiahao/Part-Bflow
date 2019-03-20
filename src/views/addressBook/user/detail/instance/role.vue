@@ -411,7 +411,7 @@ export default {
         });
       }
       if(multiId.length>0 && this.userId){
-        addMember('sys_user_role',this.userId,multiId.join(',')).then(res => {
+        addMember('role',this.userId,multiId.join(',')).then(res => {
           if(res.success){
             this.$Message.success('更新成功');
             if(this.roleData.length === 0){

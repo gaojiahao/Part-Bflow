@@ -155,11 +155,10 @@ export const getGroupData = (parentId,filter) => request('/H_roleplay-si/ds/getU
  * @author XiaoYing
  * @description 添加组织或职位
  */
-export const addMember = (list, groupId, userId) => request('/H_roleplay-si/ps/updateRelation', {
+export const addMember = (list, groupId, userId) => request('/H_roleplay-si/userInfo/addRelation', {
   list: list,
-  single: groupId,
-  multi: userId,
-  status: 0
+  multi: groupId,
+  userId: userId
 }, 'POST');
 
 /**
@@ -187,6 +186,15 @@ export const getAllRoleData = (pageSize, currentPage, filter) => request('/H_rol
  * @description 获取所用权限数据
  */
 export const getAllPermissionData = (parentId,objId,type) => request(`/H_roleplay-si/ps/${type}/getChildNode`, {
+  parentId: parentId,
+  objId: objId
+});
+
+/**
+ * @author XiaoYing
+ * @description 获取间接权限数据
+ */
+export const getIndirectData = (parentId,objId) => request('/H_roleplay-si/ps/user/indirectAuthority', {
   parentId: parentId,
   objId: objId
 });

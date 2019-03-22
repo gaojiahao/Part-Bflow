@@ -109,6 +109,13 @@ export default {
     getRelatedAppData() {
       getRelatedApp(this.$route.params.listId).then(res => {
           this.relatedApps = res;
+          this.relatedApps.map(app=>{
+             if(app.icon){
+                if(app.icon.indexOf('resource')=== 0 ){
+                     app.icon = `https://lab.roletask.com/resource/app-icon/${app.icon.split('/').pop()}`
+                }
+            }
+          });
       });
     }
   },

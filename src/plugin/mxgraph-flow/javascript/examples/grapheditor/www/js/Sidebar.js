@@ -1029,6 +1029,13 @@ Sidebar.prototype.addRoletaskAppPalette = function (expand) {
 			palettesMap[key].menus.map(function (list) {
 				lists.push(
 					sb.addEntry(list.text, mxUtils.bind(sb, function () {
+					
+					if (list.icon) {
+						if (list.icon.indexOf('resource') === 0) {
+							list.icon = `https://lab.roletask.com/resource/app-icon/${list.icon.split('/').pop()}`
+						}
+					}
+
 					var cell = new mxCell(
 						list.text,
 						new mxGeometry(0, 0, 50, 50),

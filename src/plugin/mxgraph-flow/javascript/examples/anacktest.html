@@ -146,7 +146,7 @@
             }
                
             if(currentUser.isSysRoleList.map(function (i) {
-                if(i.id === 1){
+                if(i.id === -1){
                      document.getElementById('graphToolBar').appendChild(mxUtils.button('编辑',
                         function (evt) {
                             graph.tourl();

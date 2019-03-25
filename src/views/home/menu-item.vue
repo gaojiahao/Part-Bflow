@@ -19,7 +19,7 @@
         <img 
             class="menu-section-list-item-icon" 
             v-bind:class="{ 'obj-icon': menu.type=='obj' ||  menu.type=='hr', 'subject-icon': menu.type=='subject' }"
-            v-lazy="menu.icon"
+            v-lazy="handlerGetIcon(menu.icon)"
             onerror='this.lazy="resources/images/icon/img-loading-error.png"'>
         <div class="menu-section-list-item-info">
             <div class="menu-section-list-item-info-base">
@@ -164,6 +164,14 @@ export default {
         showTaskCount(e) {
             Bus.$emit('showTaskEvent', this.menu.url.split("/")[1])
         },
+        handlerGetIcon(icon){
+            if(icon){
+                if(icon.indexOf('resource')=== 0 ){
+                    return icon = `https://lab.roletask.com/resource/app-icon/${icon.split('/').pop()}`
+                }
+            }
+            return icon;
+        }
       
     },
     mounted(){

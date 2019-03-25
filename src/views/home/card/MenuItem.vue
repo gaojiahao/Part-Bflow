@@ -1,6 +1,12 @@
 <template>
   <div class="card ">
-    <Poptip class="badge-custom" width="720" placement="right-end" @on-popper-show="popperShow" v-if="type!=='subject'" >
+    <Poptip 
+        class="badge-custom" 
+        width="720" 
+        placement="right-end" 
+        @on-popper-show="popperShow" 
+        v-if="type!=='subject'" >
+        
       <Badge :count="taskCount"></Badge>
       <div slot="title">
         <label>{{appinfo.text+' - 待办任务'}}</label>
@@ -27,7 +33,15 @@
         </Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
-            <Page :total="pageTotal" :current="currentPage" size="small" :page-size="pageSize" @on-change="changeCurrentPage" show-total></Page>
+            <Page 
+              :total="pageTotal" 
+              :current="currentPage" 
+              size="small" 
+              :page-size="pageSize" 
+              @on-change="changeCurrentPage" 
+              show-total>
+            </Page>
+
           </div>
         </div>
 

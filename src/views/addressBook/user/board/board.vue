@@ -12,7 +12,7 @@
             <Row  class="rfd-card-container">
                 <Col span="3" class="rfd-card-left">
                     <img 
-                      :src="user.photo || 'resources/images/icon/defaultUserPhoto.jpg'" 
+                      :src="user.photo || 'resources/images/icon/defaultUserPhoto.png'" 
                       class="rfd-card-img" 
                       @click="goDetail(user)">
                 </Col>

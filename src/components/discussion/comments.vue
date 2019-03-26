@@ -16,7 +16,7 @@
                     <img   
                     @click="showUserInfo(comment.creator)"
                     @error="errorimg(comment)" 
-                    slot="userCard" :src="comment.photo?comment.photo:'resources/images/icon/defaultUserPhoto.jpg'">
+                    slot="userCard" :src="comment.photo?comment.photo:'resources/images/icon/defaultUserPhoto.png'">
                 </my-pop-tip>
             </Col>
 

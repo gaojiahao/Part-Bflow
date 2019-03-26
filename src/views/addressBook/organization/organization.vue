@@ -82,11 +82,11 @@
         <div class="baseinfo-container-action" @click="handleSubmitBoxs">
           <input type='submit' value="关闭" style="background-color:rgb(81, 90, 110)" class="baseinfo-container-action-submit" id="close" />
           <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" id="edit" v-if="groupId && isPermission" />
-          <input type='submit' value="保存" class="baseinfo-container-action-submit" id="save" v-show="!isEdit" />
+          <input type='submit' value="保存" class="baseinfo-container-action-submit" id="save" v-show="!isEdit && formItem.status !== -2" />
           <input type='submit' value="归档" style="background-color:rgb(31, 94, 197)" class="baseinfo-container-action-submit" id="file" v-show="!isEdit && formItem.status === 1" />
           <input type='submit' value="还原" style="background-color:rgb(31, 94, 197)" class="baseinfo-container-action-submit" id="restore" v-show="!isEdit && formItem.status === -2" />
           <input type='submit' value="保存并新建" class="baseinfo-container-action-submit" id="saveAndAdd" v-if="!groupId" />
-          <input type='submit' value="保存草稿" class="baseinfo-container-action-submit" id="draft" v-show="!isEdit || !groupId" />
+          <input type='submit' value="保存草稿" class="baseinfo-container-action-submit" id="draft" v-show="(!isEdit && formItem.status === 0) || !groupId" />
         </div>
       </section>
       <!-- 上级组织 -->
@@ -484,9 +484,7 @@ export default {
             this.editBtnName = this.isEdit ? "编辑" : "放弃编辑";
             break;
           case "save":
-            if(!this.groupId){
-              this.formItem.status = 1;
-            }
+            this.formItem.status = 1;
             this.save();
             break;
           case "saveAndAdd":

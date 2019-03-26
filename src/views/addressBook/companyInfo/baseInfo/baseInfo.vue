@@ -80,11 +80,11 @@
     <Row class="info-btn">
       <Button @click="toCompanyLst" class="radius0 close-company">关闭</Button>
       <Button v-if="isAdd && isPermission" @click="isEditCompanyInfo" class="radius0 add-btn">{{isEdit?'编辑':'放弃编辑'}}</Button>
-      <Button v-if="!isEdit" @click="addCompanyData" class="radius0 add-btn">保存</Button>
+      <Button v-if="!isEdit && baseInfoItem.status !== -2" @click="addCompanyData" class="radius0 add-btn">保存</Button>
       <Button v-if="!isEdit && baseInfoItem.status === 1" @click="addCompanyData('file')" style="background-color:rgb(31, 94, 197)" class="radius0 add-btn">归档</Button>
       <Button v-if="!isEdit && baseInfoItem.status === -2" @click="addCompanyData('restore')" style="background-color:rgb(31, 94, 197)" class="radius0 add-btn">还原</Button>
       <Button v-if="!groupId" @click="saveAndAddCompany" class="radius0 add-btn">保存并新建</Button>
-      <Button v-if="!isEdit || !groupId" @click="addCompanyData('draft')" class="radius0 add-btn">保存草稿</Button>
+      <Button v-if="(!isEdit && baseInfoItem.status === 0) || !groupId" @click="addCompanyData('draft')" class="radius0 add-btn">保存草稿</Button>
     </Row>
   </div>
 </template>
@@ -219,11 +219,7 @@ export default {
                 this.$Message.error(error.data.message);
             });
           }else{
-            if(saveType === 'draft'){
-              data.status = 0;
-            }else{
-              data.status = 1;
-            }
+            data.status = 1;
             
             saveCompanyInfo(data).then(res => {
               if (res[0].groupId) {

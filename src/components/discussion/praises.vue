@@ -14,8 +14,8 @@
                     :key="index"
                     @click="showUserInfo(p.creator)"
                     slot="userCard"
-                    onerror="src='resources/images/icon/defaultUserPhoto.jpg'"
-                    :src="p.photo?p.photo:'resources/images/icon/defaultUserPhoto.jpg'" 
+                    onerror="src='resources/images/icon/defaultUserPhoto.png'"
+                    :src="p.photo?p.photo:'resources/images/icon/defaultUserPhoto.png'" 
                     width=40>
             </my-pop-tip>
         </span>

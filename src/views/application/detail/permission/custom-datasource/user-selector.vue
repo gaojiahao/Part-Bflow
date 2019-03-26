@@ -121,7 +121,7 @@ export default {
             return h("div", [
               h("img", {
                 attrs: {
-                  src: params.row.photo?params.row.photo:'/resources/images/icon/defaultUserPhoto.jpg'
+                  src: params.row.photo?params.row.photo:'resources/images/icon/defaultUserPhoto.png'
                 },
                 style: {
                   borderRadius:'50%',

@@ -12,6 +12,7 @@ export const  applicationRouter = {
             meta: {
                 title: '应用详情',
             },
+            redirect: { name: 'change-log' },
             component: () => import('@/views/application/detail/detail-layout.vue'),
             children:[
                 {

@@ -105,6 +105,13 @@ export default {
         this.appType = this.appData.type;
         this.appTransType = this.appData.transType;
 
+
+        if(this.appData.icon){
+          if(this.appData.icon.indexOf('resource')=== 0 ){
+              this.appData.icon = `https://lab.roletask.com/resource/app-icon/${this.appData.icon.split('/').pop()}`
+          }
+        }
+
         //获取当前登录用户角色id
         currentUser.isSysRoleList.forEach(val => {
           currentUserIds.push(val.id);

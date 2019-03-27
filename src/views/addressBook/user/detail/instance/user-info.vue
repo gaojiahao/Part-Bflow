@@ -135,11 +135,11 @@
         <Row class="info-btn">
             <Button @click="goUserList" class="radius0 close-user">关闭</Button>
             <Button v-if="isAdd" @click="editUserInfo" class="radius0 add-btn">{{ isEdit?'编辑':'放弃编辑'}}</Button>
-            <Button v-if="!isEdit" @click="updateUserData"  class="radius0 add-btn">保存</Button>
+            <Button v-if="!isEdit && formItem.status !== -2" @click="updateUserData"  class="radius0 add-btn">保存</Button>
             <Button v-if="!isEdit && formItem.status === 1" @click="updateUserData('file')" style="background-color:rgb(31, 94, 197)" class="radius0 add-btn">归档</Button>
             <Button v-if="!isEdit && formItem.status === -2" @click="updateUserData('restore')" style="background-color:rgb(31, 94, 197)" class="radius0 add-btn">还原</Button>
             <Button v-if="!userId"  @click="saveAndAddUser" class="radius0 add-btn">保存并新建</Button>
-            <Button v-if="!isEdit || !userId" @click="updateUserData('draft')" class="radius0 add-btn">保存草稿</Button>
+            <Button v-if="(!isEdit && formItem.status === 0) || !userId" @click="updateUserData('draft')" class="radius0 add-btn">保存草稿</Button>
         </Row>
         <Modal
             v-model="showCompanyModal"
@@ -426,11 +426,7 @@ export default {
                             this.$Message.error(error.data.message);
                         })
                     }else{
-                        if(saveType === 'draft'){
-                            this.formItem.status = 0;
-                        }else{
-                            this.formItem.status = 1;
-                        }
+                        this.formItem.status = 1;
                         addUser(this.formItem).then(res => {
                             if(res){
                                 this.$Message.success('保存成功');

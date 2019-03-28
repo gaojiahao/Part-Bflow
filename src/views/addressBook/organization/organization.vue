@@ -450,6 +450,9 @@ export default {
       if(oldValue !== newValue && !this.isEdit){
         this.formItem.highGroup=""
       }
+    },
+    $route(to, from) {
+      window.location.reload();
     }
   },
 
@@ -547,7 +550,6 @@ export default {
                 this.$router.push({
                   path: "/addressBook/organization/detail/" + res.groupId
                 });
-                window.location.reload();
               }
             }).catch(error=>{
               this.$Message.error(error.data.message)

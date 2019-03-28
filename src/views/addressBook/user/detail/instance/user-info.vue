@@ -331,7 +331,10 @@ export default {
           if(!this.isUpdate){
               this.isAdd = false;
           }
-      }
+      },
+      $route(to, from) {
+      window.location.reload();
+    }
   },
   methods: {
     //工号失去焦点验证唯一
@@ -431,7 +434,6 @@ export default {
                             if(res){
                                 this.$Message.success('保存成功');
                                 this.$router.push({ path: '/addressBook/user/detail/'+res.user_id});
-                                window.location.reload();
                             }
                         }).catch(error => {
                             this.$Message.error(error.data.message);
@@ -503,7 +505,6 @@ export default {
                             if(res.success){
                                 this.$Message.success(res.message);
                                 this.$router.push({ path: '/addressBook/user/add'});
-                                window.location.reload();
                             }
                         }).catch(error => {
                             this.$Message.error(error.data.message);

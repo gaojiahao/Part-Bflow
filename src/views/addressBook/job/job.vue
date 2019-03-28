@@ -245,7 +245,11 @@ export default {
       }
     };
   },
-
+  watch: {
+    $route(to, from) {
+      window.location.reload();
+    }
+  },
   methods: {
     goRoleList() {
         location.href = '/Site/index.html#page/jobs';
@@ -394,7 +398,6 @@ export default {
                   this.$router.push({
                     path: "/addressBook/job/detail/" + res.id
                   });
-                  window.location.reload();
                 }
               })
               .catch(errer => {

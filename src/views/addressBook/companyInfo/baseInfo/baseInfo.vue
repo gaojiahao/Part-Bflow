@@ -146,6 +146,11 @@ export default {
       }
     };
   },
+  watch: {
+    $route(to, from) {
+      window.location.reload();
+    }
+  },
   methods: {
     handleSuccess(res, file) {
       this.logo =
@@ -225,9 +230,9 @@ export default {
               if (res[0].groupId) {
                 this.$Message.success("保存成功");
                 this.$router.push({
-                  path: "/addressBook/companyInfo/baseInfo/" + res[0].groupId
-                });
-                window.location.reload();
+                    path: "/addressBook/companyInfo/baseInfo/" + res[0].groupId
+                  });
+                
               } else {
                 this.$Message.error(res.message);
               }

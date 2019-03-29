@@ -333,8 +333,8 @@ export default {
           }
       },
       $route(to, from) {
-      window.location.reload();
-    }
+        window.location.reload();
+      }
   },
   methods: {
     //工号失去焦点验证唯一
@@ -547,9 +547,9 @@ export default {
           day = date.getDate(),
           relDate;
       if (month >= 1 && month <= 9) {
-        month = "0" + month;
+        month = `0${month}`;
       }
-      relDate = year + "-" + month + "-" + day;
+      relDate = `${year}-${month}-${day}`;
 
       return relDate;
     }

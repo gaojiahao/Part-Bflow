@@ -429,7 +429,12 @@ export default {
                             this.$Message.error(error.data.message);
                         })
                     }else{
-                        this.formItem.status = 1;
+                        if(saveType === 'draft'){
+                            this.formItem.status = 0;
+                        }else{
+                            this.formItem.status = 1;
+                        }
+                        
                         addUser(this.formItem).then(res => {
                             if(res){
                                 this.$Message.success('保存成功');

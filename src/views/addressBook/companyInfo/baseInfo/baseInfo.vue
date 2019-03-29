@@ -224,8 +224,11 @@ export default {
                 this.$Message.error(error.data.message);
             });
           }else{
-            data.status = 1;
-            
+            if(saveType === 'draft'){
+              data.status = 0;
+            }else{
+              data.status = 1;
+            }
             saveCompanyInfo(data).then(res => {
               if (res[0].groupId) {
                 this.$Message.success("保存成功");

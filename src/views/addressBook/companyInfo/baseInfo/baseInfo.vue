@@ -202,6 +202,8 @@ export default {
         data.status = -2;
       }else if(saveType === 'restore'){
         data.status = 1;
+      }else{
+        data.status = 1;
       }
 
       if(this.groupId){

@@ -412,6 +412,8 @@ export default {
                         this.formItem.status = -2;
                     }else if(saveType === 'restore'){
                         this.formItem.status = 1;
+                    }else{
+                        this.formItem.status = 1;
                     }
 
                     if(this.formItem.termOfValidity){

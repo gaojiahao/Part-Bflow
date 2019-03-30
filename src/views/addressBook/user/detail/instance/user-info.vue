@@ -333,8 +333,8 @@ export default {
           }
       },
       $route(to, from) {
-      window.location.reload();
-    }
+        window.location.reload();
+      }
   },
   methods: {
     //工号失去焦点验证唯一
@@ -412,6 +412,8 @@ export default {
                         this.formItem.status = -2;
                     }else if(saveType === 'restore'){
                         this.formItem.status = 1;
+                    }else{
+                        this.formItem.status = 1;
                     }
 
                     if(this.formItem.termOfValidity){
@@ -429,7 +431,12 @@ export default {
                             this.$Message.error(error.data.message);
                         })
                     }else{
-                        this.formItem.status = 1;
+                        if(saveType === 'draft'){
+                            this.formItem.status = 0;
+                        }else{
+                            this.formItem.status = 1;
+                        }
+                        
                         addUser(this.formItem).then(res => {
                             if(res){
                                 this.$Message.success('保存成功');
@@ -547,9 +554,9 @@ export default {
           day = date.getDate(),
           relDate;
       if (month >= 1 && month <= 9) {
-        month = "0" + month;
+        month = `0${month}`;
       }
-      relDate = year + "-" + month + "-" + day;
+      relDate = `${year}-${month}-${day}`;
 
       return relDate;
     }

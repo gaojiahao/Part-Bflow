@@ -51,7 +51,9 @@
 
                     <cancel-project-task :data="n" v-if="n.type=='projectTaskRecall'"></cancel-project-task>
                     
-                    <business-opportunity-task  :data="n" v-if="n.type=='processStatusTime'"></business-opportunity-task>
+                    <business-opportunity-task :data="n" v-if="n.type=='processStatusTime'"></business-opportunity-task>
+
+                    <task-log-notice :data="n" v-if="n.type=='jobLog'" v-bind:class="{'notice-unread':!n.isRead}"></task-log-notice>
                 </div>
             </Col>
             <Col span="8" v-if="$route.name !='list'" class="content-container-history" >
@@ -74,6 +76,7 @@ import ExportImportNotice from "@/views/social/message/notice-tpl/export-import-
 import ProjectTask from "@/views/social/message/notice-tpl/project-task";
 import CancelProjectTask from "@/views/social/message/notice-tpl/cancel-project-task";
 import BusinessOpportunityTask from "@/views/social/message/notice-tpl/business-opportunity-notice";
+import TaskLogNotice from "@/views/social/message/notice-tpl/task-log-notice";
 
 import Messageistory from "@/views/social/message/content/messageistory";
 
@@ -94,7 +97,8 @@ export default {
         ExportImportNotice,
         ProjectTask,
         CancelProjectTask,
-        BusinessOpportunityTask
+        BusinessOpportunityTask,
+        TaskLogNotice
     },
     data(){
         return {

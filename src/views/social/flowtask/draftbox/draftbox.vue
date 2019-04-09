@@ -17,7 +17,11 @@
                         class="draftbox-content-container-toolbar-search" 
                         placeholder="输入交易号查询" />
                 </div>
-                <Table :columns="columns" :data="data" :height="tableHeight"  class="draftbox-content-table"></Table>
+                <Table :columns="columns" :data="data" :height="tableHeight"  class="draftbox-content-table">
+                    <template slot-scope="{ row }" slot="transCode">
+                        <a :href="'/Form/index.html?data='+row.transCode" target="_blank">{{row.transCode}}</a>
+                    </template>
+                </Table>
                 <Page 
                 class="draftbox-content-page"
                 :total="pageInfo.total" 
@@ -44,17 +48,8 @@ export default {
             columns: [
                 {
                     title: '交易号',
-                    key: 'transCode',
+                    slot: 'transCode',
                     width:140,
-                    render: (h,params) => {
-                        return h('a',{
-                            on: {
-                                click: () => {
-                                    window.open("/Form/index.html?data=" + params.row.transCode);
-                                }
-                            }
-                        },params.row.transCode);
-                    }
                 },
                 {
                     title: '应用名称',

@@ -17,7 +17,11 @@
                         class="donetask-content-container-toolbar-search" 
                         placeholder="输入交易号查询" />
                 </div>
-                <Table :columns="columns" :data="data" :height="tableHeight"  class="donetask-content-table"></Table>
+                <Table :columns="columns" :data="data" :height="tableHeight"  class="donetask-content-table">
+                    <template slot-scope="{ row }" slot="transId">
+                        <a :href="'/Form/index.html?data='+row.transId" target="_blank">{{row.transId}}</a>
+                    </template>
+                </Table>
                 <Page 
                 class="donetask-content-page"
                 :total="pageInfo.total" 
@@ -49,17 +53,8 @@ export default {
                 },
                 {
                     title: '交易号',
-                    key: 'transId',
-                     width:160,
-                     render: (h,params) => {
-                        return h('a',{
-                            on: {
-                                click: () => {
-                                    window.open("/Form/index.html?data=" + params.row.transId);
-                                }
-                            }
-                        },params.row.transId);
-                    }
+                    slot: 'transId',
+                    width:160,
                 },
                 {
                     title: '操作名称',

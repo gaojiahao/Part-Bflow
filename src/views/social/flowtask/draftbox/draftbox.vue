@@ -15,7 +15,7 @@
                         @on-change="handleSearch" 
                         v-model="searchkeywords" 
                         class="draftbox-content-container-toolbar-search" 
-                        placeholder="输入交易号查询" />
+                        placeholder="输入交易号" />
                 </div>
                 <Table :columns="columns" :data="data" :height="tableHeight"  class="draftbox-content-table">
                     <template slot-scope="{ row }" slot="transCode">

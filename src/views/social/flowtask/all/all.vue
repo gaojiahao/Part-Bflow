@@ -129,6 +129,10 @@ export default {
     },
     methods:{
         getFlowAllTasks:function () {
+            this.pageInfo.filter = JSON.stringify([
+                {"link":"or","operator_1":"like","value_1":this.searchkeywords,"property_1":"businessKey",
+                "operator_2":"like","value_2":this.searchkeywords,"property_2":"dealerName"}
+            ]);
             getFlowAllTasks(this.pageInfo).then(res=>{
                 this.data = res.tableContent;
                 this.pageInfo.total = res.dataCount;
@@ -143,10 +147,7 @@ export default {
             this.getFlowAllTasks();
         },
         handleSearch:function () {
-            this.pageInfo.filter = JSON.stringify([
-                {"link":"or","operator_1":"like","value_1":this.searchkeywords,"property_1":"businessKey",
-                "operator_2":"like","value_2":this.searchkeywords,"property_2":"dealerName"}
-            ]);
+            this.pageInfo.page = 1;
             this.getFlowAllTasks();
         },
         //计算时间差

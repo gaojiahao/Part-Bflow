@@ -57,6 +57,11 @@ export default {
                     width:160,
                 },
                 {
+                    title: '往来',
+                    key: 'dealerName',
+                    width:140,
+                },
+                {
                     title: '操作名称',
                     key: 'nodeName',
                      width:160,

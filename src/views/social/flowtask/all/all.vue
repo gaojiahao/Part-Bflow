@@ -15,7 +15,7 @@
                         @on-change="handleSearch" 
                         v-model="searchkeywords" 
                         class="alltask-content-container-toolbar-search" 
-                        placeholder="输入交易号查询" />
+                        placeholder="输入交易号或往来对象查询" />
                 </div>
                  
                 <Table :columns="columns" :data="data" :height="tableHeight"  class="alltask-content-table">
@@ -75,6 +75,11 @@ export default {
                     title: '交易号',
                     slot: 'businessKey',
                     width:160,
+                },
+                {
+                    title: '往来',
+                    key: 'dealerName',
+                    width:140,
                 },
                 {
                     title: '操作名称',
@@ -139,7 +144,8 @@ export default {
         },
         handleSearch:function () {
             this.pageInfo.filter = JSON.stringify([
-                {"operator":"like","value":this.searchkeywords,"property":"businessKey"}
+                {"link":"or","operator_1":"like","value_1":this.searchkeywords,"property_1":"businessKey",
+                "operator_2":"like","value_2":this.searchkeywords,"property_2":"dealerName"}
             ]);
             this.getFlowAllTasks();
         },

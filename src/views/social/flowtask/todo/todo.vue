@@ -15,7 +15,7 @@
                         @on-change="handleSearch" 
                         v-model="searchkeywords" 
                         class="todotask-content-container-toolbar-search" 
-                        placeholder="输入交易号查询" />
+                        placeholder="输入交易号或往来对象查询" />
                     <Button 
                         type="primary" 
                         style="float:right;height:29px;" 
@@ -178,7 +178,8 @@ export default {
         },
         handleSearch:function () {
             this.pageInfo.filter = JSON.stringify([
-                {"operator":"like","value":this.searchkeywords,"property":"businessKey"}
+                {"link":"or","operator_1":"like","value_1":this.searchkeywords,"property_1":"businessKey",
+                "operator_2":"like","value_2":this.searchkeywords,"property_2":"dealerName"}
             ]);
             this.getFlowTodoTasks();
         },

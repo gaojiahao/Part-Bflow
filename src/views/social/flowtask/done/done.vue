@@ -15,7 +15,7 @@
                         @on-change="handleSearch" 
                         v-model="searchkeywords" 
                         class="donetask-content-container-toolbar-search" 
-                        placeholder="输入交易号查询" />
+                        placeholder="输入交易号或往来对象查询" />
                 </div>
                 <Table :columns="columns" :data="data" :height="tableHeight"  class="donetask-content-table">
                     <template slot-scope="{ row }" slot="transId">
@@ -116,7 +116,8 @@ export default {
         },
         handleSearch:function () {
             this.pageInfo.filter = JSON.stringify([
-                {"operator":"like","value":this.searchkeywords,"property":"transId"}
+                {"link":"or","operator_1":"like","value_1":this.searchkeywords,"property_1":"transId",
+                "operator_2":"like","value_2":this.searchkeywords,"property_2":"dealerName"}
             ]);
             this.getFlowDoneTasks();
         },

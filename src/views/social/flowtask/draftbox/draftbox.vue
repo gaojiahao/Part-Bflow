@@ -15,7 +15,7 @@
                         @on-change="handleSearch" 
                         v-model="searchkeywords" 
                         class="draftbox-content-container-toolbar-search" 
-                        placeholder="输入交易号或往来对象查询" />
+                        placeholder="输入交易号" />
                 </div>
                 <Table :columns="columns" :data="data" :height="tableHeight"  class="draftbox-content-table">
                     <template slot-scope="{ row }" slot="transCode">
@@ -49,11 +49,6 @@ export default {
                 {
                     title: '交易号',
                     slot: 'transCode',
-                    width:140,
-                },
-                {
-                    title: '往来',
-                    key: 'dealerName',
                     width:140,
                 },
                 {
@@ -110,8 +105,7 @@ export default {
         },
         handleSearch:function () {
             this.pageInfo.filter = JSON.stringify([
-                {"link":"or","operator_1":"like","value_1":this.searchkeywords,"property_1":"transCode",
-                "operator_2":"like","value_2":this.searchkeywords,"property_2":"dealerName"}
+                {"operator":"like","value":this.searchkeywords,"property":"transCode"}
             ]);
             this.getDraftData();
         }

@@ -18,7 +18,11 @@
                         placeholder="输入交易号查询" />
                 </div>
                  
-                <Table :columns="columns" :data="data" :height="tableHeight"  class="alltask-content-table"></Table>
+                <Table :columns="columns" :data="data" :height="tableHeight"  class="alltask-content-table">
+                    <template slot-scope="{ row }" slot="businessKey">
+                        <a :href="'/Form/index.html?data='+row.businessKey" target="_blank">{{row.businessKey}}</a>
+                    </template>
+                </Table>
                 <Page 
                 class="alltask-content-page"
                 :total="pageInfo.total" 
@@ -69,17 +73,8 @@ export default {
                 },
                 {
                     title: '交易号',
-                    key: 'businessKey',
-                     width:160,
-                    render: (h,params) => {
-                        return h('a',{
-                            on: {
-                                click: () => {
-                                    window.open("/Form/index.html?data=" + params.row.businessKey);
-                                }
-                            }
-                        },params.row.businessKey);
-                    }
+                    slot: 'businessKey',
+                    width:160,
                 },
                 {
                     title: '操作名称',

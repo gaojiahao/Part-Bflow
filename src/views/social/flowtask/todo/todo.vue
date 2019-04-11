@@ -37,6 +37,9 @@
                     @on-selection-change="handerSelectionChange" 
                     @on-select-cancel="onSelectCancel"
                     >
+                    <template slot-scope="{ row }" slot="businessKey">
+                        <a :href="'/Form/index.html?data='+row.businessKey" target="_blank">{{row.businessKey}}</a>
+                    </template>
                 </Table>
                 <Page 
                 class="todotask-content-page"
@@ -90,17 +93,13 @@ export default {
                 },
                 {
                     title: '交易号',
-                    key: 'businessKey',
+                    slot: 'businessKey',
                     width:165,
-                    render: (h,params) => {
-                        return h('a',{
-                            on: {
-                                click: () => {
-                                    window.open("/Form/index.html?data=" + params.row.businessKey);
-                                }
-                            }
-                        },params.row.businessKey);
-                    }
+                },
+                {
+                    title: '往来',
+                    key: 'dealerName',
+                    width:140,
                 },
                 {
                     title: '操作名称',

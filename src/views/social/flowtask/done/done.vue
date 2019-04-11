@@ -106,6 +106,10 @@ export default {
     },
     methods:{
         getFlowDoneTasks:function () {
+            this.pageInfo.filter = JSON.stringify([
+                {"link":"or","operator_1":"like","value_1":this.searchkeywords,"property_1":"transId",
+                "operator_2":"like","value_2":this.searchkeywords,"property_2":"dealerName"}
+            ]);
             getFlowDoneTasks(this.pageInfo).then(res=>{
                 this.data = res.tableContent;
                 this.pageInfo.total = res.dataCount;
@@ -120,10 +124,7 @@ export default {
             this.getFlowDoneTasks();
         },
         handleSearch:function () {
-            this.pageInfo.filter = JSON.stringify([
-                {"link":"or","operator_1":"like","value_1":this.searchkeywords,"property_1":"transId",
-                "operator_2":"like","value_2":this.searchkeywords,"property_2":"dealerName"}
-            ]);
+            this.pageInfo.page = 1;
             this.getFlowDoneTasks();
         },
         //订阅消息

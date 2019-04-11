@@ -148,6 +148,10 @@ export default {
     },
     methods:{
         getFlowTodoTasks:function () {
+            this.pageInfo.filter = JSON.stringify([
+                {"link":"or","operator_1":"like","value_1":this.searchkeywords,"property_1":"businessKey",
+                "operator_2":"like","value_2":this.searchkeywords,"property_2":"dealerName"}
+            ]);
             this.loading = true;
             getFlowTodoTasks(this.pageInfo).then(res=>{
                 this.data = res.tableContent;
@@ -177,10 +181,7 @@ export default {
             this.getFlowTodoTasks();
         },
         handleSearch:function () {
-            this.pageInfo.filter = JSON.stringify([
-                {"link":"or","operator_1":"like","value_1":this.searchkeywords,"property_1":"businessKey",
-                "operator_2":"like","value_2":this.searchkeywords,"property_2":"dealerName"}
-            ]);
+            this.pageInfo.page = 1;
             this.getFlowTodoTasks();
         },
         //计算时间差

@@ -16,7 +16,9 @@
                 
                     <div class="flowtask-sider-list-item" v-bind:class="{ 'active':$route.name=='todo' }">
                         <Icon type="ios-cloud" color="#e76838" size=30 />
-                        所有待办
+                         <Badge :count="taskTodoCount" overflow-count="99" :offset="[0,-10]">
+                            所有待办
+                         </Badge>
                     </div>
                 </router-link>
 
@@ -58,18 +60,41 @@
     </div>
 </template>
 <script>
+import {getFlowTodoTasks} from "@/services/socialService";
 export default {
     name:'FlowTaskLayout',
     data(){
         return {
+            taskTodoCount:0
         }
     },
     watch:{
         $route(to, from) {
         }
     },
+
+    methods:{
+        //订阅消息
+        subscribeMessage: function() {
+            let deepstream = this.$deepstream;
+            //消息订阅
+            deepstream.event.subscribe("taskChange/" + this.$currentUser.userId, msg => {
+                this.getFlowTodoTasks();
+            });
+        },
+
+        getFlowTodoTasks:function(){
+            getFlowTodoTasks().then(res=>{
+                this.taskTodoCount = res.dataCount;
+            });
+        }
+
+    },
+
     mounted(){
         // this.routeName = this.$route.name;
+        this.subscribeMessage();
+        this.getFlowTodoTasks();
     }
 }
 </script>

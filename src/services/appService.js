@@ -256,6 +256,16 @@ export const getAppviews = (params) => request('/H_roleplay-si/ds/getListViewOrT
 
 /**
  * @author XiaoYing
+ * @description 获取所有应用名称
+ */
+export const getProcessAppNames = (page,pageSize,filter) => request('/H_roleplay-si/ds/getProcessApplication', {
+  page: page,
+  limit: pageSize,
+  filter: filter
+});
+
+/**
+ * @author XiaoYing
  * @description 启用禁用工作流
  */
 export const enabledForbiddenWorkFlow = (enabledIds, forbiddenIds, deleteId) => request('/H_roleplay-si/app/prohibitProc', {
@@ -263,6 +273,18 @@ export const enabledForbiddenWorkFlow = (enabledIds, forbiddenIds, deleteId) => 
   close: forbiddenIds,
   delete: deleteId
 }, 'POST');
+
+/**
+ * @author XiaoYing
+ * @description 添加相关应用
+ */
+export const addAppRelate = (param) => request('/H_roleplay-si/trans/addExampleDetails', {}, 'POST',param);
+
+/**
+ * @author XiaoYing
+ * @description 删除相关应用
+ */
+export const deleteAppRelate = (param) => request('/H_roleplay-si/trans/deleteExampleDetails', {}, 'POST',param);
 
 /**
  * @author XiaoYing

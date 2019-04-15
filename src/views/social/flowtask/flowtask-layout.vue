@@ -37,7 +37,7 @@
                     </div>
                 </router-link>
 
-                <router-link :to="{ name:'allFlowtask'}">
+                <router-link v-if="this.$currentUser.isAdmin" :to="{ name:'allFlowtask'}">
                     <div class="flowtask-sider-list-item" v-bind:class="{ 'active':$route.name=='allFlowtask' }">
                         <Icon type="md-menu" color="rgb(236, 114, 156)" size=30 />
                         所有工作流任务

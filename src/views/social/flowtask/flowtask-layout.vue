@@ -39,7 +39,7 @@
 
                 <router-link :to="{ name:'allFlowtask'}">
                     <div class="flowtask-sider-list-item" v-bind:class="{ 'active':$route.name=='allFlowtask' }">
-                        <Icon type="md-laptop" color="#1fe5bd" size=30 />
+                        <Icon type="md-menu" color="rgb(236, 114, 156)" size=30 />
                         所有工作流任务
                     </div>
                 </router-link>

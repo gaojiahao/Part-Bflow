@@ -16,7 +16,7 @@
                 
                     <div class="flowtask-sider-list-item" v-bind:class="{ 'active':$route.name=='todo' }">
                         <Icon type="ios-cloud" color="#e76838" size=30 />
-                        所有待办
+                        我的待办
                     </div>
                 </router-link>
 
@@ -25,7 +25,7 @@
                 <router-link :to="{ name:'done'}">
                     <div class="flowtask-sider-list-item" v-bind:class="{ 'active':$route.name=='done' }">
                         <Icon type="md-cloud-done" color="#00adb5" size=30 />
-                        所有已办
+                        我的已办
                     </div>
                 </router-link>
 
@@ -33,7 +33,14 @@
                 <router-link :to="{ name:'all'}">
                     <div class="flowtask-sider-list-item" v-bind:class="{ 'active':$route.name=='all' }">
                         <Icon type="md-laptop" color="#1fe5bd" size=30 />
-                        所有任务
+                        我的所有任务
+                    </div>
+                </router-link>
+
+                <router-link :to="{ name:'allFlowtask'}">
+                    <div class="flowtask-sider-list-item" v-bind:class="{ 'active':$route.name=='allFlowtask' }">
+                        <Icon type="md-laptop" color="#1fe5bd" size=30 />
+                        所有工作流任务
                     </div>
                 </router-link>
 

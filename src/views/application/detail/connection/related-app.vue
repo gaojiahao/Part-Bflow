@@ -88,7 +88,8 @@ export default {
       delayedDragging: false,
       showModal: false,
       relatedApps: [],
-      selectAppName: {},
+      selectAppName: [],
+      selectAppListId: [],
       formValidate: {
         name: "",
         exampleType: "",
@@ -136,8 +137,15 @@ export default {
   methods: {
     //获取选择的应用名称
     getAppSelectData(selectData) {
+      let appName = [],appListId = [];
       this.selectAppName = selectData;
-      this.formValidate.name = selectData.processApplication;
+      if(selectData.length > 0){
+        for(let item of selectData){
+          appName.push(item.processApplication);
+          this.selectAppListId.push(item.id);
+        }
+      }
+      this.formValidate.name = appName.join(',');
     },
     showAddModal() {
       this.showModal = true;
@@ -146,7 +154,7 @@ export default {
     confirmAdd() {
       let params = {
         appId: this.$route.params.listId,
-        listId: this.selectAppName.listId,
+        listId: this.selectAppListId.join(','),
         exampleType: this.formValidate.exampleType,
         alias: this.formValidate.alias
       };

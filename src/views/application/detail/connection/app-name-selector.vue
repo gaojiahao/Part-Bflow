@@ -24,38 +24,14 @@
         width="800"
         :styles="{top: '15px'}" 
         @on-ok="confirmAppName">
-        <div class="app-search">
-          <Input 
-            v-model="searchValue" 
-            @on-search="appNameFilter" 
-            :search="true" 
-            placeholder="应用名称搜索" 
-            style="width: 300px">
-          </Input>
-        </div>
-        <Table 
-          ref="appTable" 
-          @on-current-change="selectClick"
-          @on-row-dblclick="selectDbClick"
-          highlight-row 
-          :height="tableHeight" 
-          stripe size="small" 
-          :loading="loading" 
-          :columns="columns" 
-          :data="appNameData">
-        </Table>
-        <div class="user-page">
-          <div style="float: right;">
-            <Page 
-              :total="total" 
-              :current="currentPage" 
-              :page-size="pageSize" 
-              @on-change="onPageChange" 
-              size="small" 
-              show-total>
-            </Page>
-          </div>
-        </div>
+        <Tree
+          ref="permissionTree"
+          @on-check-change="onCheckChange"
+          :data="data"
+          :load-data="loadData"
+          show-checkbox
+          class="permission-tree">
+        </Tree>
       </Modal>
     </div>
 </template>
@@ -68,76 +44,63 @@ export default {
   components: {},
   data() {
     return {
-      searchValue: "",
-      total: 0,
-      currentPage: 1,
-      pageSize: 10,
-      tableHeight: 400,
-      loading: true,
       showAppNameModal: false,
-      columns: [
-        { title: "应用名称", key: "processApplication" }
-      ],
-      appNameData: [],
-      appNameSelection: [],
+      data: [],
+      appNameSelection: []
     };
   },
   watch: {
       showAppNameModal: function (value) {
           if(value){
               this.showAppNameModal = value;
-              this.selectUserModal();
-              this.appNameSelection = [];
-              this.searchValue = '';
+              this.selectAppModal();
           }
       }
   },
   methods: {
-    //应用名称过滤
-    appNameFilter() {
-      let filter = JSON.stringify([
-        {
-          operator: "like",
-          value: this.searchValue,
-          property: "processApplication"
-        }
-      ]),
-      currentPageFilter = 1;
-      this.selectUserModal(filter,currentPageFilter);
-    },
     //应用数据加载
-    selectUserModal(filter,currentPageFilter) {
-      this.loading = true;
-        getProcessAppNames(currentPageFilter?currentPageFilter:this.currentPage, this.pageSize, filter).then(res => {
-          this.appNameData = res.tableContent;
-          this.total = res.dataCount;
-          this.loading = false;
+    selectAppModal(id, callback) {
+        let treeData = [],
+        parentId = id ? id : "root";
+      getProcessAppNames(
+        parentId
+      ).then(res => {
+        res.forEach(val => {
+          if (val.leaf) {
+            treeData.push({
+              title: val.processApplication,
+              id: val.listId,
+              leaf: val.leaf
+            });
+          } else {
+            treeData.push({
+              title: val.processApplication,
+              id: val.listId,
+              loading: false,
+              leaf: val.leaf,
+              children: []
+            });
+          }
         });
+        if (callback) {
+          callback(treeData);
+        } else {
+          this.data = treeData;
+        }
+      });
       
     },
+    //异步加载树形数据
+    loadData(item, callback) {
+      this.selectAppModal(item.id, callback);
+    },
     //选择应用
-    selectClick(selection) {
-      this.appNameSelection = selection;
+    onCheckChange(selectArray, currentSelect) {
+      this.appNameSelection = selectArray;
     },
     //添加应用名称
     confirmAppName() {
       this.$emit('appSelectData',this.appNameSelection);
-    },
-    selectDbClick(selection) {
-        this.$emit('appSelectData',selection);
-        this.showAppNameModal = false;
-    },
-    //page点击
-    onPageChange(currentPage) {
-      let filter = JSON.stringify([
-        {
-          operator: "like",
-          value: this.searchValue,
-          property: "processApplication"
-        }
-      ]);
-      this.currentPage = currentPage;
-      this.selectUserModal(filter);
     }
   },
   mounted() {

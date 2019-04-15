@@ -41,8 +41,7 @@
       :data="data"
       :load-data="loadData"
       show-checkbox
-      class="permission-tree"
-    >
+      class="permission-tree">
     </Tree>
   </Modal>
 </template>

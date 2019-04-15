@@ -70,6 +70,14 @@ export const  socialRouter = {
                     component: () => import('@/views/social/flowtask/all/all.vue'),
                 },
                 {
+                    path: 'allFlowtask',
+                    name: 'allFlowtask',
+                    meta: {
+                        title: '所有工作流任务',
+                    }, 
+                    component: () => import('@/views/social/flowtask/all-flowtask/all-flowtask.vue'),
+                },
+                {
                     path: 'todo',
                     name: 'todo',
                     meta: {

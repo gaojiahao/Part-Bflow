@@ -139,6 +139,7 @@ export default {
     getAppSelectData(selectData) {
       let appName = [],appListId = [];
       this.selectAppName = selectData;
+      this.selectAppListId = [];
       if(selectData.length > 0){
         for(let item of selectData){
           appName.push(item.title);

@@ -13,6 +13,13 @@ export const getFlowAllTasks = (params) => request('/H_roleplay-si/ds/getMyTasks
 export const getAllFlowTasks = (params) => request('/H_roleplay-si/ds/getTODOTaskAll', params)
 
 /**
+     * 导出数据到excel的方法
+     * @param  {String} id 试图ID
+     * @param  {String} params 过滤条件参数
+     */
+export const exportToExcel = (params) => request('/H_roleplay-si/ds/excel/getTODOTaskAll', params)
+
+/**
  * @author snack.haugng
  * @description 获取用户工作流待办任务
  */

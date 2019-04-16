@@ -1,17 +1,28 @@
 <style lang="less">
-  .app-search {
-    margin-bottom: 5px;
-    .app-search-icon {
-      font-size: 1rem;
-      color: #39f;
-      display: inline-block;
-      cursor: pointer;
+  .permission-tree{
+    height: 500px;
+    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: auto;
+    .ivu-tree-arrow i{
+      font-size: 18px;
     }
   }
-  .user-page {
-    margin: 10px;
-    overflow: hidden;
-  }
+  /*滚动条样式*/
+.permission-tree::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 4px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 4px;
+}
+.permission-tree::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(117, 112, 112, 0.2);
+    background: rgba(117, 112, 112, 0.2);
+}
+.permission-tree::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: #f4f6f8;
+}
 </style>
 
 <template>
@@ -21,7 +32,7 @@
         v-model="showAppNameModal" 
         title="应用选择" 
         :mask-closable="false" 
-        width="800"
+        width="400"
         :styles="{top: '15px'}" 
         @on-ok="confirmAppName">
         <Tree
@@ -53,6 +64,7 @@ export default {
       showAppNameModal: function (value) {
           if(value){
               this.showAppNameModal = value;
+              this.appNameSelection = [];
               this.selectAppModal();
           }
       }
@@ -68,14 +80,16 @@ export default {
         res.forEach(val => {
           if (val.leaf) {
             treeData.push({
-              title: val.processApplication,
-              id: val.listId,
+              title: val.text,
+              listId: val.listId,
+              id: val.id,
               leaf: val.leaf
             });
           } else {
             treeData.push({
-              title: val.processApplication,
-              id: val.listId,
+              title: val.text,
+              listId: val.listId,
+              id: val.id,
               loading: false,
               leaf: val.leaf,
               children: []

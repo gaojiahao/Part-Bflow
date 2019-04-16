@@ -55,10 +55,10 @@
         </div>
         <Tree
           ref="permissionTree"
-          @on-select-change="onCheckChange"
+          @on-check-change="onCheckChange"
           :data="data"
           :load-data="loadData"
-          multiple
+          show-checkbox
           class="permission-tree"
           empty-text=" ">
         </Tree>

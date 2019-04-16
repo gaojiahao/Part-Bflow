@@ -55,10 +55,10 @@
         </div>
         <Tree
           ref="permissionTree"
-          @on-check-change="onCheckChange"
+          @on-select-change="onCheckChange"
           :data="data"
           :load-data="loadData"
-          show-checkbox
+          multiple
           class="permission-tree"
           empty-text=" ">
         </Tree>
@@ -117,8 +117,9 @@ export default {
       ).then(res => {
         res.forEach(val => {
           if (val.leaf) {
+            let appTitle = val.comment ? `${val.text}(${val.comment})` : `${val.text}`;
             treeData.push({
-              title: val.text,
+              title: appTitle,
               listId: val.listId,
               id: val.id,
               leaf: val.leaf
@@ -152,6 +153,11 @@ export default {
     },
     //添加应用名称
     confirmAppName() {
+      for(let i=0;i<this.appNameSelection.length;i++){
+        if(!this.appNameSelection[i].leaf){
+          this.appNameSelection.splice(i,1);
+        }
+      }
       this.$emit('appSelectData',this.appNameSelection);
     }
   },

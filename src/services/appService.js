@@ -258,10 +258,8 @@ export const getAppviews = (params) => request('/H_roleplay-si/ds/getListViewOrT
  * @author XiaoYing
  * @description 获取所有应用名称
  */
-export const getProcessAppNames = (page,pageSize,filter) => request('/H_roleplay-si/ds/getProcessApplication', {
-  page: page,
-  limit: pageSize,
-  filter: filter
+export const getProcessAppNames = (parentId) => request('/H_roleplay-si/ds/getTreeListByParentId',{
+  parentId: parentId
 });
 
 /**

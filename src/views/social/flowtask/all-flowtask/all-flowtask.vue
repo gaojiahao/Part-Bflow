@@ -16,9 +16,10 @@
                         v-model="searchkeywords" 
                         class="alltask-content-container-toolbar-search" 
                         placeholder="输入交易号查询" />
+                    <Button @click="exportFlowtask" type="info" style="float:right;">导出</Button>
                 </div>
                  
-                <Table :columns="columns" :data="data" :height="tableHeight"  class="alltask-content-table">
+                <Table ref="flowTable" :columns="columns" :data="data" :height="tableHeight"  class="alltask-content-table">
                     <template slot-scope="{ row }" slot="businessKey">
                         <a :href="'/Form/index.html?data='+row.businessKey" target="_blank">{{row.businessKey}}</a>
                     </template>
@@ -41,7 +42,7 @@
     </div>
 </template>
 <script>
-import { getAllFlowTasks } from "@/services/socialService";
+import { getAllFlowTasks,exportToExcel } from "@/services/socialService";
 export default {
     name:'FlowtaskAll',
     data () {
@@ -142,6 +143,35 @@ export default {
         }
     },
     methods:{
+        //导出
+        exportFlowtask() {
+            let params = {},exportColumns = [];
+            
+            this.columns.forEach(item => {
+                exportColumns.push({
+                    text: item.title,
+                    dataIndex: item.key || item.slot,
+                    width: item.width
+                })
+            });
+            params = {
+                fileName: '所有工作流',
+                columns: JSON.stringify(exportColumns),
+                filter: this.pageInfo.filter
+            };
+
+            exportToExcel(params).then(res => {
+                if(res.success){
+                    let downloadLink = document.createElement("a");
+                    downloadLink.href = res.message;
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                }
+            }).catch(res => {
+                this.$Message.error(res.data.message);
+            })
+        },
         getFlowAllTasks:function () {
             this.pageInfo.filter = JSON.stringify([
                 {"operator":"like","value":this.searchkeywords,"property":"businessKey"}

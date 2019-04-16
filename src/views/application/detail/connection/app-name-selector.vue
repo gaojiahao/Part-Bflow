@@ -117,9 +117,8 @@ export default {
       ).then(res => {
         res.forEach(val => {
           if (val.leaf) {
-            let appTitle = val.comment ? `${val.text}(${val.comment})` : `${val.text}`;
             treeData.push({
-              title: appTitle,
+              title: val.text,
               listId: val.listId,
               id: val.id,
               leaf: val.leaf

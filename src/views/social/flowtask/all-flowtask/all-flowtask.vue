@@ -177,7 +177,7 @@ export default {
                 secondDiff = Math.round(restMilliSeconds3/1000),//计算出相差秒数
                 outdateTime;
             if(isPastHour){
-                outdateTime = (dayDiff*24 + hourDiff) + '时';
+                outdateTime = (dayDiff*24 + hourDiff) + '小时';
             }else{
                 outdateTime = dayDiff + '天' + hourDiff + '时' + minuteDiff + '分' + secondDiff + '秒';
             }

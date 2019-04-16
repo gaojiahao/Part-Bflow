@@ -23,6 +23,15 @@
     border-radius: 0;
     background: #f4f6f8;
 }
+.app-search {
+    margin-bottom: 5px;
+    .app-search-icon {
+      font-size: 1rem;
+      color: #39f;
+      display: inline-block;
+      cursor: pointer;
+    }
+  }
 </style>
 
 <template>
@@ -35,26 +44,37 @@
         width="400"
         :styles="{top: '15px'}" 
         @on-ok="confirmAppName">
+        <div class="app-search">
+          <Input 
+            v-model="searchValue" 
+            @on-search="appNameFilter" 
+            :search="true" 
+            placeholder="应用名称搜索" 
+            style="width: 300px">
+          </Input>
+        </div>
         <Tree
           ref="permissionTree"
           @on-check-change="onCheckChange"
           :data="data"
           :load-data="loadData"
           show-checkbox
-          class="permission-tree">
+          class="permission-tree"
+          empty-text=" ">
         </Tree>
       </Modal>
     </div>
 </template>
 
 <script>
-import { getProcessAppNames } from "@/services/appService.js";
+import { getProcessAppNames,searchProcessAppNames } from "@/services/appService.js";
 
 export default {
   name: "UserSelector",
   components: {},
   data() {
     return {
+      searchValue: "",
       showAppNameModal: false,
       data: [],
       appNameSelection: []
@@ -70,6 +90,24 @@ export default {
       }
   },
   methods: {
+    appNameFilter() {
+      this.data = [];
+      if(this.searchValue){
+        searchProcessAppNames(this.searchValue).then(res => {
+          res.tableContent.forEach(val => {
+            this.data.push({
+                title: val.text,
+                listId: val.listId,
+                id: val.id,
+                leaf: val.leaf
+            })
+          })
+        })
+      }else{
+        this.selectAppModal('root');
+      }
+      
+    },
     //应用数据加载
     selectAppModal(id, callback) {
         let treeData = [],

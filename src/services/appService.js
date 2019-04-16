@@ -264,6 +264,14 @@ export const getProcessAppNames = (parentId) => request('/H_roleplay-si/ds/getTr
 
 /**
  * @author XiaoYing
+ * @description 搜索应用名称
+ */
+export const searchProcessAppNames = (text) => request('/H_roleplay-si/ds/getMenuLeafByText',{
+  text: text
+});
+
+/**
+ * @author XiaoYing
  * @description 启用禁用工作流
  */
 export const enabledForbiddenWorkFlow = (enabledIds, forbiddenIds, deleteId) => request('/H_roleplay-si/app/prohibitProc', {

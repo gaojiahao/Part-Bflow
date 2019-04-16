@@ -141,8 +141,8 @@ export default {
       this.selectAppName = selectData;
       if(selectData.length > 0){
         for(let item of selectData){
-          appName.push(item.processApplication);
-          this.selectAppListId.push(item.id);
+          appName.push(item.title);
+          this.selectAppListId.push(item.listId);
         }
       }
       this.formValidate.name = appName.join(',');
@@ -152,12 +152,16 @@ export default {
     },
     //添加相关应用确定
     confirmAdd() {
-      let params = {
-        appId: this.$route.params.listId,
-        listId: this.selectAppListId.join(','),
-        exampleType: this.formValidate.exampleType,
-        alias: this.formValidate.alias
-      };
+      let params = [];
+      for(let item of this.selectAppListId){
+        params.push({
+          appId: this.$route.params.listId,
+          listId: item,
+          exampleType: this.formValidate.exampleType,
+          alias: this.formValidate.alias
+        })
+      }
+
       this.$refs["formValid"].validate(v => {
         if(v){
           addAppRelate(params).then(res => {

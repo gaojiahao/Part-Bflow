@@ -15,8 +15,8 @@
           <Card class="app-card">
             <img class="card-img" :src="app.icon" />
             <div class="card-right">
-              <p class="card-name">{{ app.listName }}</p>
-              <p class="card-type">{{ app.appName }}</p>
+              <p class="card-name">{{ app.appName || app.listName }}</p>
+              <p class="card-type">{{ app.listName }}</p>
             </div>
             <Checkbox @on-change="changeAppStatus(app,app.sort)" class="card-check" :disabled="!isAdmin" :value="app.STATUS===1?true:false"></Checkbox>
             <div v-if="isAdmin" @click="deleteApp(app)" class="card-delete">删除</div>

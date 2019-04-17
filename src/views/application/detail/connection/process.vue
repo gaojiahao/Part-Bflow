@@ -31,7 +31,16 @@
         <Input placeholder="请输入流程状态名称" @on-search="search" :search="true" v-model="serValue" style="width:300px;" />
         <Button type="primary" @click="search" class="search-btn" size="small">查询</Button>
       </div>
-      <Table :loading="loading" :columns="columns" :data="processData" size="small"></Table>
+      <Table :loading="loading" :columns="columns" :data="processData" size="small">
+        <template slot-scope="{ row, index }" slot="color">
+            <ColorPicker 
+              @on-change="onColorChange(row,index)" 
+              @on-active-change="onActiveColorChange" 
+              :disabled="!isAdmin || (row.$isEdit?false:true)" 
+              :value="row.color || '#fff'" 
+              recommend/>
+        </template>
+      </Table>
       <div style="margin: 10px;overflow: hidden">
         <div class="fr">
           <Page @on-page-size-change="onPageSizeChange" :total="dataTotal" show-elevator show-sizer :current="pageIndex" :page-size="pageSize" @on-change="pageChange" size="small" show-total></Page>
@@ -65,6 +74,7 @@ export default {
       listId: this.$route.params.listId,
       type:'list',
       loading: false,
+      currentColor: '',
       columns: [
         {
           title: "流程状态",
@@ -144,6 +154,10 @@ export default {
               return h("div", params.row.delayHour);
             }
           }
+        },
+        {
+          title: '颜色',
+          slot: 'color'
         },
         {
           title: "操作",
@@ -276,6 +290,13 @@ export default {
   },
 
   methods: {
+    //颜色选择
+    onColorChange(row,index) {
+      this.$set(row, "color", this.currentColor);
+    },
+    onActiveColorChange(color) {
+      this.currentColor = color;
+    },
     getProcessStatusByListId() {
       this.loading = true;
       getProcessStatusByListId(this.listId, this.pageIndex, this.pageSize).then(

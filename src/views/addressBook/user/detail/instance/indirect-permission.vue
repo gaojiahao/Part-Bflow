@@ -90,7 +90,8 @@ export default {
                 title: val.text,
                 id: val.id,
                 leaf: val.leaf,
-                checked: val.check
+                checked: val.check,
+                disableCheckbox: true
               });
             } else {
               treeData.push({
@@ -100,7 +101,8 @@ export default {
                 indeterminate: val.halfSelected,
                 leaf: val.leaf,
                 checked: val.check,
-                children: []
+                children: [],
+                disableCheckbox: true
               });
             }
           });

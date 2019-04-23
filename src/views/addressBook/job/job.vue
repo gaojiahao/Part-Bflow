@@ -5,28 +5,25 @@
 <template>
   <div class="job-wrap">
     <header class="job-wrap-header">
-      <span @click="goRoleList" class="job-wrap-header-job">职位</span>
-      <span class="job-wrap-header-others">/</span>
-      <span v-show="jobId" class="job-wrap-header-others">{{name}}</span>
-      <span v-show="!jobId" class="job-wrap-header-others">创建</span>
-      <Tag v-show="jobId" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status}" style="margin-bottom: 7px;"></Tag>
-    </header>
-
-    <div class="job-wrap-action">
-      <ul>
-        <li v-for="(item,index) in actionBtn" :key="index" v-if="!item.hidden" class="job-wrap-action-li" v-bind:class="index===actionIndex?'job-wrap-action-li-active':''" @click="handlerViewChange(index)">
-          <div>
-            <img v-if="!item.type" :src="item.imgPath" class="job-wrap-action-li-img" />
-            <Icon v-else :type="item.type" class="icon" />
-            <div class="left-content">
-              <span v-show="item.number!=='undefine'">{{item.number}}</span>
-              <h3>{{item.label}}</h3>
-            </div>
+      <div class="l-info">
+        <span @click="goRoleList" class="l-info-job">职位</span>
+        <span class="l-info-others">/</span>
+        <span v-show="jobId" class="l-info-others">{{name}}</span>
+        <span v-show="!jobId" class="l-info-others">创建</span>
+        <Tag v-show="jobId" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status}" style="margin-bottom: 7px;"></Tag>
+      </div>
+    
+      <ul class="r-action">
+        <li v-for="(item,index) in actionBtn" :key="index" v-if="!item.hidden" class="r-action-li" v-bind:class="index===actionIndex?'r-action-li-active':''" @click="handlerViewChange(index)">
+          <img v-if="!item.type" :src="item.imgPath" class="r-action-li-img" />
+          <Icon v-else :type="item.type" class="icon" />
+          <div class="left-content">
+            <span v-show="item.number!=='undefine'">{{item.number}}</span>
+            <p>{{item.label}}</p>
           </div>
         </li>
       </ul>
-    </div>
-
+    </header>
     <div class="job-wrap-tabs">
       <!-- 基本信息 -->
       <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===2">

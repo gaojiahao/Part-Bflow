@@ -22,20 +22,18 @@
         <span @click="goCompanyList" class="detail-com-header-bread-user">公司</span>
         <span class="detail-com-header-bread-others">/</span>
         <span class="detail-com-header-bread-others">{{ (companyInformation&&companyInformation.groupName)?companyInformation.groupName:'创建'}}</span>
-      </div>
-      <Tag 
+        <Tag 
         v-show="groupId"
         class="radius10 marlr10 color_fff" 
         v-instanceStateDirective="{status:companyInformation.status}"></Tag>
-    </Row>
-    <Row class="detail-tabs">
-      <div @click="onClickTab(index)" v-if="groupId?item.isShow:item.isShowAcive" :class="{'detail-tabs-child':true,'active-item':item.isShowAcive}" v-for="(item,index) of relativeInstance" :key="index">
-        <img v-if="!item.type" :src="item.imgUrl" />
-        <Icon v-else :type="item.type" class="icon" />
-        <div class="detail-tabs-child-right">
-          <span>{{ item.relativeNum }}</span>
-          <p>{{ item.name }}</p>
-        </div>
+      </div>
+        <div @click="onClickTab(index)" v-if="groupId?item.isShow:item.isShowAcive" :class="{'detail-tabs-child':true,'active-item':item.isShowAcive}" v-for="(item,index) of relativeInstance" :key="index">
+          <img v-if="!item.type" :src="item.imgUrl" />
+          <Icon v-else :type="item.type" class="icon" />
+          <div class="detail-tabs-child-right">
+            <span>{{ item.relativeNum }}</span>
+            <p>{{ item.name }}</p>
+          </div>
       </div>
     </Row>
     <Row class="detail-content">

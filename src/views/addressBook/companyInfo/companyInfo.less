@@ -3,9 +3,9 @@
 }
 .detail-com-header{
     border-bottom: 1px solid #ddd;
-    padding: 5px 10px;
     background-color: #fff;
-    margin-top: 0px;
+    height: 45px;
+    overflow: hidden;
     &-status{
         float: left;
         margin-left: 19px;
@@ -15,7 +15,8 @@
     }
     &-bread{
         float: left;
-        height: 33px;
+        height: 45px;
+        line-height: 45px;
         &-user{
             color: rgb(76, 175, 80);
             font-size: 16px;
@@ -32,17 +33,7 @@
             font-family: 'Open Sans', 'Helvetica Neue', helvetica, arial, verdana, sans-serif;
         }
     }
-}
-.detail-content{
-    background: #ddd;
-    overflow: auto;
-}
-.detail-tabs{
-    width: 100%;
-    background-color: #fff;
-    overflow: hidden;
-    border-bottom: 1px solid #ddd;
-    &-child{
+    .detail-tabs-child{
         float: right;
         border-left: 1px solid #ddd;
         padding: 2px 9px;
@@ -70,13 +61,13 @@
             font-size: 1.9rem;
         }
     }
-    &-child:first-child{
+    .detail-tabs-child:first-child{
         border-right: 1px solid #ddd;
         margin-right: 10px;
     }
-    &-child:last-child{
-        height: 43px;
-        line-height: 43px;
+    .detail-tabs-child:last-child{
+        height: 45px;
+        line-height: 45px;
         img{
             border-radius: 30px;
             padding-bottom: 4px;
@@ -86,7 +77,18 @@
         background-color: #ddd;
     }
 }
+.detail-content{
+    background: #ddd;
+    overflow: auto;
+}
+.detail-tabs{
+    width: 100%;
+    background-color: #fff;
+    overflow: hidden;
+    border-bottom: 1px solid #ddd;
+    
+}
 .ivu-tag{
-    margin-top: 4px !important;
+    margin-bottom: 4px !important;
     border: none;
 }

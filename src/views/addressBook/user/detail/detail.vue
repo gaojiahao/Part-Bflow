@@ -5,7 +5,7 @@
 <template>
   <Row class="detail">
     <Row class="detail-user-header">
-      <div class="detail-header-bread">
+      <div class="detail-user-header-bread">
         <span @click="goUserList" class="detail-user-header-bread-user">用户</span>
         <span class="detail-user-header-bread-others">/</span>
         <span 
@@ -20,8 +20,6 @@
           v-instanceStateDirective="{status:userInformation.status}">
         </Tag>
       </div>
-    </Row>
-    <Row class="detail-tabs">
       <div 
         @click="onClickTab(index)"
         v-if="userInformation.userId?item.isShow:item.isShowAcive"

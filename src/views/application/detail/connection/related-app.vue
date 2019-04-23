@@ -11,7 +11,7 @@
     <Row class="related-app-content" :gutter="8">
       <draggable v-model="relatedApps" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="isDragging=false">
         <transition-group type="transition" :name="'flip-list'">
-        <Col :xs="24" :sm="12" :md="8" :lg="5" v-for="(app,index) of relatedApps" :key="index" style="margin-bottom:5px">
+        <Col :xs="24" :sm="12" :md="8" :lg="5" v-for="(app,index) of relatedApps" :key="index+'01'" style="margin-bottom:5px">
           <Card class="app-card">
             <img class="card-img" :src="app.icon" />
             <div class="card-right">

@@ -5,27 +5,27 @@
 <template>
   <div class="organization-wrap">
     <header class="organization-wrap-header">
-      <span @click="goOrgList" class="organization-wrap-header-org">组织</span>
-      <span class="organization-wrap-header-others">/</span>
-      <span v-show="groupId" class="organization-wrap-header-others">{{name}}</span>
-      <span v-show="!groupId" class="organization-wrap-header-others">创建</span>
-      <Tag v-show="groupId" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status}" style="margin-bottom: 7px; padding-right: 13px;"></Tag>
-    </header>
+     <div class="l-info">
+        <span @click="goOrgList" class="l-info-org">组织</span>
+        <span class="l-info-others">/</span>
+        <span v-show="groupId" class="l-info-others">{{name}}</span>
+        <span v-show="!groupId" class="l-info-others">创建</span>
+        <Tag v-show="groupId" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status}" style="margin-bottom: 7px; padding-right: 13px;"></Tag>
+     </div>
 
-    <div class="organization-wrap-action">
-      <ul>
-        <li v-for="(item,index) in actionBtn" :key="index" v-if="!item.hidden" class="organization-wrap-action-li" v-bind:class="index===actionIndex?'organization-wrap-action-li-active':''" @click="handlerViewChange(index)">
-          <div>
-            <img v-if="!item.type" :src="item.imgPath" class="organization-wrap-action-li-img" />
-            <Icon v-else :type="item.type" class="icon" />
-            <div class="left-content">
-              <span v-show="item.number!=='undefine'">{{item.number}}</span>
-              <h3>{{item.label}}</h3>
-            </div>
-          </div>
+      <ul class="r-action">
+        <li v-for="(item,index) in actionBtn" :key="index+12" v-if="!item.hidden" class="r-action-li" v-bind:class="index===actionIndex?'r-action-li-active':''" @click="handlerViewChange(index)">
+          <img v-if="!item.type" :src="item.imgPath" class="r-action-li-img" />
+          <Icon v-else :type="item.type" class="icon" />
+          <div class="left-content">
+            <span v-show="item.number!=='undefine'">{{item.number}}</span>
+            <p>{{item.label}}</p>
+          </div> 
         </li>
       </ul>
-    </div>
+    </header>
+
+  
 
     <div class="organization-wrap-tabs">
       <!-- 基本信息 -->
@@ -442,7 +442,7 @@ export default {
   computed: {
     formItemGroupType() {
 　　　　return this.formItem.groupType;
-　　}
+　　},
   },
 
   watch:{

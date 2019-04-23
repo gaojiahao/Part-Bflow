@@ -4,9 +4,51 @@
 }
 .detail-user-header{
     border-bottom: 1px solid #ddd;
-    padding: 3px 10px;
     background-color: #fff;
-    height: 40px;
+    height: 45px;
+    overflow: hidden;
+    .detail-tabs-child{
+        float: right;
+        border-left: 1px solid #ddd;
+        padding: 2px 9px;
+        text-align: center;
+        cursor: pointer;
+        height: 100%;
+        color: gray;
+        &-right{
+            vertical-align: middle;
+            text-align: center;
+            display: inline-block;
+            span{
+                color: red;
+                font-weight: bold;
+            }
+            p{
+                font-weight: bold;
+                font-size: 14px;
+            }
+        }
+        img{
+            width: 30px;
+            vertical-align: middle;
+        }
+        .icon{
+            font-size: 1.9rem;
+        }
+    }
+    .detail-tabs-child:first-child{
+        border-right: 1px solid #ddd;
+    }
+    .detail-tabs-child:last-child{
+        line-height: 45px;
+        img{
+            border-radius: 30px;
+            padding-bottom: 4px;
+        }
+    }
+    .active-item{
+        background-color: #ddd;
+    }
     &-status{
         float: left;
         margin-left: 19px;
@@ -16,7 +58,8 @@
     }
     &-bread{
         float: left;
-        height: 33px;
+        height: 45px;
+        line-height: 45px;
         &-user{
             color: rgb(76, 175, 80);
             font-size: 16px;
@@ -57,55 +100,6 @@
         }
     }
 }
-.detail-tabs{
-    width: 100%;
-    background-color: #fff;
-    overflow: hidden;
-    border-bottom: 1px solid #ddd;
-    height: 45px;
-    &-child{
-        float: right;
-        border-left: 1px solid #ddd;
-        padding: 2px 9px;
-        text-align: center;
-        cursor: pointer;
-        height: 100%;
-        color: gray;
-        &-right{
-            vertical-align: middle;
-            text-align: center;
-            display: inline-block;
-            span{
-                color: red;
-                font-weight: bold;
-            }
-            p{
-                font-weight: bold;
-                font-size: 14px;
-            }
-        }
-        img{
-            width: 30px;
-            vertical-align: middle;
-        }
-        .icon{
-            font-size: 1.9rem;
-        }
-    }
-    &-child:first-child{
-        border-right: 1px solid #ddd;
-    }
-    &-child:last-child{
-        line-height: 45px;
-        img{
-            border-radius: 30px;
-            padding-bottom: 4px;
-        }
-    }
-    .active-item{
-        background-color: #ddd;
-    }
-}
 .detail-content-tabs{
     overflow: auto;
     height: calc(100% - 85px);
@@ -113,6 +107,6 @@
     background-color: #ddd;
 }
 .ivu-tag{
-    margin-bottom: 7px !important;
+    margin-bottom: 4px !important;
     border: none;
 }

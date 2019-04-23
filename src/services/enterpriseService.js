@@ -19,28 +19,7 @@ export const getEnterpriseById = (url) => request('/H_roleplay-si/app/getEnterpr
  * 保存企业信息
 */
 export const addOrUpdateEnterprise = (data) => {
-    let {
-        id,
-        logo,
-        nickname,
-        name,
-        instruction,
-        address,
-        phone,
-        backgroundImg,
-        backgroundName
-    } = data
-    return request('/H_roleplay-si/app/addOrUpdateEnterprise', {
-        id: id,
-        logo: logo,
-        nickname: nickname,
-        name: name,
-        instruction: instruction,
-        address: address,
-        phone: phone,
-        backgroundImg:backgroundImg,
-        backgroundName:backgroundName
-    }, "POST");
+    return request('/H_roleplay-si/app/updateEnterpriseProperty', {}, "POST",data);
 }
 
 /** 

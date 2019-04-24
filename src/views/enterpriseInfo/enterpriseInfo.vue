@@ -40,18 +40,18 @@
         <div class="select-explain">
           <label class="left-leble">企业简称</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.nickname}}</span>
-          <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.nickname" class="input-common-att" />
+          <input v-else type="text" v-model="enterpriseInfo.nickname" class="input-common-att" />
           <a @click="handleEditName" v-if="$currentUser.isAdmin">{{edit}}</a>
         </div>
         <div class="select-explain">
           <label class="left-leble">企业全称</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.name}}</span>
-          <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.name" class="input-common-att" />
+          <input v-else type="text" v-model="enterpriseInfo.name" class="input-common-att" />
         </div>
         <div class="select-explain-textarea">
           <label class="left-leble">企业说明</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.instraction}}</span>
-          <textarea rows="3" cols="20" v-if="editEnterpriseName" v-model="enterpriseInfo.instraction" type="textarea" class="select-explain-textarea-text"></textarea>
+          <textarea rows="3" cols="20" v-else v-model="enterpriseInfo.instraction" type="textarea" class="select-explain-textarea-text"></textarea>
         </div>
       </section>
 
@@ -59,12 +59,12 @@
         <div class="select-explain">
           <label class="left-leble">企业地址</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.address}}</span>
-          <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.address" class="input-common-att" />
+          <input v-else type="text" v-model="enterpriseInfo.address" class="input-common-att" />
         </div>
         <div class="select-explain">
           <label class="left-leble">联系电话</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.phone}}</span>
-          <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.phone" class="input-common-att" />
+          <input v-else type="text" v-model="enterpriseInfo.phone" class="input-common-att" />
         </div>
       </section>
 
@@ -72,41 +72,42 @@
         <div class="select-explain">
           <label class="left-leble">企业微信企业ID</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.qwCorpid}}</span>
-          <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.qwCorpid" class="input-common-att" />
+          <input v-else type="text" v-model="enterpriseInfo.qwCorpid" class="input-common-att" />
         </div>
         <div class="select-explain">
           <label class="left-leble">企业微信应用代理ID</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.qwAppAgentId}}</span>
-          <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.qwAppAgentId" class="input-common-att" />
+          <input v-else type="text" v-model="enterpriseInfo.qwAppAgentId" class="input-common-att" />
         </div>
          <div class="select-explain">
           <label class="left-leble">企业微信应用密钥</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.qwAppsecret}}</span>
-          <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.qwAppsecret" class="input-common-att" />
+          <input v-else type="text" v-model="enterpriseInfo.qwAppsecret" class="input-common-att" />
         </div>
          <div class="select-explain">
           <label class="left-leble">钉钉企业ID</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.ddCorpid}}</span>
-          <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.ddCorpid" class="input-common-att" />
+          <input v-else type="text" v-model="enterpriseInfo.ddCorpid" class="input-common-att" />
         </div>
         <div class="select-explain">
           <label class="left-leble">钉钉信应用代理ID</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.ddAppAgentId}}</span>
-          <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.ddAppAgentId" class="input-common-att" />
+          <input v-else type="text" v-model="enterpriseInfo.ddAppAgentId" class="input-common-att" />
         </div>
         <div class="select-explain">
           <label class="left-leble">钉钉应用ID</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.ddAppKey}}</span>
-          <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.ddAppKey" class="input-common-att" />
+          <input v-else type="text" v-model="enterpriseInfo.ddAppKey" class="input-common-att" />
         </div>
         <div class="select-explain">
           <label class="left-leble">钉钉应用应用密钥</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.ddAppsecret}}</span>
-          <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.ddAppsecret" class="input-common-att" />
+          <input v-else type="text" v-model="enterpriseInfo.ddAppsecret" class="input-common-att" />
         </div>
          <div class="select-explain">
           <label class="left-leble">路塔实例详情资源地址</label>
-          <a :href="enterpriseInfo.rtRedirectUrl" _blank="target"></a>
+          <a v-if="!editEnterpriseName" :href="enterpriseInfo.rtRedirectUrl" _blank="target"></a>
+          <input v-else type="text" v-model="enterpriseInfo.rtRedirectUrl" class="input-common-att" />
         </div>
       </section>
 

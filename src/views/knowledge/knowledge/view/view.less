@@ -1,0 +1,102 @@
+.knowledge{
+    height: 100%;
+    background-color: #fff;
+    overflow-x: hidden;
+    &-header{
+        width: 100%;
+        position: fixed !important;
+        background-color: #fff;
+        border-bottom: 1px solid #ddd;
+        overflow: hidden;
+        top: 0px;
+        left: 260px;
+        padding: 5px;
+        height: 45px;
+        z-index: 1;
+        &-mark{
+            padding-top:4px;
+            float:left;
+            margin-top: 2px;
+            position: relative;
+            left: 35%;
+        }
+        &-icon{
+            color: #39f;
+            font-size: 17px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        &-btn{
+            color: #39f;
+            font-size: 18px;
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+        &-drop{
+            float: right;
+            margin-right: 282px;
+        }
+        &-point{
+            font-size:18px;
+            line-height:22px;
+            color: #39f;
+        }
+    }
+    &-content{
+        padding-bottom: 225px;
+        .knowledge-title{
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            padding: 5px 0px;
+        }
+        .knowledge-text{
+            padding-top: 13px; 
+            font-size: 14px;
+            &-desc{
+                padding-bottom: 15px;
+                display: none;
+            }
+            .w-e-text{
+                overflow: hidden;
+            }
+            &-comment{
+                margin-left: 10px;
+                margin-top: 30px;
+                div{
+                    font-weight: bold;
+                    border-bottom: 1px solid #ddd;
+                    padding: 5px 0px;
+                }
+            }
+        }
+    }
+    &-footer{
+        width: 100%;
+        position: fixed !important;
+        background-color: #fff;
+        border-top: 1px solid #ddd;
+        bottom: 0px;
+        left: 260px;
+        padding: 5px;
+        height: 180px;
+        &-btn{
+            
+        }
+    }
+}
+  /*滚动条样式*/
+.knowledge::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 4px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 4px;
+}
+.knowledge::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(117, 112, 112, 0.2);
+    background: rgba(117, 112, 112, 0.2);
+}
+.knowledge::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: #f4f6f8;
+}

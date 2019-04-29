@@ -7,6 +7,7 @@
     <Row class="publish-container">
         <div 
             class="publish-container-content" 
+            id = "contentWrap"
             contenteditable="true" 
             ref="publishContent"
             v-html="innerText"
@@ -142,6 +143,9 @@
 
 <script>
 import { getToken } from "@/utils/utils";
+import { 
+    uploadImage
+} from "@/services/subscribeService";
 export default {
     name:"coment-publish",
     props:{
@@ -206,12 +210,13 @@ export default {
         },
     },
     methods: {
+
         choice_face: function(n) {
-            this.discContent.txt  =   this.discContent.txt + '<img src="'+ n+'" width="20">';
+            this.discContent.txt  =   this.discContent.txt + '<img src="'+ n+'" width="20" paste="1">';
             this.faceVisible = false;
         },
         changeTxt:function(e){
-            this.discContent.txt=  e.target.innerHTML
+            this.discContent.txt=   e.target.innerHTML;
         },
         handleSend: function() {
             let  imgs= this.uploadList.map(img=>{
@@ -227,8 +232,8 @@ export default {
                 });
 
             files = files.concat(imgs);
-
-            this.handlePublish(this.discContent.txt,files,this.superComment,this.commentAndReply);
+            let content =  document.getElementById('contentWrap').innerHTML;
+            this.handlePublish(content,files,this.superComment,this.commentAndReply);
 
             this.innerText = '';
             this.discContent.txt = '';
@@ -293,7 +298,28 @@ export default {
         handleClearFile(){
             this.$refs.uploadFile.clearFiles();
             this.uploadFileList = this.$refs.uploadFile.fileList;
-        }
+        },
+
+        uploadImageByBase64(referenceID,file){
+            let target = document.getElementById('contentWrap');
+            uploadImage({
+                  referenceId:referenceID,
+                    file:file
+            }).then(res=>{
+                if(res.length>0){
+                    let imgArr = Array.from(target.getElementsByTagName('img'));
+                    let f = imgArr.filter(item=>{
+                        return !item.getAttribute('paste');
+                    });
+                    let img = document.createElement('img');  
+                    img.setAttribute('src',`/H_roleplay-si/ds/download?url=${res[0].attacthment}`);
+                    img.setAttribute('paste',1);
+                    img.setAttribute('class','paste-img');
+                    f[0].parentNode.replaceChild(img,f[0]);
+                    this.discContent.txt =  target.innerHTML;
+                }
+            });
+        },
     },
     created(){
         var baseUrl = 'resources/images/face/';
@@ -310,6 +336,39 @@ export default {
     mounted () {
         this.uploadList = this.$refs.upload.fileList;
         this.uploadFileList = this.$refs.uploadFile.fileList;
+        // demo 程序将粘贴事件绑定到 document 上
+        let target = document.getElementById('contentWrap');
+        let that = this;
+        target.addEventListener("paste",  (e)=> {
+            let clipboardData = e.clipboardData;
+            let ua = window.navigator.userAgent
+            if ( !(clipboardData && clipboardData.items) ) {
+                return;
+            }
+               if(clipboardData.items.length === 0){
+                return;
+            }
+             // Mac平台下Chrome49版本以下 复制Finder中的文件的Bug Hack掉
+            if(clipboardData.items && clipboardData.items.length === 2 && clipboardData.items[0].kind === "string" && clipboardData.items[1].kind === "file" &&
+                clipboardData.types && clipboardData.types.length === 2 && clipboardData.types[0] === "text/plain" && clipboardData.types[1] === "Files" &&
+                ua.match(/Macintosh/i) && Number(ua.match(/Chrome\/(\d{2})/i)[1]) < 49){
+                return;
+            }
+           
+            for (let i = 0, len = clipboardData.items.length; i < len; i++) {
+                let item = clipboardData.items[i];
+                if (item.kind === "file") {
+                    let f= item.getAsFile();
+                    let reader=new FileReader()
+                    //读取完成
+                    reader.onload= (e)=> {
+                        that.uploadImageByBase64('ab',e.target.result);
+                       
+                    }
+                    reader.readAsDataURL(f)
+                }
+            }
+        }, false);
     }
 };
 </script>

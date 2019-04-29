@@ -433,7 +433,8 @@ export default {
           ddCorpid: this.enterpriseInfo.ddCorpid,
           ddAppAgentId: this.enterpriseInfo.ddAppAgentId,
           ddAppKey: this.enterpriseInfo.ddAppKey,
-          ddAppsecret: this.enterpriseInfo.ddAppsecret
+          ddAppsecret: this.enterpriseInfo.ddAppsecret,
+          rtRedirectUrl:this.enterpriseInfo.rtRedirectUrl
         };
         let data = [];
         for(let key in values){

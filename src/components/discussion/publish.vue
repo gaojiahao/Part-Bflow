@@ -19,20 +19,20 @@
     <Row class="publish-bar">
         <Col class="publish-bar-left" span="12">
             <Poptip 
-            placement="bottom-start" 
-            v-model="faceVisible"
-            width="300">
-                <Icon 
-                    class="choice-face" 
-                    type="ios-happy-outline"  
-                    size=24 />表情
-                    <div class="api-emotion" slot="content">
-                        <img 
-                            :src="n" 
-                            width=24 v-for="n in faces" :key="n" 
-                            @click="choice_face(n)"
-                            style="float:left;margin: 2px;cursor: pointer;">
-                    </div>
+                placement="bottom-start" 
+                v-model="faceVisible"
+                width="300">
+                    <Icon 
+                        class="choice-face" 
+                        type="ios-happy-outline"  
+                        size=24 />表情
+                        <div class="api-emotion" slot="content">
+                            <img 
+                                :src="n" 
+                                width=24 v-for="n in faces" :key="n" 
+                                @click="choice_face(n)"
+                                style="float:left;margin: 2px;cursor: pointer;">
+                        </div>
             </Poptip>
 
             <Poptip 

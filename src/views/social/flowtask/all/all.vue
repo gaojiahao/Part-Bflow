@@ -18,7 +18,7 @@
                         placeholder="输入交易号或往来对象查询" />
                 </div>
                  
-                <Table :columns="columns" :data="data" :height="tableHeight"  class="alltask-content-table">
+                <Table @on-sort-change="onSortChange" :columns="columns" :data="data" :height="tableHeight"  class="alltask-content-table">
                     <template slot-scope="{ row }" slot="businessKey">
                         <a :href="'/Form/index.html?data='+row.businessKey" target="_blank">{{row.businessKey}}</a>
                     </template>
@@ -107,6 +107,16 @@ export default {
                     width:150
                 },
                 {
+                    title: "已过小时数",
+                    key: "pastTimeHour",
+                    width:120,
+                    sortable: 'custom',
+                    render: (h,params) => {
+                            let outTime = this.calcLeadTime(params.row.startTime, true);
+                            return h('span',{},outTime);
+                        }
+                },
+                {
                 title: "已过时间",
                 key: "crtTime",
                  width:150,
@@ -123,16 +133,30 @@ export default {
                 total:0,
                 filter:[]
             },
+            sortColumn: null,
             searchkeywords:'',
             tableHeight:1
         }
     },
     methods:{
+        //排序
+        onSortChange(column) {
+            if(column.order === 'normal'){
+                delete this.pageInfo.sort;
+                this.sortColumn = null;
+            }else{
+                this.sortColumn = [{property:column.key,direction:column.order}];
+            }
+            this.getFlowAllTasks();
+        },
         getFlowAllTasks:function () {
             this.pageInfo.filter = JSON.stringify([
                 {"link":"or","operator_1":"like","value_1":this.searchkeywords,"property_1":"businessKey",
                 "operator_2":"like","value_2":this.searchkeywords,"property_2":"dealerName"}
             ]);
+            if(this.sortColumn){
+                this.pageInfo.sort= JSON.stringify(this.sortColumn);
+            }
             getFlowAllTasks(this.pageInfo).then(res=>{
                 this.data = res.tableContent;
                 this.pageInfo.total = res.dataCount;
@@ -151,7 +175,7 @@ export default {
             this.getFlowAllTasks();
         },
         //计算时间差
-        calcLeadTime(date) {
+        calcLeadTime(date,isPastHour) {
             let startDate = new Date(date.replace(/-/g,"/")),
                 currentDate = new Date(),
                 dateDiff = currentDate.getTime() - startDate.getTime(),//时间差的毫秒数
@@ -163,7 +187,11 @@ export default {
                 restMilliSeconds3 = restMilliSeconds2%(60*1000),//计算分钟数后剩余的毫秒数
                 secondDiff = Math.round(restMilliSeconds3/1000),//计算出相差秒数
                 outdateTime;
-            outdateTime = dayDiff + '天' + hourDiff + '时' + minuteDiff + '分' + secondDiff + '秒';
+            if(isPastHour){
+                outdateTime = (dayDiff*24 + hourDiff) + '小时';
+            }else{
+                outdateTime = dayDiff + '天' + hourDiff + '时' + minuteDiff + '分' + secondDiff + '秒';
+            }
             return outdateTime;
         },
         //订阅消息

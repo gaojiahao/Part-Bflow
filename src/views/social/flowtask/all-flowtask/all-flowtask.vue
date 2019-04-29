@@ -19,7 +19,13 @@
                     <Button @click="exportFlowtask" type="info" style="float:right;">导出</Button>
                 </div>
                  
-                <Table ref="flowTable" :columns="columns" :data="data" :height="tableHeight"  class="alltask-content-table">
+                <Table 
+                    ref="flowTable" 
+                    @on-sort-change="onSortChange"
+                    :columns="columns" 
+                    :data="data" 
+                    :height="tableHeight"  
+                    class="alltask-content-table">
                     <template slot-scope="{ row }" slot="businessKey">
                         <a :href="'/Form/index.html?data='+row.businessKey" target="_blank">{{row.businessKey}}</a>
                     </template>
@@ -100,7 +106,8 @@ export default {
                 {
                     title: "已过小时数",
                     key: "pastTimeHour",
-                    width:100,
+                    width:120,
+                    sortable: 'custom',
                     render: (h,params) => {
                             let outTime = this.calcLeadTime(params.row.crtTime, true);
                             return h('span',{},outTime);
@@ -138,11 +145,22 @@ export default {
                 total:0,
                 filter:[]
             },
+            sortColumn: null,
             searchkeywords:'',
             tableHeight:1
         }
     },
     methods:{
+        //排序
+        onSortChange(column) {
+            if(column.order === 'normal'){
+                delete this.pageInfo.sort;
+                this.sortColumn = null;
+            }else{
+                this.sortColumn = [{property:column.key,direction:column.order}];
+            }
+            this.getFlowAllTasks();
+        },
         //导出
         exportFlowtask() {
             let params = {},exportColumns = [];
@@ -176,6 +194,9 @@ export default {
             this.pageInfo.filter = JSON.stringify([
                 {"operator":"like","value":this.searchkeywords,"property":"businessKey"}
             ]);
+            if(this.sortColumn){
+                this.pageInfo.sort= JSON.stringify(this.sortColumn);
+            }
             getAllFlowTasks(this.pageInfo).then(res=>{
                 this.data = res.tableContent;
                 this.pageInfo.total = res.dataCount;

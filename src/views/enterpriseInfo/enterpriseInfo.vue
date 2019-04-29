@@ -8,49 +8,109 @@
       <section class="info-warp-main-section">
         <div class="select-logo">
           <label class="left-leble">企业LOGO</label>
-          <Upload v-if="$currentUser.isAdmin" ref="upload" :show-upload-list="false" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" type="drag" action="/H_roleplay-si/ds/upload" style="display: inline-block;width:256px;vertical-align: middle;" :headers="httpHeaders">
-            <div style="width: 256px;height:64px;line-height: 64px;" v-if="!enterpriseInfo.logo">
-              <img v-if="enterpriseInfo.logo" :src="enterpriseInfo.logo">
-              <i v-if="!enterpriseInfo.logo" class="iconfont">&#xe63b;</i>
-            </div>
-            <div style="width: 256px;height:64px;line-height: 64px;" class="demo-upload-list" v-if="enterpriseInfo.logo">
-              <img :src="enterpriseInfo.logo">
-              <div class="demo-upload-list-cover">
-                <Icon type="camera" color="#fff" size="30"></Icon>
-              </div>
-            </div>
-          </Upload>
-          <img v-else :src="enterpriseInfo.logo" />
+          <div class="logo" >
+            <Upload 
+              v-if="$currentUser.isAdmin" 
+              ref="upload" 
+              :show-upload-list="false" 
+              :on-success="handleSuccess" 
+              :format="['jpg','jpeg','png']" 
+              :max-size="2048" 
+              :on-format-error="handleFormatError" 
+              :on-exceeded-size="handleMaxSize" 
+              type="drag" 
+              action="/H_roleplay-si/ds/upload" 
+              :headers="httpHeaders">
+                <div style="width: 256px;height:64px;line-height: 64px;" v-if="!enterpriseInfo.logo">
+                  <img v-if="enterpriseInfo.logo" :src="enterpriseInfo.logo">
+                  <i v-if="!enterpriseInfo.logo" class="iconfont">&#xe63b;</i>
+                </div>
+                <div style="width: 256px;height:64px;line-height: 64px;" class="demo-upload-list" v-if="enterpriseInfo.logo">
+                  <img :src="enterpriseInfo.logo">
+                  <div class="demo-upload-list-cover">
+                    <Icon type="camera" color="#fff" size="30"></Icon>
+                  </div>
+                </div>
+            </Upload>
+            <img v-else :src="enterpriseInfo.logo" />
+            <p style="font-size: 12px;color:#999;margin-top: 5px;">推荐尺寸702*180</p>
+          </div>
+         
         </div>
         <div class="select-explain">
           <label class="left-leble">企业简称</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.nickname}}</span>
-          <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.nickname" class="input-common-att" />
+          <input v-else type="text" v-model="enterpriseInfo.nickname" class="input-common-att" />
           <a @click="handleEditName" v-if="$currentUser.isAdmin">{{edit}}</a>
         </div>
         <div class="select-explain">
           <label class="left-leble">企业全称</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.name}}</span>
-          <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.name" class="input-common-att" />
+          <input v-else type="text" v-model="enterpriseInfo.name" class="input-common-att" />
         </div>
         <div class="select-explain-textarea">
           <label class="left-leble">企业说明</label>
-          <span v-if="!editEnterpriseName">{{enterpriseInfo.instruction}}</span>
-          <textarea rows="3" cols="20" v-if="editEnterpriseName" v-model="enterpriseInfo.instruction" type="textarea" class="select-explain-textarea-text"></textarea>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.instraction}}</span>
+          <textarea rows="3" cols="20" v-else v-model="enterpriseInfo.instraction" type="textarea" class="select-explain-textarea-text"></textarea>
         </div>
       </section>
+
       <section class="info-warp-main-section">
         <div class="select-explain">
           <label class="left-leble">企业地址</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.address}}</span>
-          <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.address" class="input-common-att" />
+          <input v-else type="text" v-model="enterpriseInfo.address" class="input-common-att" />
         </div>
         <div class="select-explain">
           <label class="left-leble">联系电话</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.phone}}</span>
-          <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.phone" class="input-common-att" />
+          <input v-else type="text" v-model="enterpriseInfo.phone" class="input-common-att" />
         </div>
       </section>
+
+      <section class="info-warp-main-section">
+        <div class="select-explain">
+          <label class="left-leble">企业微信企业ID</label>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.qwCorpid}}</span>
+          <input v-else type="text" v-model="enterpriseInfo.qwCorpid" class="input-common-att" />
+        </div>
+        <div class="select-explain">
+          <label class="left-leble">企业微信应用代理ID</label>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.qwAppAgentId}}</span>
+          <input v-else type="text" v-model="enterpriseInfo.qwAppAgentId" class="input-common-att" />
+        </div>
+         <div class="select-explain">
+          <label class="left-leble">企业微信应用密钥</label>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.qwAppsecret}}</span>
+          <input v-else type="text" v-model="enterpriseInfo.qwAppsecret" class="input-common-att" />
+        </div>
+         <div class="select-explain">
+          <label class="left-leble">钉钉企业ID</label>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.ddCorpid}}</span>
+          <input v-else type="text" v-model="enterpriseInfo.ddCorpid" class="input-common-att" />
+        </div>
+        <div class="select-explain">
+          <label class="left-leble">钉钉信应用代理ID</label>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.ddAppAgentId}}</span>
+          <input v-else type="text" v-model="enterpriseInfo.ddAppAgentId" class="input-common-att" />
+        </div>
+        <div class="select-explain">
+          <label class="left-leble">钉钉应用ID</label>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.ddAppKey}}</span>
+          <input v-else type="text" v-model="enterpriseInfo.ddAppKey" class="input-common-att" />
+        </div>
+        <div class="select-explain">
+          <label class="left-leble">钉钉应用应用密钥</label>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.ddAppsecret}}</span>
+          <input v-else type="text" v-model="enterpriseInfo.ddAppsecret" class="input-common-att" />
+        </div>
+         <div class="select-explain">
+          <label class="left-leble">路塔实例详情资源地址</label>
+          <a v-if="!editEnterpriseName" :href="enterpriseInfo.rtRedirectUrl" _blank="target"></a>
+          <input v-else type="text" v-model="enterpriseInfo.rtRedirectUrl" class="input-common-att" />
+        </div>
+      </section>
+
       <section class="info-warp-main-section">
         <div>
           <label class="left-leble">
@@ -126,13 +186,21 @@ export default {
   data() {
     return {
       enterpriseInfo: {
-        logo: "",
-        nickname: "",
-        name: "",
-        instruction: "",
-        address: "",
-        phone: "",
-        admins: [],
+        logo: "",   //企业LOGO
+        nickname: "",   //企业简称
+        name: "",   //企业全称
+        instraction: "",    //企业说明
+        address: "",    //企业地址
+        phone: "",    //联系电话
+        qwCorpid:"",  //企业微信企业ID
+        qwAppAgentId:"",    //企业微信应用代理ID
+        qwAppsecret:"",    //企业微信应用密钥
+        ddCorpid:"",    //钉钉企业ID
+        ddAppAgentId:"",    //钉钉应用代理ID
+        ddAppKey:"",    //钉钉应用ID
+        ddAppsecret:"",    //钉钉应用应用密钥
+        rtRedirectUrl:"", //
+        admins: [],   //企业管理员
         backgroundImg: "",
         backgroundName: ""
       },
@@ -350,17 +418,31 @@ export default {
     handleEditName() {
       this.edit = this.editEnterpriseName ? "修改" : "保存";
       this.closable = !this.closable;
-
+   
       //保存修改的数据
       if (this.editEnterpriseName) {
-        let data = {
-          id: this.enterpriseInfo.id,
+        let values = {
           nickname: this.enterpriseInfo.nickname,
           name: this.enterpriseInfo.name,
-          instruction: this.enterpriseInfo.instruction,
+          instraction: this.enterpriseInfo.instraction,
           address: this.enterpriseInfo.address,
-          phone: this.enterpriseInfo.phone
+          phone: this.enterpriseInfo.phone,
+          qwCorpid: this.enterpriseInfo.qwCorpid,
+          qwAppAgentId: this.enterpriseInfo.qwAppAgentId,
+          qwAppsecret: this.enterpriseInfo.qwAppsecret,
+          ddCorpid: this.enterpriseInfo.ddCorpid,
+          ddAppAgentId: this.enterpriseInfo.ddAppAgentId,
+          ddAppKey: this.enterpriseInfo.ddAppKey,
+          ddAppsecret: this.enterpriseInfo.ddAppsecret
         };
+        let data = [];
+        for(let key in values){
+          data.push({
+            "property":key,
+            "value":values[key]
+          })
+        }
+
         addOrUpdateEnterprise(data).then(res => {
           if (res.success) {
             this.$Message.info("保存成功");
@@ -388,11 +470,14 @@ export default {
 
     upload() {
       this.loadingStatus = true;
-      let data = {
-        id: this.enterpriseInfo.id,
-        backgroundImg: this.enterpriseInfo.backgroundImg,
-        backgroundName: this.enterpriseInfo.backgroundName
-      };
+      let data = [{
+        "property":"backgroundImg",
+        "value": this.enterpriseInfo.backgroundImg,
+      },{
+        "property":"backgroundName",
+        "value":this.enterpriseInfo.backgroundName
+      }];
+
       addOrUpdateEnterprise(data).then(res => {
         if (res.success) {
           this.$Message.info("图片上传成功");
@@ -408,7 +493,10 @@ export default {
         "/H_roleplay-si/ds/download?width=256&height=64&url=" +
         res.data[0].attacthment;
 
-      let data = { id: this.enterpriseInfo.id, logo: this.enterpriseInfo.logo };
+      let data = [{ 
+        "property":"logo",
+        "value":this.enterpriseInfo.logo 
+      }];
       addOrUpdateEnterprise(data).then(res => {
         if (res.success) {
           this.$Message.info("图片上传成功");

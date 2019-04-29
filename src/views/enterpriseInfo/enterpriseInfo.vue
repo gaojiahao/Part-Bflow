@@ -104,9 +104,14 @@
           <span v-if="!editEnterpriseName">{{enterpriseInfo.ddAppsecret}}</span>
           <input v-else type="text" v-model="enterpriseInfo.ddAppsecret" class="input-common-att" />
         </div>
+        <div class="select-explain">
+          <label class="left-leble">钉钉扫码登录授权应用ID</label>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.ddOauth2AppId}}</span>
+          <input v-else type="text" v-model="enterpriseInfo.ddOauth2AppId" class="input-common-att" />
+        </div>
          <div class="select-explain">
           <label class="left-leble">路塔实例详情资源地址</label>
-          <a v-if="!editEnterpriseName" :href="enterpriseInfo.rtRedirectUrl" _blank="target"></a>
+             <span v-if="!editEnterpriseName">{{enterpriseInfo.ddAppsecret}}</span>
           <input v-else type="text" v-model="enterpriseInfo.rtRedirectUrl" class="input-common-att" />
         </div>
       </section>
@@ -199,6 +204,7 @@ export default {
         ddAppAgentId:"",    //钉钉应用代理ID
         ddAppKey:"",    //钉钉应用ID
         ddAppsecret:"",    //钉钉应用应用密钥
+        ddOauth2AppId:"",   //钉钉扫码登录授权应用ID
         rtRedirectUrl:"", //
         admins: [],   //企业管理员
         backgroundImg: "",
@@ -434,6 +440,7 @@ export default {
           ddAppAgentId: this.enterpriseInfo.ddAppAgentId,
           ddAppKey: this.enterpriseInfo.ddAppKey,
           ddAppsecret: this.enterpriseInfo.ddAppsecret,
+          ddOauth2AppId:this.enterpriseInfo.ddOauth2AppId,
           rtRedirectUrl:this.enterpriseInfo.rtRedirectUrl
         };
         let data = [];

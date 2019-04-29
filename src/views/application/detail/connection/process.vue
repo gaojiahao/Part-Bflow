@@ -297,6 +297,7 @@ export default {
     //颜色选择
     onColorChange(row,index) {
       this.$set(row, "color", this.currentColor);
+      this.handleSave(row);
     },
     onActiveColorChange(color) {
       this.currentColor = color;

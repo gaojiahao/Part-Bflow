@@ -15,16 +15,19 @@
           <FormItem label="流程状态:" prop="fieldValue">
             <Input v-model="processInfoItem.fieldValue"></Input>
           </FormItem>
-          <!-- <FormItem label="流程状态编码:" prop="fieldCode">
-            <Input v-model="processInfoItem.fieldCode"></Input>
-          </FormItem> -->
           <FormItem label="排序:" prop="sort">
             <Input v-model="processInfoItem.sort"></Input>
           </FormItem>
+          <FormItem label="颜色:" prop="color">
+            <ColorPicker
+              v-model="processInfoItem.color" 
+              recommend/>
+          </FormItem>
         </Form>
         <div slot="footer">
-          <Button type="text" size="large" @click="showModal=false">取消</Button>
-          <Button type="primary" size="large" @click="addProcessStatus">确定</Button>
+          <Button type="text" size="small" @click="showModal=false">取消</Button>
+          <Button type="primary" size="small" @click="addProcessStatus">保存</Button>
+          <Button type="primary" size="small" @click="addProcessStatus('update')">保存并新建</Button>
         </div>
       </Modal>
       <div class="search">
@@ -36,7 +39,7 @@
             <ColorPicker 
               @on-change="onColorChange(row,index)" 
               @on-active-change="onActiveColorChange" 
-              :disabled="!isAdmin || (row.$isEdit?false:true)" 
+              :disabled="!isAdmin" 
               :value="row.color || '#fff'" 
               recommend/>
         </template>
@@ -254,7 +257,8 @@ export default {
       processInfoItem: {
         fieldValue: "",
         fieldCode: "biProcessStatus",
-        sort: ""
+        sort: "",
+        color: ""
       },
       ruleValidate: {
         fieldValue: [
@@ -384,7 +388,7 @@ export default {
       }
     },
 
-    addProcessStatus() {
+    addProcessStatus(type) {
       this.processInfoItem.listId = this.$route.params.listId;
       this.$refs["processInfoItem"].validate(valid => {
         if (valid) {
@@ -393,9 +397,7 @@ export default {
               this.$Message.info("添加成功");
               this.getProcessStatusByListId();
               this.$refs["processInfoItem"].resetFields();
-              this.processInfoItem.fieldValue = "";
-              this.processInfoItem.sort = "";
-              this.showModal = false;
+              type !== 'update' && (this.showModal = false);
             } else {
               this.$Message.error({
                 content: res.message,

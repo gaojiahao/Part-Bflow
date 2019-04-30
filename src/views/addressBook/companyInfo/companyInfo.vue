@@ -145,7 +145,7 @@ export default {
     }
   },
   mounted() {
-    let tabsMaxHeight = document.body.clientHeight - 120;
+    let tabsMaxHeight = document.body.clientHeight - 100;
     window.document.getElementsByClassName("detail-content")[0].style.height =
       tabsMaxHeight + "px";
     let groupId =

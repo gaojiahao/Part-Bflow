@@ -44,12 +44,12 @@
 
          <Row>
             <FormItem label="标题:" prop="logTitle" >
-              <Input v-model="modalFormData.logTitle" placeholder="请输入任务日志标题" />
+              <Input v-model="modalFormData.logTitle" placeholder="请输入工作日志标题" />
             </FormItem> 
          </Row>
 
          <Row>
-            <Col span="4">
+            <Col span="8">
                <FormItem label="类型:" prop="logType">
                   <Select v-model="modalFormData.logType" >
                     <Option v-for="item in logTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -57,7 +57,7 @@
               </FormItem> 
             </Col>
            
-           <Col span="4">
+           <Col span="8">
               <FormItem label="日期:" prop="taskDate">
                 <DatePicker 
                   type="date" 
@@ -102,7 +102,15 @@
         <img :src="item.photo?item.photo:'resources/images/icon/defaultUserPhoto.png'" class="head-portrait"/>
         <ul class="timeline-item-content-ul">
           <li>
-            <span>{{item.logTitle}}</span>
+           
+            <Tag color="primary"  v-if="item.logType =='generally'">一般事项</Tag>
+            <Tag color="error"  v-if="item.logType =='abnormal'">异常事项</Tag>
+            <Tag color="primary"  v-if="item.logType =='conference'">会议事项</Tag>
+
+            <Tag color="red" v-if="item.logStatus =='0'">待办</Tag>
+            <Tag color="green"  v-if="item.logStatus =='1'">已办</Tag>
+            <strong>{{item.logTitle}}</strong>
+            
           </li>
           <li>
             <span>{{item.handlerName}}</span>

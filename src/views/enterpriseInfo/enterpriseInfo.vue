@@ -73,6 +73,7 @@
           <label class="left-leble">企业微信企业ID</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.qwCorpid}}</span>
           <input v-else type="text" v-model="enterpriseInfo.qwCorpid" class="input-common-att" />
+          <a @click="handleSyncInfo" v-if="$currentUser.isAdmin">同步</a>
         </div>
         <div class="select-explain">
           <label class="left-leble">企业微信应用代理ID</label>
@@ -90,12 +91,12 @@
           <input v-else type="text" v-model="enterpriseInfo.ddCorpid" class="input-common-att" />
         </div>
         <div class="select-explain">
-          <label class="left-leble">钉钉信应用代理ID</label>
+          <label class="left-leble">钉钉应用ID</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.ddAppAgentId}}</span>
           <input v-else type="text" v-model="enterpriseInfo.ddAppAgentId" class="input-common-att" />
         </div>
         <div class="select-explain">
-          <label class="left-leble">钉钉应用ID</label>
+          <label class="left-leble">钉钉应用Key</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.ddAppKey}}</span>
           <input v-else type="text" v-model="enterpriseInfo.ddAppKey" class="input-common-att" />
         </div>
@@ -201,8 +202,8 @@ export default {
         qwAppAgentId:"",    //企业微信应用代理ID
         qwAppsecret:"",    //企业微信应用密钥
         ddCorpid:"",    //钉钉企业ID
-        ddAppAgentId:"",    //钉钉应用代理ID
-        ddAppKey:"",    //钉钉应用ID
+        ddAppAgentId:"",    //钉钉应用ID
+        ddAppKey:"",    //钉钉应用Key
         ddAppsecret:"",    //钉钉应用应用密钥
         ddOauth2AppId:"",   //钉钉扫码登录授权应用ID
         rtRedirectUrl:"", //
@@ -461,6 +462,11 @@ export default {
       }
 
       this.editEnterpriseName = !this.editEnterpriseName;
+    },
+
+    //同步
+    handleSyncInfo(){
+
     },
 
     //上传

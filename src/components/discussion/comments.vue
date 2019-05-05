@@ -24,7 +24,7 @@
 
                 <p><b>{{comment.creatorName}}</b></p>
 
-                <div class="comments-content-item-content-text" v-html="comment.content">
+                <div class="comments-content-item-content-text "  @click="handleViewTextImg($event)" v-html="comment.content">
                 </div>
 
                 <div class="comments-content-item-img" v-if="comment.commentAttachments.length>0">
@@ -273,6 +273,13 @@ export default {
                 
                 this.$refs.childComments[0].handleLoadMore();
             });
+        },
+        handleViewTextImg:function(event){
+            var tagName = event.target.tagName;
+
+            if(tagName === 'IMG' && !~event.target.getAttribute('src').indexOf('resources/images')){
+                this.handleViewImg(event.target.getAttribute('src'));
+            }
         },
         handleViewImg:function (img) {
             if(window.top.viewInsCommentsImg){

@@ -54,7 +54,8 @@ module.exports = {
       },
       {
         test: /iview\/.*?js$/,
-        loader: 'babel-loader'
+        loader: 'babel-loader',
+        exclude: /node_modules/
       },
       {
         test: /\.js$/,

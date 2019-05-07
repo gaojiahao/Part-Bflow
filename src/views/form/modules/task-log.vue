@@ -40,50 +40,73 @@
     </div>
 
     <div class="timeline-box-form">
-      <Form ref="formValidate" :label-width="120"   :model="modalFormData"  :rules="ruleValidate">
+      <Form ref="logForm" :label-width="120"   :model="modalFormData"  :rules="ruleValidate">
+
+        
 
          <Row>
+            <Col span="24">
+             <FormItem label='状态'   prop="logStatus"> 
+                <Checkbox 
+                  v-model="modalFormData.logStatus" 
+                  size='large' 
+                  true-value='已办' 
+                  false-value='待办'>
+                  {{modalFormData.logStatus}}
+                </Checkbox>
+            </FormItem>
+            </Col>
+         </Row>
+
+          <Row>
+           <Col span="24">
             <FormItem label="标题:" prop="logTitle" >
               <Input v-model="modalFormData.logTitle" placeholder="请输入工作日志标题" />
             </FormItem> 
+            </Col>
+
+            
          </Row>
 
          <Row>
-            <Col span="8">
+          <Col span="8">
                <FormItem label="类型:" prop="logType">
                   <Select v-model="modalFormData.logType" >
-                    <Option v-for="item in logTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    <Option v-for="item in logTypeList" :value="item.name" :key="item.name">{{ item.name }}</Option>
                 </Select>
               </FormItem> 
             </Col>
            
            <Col span="8">
-              <FormItem label="日期:" prop="taskDate">
+              <FormItem label="日期:" prop="taskDate" >
                 <DatePicker 
+                  style="width: 100%"
                   type="date" 
                   format="yyyy-MM-dd" 
+                  @on-change='handlerChangelogHours'
                   :clearable="false" 
                   v-model="modalFormData.taskDate">
                 </DatePicker>
               </FormItem>
             </Col>
+
+            <Col span="8">
+               <FormItem label="申报工时:" prop="logDeclarationHours">
+                <InputNumber 
+                  v-model="modalFormData.logDeclarationHours"  
+                  :min="0.1" 
+                  :step="0.1"/>单位/时
+              </FormItem>
+            </Col>
+
+           
          </Row>
 
          <Row>
-            <Col span="24">
-             <FormItem label="状态"  prop="logStatus"> 
-                <RadioGroup v-model="modalFormData.logStatus">
-                    <Radio label="1">已办</Radio>
-                    <Radio label="0">待办</Radio>
-                </RadioGroup>
-            </FormItem>
-            </Col>
+           
          </Row>
 
-          <FormItem label="申报工时:" prop="logDeclarationHours">
-                <InputNumber v-model="modalFormData.logDeclarationHours"  :min="0.1" :step="0.1"/>
-                <span style="margin-left:10px;">单位/时</span>
-              </FormItem>
+         
 
         <FormItem label="备注:" prop="comments">
           <Input  v-model="modalFormData.comments" type="textarea" placeholder="输入您特别想备注的信息" />
@@ -103,19 +126,23 @@
         <ul class="timeline-item-content-ul">
           <li>
            
-            <Tag color="primary"  v-if="item.logType =='generally'">一般事项</Tag>
-            <Tag color="error"  v-if="item.logType =='abnormal'">异常事项</Tag>
-            <Tag color="primary"  v-if="item.logType =='conference'">会议事项</Tag>
+            <Checkbox 
+              v-model="item.logStatus" 
+              size='large' 
+              @on-change='handlerChangeLogStatus(item)'
+              true-value='已办' 
+              false-value='待办'>
+            </Checkbox>
 
-            <Tag color="red" v-if="item.logStatus =='0'">待办</Tag>
-            <Tag color="green"  v-if="item.logStatus =='1'">已办</Tag>
             <strong>{{item.logTitle}}</strong>
-            
           </li>
           <li>
             <span>{{item.handlerName}}</span>
             <span>{{item.taskDate}}</span>
             <span v-html="`${item.logDeclarationHours} 小时`"></span>
+
+            <span >{{item.logType}}</span>
+
           </li>
           <li>
             <pre>{{item.comment}}</pre>
@@ -138,8 +165,10 @@
 </template>
 
 <script>
-import { getTaskLog, saveTaskLog } from "@/services/appService.js";
+import { getTaskLog, saveTaskLog,updateLogStatus} from "@/services/appService.js";
+import { getDictByValue} from "@/services/commonService.js";
 import { FormatDate } from "@/utils/utils";
+
 export default {
   name: "TaskLog",
   components: {},
@@ -151,9 +180,9 @@ export default {
   data() {
     
     const  validateTaskStatus = (rule, value, callback) => {
-      if(this.modalFormData.taskDate<=new Date() && value!=1){
+      if(this.modalFormData.taskDate<=new Date() && value!='已办'){
         callback(new Error('日期小于等于今日，日志类型应该为已办'));
-      }else if(this.modalFormData.taskDate>new Date() && value!=0){
+      }else if(this.modalFormData.taskDate>new Date() && value!='待办'){
         callback(new Error('日期大于今日，日志类型应该为待办'));
       }
 
@@ -161,31 +190,17 @@ export default {
     };
     return {
         transCode:"",
-        projectTaskId:"",
         logData: [],
         helpPanelVisible:false,
-        logTypeList:[
-          {
-            value: 'generally',
-            label: '一般事项'
-          },
-          {
-            value: 'abnormal',
-            label: '异常事项'
-          },
-          {
-            value: 'conference',
-            label: '会议'
-          }
-        ],
+        logTypeList:[],
         modalFormData: {
             //变更日志表单数据
             logTitle: "",
             taskDate:FormatDate(new Date(),"yyyy-MM-dd"),
             logDeclarationHours: 1,
             comments: "",
-            logType:"generally",
-            logStatus:"1"
+            logType:"",
+            logStatus:"已办"
         },
         ruleValidate: {
             //变更日志表单校验
@@ -221,7 +236,7 @@ export default {
     submitLog(event) {
         //校验提交的数据是否为空
         let valid;
-        this.$refs["formValidate"].validate(v => {
+        this.$refs["logForm"].validate(v => {
             valid = v;
         });
         if(!valid) {return;}
@@ -261,16 +276,14 @@ export default {
           
         saveTaskLog(formdata).then(res => {
             if (res.success) {
-                // window.top.Ext.toast(res.message);
-                console.log(this);
-                this.$refs['formValidate'].resetFields();
+                window.top.Ext.toast(res.message);
+                this.$refs['logForm'].resetFields();
                 this.getTaskLog(this.transCode);
             }else{
-                   window.top.Ext.toast(res.message)
+                window.top.Ext.toast(res.message)
             }
         });
     }, 
-
     /**
      * 获取任务日志
      */
@@ -280,21 +293,43 @@ export default {
         this.logData = res.tableContent;
         this.logData.forEach(item=>{
           item.comment.replace(/<br>/g,'\r\n'); 
+         
         })
       }).then(res=>{
             window.top.setTaskLogIframeHeight();
         });;
     },
-
     changeCurrentPage(currentPage) {
      this.currentPage = currentPage;
      this.getTaskLog();
     },
-   
+    /**
+     * 更新日志状态
+     */
+    handlerChangeLogStatus(log){
+      updateLogStatus(log.jobLogId,log.logStatus).then(res=>{
+         window.top.Ext.toast(res.message);
+      })
+    },
+    /**
+     * 执行状态校验
+     */
+    handlerChangelogHours(){
+      this.$refs.logForm.validateField('logStatus');
+    },
+
+    /**
+     * 初始化日志类型下拉选项
+     */
+    initLogTypeList(){
+      getDictByValue('logType').then(res=>{
+        this.logTypeList = res;
+      })
+    }
   },
   created() {
     this.transCode = this.$route.params.transCode; 
-    this.projectTaskId = this.$route.params.projectTaskId;
+    this.initLogTypeList();
     this.getTaskLog();
   }
 };

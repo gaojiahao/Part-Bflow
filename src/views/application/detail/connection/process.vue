@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="less">
 @import "./process.less";
 </style>
 <template>
@@ -37,11 +37,13 @@
       <Table :loading="loading" :columns="columns" :data="processData" size="small">
         <template slot-scope="{ row, index }" slot="color">
             <ColorPicker 
+              class="process-colorpick"
               @on-change="onColorChange(row,index)" 
               @on-active-change="onActiveColorChange" 
               :disabled="!isAdmin" 
               :value="row.color || '#fff'" 
-              recommend/>
+              recommend
+              transfer/>
         </template>
       </Table>
       <div style="margin: 10px;overflow: hidden">

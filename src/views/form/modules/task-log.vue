@@ -305,7 +305,7 @@ export default {
      */
     handlerChangeLogStatus(log){
       
-      if(new Date(log.taskDate) != new Date() && log.logStatus === '已办'){
+      if(new Date(log.taskDate) > new Date() && log.logStatus === '已办'){
         this.modalVisible = true;
         this.curLog = log;
       }else{

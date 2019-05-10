@@ -73,7 +73,14 @@
           <label class="left-leble">企业微信企业ID</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.qwCorpid}}</span>
           <input v-else type="text" v-model="enterpriseInfo.qwCorpid" class="input-common-att" />
-          <a @click="handleSyncInfo" v-if="$currentUser.isAdmin">同步</a>
+          <Button 
+            type="info" 
+            shape="circle" 
+            @click="handleSyncInfo" 
+            v-if="$currentUser.isAdmin" 
+            :style="{marginLeft:'50px'}">
+            同步第三方平台用户
+          </Button>
         </div>
         <div class="select-explain">
           <label class="left-leble">企业微信应用代理ID</label>

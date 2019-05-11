@@ -810,3 +810,14 @@ export const getTaskLog = (transCode,currentPage,pageSize) => request('/H_rolepl
   pageIndex:currentPage,
   pageSize:pageSize
 })
+
+/**
+ * @author snack.huang
+ * @description 更新任务日志状态
+ * @param {*} param 
+ */
+export const updateLogStatus = (jobLogId,logStatus) => request('/H_roleplay-si/jobLog/updateLogStatus',{},'POST',{
+  jobLogId:jobLogId,
+  logStatus:logStatus
+})
+

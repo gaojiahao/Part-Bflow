@@ -26,7 +26,10 @@ Vue.use(VueLazyload);
 Vue.use(iView);
 let cache = window.sessionStorage.getItem('roletask.com.r2.cache');
 let deepstreamAddress = window.localStorage.getItem('r2-cached-properties');
-
+Vue.config.keyCodes = {
+  v: 86,
+  f1: 112,
+}
  if(cache){
     init(cache);
     new Vue({

@@ -52,4 +52,8 @@ export const addSubscribeUsers = (data) => request('/H_roleplay-si/comment/subsc
 export const deleteSubscribeUsers = (data) => request('/H_roleplay-si/comment/unsubscribeBatchByRelationKey', data, 'POST')
 
 
+/**
+ * @description 上传图片
+ */
+export const uploadImage = (data) => request('/H_roleplay-si/ds/upload_image', {}, 'POST',data)
 

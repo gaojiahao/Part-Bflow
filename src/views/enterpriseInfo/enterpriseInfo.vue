@@ -69,6 +69,30 @@
       </section>
 
       <section class="info-warp-main-section">
+        <div :style="{marginBottom:'5px'}">
+          <Button type="info" size="small" @click="showAddExchange">添加汇率</Button>
+          <Button type="info" size="small" @click="deleteExchange">删除</Button>
+        </div>
+        <Table :columns="rateColumns" :data="rateData" @on-selection-change="onSelectChange" width="600" size="small">
+          <template slot-scope="{ row }" slot="currency">
+              <span @click="editExchangeRate(row,'currencyEdit')" class="cell-click" v-if="!row.currencyEdit">{{ row.currencyName }}</span>
+              <Select 
+                v-else 
+                v-model="row.currency" 
+                style="width:150px"
+                transfer
+                @on-change="onCurrencyChange($event,row)">
+                  <Option v-for="item in currencyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+          </template>
+          <template slot-scope="{ row }" slot="exchangeRate">
+              <span @click="editExchangeRate(row,'exchangeEdit')" class="cell-click" v-if="!row.exchangeEdit">{{ row.exchangeRate }}</span>
+              <InputNumber @on-blur="onExchangeRateBlur(row)" v-else :min="0" v-model="row.exchangeRate"></InputNumber>
+          </template>
+      </Table>
+      </section>
+
+      <section class="info-warp-main-section">
         <div class="select-explain">
           <label class="left-leble">企业微信企业ID</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.qwCorpid}}</span>
@@ -175,6 +199,24 @@
         </Tag>
       </div>
     </user-modal>
+    <!-- 添加汇率modal -->
+    <Modal v-model="showExchangeRateModal" title="新增汇率">
+        <Form :model="exchangeRateInfo" ref="exchangeRateInfoItem" :label-width="100" :rules="ruleValidate">
+          <FormItem label="币种:" prop="currency">
+            <Select @on-change="onModalCurrencyChange" v-model="exchangeRateInfo.currency" style="width:200px">
+                  <Option v-for="item in currencyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+          </FormItem>
+          <FormItem label="汇率:" prop="exchangeRate">
+            <InputNumber :min="0" v-model="exchangeRateInfo.exchangeRate"></InputNumber>
+          </FormItem>
+        </Form>
+        <div slot="footer">
+          <Button type="text" size="small" @click="showExchangeRateModal=false">取消</Button>
+          <Button type="primary" size="small" @click="addExchangeRate">保存</Button>
+          <Button type="primary" size="small" @click="addExchangeRate('update')">保存并新建</Button>
+        </div>
+    </Modal>
   </div>
 </template>
 
@@ -185,8 +227,14 @@ import {
   addOrUpdateEnterprise,
   updateRelation,
   deleteRelation,
-  getAllUsers
+  getAllUsers,
+  importThirdPlat,
+  getExchangeRateData,
+  addExchangeRateData,
+  deleteExchangeRateData,
+  updateExchangeRateData
 } from "@/services/enterpriseService";
+import { getDictByValue } from "@/services/commonService";
 import { getToken } from "@/utils/utils";
 import UserModal from "@/components/modal/Modal";
 
@@ -218,7 +266,28 @@ export default {
         backgroundImg: "",
         backgroundName: ""
       },
+      exchangeRateInfo: {
+        currency: "",
+        exchangeRate: 0,
+      },
+      ruleValidate: {
+        currency: [
+          {
+            required: true,
+            message: "币种不能为空",
+            trigger: "change"
+          }
+        ],
+        exchangeRate: [
+          {
+            required: true,
+            message: "汇率不能为空",
+            type: "number"
+          }
+        ]
+      },
       editEnterpriseName: false,
+      showExchangeRateModal: false,
       edit: "修改",
 
       httpHeaders: {
@@ -247,15 +316,151 @@ export default {
       ],
       closable: false,
 
+      rateColumns: [
+        {
+          type: "selection",
+          width: 60,
+          align: "center"
+        },
+        {
+          title: "币种",
+          slot: "currency",
+          sortable: true
+        },
+        {
+          title: "汇率",
+          slot: "exchangeRate",
+          sortable: true
+        },
+        {
+          title: "操作",
+          key: "action",
+          render: (h, params) => {
+            return h("a",{
+              on: {
+                click: () => {
+                  let deleteData = [];
+                  deleteData.push(params.row.id);
+                  this.deleteRateCommon(deleteData);
+                }
+              }
+            },"删除");
+          }
+        }
+      ],
+      rateData: [],
+      currencyList: [],
+
       searchValue: "",
       pageTotal: 0, //table总数
       pageSize: 8,
       currentPage: 1, //table当前页
-      loading: false
+      loading: false,
+      hasNoCurrency: true,
+      selectExchange: []
     };
   },
 
   methods: {
+    //删除统一方法
+    deleteRateCommon(deleteData) {
+      this.$Modal.confirm({
+            title: "确认",
+            content: "确认删除所选汇率？",
+            onOk: () => {
+              deleteExchangeRateData(deleteData).then(res => {
+                    if(res.success){
+                      this.$Message.success(res.message);
+                      this.getExchangeRateDatas();
+                    }
+                  })
+              }
+          });
+    },
+    showAddExchange() {
+      this.showExchangeRateModal = true;
+    },
+    editExchangeRate(row, isEdit) {
+      this.$set(row, isEdit, true);
+    },
+    onCurrencyChange(value,row) {
+      for(let item of this.rateData){
+        if(item.currency === value){
+          this.$Message.error('不可选择汇率已有币种！');
+          this.hasNoCurrency = false;
+          break;
+        }else{
+          this.hasNoCurrency = true;
+        }
+      }
+
+      if(this.hasNoCurrency){
+        if(row){
+          updateExchangeRateData(row).then(res => {
+            if(res.success){
+                this.$Message.success(res.message);
+                this.getExchangeRateDatas();
+              }
+          }).catch(error => {
+            this.$Message.error(res.data.message);
+          })
+      }
+      }
+    },
+    onSelectChange(selection) {
+      this.selectExchange = selection;
+    },
+    //汇率添加币种唯一校验
+    onModalCurrencyChange(value) {
+      for(let item of this.rateData){
+        if(item.currency === value){
+          this.$Message.error('不可选择汇率已有币种！');
+          break;
+        }
+      }
+    },
+    onExchangeRateBlur(row) {
+      if(row){
+        updateExchangeRateData(row).then(res => {
+          if(res.success){
+              this.$Message.success(res.message);
+              this.getExchangeRateDatas();
+            }
+        }).catch(error => {
+          this.$Message.error(res.data.message);
+        })
+      }
+    },
+    //添加汇率
+    addExchangeRate(type) {
+      this.$refs["exchangeRateInfoItem"].validate(valid => {
+        if(valid){
+          addExchangeRateData(this.exchangeRateInfo).then(res => {
+            if(res.success){
+              this.$Message.success(res.message);
+              this.$refs["exchangeRateInfoItem"].resetFields();
+              type !== 'update' && (this.showExchangeRateModal = false)
+              this.getExchangeRateDatas();
+            }
+          }).catch(error => {
+            this.$Message.error(res.data.message);
+          })
+        }
+      })
+    },
+    //删除汇率
+    deleteExchange() {
+      let deleteData = [];
+      if(this.selectExchange.length > 0){
+        for(let item of this.selectExchange){
+          deleteData.push(item.id);
+        }
+
+        this.deleteRateCommon(deleteData);
+      }else{
+        this.$Message.error('请先选择要删除的选项！');
+      }
+    },
     //管理员选择modal展示
     selectAdminModal() {
       this.showAdminModal = true;
@@ -473,7 +678,23 @@ export default {
 
     //同步
     handleSyncInfo(){
-
+      let fontDDColor = '#8DE427',
+          fontqywxColor = '#8DE427';
+      importThirdPlat().then(res => {
+        if(res.success){
+          this.$Message.success('同步成功！');
+        }else{
+          res.dd.success && (fontqywxColor = '#E4393C');
+          res.qywx.success && (fontDDColor = '#E4393C');
+            
+          this.$Message.info({
+            content: `<div style="color:${fontDDColor}">${res.dd.message}</div>
+                      <div style="color:${fontqywxColor}">${res.qywx.message}</div>`
+          });
+        }
+      }).catch(err => {
+        this.$Message.error(err.data.message);
+      });
     },
 
     //上传
@@ -540,10 +761,37 @@ export default {
         title: "文件格式不对",
         desc: "请上传格式为png 或者 jpg 的图片"
       });
+    },
+    //获取币种数据
+    getCurrencyDatas() {
+      getDictByValue('fundCurrency').then(res => {
+        if(res){
+          for(let item of res) {
+            this.currencyList.push({
+              label: item.name,
+              value: item.value
+            });
+          }
+        }
+      })
+    },
+    //获取汇率数据
+    getExchangeRateDatas() {
+      getExchangeRateData().then(res => {
+        if(res.success){
+          this.rateData = res.list;
+          this.rateData.forEach(val => {
+            val.exchangeEdit = false;
+            val.currencyEdit = false;
+          })
+        }
+      })
     }
   },
   created() {
     this.getAdmintrstorData();
+    this.getCurrencyDatas()
+    this.getExchangeRateDatas();
   }
 };
 </script>

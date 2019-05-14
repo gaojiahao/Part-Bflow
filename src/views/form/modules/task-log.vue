@@ -41,9 +41,6 @@
 
     <div class="timeline-box-form">
       <Form ref="logForm" :label-width="120"   :model="modalFormData"  :rules="ruleValidate">
-
-        
-
          <Row>
             <Col span="24">
              <FormItem label='状态'   prop="logStatus"> 
@@ -64,8 +61,6 @@
               <Input v-model="modalFormData.logTitle" placeholder="请输入工作日志标题" />
             </FormItem> 
             </Col>
-
-            
          </Row>
 
          <Row>
@@ -102,16 +97,9 @@
            
          </Row>
 
-         <Row>
-           
-         </Row>
-
-         
 
         <FormItem label="备注:" prop="comments">
           <Input  v-model="modalFormData.comments" type="textarea" placeholder="输入您特别想备注的信息" />
-
-          
         </FormItem>
 
         <FormItem>
@@ -161,6 +149,13 @@
             ></Page>
       </div>
     </div>
+    <Modal
+        v-model="modalVisible"
+        title="系统提示"
+        @on-ok="handlerUpdateLogStatus(curLog)"
+        @on-cancel="getTaskLog();modalVisible=false">
+        <p>如果更新为已办，日志的日期将自动更新未为今天!</p>
+    </Modal>
   </div>
 </template>
 
@@ -192,6 +187,7 @@ export default {
         transCode:"",
         logData: [],
         helpPanelVisible:false,
+        modalVisible:false,
         logTypeList:[],
         modalFormData: {
             //变更日志表单数据
@@ -259,6 +255,7 @@ export default {
                     id:'',
                     handlerEntity: currentUser.entityId,
                     biProcessStatus: null,
+                    transType:'YW146'
                 },
                 jobLog:{
                     logTitle: this.modalFormData.logTitle,
@@ -307,6 +304,15 @@ export default {
      * 更新日志状态
      */
     handlerChangeLogStatus(log){
+      
+      if(new Date(log.taskDate) > new Date() && log.logStatus === '已办'){
+        this.modalVisible = true;
+        this.curLog = log;
+      }else{
+        this.handlerUpdateLogStatus(log);
+      }
+    },
+    handlerUpdateLogStatus(log){
       updateLogStatus(log.jobLogId,log.logStatus).then(res=>{
          window.top.Ext.toast(res.message);
       })

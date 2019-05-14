@@ -291,7 +291,7 @@ export default {
                 this.isFilter = true;
                 this.userListVisible = true;
             }
-            if(this.isFilter && this.userListVisible) {
+            if(this.isFilter) {
                 // 说明输入了@ 截取@到光标之间的字符串
                 const targetText = fullText.slice(this.at_focusOffset ,end);
                 const regx = /[^\u4e00-\u9fa5\w-]/ ;

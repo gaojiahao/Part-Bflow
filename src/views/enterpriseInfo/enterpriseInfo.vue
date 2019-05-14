@@ -133,7 +133,7 @@
           <input v-else type="text" v-model="enterpriseInfo.ddAppKey" class="input-common-att" />
         </div>
         <div class="select-explain">
-          <label class="left-leble">钉钉应用应用密钥</label>
+          <label class="left-leble">钉钉应用密钥</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.ddAppsecret}}</span>
           <input v-else type="text" v-model="enterpriseInfo.ddAppsecret" class="input-common-att" />
         </div>

@@ -182,14 +182,15 @@ export default {
         }
       });
     },
-    handlePublish:function (content,uploadList) {
+    handlePublish:function (content,uploadList,userIds=[]) {
         let comment ={
             type:this.type,       
             content:content, 
             relationKey:this.transCode,
             parentId: -1,
             commentAndReply:false,
-            commentAttachments:uploadList
+            commentAttachments:uploadList,
+            userIds:userIds
         };
         saveComment(comment).then(res=>{
             if(!res.success){

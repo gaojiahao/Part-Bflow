@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="less" scoped> 
 @import "./publish.less";
 </style>
 
@@ -9,11 +9,29 @@
             class="publish-container-content" 
             id = "contentWrap"
             contenteditable="true" 
-            ref="publishContent"
+            ref="editor"
             v-html="innerText"
-            @input="changeTxt" 
+            @input="changeTxt"
+            @blur="onPopperShow"
             @focus="lock=true" 
-            @blur="lock=false"></div>
+            @keydown="handleDOMRemoved"
+            ></div>
+
+        <div class="atwho-view" id="at-view-64" v-show="userListVisible" :style="{top:`${top}px`,left:`${left}px`}" >
+            <ul class="atwho-view-ul" @click="handleSelectUser" >
+               <li 
+                    v-for="(item,index) in userList" 
+                    :key="item.userId" 
+                    :userId="item.userId" 
+                    :class="{'at-high-light': index === currentIndex}"
+                    @mousedown="OnMouseDown"
+                    @mouseover="handleMouseover(index)"
+                 
+                    >
+                    {{item.nickname}}
+                </li>
+            </ul>
+        </div>    
     </Row>
     <br>
     <Row class="publish-bar">
@@ -143,8 +161,12 @@
 
 <script>
 import { getToken } from "@/utils/utils";
+import {
+  getDomValue, insertHtmlAtCaret, getCursortPosition
+} from '@/utils/dom-utils'
 import { 
-    uploadImage
+    uploadImage,
+    getAllUsers
 } from "@/services/subscribeService";
 export default {
     name:"coment-publish",
@@ -196,7 +218,18 @@ export default {
             uploadList: [],
             uploadFileList:[],
             commentAndReply:false,
-            faceVisible:false
+            faceVisible:false,
+            userList:[],
+            userListVisible:false,
+            left:0,
+            top:0,
+            isFilter:false,
+            at_focusOffset:0,
+            currentIndex:0,
+            // 存放被@的用户列表
+            atUsers: [],
+            contentWrap:{},
+            range:{}
         };
     },
     watch:{
@@ -210,14 +243,158 @@ export default {
         },
     },
     methods: {
+        OnMouseDown(e) {
+            e.preventDefault()
+        },
+
+        handleMouseover(index){
+            this.currentIndex = index;
+        },
+
+        getAllUsers(filter=""){
+            getAllUsers(5,1,filter).then(res=>{
+                this.userList = res.tableContent;
+                if(res.tableContent.length === 0){
+                    this.userListVisible = false;
+                }
+            })
+        },
+
+        onPopperShow:function(){
+            //点击表情时获取光标位置
+            // 返回插入符号当前位置的selection对象
+            let selection = window.getSelection();
+
+            // 获取包含当前节点的文档片段
+            this.range = selection.getRangeAt(0);
+            this.userListVisible = false;
+        },
 
         choice_face: function(n) {
-            this.discContent.txt  =   this.discContent.txt + '<img src="'+ n+'" width="20" paste="1">';
+            // 创建需追加到光标处节点的文档片段
+            const range = this.range.cloneRange();
+            let fragment = range.createContextualFragment('<img src="'+ n +'" width="20" paste="1">')
+            // 将创建的文档片段插入到光标处
+            this.range.insertNode(fragment.lastChild)
+      
             this.faceVisible = false;
         },
+
         changeTxt:function(e){
-            this.discContent.txt=   e.target.innerHTML;
+            // 获取输入框中的值
+            const fullText =this.contentWrap.innerText.replace(/\n/g, '');
+            // 获取光标位置
+            const end = getCursortPosition(this.contentWrap);
+            // 获取离光标最近的一个@的位置
+            if(e.data === '@'){
+                this.at_focusOffset = end;   
+                this.isFilter = true;
+                this.userListVisible = true;
+            }
+            if(this.isFilter) {
+                // 说明输入了@ 截取@到光标之间的字符串
+                const targetText = fullText.slice(this.at_focusOffset ,end);
+                const regx = /[^\u4e00-\u9fa5\w-]/ ;
+                if(/^\s/.test(targetText) || targetText.match(regx)) {
+                // 以空白符开头 或者包含不合法字符
+                this.hidenUserPanel();
+                } else {
+                    // 合法的用户输入
+                    this.showUserPanel(this.contentWrap,targetText);
+                }
+            } 
         },
+
+        handleSelectUser(e){
+            let target = event.target || event.srcElement;
+            //用户ID
+            const userId = target.getAttribute('userId');
+             // 获取输入框中的值
+            const fullText = this.contentWrap.innerText.replace(/\n/g, '')
+            // 获取光标位置
+            const end = getCursortPosition(this.contentWrap);
+            // 获取离光标最近的一个@的位置
+            const lastAtIndex = fullText.slice(0,end).lastIndexOf('@');
+            const offset = end - lastAtIndex;
+            // 删除之前的内容
+            let selection = getSelection();
+            let range =selection.getRangeAt(0);
+            range.setStart(range.endContainer, range.endOffset - offset);
+            range.deleteContents();
+          
+            // 插入选中的user
+            let input = `<span contenteditable="false" style="color: #646b6b;font-style: italic;font-size:12px;cursor: pointer;">@${target.innerText}&nbsp;</span>`;
+            insertHtmlAtCaret(input);
+            // 添加用户
+            this.atUsers.push({
+                userId:userId,
+                name:target.innerText
+            });
+            
+            this.hidenUserPanel();
+        },
+
+        // 处理节点的删除
+        handleDOMRemoved(e) {
+            if (e.keyCode === 8 ) {
+                // 获取输入框中的值
+                const fullText = this.contentWrap.innerText.replace(/\n/g, '');
+                // 获取光标位置
+                const end = getCursortPosition(this.contentWrap);
+                // 光标之前用户名最大可能长度的文本
+                const content = fullText.slice(end-30, end);
+                // 获取离光标最近的一个@的位置
+                const lastAtIndex = fullText.lastIndexOf('@');
+
+                if(lastAtIndex+1 === end){
+                    this.hidenUserPanel();
+                }
+
+                if (lastAtIndex > -1) {
+                    // 如果存在 @
+                    const user = fullText.slice(lastAtIndex, end).trim().replace(/@/, '');
+                    for(let i=0;i<this.atUsers.length;i++){
+                        if(this.atUsers[i].name === user){
+                            this.atUsers.splice(i,1);
+                            break;
+                        }
+                    }
+                  
+                }
+
+               
+            }
+        },
+        //隐藏用户列表
+        hidenUserPanel(){
+            this.userListVisible = false;
+            this.isFilter = false;
+            this.at_focusOffset = 0;
+            this.currentIndex = 0;
+        },
+        //隐藏用户列表
+        showUserPanel(el,targetText=""){
+           const func = () => {
+                // top && left
+                var sel = window.getSelection();
+                if (sel) {
+                    const range = sel.getRangeAt(0);
+                    const textareaRect = el.getBoundingClientRect();
+                    const rangeRect = range.getBoundingClientRect();
+                    const top = rangeRect.y - textareaRect.y;
+                    const left = rangeRect.x - textareaRect.x;
+                    this.userListVisible = true ;
+                    this.left = left;
+                    this.top = top;
+                    let atView = document.getElementById('at-view-64');
+                    atView.focus();
+                    const filter = JSON.stringify([{"operator":"like","value":targetText,"property":"nickname"}]);
+                    this.getAllUsers(filter);
+                }
+            }
+            func();
+        },
+
         handleSend: function() {
             let  imgs= this.uploadList.map(img=>{
                     return {
@@ -233,11 +410,20 @@ export default {
 
             files = files.concat(imgs);
             let content =  document.getElementById('contentWrap').innerHTML;
-            this.handlePublish(content,files,this.superComment,this.commentAndReply);
+
+            let obj = {};
+            //数组去重
+            let userIds = this.atUsers.reduce((cur, next) => {
+                obj[next.userId] ? "" : (obj[next.userId] = true && cur.push(next.userId));
+                return cur;
+            }, []);
+
+            this.handlePublish(content,files,userIds,this.superComment,this.commentAndReply);
 
             this.innerText = '';
             this.discContent.txt = '';
-            this.$refs.publishContent.innerText = '';
+            this.$refs.editor.innerHTML = "";
+            this.atUsers = [];
             this.$refs.upload.clearFiles();
             this.$refs.uploadFile.clearFiles();
            
@@ -320,6 +506,57 @@ export default {
                 }
             });
         },
+
+        initEvent(){
+            // // demo 程序将粘贴事件绑定到 document 上
+            // this.$refs.editor.addEventListener('compositionstart',(e)=>{
+            //     this.isCN = true;
+            // });
+
+            // //中文输入完成触发事件
+            // this.$refs.editor.addEventListener('compositionend',(e)=>{
+            //     if(this.isFilter){
+            //         this.filterContent = this.filterContent+e.data;
+            //         let filter = JSON.stringify([{"operator":"like","value":this.filterContent,"property":"nickname"}]);
+            //         this.getAllUsers(filter);
+            //         this.isCN = false;
+            //     }  
+            // });
+
+
+            const that = this;
+            this.$refs.editor.addEventListener("paste",  (e)=> {
+                let clipboardData = e.clipboardData;
+                let ua = window.navigator.userAgent
+                if ( !(clipboardData && clipboardData.items) ) {
+                    return;
+                }
+                if(clipboardData.items.length === 0){
+                    return;
+                }
+                // Mac平台下Chrome49版本以下 复制Finder中的文件的Bug Hack掉
+                if(clipboardData.items && clipboardData.items.length === 2 && clipboardData.items[0].kind === "string" && clipboardData.items[1].kind === "file" &&
+                    clipboardData.types && clipboardData.types.length === 2 && clipboardData.types[0] === "text/plain" && clipboardData.types[1] === "Files" &&
+                    ua.match(/Macintosh/i) && Number(ua.match(/Chrome\/(\d{2})/i)[1]) < 49){
+                    return;
+                }
+            
+                for (let i = 0, len = clipboardData.items.length; i < len; i++) {
+                    let item = clipboardData.items[i];
+                    if (item.kind === "file") {
+                        let f= item.getAsFile();
+                        let reader=new FileReader()
+                        //读取完成
+                        reader.onload= (e)=> {
+                            that.uploadImageByBase64('ab',e.target.result);
+                        
+                        }
+                        reader.readAsDataURL(f)
+                    }
+                }
+            }, false);
+        },
+
     },
     created(){
         var baseUrl = 'resources/images/face/';
@@ -336,40 +573,16 @@ export default {
     mounted () {
         this.uploadList = this.$refs.upload.fileList;
         this.uploadFileList = this.$refs.uploadFile.fileList;
-        // demo 程序将粘贴事件绑定到 document 上
-        let target = document.getElementById('contentWrap');
-        let that = this;
-        target.addEventListener("paste",  (e)=> {
-            let clipboardData = e.clipboardData;
-            let ua = window.navigator.userAgent
-            if ( !(clipboardData && clipboardData.items) ) {
-                return;
-            }
-               if(clipboardData.items.length === 0){
-                return;
-            }
-             // Mac平台下Chrome49版本以下 复制Finder中的文件的Bug Hack掉
-            if(clipboardData.items && clipboardData.items.length === 2 && clipboardData.items[0].kind === "string" && clipboardData.items[1].kind === "file" &&
-                clipboardData.types && clipboardData.types.length === 2 && clipboardData.types[0] === "text/plain" && clipboardData.types[1] === "Files" &&
-                ua.match(/Macintosh/i) && Number(ua.match(/Chrome\/(\d{2})/i)[1]) < 49){
-                return;
-            }
-           
-            for (let i = 0, len = clipboardData.items.length; i < len; i++) {
-                let item = clipboardData.items[i];
-                if (item.kind === "file") {
-                    let f= item.getAsFile();
-                    let reader=new FileReader()
-                    //读取完成
-                    reader.onload= (e)=> {
-                        that.uploadImageByBase64('ab',e.target.result);
-                       
-                    }
-                    reader.readAsDataURL(f)
-                }
-            }
-        }, false);
-    }
+      
+        this.$nextTick(()=>{
+            this.$refs.editor.focus();
+            this.contentWrap = this.$refs.editor;
+            
+                    })
+        //初始化事件
+        this.initEvent();
+    },
+
 };
 </script>
 

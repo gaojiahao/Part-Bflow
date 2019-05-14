@@ -53,7 +53,17 @@ export const deleteSubscribeUsers = (data) => request('/H_roleplay-si/comment/un
 
 
 /**
+ * @author guozheng
  * @description 上传图片
  */
 export const uploadImage = (data) => request('/H_roleplay-si/ds/upload_image', {}, 'POST',data)
 
+/**
+ * @author guozheng
+ * @description 获取所有用户数据
+ */
+export const getAllUsers = (pageSize, currentPage, filter) => request('/H_roleplay-si/ds/getAllUsers', {
+    page: currentPage,
+    limit: pageSize,
+    filter: filter
+  });

@@ -69,11 +69,11 @@
       </section>
 
       <section class="info-warp-main-section">
-        <div :style="{marginBottom:'5px'}">
+        <div v-if="$currentUser.isAdmin" :style="{marginBottom:'5px'}">
           <Button type="info" size="small" @click="showAddExchange">添加汇率</Button>
           <Button type="info" size="small" @click="deleteExchange">删除</Button>
         </div>
-        <Table :columns="rateColumns" :data="rateData" @on-selection-change="onSelectChange" width="600" size="small">
+        <Table :columns="rateColumns" border :data="rateData" @on-selection-change="onSelectChange" width="600" size="small">
           <template slot-scope="{ row }" slot="currency">
               <span @click="editExchangeRate(row,'currencyEdit')" class="cell-click" v-if="!row.currencyEdit">{{ row.currency }}</span>
               <Select 
@@ -340,7 +340,15 @@ export default {
           title: "操作",
           key: "action",
           render: (h, params) => {
-            return h("a",{
+            return h("Button",{
+              props: {
+                type: 'text',
+                size: 'small',
+                disabled: !this.$currentUser.isAdmin
+              },
+              style: {
+                color: '#39f'
+              },
               on: {
                 click: () => {
                   let deleteData = [];
@@ -385,7 +393,7 @@ export default {
       this.showExchangeRateModal = true;
     },
     editExchangeRate(row, isEdit) {
-      this.$set(row, isEdit, true);
+      this.$currentUser.isAdmin && this.$set(row, isEdit, true);
     },
     onCurrencyChange(value,row) {
       for(let item of this.rateData){

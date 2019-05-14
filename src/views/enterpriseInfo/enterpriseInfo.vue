@@ -75,14 +75,15 @@
         </div>
         <Table :columns="rateColumns" :data="rateData" @on-selection-change="onSelectChange" width="600" size="small">
           <template slot-scope="{ row }" slot="currency">
-              <span @click="editExchangeRate(row,'currencyEdit')" class="cell-click" v-if="!row.currencyEdit">{{ row.currencyName }}</span>
+              <span @click="editExchangeRate(row,'currencyEdit')" class="cell-click" v-if="!row.currencyEdit">{{ row.currency }}</span>
               <Select 
                 v-else 
                 v-model="row.currency" 
                 style="width:150px"
                 transfer
+                label-in-value
                 @on-change="onCurrencyChange($event,row)">
-                  <Option v-for="item in currencyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                  <Option v-for="item in currencyList" :value="item.label" :key="item.value">{{ item.label }}</Option>
               </Select>
           </template>
           <template slot-scope="{ row }" slot="exchangeRate">
@@ -203,9 +204,12 @@
     <Modal v-model="showExchangeRateModal" title="新增汇率">
         <Form :model="exchangeRateInfo" ref="exchangeRateInfoItem" :label-width="100" :rules="ruleValidate">
           <FormItem label="币种:" prop="currency">
-            <Select @on-change="onModalCurrencyChange" v-model="exchangeRateInfo.currency" style="width:200px">
-                  <Option v-for="item in currencyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
+            <Select 
+              @on-change="onModalCurrencyChange" 
+              v-model="exchangeRateInfo.currency"
+              style="width:200px">
+                  <Option v-for="item in currencyList" :value="item.label" :key="item.value">{{ item.label }}</Option>
+            </Select>
           </FormItem>
           <FormItem label="汇率:" prop="exchangeRate">
             <InputNumber :min="0" v-model="exchangeRateInfo.exchangeRate"></InputNumber>
@@ -385,7 +389,7 @@ export default {
     },
     onCurrencyChange(value,row) {
       for(let item of this.rateData){
-        if(item.currency === value){
+        if(item.currency === value.value){
           this.$Message.error('不可选择汇率已有币种！');
           this.hasNoCurrency = false;
           break;
@@ -396,15 +400,18 @@ export default {
 
       if(this.hasNoCurrency){
         if(row){
+          row.currency = value.label;
           updateExchangeRateData(row).then(res => {
             if(res.success){
                 this.$Message.success(res.message);
                 this.getExchangeRateDatas();
+              }else{
+                this.$Message.error(res.message);
               }
           }).catch(error => {
             this.$Message.error(res.data.message);
           })
-      }
+        }
       }
     },
     onSelectChange(selection) {
@@ -425,6 +432,8 @@ export default {
           if(res.success){
               this.$Message.success(res.message);
               this.getExchangeRateDatas();
+            }else{
+              this.$Message.error(res.message);
             }
         }).catch(error => {
           this.$Message.error(res.data.message);
@@ -441,6 +450,8 @@ export default {
               this.$refs["exchangeRateInfoItem"].resetFields();
               type !== 'update' && (this.showExchangeRateModal = false)
               this.getExchangeRateDatas();
+            }else{
+              this.$Message.error(res.message);
             }
           }).catch(error => {
             this.$Message.error(res.data.message);

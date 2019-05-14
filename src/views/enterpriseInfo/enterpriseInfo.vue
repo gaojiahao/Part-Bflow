@@ -788,6 +788,7 @@ export default {
     },
     //获取汇率数据
     getExchangeRateDatas() {
+      this.selectExchange = [];
       getExchangeRateData().then(res => {
         if(res.success){
           this.rateData = res.list;

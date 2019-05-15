@@ -25,7 +25,7 @@
           <span style="margin-left:10px;">单位/时</span>
         </FormItem>
         <FormItem label="更新内容:" prop="content">
-           <div ref="logeditor"></div>
+           <div contenteditable="true" ref="logContent" class="log-content"></div>
         </FormItem>
         
         <FormItem>
@@ -95,6 +95,14 @@ export default {
         content: ""
       },
       ruleValidate: {
+        scope: [
+          {
+            required: true,
+            message: "范围不能为空",
+            trigger: "change",
+            type: 'array'
+          }
+        ],
         //变更日志表单校验
         spendTime: [ 
           {
@@ -120,9 +128,6 @@ export default {
     isAdmin: function(value) {
       if (value) {
         this.isAdminTrue = true;
-          setTimeout(() => {
-            this.createEditor();
-          },10)
       } else {
         this.isAdminTrue = false;
       }
@@ -136,10 +141,10 @@ export default {
     submitLog(event) {
       //校验提交的数据是否为空
       let valid;
-      if (this.logeditor.txt.html() === "<div></div>" || this.modalFormData.scope.length === 0) {
+      if (this.$refs['logContent'].innerHTML === "") {
         this.$Message.error("必填项请输入！");
       } else {
-        this.modalFormData.content = this.logeditor.txt.html();
+        this.modalFormData.content = this.$refs['logContent'].innerHTML;
       }
 
       this.$refs["formValidate"].validate(v => {
@@ -154,7 +159,7 @@ export default {
         saveAppLog(listId, scope, spendTime, content).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
-            this.logeditor.txt.html(`<div></div>`);
+            this.$refs['logContent'].innerHTML = "";
             this.$refs["formValidate"].resetFields();
             this.getChangeLog();
           }
@@ -177,13 +182,6 @@ export default {
           this.logData = res.tableContent;
           this.dataCount = res.dataCount;
         }
-
-        if(!this.logeditor){
-              setTimeout(() => {
-                this.createEditor();
-              },10)
-            }
-       
       });
     },
 
@@ -199,35 +197,6 @@ export default {
           });
         }
       });
-    },
-    //create富文本编辑器
-    createEditor() {
-      this.logeditor = new E(this.$refs.logeditor)
-      this.logeditor.customConfig.onchange = (html) => {
-        this.modalFormData.content = html;
-      }
-      this.logeditor.customConfig.zIndex = 100
-      this.logeditor.customConfig.menus = [
-        'head',  // 标题
-        'bold',  // 粗体
-        'fontSize',  // 字号
-        'fontName',  // 字体
-        'italic',  // 斜体
-        'underline',  // 下划线
-        'strikeThrough',  // 删除线
-        'foreColor',  // 文字颜色
-        'backColor',  // 背景颜色
-        'link',  // 插入链接
-        'list',  // 列表
-        'justify',  // 对齐方式
-        'quote',  // 引用
-        'emoticon',  // 表情
-        'code',  // 插入代码
-        'undo',  // 撤销
-        'redo'  // 重复
-      ]
-      this.logeditor.create();
-      this.logeditor.txt.html(`<div></div>`);
     }
   },
   created() {

@@ -23,7 +23,7 @@
                     v-for="(item,index) in userList" 
                     :key="item.userId" 
                     :userId="item.userId" 
-                    :class="{'at-high-light': index === currentIndex}"
+                    :class="{'at-high-light': index === currentWho.index}"
                     @mousedown="OnMouseDown"
                     @mouseover="handleMouseover(index)"
                  
@@ -225,7 +225,9 @@ export default {
             top:0,
             isFilter:false,
             at_focusOffset:0,
-            currentIndex:0,
+            currentWho:'',
+            //.currentWho.index:0,
+            // currentUser:'',
             // 存放被@的用户列表
             atUsers: [],
             contentWrap:{},
@@ -248,7 +250,7 @@ export default {
         },
 
         handleMouseover(index){
-            this.currentIndex = index;
+            this.currentWho.index = index;
         },
 
         getAllUsers(filter=""){
@@ -256,6 +258,14 @@ export default {
                 this.userList = res.tableContent;
                 if(res.tableContent.length === 0){
                     this.userListVisible = false;
+                }else{
+                    let nickname = res.tableContent[0].nickname;
+                    let userId = res.tableContent[0].userId;
+                    this.currentWho = {
+                        nickname:nickname,
+                         userId:userId,
+                        index:0
+                    }
                 }
             })
         },
@@ -306,9 +316,9 @@ export default {
         },
 
         handleSelectUser(e){
-            let target = event.target || event.srcElement;
-            //用户ID
-            const userId = target.getAttribute('userId');
+           const nickname = e && e.target.innerText || this.currentWho.nickname;
+           const userId = e && e.target.getAttribute('userId') || this.currentWho.userId;
+
              // 获取输入框中的值
             const fullText = this.contentWrap.innerText.replace(/\n/g, '')
             // 获取光标位置
@@ -323,19 +333,20 @@ export default {
             range.deleteContents();
           
             // 插入选中的user
-            let input = `<span contenteditable="false" style="color: #646b6b;font-style: italic;font-size:12px;cursor: pointer;">@${target.innerText}&nbsp;</span>`;
+            let input = `<span contenteditable="false" style="color: #646b6b;font-style: italic;font-size:12px;cursor: pointer;">@${nickname}&nbsp;</span>`;
             insertHtmlAtCaret(input);
             // 添加用户
             this.atUsers.push({
                 userId:userId,
-                name:target.innerText
+                name:nickname
             });
             
             this.hidenUserPanel();
         },
 
-        // 处理节点的删除
+           // 处理节点的删除
         handleDOMRemoved(e) {
+            //删除
             if (e.keyCode === 8 ) {
                 // 获取输入框中的值
                 const fullText = this.contentWrap.innerText.replace(/\n/g, '');
@@ -364,13 +375,48 @@ export default {
 
                
             }
+
+            if(this.currentWho){
+                // ↑ ↓
+                if (e.keyCode === 38 || e.keyCode === 40) {
+                    if (!(e.metaKey || e.ctrlKey)) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.handleKeyBoardSelect(e);
+                    }
+                    return;
+                }
+                // 按下回车键
+                if (e.keyCode === 13) {
+                    this.handleSelectUser();
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            }
         },
+
+        handleKeyBoardSelect(e) {
+            // 处理键盘的上下输入
+            const offset = e.keyCode === 38 ? -1 : 1
+            const { index } = this.currentWho
+            // 循环的计算
+            const next = Math.max(0, Math.min(index+offset,this.userList.length-1));
+            
+            const nickname = this.userList[next].nickname;
+            const userId = this.userList[next].userId;
+
+            this.currentWho = {
+                nickname:nickname,
+                userId:userId,
+                index:next
+            }
+        },
+
         //隐藏用户列表
         hidenUserPanel(){
             this.userListVisible = false;
             this.isFilter = false;
             this.at_focusOffset = 0;
-            this.currentIndex = 0;
         },
         //隐藏用户列表
         showUserPanel(el,targetText=""){
@@ -409,7 +455,7 @@ export default {
                 });
 
             files = files.concat(imgs);
-            let content =  document.getElementById('contentWrap').innerHTML;
+            let content =  this.$refs.editor.innerHTML;
 
             let obj = {};
             //数组去重
@@ -487,7 +533,7 @@ export default {
         },
 
         uploadImageByBase64(referenceID,file){
-            let target = document.getElementById('contentWrap');
+            let target = this.$refs.editor;
             uploadImage({
                   referenceId:referenceID,
                     file:file

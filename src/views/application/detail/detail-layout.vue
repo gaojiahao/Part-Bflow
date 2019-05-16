@@ -46,6 +46,12 @@
           连接&API
         </MenuItem>
       </router-link>
+
+      <router-link :to="{ name:'features'}">
+        <MenuItem name="features">
+          特性管理
+        </MenuItem>
+      </router-link>
     </Menu>
 
   <div class="detail-content">

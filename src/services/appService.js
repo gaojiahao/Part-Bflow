@@ -821,3 +821,22 @@ export const updateLogStatus = (jobLogId,logStatus) => request('/H_roleplay-si/j
   logStatus:logStatus
 })
 
+/**
+ * @author XiaoYing
+ * @description 获取特性管理数据
+ * @param {String} listId 应用ID
+ */
+export const getAppFeaturesList = (listId) => request('/H_roleplay-si/app/feature/list', {
+  listId: listId
+})
+
+/**
+ * @author XiaoYing
+ * @description 获取特性管理数据
+ * @param {String} listId 应用ID
+ */
+export const switchAppFeatures = (listId, featureId) => request('/H_roleplay-si/app/feature/switch', {
+  listId: listId,
+  featureId: featureId
+}, 'POST')
+

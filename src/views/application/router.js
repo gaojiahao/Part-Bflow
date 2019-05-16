@@ -54,7 +54,15 @@ export const  applicationRouter = {
                         title: '连接',
                     },
                     component: () => import('@/views/application/detail/connection/connection-layout.vue'),
-                }   
+                },
+                {
+                    path: 'features',
+                    name: 'features',
+                    meta: {
+                        title: '特性管理',
+                    },
+                    component: () => import('@/views/application/detail/features/features-layout.vue'),
+                }    
             ]
         },{
             path: 'list',

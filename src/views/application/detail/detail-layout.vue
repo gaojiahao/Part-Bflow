@@ -49,7 +49,7 @@
 
       <router-link :to="{ name:'features'}">
         <MenuItem name="features">
-          特性管理
+          配置
         </MenuItem>
       </router-link>
     </Menu>

@@ -222,6 +222,7 @@ export default {
             title: "操作",
             key: "list",
             align: "center",
+            width: 300,
             render: (h,params) => {
                 return h('div',[
                     h('a',{

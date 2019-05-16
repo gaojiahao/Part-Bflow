@@ -7,7 +7,7 @@
         <Row class="app-action">
             <Row v-if="!row" class="app-action-title">
                 <h3>字段或字段组<a v-if="isAdmin" @click="showModal" class="app-action-title-add">添加</a></h3>
-                <span class="warning-color marlr">应用字段授权给用户或用户组</span>
+                <span class="marlr" :style="{color:'#aaaaaa'}">应用字段授权给用户或用户组</span>
             </Row>
             <div :class="{'app-action-source':!row}">
                 <h3 v-if="isAdmin && row" @click="showModal" class="app-action-title-add"><Icon type="md-add" />添加</h3>
@@ -157,6 +157,7 @@ export default {
         optColumns = [ {
           title: "操作",
           key: "list",
+          width: 300,
           align: "center",
           render: (h, params) => {
             return h("div", [

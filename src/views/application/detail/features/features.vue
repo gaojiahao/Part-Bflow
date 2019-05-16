@@ -6,7 +6,7 @@
 <div class="bg_ff" :style="{marginBottom:'20px'}">
 
     <Row class="app-feature-title">
-         <h3>特性中心</h3>
+         <h3>特性管理</h3>
     </Row>
     <Row class="feature-content">
         <!-- <div class="feature-toolbar">
@@ -40,8 +40,8 @@
                                 {{ item.title }}
                                 <Icon v-if="item.status === '1'" type="md-checkmark-circle" class="card-right-title-icon" />
                             </p>
-                            <Tooltip :content="item.description" max-width="200" placement="top">
-                                <p class="card-right-desc">{{ item.description }}</p>
+                            <Tooltip class="card-right-desc" :content="item.description" max-width="200" placement="top">
+                                <p>{{ item.description }}</p>
                             </Tooltip>
                             <p>
                                 <Button 

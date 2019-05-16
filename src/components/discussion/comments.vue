@@ -248,7 +248,7 @@ export default {
             comment.showReply = !comment.showReply;
             
         },
-        handleReplyPublish:function (content,uploadList,superComment,commentAndReply) {
+        handleReplyPublish:function (content,uploadList,userIds=[],superComment,commentAndReply) {
             this.$forceUpdate();
             let comment ={
                 type:superComment.type,       

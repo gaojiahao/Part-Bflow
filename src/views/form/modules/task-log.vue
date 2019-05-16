@@ -42,8 +42,8 @@
     <div class="timeline-box-form">
       <Form ref="logForm" :label-width="120"   :model="modalFormData"  :rules="ruleValidate">
          <Row>
-            <Col span="24">
-             <FormItem label='状态'   prop="logStatus"> 
+            <Col span="8">
+              <FormItem label='状态'   prop="logStatus"> 
                 <Checkbox 
                   v-model="modalFormData.logStatus" 
                   size='large' 
@@ -51,7 +51,21 @@
                   false-value='待办'>
                   {{modalFormData.logStatus}}
                 </Checkbox>
-            </FormItem>
+              </FormItem>
+            </Col>
+            <Col span="8">
+              <FormItem label='成员'  prop="users"> 
+                <Select
+                  v-model="modalFormData.users"
+                  multiple
+                  filterable
+                  remote
+                  :remote-method="remoteFilterSearch"
+                  @on-query-change="handleQueryChange"
+                  :loading="loading">
+                  <Option v-for="(option) in userList" :value="option.userId" :key="option.userId">{{option.nickname}}</Option>
+                </Select>
+              </FormItem>
             </Col>
          </Row>
 
@@ -162,6 +176,7 @@
 <script>
 import { getTaskLog, saveTaskLog,updateLogStatus} from "@/services/appService.js";
 import { getDictByValue} from "@/services/commonService.js";
+import { getAllUsers } from "@/services/subscribeService";
 import { FormatDate } from "@/utils/utils";
 
 export default {
@@ -189,11 +204,14 @@ export default {
         helpPanelVisible:false,
         modalVisible:false,
         logTypeList:[],
+        loading:false,
+        userList:[],
         modalFormData: {
             //变更日志表单数据
             logTitle: "",
             taskDate:FormatDate(new Date(),"yyyy-MM-dd"),
             logDeclarationHours: 1,
+            users:[],
             comments: "",
             logType:"",
             logStatus:"已办"
@@ -203,6 +221,9 @@ export default {
             logTitle: [
               {required: true,message: "不允许为空" },
               { type: 'string', max: 20, message: '标题不能超过20个字符'}
+            ],
+            users: [
+              {required: true,message: "不允许为空" }
             ],
             logType: [
               {required: true,message: "不允许为空" }
@@ -242,6 +263,7 @@ export default {
         let formdata = {
             listId: '2750a13d-295d-4776-9673-290c51bfc568',
             wfParam:null,
+            userIds:[...this.modalFormData.users],
             formData:{
                 baseinfo:{
                     handlerName: currentUser.nickname,
@@ -280,6 +302,7 @@ export default {
                 window.top.Ext.toast(res.message)
             }
         });
+        
     }, 
     /**
      * 获取任务日志
@@ -296,6 +319,26 @@ export default {
             window.top.setTaskLogIframeHeight();
         });;
     },
+
+    handleQueryChange(query){
+      if(query===""){
+        this.getAllUsers();
+      }
+    },
+
+    remoteFilterSearch(query){
+      this.getAllUsers(query);
+    },
+
+    getAllUsers(query){
+        this.loading = true;
+        const filter = query?JSON.stringify([{"operator":"like","value":query,"property":"nickname"}]):'';
+        getAllUsers(7,1,filter).then(res=>{
+            this.userList = res.tableContent;
+            this.loading = false;
+        })
+    },
+
     changeCurrentPage(currentPage) {
      this.currentPage = currentPage;
      this.getTaskLog();
@@ -337,6 +380,7 @@ export default {
     this.transCode = this.$route.params.transCode; 
     this.initLogTypeList();
     this.getTaskLog();
+    this.getAllUsers();
   }
 };
 </script>

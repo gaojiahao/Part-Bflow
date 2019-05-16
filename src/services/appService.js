@@ -798,7 +798,7 @@ export const serachProcess = (listId, currentPage, pageSize, filter) => request(
  * @description 保存任务日志
  * @param {*} param 
  */
-export const saveTaskLog = (data) => request('/H_roleplay-si/jobLog/save', {}, "POST",data)
+export const saveTaskLog = (data) => request('/H_roleplay-si/jobLog/batchSave', {}, "POST",data)
 
 /**
  * @author guozheng

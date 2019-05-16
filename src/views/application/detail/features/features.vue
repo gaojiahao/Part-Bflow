@@ -44,8 +44,21 @@
                                 <p class="card-right-desc">{{ item.description }}</p>
                             </Tooltip>
                             <p>
-                                <Button @click="openOrCloseFeatures(item.id)" type="info" v-if="item.status === '0'">开启</Button>
-                                <Button @click="openOrCloseFeatures(item.id)" type="error" ghost  v-if="item.status === '1'">关闭</Button>
+                                <Button 
+                                    @click="openOrCloseFeatures(item.id)" 
+                                    type="info" 
+                                    :disabled="!isAdmin"
+                                    v-if="item.status === '0'">
+                                    开启
+                                </Button>
+                                <Button 
+                                    @click="openOrCloseFeatures(item.id)" 
+                                    type="error" 
+                                    :disabled="!isAdmin"
+                                    ghost  
+                                    v-if="item.status === '1'">
+                                    关闭
+                                </Button>
                             </p>
                         </div>
                      </div>

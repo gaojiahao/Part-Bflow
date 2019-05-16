@@ -38,7 +38,7 @@
                         <div class="card-right">
                             <p class="card-right-title">
                                 {{ item.title }}
-                                <Icon type="md-checkmark-circle" class="card-right-title-icon" />
+                                <Icon v-if="item.status === '1'" type="md-checkmark-circle" class="card-right-title-icon" />
                             </p>
                             <Tooltip :content="item.description" max-width="200" placement="top">
                                 <p class="card-right-desc">{{ item.description }}</p>

@@ -42,7 +42,7 @@
     <div class="timeline-box-form">
       <Form ref="logForm" :label-width="120"   :model="modalFormData"  :rules="ruleValidate">
          <Row>
-            <Col span="8">
+            <Col :xs="24" :sm="12" :md="8" :lg="8">
               <FormItem label='状态'   prop="logStatus"> 
                 <Checkbox 
                   v-model="modalFormData.logStatus" 
@@ -53,7 +53,7 @@
                 </Checkbox>
               </FormItem>
             </Col>
-            <Col span="8">
+            <Col :xs="24" :sm="12" :md="8" :lg="8">
               <FormItem label='成员'  prop="users"> 
                 <Select
                   v-model="modalFormData.users"
@@ -78,7 +78,7 @@
          </Row>
 
          <Row>
-          <Col span="8">
+          <Col :xs="24" :sm="12" :md="8" :lg="8">
                <FormItem label="类型:" prop="logType">
                   <Select v-model="modalFormData.logType" >
                     <Option v-for="item in logTypeList" :value="item.name" :key="item.name">{{ item.name }}</Option>
@@ -86,7 +86,7 @@
               </FormItem> 
             </Col>
            
-           <Col span="8">
+           <Col :xs="24" :sm="12" :md="8" :lg="8">
               <FormItem label="日期:" prop="taskDate" >
                 <DatePicker 
                   style="width: 100%"
@@ -99,7 +99,7 @@
               </FormItem>
             </Col>
 
-            <Col span="8">
+            <Col :xs="24" :sm="12" :md="8" :lg="8">
                <FormItem label="申报工时:" prop="logDeclarationHours">
                 <InputNumber 
                   v-model="modalFormData.logDeclarationHours"  

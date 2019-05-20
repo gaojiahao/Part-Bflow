@@ -276,7 +276,7 @@ export default {
                     modifer: currentUser.userId,
                     id:'',
                     handlerEntity: currentUser.entityId,
-                    biProcessStatus: null,
+                    biProcessStatus: this.modalFormData.logStatus,
                     transType:'YW146'
                 },
                 jobLog:{
@@ -284,8 +284,7 @@ export default {
                     taskDate:FormatDate(this.modalFormData.taskDate,'yyyy-MM-dd'),
                     logDeclarationHours: this.modalFormData.logDeclarationHours,
                     relTransCode:this.transCode,
-                    logType:this.modalFormData.logType,
-                    logStatus:this.modalFormData.logStatus
+                    logType:this.modalFormData.logType
                 },
                 comment:{
                     biComment:this.modalFormData.comments

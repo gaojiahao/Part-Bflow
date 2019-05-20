@@ -164,6 +164,7 @@ export default {
         },
         onCancel: () => {
           this.reloadViewData();
+          this.setColumns();
         }
       });
     },

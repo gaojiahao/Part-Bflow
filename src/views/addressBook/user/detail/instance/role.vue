@@ -309,7 +309,7 @@ export default {
     },
     //重新渲染默认职位columns方法
     reRenderDefaultView() {
-      this.columns[4].render = (h, params) => {
+      this.columns[8].render = (h, params) => {
         let defaultView = false;
         if (params.row.isDefault === 1) {
           defaultView = true;

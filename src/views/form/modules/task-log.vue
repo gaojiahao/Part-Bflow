@@ -355,7 +355,7 @@ export default {
       }
     },
     handlerUpdateLogStatus(log){
-      updateLogStatus(log.jobLogId,log.logStatus).then(res=>{
+      updateLogStatus(log.transCode,log.logStatus).then(res=>{
          window.top.Ext.toast(res.message);
       })
     },

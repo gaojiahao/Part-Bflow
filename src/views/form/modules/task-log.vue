@@ -5,7 +5,7 @@
 <template>
   <div  class="timeline-box">
 
-    <Drawer  placement="right" :closable="false" width="400" v-model="helpPanelVisible">
+    <Drawer  placement="right" :closable="false" width="50%" v-model="helpPanelVisible">
         <h3>工作+进展</h3>
         <br>
         今天研发任务已经完成了60%，比计划提前三天
@@ -40,7 +40,7 @@
     </div>
 
     <div class="timeline-box-form">
-      <Form ref="logForm" :label-width="120"   :model="modalFormData"  :rules="ruleValidate">
+      <Form ref="logForm" :label-width="80"   :model="modalFormData"  :rules="ruleValidate">
          <Row>
             <Col :xs="24" :sm="12" :md="8" :lg="8">
               <FormItem label='状态'   prop="logStatus"> 

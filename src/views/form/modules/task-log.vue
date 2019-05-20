@@ -5,7 +5,7 @@
 <template>
   <div  class="timeline-box">
 
-    <Drawer  placement="right" :closable="false" width="400" v-model="helpPanelVisible">
+    <Drawer  placement="right" :closable="false" width="50%" v-model="helpPanelVisible">
         <h3>工作+进展</h3>
         <br>
         今天研发任务已经完成了60%，比计划提前三天
@@ -23,7 +23,7 @@
 
         <h3>问题+解决方案</h3>
         <br>
-        A客户不同意我们的合同条款，想邀请后天老板一起拜访
+        A客户不同意我们的合同条款，想后天邀请老板一起拜访
          <Divider />
 
         <h3>计划+目标</h3>
@@ -40,10 +40,10 @@
     </div>
 
     <div class="timeline-box-form">
-      <Form ref="logForm" :label-width="120"   :model="modalFormData"  :rules="ruleValidate">
+      <Form ref="logForm" :label-width="80"   :model="modalFormData"  :rules="ruleValidate">
          <Row>
-            <Col span="24">
-             <FormItem label='状态'   prop="logStatus"> 
+            <Col :xs="24" :sm="12" :md="8" :lg="8">
+              <FormItem label='状态'   prop="logStatus"> 
                 <Checkbox 
                   v-model="modalFormData.logStatus" 
                   size='large' 
@@ -51,7 +51,21 @@
                   false-value='待办'>
                   {{modalFormData.logStatus}}
                 </Checkbox>
-            </FormItem>
+              </FormItem>
+            </Col>
+            <Col :xs="24" :sm="12" :md="8" :lg="8">
+              <FormItem label='成员'  prop="users"> 
+                <Select
+                  v-model="modalFormData.users"
+                  multiple
+                  filterable
+                  remote
+                  :remote-method="remoteFilterSearch"
+                  @on-query-change="handleQueryChange"
+                  :loading="loading">
+                  <Option v-for="(option) in userList" :value="option.userId" :key="option.userId">{{option.nickname}}</Option>
+                </Select>
+              </FormItem>
             </Col>
          </Row>
 
@@ -64,7 +78,7 @@
          </Row>
 
          <Row>
-          <Col span="8">
+          <Col :xs="24" :sm="12" :md="8" :lg="8">
                <FormItem label="类型:" prop="logType">
                   <Select v-model="modalFormData.logType" >
                     <Option v-for="item in logTypeList" :value="item.name" :key="item.name">{{ item.name }}</Option>
@@ -72,7 +86,7 @@
               </FormItem> 
             </Col>
            
-           <Col span="8">
+           <Col :xs="24" :sm="12" :md="8" :lg="8">
               <FormItem label="日期:" prop="taskDate" >
                 <DatePicker 
                   style="width: 100%"
@@ -85,7 +99,7 @@
               </FormItem>
             </Col>
 
-            <Col span="8">
+            <Col :xs="24" :sm="12" :md="8" :lg="8">
                <FormItem label="申报工时:" prop="logDeclarationHours">
                 <InputNumber 
                   v-model="modalFormData.logDeclarationHours"  
@@ -162,6 +176,7 @@
 <script>
 import { getTaskLog, saveTaskLog,updateLogStatus} from "@/services/appService.js";
 import { getDictByValue} from "@/services/commonService.js";
+import { getAllUsers } from "@/services/subscribeService";
 import { FormatDate } from "@/utils/utils";
 
 export default {
@@ -189,11 +204,14 @@ export default {
         helpPanelVisible:false,
         modalVisible:false,
         logTypeList:[],
+        loading:false,
+        userList:[],
         modalFormData: {
             //变更日志表单数据
             logTitle: "",
             taskDate:FormatDate(new Date(),"yyyy-MM-dd"),
             logDeclarationHours: 1,
+            users:[],
             comments: "",
             logType:"",
             logStatus:"已办"
@@ -203,6 +221,9 @@ export default {
             logTitle: [
               {required: true,message: "不允许为空" },
               { type: 'string', max: 20, message: '标题不能超过20个字符'}
+            ],
+            users: [
+              {required: true,message: "不允许为空" }
             ],
             logType: [
               {required: true,message: "不允许为空" }
@@ -242,6 +263,7 @@ export default {
         let formdata = {
             listId: '2750a13d-295d-4776-9673-290c51bfc568',
             wfParam:null,
+            userIds:[...this.modalFormData.users],
             formData:{
                 baseinfo:{
                     handlerName: currentUser.nickname,
@@ -254,7 +276,7 @@ export default {
                     modifer: currentUser.userId,
                     id:'',
                     handlerEntity: currentUser.entityId,
-                    biProcessStatus: null,
+                    biProcessStatus: this.modalFormData.logStatus,
                     transType:'YW146'
                 },
                 jobLog:{
@@ -262,8 +284,7 @@ export default {
                     taskDate:FormatDate(this.modalFormData.taskDate,'yyyy-MM-dd'),
                     logDeclarationHours: this.modalFormData.logDeclarationHours,
                     relTransCode:this.transCode,
-                    logType:this.modalFormData.logType,
-                    logStatus:this.modalFormData.logStatus
+                    logType:this.modalFormData.logType
                 },
                 comment:{
                     biComment:this.modalFormData.comments
@@ -280,6 +301,7 @@ export default {
                 window.top.Ext.toast(res.message)
             }
         });
+        
     }, 
     /**
      * 获取任务日志
@@ -296,6 +318,26 @@ export default {
             window.top.setTaskLogIframeHeight();
         });;
     },
+
+    handleQueryChange(query){
+      if(query===""){
+        this.getAllUsers();
+      }
+    },
+
+    remoteFilterSearch(query){
+      this.getAllUsers(query);
+    },
+
+    getAllUsers(query){
+        this.loading = true;
+        const filter = query?JSON.stringify([{"operator":"like","value":query,"property":"nickname"}]):'';
+        getAllUsers(7,1,filter).then(res=>{
+            this.userList = res.tableContent;
+            this.loading = false;
+        })
+    },
+
     changeCurrentPage(currentPage) {
      this.currentPage = currentPage;
      this.getTaskLog();
@@ -313,7 +355,7 @@ export default {
       }
     },
     handlerUpdateLogStatus(log){
-      updateLogStatus(log.jobLogId,log.logStatus).then(res=>{
+      updateLogStatus(log.transCode,log.logStatus).then(res=>{
          window.top.Ext.toast(res.message);
       })
     },
@@ -337,6 +379,7 @@ export default {
     this.transCode = this.$route.params.transCode; 
     this.initLogTypeList();
     this.getTaskLog();
+    this.getAllUsers();
   }
 };
 </script>

@@ -529,7 +529,7 @@ export default {
               };
           }).catch(error=>{
               this.$Message.error(error.data.message)
-            });;
+            });
         }
         if (!this.checkout) {
           this.$Message.error("名称已经存在!");

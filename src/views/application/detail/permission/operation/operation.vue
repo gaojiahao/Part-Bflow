@@ -7,7 +7,7 @@
         
         <Row class="app-action">
             <Row class="app-action-title">
-                <h3>动作</h3><span class="warning-color marlr">勾选以启用或停用应用的动作</span>
+                <h3>动作</h3><span class="marlr" :style="{color:'#aaaaaa'}">勾选以启用或停用应用的动作</span>
             </Row>
             <div class="app-action-source">
                 <Row class="app-action-source-list">

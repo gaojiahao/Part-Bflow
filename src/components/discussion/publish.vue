@@ -409,7 +409,7 @@ export default {
                 });
 
             files = files.concat(imgs);
-            let content =  document.getElementById('contentWrap').innerHTML;
+            let content =  this.$refs.editor.innerHTML;
 
             let obj = {};
             //数组去重
@@ -487,7 +487,7 @@ export default {
         },
 
         uploadImageByBase64(referenceID,file){
-            let target = document.getElementById('contentWrap');
+            let target = this.$refs.editor;
             uploadImage({
                   referenceId:referenceID,
                     file:file

@@ -798,7 +798,7 @@ export const serachProcess = (listId, currentPage, pageSize, filter) => request(
  * @description 保存任务日志
  * @param {*} param 
  */
-export const saveTaskLog = (data) => request('/H_roleplay-si/jobLog/save', {}, "POST",data)
+export const saveTaskLog = (data) => request('/H_roleplay-si/jobLog/batchSave', {}, "POST",data)
 
 /**
  * @author guozheng
@@ -816,8 +816,27 @@ export const getTaskLog = (transCode,currentPage,pageSize) => request('/H_rolepl
  * @description 更新任务日志状态
  * @param {*} param 
  */
-export const updateLogStatus = (jobLogId,logStatus) => request('/H_roleplay-si/jobLog/updateLogStatus',{},'POST',{
-  jobLogId:jobLogId,
-  logStatus:logStatus
+export const updateLogStatus = (transCode,logStatus) => request('/H_roleplay-si/formAPI/updateProcessStatus',{
+  transCode:transCode,
+  processStatus:logStatus
 })
+
+/**
+ * @author XiaoYing
+ * @description 获取特性管理数据
+ * @param {String} listId 应用ID
+ */
+export const getAppFeaturesList = (listId) => request('/H_roleplay-si/app/feature/list', {
+  listId: listId
+})
+
+/**
+ * @author XiaoYing
+ * @description 获取特性管理数据
+ * @param {String} listId 应用ID
+ */
+export const switchAppFeatures = (listId, featureId) => request('/H_roleplay-si/app/feature/switch', {
+  listId: listId,
+  featureId: featureId
+}, 'POST')
 

@@ -99,7 +99,6 @@ export default {
           {
             required: true,
             message: "范围不能为空",
-            trigger: "change",
             type: 'array'
           }
         ],
@@ -160,7 +159,11 @@ export default {
           if (res.success) {
             this.$Message.success(res.message);
             this.$refs['logContent'].innerHTML = "";
-            this.$refs["formValidate"].resetFields();
+            this.modalFormData.scope = [];
+            this.modalFormData.spendTime = 1;
+            this.$nextTick(() => {
+              this.$refs["formValidate"].resetFields();
+            });
             this.getChangeLog();
           }
         });

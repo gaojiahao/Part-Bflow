@@ -150,7 +150,8 @@ export default {
             return h('div',[
               h('Select',{
                 props: {
-                  value: params.row.fieldCode
+                  value: params.row.fieldCode,
+                  transfer: true
                 },
                 on: {
                   'on-change': value => {
@@ -187,7 +188,8 @@ export default {
             return h('div',[
               h('Select',{
                 props: {
-                  value: params.row.operator
+                  value: params.row.operator,
+                  transfer: true
                 },
                 on: {
                   'on-change': value => {
@@ -234,7 +236,8 @@ export default {
             return h('div',[
               h('Select',{
                 props: {
-                  value: params.row.logicOperator
+                  value: params.row.logicOperator,
+                  transfer: true
                 },
                 on: {
                   'on-change': value => {

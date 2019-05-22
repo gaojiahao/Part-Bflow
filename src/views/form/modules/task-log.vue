@@ -54,12 +54,13 @@
               </FormItem>
             </Col>
             <Col :xs="24" :sm="12" :md="8" :lg="8">
-              <FormItem label='成员'  prop="users"> 
+              <FormItem label='员工'  prop="users"> 
                 <Select
                   v-model="modalFormData.users"
                   multiple
                   filterable
                   remote
+                  placeholder="请选择或搜索员工"
                   :remote-method="remoteFilterSearch"
                   @on-query-change="handleQueryChange"
                   :loading="loading">

@@ -22,6 +22,14 @@ export const getListById = (listId) => request('/H_roleplay-si/ds/list/getListBy
 
 /**
  * @author XiaoYing
+ * @description 获取通讯录员工往来标签
+ */
+export const getDealerLabels = () => request('/H_roleplay-si/ds/getObjDealerLabelSource', {
+  filter: JSON.stringify([{"operator":"ne","value":"员工","property":"dealerLabelName"}])
+});
+
+/**
+ * @author XiaoYing
  * @description 添加权限
  */
 export const addPermission = (permissionIds,menuIds, objId,type) => request(`/H_roleplay-si/ps/${type}/save`, {

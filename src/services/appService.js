@@ -816,9 +816,11 @@ export const getTaskLog = (transCode,currentPage,pageSize) => request('/H_rolepl
  * @description 更新任务日志状态
  * @param {*} param 
  */
-export const updateLogStatus = (transCode,logStatus) => request('/H_roleplay-si/formAPI/updateProcessStatus',{
+export const updateLogStatus = (jobLogId,transCode,processStatus,taskDate) => request('/H_roleplay-si/jobLog/updateLogStatus',{}, "POST",{
+  jobLogId:jobLogId,
   transCode:transCode,
-  processStatus:logStatus
+  taskDate:taskDate,
+  processStatus:processStatus
 })
 
 /**

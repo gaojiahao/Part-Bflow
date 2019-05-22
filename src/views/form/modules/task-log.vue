@@ -169,7 +169,7 @@
         title="系统提示"
         @on-ok="handlerUpdateLogStatus(curLog)"
         @on-cancel="getTaskLog();modalVisible=false">
-        <p>如果更新为已办，日志的日期将自动更新未为今天!</p>
+        <p>如果更新为已办，日志的日期将自动更新为今天!</p>
     </Modal>
   </div>
 </template>
@@ -356,7 +356,14 @@ export default {
       }
     },
     handlerUpdateLogStatus(log){
-      updateLogStatus(log.transCode,log.logStatus).then(res=>{
+      let taskDate = log.taskDate;
+      if(log.logStatus === '已办'){
+        taskDate = FormatDate(new Date(),"yyyy-MM-dd");
+      }
+      updateLogStatus(log.jobLogId,log.transCode,log.logStatus,taskDate).then(res=>{
+        if(res.success){
+          
+        }
          window.top.Ext.toast(res.message);
       })
     },

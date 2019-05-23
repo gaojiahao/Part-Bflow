@@ -88,7 +88,7 @@
           </template>
           <template slot-scope="{ row }" slot="exchangeRate">
               <span @click="editExchangeRate(row,'exchangeEdit')" class="cell-click" v-if="!row.exchangeEdit">{{ row.exchangeRate }}</span>
-              <InputNumber @on-blur="onExchangeRateBlur(row)" v-else :min="0" v-model="row.exchangeRate"></InputNumber>
+              <Input @on-blur="onExchangeRateBlur(row)" v-else v-model="row.exchangeRate"></Input>
           </template>
       </Table>
       </section>
@@ -394,6 +394,8 @@ export default {
     },
     editExchangeRate(row, isEdit) {
       this.$currentUser.isAdmin && this.$set(row, isEdit, true);
+      this.$refs['inputNumber'].focus();
+      this.$refs['inputNumber'].focus();
     },
     onCurrencyChange(value,row) {
       for(let item of this.rateData){
@@ -436,16 +438,21 @@ export default {
     },
     onExchangeRateBlur(row) {
       if(row){
-        updateExchangeRateData(row).then(res => {
-          if(res.success){
-              this.$Message.success(res.message);
-              this.getExchangeRateDatas();
-            }else{
-              this.$Message.error(res.message);
-            }
-        }).catch(error => {
-          this.$Message.error(res.data.message);
-        })
+        if(!isNaN(row.exchangeRate)){
+          row.exchangeRate = Number(row.exchangeRate);
+          updateExchangeRateData(row).then(res => {
+            if(res.success){
+                this.$Message.success(res.message);
+                this.getExchangeRateDatas();
+              }else{
+                this.$Message.error(res.message);
+              }
+          }).catch(error => {
+            this.$Message.error(res.data.message);
+          })
+        }else{
+          this.$Message.error('请输入数字！');
+        }
       }
     },
     //添加汇率

@@ -224,7 +224,7 @@ export default {
               { type: 'string', max: 20, message: '标题不能超过20个字符'}
             ],
             users: [
-              {required: true,message: "不允许为空" }
+              {required: true,message: "不允许为空" , type: 'array'}
             ],
             logType: [
               {required: true,message: "不允许为空" }
@@ -296,7 +296,10 @@ export default {
         saveTaskLog(formdata).then(res => {
             if (res.success) {
                 window.top.Ext.toast(res.message);
-                this.$refs['logForm'].resetFields();
+              this.modalFormData.users = [];
+              this.$nextTick(() => {
+               this.$refs['logForm'].resetFields();
+              });
                 this.getTaskLog(this.transCode);
             }else{
                 window.top.Ext.toast(res.message)

@@ -394,8 +394,6 @@ export default {
     },
     editExchangeRate(row, isEdit) {
       this.$currentUser.isAdmin && this.$set(row, isEdit, true);
-      this.$refs['inputNumber'].focus();
-      this.$refs['inputNumber'].focus();
     },
     onCurrencyChange(value,row) {
       for(let item of this.rateData){

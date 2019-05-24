@@ -1,0 +1,66 @@
+.feature-content{
+    padding: 10px 30px 20px 30px;
+    .feature-body{
+       margin-top: 20px;
+    }
+ }
+
+ .app-feature-title{
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #e8e8e8;
+    padding: 0px 15px;
+    background-color: #fff;
+ }
+ .feature-toolbar{
+   .feature-search{
+      width: 93%;
+    }
+   .feature-dropdown{
+   float: right;
+   margin-top: 9px;
+   }
+ }
+ .feature-content{
+    .feature-card{
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 5px;
+      height: 150px;
+      .card-left{
+         position: absolute;
+         top: 10px;
+         left: 25px;
+         img{
+            width: 70px;
+         }
+      }
+      .card-right{
+         position: absolute;
+         top: 15px;
+         left: 105px;
+         &-title{
+            &-icon{
+               color: #42ec52;
+               font-size: 16px;
+            }
+         }
+         &-desc{
+            max-width: 188px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-top: 12px;
+            margin-bottom: 12px;
+            line-height: 20px;
+            font-size: 12px;
+            color: #a6a6a6;
+            cursor: pointer;
+         }
+      }
+    }
+    .feature-card:hover{
+      box-shadow: 0 4px 8px 0 #ddd;
+    }
+ }
+ 

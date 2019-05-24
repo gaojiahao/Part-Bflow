@@ -129,7 +129,6 @@
 }
 
 .app-resource-group-title{
-    height: 40px;
     line-height: 40px;
     border-bottom: 1px solid #e8e8e8;
     padding: 0px 15px;
@@ -332,7 +331,7 @@ margin-top: 0;
 }
 
 .info-color{
-  color: #2db7f5;
+  color: #2d8cf0;
 }
 .success-color{
   color: #009688;

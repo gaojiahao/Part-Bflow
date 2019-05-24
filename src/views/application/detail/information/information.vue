@@ -13,7 +13,7 @@
       </Breadcrumb>
     </header>
 
-    <Row class="font14" style="height:220px;">
+    <Row class="font14" style="height:185px;">
         <div class="app-left">
           <Upload v-if="!showEditBtn" ref="upload"  
               :show-upload-list="false" 
@@ -86,7 +86,7 @@
           <Row class="pad5">
             <Col span="24">说明：
               <pre class="app-pre" v-if="showAppEditAdmin">{{appData.comment}}</pre>
-              <Input v-show="!showAppEditAdmin" v-model="appData.comment" type="textarea" />
+              <Input v-show="!showAppEditAdmin" v-model="appData.comment" type="textarea" style="border-bottom:1px solid #ddd" />
             </Col>
           </Row>
         </div>

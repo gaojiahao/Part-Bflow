@@ -10,7 +10,7 @@
             <span class="message-container-content">
                 <span class="message-container-creator notice-creator">路塔</span>
                 <span>:您有新的消息</span>
-                <b>{{data.tempContent.result}}</b>
+                <b v-html="data.tempContent.result"></b>
             </span>
         </div>
     </div>

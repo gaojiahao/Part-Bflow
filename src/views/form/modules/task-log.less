@@ -1,13 +1,13 @@
 .timeline-box {
     &-form {
       background-color: #ffffff;
-      padding: 15px 40px 0 0;
+      padding:0px 15px 0px 0px;
       border-bottom: 1px solid #dedede;
       //form表单标签字体样式
       .ivu-form-item-label {
         font-size: 14px;
       }
-  
+
       &-submit {
         background-color: rgb(0, 150, 136);
         color: #fff;
@@ -27,7 +27,7 @@
       padding: 0 20px;
       &-item {
         padding: 15px 0px;
-        border-bottom: 1px solid #dedede;
+        border-bottom: 1px dotted #ddd;
         position: relative;
         .head-portrait{
            height: 40px;
@@ -44,6 +44,9 @@
           span {
             padding: 0 20px 0 0;
           }
+          pre{
+            margin: 0.5em 0px;
+          }
         } 
       }
     }
@@ -54,8 +57,14 @@
       padding: 0 30px;
       background-color: #fff;
     }
+}
+
+.ivu-timeline-item-content {
+  top: -11px !important;
+}
+
+.app-resource-group-title{
+  h3{
+    display: -webkit-inline-box;
   }
-  
-  .ivu-timeline-item-content {
-    top: -11px !important;
-  }
+}

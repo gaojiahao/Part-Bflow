@@ -161,7 +161,8 @@ export default {
               h('Select',{
                 props: {
                   value: params.row.allowedNegative,
-                  disabled: !this.isAdmin?true:isDisabled
+                  disabled: !this.isAdmin?true:isDisabled,
+                  transfer: true
                 },
                 on: {
                   'on-change': value => {

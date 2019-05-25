@@ -74,7 +74,7 @@ export default {
             columnData: [],
             loading: false,
             pageTotal: 0, //table总数
-            pageSize: 10,
+            pageSize: 5,
             currentPage: 1, //table当前页
             columns: [
                 {
@@ -203,7 +203,7 @@ export default {
             let params = {
                 type: "myToDo",
                 page: currentPage,
-                listId: this.menu.listId,
+                listId: this.pageListId,
                 limit: this.pageSize
             };
             this.loading = true;

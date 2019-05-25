@@ -85,7 +85,7 @@ export default {
           isShow: true,
           isShowAcive: false,
           relativeNum: 0,
-          imgUrl: "resources/images/icon/company.png"
+          imgUrl: "https://lab.roletask.com/resource/app-icon/company.png"
         },
         {
           name: "上级公司",
@@ -93,7 +93,7 @@ export default {
           isShow: true,
           isShowAcive: false,
           relativeNum: 0,
-          imgUrl: "resources/images/icon/company.png"
+          imgUrl: "https://lab.roletask.com/resource/app-icon/company.png"
         },
         {
           name: "公司成员",
@@ -101,7 +101,7 @@ export default {
           isShow: true,
           isShowAcive: false,
           relativeNum: 0,
-          imgUrl: "resources/images/icon/user.png"
+          imgUrl: "https://lab.roletask.com/resource/app-icon/user.png"
         },
         {
           name: "基本信息",

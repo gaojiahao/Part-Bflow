@@ -8,7 +8,7 @@
             <Row class="app-action-title">
                 <h3>自定义数据源<a v-if="isAdmin" @click="showModal" class="app-action-title-add">添加</a>
                 </h3>
-                <span class="warning-color marlr">自定义应用字段过滤条件以及授权给用户或用户组</span>
+                <span class="marlr" :style="{color:'#aaaaaa'}">自定义应用字段过滤条件以及授权给用户或用户组</span>
             </Row>
             <div class="app-action-source">
                 <Row>
@@ -121,6 +121,7 @@ export default {
           title: "操作",
           key: "list",
           align: "center",
+          width: 300,
           render: (h, params) => {
             return h("div", [
               h(

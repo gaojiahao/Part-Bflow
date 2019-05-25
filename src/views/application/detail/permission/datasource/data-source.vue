@@ -8,7 +8,7 @@
             <Row class="app-action-title">
                 <h3>数据源<a v-if="isAdmin" @click="showModal" class="app-action-title-add">授权</a>
                 </h3>
-                <span class="warning-color marlr">用户默认可查看我创建的实例、我经办的实例、我负责的组织经办的实例</span>
+                <span class="marlr" :style="{color:'#aaaaaa'}">用户默认可查看我创建的实例、我经办的实例、我负责的组织经办的实例</span>
             </Row>
             <div class="app-action-source">
                 <Row>
@@ -207,7 +207,11 @@ export default {
                      } 
                     }
                   }),
-                  h('span',{},val['name'])
+                  h('span',{
+                    style: {
+                      marginLeft: '-7px'
+                    }
+                  },val['name'])
                 ]);
               renderData.push(pushData);
             })
@@ -218,6 +222,7 @@ export default {
           title: "操作",
           key: "list",
           align: "center",
+          width: 300,
           render: (h, params) => {
             return h("div", [
               h(

@@ -206,28 +206,28 @@ export default {
         },
         {
           label: "成员信息",
-          imgPath: "resources/images/icon/user.png",
+          imgPath: "https://lab.roletask.com/resource/app-icon/user.png",
           number: 0,
           hidden: false,
           id: "user"
         },
         {
           label: "负责人",
-          imgPath: "resources/images/icon/user.png",
+          imgPath: "https://lab.roletask.com/resource/app-icon/user.png",
           number: 0,
           hidden: false,
           id: "groupPrincipal"
         },
         {
           label: "下级组织",
-          imgPath: "resources/images/icon/organization.png",
+          imgPath: "https://lab.roletask.com/resource/app-icon/organization.png",
           number: 0,
           hidden: false,
           id: "childGroup"
         },
         {
           label: "上级组织",
-          imgPath: "resources/images/icon/organization.png",
+          imgPath: "https://lab.roletask.com/resource/app-icon/organization.png",
           number: 0,
           hidden: false,
           id: "parentGroup"
@@ -529,7 +529,7 @@ export default {
               };
           }).catch(error=>{
               this.$Message.error(error.data.message)
-            });;
+            });
         }
         if (!this.checkout) {
           this.$Message.error("名称已经存在!");

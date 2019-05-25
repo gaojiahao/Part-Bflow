@@ -1,8 +1,8 @@
 .timeline-box {
     &-form {
       background-color: #ffffff;
-      padding: 15px 40px 0 0;
-      border-bottom: 1px solid #dedede;
+      padding:0px 15px 0px 0px;
+      border-bottom: 1px solid transparent;
       //form表单标签字体样式
       .ivu-form-item-label {
         font-size: 14px;
@@ -49,6 +49,10 @@
           }
         } 
       }
+    }
+
+    .timeline-box-log ul:first-child {
+        border-top: 1px dotted #ddd;
     }
   
     .loading-more {

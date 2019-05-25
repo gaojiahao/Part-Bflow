@@ -57,6 +57,21 @@
                         style="width:60%">
                     </Input>
                 </FormItem>
+                <FormItem label="往来关系：">
+                    <Select 
+                        multiple 
+                        style="width:60%" 
+                        v-model="formItem.dealerLabel" 
+                        :class="{'info-edit':isEdit}"
+                        :disabled="isEdit">
+                        <Option 
+                            v-for="(val, index) of dealerLabelData" 
+                            :key="index" 
+                            :value="val.dealerLabelName">
+                            {{ val.dealerLabelName }}
+                        </Option>
+                    </Select>
+                </FormItem>
                 <FormItem label="性别：">
                     <RadioGroup v-model="formItem.gender">
                         <Radio :disabled="isEdit" label="1">男</Radio>
@@ -195,7 +210,8 @@ import {
     updateUser,
     addUser,
     checkoutFieldIsOnly,
-    getAllCompanys
+    getAllCompanys,
+    getDealerLabels
 } from "@/services/addressBookService.js";
 
 export default {
@@ -248,10 +264,12 @@ export default {
         }
       ],
       companyData: [],
+      dealerLabelData: [],
       selectedCompanyData: {},
       formItem: {
         userCode: "",
         nickname: "",
+        dealerLabel: [],
         mobile: "",
         officePhone: "",
         email: "",
@@ -315,6 +333,7 @@ export default {
               console.log(this.userInfo);
                 this.formItem.userCode = this.userInfo.userCode;
                 this.formItem.nickname = this.userInfo.nickname;
+                this.formItem.dealerLabel = this.userInfo.dealerLabel ? this.userInfo.dealerLabel.split(',') : [];
                 this.formItem.mobile = this.userInfo.mobile;
                 this.formItem.officePhone = this.userInfo.officePhone;
                 this.formItem.email = this.userInfo.email;
@@ -398,6 +417,12 @@ export default {
     editUserInfo() {
         this.isEdit = !this.isEdit;
     },
+    //获取往来标签信息
+    getDealerLabelDatas() {
+        getDealerLabels().then(res => {
+            this.dealerLabelData = res.tableContent;
+        })
+    },
     //更新用户详情信息
     updateUserData(saveType) {
         this.$refs["formItem"].validate(valid => {
@@ -405,6 +430,7 @@ export default {
                 if(this.checkout){
                     this.formItem.photo = this.logo;
                     this.formItem.status = Number(this.formItem.status);
+                    this.formItem.dealerLabel = this.formItem.dealerLabel.join(',');
 
                     if(saveType === 'draft'){
                         this.formItem.status = 0;
@@ -502,12 +528,13 @@ export default {
                 if(this.checkout){
                     this.formItem.photo = this.logo;
                     this.formItem.status = 1;
+                    this.formItem.dealerLabel = this.formItem.dealerLabel.join(',');
                     if(this.formItem.termOfValidity){
                         this.formItem.termOfValidity = this.formatDate(this.formItem.termOfValidity);
                     }
                     
                     if(this.userInfo.userId){
-                    this.formItem.userId = this.userInfo.userId;
+                        this.formItem.userId = this.userInfo.userId;
                         updateUser(this.formItem).then(res => {
                             if(res.success){
                                 this.$Message.success(res.message);
@@ -563,10 +590,11 @@ export default {
   },
   mounted() {
       this.getAllCompanysData();
-    if(!this.userId){
-        this.isAdd = false;
-        this.isEdit = false;
-    }
+      this.getDealerLabelDatas()
+      if(!this.userId){
+         this.isAdd = false;
+         this.isEdit = false;
+      }
   }
 };
 </script>

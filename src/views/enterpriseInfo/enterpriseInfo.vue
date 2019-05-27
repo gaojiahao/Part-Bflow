@@ -148,7 +148,7 @@
         </div>
          <div class="select-explain">
           <label class="left-leble">路塔实例详情资源地址</label>
-             <span v-if="!editEnterpriseName">{{enterpriseInfo.ddAppsecret}}</span>
+             <span v-if="!editEnterpriseName">{{enterpriseInfo.rtRedirectUrl}}</span>
           <input v-else type="text" v-model="enterpriseInfo.rtRedirectUrl" class="input-common-att" />
         </div>
       </section>

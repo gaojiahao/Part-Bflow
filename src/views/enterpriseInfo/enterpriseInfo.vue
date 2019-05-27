@@ -75,20 +75,24 @@
         </div>
         <Table :columns="rateColumns" border :data="rateData" @on-selection-change="onSelectChange" width="600" size="small">
           <template slot-scope="{ row }" slot="currency">
-              <span @click="editExchangeRate(row,'currencyEdit')" class="cell-click" v-if="!row.currencyEdit">{{ row.currency }}</span>
+              <span @click="editExchangeRate(row,'currencyEdit')" :class="{'cell-click':row.currencyValue !== 'rmb'}" v-if="!row.currencyEdit">{{ row.currency }}</span>
               <Select 
                 v-else 
                 v-model="row.currency" 
                 style="width:150px"
                 transfer
                 label-in-value
+                filterable
                 @on-change="onCurrencyChange($event,row)">
                   <Option v-for="item in currencyList" :value="item.label" :key="item.value">{{ item.label }}</Option>
               </Select>
           </template>
           <template slot-scope="{ row }" slot="exchangeRate">
-              <span @click="editExchangeRate(row,'exchangeEdit')" class="cell-click" v-if="!row.exchangeEdit">{{ row.exchangeRate }}</span>
+              <span @click="editExchangeRate(row,'exchangeEdit')" :class="{'cell-click':row.currencyValue !== 'rmb'}" v-if="!row.exchangeEdit">{{ row.exchangeRate }}</span>
               <Input @on-blur="onExchangeRateBlur(row)" v-else v-model="row.exchangeRate"></Input>
+          </template>
+          <template slot-scope="{ row }" slot="localCurrency">
+              <Radio @on-change="onLocalCurrencyChange($event,row)" :value="row.localCurrency===1?true:false"></Radio>
           </template>
       </Table>
       </section>
@@ -207,11 +211,12 @@
             <Select 
               @on-change="onModalCurrencyChange" 
               v-model="exchangeRateInfo.currency"
+              filterable
               style="width:200px">
                   <Option v-for="item in currencyList" :value="item.label" :key="item.value">{{ item.label }}</Option>
             </Select>
           </FormItem>
-          <FormItem label="汇率:" prop="exchangeRate">
+          <FormItem label="默认汇率:" prop="exchangeRate">
             <InputNumber :min="0" v-model="exchangeRateInfo.exchangeRate"></InputNumber>
           </FormItem>
         </Form>
@@ -332,9 +337,14 @@ export default {
           sortable: true
         },
         {
-          title: "汇率",
+          title: "默认汇率",
           slot: "exchangeRate",
           sortable: true
+        },
+        {
+          title: "是否本位币",
+          align: 'center',
+          slot: "localCurrency"
         },
         {
           title: "操作",
@@ -344,7 +354,7 @@ export default {
               props: {
                 type: 'text',
                 size: 'small',
-                disabled: !this.$currentUser.isAdmin
+                disabled: !this.$currentUser.isAdmin || params.row.currencyValue === 'rmb'
               },
               style: {
                 color: '#39f'
@@ -393,7 +403,9 @@ export default {
       this.showExchangeRateModal = true;
     },
     editExchangeRate(row, isEdit) {
-      this.$currentUser.isAdmin && this.$set(row, isEdit, true);
+      if(this.$currentUser.isAdmin){
+        row.currencyValue !== 'rmb' && this.$set(row, isEdit, true);
+      }
     },
     onCurrencyChange(value,row) {
       for(let item of this.rateData){
@@ -451,6 +463,21 @@ export default {
         }else{
           this.$Message.error('请输入数字！');
         }
+      }
+    },
+    onLocalCurrencyChange(status, row) {
+      if(row){
+        status ? row.localCurrency = 1 : row.localCurrency = 0;
+        updateExchangeRateData(row).then(res => {
+            if(res.success){
+                this.$Message.success(res.message);
+                this.getExchangeRateDatas();
+              }else{
+                this.$Message.error(res.message);
+              }
+          }).catch(error => {
+            this.$Message.error(res.data.message);
+          })
       }
     },
     //添加汇率
@@ -806,6 +833,7 @@ export default {
         if(res.success){
           this.rateData = res.list;
           this.rateData.forEach(val => {
+            val.currencyValue === 'rmb' && (val._disabled = true);
             val.exchangeEdit = false;
             val.currencyEdit = false;
           })

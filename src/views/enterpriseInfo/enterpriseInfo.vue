@@ -92,7 +92,7 @@
               <Input @on-blur="onExchangeRateBlur(row)" v-else v-model="row.exchangeRate"></Input>
           </template>
           <template slot-scope="{ row }" slot="localCurrency">
-              <Radio @on-change="onLocalCurrencyChange($event,row)" :value="row.localCurrency===1?true:false"></Radio>
+              <Radio @on-change="onLocalCurrencyChange($event,row)" :disabled="!$currentUser.isAdmin" :value="row.localCurrency===1?true:false"></Radio>
           </template>
       </Table>
       </section>

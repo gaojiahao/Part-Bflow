@@ -1,5 +1,6 @@
 <style lang="less" scoped>
 @import "./notice-common.less";
+
 </style>
 <template>
     
@@ -61,7 +62,7 @@
                     <a v-if="data.sourceContent.type ==='instance'" class="notice-relationKey" @click="handleViewDetail">{{data.sourceContent.relationKey}}</a>
                     发表了评论
                 </div>
-                    <div  v-html="data.tempContent" >
+                    <div  class="notice-content" v-html="data.tempContent" >
                     
                     </div>
                     <div class="notice-comment-images">

@@ -174,7 +174,7 @@ export default {
         },
         {
           label: "成员信息",
-          imgPath: "resources/images/icon/user.png",
+          imgPath: "https://lab.roletask.com/resource/app-icon/user.png",
           number: 0,
           hidden: false,
           id: "user"

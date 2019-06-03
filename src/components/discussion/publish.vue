@@ -543,12 +543,16 @@ export default {
                     let f = imgArr.filter(item=>{
                         return !item.getAttribute('paste');
                     });
-                    let img = document.createElement('img');  
-                    img.setAttribute('src',`/H_roleplay-si/ds/download?url=${res[0].attacthment}`);
-                    img.setAttribute('paste',1);
-                    img.setAttribute('class','paste-img');
-                    f[0].parentNode.replaceChild(img,f[0]);
-                    this.discContent.txt =  target.innerHTML;
+                    if(f.length>0){
+                         let img = document.createElement('img');  
+                        img.setAttribute('src',`/H_roleplay-si/ds/download?url=${res[0].attacthment}`);
+                        img.setAttribute('paste',1);
+                        img.setAttribute('class','paste-img');
+                        f[0].parentNode.replaceChild(img,f[0]);
+                        this.discContent.txt =  target.innerHTML;
+                    }else{
+                         document.execCommand('insertImage', false, `/H_roleplay-si/ds/download?url=${res[0].attacthment}`) 
+                    }
                 }
             });
         },

@@ -625,10 +625,9 @@ export default {
         this.uploadFileList = this.$refs.uploadFile.fileList;
       
         this.$nextTick(()=>{
-            this.$refs.editor.focus();
+            // this.$refs.editor.focus();
             this.contentWrap = this.$refs.editor;
-            
-                    })
+        })
         //初始化事件
         this.initEvent();
     },

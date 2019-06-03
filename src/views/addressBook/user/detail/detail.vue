@@ -45,12 +45,14 @@
       <department-member @changeInstance="getInstanceCount" v-if="whichShow.dep" :isUpdate="isUpdate"></department-member>
       <!-- 职位 -->
       <role-member @changeInstance="getInstanceCount" v-if="whichShow.role" :isUpdate="isUpdate"></role-member>
+      <!-- 绩效分析 -->
+      <performance-analysis v-if="whichShow.performance"></performance-analysis>
       <!-- 直接权限 -->
       <direct-permission @changeInstance="getInstanceCount" v-if="whichShow.dirper" :target="target" :isUpdate="isUpdate"></direct-permission>
       <!-- 间接权限 -->
       <indirect-permission v-if="whichShow.indirper"></indirect-permission>
       <!-- 工作流任务 -->
-      <workfow-task  v-if="whichShow.workflow"></workfow-task>
+      <workfow-task v-if="whichShow.workflow"></workfow-task>
     </Row>
   </Row>
 </template>
@@ -64,6 +66,7 @@ import RoleMember from "./instance/role";
 import DirectPermission from "./instance/direct-permission";
 import IndirectPermission from "./instance/indirect-permission";
 import WorkfowTask from './instance/workflow-task';
+import PerformanceAnalysis from './instance/performance-analysis';
 import { getUserInfoById,getInstanceCountByUserId,getListById } from "@/services/addressBookService.js";
 
 export default {
@@ -76,7 +79,8 @@ export default {
     RoleMember,
     DirectPermission,
     IndirectPermission,
-    WorkfowTask
+    WorkfowTask,
+    PerformanceAnalysis
   },
   props: {},
   data() {
@@ -103,6 +107,7 @@ export default {
         { name: "工作流任务", showName: 'workflow', isShow: true, isShowAcive: false, relativeNum: 0, type:"md-menu" },
         { name: "间接权限", showName: 'indirper', isShow: true, isShowAcive: false, relativeNum: 0, type:"ios-people" },
         { name: "直接权限", showName: 'dirper', isShow: true, isShowAcive: false, relativeNum: 0, type:"md-person" },
+        { name: "绩效分析", showName: 'performance', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'https://lab.roletask.com/resource/app-icon/bonus-provisions.png' },
         { name: "职位", showName: 'role', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'https://lab.roletask.com/resource/app-icon/job.png' },
         { name: "组织", showName: 'dep',  isShow: true,isShowAcive: false, relativeNum: 0, imgUrl: 'https://lab.roletask.com/resource/app-icon/organization.png' },
         { name: "下级用户", showName: 'lowuser', isShow: true, isShowAcive: false, relativeNum: 0, imgUrl: 'https://lab.roletask.com/resource/app-icon/user.png' },

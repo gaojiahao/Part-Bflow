@@ -192,7 +192,7 @@ export default {
   data() {
     
     const  validateTaskStatus = (rule, value, callback) => {
-      if(this.modalFormData.taskDate<new Date() && value!='已办'){
+      if(this.modalFormData.taskDate<FormatDate(new Date(),"yyyy-MM-dd") && value!='已办'){
         callback(new Error('日期小于今日，日志类型应该为已办'));
       }else if(this.modalFormData.taskDate>new Date() && value!='待办'){
         callback(new Error('日期大于今日，日志类型应该为待办'));

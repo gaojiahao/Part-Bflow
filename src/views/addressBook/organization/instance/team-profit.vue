@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import {  } from "@/services/addressBookService.js";
+import { getTeamProfitData,getTeamProfitDetail } from "@/services/addressBookService.js";
 
 export default {
   name: "TeamProfit",
@@ -69,37 +69,41 @@ export default {
           align: 'right'
         }
       ],
-      performanceData: [
-          {project:'收入(小计)',account:1050},
-          {project:'销售收入',account:200,isChild: true},
-          {project:'项目任务收入',account:209,isChild: true},
-          {project:'其他收入',account:30000,isChild: true},
-          {project:'成本(小计)',account:0},
-          {project:'标准用料',account:209,isChild: true},
-          {project:'直接人工',account:30000,isChild: true}
-      ],
+      performanceData: [],
       modalColumns: [
           {
             title: "实例编码",
-            key: "performanceType",
-            align: 'right'
+            key: "transCode",
+            align: 'right',
+            render: (h, params) => {
+              return h(
+                "a",
+                {
+                  attrs: {
+                    href: "/Form/index.html?data=" + params.row.transCode,
+                    target: "_blank"
+                  }
+                },
+                params.row.transCode
+              );
+          }
           },
           {
             title: "生效时间",
-            slot: "transCode"
+            key: "effectiveTime"
           },
           {
             title: "应用名称",
-            slot: "appName"
+            key: "appTitle"
           },
           {
             title: "增加金额",
-            slot: "addAccount",
+            key: "dr",
             align: 'right'
           },
           {
             title: "减少金额",
-            slot: "minusAccount",
+            key: "cr",
             align: 'right'
           }
       ],
@@ -110,20 +114,51 @@ export default {
       showModal (row) {
           this.showAccountDetail = true;
           this.modalTitle = row.project;
+          getTeamProfitDetail(this.groupId,row.project).then(res => {
+            if(res.success){
+              this.modalData = res.data;
+            }
+          })
       },
     //获取绩效分析数据
     getPerformanceData() {
-    //   if(this.userId){
-    //     this.loading = true;
-    //     getWorkFlowTaskByUserId(this.userId,this.currentPage,this.pageSize).then(res => {
-    //       this.worlflowTaskData = res.tableContent;
-    //       this.total = res.dataCount;
-    //       this.loading = false;
-    //     })
-    //   }else{
-    //       this.loading = false;
-    //   }
+      if(this.groupId){
+        this.loading = true;
+        getTeamProfitData(this.groupId).then(res => {
+          if(res.success){
+            this.performanceData = this.createProfitData(res.obj);
+            this.loading = false;
+          }
+        })
+      }else{
+          this.loading = false;
+      }
     },
+    createProfitData(data) {
+      const profitData = [
+        {project: '收入(小计)',account: data.income.incomeSum},
+        {project: '销售收入',account: data.income.groupIncome,isChild: true},
+        {project: '任务收入',account: data.income.taskIncome,isChild: true},
+        {project: '其他收入',account: data.income.otherIncome,isChild: true},
+        {project: '成本(小计)',account: data.productsCost.productsCostSum},
+        {project: '标准用料',account: data.productsCost.material,isChild: true},
+        {project: '直接人工',account: data.productsCost.artificial,isChild: true},
+        {project: '制造费用',account: data.productsCost.madeCost,isChild: true},
+        {project: '外部服务采购',account: data.productsCost.outsideServerPurchase,isChild: true},
+        {project: '内部服务采购',account: data.productsCost.insideServerPurchase,isChild: true},
+        {project: '费用(小计)',account: data.cost.costSum},
+        {project: '超标用料',account: data.cost.overProof,isChild: true},
+        {project: '报销费用',account: data.cost.claimingExpenses,isChild: true},
+        {project: '资金费用',account: data.cost.fundCost,isChild: true},
+        {project: '设备改造',account: data.cost.facilityReform,isChild: true},
+        {project: '佣金',account: data.cost.commission,isChild: true},
+        {project: '税金',account: data.cost.taxAmount,isChild: true},
+        {project: '手续费',account: data.cost.transferCharge,isChild: true},
+        {project: '利润额',account: data.profit},
+        {project: '利润率',account: data.profitRate}
+      ];
+      return profitData;
+    }
   },
   mounted() {
     this.getPerformanceData();

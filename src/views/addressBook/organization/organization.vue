@@ -241,7 +241,6 @@ export default {
         {
           label: "组织利润表",
           imgPath: "https://lab.roletask.com/resource/app-icon/team-profit.png",
-          number: 12,
           hidden: false,
           id: "teamProfit"
         },
@@ -592,7 +591,7 @@ export default {
     getObjDetailsCountByGroupId(groupId) {
       getObjDetailsCountByGroupId(groupId).then(res => {
         this.actionBtn.forEach((element,index) => {
-          if( element.id !== 'baseinfo' ){
+          if( element.id !== 'baseinfo' && element.id !== 'teamProfit' ){
             element.number =res[element.id]?res[element.id]:0;
           }
         });

@@ -3,7 +3,7 @@
       &-detail{
         width: 30%;
         margin: 0 auto;
-        padding: 26px 50px;
+        padding: 0px 50px;
         box-shadow: 0px 1px 10px #ddd;
         position: relative;
       }
@@ -31,9 +31,11 @@
             </Table>
         </div>
         <!-- 项目modal -->
-        <Modal v-model="showAccountDetail" :title="modalTitle">
+        <Modal v-model="showAccountDetail" width="800" :title="modalTitle">
             <Table 
               border
+              size="small"
+              height="400"
               :columns="modalColumns" 
               :data="modalData">
             </Table>
@@ -74,7 +76,7 @@ export default {
           {
             title: "实例编码",
             key: "transCode",
-            align: 'right',
+            width: 150,
             render: (h, params) => {
               return h(
                 "a",
@@ -90,6 +92,7 @@ export default {
           },
           {
             title: "生效时间",
+            width: 150,
             key: "effectiveTime"
           },
           {
@@ -116,7 +119,7 @@ export default {
           this.modalTitle = row.project;
           getTeamProfitDetail(this.groupId,row.project).then(res => {
             if(res.success){
-              this.modalData = res.data;
+              this.modalData = res.obj.data;
             }
           })
       },

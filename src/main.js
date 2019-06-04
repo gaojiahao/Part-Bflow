@@ -3,6 +3,7 @@ import App from './App';
 import router from './router';
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
+// import '../my-theme/index.less';
 import fontIcon from './assets/App.css';
 import { deepstream } from './plugin/deepstream';
 import VueLazyload from 'vue-lazyload'

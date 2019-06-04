@@ -90,7 +90,7 @@
         </div>
       </section>
       <!-- 组织利润表 -->
-      <section class="memberinfo-container" v-if="actionIndex===5">
+      <section v-if="actionIndex===5">
         <team-profit :groupId="groupId"></team-profit>
       </section>
       <!-- 上级组织 -->

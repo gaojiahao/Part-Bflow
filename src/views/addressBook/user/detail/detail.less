@@ -1,6 +1,12 @@
 .detail{
     overflow: hidden;
     height: 100%;
+    .detail-content-tabs{
+        overflow: auto;
+        height: calc(100% - 85px);
+        padding: 5px 0;
+        background-color: #ddd;
+    }
 }
 .detail-user-header{
     border-bottom: 1px solid #ddd;
@@ -39,7 +45,7 @@
     .detail-tabs-child:first-child{
         border-right: 1px solid #ddd;
     }
-    .detail-tabs-child:last-child{
+    .detail-tabs-child:last-child, .detail-tabs-child:nth-child(5){
         line-height: 45px;
         img{
             border-radius: 30px;
@@ -99,12 +105,6 @@
             background-color: #39f;
         }
     }
-}
-.detail-content-tabs{
-    overflow: auto;
-    height: calc(100% - 85px);
-    padding: 5px 0;
-    background-color: #ddd;
 }
 .ivu-tag{
     margin-bottom: 4px !important;

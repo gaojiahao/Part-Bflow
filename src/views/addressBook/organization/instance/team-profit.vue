@@ -88,7 +88,7 @@ export default {
                 },
                 params.row.transCode
               );
-          }
+            }
           },
           {
             title: "生效时间",
@@ -133,8 +133,6 @@ export default {
             this.loading = false;
           }
         })
-      }else{
-          this.loading = false;
       }
     },
     createProfitData(data) {

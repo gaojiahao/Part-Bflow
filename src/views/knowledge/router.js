@@ -5,6 +5,7 @@ export const  knowledgeBaseRouter = {
     meta: {
         title: '知识库'
     },
+    redirect: '/knowledge/knowledgeList',
     component: () =>import('@/views/knowledge/layout.vue'),
     children: [{
             path: 'knowledgeList',

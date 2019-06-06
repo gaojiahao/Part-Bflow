@@ -4,6 +4,7 @@ export const  applicationRouter = {
     meta: {
         title: '应用'
     },
+    redirect: '/application/list',
     component: () =>import('@/views/application/layout.vue'),
     children: [
         {

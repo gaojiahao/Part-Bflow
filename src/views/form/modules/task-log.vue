@@ -337,7 +337,7 @@ export default {
     getAllUsers(query){
         this.loading = true;
         const filter = query?JSON.stringify([{"operator":"like","value":query,"property":"nickname"}]):'';
-        getAllUsers(25,1,filter).then(res=>{
+        getAllUsers(200,1,filter).then(res=>{
             this.userList = res.tableContent;
             this.loading = false;
         })

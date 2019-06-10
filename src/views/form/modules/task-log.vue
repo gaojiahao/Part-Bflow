@@ -235,7 +235,7 @@ export default {
               {validator:validateTaskStatus}
             ],
             logDeclarationHours: [
-              {required: true, message: "不允许为空",type: "number"}
+              {required: true, message: "必填项且在0.1到24之间",type: "number"}
             ],
             taskDate: [
               {required: true,message: "不允许为空" }

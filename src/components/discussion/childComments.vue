@@ -27,7 +27,7 @@
                 </my-pop-tip>
 
                 <span>:</span>
-                <span v-html="comment.content"></span>
+                <span v-html="comment.content" class="child-comment-content"></span>
             </p>
             <p >
                 <span>

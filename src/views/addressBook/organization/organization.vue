@@ -29,7 +29,7 @@
 
     <div class="organization-wrap-tabs">
       <!-- 基本信息 -->
-      <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===5">
+      <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===6">
         <Form :model="formItem" :labelWidth="120" ref="formItem" :rules="ruleValidate" :class="{'is-required':isEdit}" style="background-color: #fff">
           <FormItem label="组织名称:" style="font-size:16px" prop="groupName">
             <Input v-model="formItem.groupName" @on-blur="onGroupNameOutBlur" :readonly="isEdit" :class="isEdit?'input-status-isedit':''" />
@@ -88,6 +88,10 @@
           <input type='submit' value="保存并新建" class="baseinfo-container-action-submit" id="saveAndAdd" v-if="!groupId" />
           <input type='submit' value="保存草稿" class="baseinfo-container-action-submit" id="draft" v-show="(!isEdit && formItem.status === 0) || !groupId" />
         </div>
+      </section>
+      <!-- 组织利润表 -->
+      <section v-if="actionIndex===5">
+        <team-profit :groupId="groupId"></team-profit>
       </section>
       <!-- 上级组织 -->
       <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===4">
@@ -164,6 +168,7 @@ import LowerOrganization from "./instance/lower-origanization";
 import MemberInfo from "./instance/member-info";
 import Principal from "./instance/principal";
 import Permission from "../user/detail/instance/direct-permission";
+import TeamProfit from './instance/team-profit';
 export default {
   name: "organization",
 
@@ -174,7 +179,8 @@ export default {
     MemberInfo,
     Principal,
     Permission,
-    PrincipalModal
+    PrincipalModal,
+    TeamProfit
   },
 
   data() {
@@ -233,6 +239,12 @@ export default {
           id: "parentGroup"
         },
         {
+          label: "组织利润表",
+          imgPath: "https://lab.roletask.com/resource/app-icon/team-profit.png",
+          hidden: false,
+          id: "teamProfit"
+        },
+        {
           label: "基本信息",
           type: "ios-home",
           hidden: false,
@@ -240,7 +252,7 @@ export default {
         }
       ],
 
-      actionIndex: 5,
+      actionIndex: 6,
 
       //上级组织模态框属性
       isShowMemberModal: false,
@@ -578,8 +590,10 @@ export default {
     */
     getObjDetailsCountByGroupId(groupId) {
       getObjDetailsCountByGroupId(groupId).then(res => {
-        this.actionBtn.forEach(element => {
-          element.number = res[element.id];
+        this.actionBtn.forEach((element,index) => {
+          if( element.id !== 'baseinfo' && element.id !== 'teamProfit' ){
+            element.number =res[element.id]?res[element.id]:0;
+          }
         });
       });
     },

@@ -22,7 +22,7 @@ export default {
   name: "appSubject",
   components: {},
   props: {
-    isAdmin: Boolean,
+    isOperator: Boolean,
     appTransType: String
   },
   data() {
@@ -101,7 +101,7 @@ export default {
             return h('Checkbox', {
               props: {
                 value: params.row.status === 1?true:false,
-                disabled: !this.isAdmin?true:isDisabled
+                disabled: !this.isOperator?true:isDisabled
               },
               on: {
                 'on-change': (status) => {
@@ -123,7 +123,7 @@ export default {
               return h('Checkbox', {
                 props: {
                   value: params.row.matchType === 2?true:false,
-                  disabled: !this.isAdmin?true:isDisabled
+                  disabled: !this.isOperator?true:isDisabled
                 },
                 on: {
                   'on-change': (status) => {
@@ -161,7 +161,7 @@ export default {
               h('Select',{
                 props: {
                   value: params.row.allowedNegative,
-                  disabled: !this.isAdmin?true:isDisabled,
+                  disabled: !this.isOperator?true:isDisabled,
                   transfer: true
                 },
                 on: {
@@ -190,7 +190,7 @@ export default {
             return h('Checkbox', {
               props: {
                 value: params.row.verification,
-                disabled: !this.isAdmin?true:isDisabled
+                disabled: !this.isOperator?true:isDisabled
               },
               on: {
                 'on-change': (status) => {
@@ -276,7 +276,6 @@ export default {
   },
   created() {
     this.getAllAppSubjectData();
-    
   }
 };
 </script>

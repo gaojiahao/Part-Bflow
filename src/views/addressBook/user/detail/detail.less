@@ -1,6 +1,12 @@
 .detail{
     overflow: hidden;
     height: 100%;
+    .detail-content-tabs{
+        overflow: auto;
+        height: calc(100% - 85px);
+        padding: 5px 0;
+        background-color: #ddd;
+    }
 }
 .detail-user-header{
     border-bottom: 1px solid #ddd;
@@ -43,6 +49,12 @@
         line-height: 45px;
         img{
             border-radius: 30px;
+            padding-bottom: 4px;
+        }
+    }
+    .detail-tabs-child:nth-child(5){
+        line-height: 45px;
+        img{
             padding-bottom: 4px;
         }
     }
@@ -99,12 +111,6 @@
             background-color: #39f;
         }
     }
-}
-.detail-content-tabs{
-    overflow: auto;
-    height: calc(100% - 85px);
-    padding: 5px 0;
-    background-color: #ddd;
 }
 .ivu-tag{
     margin-bottom: 4px !important;

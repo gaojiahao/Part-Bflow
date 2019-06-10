@@ -38,7 +38,7 @@
                     <span>{{ row.benefit | toThousandFilter }}</span>
               </template>
               <div slot="footer">
-                <b :style="{float:'right',marginRight:'35px'}">{{`合计：${modalSum}`}}</b>
+                <b :style="{float:'right',marginRight:'35px'}">合计：{{modalSum  | toThousandFilter}}</b>
               </div>
             </Table>
             <div slot="footer"></div>

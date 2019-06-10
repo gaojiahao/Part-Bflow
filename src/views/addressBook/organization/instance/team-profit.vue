@@ -25,8 +25,8 @@
                     <b v-else>{{ row.project }}</b>
               </template>
               <template slot-scope="{ row }" slot="account">
-                    <a v-if="row.isChild" @click="showModal(row)">{{ row.account }}</a>
-                    <span v-else>{{ row.account }}</span>
+                    <a v-if="row.isChild" @click="showModal(row)">{{ row.account | toThousandFilter }}</a>
+                    <span v-else>{{ row.account | toThousandFilter }}</span>
               </template>
             </Table>
         </div>
@@ -38,6 +38,12 @@
               height="400"
               :columns="modalColumns" 
               :data="modalData">
+              <template slot-scope="{ row }" slot="dr">
+                    <span>{{ row.dr | toThousandFilter }}</span>
+              </template>
+              <template slot-scope="{ row }" slot="cr">
+                    <span>{{ row.cr | toThousandFilter }}</span>
+              </template>
             </Table>
             <div slot="footer"></div>
         </Modal>
@@ -101,12 +107,12 @@ export default {
           },
           {
             title: "增加金额",
-            key: "dr",
+            slot: "dr",
             align: 'right'
           },
           {
             title: "减少金额",
-            key: "cr",
+            slot: "cr",
             align: 'right'
           }
       ],

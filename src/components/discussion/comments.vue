@@ -87,7 +87,7 @@
                 </div>
 
                 <div  v-if="comment.showReply || comment.showChilds" 
-                    class="comments-content-item-content-reply">
+                    class="comments-content-item-content-reply" @click="handleViewTextImg($event)">
                     <commentPublish 
                         v-if="comment.showReply" 
                         :handlePublish="handleReplyPublish" 

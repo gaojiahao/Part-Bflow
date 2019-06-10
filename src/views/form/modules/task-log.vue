@@ -43,7 +43,7 @@
       <Form ref="logForm" :label-width="80"   :model="modalFormData"  :rules="ruleValidate">
          <Row>
             <Col :xs="24" :sm="12" :md="8" :lg="8">
-              <FormItem label='状态'   prop="logStatus"> 
+              <FormItem label='状态' prop="logStatus"> 
                 <Checkbox 
                   v-model="modalFormData.logStatus" 
                   size='large' 
@@ -103,7 +103,8 @@
             <Col :xs="24" :sm="12" :md="8" :lg="8">
                <FormItem label="申报工时:" prop="logDeclarationHours">
                 <InputNumber 
-                  v-model="modalFormData.logDeclarationHours"  
+                  v-model="modalFormData.logDeclarationHours"
+                  max="24"  
                   :min="0.1" 
                   :step="0.1"/>单位/时
               </FormItem>
@@ -191,8 +192,8 @@ export default {
   data() {
     
     const  validateTaskStatus = (rule, value, callback) => {
-      if(this.modalFormData.taskDate<=new Date() && value!='已办'){
-        callback(new Error('日期小于等于今日，日志类型应该为已办'));
+      if(this.modalFormData.taskDate<FormatDate(new Date(),"yyyy-MM-dd") && value!='已办'){
+        callback(new Error('日期小于今日，日志类型应该为已办'));
       }else if(this.modalFormData.taskDate>new Date() && value!='待办'){
         callback(new Error('日期大于今日，日志类型应该为待办'));
       }
@@ -336,7 +337,7 @@ export default {
     getAllUsers(query){
         this.loading = true;
         const filter = query?JSON.stringify([{"operator":"like","value":query,"property":"nickname"}]):'';
-        getAllUsers(7,1,filter).then(res=>{
+        getAllUsers(200,1,filter).then(res=>{
             this.userList = res.tableContent;
             this.loading = false;
         })

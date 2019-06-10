@@ -22,6 +22,40 @@ export const getListById = (listId) => request('/H_roleplay-si/ds/list/getListBy
 
 /**
  * @author XiaoYing
+ * @description 获取组织利润表数据
+ */
+export const getTeamProfitData = (groupCode) => request('/H_roleplay-si/account/GroupProfitStatement', {
+  groupId: groupCode
+});
+
+/**
+ * @author XiaoYing
+ * @description 获取组织利润表下钻数据
+ */
+export const getTeamProfitDetail = (groupCode,classify) => request('/H_roleplay-si/account/getGroupProfitWater', {
+  groupId: groupCode,
+  classify: classify
+});
+
+/**
+ * @author XiaoYing
+ * @description 获取员工绩效数据
+ */
+export const getPerformanceData = (userId) => request('/H_roleplay-si/account/personProfitStatement', {
+  userId: userId
+});
+
+/**
+ * @author XiaoYing
+ * @description 获取员工绩效明细数据
+ */
+export const getPerformanceDetail = (userId,classify) => request('/H_roleplay-si/account/getPersonProfitWater', {
+  userId: userId,
+  classify: classify
+});
+
+/**
+ * @author XiaoYing
  * @description 获取通讯录员工往来标签
  */
 export const getDealerLabels = () => request('/H_roleplay-si/ds/getObjDealerLabelSource', {

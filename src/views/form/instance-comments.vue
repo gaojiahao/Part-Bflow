@@ -230,7 +230,12 @@ export default {
 
             this.pageInfo.total = res.dataCount;
         }).then(res=>{
-            window.top.setInstaceCommentsIframeHeight();
+             this.$nextTick(function () {
+                 setTimeout(() => {
+                     window.top.setInstaceCommentsIframeHeight();
+                 },100);
+            })
+            
         });
     },
 

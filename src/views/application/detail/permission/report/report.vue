@@ -260,7 +260,7 @@ export default {
                 },
                 on: {
                   "on-change": e => {
-                    this.onClickDefaultView(params, ture);
+                    this.onClickDefaultView(params, true);
                   }
                 }
               });

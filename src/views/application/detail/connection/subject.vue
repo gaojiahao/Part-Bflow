@@ -22,7 +22,6 @@ export default {
   name: "appSubject",
   components: {},
   props: {
-    isOperator: Boolean,
     appTransType: String
   },
   data() {
@@ -101,7 +100,7 @@ export default {
             return h('Checkbox', {
               props: {
                 value: params.row.status === 1?true:false,
-                disabled: !this.isOperator?true:isDisabled
+                disabled: isDisabled
               },
               on: {
                 'on-change': (status) => {
@@ -123,7 +122,7 @@ export default {
               return h('Checkbox', {
                 props: {
                   value: params.row.matchType === 2?true:false,
-                  disabled: !this.isOperator?true:isDisabled
+                  disabled: isDisabled
                 },
                 on: {
                   'on-change': (status) => {
@@ -161,7 +160,7 @@ export default {
               h('Select',{
                 props: {
                   value: params.row.allowedNegative,
-                  disabled: !this.isOperator?true:isDisabled,
+                  disabled: isDisabled,
                   transfer: true
                 },
                 on: {
@@ -190,7 +189,7 @@ export default {
             return h('Checkbox', {
               props: {
                 value: params.row.verification,
-                disabled: !this.isOperator?true:isDisabled
+                disabled: isDisabled
               },
               on: {
                 'on-change': (status) => {

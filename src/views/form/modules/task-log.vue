@@ -95,6 +95,10 @@
     </div>
 
     <div  class="timeline-box-log" v-show="logData.length===0?false:true">
+      <div class="timeline-box-log-sum">
+        <span>总工时：<b>{{ logHours }}</b></span>
+        <span :style="{marginLeft:'15px'}">总成本：<b>{{ logCosts }}</b></span>
+      </div>
       <ul class="timeline-box-log-item" v-for="(item,index) in logData" :key="index">
         <img :src="item.photo?item.photo:'resources/images/icon/defaultUserPhoto.png'" class="head-portrait"/>
         <ul class="timeline-item-content-ul">
@@ -172,6 +176,8 @@ export default {
     };
     return {
         transCode:"",
+        logHours: "",
+        logCosts: "",
         logData: [],
         modalVisible:false,
         logTypeList:[],
@@ -284,13 +290,15 @@ export default {
       getTaskLog(this.transCode,this.currentPage,this.pageSize).then(res => {
         this.pageTotal = res.dataCount;
         this.logData = res.tableContent;
+        this.logCosts = res.logCosts;
+        this.logHours = res.logHours;
         this.logData.forEach(item=>{
           item.comment.replace(/<br>/g,'\r\n'); 
          
         })
       }).then(res=>{
-            window.top.setTaskLogIframeHeight();
-        });;
+            window.top.setTaskLogIframeHeight && window.top.setTaskLogIframeHeight();
+        });
     },
 
     handleQueryChange(query){

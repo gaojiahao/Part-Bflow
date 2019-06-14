@@ -294,12 +294,20 @@ export const deleteAppRelate = (param) => request('/H_roleplay-si/trans/deleteEx
 
 /**
  * @author XiaoYing
- * @description 设置默认视图
+ * @description 设置报表PC默认视图
  */
-export const saveDefaultView = (params, isMobile = false) => request('/H_roleplay-si/app/setAppDefaultView', {
+export const saveDefaultView = (params) => request('/H_roleplay-si/app/setAppDefaultView', {
   viewId: params.viewId,
-  listId: params.listId,
-  isMobile: isMobile
+  listId: params.listId
+}, 'POST');
+
+/**
+ * @author XiaoYing
+ * @description 设置报表移动默认视图
+ */
+export const saveMobileDefaultView = (params) => request('/H_roleplay-si/app/setAppMobileView', {
+  viewId: params.viewId,
+  listId: params.listId
 }, 'POST');
 
 /**

@@ -28,7 +28,8 @@
 import {
   getListViewPermission,
   deleteAppViews,
-  saveDefaultView
+  saveDefaultView,
+  saveMobileDefaultView
 } from "@/services/appService.js";
 import AssessModal from "@/components/modal/Modal";
 import ReportModal from "./report-modal";
@@ -185,12 +186,21 @@ export default {
         viewId: params.row.viewId,
         listId: this.listId
       };
-      saveDefaultView(defaultParams, isMobile).then(res => {
-        if (res.success) {
-          this.$Message.success(res.message);
-          this.reloadViewData();
-        }
-      });
+      if(isMobile){
+        saveMobileDefaultView(defaultParams).then(res => {
+          if (res.success) {
+            this.$Message.success(res.message);
+            this.reloadViewData();
+          }
+        });
+      }else{
+        saveDefaultView(defaultParams).then(res => {
+          if (res.success) {
+            this.$Message.success(res.message);
+            this.reloadViewData();
+          }
+        });
+      }
     },
 
     setColumns() {
@@ -226,14 +236,11 @@ export default {
         ],
         defaultViewColumn = [
           {
-            title: "默认视图",
+            title: "默认报表（PC）",
             key: "isDefault",
             align: "center",
             render: (h, params) => {
-              let defaultView = false;
-              if (params.row.isDefault === 1) {
-                defaultView = true;
-              }
+              let defaultView = params.row.isDefault === 1;
               return h("Radio", {
                 props: {
                   value: defaultView,
@@ -248,11 +255,11 @@ export default {
             }
           },
           {
-            title: "手机视图",
-            key: "isMobileDefault",
+            title: "默认报表（移动）",
+            key: "isMobile",
             align: "center",
             render: (h, params) => {
-              let defaultView = params.row.isDefault === 1;
+              let defaultView = params.row.isMobile === 1;
               return h("Radio", {
                 props: {
                   value: defaultView,

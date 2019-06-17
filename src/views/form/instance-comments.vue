@@ -233,7 +233,7 @@ export default {
              this.$nextTick(function () {
                  setTimeout(() => {
                      window.top.setInstaceCommentsIframeHeight();
-                 },200);
+                 },1000);
             })
             
         });

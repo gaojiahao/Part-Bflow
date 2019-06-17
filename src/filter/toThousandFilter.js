@@ -20,7 +20,7 @@ const toThousandFilter  = (num) => {
     }
     
     t = t.split("").reverse().join("") + r;
-    num < 0 && (t = '-' + t) 
+    num < 0 && (t = '-' + t); 
 
     return t;
 }

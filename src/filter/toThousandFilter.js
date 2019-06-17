@@ -9,7 +9,8 @@ const toThousandFilter  = (num) => {
 
     num = num + "";
     numone = num.split(".")[0];
-    l = num < 0 ? numone.split("").slice(1,numone.split("").length).reverse() : numone.split("").reverse(); 
+    l = numone.split("").reverse();
+    num < 0 && (l = numone.split("").slice(1,numone.split("").length).reverse()); 
     r = num.split(".")[1];
     r = (r == null ? "" : "." + r);
     t = "";
@@ -18,7 +19,8 @@ const toThousandFilter  = (num) => {
         t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
     }
     
-    num < 0 ? t = '-' + t.split("").reverse().join("") + r : t = t.split("").reverse().join("") + r
+    t = t.split("").reverse().join("") + r;
+    num < 0 && (t = '-' + t) 
 
     return t;
 }

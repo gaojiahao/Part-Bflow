@@ -7,7 +7,7 @@
 <template>
     <div class="connection-layout">
         <!-- 应用科目 -->
-        <app-subject v-if="!isAddress && appType === 'business'" :isOperator="isOperator" :appTransType="appTransType"></app-subject>
+        <app-subject v-if="!isAddress && appType === 'business' && isOperator" :appTransType="appTransType"></app-subject>
         <!-- 相关应用 -->
         <related-app v-if="!isAddress" :isAdmin="isAdmin"></related-app>
         <!-- 流程状态管理-->

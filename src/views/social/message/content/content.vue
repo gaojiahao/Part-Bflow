@@ -166,7 +166,7 @@ export default {
             });
         },
         handleViewDetail:function () {
-            window.open('/Site/index.html#appSetting/' + this.listId);
+            window.open('/Site/index.html#list/' + this.listId);
         },
         handleExpend:function () {
 

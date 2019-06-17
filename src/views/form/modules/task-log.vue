@@ -5,38 +5,8 @@
 <template>
   <div  class="timeline-box">
 
-    <Drawer  placement="right" :closable="false" width="50%" v-model="helpPanelVisible">
-        <h3>工作+进展</h3>
-        <br>
-        今天研发任务已经完成了60%，比计划提前三天
-        <Divider />
-
-        <h3>工作+结果 </h3>
-        <br>
-        今天和客户谈了一个合同，成功拿到了500万订单
-        <Divider />
-
-        <h3>工作+策略 </h3>
-        <br>
-        通过与供应商争取到订单式生产的有利合同条款，解决了库存多的问题
-        <Divider />
-
-        <h3>问题+解决方案</h3>
-        <br>
-        A客户不同意我们的合同条款，想后天邀请老板一起拜访
-         <Divider />
-
-        <h3>计划+目标</h3>
-        <br>
-        明天，与质量部门开会，确认出厂产品的质量检验流程
-    </Drawer>
-
     <div class="app-resource-group-title">
         <span class="font16">工作日志  </span>
-        <span class="font12 info-color">不知道如何写日志？这里有模板哦!</span> 
-        <Button  @click="helpPanelVisible = !helpPanelVisible"  size='small' >立即查看
-          <Icon type="ios-arrow-forward" />
-        </Button>
     </div>
 
     <div class="timeline-box-form">
@@ -104,7 +74,7 @@
                <FormItem label="申报工时:" prop="logDeclarationHours">
                 <InputNumber 
                   v-model="modalFormData.logDeclarationHours"
-                  max="24"  
+                  :max='24' 
                   :min="0.1" 
                   :step="0.1"/>单位/时
               </FormItem>
@@ -125,6 +95,10 @@
     </div>
 
     <div  class="timeline-box-log" v-show="logData.length===0?false:true">
+      <div class="timeline-box-log-sum">
+        <span>总工时：<b>{{ logHours }}</b></span>
+        <span :style="{marginLeft:'15px'}">总成本：<b>{{ logCosts }}</b></span>
+      </div>
       <ul class="timeline-box-log-item" v-for="(item,index) in logData" :key="index">
         <img :src="item.photo?item.photo:'resources/images/icon/defaultUserPhoto.png'" class="head-portrait"/>
         <ul class="timeline-item-content-ul">
@@ -202,8 +176,9 @@ export default {
     };
     return {
         transCode:"",
+        logHours: "",
+        logCosts: "",
         logData: [],
-        helpPanelVisible:false,
         modalVisible:false,
         logTypeList:[],
         loading:false,
@@ -235,7 +210,7 @@ export default {
               {validator:validateTaskStatus}
             ],
             logDeclarationHours: [
-              {required: true, message: "不允许为空",type: "number"}
+              {required: true, message: "必填项且在0.1到24之间",type: "number"}
             ],
             taskDate: [
               {required: true,message: "不允许为空" }
@@ -315,13 +290,15 @@ export default {
       getTaskLog(this.transCode,this.currentPage,this.pageSize).then(res => {
         this.pageTotal = res.dataCount;
         this.logData = res.tableContent;
+        this.logCosts = res.logCosts;
+        this.logHours = res.logHours;
         this.logData.forEach(item=>{
           item.comment.replace(/<br>/g,'\r\n'); 
          
         })
       }).then(res=>{
-            window.top.setTaskLogIframeHeight();
-        });;
+            window.top.setTaskLogIframeHeight && window.top.setTaskLogIframeHeight();
+        });
     },
 
     handleQueryChange(query){

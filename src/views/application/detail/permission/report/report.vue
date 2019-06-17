@@ -5,20 +5,22 @@
 <template>
   <div class="app-report">
     <Row class="app-report-title">
-      <h3>报表 <a v-if="isAdmin && appType!='subject'" @click="goCreateView">添加报表</a></h3>
+      <h3>
+        报表
+        <a v-if="isAdmin && appType!='subject'" @click="goCreateView">添加报表</a>
+      </h3>
       <span class="marlr" :style="{color:'#aaaaaa'}">用户默认拥有此应用默认报表的权限</span>
     </Row>
     <Row class="app-report-table">
       <Table :columns="columns" :data="reportSources" size="small"></Table>
-
     </Row>
-    <report-modal 
-      :modalStatis="showReportModal" 
-      @emitPermissionModal="emitPermissionModal" 
-      :permissionId="permissionId" 
-      @reGetData="reGetData" 
-      :permissionData="permissionData">
-    </report-modal>
+    <report-modal
+      :modalStatis="showReportModal"
+      @emitPermissionModal="emitPermissionModal"
+      :permissionId="permissionId"
+      @reGetData="reGetData"
+      :permissionData="permissionData"
+    ></report-modal>
   </div>
 </template>
 
@@ -26,7 +28,8 @@
 import {
   getListViewPermission,
   deleteAppViews,
-  saveDefaultView
+  saveDefaultView,
+  saveMobileDefaultView
 } from "@/services/appService.js";
 import AssessModal from "@/components/modal/Modal";
 import ReportModal from "./report-modal";
@@ -46,14 +49,14 @@ export default {
       permissionId: "",
       columns: [],
       reportSources: [],
-      permissionData:[]
+      permissionData: []
     };
   },
   watch: {
     isAdmin: function(value) {
-     this.setColumns();
+      this.setColumns();
     },
-    deep:true
+    deep: true
   },
   methods: {
     emitPermissionModal() {
@@ -70,7 +73,7 @@ export default {
         "/viewTypes";
     },
 
-     reGetData(){
+    reGetData() {
       this.getViewsData();
     },
 
@@ -78,16 +81,20 @@ export default {
     getViewsData() {
       getListViewPermission(this.listId).then(res => {
         res.forEach(element => {
-          if(!element.users){
+          if (!element.users) {
             element.users = [];
           }
-          if(!element.roles){
+          if (!element.roles) {
             element.roles = [];
           }
-          if(!element.groups){
+          if (!element.groups) {
             element.groups = [];
           }
-          element.permissionList = [...element.groups,...element.roles,...element.users]
+          element.permissionList = [
+            ...element.groups,
+            ...element.roles,
+            ...element.users
+          ];
         });
         this.reportSources = res;
       });
@@ -147,20 +154,24 @@ export default {
     //重新加载视图数据并渲染默认视图
     reloadViewData() {
       getListViewPermission(this.listId).then(res => {
-         res.forEach(element => {
-          element.permissionList = [...element.groups,...element.roles,...element.users]
+        res.forEach(element => {
+          element.permissionList = [
+            ...element.groups,
+            ...element.roles,
+            ...element.users
+          ];
         });
         this.reportSources = res;
       });
     },
 
     //点击默认视图方法
-    onClickDefaultView(params) {
+    onClickDefaultView(params, isMobile) {
       this.$Modal.confirm({
         title: "确认",
         content: "确认设置此视图为默认视图？",
         onOk: () => {
-          this.setDefaultViews(params);
+          this.setDefaultViews(params, isMobile);
         },
         onCancel: () => {
           this.reloadViewData();
@@ -170,143 +181,182 @@ export default {
     },
 
     //设置默认视图并重新渲染columns
-    setDefaultViews(params) {
+    setDefaultViews(params, isMobile) {
       let defaultParams = {
         viewId: params.row.viewId,
         listId: this.listId
       };
-      saveDefaultView(defaultParams).then(res => {
-        if (res.success) {
-          this.$Message.success(res.message);
-          this.reloadViewData();
-        }
-      });
+      if(isMobile){
+        saveMobileDefaultView(defaultParams).then(res => {
+          if (res.success) {
+            this.$Message.success(res.message);
+            this.reloadViewData();
+          }
+        });
+      }else{
+        saveDefaultView(defaultParams).then(res => {
+          if (res.success) {
+            this.$Message.success(res.message);
+            this.reloadViewData();
+          }
+        });
+      }
     },
 
-    setColumns(){
-      let defaultColumns = [{
-          title: "报表名称",
-          key: "title",
-          width: 200,
-        },
-        {
-          title: "已授权用户、组织或职位",
-          key: "permissionList",
-          render:(h,params) =>{
-            let permissionList = params.row.permissionList,
+    setColumns() {
+      let defaultColumns = [
+          {
+            title: "报表名称",
+            key: "title",
+            width: 200
+          },
+          {
+            title: "已授权用户、组织或职位",
+            key: "permissionList",
+            render: (h, params) => {
+              let permissionList = params.row.permissionList,
                 renderData = [];
-            if (permissionList.length > 0) {
-              permissionList.forEach((val, index) => {
-                  let pushData = h("span",{
-                    style: {
-                      margin: '0px 5px'
-                    }
-                  },val.name);
-                renderData.push(pushData);
-              });
-              return h("div", renderData);
-            }
-          }
-        }],
-        defaultViewColumn = [{
-          title: "默认视图",
-          key: "isDefault",
-          align: "center",
-          render: (h, params) => {
-            let defaultView = false;
-            if (params.row.isDefault === 1) {
-              defaultView = true;
-            }
-            return h("Radio", {
-              props: {
-                value: defaultView,
-                disabled: !this.isAdmin
-              },
-              on: {
-                "on-change": e => {
-                  this.onClickDefaultView(params);
-                }
+              if (permissionList.length > 0) {
+                permissionList.forEach((val, index) => {
+                  let pushData = h(
+                    "span",
+                    {
+                      style: {
+                        margin: "0px 5px"
+                      }
+                    },
+                    val.name
+                  );
+                  renderData.push(pushData);
+                });
+                return h("div", renderData);
               }
-            });
+            }
           }
-        }],
-        optColumns = [{
-          title: "操作",
-          key: "list",
-          width: 300,
-          align: "center",
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "a",
-                {
-                  on: {
-                    click: () => {
-                      this.deleteViews(params, params.index);
-                    }
-                  },
-                  style: {
-                      display: this.appType !== 'subject' ? "inline-block" : "none"
-                    }
+        ],
+        defaultViewColumn = [
+          {
+            title: "默认报表（PC）",
+            key: "isDefault",
+            align: "center",
+            render: (h, params) => {
+              let defaultView = params.row.isDefault === 1;
+              return h("Radio", {
+                props: {
+                  value: defaultView,
+                  disabled: !this.isAdmin
                 },
-                "删除"
-              ),
-              h("span", {
-                style: {
-                  height: "20px",
-                  borderLeft: "1px solid #39f",
-                  margin: "0px 5px",
-                  display: this.appType !== 'subject' ? "inline" : "none"
-                }
-              }),
-              h(
-                "a",
-                {
-                  on: {
-                    click: () => {
-                      let href =
-                        "/Site/index.html#appSetting/viewConfig/" +
-                        this.listId +
-                        "/" +
-                        params.row.viewId;
-                      window.top.location.href = href;
-                    }
-                  },
-                  style: {
-                      display: this.appType !== 'subject' ? "inline-block" : "none"
-                    }
-                },
-                "修改"
-              ),
-              h("span", {
-                style: {
-                  height: "20px",
-                  borderLeft: "1px solid #39f",
-                  margin: "0px 5px",
-                  display: this.appType !== 'subject' ? "inline" : "none"
-                }
-              }),
-              h(
-                "a",
-                {
-                  on: {
-                    click: () => {
-                      this.permissionId = params.row.permissionId;
-                      this.showReportModal = true;
-                      this.permissionData = params.row.permissionList;
-                    }
+                on: {
+                  "on-change": e => {
+                    this.onClickDefaultView(params);
                   }
+                }
+              });
+            }
+          },
+          {
+            title: "默认报表（移动）",
+            key: "isMobile",
+            align: "center",
+            render: (h, params) => {
+              let defaultView = params.row.isMobile === 1;
+              return h("Radio", {
+                props: {
+                  value: defaultView,
+                  disabled: !this.isAdmin
                 },
-                "授权"
-              )
-            ]);
+                on: {
+                  "on-change": e => {
+                    this.onClickDefaultView(params, true);
+                  }
+                }
+              });
+            }
           }
-        }];
-      if(this.isAdmin && this.appType !== 'subject'){
-        this.columns = defaultColumns.concat(defaultViewColumn).concat(optColumns);
-      }else if(this.isAdmin){
+        ],
+        optColumns = [
+          {
+            title: "操作",
+            key: "list",
+            width: 300,
+            align: "center",
+            render: (h, params) => {
+              return h("div", [
+                h(
+                  "a",
+                  {
+                    on: {
+                      click: () => {
+                        this.deleteViews(params, params.index);
+                      }
+                    },
+                    style: {
+                      display:
+                        this.appType !== "subject" ? "inline-block" : "none"
+                    }
+                  },
+                  "删除"
+                ),
+                h("span", {
+                  style: {
+                    height: "20px",
+                    borderLeft: "1px solid #39f",
+                    margin: "0px 5px",
+                    display: this.appType !== "subject" ? "inline" : "none"
+                  }
+                }),
+                h(
+                  "a",
+                  {
+                    on: {
+                      click: () => {
+                        let href =
+                          "/Site/index.html#appSetting/viewConfig/" +
+                          this.listId +
+                          "/" +
+                          params.row.viewUniqueId;
+                        window.top.location.href = href;
+                      }
+                    },
+                    style: {
+                      display:
+                        this.appType !== "subject" ? "inline-block" : "none"
+                    }
+                  },
+                  "修改"
+                ),
+                h("span", {
+                  style: {
+                    height: "20px",
+                    borderLeft: "1px solid #39f",
+                    margin: "0px 5px",
+                    display: this.appType !== "subject" ? "inline" : "none"
+                  }
+                }),
+                h(
+                  "a",
+                  {
+                    on: {
+                      click: () => {
+                        this.permissionId = params.row.permissionId;
+                        this.showReportModal = true;
+                        this.permissionData = params.row.permissionList;
+                      }
+                    }
+                  },
+                  "授权"
+                )
+              ]);
+            }
+          }
+        ];
+      if (this.isAdmin && this.appType !== "subject") {
+        this.columns = defaultColumns
+          .concat(defaultViewColumn)
+          .concat(optColumns);
+      } else if (this.isAdmin) {
         this.columns = defaultColumns.concat(optColumns);
-      }else{
+      } else {
         this.columns = defaultColumns;
       }
     }

@@ -156,6 +156,13 @@ export default {
             });
 
             comment.showReply = !comment.showReply;
+            if(window.top.setInstaceCommentsIframeHeight){
+                this.$nextTick(function () {
+                    setTimeout(() => {
+                        window.top.setInstaceCommentsIframeHeight();
+                    },200);
+                })
+            }
         },
         handleReplyPublish:function (content,uploadList,userIds=[],superComment,commentAndReply) {
              this.$forceUpdate();
@@ -200,7 +207,15 @@ export default {
                     this.showloadMore = true;
                 }
             }).then(res=>{
-                if(this.isInIframe)  window.top.setInstaceCommentsIframeHeight();
+                if(this.isInIframe){
+                    if(window.top.setInstaceCommentsIframeHeight){
+                this.$nextTick(function () {
+                    setTimeout(() => {
+                        window.top.setInstaceCommentsIframeHeight();
+                    },200);
+                })
+            }
+                }
             });
         }
         

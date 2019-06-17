@@ -21,7 +21,7 @@
               :loading="loading" 
               :data="performanceData">
               <template slot-scope="{ row }" slot="account">
-                    <a @click="showModal(row)">{{ row.account }}</a>
+                    <a @click="showModal(row)">{{ row.account | toThousandFilter }}</a>
               </template>
             </Table>
         </div>
@@ -34,8 +34,11 @@
               :loading="modalLoading"
               :columns="modalColumns" 
               :data="modalData">
+              <template slot-scope="{ row }" slot="benefit">
+                    <span>{{ row.benefit | toThousandFilter }}</span>
+              </template>
               <div slot="footer">
-                <b :style="{float:'right',marginRight:'35px'}">{{`合计：${modalSum}`}}</b>
+                <b :style="{float:'right',marginRight:'35px'}">合计：{{modalSum  | toThousandFilter}}</b>
               </div>
             </Table>
             <div slot="footer"></div>
@@ -99,7 +102,7 @@ export default {
           },
           {
             title: "金额",
-            key: "workBenefit",
+            slot: "benefit",
             align: 'right'
           }
       ],

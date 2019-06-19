@@ -59,7 +59,8 @@
 
         <comments 
             :comments="comments" 
-            :refreshRootComments="refreshComments"></comments>
+            :refreshRootComments="refreshComments"
+            @refreshDeleteComments="refreshDeleteComments"></comments>
 
         <Page 
             class="pad20"
@@ -143,6 +144,9 @@ export default {
     };
   },
   methods: {
+    refreshDeleteComments () {
+        this.refreshComments();
+    },
     emitUserModal() {
       this.showUserModal = false;
     },

@@ -59,7 +59,8 @@
             <comments 
                 :isInIframe="true" 
                 :comments="comments" 
-                :refreshRootComments="refreshComments"></comments>
+                :refreshRootComments="refreshComments"
+                @refreshDeleteComments="refreshDeleteComments"></comments>
 
             <Page 
                 class="pad20"
@@ -130,6 +131,9 @@ export default {
   },
  
   methods: {
+    refreshDeleteComments () {
+        this.refreshComments();
+    },
     addUserData(value) {
         let userIds = [],
             data = {};
@@ -232,7 +236,7 @@ export default {
         }).then(res=>{
              this.$nextTick(function () {
                  setTimeout(() => {
-                     window.top.setInstaceCommentsIframeHeight();
+                     window.top.setInstaceCommentsIframeHeight && window.top.setInstaceCommentsIframeHeight();
                  },1000);
             })
             

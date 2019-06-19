@@ -35,7 +35,8 @@
                   <div>最新评论({{pageInfo.total}})</div>
                   <comments 
                       :comments="comments" 
-                      :refreshRootComments="refreshComments">
+                      :refreshRootComments="refreshComments"
+                      @refreshDeleteComments="refreshDeleteComments">
                   </comments>
 
                   <Page 
@@ -110,6 +111,9 @@ export default {
     }
   },
   methods: {
+    refreshDeleteComments () {
+        this.refreshComments();
+    },
     editUpdate() {
       Bus.$emit('refreshList');
       this.getKnowledgeDataById(this.knowledgeId);

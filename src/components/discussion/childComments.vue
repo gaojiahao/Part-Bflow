@@ -29,10 +29,11 @@
                 <span>:</span>
                 <span v-html="comment.content" class="child-comment-content"></span>
             </p>
-            <p >
+            <p>
                 <span>
-                    {{comment.times}}
+                    {{comment.times}}&nbsp;|
                 </span>
+                <span @click="deleteComments(comment)" class="comments-delete">删除</span>
                 <span class="fr">
                     <span  class="cursor-pointer" @click="handleShowReply(comment)">回复</span>
                     
@@ -78,7 +79,8 @@ import {
     commentThumbsUp,
     saveComment,
     getCommentsByParentId,
-    getUserInfoByUserId
+    getUserInfoByUserId,
+    deleteComment
     } from "@/services/appService.js";
 
 import MyPopTip from "@/components/poptip/MyPopTip";
@@ -186,6 +188,25 @@ export default {
                 this.refreshComments();
             });
         },
+        //删除评论
+        deleteComments (comment) {
+            if(comment.id){
+                this.$Modal.confirm({
+                    title: "确认",
+                    content: "确认删除此条评论？",
+                    onOk: () => {
+                        deleteComment(comment.id).then(res => {
+                            if(res.success){
+                                this.$Message.success(res.message);
+                                this.refreshComments();
+                            }
+                        }).catch(err => {
+                            this.$Message.success(err.data.message);
+                        });
+                    }
+                });
+            }
+        },
         showUserInfo(userId) {
             getUserInfoByUserId(userId).then(res => {
                 if (res.dataCount) {
@@ -203,18 +224,19 @@ export default {
             getCommentsByParentId(params).then(res=>{
                 this.comments = res.tableContent;
                 this.superComment.childCommentNum = res.dataCount;
+                res.dataCount === 0 && this.$emit('hiddenChildComments');
                 if(this.comments.length<res.dataCount){
                     this.showloadMore = true;
                 }
             }).then(res=>{
                 if(this.isInIframe){
                     if(window.top.setInstaceCommentsIframeHeight){
-                this.$nextTick(function () {
-                    setTimeout(() => {
-                        window.top.setInstaceCommentsIframeHeight();
-                    },200);
-                })
-            }
+                        this.$nextTick(function () {
+                            setTimeout(() => {
+                                window.top.setInstaceCommentsIframeHeight();
+                            },200);
+                        })
+                    }
                 }
             });
         }

@@ -504,6 +504,15 @@ export const getBigProcessByOrderCode = (treansCode) => request('/corebiz-api/la
 export const saveComment = (comment) => request('/H_roleplay-si/comment/saveComment', {}, 'POST', comment)
 
 /**
+ * @author XiaoYing
+ * @description 删除评论信息
+ * @param { id } id 评论id
+ */
+export const deleteComment = (id) => request('/H_roleplay-si/comment/deleteComment', {
+  id: id
+}, 'POST')
+
+/**
  * @author snack.huang
  * @description 获取评论信息
  * @param {Object} param 评论信息

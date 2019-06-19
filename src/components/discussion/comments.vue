@@ -63,7 +63,12 @@
                             class="cursor-pointer"
                             @click="handleShowChilds(comment)" 
                             v-if="comment.childCommentNum>0">|&nbsp;查看<strong> {{comment.childCommentNum}}</strong>条回复
-                            </span>
+                        </span>
+                        <span 
+                            v-if="$currentUser.userId == comment.creator" 
+                            @click="deleteComments(comment)" 
+                            class="comments-delete">
+                            <span style="color:#333">|&nbsp;</span>删除</span>
                     </span>
 
                     <span  class="comments-content-item-content-bar-right" >
@@ -102,6 +107,7 @@
                         v-if="comment.showChilds" 
                         :superComment ="comment"
                         :isInIframe="isInIframe"
+                        @hiddenChildComments="hiddenChildComments"
                         >
                     </child-comments>
                 </div>
@@ -126,7 +132,8 @@ import {
     cancelCommentThumbsUp,
     saveComment,
     getComments,
-    getUserInfoByUserId
+    getUserInfoByUserId,
+    deleteComment
     } from "@/services/appService.js";
 
 import MyPopTip from "@/components/poptip/MyPopTip";
@@ -169,6 +176,9 @@ export default {
         
     },
     methods: {
+        hiddenChildComments () {
+            this.$emit('refreshDeleteComments');
+        },
         errorimg(comment) {
             comment.photo = 'resources/images/icon/defaultUserPhoto.png';
         },
@@ -220,6 +230,25 @@ export default {
             }
 
            
+        },
+        //删除评论
+        deleteComments (comment) {
+            if(comment.id){
+                this.$Modal.confirm({
+                    title: "确认",
+                    content: "确认删除此条评论？",
+                    onOk: () => {
+                        deleteComment(comment.id).then(res => {
+                            if(res.success){
+                                this.$Message.success(res.message);
+                                this.$emit('refreshDeleteComments');
+                            }
+                        }).catch(err => {
+                            this.$Message.success(err.data.message);
+                        });
+                    }
+                });
+            }
         },
         handleShowChilds:function (comment) {
             this.$forceUpdate();
@@ -314,8 +343,7 @@ export default {
     created(){
        
     },
-    mounted () {
-    }
+    mounted () {}
 };
 </script>
 

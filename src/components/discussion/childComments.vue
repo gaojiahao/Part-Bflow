@@ -31,9 +31,15 @@
             </p>
             <p>
                 <span>
-                    {{comment.times}}&nbsp;|
+                    {{comment.times}}
                 </span>
-                <span @click="deleteComments(comment)" class="comments-delete">删除</span>
+                <span 
+                    v-if="comment.replyUserId == $currentUser.userId" 
+                    @click="deleteComments(comment)" 
+                    class="comments-delete">
+                    <span style="color:#333">|&nbsp;</span>
+                    删除
+                </span>
                 <span class="fr">
                     <span  class="cursor-pointer" @click="handleShowReply(comment)">回复</span>
                     

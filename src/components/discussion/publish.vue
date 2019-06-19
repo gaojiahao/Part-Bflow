@@ -39,6 +39,7 @@
             <Poptip 
                 placement="bottom-start" 
                 v-model="faceVisible"
+                @on-popper-show="onPopShow"
                 width="300">
                     <Icon 
                         class="choice-face" 
@@ -279,7 +280,9 @@ export default {
             this.range = selection.getRangeAt(0);
             this.userListVisible = false;
         },
-
+        onPopShow () {
+            this.$refs.editor.focus();
+        },
         choice_face: function(n) {
             // 创建需追加到光标处节点的文档片段
             const range = this.range.cloneRange();
@@ -625,7 +628,6 @@ export default {
         this.uploadFileList = this.$refs.uploadFile.fileList;
       
         this.$nextTick(()=>{
-            // this.$refs.editor.focus();
             this.contentWrap = this.$refs.editor;
         })
         //初始化事件

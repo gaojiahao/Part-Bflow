@@ -82,7 +82,7 @@
                   </div>
                 </template>
                 <template slot-scope="{ row,index }" slot="trComment">
-                    <Input @on-blur="onTaxCommentBlur(row,index)" type="textarea" v-model="row.trComment"></Input>
+                    <Input @on-blur="onTaxCommentBlur(row,index)" :autosize="true" type="textarea" v-model="row.trComment"></Input>
                 </template>
                 <template slot-scope="{ row, index }" slot="action">
                     <Icon @click="deleteTaxCompany(index)" type="md-close" :style="{color:'#39f',fontSize:'18px'}" />

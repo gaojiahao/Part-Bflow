@@ -567,7 +567,9 @@ export const saveCompanyInfo = (data) => {
     companyType,
     status,
     groupCode,
-    groupPic
+    groupPic,
+    taxpayerType,
+    taxCompanyRelList
   } = data;
   return request('/H_roleplay-si/sysGroup/saveBatch', {}, 'POST', [{
     groupName: groupName,
@@ -578,9 +580,40 @@ export const saveCompanyInfo = (data) => {
     groupType: 'C',
     parentId: '1',
     groupCode: groupCode,
-    groupPic: groupPic
+    groupPic: groupPic,
+    taxpayerType: taxpayerType,
+    taxCompanyRelList: taxCompanyRelList
   }]);
 };
+
+/**
+ * @author zhaohuai
+ * 更新公司信息
+ * 
+ */
+export const updateConpanyInfo = (data) => {
+  let {
+    groupName,
+    groupShortName,
+    companyType,
+    status,
+    groupId,
+    groupPic,
+    taxpayerType,
+    taxCompanyRelList
+  } = data
+  return request('/H_roleplay-si/sysGroup/company/updateBatch', {}, 'POST', [{
+    groupName: groupName,
+    groupShortName: groupShortName,
+    companyType: companyType,
+    status: status,
+    groupId: groupId,
+    groupPic: groupPic,
+    taxpayerType: taxpayerType,
+    taxCompanyRelList: taxCompanyRelList
+  }])
+}
+
 /**
  * @author zhaohuai
  * 获取公司列表信息
@@ -698,29 +731,6 @@ export const getAllCompanys = (pageSize, currentPage, searchValue, targer) => re
   target: targer
 });
 
-/**
- * @author zhaohuai
- * 更新公司信息
- * 
- */
-export const updateConpanyInfo = (data) => {
-  let {
-    groupName,
-    groupShortName,
-    companyType,
-    status,
-    groupId,
-    groupPic
-  } = data
-  return request('/H_roleplay-si/sysGroup/company/updateBatch', {}, 'POST', [{
-    groupName: groupName,
-    groupShortName: groupShortName,
-    companyType: companyType,
-    status: status,
-    groupId: groupId,
-    groupPic: groupPic
-  }])
-}
 /**
  * @author zhaohuai
  * 唯一校验

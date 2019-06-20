@@ -58,6 +58,39 @@
             </Select>
             <span v-else style="margin-left:5px;">{{baseInfoItem.companyType}}</span>
           </FormItem>
+          <FormItem label="纳税人类型:">
+            <Select v-model="baseInfoItem.taxpayerType" v-if="!isEdit" :disabled="isEdit">
+              <Option value='一般'>一般</Option>
+              <Option value='小规模'>小规模</Option>
+            </Select>
+            <span v-else style="margin-left:5px;">{{baseInfoItem.taxpayerType}}</span>
+          </FormItem>
+          <FormItem label="税率关系:">
+            <div v-if="!isEdit">
+              <Button type="info" size="small" @click="addTaxCompany">新增</Button>
+              <Table border size="small" :columns="taxColumns" :data="baseInfoItem.taxCompanyRelList">
+                <template slot-scope="{ row,index }" slot="trTaxRate">
+                  <div :style="{position:'relative'}">
+                    <b class="tax-rate">*</b>
+                    <Input @on-blur="onTaxBlur(row,index)" v-model="row.trTaxRate"></Input>
+                  </div>
+                </template>
+                <template slot-scope="{ row,index }" slot="trStartEffectiveTime">
+                  <div :style="{position:'relative'}">
+                    <b class="tax-date">*</b>
+                    <DatePicker format="yyyy-MM-dd" @on-change="onDateChange(row,index)" transfer type="date" v-model="row.trStartEffectiveTime"></DatePicker>
+                  </div>
+                </template>
+                <template slot-scope="{ row,index }" slot="trComment">
+                    <Input @on-blur="onTaxCommentBlur(row,index)" type="textarea" v-model="row.trComment"></Input>
+                </template>
+                <template slot-scope="{ row, index }" slot="action">
+                    <Icon @click="deleteTaxCompany(index)" type="md-close" :style="{color:'#39f',fontSize:'18px'}" />
+                </template>
+              </Table>
+            </div>
+            <Table v-else border size="small" :columns="taxViewColumns" :data="taxViewdata"></Table>
+          </FormItem>
         </Form>
       </div>
       <div v-if="isAdd && isEdit" class="info-person">
@@ -119,7 +152,9 @@ export default {
         groupName: "",
         groupShortName: "",
         companyType: "",
-        status: -3
+        status: -3,
+        taxpayerType: "",
+        taxCompanyRelList: []
       },
       ruleValidate: {
         groupName: [
@@ -143,7 +178,38 @@ export default {
             trigger: "change"
           }
         ]
-      }
+      },
+      taxColumns: [{
+          title: "税率",
+          slot: "trTaxRate"
+        },
+        {
+          title: "开始生效时间",
+          slot: "trStartEffectiveTime"
+        },
+        {
+          title: "说明",
+          slot: "trComment"
+        },
+        {
+          title: "动作",
+          slot: "action",
+          align: 'center',
+          width: 70
+      }],
+      taxViewdata: [],
+      taxViewColumns: [{
+          title: "税率",
+          key: "trTaxRate"
+        },
+        {
+          title: "开始生效时间",
+          key: "trStartEffectiveTime"
+        },
+        {
+          title: "说明",
+          key: "trComment"
+      }]
     };
   },
   watch: {
@@ -152,6 +218,20 @@ export default {
     }
   },
   methods: {
+    //格式化日期方法
+    formatDate(currentDate) {
+      let date = new Date(currentDate),
+          year = date.getFullYear(),
+          month = date.getMonth() + 1,
+          day = date.getDate(),
+          relDate;
+      if (month >= 1 && month <= 9) {
+        month = `0${month}`;
+      }
+      relDate = `${year}-${month}-${day}`;
+
+      return relDate;
+    },
     handleSuccess(res, file) {
       this.logo =
         "/H_roleplay-si/ds/download?width=128&height=128&specify=true&url=" +
@@ -184,6 +264,29 @@ export default {
         desc: "请上传格式为png 或者 jpg 的图片"
       });
     },
+    addTaxCompany () {
+      this.baseInfoItem.taxCompanyRelList.push({trTaxRate:null,trStartEffectiveTime:"",trComment:"",action:""});
+    },
+    deleteTaxCompany (index) {
+      this.baseInfoItem.taxCompanyRelList.splice(index,1);
+    },
+    onDateChange(row,index){
+      row.trStartEffectiveTime && (row.trStartEffectiveTime = this.formatDate(row.trStartEffectiveTime));
+      this.baseInfoItem.taxCompanyRelList[index] = row;
+    },
+    onTaxBlur(row,index){
+      if(!isNaN(row.trTaxRate) && row.trTaxRate > 0){
+        row.trStartEffectiveTime && (row.trStartEffectiveTime = this.formatDate(row.trStartEffectiveTime));
+        this.baseInfoItem.taxCompanyRelList[index] = row;
+      }else{
+        this.$Message.error('请输入数字且大于0！');
+        this.$set(row,'trTaxRate',null);
+      }
+    },
+    onTaxCommentBlur(row,index){
+      row.trStartEffectiveTime && (row.trStartEffectiveTime = this.formatDate(row.trStartEffectiveTime));
+      this.baseInfoItem.taxCompanyRelList[index] = row;
+    },
     //保存公司基本信息
     addCompanyData(saveType) {
       let baseInfo = this.baseInfoItem,
@@ -193,7 +296,9 @@ export default {
             groupShortName: baseInfo.groupShortName,
             companyType: baseInfo.companyType,
             status: baseInfo.status,
-            groupPic: this.logo
+            groupPic: this.logo,
+            taxpayerType: baseInfo.taxpayerType,
+            taxCompanyRelList: baseInfo.taxCompanyRelList
         };
       
       if(saveType === 'draft'){
@@ -255,6 +360,9 @@ export default {
           this.cacheShortName = res[0].groupShortName;
           this.cacheGroupName = res[0].groupName;
           this.baseInfoItem.status = this.baseInfoItem.status;
+          this.baseInfoItem.taxpayerType = res[0].taxpayerType;
+          this.baseInfoItem.taxCompanyRelList = res[0].taxCompanyRelList;
+          this.taxViewdata = res[0].taxCompanyRelList;
         }
       });
     },
@@ -279,6 +387,7 @@ export default {
     },
     isEditCompanyInfo() {
       this.isEdit = !this.isEdit;
+      this.isEdit && this.getCompanyInfo(this.groupId);
     },
     //保存并新增
     saveAndAddCompany() {
@@ -289,7 +398,9 @@ export default {
         companyType: baseInfo.companyType,
         status: 1,
         groupCode: this.guid(),
-        groupPic: this.logo
+        groupPic: this.logo,
+        taxpayerType: baseInfo.taxpayerType,
+        taxCompanyRelList: baseInfo.taxCompanyRelList
       };
       this.$refs["baseInfoItem"].validate(valid => {
         if (valid) {
@@ -306,6 +417,8 @@ export default {
               this.baseInfoItem.groupShortName = "";
               this.baseInfoItem.status = -3;
               this.baseInfoItem.companyType = "";
+              this.baseInfoItem.taxpayerType = "";
+              this.baseInfoItem.taxCompanyRelList = [];
               this.$refs["upload"].fileList.splice(
                 0,
                 this.$refs["upload"].fileList.length

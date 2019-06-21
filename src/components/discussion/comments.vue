@@ -231,6 +231,13 @@ export default {
                 c.showPraises = false;
             });
             comment.showChilds = !comment.showChilds;
+            if(window.top.setInstaceCommentsIframeHeight){
+                this.$nextTick(function () {
+                    setTimeout(() => {
+                        window.top.setInstaceCommentsIframeHeight();
+                    },200);
+                })
+            }
         },
         handleShowReply:function (comment) {
             this.$forceUpdate();
@@ -242,7 +249,11 @@ export default {
 
             
             if(window.top.setInstaceCommentsIframeHeight){
-                window.top.setInstaceCommentsIframeHeight();
+                this.$nextTick(function () {
+                    setTimeout(() => {
+                        window.top.setInstaceCommentsIframeHeight();
+                    },200);
+                })
             }
 
             comment.showReply = !comment.showReply;

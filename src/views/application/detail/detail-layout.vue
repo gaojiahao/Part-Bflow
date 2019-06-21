@@ -58,8 +58,8 @@
     <router-view 
       :listId="this.$route.params.listId" 
       :isAdmin="isAdmin"
-      :isAddress="isAddress" 
       :isOperator="isOperator"
+      :isAddress="isAddress" 
       :appType="appType"
       :appTransType="appTransType" 
       :isCompanyAdmin="isCompanyAdmin"
@@ -88,7 +88,7 @@ export default {
       isAdmin: false,       //应用管理员权限
       isCompanyAdmin: false,  //企业管理员权限
       isAddress: false,   //通讯录权限
-      isOperator: false,
+      isOperator: false, //运营管理员权限
       appType: "",
       appTransType: "",
       enabledForbidden: -1
@@ -126,7 +126,6 @@ export default {
         });
         //判断当前用户是否有当前应用权限
         currentUserIds.indexOf(-1) > -1 && (this.isOperator = true);
-          
         if (this.appData.administrator) {
           if (
             currentUser.nickname === this.appData.administrator &&

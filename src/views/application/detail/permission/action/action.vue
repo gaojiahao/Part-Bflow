@@ -162,11 +162,14 @@ export default {
 
             this.actionData.forEach((val,index) => {
               let pushData,pushDataStatus;
-              actionId.forEach(data => {
-                if(data == val.id){
+              for(let i=0;i<actionId.length;i++){
+                if(actionId[i] == val.id){
                   pushDataStatus = val.id;
+                  break;
+                }else{
+                  pushDataStatus = `${val.id}_false`;
                 }
-              });
+              }
               pushData = h('span',{
                 style: {
                   marginLeft: '10px'

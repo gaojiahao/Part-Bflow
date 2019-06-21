@@ -4,6 +4,7 @@ export const  checkSheetRouter = {
     meta: {
         title: '点检表'
     },
+    redirect: '/checkSheet/list',
     component: () =>import('@/views/performance-standard/layout.vue'),
     children: [{
             path: 'list',

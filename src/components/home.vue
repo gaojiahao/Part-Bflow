@@ -58,24 +58,54 @@
     <div class="layout" :class="{'layout-hide-text': spanLeft < 3}">
         <Row type="flex" style="height:100%;">
             <i-col :span="spanLeft" class="layout-menu-left">
-                <Menu active-name="1" theme="dark" width="auto">
+                <Menu theme="dark" width="auto">
                     <div class="layout-logo-left" v-if="spanLeft!=1">Roletask</div>
                     <div class="layout-logo-left" style="text-align: center;" v-if="spanLeft==1">R</div>
-                    <Menu-item name="1">
+                    <Menu-item name="home" to="/home">
                         <Icon type="ios-navigate" :size="iconSize"></Icon>
                         <span class="layout-text">职位看板</span>
                     </Menu-item>
-                    <Menu-item name="2">
-                        <Icon type="ios-keypad" :size="iconSize"></Icon>
-                        <span class="layout-text">通讯录</span>
-                    </Menu-item>
-                    <Menu-item name="3">
+                    <Submenu name="addressBook">
+                        <template slot="title">
+                            <Icon type="ios-keypad" :size="iconSize" />
+                            通讯录
+                        </template>
+                        <MenuItem name="user" to="/addressBook/user">员工</MenuItem>
+                        <MenuItem name="organization" to="/addressBook/organization">组织</MenuItem>
+                        <MenuItem name="job" to="/addressBook/job">职位</MenuItem>
+                        <MenuItem name="companyInfo" to="/addressBook/companyInfo">公司</MenuItem>
+                    </Submenu>
+                    <Menu-item name="message" to="/social/message">
                         <Icon type="ios-analytics" :size="iconSize"></Icon>
-                        <span class="layout-text">MRP</span>
+                        <span class="layout-text">消息</span>
                     </Menu-item>
-                    <Menu-item name="4">
-                        <Icon type="android-laptop" :size="iconSize"></Icon>
+                    <Menu-item name="flowtask" to="/social/flowtask">
+                        <Icon type="ios-analytics" :size="iconSize"></Icon>
+                        <span class="layout-text">任务</span>
+                    </Menu-item>
+                    <Menu-item name="application" to="/application">
+                        <Icon type="ios-analytics" :size="iconSize"></Icon>
                         <span class="layout-text">应用中心</span>
+                    </Menu-item>
+                    <Menu-item name="fileCabinet" to="/fileCabinet">
+                        <Icon type="ios-analytics" :size="iconSize"></Icon>
+                        <span class="layout-text">文件柜</span>
+                    </Menu-item>
+                    <Menu-item name="wokdGuide" to="/wokdGuide">
+                        <Icon type="ios-analytics" :size="iconSize"></Icon>
+                        <span class="layout-text">作业指导</span>
+                    </Menu-item>
+                    <Menu-item name="knowledge" to="/knowledge">
+                        <Icon type="ios-analytics" :size="iconSize"></Icon>
+                        <span class="layout-text">知识库</span>
+                    </Menu-item>
+                    <Menu-item name="checkSheet" to="/checkSheet">
+                        <Icon type="ios-analytics" :size="iconSize"></Icon>
+                        <span class="layout-text">作业结果点检</span>
+                    </Menu-item>
+                    <Menu-item name="enterpriseInfo" to="/enterpriseInfo">
+                        <Icon type="ios-analytics" :size="iconSize"></Icon>
+                        <span class="layout-text">企业详情信息</span>
                     </Menu-item>
                 </Menu>
             </i-col>

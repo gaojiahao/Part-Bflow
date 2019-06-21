@@ -11,15 +11,15 @@
             添加应用</Button>
         </router-link> -->
         <div class="app-layout">
-          <!-- <div @click="showListView" :class="{'view-cut-focus': isViewCutFocus,'active': isListAcive}">
+          <div @click="showListView" :class="{'view-cut-focus': isViewCutFocus,'active': isListAcive}">
             <Tooltip content="列表视图" placement="top">
               <Icon type="md-menu"></Icon>
             </Tooltip>
-          </div> -->
+          </div>
           <div @click="showCardView" :class="{'view-cut-focus': isViewCutFocus,'active': isCardAcive}">
-            <!-- <Tooltip content="卡片视图" placement="top"> -->
-              <!-- <Icon type="ios-apps"></Icon> -->
-            <!-- </Tooltip> -->
+            <Tooltip content="卡片视图" placement="top">
+              <Icon type="ios-apps"></Icon>
+            </Tooltip>
           </div>
         </div>
         <div class="top-head-search">

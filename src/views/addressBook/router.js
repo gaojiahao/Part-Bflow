@@ -48,6 +48,7 @@ export const addressBookRouter = {
         meta: {
           title: '组织'
         },
+        redirect: 'organization/board',
         component: () =>
           import('@/views/addressBook/organization/index.vue'),
         children: [{
@@ -91,6 +92,7 @@ export const addressBookRouter = {
         meta: {
           title: '职位'
         },
+        redirect: 'job/board',
         component: () =>
           import('@/views/addressBook/job/index.vue'),
         children: [{
@@ -125,6 +127,7 @@ export const addressBookRouter = {
         meta: {
           title: '公司'
         },
+        redirect: 'companyInfo/board',
         component: () =>
           import('@/views/addressBook/companyInfo/index.vue'),
         children: [{

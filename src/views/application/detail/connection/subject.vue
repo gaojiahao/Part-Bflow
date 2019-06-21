@@ -94,7 +94,7 @@ export default {
           align: "left",
           render: (h, params) => {
             let isDisabled = false;
-            if(params.row.accountStatus === 0 || params.row.accountType === 1){
+            if(params.row.accountStatus === 0){
               isDisabled = true;
             }
             return h('Checkbox', {

@@ -18,18 +18,10 @@
                 <div class="form-con">
                     <Form ref="loginForm" :model="form" :rules="rules">
                         <FormItem prop="userName">
-                            <Input v-model="form.userName" placeholder="请输入用户名">
-                                <span slot="prepend">
-                                    <Icon :size="16" type="person"></Icon>
-                                </span>
-                            </Input>
+                            <Input prefix="ios-contact" v-model="form.userName" placeholder="请输入用户名"></Input>
                         </FormItem>
                         <FormItem prop="password">
-                            <Input type="password" v-model="form.password" placeholder="请输入密码">
-                                <span slot="prepend">
-                                    <Icon :size="14" type="locked"></Icon>
-                                </span>
-                            </Input>
+                            <Input prefix="md-lock" type="password" v-model="form.password" placeholder="请输入密码"></Input>
                         </FormItem>
                         <FormItem>
                             <Button @click="handleSubmit" type="primary" long>登录</Button>
@@ -53,7 +45,7 @@ export default {
         return {
             form: {
                 userName: 'admin',
-                password: '1'
+                password: '123456'
             },
             rules: {
                 userName: [
@@ -76,14 +68,6 @@ export default {
                         userName:this.form.userName,
                         password:this.form.password
                     }).then(res =>{
-
-                        if(res.userName !== 'admin'){
-                            return;
-                        }
-
-                        if(res.password !== '123456'){
-                            return;
-                        }
                         
                         this.$router.push({
                             name: 'home_index'

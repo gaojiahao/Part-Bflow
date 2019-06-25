@@ -24,17 +24,21 @@ export const getListById = (listId) => request('/H_roleplay-si/ds/list/getListBy
  * @author XiaoYing
  * @description 获取组织利润表数据
  */
-export const getTeamProfitData = (groupCode) => request('/H_roleplay-si/account/GroupProfitStatement', {
-  groupId: groupCode
+export const getTeamProfitData = (groupCode,startDate,endDate) => request('/H_roleplay-si/account/GroupProfitStatement', {
+  groupId: groupCode,
+  startDate: startDate,
+  endDate: endDate
 });
 
 /**
  * @author XiaoYing
  * @description 获取组织利润表下钻数据
  */
-export const getTeamProfitDetail = (groupCode,classify) => request('/H_roleplay-si/account/getGroupProfitWater', {
+export const getTeamProfitDetail = (groupCode,classify,startDate,endDate) => request('/H_roleplay-si/account/getGroupProfitWater', {
   groupId: groupCode,
-  classify: classify
+  classify: classify,
+  startDate: startDate,
+  endDate: endDate
 });
 
 /**

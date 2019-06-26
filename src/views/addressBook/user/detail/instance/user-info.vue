@@ -40,12 +40,20 @@
                         <img :src="logo" v-if="visible" style="width: 100%">
                     </Modal>
                 </FormItem>
-                <FormItem label="工号：" prop="userCode">
+                <FormItem label="编码：" :class="{'info-none':!isAdd}">
                     <Input 
-                        :class="{'info-edit':isAdd}" 
-                        :readonly="isAdd" 
-                        @on-blur="userCodeBlur" 
+                        :class="{'info-edit':true}"
+                        readonly 
                         v-model="formItem.userCode" 
+                        style="width:60%">
+                    </Input>
+                </FormItem>
+                <FormItem label="工号：" prop="jobNumber">
+                    <Input 
+                        :class="{'info-edit':isEdit}" 
+                        :readonly="isEdit" 
+                        @on-blur="userCodeBlur" 
+                        v-model="formItem.jobNumber" 
                         style="width:60%">
                     </Input>
                 </FormItem>
@@ -268,6 +276,7 @@ export default {
       selectedCompanyData: {},
       formItem: {
         userCode: "",
+        jobNumber: "",
         nickname: "",
         dealerLabel: [],
         mobile: "",
@@ -281,12 +290,12 @@ export default {
         entityName: ''
       },
       ruleValidate: {
-          userCode: [
+          jobNumber: [
           {
-            required: true,
+            required: false,
             message: "用户工号只能包含字母或数字或汉字或下划线",
             trigger: "blur",
-            pattern: /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/
+            pattern: /^[\u4e00-\u9fa5a-zA-Z\d]{1,8}$/
           }
         ],
         nickname: [
@@ -332,6 +341,7 @@ export default {
           if(Object.keys(this.userInfo).length > 0){
               console.log(this.userInfo);
                 this.formItem.userCode = this.userInfo.userCode;
+                this.formItem.jobNumber = this.userInfo.jobNumber;
                 this.formItem.nickname = this.userInfo.nickname;
                 this.formItem.dealerLabel = this.userInfo.dealerLabel ? this.userInfo.dealerLabel.split(',') : [];
                 this.formItem.mobile = this.userInfo.mobile;
@@ -360,19 +370,9 @@ export default {
     userCodeBlur() {
         let filter;
         if(this.userId){
-            let value = this.formItem.userCode;
-            filter = JSON.stringify([{filedName:"userCode",symbol:"=",value:value},{filedName:"userId",symbol:"<>",value:this.userId}]);
-            checkoutFieldIsOnly('sys_user',filter).then(res => {
-                if(res.result === 1){
-                    this.checkout = false;
-                    this.$Message.error('工号已存在，请重新输入！');
-                }else{
-                    this.checkout = true;
-                }
-            })
-        }else{
-            if(this.formItem.userCode){
-                filter = JSON.stringify([{filedName:"userCode",symbol:"=",value:this.formItem.userCode}]);
+            let value = this.formItem.jobNumber;
+            if(value){
+                filter = JSON.stringify([{filedName:"jobNumber",symbol:"=",value:value},{filedName:"userId",symbol:"<>",value:this.userId}]);
                 checkoutFieldIsOnly('sys_user',filter).then(res => {
                     if(res.result === 1){
                         this.checkout = false;
@@ -381,6 +381,22 @@ export default {
                         this.checkout = true;
                     }
                 })
+            }else{
+                this.checkout = true;
+            }
+        }else{
+            if(this.formItem.jobNumber){
+                filter = JSON.stringify([{filedName:"jobNumber",symbol:"=",value:this.formItem.jobNumber}]);
+                checkoutFieldIsOnly('sys_user',filter).then(res => {
+                    if(res.result === 1){
+                        this.checkout = false;
+                        this.$Message.error('工号已存在，请重新输入！');
+                    }else{
+                        this.checkout = true;
+                    }
+                })
+            }else{
+                this.checkout = true;
             }
         }
     },
@@ -551,6 +567,7 @@ export default {
                                 this.formItem.termOfValidity = '';
                                 this.logo = '';
                                 this.formItem.photo = '';
+                                this.formItem.jobNumber = '';
                                 this.formItem.gender = "1";
                                 this.formItem.status = -3;
                                 this.formItem.userType = "1";

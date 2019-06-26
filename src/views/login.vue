@@ -69,7 +69,7 @@ export default {
                         password:this.form.password
                     }).then(res =>{
                         if(res.success){
-                            localStorage.setItem('roleplay-token', res.token);
+                            localStorage.setItem('roleplay-token', JSON.stringify(res));
                             this.$router.push({
                                 name: 'home_index'
                             });

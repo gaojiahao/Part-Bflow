@@ -1,8 +1,8 @@
 export const getToken = () => {
     let token;
-    if (localStorage.getItem('roleplay-token')) {
+    if (localStorage['roleplay-token']) {
         try {
-            token = localStorage.getItem('roleplay-token');
+            token = JSON.parse(localStorage['roleplay-token']).token;
         } catch (e) {
             token = false;
         }

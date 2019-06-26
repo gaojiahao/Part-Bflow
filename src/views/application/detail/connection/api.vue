@@ -125,6 +125,7 @@
 <script>
 import { findList } from "@/services/appService.js";
 import { ForamtJson } from "@/utils/utils";
+import { getFormViews, getViewConfig } from "@/services/flowService";
 
 const Clipboard = require("clipboard");
 export default {
@@ -272,10 +273,30 @@ export default {
         }
       }
       return datas;
-    }
+    },
+    async getBaseObjectValues() {
+      var uniqueId,
+          config;
+
+      var viewId= await getFormViews(this.listId).then(res => {
+          if (res.length > 0) {
+              for (let item of res) {
+                if (item.viewType === "submit") {
+                    uniqueId = item.uniqueId;
+                }
+              }
+            }
+            return uniqueId;
+        }),cfg;
+        if(uniqueId != null) config = await getViewConfig(uniqueId).then(data => {
+           return data;
+        })
+        return config;
+    } 
   },
   mounted() {
-    findList(this.listId).then(res => {
+    var that = this;
+    findList(that.listId).then(res => {
       //创建实例
       if(res.commitApi && res.commitUrl){
         this.commitApi = JSON.parse(res.commitUrl);
@@ -294,6 +315,82 @@ export default {
         this.updateApi.body = ForamtJson(this.updateApi.body);
         this.updateApi.params = this.formatData(this.updateApi.body)
       }
+
+      if (res.type == 'obj') {//判断类型是否为基础对象
+              that.getBaseObjectValues().then(item =>{
+              var itemConfig = JSON.parse(item.config),
+                  apiConfig = {
+                    listId : undefined, 
+                    formData:{},
+                  },
+                  fieldLabel,
+                  fieldItemKey,
+                  commitMethod,
+                  commitAddress,
+                  viewMethod,
+                  viewAddress,
+                  updateMethod,
+                  updateAddress,
+                  apiKey = '/save',
+                  baseObjectKey = itemConfig.baseObjectKey,
+                  formData = apiConfig.formData;
+
+              apiConfig.listId = item.listId;
+              
+              commitMethod = 'POST';
+              commitAddress = ['/',baseObjectKey,apiKey].join('') + '（无工作流任务）'+
+                              ['/',baseObjectKey,'/saveAndStartWf'].join('') + '（有工作流任务）';
+              updateMethod = 'POST';
+              updateAddress = ['/',baseObjectKey,'/updateAndEffective'].join('') + '（无工作流任务）'+
+                              ['/',baseObjectKey,'/updateAndStartWf'].join('') + '（有工作流任务）';
+              viewMethod = 'get';
+              viewAddress = ['/',baseObjectKey,'/findData'].join('');
+              
+
+              for (var j = 0; j < itemConfig.items.length; j++) {//循环获取到config下的items 各层容器
+
+                var fieldset = itemConfig.items[j],
+                    fields = fieldset.items,
+                    fieldsetNode = {},
+                    isList = fieldset.isMultiple,
+                    name = fieldset.name,
+                    gridNode,
+                    grid;
+
+                  if (fieldset.xtype == 'r2Fileupload') continue;
+                  formData[name] = fieldsetNode;
+
+                  if (isList) {
+                      gridNode = {};
+                      fieldsetNode.dataSet = [gridNode];
+                      if (fields) {
+                        grid = fields[0];
+                        fields = grid.columns;//r2Grid
+                      } else {
+                        fields = fieldset.columns;//bomGrid
+                      }
+                  }
+
+                  if (fields) {
+                    fields.map(function(fieldDetail) {
+                      var fieldLabel = fieldDetail.fieldLabel || fieldDetail.text,
+                          fieldCode =  fieldDetail.fieldCode;
+
+                      (isList?gridNode:fieldsetNode)[fieldCode] = fieldLabel;
+                    })
+                  }
+              }
+              that.$set(that.commitApi,'body',apiConfig);
+              that.$set(that.commitApi,'method',commitMethod);
+              that.$set(that.commitApi,'address',commitAddress);
+              that.$set(that.viewApi,'body',apiConfig);
+              that.$set(that.viewApi,'method',viewMethod);
+              that.$set(that.viewApi,'address',viewAddress);
+              that.$set(that.updateApi,'body',apiConfig);
+              that.$set(that.updateApi,'method',updateMethod);
+              that.$set(that.updateApi,'address',updateAddress);
+            });
+          } 
       })
      
       this.returnMsg = {

@@ -27,7 +27,7 @@
                             <Button @click="handleSubmit" type="primary" long>登录</Button>
                         </FormItem>
                     </Form>
-                    <p class="login-tip">输入任意用户名和密码即可</p>
+                    <p class="login-tip">请输入正确的用户名和密码</p>
                 </div>
             </Card>
         </div>
@@ -61,17 +61,21 @@ export default {
         handleSubmit () {
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
-                    Cookies.set('user', this.form.userName);
+                    Cookies.set('userCode', this.form.userName);
                     Cookies.set('password', this.form.password);
 
                     login({
-                        userName:this.form.userName,
+                        userCode:this.form.userName,
                         password:this.form.password
                     }).then(res =>{
-                        
-                        this.$router.push({
-                            name: 'home_index'
-                        });
+                        if(res.success){
+                            localStorage.setItem('roleplay-token', res.token);
+                            this.$router.push({
+                                name: 'home_index'
+                            });
+                        }
+                    }).catch(err => {
+                        this.$Message.error(err.data.message);
                     });
                     // this.$store.commit('setAvator', 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg');
                     // if (this.form.userName === 'iview_admin') {

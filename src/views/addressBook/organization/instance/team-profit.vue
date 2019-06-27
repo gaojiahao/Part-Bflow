@@ -135,7 +135,7 @@ export default {
   methods: {
       onStartDateChange (date, dateType) {
         let createColumn = [];
-        this.startDate = new Date(date);
+        date && (this.startDate = new Date(date));
         if(this.startDate && this.endDate){
           if(this.startDate <= this.endDate){
             createColumn = this.createColumns(this.startDate,this.endDate);
@@ -161,7 +161,7 @@ export default {
       },
       onEndDateChange (date, dateType) {
         let createColumn = [];
-        this.endDate = new Date(date);
+        date && (this.endDate = new Date(date));
         if(this.startDate && this.endDate){
           if(this.startDate <= this.endDate){
             createColumn = this.createColumns(this.startDate,this.endDate);
@@ -206,6 +206,7 @@ export default {
                   width: 150,
                   align: 'right',
                   render: (h, params) => {
+                    let realText = toThousandFilter(params.row[viewText]);
                     if(params.row.isChild){
                       return h('a',{
                         on: {
@@ -213,9 +214,9 @@ export default {
                             this.showModal(params.row,currentYear,currentMonth);
                           }
                         }
-                      },params.row[viewText]);
+                      },realText);
                     }else{
-                      return h('span',{},params.row[viewText])
+                      return h('span',{},realText)
                     }
                   }
                 });
@@ -227,13 +228,14 @@ export default {
                 for(let k=0;k<12-startMonth;k++){
                   let viewText = `${viewYear}年${viewMonth+1<=9?"0"+(viewMonth+1):viewMonth+1}月`,
                       currentYear = `${viewYear}`,
-                      currentMonth = `${viewMonth}`;
+                      currentMonth = `${viewMonth+1}`;
                   resultColumns.push({
                     title: `${viewYear}年${viewMonth+1}月`,
                     key: viewText,
                     width: 150,
                     align: 'right',
                     render: (h, params) => {
+                      let realText = toThousandFilter(params.row[viewText]);
                       if(params.row.isChild){
                         return h('a',{
                           on: {
@@ -241,9 +243,9 @@ export default {
                               this.showModal(params.row,currentYear,currentMonth);
                             }
                           }
-                        },params.row[viewText]);
+                        },realText);
                       }else{
-                        return h('span',{},params.row[viewText])
+                        return h('span',{},realText)
                       }
                     }
                   });
@@ -261,6 +263,7 @@ export default {
                     width: 150,
                     align: 'right',
                     render: (h, params) => {
+                      let realText = toThousandFilter(params.row[viewText]);
                       if(params.row.isChild){
                         return h('a',{
                           on: {
@@ -268,9 +271,9 @@ export default {
                               this.showModal(params.row,currentYear,currentMonth);
                             }
                           }
-                        },params.row[viewText]);
+                        },realText);
                       }else{
-                        return h('span',{},params.row[viewText])
+                        return h('span',{},realText)
                       }
                     }
                   });
@@ -288,13 +291,14 @@ export default {
             for(let i=-1;i<endMonth-startMonth;i++){
               let viewText = `${startYear}年${viewMonth+1<=9?"0"+(viewMonth+1):viewMonth+1}月`,
                   currentYear = `${startYear}`,
-                  currentMonth = `${viewMonth}`;
+                  currentMonth = `${viewMonth+1}`;
               resultColumns.push({
                 title: `${startYear}年${viewMonth+1}月`,
                 key: viewText,
                 width: 150,
                 align: 'right',
                 render: (h, params) => {
+                  let realText = toThousandFilter(params.row[viewText]);
                     if(params.row.isChild){
                       return h('a',{
                         on: {
@@ -302,9 +306,9 @@ export default {
                             this.showModal(params.row,currentYear,currentMonth);
                           }
                         }
-                      },params.row[viewText]);
+                      },realText);
                     }else{
-                      return h('span',{},params.row[viewText])
+                      return h('span',{},realText)
                     }
                   }
               });

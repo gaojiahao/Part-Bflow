@@ -2,13 +2,19 @@
 
 // 不作为Main组件的子页面展示的页面单独写，如下
 export const loginRouter = {
-  path: '/',
+  path: '/login',
   name: 'login',
   meta: {
     title: 'Login - 登录'
   },
   component: () =>
     import('@/views/login.vue')
+};
+
+export const entryRouter = {
+  path: '/',
+  name: 'entry',
+  redirect: '/login'
 };
 
 export const flowRouter = {
@@ -150,6 +156,7 @@ import { fileCabinetRouter } from '@/views/file-cabinet/router';
 
 export const routers = [
   loginRouter,
+  entryRouter,
   flowRouter,
   home,
   homepageRouter,

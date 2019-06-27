@@ -18,10 +18,10 @@
                 <div class="form-con">
                     <Form ref="loginForm" :model="form" :rules="rules">
                         <FormItem prop="userName">
-                            <Input prefix="ios-contact" v-model="form.userName" placeholder="请输入用户名"></Input>
+                            <Input prefix="ios-contact" @keyup.enter="handleSubmit" v-model="form.userName" placeholder="请输入用户名"></Input>
                         </FormItem>
                         <FormItem prop="password">
-                            <Input prefix="md-lock" type="password" v-model="form.password" placeholder="请输入密码"></Input>
+                            <Input prefix="md-lock" type="password" @keyup.enter="handleSubmit" v-model="form.password" placeholder="请输入密码"></Input>
                         </FormItem>
                         <FormItem>
                             <Button @click="handleSubmit" type="primary" long>登录</Button>
@@ -37,7 +37,7 @@
 
 <script>
 import Cookies from 'js-cookie';
-import {login} from  '../services/loginService';
+import { login } from  '../services/loginService';
 
 
 export default {

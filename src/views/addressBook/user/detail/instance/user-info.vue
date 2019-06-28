@@ -50,7 +50,7 @@
                 </FormItem>
                 <FormItem label="工号：" prop="jobNumber">
                     <Input 
-                        :class="{'info-edit':isEdit}" 
+                        :class="{'info-edit':isEdit}"
                         :readonly="isEdit" 
                         @on-blur="userCodeBlur" 
                         v-model="formItem.jobNumber" 
@@ -293,9 +293,9 @@ export default {
           jobNumber: [
           {
             required: false,
-            message: "用户工号只能包含字母或数字或汉字或下划线",
+            message: "用户工号应不大于8位！",
             trigger: "blur",
-            pattern: /^[\u4e00-\u9fa5a-zA-Z\d]{1,8}$/
+            pattern: /^[\w\W]{1,8}$/
           }
         ],
         nickname: [

@@ -125,6 +125,8 @@ export const getFormViews = (listId) => request('/H_roleplay-si/ds/list/getFormV
   listId: listId
 });
 
+export const getViewConfig = (viewId) => request(`/H_roleplay-si/form/${viewId}/view`)
+
 export const getObjFeildChangeHistory = (transCode) => request('/H_roleplay-si/easy/transTypeHistoryApi/findData', {
   transCode: transCode,
 })

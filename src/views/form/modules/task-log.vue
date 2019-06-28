@@ -338,7 +338,7 @@ export default {
     },
     handlerUpdateLogStatus(log){
       let taskDate = log.taskDate;
-      if(log.logStatus === '已办'){
+      if(log.logStatus === '已办' && new Date(log.taskDate) >new Date()){
         taskDate = FormatDate(new Date(),"yyyy-MM-dd");
       }
       updateLogStatus(log.jobLogId,log.transCode,log.logStatus,taskDate).then(res=>{

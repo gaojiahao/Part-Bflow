@@ -11,6 +11,12 @@ export const loginRouter = {
     import('@/views/login.vue')
 };
 
+export const entryRouter = {
+  path: '/',
+  name: 'entry',
+  redirect: '/login'
+};
+
 export const flowRouter = {
   path: '/pulse_graph/:caseId',
   name: 'pulse_graph',
@@ -91,7 +97,7 @@ export const taskLog = {
 
 
 export const appRouter = [{
-  path: '/',
+  path: '/home_index',
   name: 'home_index',
   component: () =>
     import('@/components/home.vue')
@@ -150,6 +156,7 @@ import { fileCabinetRouter } from '@/views/file-cabinet/router';
 
 export const routers = [
   loginRouter,
+  entryRouter,
   flowRouter,
   home,
   homepageRouter,

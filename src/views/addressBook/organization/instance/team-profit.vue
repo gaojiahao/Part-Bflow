@@ -72,7 +72,7 @@
 
 <script>
 import { getTeamProfitData,getTeamProfitDetail } from "@/services/addressBookService.js";
-import { toThousandFilter, getLastDay } from "@/utils/utils";
+import { toThousandFilter, getLastDay, getPreMonthDay } from "@/utils/utils";
 
 export default {
   name: "TeamProfit",
@@ -87,7 +87,7 @@ export default {
       loading: false,
       showAccountDetail: false,
       modalTitle: "",
-      startDate: new Date(),
+      startDate: "",
       endDate: new Date(),
       columns: [],
       performanceData: [],
@@ -134,23 +134,10 @@ export default {
   },
   methods: {
       onStartDateChange (date, dateType) {
-        let createColumn = [];
         date && (this.startDate = new Date(date));
         if(this.startDate && this.endDate){
           if(this.startDate <= this.endDate){
-            createColumn = this.createColumns(this.startDate,this.endDate);
-            this.getPerformanceData();
-            if(createColumn.length > 0){
-              createColumn.unshift({
-                title: "项目",
-                slot: "project",
-                width: 150,
-                fixed: 'left'
-              });
-              this.columns = createColumn;
-            }else{
-              this.getPerformanceData();
-            }
+            this.getPerformanceData(this.startDate,this.endDate);
           }else{
             this.$Message.error({
               content:'请重新选择开始日期或截止日期，截止日期应大于等于开始日期！',
@@ -160,23 +147,10 @@ export default {
         }
       },
       onEndDateChange (date, dateType) {
-        let createColumn = [];
         date && (this.endDate = new Date(date));
         if(this.startDate && this.endDate){
           if(this.startDate <= this.endDate){
-            createColumn = this.createColumns(this.startDate,this.endDate);
-            this.getPerformanceData();
-            if(createColumn.length > 0){
-              createColumn.unshift({
-                title: "项目",
-                slot: "project",
-                width: 150,
-                fixed: 'left'
-              });
-              this.columns = createColumn;
-            }else{
-              this.getPerformanceData();
-            }
+            this.getPerformanceData(this.startDate,this.endDate);
           }else{
             this.$Message.error({
               content:'请重新选择开始日期或截止日期，截止日期应大于等于开始日期！',
@@ -354,10 +328,22 @@ export default {
         })
     },
     //获取绩效分析数据
-    getPerformanceData() {
+    getPerformanceData(startDate,endDate) {
+      let createColumn = [];
       if(this.groupId){
         this.loading = true;
-        getTeamProfitData(this.groupId,this.formatDate(this.startDate),this.formatDate(this.endDate)).then(res => {
+        createColumn = this.createColumns(startDate,endDate);
+        if(createColumn.length > 0){
+            createColumn.unshift({
+              title: "项目",
+              slot: "project",
+              width: 150,
+              fixed: 'left'
+            });
+            this.columns = createColumn;
+        }
+        
+        getTeamProfitData(this.groupId,this.formatDate(startDate),this.formatDate(endDate)).then(res => {
           if(res.success){
             this.performanceData = this.createProfitData(res.obj);
             this.loading = false;
@@ -415,7 +401,9 @@ export default {
     }
   },
   mounted() {
-    this.getPerformanceData();
+    let currentHalfMonth = getPreMonthDay(new Date(), 5);
+    this.startDate = currentHalfMonth;
+    this.getPerformanceData(this.startDate,this.formatDate(this.endDate));
   }
 };
 </script>

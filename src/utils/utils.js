@@ -30,6 +30,29 @@ export const FormatDate = (date, fmt) => {
 }
 
 /**
+ * @param  {Date} date 日期
+ * @param  {monthNum} Number  前几个月
+ * 获取日期之前的几月
+ */
+export const getPreMonthDay = (date, monthNum) => {
+    let year = date.getFullYear(); //获取当前日期的年份
+    let month = date.getMonth(); //获取当前日期的月份
+    let year2 = year
+    let month2 = parseInt(month) - monthNum
+    if (month2 <= 0) {
+      year2 =
+        parseInt(year2) -
+        parseInt(month2 / 12 == 0 ? 1 : Math.abs(parseInt(month2 / 12)) + 1)
+      month2 = 12 - (Math.abs(month2) % 12)
+    }
+    if (month2 < 10) {
+      month2 = '0' + month2
+    }
+    let t2 = year2 + '-' + month2 + '-' + day2
+    return t2
+  }
+
+/**
  * @description 获取某月最后一天
  */
 export const getLastDay = (year,month) => {   

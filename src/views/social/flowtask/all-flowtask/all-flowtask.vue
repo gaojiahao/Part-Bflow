@@ -60,6 +60,7 @@ export default {
                     width:90,
                     render: (h,params) => {
                         let isDot = true;
+                        
                         if(params.row.type === 1){
                             isDot = false;
                         }

@@ -48,8 +48,8 @@ export const getPreMonthDay = (date, monthNum) => {
     if (month2 < 10) {
       month2 = '0' + month2
     }
-    let t2 = year2 + '-' + month2 + '-' + day2
-    return t2
+    let t2 = year2 + '-' + month2;
+    return t2;
   }
 
 /**

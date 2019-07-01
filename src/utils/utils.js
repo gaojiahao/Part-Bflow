@@ -36,7 +36,7 @@ export const FormatDate = (date, fmt) => {
  */
 export const getPreMonthDay = (date, monthNum) => {
     let year = date.getFullYear(); //获取当前日期的年份
-    let month = date.getMonth(); //获取当前日期的月份
+    let month = date.getMonth() + 1; //获取当前日期的月份
     let year2 = year
     let month2 = parseInt(month) - monthNum
     if (month2 <= 0) {

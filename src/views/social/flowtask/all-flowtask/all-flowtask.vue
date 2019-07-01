@@ -63,6 +63,10 @@ export default {
                         if(params.row.type === 1){
                             isDot = false;
                         }
+                        if(params.row.assigneeName && this.$currentUser.nickname != params.row.assigneeName){
+                            isDot = false;
+                        }
+                        
                         return h('div',[
                             h('Badge',{
                                 props: {

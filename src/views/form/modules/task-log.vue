@@ -7,16 +7,19 @@
 
     <div class="app-resource-group-title">
         <span class="font16">工作日志</span>
-        <Tooltip class="hidden-form" v-if="!hiddenForm" content="打开工作日志表单" placement="left">
+        <span v-if="logData.length>0">
+          <Tooltip class="hidden-form" v-if="!hiddenForm" content="打开工作日志表单" placement="left">
           <span @click="openForm">
               <Icon type="md-arrow-dropup-circle" />
           </span>
-        </Tooltip>
-        <Tooltip class="hidden-form" v-else content="关闭工作日志表单" placement="left">
-          <span @click="closeForm">
-              <Icon type="md-arrow-dropdown-circle" />
-          </span>
-        </Tooltip>
+          </Tooltip>
+          <Tooltip class="hidden-form" v-else content="关闭工作日志表单" placement="left">
+            <span @click="closeForm">
+                <Icon type="md-arrow-dropdown-circle" />
+            </span>
+          </Tooltip>
+        </span>
+        
     </div>
 
     <div class="timeline-box-form" v-if="hiddenForm">
@@ -237,11 +240,19 @@ export default {
   methods: {
     openForm() {
       this.hiddenForm = true;
-      window.top.setTaskLogIframeHeight && window.top.setTaskLogIframeHeight();
+      if(window.top.setTaskLogIframeHeight){
+        setTimeout(function(){
+          window.top.setTaskLogIframeHeight();
+        },500)
+      }
     },
     closeForm() {
       this.hiddenForm = false;
-      window.top.setTaskLogIframeHeight && window.top.setTaskLogIframeHeight();
+      if(window.top.setTaskLogIframeHeight){
+        setTimeout(function(){
+          window.top.setTaskLogIframeHeight();
+        },500)
+      }
     },
     errorimg(item,index) {
       this.logData[index].photo = 'resources/images/icon/defaultUserPhoto.png';

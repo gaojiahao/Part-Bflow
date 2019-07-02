@@ -133,8 +133,10 @@
             :current="currentPage"
             :page-size="pageSize" 
             @on-change="changeCurrentPage"
-            prev-text="上一页" 
-            next-text="下一页"
+            @on-page-size-change="onPageSizeChange"
+            show-total
+            show-elevator
+            show-sizer
             size="small"  
             ></Page>
       </div>
@@ -218,7 +220,7 @@ export default {
         },
         currentPage: 1,
         pageTotal:0,
-        pageSize:6
+        pageSize:10
         };
   },
 
@@ -323,6 +325,10 @@ export default {
     changeCurrentPage(currentPage) {
      this.currentPage = currentPage;
      this.getTaskLog();
+    },
+    onPageSizeChange(size){
+      this.pageSize = size;
+      this.getTaskLog();
     },
     /**
      * 更新日志状态

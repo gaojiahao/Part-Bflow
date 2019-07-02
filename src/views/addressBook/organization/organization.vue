@@ -4,149 +4,46 @@
 
 <template>
   <div class="organization-wrap">
-    <header class="organization-wrap-header">
-     <div class="l-info">
+    <header class="organization-wrap-header shadow" >
+      <div class="l-info">
         <span @click="goOrgList" class="l-info-org">组织</span>
         <span class="l-info-others">/</span>
-        <span v-show="groupId" class="l-info-others">{{name}}</span>
+        <span v-show="groupId" class="l-info-others">{{org.name}}</span>
         <span v-show="!groupId" class="l-info-others">创建</span>
-        <Tag v-show="groupId" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status}" style="margin-bottom: 7px; padding-right: 13px;"></Tag>
-     </div>
+        <Tag
+          v-show="groupId"
+          class="radius10 marlr10 color_fff"
+          v-instanceStateDirective="{status:org.status}"
+          style="margin-bottom: 7px; padding-right: 13px;"
+        ></Tag>
+      </div>
 
       <ul class="r-action">
-        <li v-for="(item,index) in actionBtn" :key="index+12" v-if="!item.hidden" class="r-action-li" v-bind:class="index===actionIndex?'r-action-li-active':''" @click="handlerViewChange(index)">
-          <img v-if="!item.type" :src="item.imgPath" class="r-action-li-img" />
-          <Icon v-else :type="item.type" class="icon" />
+        <router-link
+          tag="li"
+          :to="item.routeName"
+          class="r-action-li"
+          v-show="!item.hidden"
+          v-for="(item,index) in actionBtn"
+          :key="index"
+        >
+          <img v-if="!item.type" :src="item.imgPath" class="r-action-li-img">
+          <Icon v-else :type="item.type" class="icon"/>
           <div class="left-content">
             <span v-show="item.number!=='undefine'">{{item.number}}</span>
             <p>{{item.label}}</p>
-          </div> 
-        </li>
+          </div>
+        </router-link>
       </ul>
     </header>
 
-  
-
-    <div class="organization-wrap-tabs">
-      <!-- 基本信息 -->
-      <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===6">
-        <Form :model="formItem" :labelWidth="120" ref="formItem" :rules="ruleValidate" :class="{'is-required':isEdit}" style="background-color: #fff">
-          <FormItem label="组织名称:" style="font-size:16px" prop="groupName">
-            <Input v-model="formItem.groupName" @on-blur="onGroupNameOutBlur" :readonly="isEdit" :class="isEdit?'input-status-isedit':''" />
-          </FormItem>
-
-          <FormItem label="组织类型:" :labelWidth="120" prop="groupType">
-            <Select  v-model="formItem.groupType" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
-              <Option value="M">管理层</Option>
-              <Option value="A">事业部</Option>
-              <Option value="O">部门</Option>
-              <Option value="D">直营店</Option>
-              <Option value="J">加盟店</Option>
-              <Option value="G">小组</Option>
-            </Select>
-          </FormItem>
-          <FormItem label="组织职能:" :labelWidth="120" prop="depFunction">
-            <Select v-model="formItem.depFunction" :disabled="isEdit" :class="isEdit?'input-status-isedit':''">
-              <Option value="M">管理</Option>
-              <Option value="S">销售</Option>
-              <Option value="C">制造</Option>
-              <Option value="R">研发</Option>
-              <Option value="O">运营</Option>
-              <Option value="E">工程</Option>
-            </Select>
-          </FormItem>
-          <div class="baseinfo-container-divider"></div>
-          <FormItem label="组织负责人:" :labelWidth="120" prop="principalName" style="margin-top:20px">
-            <Input @on-click="selectPrincipalModal" v-model="formItem.principalName" icon="md-arrow-dropdown" placeholder="选择用户" :readonly="isEdit" :class="isEdit?'input-status-isedit':''"></Input>
-          </FormItem>
-          <FormItem label="上级组织:" :labelWidth="120" prop="highGroup" style="margin-top:20px">
-            <Input @on-click="selectHighOrgModal" v-model="formItem.highGroup" icon="md-arrow-dropdown" placeholder="选择上级组织" :readonly="isEdit" :class="isEdit?'input-status-isedit':''"></Input>
-          </FormItem>
-          <FormItem v-if="hiddenInput" label="上级组织parentId" style="font-size:16px">
-            <Input v-model="formItem.parentId" />
-          </FormItem>
-          <div class="baseinfo-container-divider" v-if="groupId && isEdit"></div>
-          <FormItem label="创建者:" v-if="groupId && isEdit">
-            <span>{{ tableContent.creator}}</span>
-          </FormItem>
-          <FormItem label="创建时间:" v-if="groupId && isEdit">
-            <span>{{ tableContent.crtTime }}</span>
-          </FormItem>
-          <FormItem label="修改者:" v-if="groupId && isEdit">
-            <span>{{ tableContent.modifier}}</span>
-          </FormItem>
-          <FormItem label="修改时间:" v-if="groupId && isEdit">
-            <span>{{ tableContent.modTime }}</span>
-          </FormItem>
-        </Form>
-        <div class="baseinfo-container-action" @click="handleSubmitBoxs">
-          <input type='submit' value="关闭" style="background-color:rgb(81, 90, 110)" class="baseinfo-container-action-submit" id="close" />
-          <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" id="edit" v-if="groupId && isPermission" />
-          <input type='submit' value="保存" class="baseinfo-container-action-submit" id="save" v-show="!isEdit && formItem.status !== -2" />
-          <input type='submit' value="归档" style="background-color:rgb(31, 94, 197)" class="baseinfo-container-action-submit" id="file" v-show="!isEdit && formItem.status === 1" />
-          <input type='submit' value="还原" style="background-color:rgb(31, 94, 197)" class="baseinfo-container-action-submit" id="restore" v-show="!isEdit && formItem.status === -2" />
-          <input type='submit' value="保存并新建" class="baseinfo-container-action-submit" id="saveAndAdd" v-if="!groupId" />
-          <input type='submit' value="保存草稿" class="baseinfo-container-action-submit" id="draft" v-show="(!isEdit && formItem.status === 0) || !groupId" />
-        </div>
-      </section>
-      <!-- 组织利润表 -->
-      <section v-if="actionIndex===5">
-        <team-profit :groupId="groupId"></team-profit>
-      </section>
-      <!-- 上级组织 -->
-      <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===4">
-        <high-organization :isPermission="isPermission" :groupId="groupId" :groupType="formItem.groupType" @on-high-organization-change='handleChangeObjDetailsCount'></high-organization>
-      </section>
-      <!-- 下级组织 -->
-      <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===3">
-        <lower-organization :isPermission="isPermission" :groupId="groupId" :groupType="formItem.groupType" @on-lower-organization-change='handleChangeObjDetailsCount'></lower-organization>
-      </section>
-      <!-- 负责人 -->
-      <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===2">
-        <principal :isPermission="isPermission" :groupId="groupId" @on-principal-change='handleChangeObjDetailsCount'></principal>
-      </section>
-      <!-- 成员信息 -->
-      <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===1">
-        <member-info :isPermission="isPermission" :groupId="groupId" @on-member-info-change='handleChangeObjDetailsCount'></member-info>
-      </section>
-      <!-- 权限 -->
-      <section class="permission-container" v-if="actionIndex===0">
-        <permission :isPermission="isPermission" :target="target" :groupId="groupId" @on-permission-change='handleChangeObjDetailsCount'></permission>
-      </section>
+    <div class="org-container">
+      <router-view 
+        :isPermission="isPermission" 
+        :groupType="formItem.groupType" 
+        :target="target" 
+        ></router-view>
     </div>
-
-    <member-modal v-model="isShowMemberModal" width="700" footerBtnAlign="right" title="选择组织" @on-ok="saveSelectionHighOrg">
-      <div style="margin-top:10px;">
-        <div class="app-search">
-          <Input @on-search="orgFilter" :search="true" v-model="searchHighOrgValue" placeholder="搜索组织名称" style="width: 300px"></Input>
-          <a @click="orgFilter" class="app-search-icon">
-            <Button type="primary" size="small">查询</Button>
-          </a>
-        </div>
-        <Table class="rfd-table" height="400" :loading="highOrgModalLoading" :columns="highOrgColumnsModal" :data="listUserData" size='small' highlight-row ref="currentRowTable" @on-row-dblclick="handleHighOrgDblclick" @on-current-change="onSelectUserList"></Table>
-        <div style="margin: 10px;overflow: hidden">
-          <div style="float: right;">
-            <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-page-size-change="onHighOrgPageSizeChange" @on-change="listUserChangePage" show-total show-elevator show-sizer></Page>
-          </div>
-        </div>
-      </div>
-    </member-modal>
-    <principal-modal v-model="isShowPrincipalModal" width="700" footerBtnAlign="right" title="选择负责人" @on-ok="savaSelectPrincipal">
-      <div>
-        <div class="app-search">
-          <Input @on-search="userFilter" :search="true" v-model="searchPrincipalValue" placeholder="搜索工号或者名称" style="width: 300px"></Input>
-          <a @click="userFilter" class="app-search-icon">
-            <Button type="primary" size="small">查询</Button>
-          </a>
-        </div>
-        <Table class="rfd-table" height="400" :loading="PrincipalModaLoading" :columns="principalColumnsModel" :data="principalData" size='small' highlight-row ref="currentRowTable" @on-row-dblclick="handlePrinciplDblclick" @on-current-change="onSelectPrincipal"></Table>
-        <div style="margin: 10px;overflow: hidden">
-          <div style="float: right;">
-            <Page :total="principalPageTotal" :current="principalCurrentPage" :page-size="principalPageSize" size="small" @on-page-size-change="onPrincipalPageSizeChange" @on-change="principalChangePage" show-total show-elevator show-sizer></Page>
-          </div>
-        </div>
-      </div>
-    </principal-modal>
   </div>
 </template>
 
@@ -159,32 +56,21 @@ import {
   checkoutFieldIsOnly,
   getAllHigherGroupByGroupType,
   getAllUsers,
-  getListById
+  getListById,
+  getOrgById
 } from "@/services/addressBookService.js";
-import MemberModal from "@/components/modal/Modal";
-import PrincipalModal from "@/components/modal/Modal";
-import HighOrganization from "./instance/higher-organization";
-import LowerOrganization from "./instance/lower-origanization";
-import MemberInfo from "./instance/member-info";
-import Principal from "./instance/principal";
-import Permission from "../user/detail/instance/direct-permission";
-import TeamProfit from './instance/team-profit';
 export default {
   name: "organization",
 
   components: {
-    MemberModal,
-    HighOrganization,
-    LowerOrganization,
-    MemberInfo,
-    Principal,
-    Permission,
-    PrincipalModal,
-    TeamProfit
   },
 
   data() {
     return {
+      org:{
+        name:"",
+        status: -3
+      },
       formItem: {
         groupName: "",
         groupType: "",
@@ -207,47 +93,56 @@ export default {
           label: "权限",
           type: "md-person",
           number: 0,
-          hidden: false,
+          hidden: this.$route.params.groupId==undefined,
+          routeName: "permission",
           id: "objectPermission"
         },
         {
           label: "成员信息",
           imgPath: "https://lab.roletask.com/resource/app-icon/user.png",
           number: 0,
-          hidden: false,
+          hidden: this.$route.params.groupId==undefined,
+          routeName: "memberinfo",
           id: "user"
         },
         {
           label: "负责人",
           imgPath: "https://lab.roletask.com/resource/app-icon/user.png",
           number: 0,
-          hidden: false,
+          hidden: this.$route.params.groupId==undefined,
+          routeName: "principal",
           id: "groupPrincipal"
         },
         {
           label: "下级组织",
-          imgPath: "https://lab.roletask.com/resource/app-icon/organization.png",
+          imgPath:
+            "https://lab.roletask.com/resource/app-icon/organization.png",
           number: 0,
-          hidden: false,
+          hidden: this.$route.params.groupId==undefined,
+          routeName: "lowerOrg",
           id: "childGroup"
         },
         {
           label: "上级组织",
-          imgPath: "https://lab.roletask.com/resource/app-icon/organization.png",
+          imgPath:
+            "https://lab.roletask.com/resource/app-icon/organization.png",
           number: 0,
-          hidden: false,
+          hidden: this.$route.params.groupId==undefined,
+          routeName: "higherOrg",
           id: "parentGroup"
         },
         {
           label: "组织利润表",
           imgPath: "https://lab.roletask.com/resource/app-icon/team-profit.png",
-          hidden: false,
+          hidden: this.$route.params.groupId==undefined,
+          routeName: "teamProfit",
           id: "teamProfit"
         },
         {
           label: "基本信息",
           type: "ios-home",
           hidden: false,
+          routeName: "basic",
           id: "baseinfo"
         }
       ],
@@ -445,7 +340,7 @@ export default {
       groupId: this.$route.params.groupId,
       isPermission: true,
       target: {
-        type: 'group',
+        type: "group",
         targetId: this.$route.params.groupId
       }
     };
@@ -453,426 +348,49 @@ export default {
 
   computed: {
     formItemGroupType() {
-　　　　return this.formItem.groupType;
-　　},
+      return this.formItem.groupType;
+    }
   },
 
-  watch:{
-    formItemGroupType:function(oldValue,newValue){
-      if(oldValue !== newValue && !this.isEdit){
-        this.formItem.highGroup=""
+  watch: {
+    formItemGroupType: function(oldValue, newValue) {
+      if (oldValue !== newValue && !this.isEdit) {
+        this.formItem.highGroup = "";
       }
     },
     $route(to, from) {
-      window.location.reload();
+      // window.location.reload();
     }
   },
 
   methods: {
     goOrgList() {
-        location.href = '/Site/index.html#page/origanizations';
+      location.href = "/Site/index.html#page/origanizations";
     },
-    /** 
-     * 切换相关实例
-    */
-    handlerViewChange(index) {
-      this.actionIndex = index;
-    },
-
-    //按钮事件委托给父元素处理
-    handleSubmitBoxs(event) {
-      let target = event.target || event.srcElement;
-      if (target.nodeName.toLocaleLowerCase() === "input") {
-        switch (target.id) {
-          case "close":
-            this.$Modal.confirm({
-              title: "提示",
-              content: "是否关闭当前页面",
-              closable: true,
-              onOk: function() {
-                location.href = "/Site/index.html#page/origanizations";
-              }
-            });
-            break;
-          case "edit":
-            this.isEdit = !this.isEdit;
-            this.editBtnName = this.isEdit ? "编辑" : "放弃编辑";
-            break;
-          case "save":
-            this.formItem.status = 1;
-            this.save();
-            break;
-          case "saveAndAdd":
-            this.formItem.status = 1;
-            this.saveAndAdd();
-            break;
-          case "file":
-            this.formItem.status = -2;
-            this.save();
-            break;
-          case "draft":
-            this.formItem.status = 0;
-            this.save();
-            break;
-          case "restore":
-            this.formItem.status = 1;
-            this.save();
-            break;
-        }
-      }
-    },
-
-    /** 
-     * 保存基本信息,并新建
-    */
-    saveAndAdd() {
-      this.$refs["formItem"].validate(valid => {
-        if (valid && !this.groupId && this.checkout) {
-          delete this.formItem.groupId;
-
-          saveBaseinfo(this.formItem).then(res => {
-              this.$Message.success('保存成功');
-              this.$refs["formItem"].resetFields();
-              this.formItem = {
-                groupName: "",
-                groupType: "",
-                depFunction: "",
-                status: -3
-              };
-          }).catch(error=>{
-              this.$Message.error(error.data.message)
-            });
-        }
-        if (!this.checkout) {
-          this.$Message.error("名称已经存在!");
-        }
-      });
-    },
-
-    /** 
-     * 保存基本信息
-    */
-    save() {
-      this.$refs["formItem"].validate(valid => {
-        if (valid) {
-          if (!this.groupId && this.checkout) {
-            delete this.formItem.groupId;
-            saveBaseinfo(this.formItem).then(res => {
-              if (res) {
-                this.$router.push({
-                  path: "/addressBook/organization/detail/" + res.groupId
-                });
-              }
-            }).catch(error=>{
-              this.$Message.error(error.data.message)
-            });
-          } else if (this.groupId && this.checkout) {
-            this.formItem.groupId = this.groupId;
-            updateBaseinfo(this.formItem).then(res => {
-              if (res) {
-                this.$Message.success(res.message);
-                window.location.reload();
-              }
-            }).catch(error=>{
-              this.$Message.error(error.data.message)
-            });
-          }
-          if (!this.checkout) {
-            this.$Message.error("名称已经存在!");
-          }
-        }
-      });
-    },
-
-    /** 
+    /**
      * 获取相关实例数量
      * @param groupId 组织id
-    */
+     */
     getObjDetailsCountByGroupId(groupId) {
       getObjDetailsCountByGroupId(groupId).then(res => {
-        this.actionBtn.forEach((element,index) => {
-          if( element.id !== 'baseinfo' && element.id !== 'teamProfit' ){
-            element.number =res[element.id]?res[element.id]:0;
+        this.actionBtn.forEach((element, index) => {
+          if (element.id !== "baseinfo" && element.id !== "teamProfit") {
+            element.number = res[element.id] ? res[element.id] : 0;
           }
         });
       });
-    },
-
-    handleChangeObjDetailsCount(val) {
-      if (val) {
-        this.getObjDetailsCountByGroupId(this.groupId);
-      }
-    },
-
-    listUserChangePage(currentPage) {
-      let filter = [
-        {
-          operator: "like",
-          value: this.searchHighOrgValue,
-          property: "groupName"
-        }
-      ];
-      this.getAllHigherGroupByGroupType(currentPage, this.pageSize, filter);
-    },
-    //过滤
-    orgFilter() {
-      let filter = [
-        {
-          operator: "like",
-          value: this.searchHighOrgValue,
-          property: "groupName"
-        }
-      ];
-      this.getAllHigherGroupByGroupType(this.listUserCurrentPage, this.pageSize, filter);
-    },
-
-    //监听模态框选中的用户
-    onSelectUserList(currentRow, oldCurrentRow) {
-      this.onSelectionModal = currentRow;
-    },
-
-    //当组织名称失去焦点的是校验名称
-    onGroupNameOutBlur() {
-      let filter = {};
-      if (!this.isEdit) {
-        if (this.groupId) {
-          filter = [
-            {
-              filedName: "groupName",
-              value: this.formItem.groupName,
-              symbol: "="
-            },
-            {
-              filedName: "groupId",
-              symbol: "<>",
-              value: this.groupId
-            }
-          ];
-        } else {
-          filter = [
-            {
-              filedName: "groupName",
-              value: this.formItem.groupName,
-              symbol: "="
-            }
-          ];
-        }
-        filter = JSON.stringify(filter);
-        //当groupId不存在时，校验名称是否唯一
-        checkoutFieldIsOnly("sys_group", filter)
-          .then(res => {
-            if (res.result > 0) {
-              this.checkout = false;
-              this.$Message.error("名称已经存在!");
-            } else {
-              this.checkout = true;
-            }
-          })
-          .catch(error => {
-            this.$Message.error(error.data.message);
-          });
-      }
-    },
-
-    //获取所有组织
-    getAllHigherGroupByGroupType(currentPage, pageSize, relfilter) {
-      this.highOrgModalLoading = true;
-      let filter = relfilter ? relfilter : [];
-     
-      filter = JSON.stringify(filter);
-      getAllHigherGroupByGroupType(currentPage, pageSize,this.formItem.groupType, filter).then(res => {
-          this.listUserPageTotal = res.summary.total;
-          this.listUserData = res.tableContent;
-          this.highOrgModalLoading = false;
-      });
-    },
-
-    //展示上级组织选择器
-    selectHighOrgModal() {
-      if(this.formItem.groupType){
-        this.isShowMemberModal = true;
-        this.searchHighOrgValue = "";
-        this.getAllHigherGroupByGroupType(this.listUserCurrentPage, this.pageSize);
-      }else{
-        this.$Message.info('组织类型不能为空！')
-      }
-    },
-    //确认选择的上级组织
-    saveSelectionHighOrg() {
-      this.formItem.highGroup = this.onSelectionModal.groupName;
-      this.formItem.parentId = this.onSelectionModal.groupId;
-      this.isShowMemberModal = false;
-    },
-
-    //展示负责人选择器
-    selectPrincipalModal() {
-      this.isShowPrincipalModal = true;
-      this.searchPrincipalValue = "";
-      this.getListUsers(this.principalCurrentPage, this.principalPageSize);
-    },
-
-    //获取用户列表
-    getListUsers(currentPage, pageSize, filter) {
-      this.PrincipalModaLoading = true;
-      getAllUsers(pageSize, currentPage, filter).then(res => {
-          this.principalPageTotal = res.summary.total;
-          this.principalData = res.tableContent;
-          this.PrincipalModaLoading = false;
-      });
-    },
-
-    principalChangePage(currentPage) {
-      let filter = JSON.stringify([
-        {
-          operator_1: "like",
-          value_1: this.searchPrincipalValue,
-          property_1: "nickname",
-          link: "or",
-          operator_2: "like",
-          value_2: this.searchPrincipalValue,
-          property_2: "userCode"
-        }
-      ]);
-      this.getListUsers(currentPage, this.principalPageSize, filter);
-    },
-
-    //监听模态框选中的用户
-    onSelectPrincipal(currentRow, oldCurrentRow) {
-      this.onSelectionPrincipal = currentRow;
-    },
-
-    //双击负责人选中
-    handlePrinciplDblclick(row, index) {
-      this.formItem.principalName = row.nickname;
-      this.formItem.principal = row.userId;
-      this.isShowPrincipalModal = false;
-    },
-
-    //负责人点击切换每页显示条数
-    onPrincipalPageSizeChange(size) {
-      let filter = JSON.stringify([
-        {
-          operator_1: "like",
-          value_1: this.searchPrincipalValue,
-          property_1: "nickname",
-          link: "or",
-          operator_2: "like",
-          value_2: this.searchPrincipalValue,
-          property_2: "userCode"
-        }
-      ]);
-      this.principalPageSize = size;
-      this.getListUsers(1, size, filter);
-    },
-
-    //双击上级组织选中
-    handleHighOrgDblclick(row, index) {
-      this.formItem.highGroup = row.groupName;
-      this.formItem.parentId = row.groupId;
-      this.isShowMemberModal = false;
-    },
-
-    //上级组织点击切换每页显示条数
-    onHighOrgPageSizeChange(size) {
-      this.pageSize = size;
-      let filter = [
-        {
-          operator: "like",
-          value: this.searchHighOrgValue,
-          property: "groupName"
-        }
-      ];
-      this.getAllHigherGroupByGroupType(1, size, filter);
-    },
-
-    //点击确定保存
-    savaSelectPrincipal() {
-      this.formItem.principalName = this.onSelectionPrincipal.nickname;
-      this.formItem.principal = this.onSelectionPrincipal.userId;
-      this.isShowPrincipalModal = false;
-    },
-
-    //过滤
-    userFilter() {
-      let filter = JSON.stringify([
-        {
-          operator_1: "like",
-          value_1: this.searchPrincipalValue,
-          property_1: "nickname",
-          link: "or",
-          operator_2: "like",
-          value_2: this.searchPrincipalValue,
-          property_2: "userCode"
-        }
-      ]);
-      this.getListUsers(this.listUserCurrentPage, this.pageSize, filter);
     }
   },
 
   mounted() {
-    let tabsMaxHight = document.body.clientHeight - 95;
-
-    window.document.getElementsByClassName(
-      "organization-wrap-tabs"
-    )[0].style.height =
-      tabsMaxHight + "px";
-
-    window.document.getElementsByClassName(
-      "organization-wrap-tabs"
-    )[0].style.maxHeight =
-      tabsMaxHight + "px";
-
-    let filter = JSON.stringify([
-      { operator: "eq", value: this.groupId, property: "groupId" }
-    ]);
-    if (this.groupId) {
-      getOrgBaseInfo(filter).then(res => {
-        if (res.tableContent[0]) {
-          let tableContent = res.tableContent[0];
-          this.formItem.groupName = tableContent.groupName;
-          this.name = tableContent.groupName;
-          this.formItem.groupType = tableContent.groupType;
-          this.formItem.depFunction = tableContent.depFunction;
-          this.formItem.status = tableContent.status;
-          this.formItem.principal = tableContent.principal; //负责人id
-          this.formItem.principalName = tableContent.principalName; //负责人名称
-          this.formItem.highGroup = tableContent.parentName;
-          this.formItem.parentId = tableContent.parentId;
-          this.tableContent = tableContent;
-          this.parentType = tableContent.parentType;
-          this.editHighOrg = this.formItem.highGroup;
-          this.editHighOrgParentId = this.formItem.parentId;
-          switch (tableContent.groupType) {
-            case "M":
-              this.groupType = "管理层";
-              break;
-            case "A":
-              this.groupType = "事业部";
-              break;
-            case "O":
-              this.groupType = "部门";
-              break;
-            case "G":
-              this.groupType = "小组";
-              break;
-          }
-        }
-      });
-      this.getObjDetailsCountByGroupId(this.groupId);
-    } else if (!this.groupId && this.$route.name == "org-add") {
-      this.isEdit = false;
-      this.actionBtn.forEach(element => {
-        if (element.id !== "baseinfo") {
-          element.hidden = true;
-        }
-      });
+    if(this.$route.params.groupId){
+      this.getObjDetailsCountByGroupId(this.$route.params.groupId);
     }
-
-    getListById('000002').then(res => {
-        if(!res[0].action.update){
-          this.isPermission = false;
-        }
-      });
+    getListById("000002").then(res => {
+      if (!res[0].action.update) {
+        this.isPermission = false;
+      }
+    });
   }
 };
 </script>

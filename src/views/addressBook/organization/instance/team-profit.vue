@@ -36,7 +36,6 @@
               border
               stripe
               size="small"
-              height="500"
               :columns="columns" 
               :loading="loading" 
               :data="performanceData">
@@ -78,9 +77,9 @@ export default {
   name: "TeamProfit",
   components: {},
   props: {
-    groupId: {
-      type: String
-    }
+    // groupId: {
+    //   type: String
+    // }
   },
   data() {
     return {
@@ -411,6 +410,7 @@ export default {
     }
   },
   mounted() {
+    this.groupId = this.$route.params.groupId;
     this.getPerformanceData();
   }
 };

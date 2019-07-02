@@ -98,7 +98,7 @@ export default {
     return {
       permissionParams: {
         objectName: "group",
-        objectId: this.groupId,
+        objectId: this.$route.params.groupId,
         page: 1,
         limit: 10,
         start: 0
@@ -136,7 +136,7 @@ export default {
                       title: "确认",
                       content: "确认删除该权限？",
                       onOk: () => {
-                        deleteOrgPermission(this.groupId, params.row.id).then(
+                        deleteOrgPermission(this.$route.params.groupId, params.row.id).then(
                           res => {
                             if (res.success) {
                               this.$Message.success("删除成功!");
@@ -164,7 +164,7 @@ export default {
       searchValue: "",
       target: {
         type: "group",
-        targetId: this.groupId
+        targetId: this.$route.params.groupId
       }
     };
   },
@@ -195,7 +195,7 @@ export default {
         multiId.push(val.id);
       });
       if (multiId) {
-        deleteOrgPermission(this.groupId, multiId.join(",")).then(res => {
+        deleteOrgPermission(this.$route.params.groupId, multiId.join(",")).then(res => {
           if (res.success) {
             that.$Message.success("删除成功!");
             that.reload = true;

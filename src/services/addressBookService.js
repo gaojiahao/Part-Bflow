@@ -312,10 +312,16 @@ export const getUsersByGroupId = (groupId, currentPage, pageSize) => request('/H
   groupId: groupId,
   page: currentPage,
   limit: pageSize,
-  start: 0,
-});
+  start: 0
+})
 
-
+/**
+ * @author snack.huang
+ * @description 按组织ID查询组织信息
+ */
+export const getOrgById = (groupId) => request('/H_roleplay-si/ds/list/getOrgById', {
+  groupId: groupId
+})
 
 /**
  * @author GuoZheng

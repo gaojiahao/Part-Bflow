@@ -1,2 +1,2 @@
-import ProgressRing from './progress-ring';
-export default ProgressRing;
+import ProgressRing from './progress-ring'
+export default ProgressRing

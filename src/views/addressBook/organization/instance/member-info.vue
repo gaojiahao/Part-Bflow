@@ -16,14 +16,14 @@
     color: rgb(122, 118, 118);
   }
 
-  .app-table-search{
+  .app-table-search {
     float: right;
     .app-search-icon {
       font-size: 1rem;
       color: #fff;
       display: inline-block;
       cursor: pointer;
-      span{
+      span {
         color: #fff;
       }
     }
@@ -36,10 +36,8 @@
     color: #39f;
     display: inline-block;
     cursor: pointer;
-   
   }
 }
-
 
 .page-selection-box {
   width: 100%;
@@ -49,13 +47,24 @@
   margin-bottom: 10px;
   padding: 1px 5px;
 }
+
+.memberWarp{
+  width: 80%;
+  margin: auto;
+}
 </style>
 
 
 <template>
-  <div>
-    <custom-table apiUrl="/ds/getUsersByGroupId" :columns="memberInfoColumns" :apiParams="memberInfoParams" v-model="reload" @on-selection-change="onSelectionChange" @on-refesh-change='onRefeshChange'>
-
+  <div class="memberWarp">
+    <custom-table
+      apiUrl="/ds/getUsersByGroupId"
+      :columns="memberInfoColumns"
+      :apiParams="memberInfoParams"
+      v-model="reload"
+      @on-selection-change="onSelectionChange"
+      @on-refesh-change="onRefeshChange"
+    >
       <div slot="header" class="header-action">
         <div v-if="isPermission" style="display:inline;">
           <label @click="showMemberModal">添加成员</label>
@@ -66,35 +75,78 @@
         </div>
 
         <div class="app-table-search">
-          <Input @on-search="userTableFilter" :search="true" v-model="searchTableValue" placeholder="搜索工号或名称" style="width: 300px"></Input>
+          <Input
+            @on-search="userTableFilter"
+            :search="true"
+            v-model="searchTableValue"
+            placeholder="搜索工号或名称"
+            style="width: 300px"
+          ></Input>
           <a @click="userTableFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </a>
         </div>
-
       </div>
     </custom-table>
 
-    <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionUser">
+    <member-modal
+      v-model="isShowMemberModal"
+      width="1000"
+      footerBtnAlign="right"
+      title="选择用户"
+      @on-ok="saveSelectionUser"
+    >
       <div style="margin-top:10px;">
         <div class="app-search">
-          <Input @on-search="userFilter" :search="true" v-model="searchValue" placeholder="搜索工号或名称" style="width: 300px"></Input>
+          <Input
+            @on-search="userFilter"
+            :search="true"
+            v-model="searchValue"
+            placeholder="搜索工号或名称"
+            style="width: 300px"
+          ></Input>
           <a @click="userFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </a>
         </div>
-        <Table height="400" size='small' ref="selection" :loading="listUserLoading" :columns="memberInfoColumnsModel" :data="listUserData" @on-select-all="onSelectAll" @on-selection-change="handerSelectionChange" @on-select-cancel="onSelectCancel">
-        </Table>
+        <Table
+          height="400"
+          size="small"
+          ref="selection"
+          :loading="listUserLoading"
+          :columns="memberInfoColumnsModel"
+          :data="listUserData"
+          @on-select-all="onSelectAll"
+          @on-selection-change="handerSelectionChange"
+          @on-select-cancel="onSelectCancel"
+        ></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
-            <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-page-size-change="onPageSizeChange" @on-change="listUserChangePage" show-total show-elevator show-sizer></Page>
+            <Page
+              :total="listUserPageTotal"
+              :current="listUserCurrentPage"
+              :page-size="pageSize"
+              size="small"
+              @on-page-size-change="onPageSizeChange"
+              @on-change="listUserChangePage"
+              show-total
+              show-elevator
+              show-sizer
+            ></Page>
           </div>
         </div>
       </div>
       <div class="page-selection-box" v-show="onPageSelection[0] ">
-        <Tag v-for="item in onPageSelection" :key="item.userId" :userId="item.userId" :closable="true" @on-close="deletePageSelection" type="border" color="primary" size="small">
-          {{item.nickname}}
-        </Tag>
+        <Tag
+          v-for="item in onPageSelection"
+          :key="item.userId"
+          :userId="item.userId"
+          :closable="true"
+          @on-close="deletePageSelection"
+          type="border"
+          color="primary"
+          size="small"
+        >{{item.nickname}}</Tag>
       </div>
     </member-modal>
   </div>
@@ -277,7 +329,7 @@ export default {
           key: "email"
         }
       ],
-      searchTableValue:"",
+      searchTableValue: "",
       //模态框参数
       searchValue: "",
       isShowMemberModal: false,
@@ -404,19 +456,18 @@ export default {
     getListUsers(currentPage, pageSize, filter) {
       this.listUserLoading = true;
       getAllUsers(pageSize, currentPage, filter).then(res => {
-          this.listUserPageTotal = res.dataCount;
-          this.listUserData = res.tableContent;
-          this.listUserLoading = false;
-          if (this.onPageSelection.length > 0) {
-            this.listUserData.map(item => {
-              this.onPageSelection.map(sel => {
-                if (item.userId === sel.userId) {
-                  item._checked = true;
-                }
-              });
+        this.listUserPageTotal = res.dataCount;
+        this.listUserData = res.tableContent;
+        this.listUserLoading = false;
+        if (this.onPageSelection.length > 0) {
+          this.listUserData.map(item => {
+            this.onPageSelection.map(sel => {
+              if (item.userId === sel.userId) {
+                item._checked = true;
+              }
             });
-          }
-         
+          });
+        }
       });
     },
 

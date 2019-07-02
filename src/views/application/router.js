@@ -1,4 +1,4 @@
-export const  applicationRouter = {
+export const applicationRouter = {
     path: '/application',
     name: 'application',
     meta: {

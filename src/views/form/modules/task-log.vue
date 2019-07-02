@@ -190,7 +190,7 @@ export default {
         logCosts: "",
         logData: [],
         modalVisible:false,
-        hiddenForm: false,
+        hiddenForm: true,
         logTypeList:[],
         loading:false,
         userList:[],
@@ -236,10 +236,10 @@ export default {
 
   methods: {
     openForm() {
-      this.hiddenForm = true;
+      this.hiddenForm = false;
     },
     closeForm() {
-      this.hiddenForm = false;
+      this.hiddenForm = true;
     },
     errorimg(item,index) {
       this.logData[index].photo = 'resources/images/icon/defaultUserPhoto.png';

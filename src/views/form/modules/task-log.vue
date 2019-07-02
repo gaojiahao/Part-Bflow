@@ -7,16 +7,16 @@
 
     <div class="app-resource-group-title">
         <span class="font16">工作日志</span>
-        <span v-if="!hiddenForm" @click="openForm" class="hidden-form">
-          <Tooltip transfer content="打开工作日志表单" placement="left">
-            <Icon type="md-arrow-dropup-circle" />
-          </Tooltip>
-        </span>
-        <span v-else @click="closeForm" class="hidden-form">
-          <Tooltip transfer content="关闭工作日志表单" placement="left">
-            <Icon type="md-arrow-dropdown-circle" />
-          </Tooltip>
-        </span>
+        <Tooltip class="hidden-form" v-if="!hiddenForm" content="打开工作日志表单" placement="left">
+          <span @click="openForm">
+              <Icon type="md-arrow-dropup-circle" />
+          </span>
+        </Tooltip>
+        <Tooltip class="hidden-form" v-else content="关闭工作日志表单" placement="left">
+          <span @click="closeForm">
+              <Icon type="md-arrow-dropdown-circle" />
+          </span>
+        </Tooltip>
     </div>
 
     <div class="timeline-box-form" v-if="hiddenForm">

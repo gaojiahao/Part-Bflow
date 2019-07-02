@@ -237,9 +237,11 @@ export default {
   methods: {
     openForm() {
       this.hiddenForm = true;
+      window.top.setTaskLogIframeHeight && window.top.setTaskLogIframeHeight();
     },
     closeForm() {
       this.hiddenForm = false;
+      window.top.setTaskLogIframeHeight && window.top.setTaskLogIframeHeight();
     },
     errorimg(item,index) {
       this.logData[index].photo = 'resources/images/icon/defaultUserPhoto.png';

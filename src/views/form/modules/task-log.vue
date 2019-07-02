@@ -236,10 +236,10 @@ export default {
 
   methods: {
     openForm() {
-      this.hiddenForm = false;
+      this.hiddenForm = true;
     },
     closeForm() {
-      this.hiddenForm = true;
+      this.hiddenForm = false;
     },
     errorimg(item,index) {
       this.logData[index].photo = 'resources/images/icon/defaultUserPhoto.png';

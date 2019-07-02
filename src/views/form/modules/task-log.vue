@@ -6,10 +6,20 @@
   <div  class="timeline-box">
 
     <div class="app-resource-group-title">
-        <span class="font16">工作日志  </span>
+        <span class="font16">工作日志</span>
+        <span v-if="!hiddenForm" @click="openForm" class="hidden-form">
+          <Tooltip transfer content="打开工作日志表单" placement="left">
+            <Icon type="md-arrow-dropup-circle" />
+          </Tooltip>
+        </span>
+        <span v-else @click="closeForm" class="hidden-form">
+          <Tooltip transfer content="关闭工作日志表单" placement="left">
+            <Icon type="md-arrow-dropdown-circle" />
+          </Tooltip>
+        </span>
     </div>
 
-    <div class="timeline-box-form">
+    <div class="timeline-box-form" v-if="hiddenForm">
       <Form ref="logForm" :label-width="80"   :model="modalFormData"  :rules="ruleValidate">
          <Row>
             <Col :xs="24" :sm="12" :md="8" :lg="8">
@@ -100,7 +110,7 @@
         <span :style="{marginLeft:'15px'}">总成本：<b>{{ logCosts }}</b></span>
       </div>
       <ul class="timeline-box-log-item" v-for="(item,index) in logData" :key="index">
-        <img :src="item.photo?item.photo:'resources/images/icon/defaultUserPhoto.png'" class="head-portrait"/>
+        <img  @error="errorimg(item,index)" :src="item.photo?item.photo:'resources/images/icon/defaultUserPhoto.png'" class="head-portrait"/>
         <ul class="timeline-item-content-ul">
           <li>
            
@@ -180,6 +190,7 @@ export default {
         logCosts: "",
         logData: [],
         modalVisible:false,
+        hiddenForm: false,
         logTypeList:[],
         loading:false,
         userList:[],
@@ -224,6 +235,15 @@ export default {
 
 
   methods: {
+    openForm() {
+      this.hiddenForm = true;
+    },
+    closeForm() {
+      this.hiddenForm = false;
+    },
+    errorimg(item,index) {
+      this.logData[index].photo = 'resources/images/icon/defaultUserPhoto.png';
+    },
     /**
      * 提交变更日志
      */

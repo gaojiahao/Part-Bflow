@@ -1,17 +1,19 @@
 <style lang="less" scoped>
-    .indirect{
+    .direct{
       &-detail{
         background-color: #fff;
-        width: 75%;
+        width: 35%;
         margin: 0 auto;
         padding: 26px 50px;
         box-shadow: 0px 1px 10px #ddd;
         position: relative;
+        &-btn{
+          margin-bottom:5px;
+          color: rgb(0, 150, 136);
+          font-size: 17px;
+          cursor: pointer;
+        }
       }
-  }
-  .user-page {
-    margin: 10px;
-    overflow: hidden;
   }
   .app-table-search{
     margin-bottom: 5px;
@@ -22,112 +24,109 @@
       cursor: pointer;
     }
 }
+
+.permission-tree{
+    .ivu-tree-arrow i{
+      font-size: 18px;
+    }
+  }
 </style>
 
 <template>
-    <div class="indirect">
-        <div class="indirect-detail">
-            <div class="app-table-search">
-              <Input 
-                @on-search="permissionFilter" 
-                :search="true" 
-                v-model="searchValue" 
-                placeholder="搜索权限名称" 
-                style="width: 300px">
-              </Input>
-              <a @click="permissionFilter" class="app-search-icon">
-                <Button type="primary" size="small">查询</Button>
-              </a>
-            </div>
-            <Table 
-              ref="selection" 
-              :columns="columns" 
-              :loading="loading" 
-              :data="indirPermissionData">
-            </Table>
-            <div class="user-page">
-                <div style="float: right;padding-bottom: 5px;">
-                  <Page 
-                    @on-page-size-change="onPageSizeChange" 
-                    :total="total" 
-                    show-elevator show-sizer 
-                    :current="currentPage" 
-                    :page-size="pageSize" 
-                    @on-change="onPageChange" 
-                    size="small" 
-                    show-total>
-                  </Page>
-                </div>
-            </div>
+  <div class="direct">
+    <div class="direct-detail" id="directHeight">
+      <!-- <div class="direct-header">
+        <div class="app-table-search">
+          <Input 
+            @on-search="permissionFilter" 
+            :search="true" 
+            v-model="searchValue" 
+            placeholder="搜索权限名称" 
+            style="width: 300px">
+          </Input>
         </div>
+      </div> -->
+      <div class="direct-table">
+        <Tree
+          ref="permissionTree"
+          :data="data"
+          :load-data="loadData"
+          class="permission-tree"
+          :empty-text="emptyText"
+          show-checkbox>
+        </Tree>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-import { getIndirectPermissionData } from "@/services/addressBookService.js";
+import { getIndirectData } from "@/services/addressBookService.js";
 
 export default {
   name: "indirectPermission",
-  components: {},
-  props: {},
   data() {
     return {
       userId: this.$route.params.userId,
+      loading: false,
       searchValue: "",
-      total: 0,
-      currentPage: 1,
-      pageSize: 10,
-      loading: true,
-      columns: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
-          title: "名称",
-          key: "name"
-        },
-        {
-          title: "权限来源",
-          key: "origin"
-        }
-      ],
-      indirPermissionData: []
+      emptyText: '',
+      data: []
     };
   },
   methods: {
-    //获取间接权限数据
-    getIndirPermissionData(search) {
-      if(this.userId){
-        this.loading = true;
-        getIndirectPermissionData(this.userId,this.pageSize,this.currentPage,search).then(res => {
-          this.indirPermissionData = res.tableContent;
-          this.total = res.dataCount;
-          this.loading = false;
-        })
-      }else{
-          this.loading = false;
-      }
+    //加载所有权限数据
+    getAllPermissionDatas(id, callback) {
+      let treeData = [],
+        parentId = id ? id : "root";
+      getIndirectData(
+        parentId,
+        this.userId
+      ).then(res => {
+        if(res.length > 0){
+          res.forEach(val => {
+            if (val.leaf) {
+              treeData.push({
+                title: val.text,
+                id: val.id,
+                leaf: val.leaf,
+                checked: val.check,
+                disableCheckbox: true
+              });
+            } else {
+              treeData.push({
+                title: val.text,
+                id: val.id,
+                loading: false,
+                indeterminate: val.halfSelected,
+                leaf: val.leaf,
+                checked: val.check,
+                children: [],
+                disableCheckbox: true
+              });
+            }
+          });
+          if (callback) {
+            callback(treeData);
+          } else {
+            this.data = treeData;
+          }
+        }else{
+          this.emptyText = '暂无数据';
+        }
+      });
     },
-    //点击分页
-    onPageChange(currentPage) {
-      this.currentPage = currentPage;
-      this.getIndirPermissionData(this.searchValue);
-    },
-    //点击切换每页显示条数
-    onPageSizeChange(size) {
-      this.pageSize = size;
-      this.getIndirPermissionData(this.searchValue);
+    //异步加载树形数据
+    loadData(item, callback) {
+      this.getAllPermissionDatas(item.id, callback);
     },
     //权限过滤
     permissionFilter() {
-      this.currentPage = 1;
-      this.getIndirPermissionData(this.searchValue);
+      this.getAllPermissionDatas();
     }
   },
   mounted() {
-    this.getIndirPermissionData();
+    this.getAllPermissionDatas();
   }
 };
 </script>

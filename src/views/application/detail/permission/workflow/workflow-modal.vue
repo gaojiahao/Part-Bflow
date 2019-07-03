@@ -134,7 +134,7 @@ export default {
               {
                 on: {
                   click: () => {
-                    window.open('/myflow/viewFlow.html?processId='+params.row.id+'&listId='+this.listId+'&processCode='+ params.row.processCode);
+                    window.open('/myflow/viewFlow.html?processId='+params.row.procId+'&listId='+this.listId+'&processCode='+ params.row.processCode);
                   }
                 }
               },

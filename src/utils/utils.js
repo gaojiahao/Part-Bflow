@@ -29,6 +29,71 @@ export const FormatDate = (date, fmt) => {
     return fmt;
 }
 
+/**
+ * @param  {Date} date 日期
+ * @param  {monthNum} Number  前几个月
+ * 获取日期之前的几月
+ */
+export const getPreMonthDay = (date, monthNum) => {
+    let year = date.getFullYear(); //获取当前日期的年份
+    let month = date.getMonth() + 1; //获取当前日期的月份
+    let year2 = year
+    let month2 = parseInt(month) - monthNum
+    if (month2 <= 0) {
+      year2 =
+        parseInt(year2) -
+        parseInt(month2 / 12 == 0 ? 1 : Math.abs(parseInt(month2 / 12)) + 1)
+      month2 = 12 - (Math.abs(month2) % 12)
+    }
+    if (month2 < 10) {
+      month2 = '0' + month2
+    }
+    let t2 = year2 + '-' + month2;
+    return t2;
+  }
+
+/**
+ * @description 获取某月最后一天
+ */
+export const getLastDay = (year,month) => {   
+    let new_year = year;  //取当前的年份   
+    let new_month = month++;//取下一个月的第一天，方便计算（最后一天不固定）   
+    if(month>12)      //如果当前大于12月，则年份转到下一年   
+    {   
+    new_month -=12;    //月份减   
+    new_year++;      //年份增   
+    }   
+    let new_date = new Date(new_year,new_month,1);        //取当年当月中的第一天   
+    return (new Date(new_date.getTime()-1000*60*60*24)).getDate();//获取当月最后一天日期   
+};
+
+/**
+ * @author XiaoYing
+ * @param num 数值
+ * @description 数字千分位符格式化
+ */
+export const toThousandFilter  = (num) => {
+    let t,r,l,numone;
+    if (typeof num !== 'number') return num;
+
+    num = num + "";
+    numone = num.split(".")[0];
+    l = numone.split("").reverse();
+    num < 0 && (l = numone.split("").slice(1,numone.split("").length).reverse()); 
+    r = num.split(".")[1];
+    r = (r == null ? "" : "." + r);
+    t = "";
+
+    for (let i = 0; i < l.length; i++) {
+        t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+    }
+    
+    t = t.split("").reverse().join("") + r;
+    num < 0 && (t = '-' + t); 
+
+    return t;
+}
+
 /** 
  * 格式化Json数据
 */

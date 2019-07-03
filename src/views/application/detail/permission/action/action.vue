@@ -8,7 +8,7 @@
             <Row class="app-action-title">
                 <h3>动作<a v-if="isAdmin" @click="showModal" class="app-action-title-add">授权</a>
                 </h3>
-                <span class="warning-color marlr">授予用户、组织或职位当前应用动作的权限</span>
+                <span class="marlr" :style="{color:'#aaaaaa'}">授予用户、组织或职位当前应用动作的权限</span>
             </Row>
             <div class="app-action-source">
                 <Row>
@@ -162,14 +162,17 @@ export default {
 
             this.actionData.forEach((val,index) => {
               let pushData,pushDataStatus;
-              actionId.forEach(data => {
-                if(data == val.id){
+              for(let i=0;i<actionId.length;i++){
+                if(actionId[i] == val.id){
                   pushDataStatus = val.id;
+                  break;
+                }else{
+                  pushDataStatus = `${val.id}_false`;
                 }
-              });
+              }
               pushData = h('span',{
                 style: {
-                  marginLeft: '5px'
+                  marginLeft: '10px'
                 }
               },[
                   h('Checkbox',{
@@ -207,7 +210,11 @@ export default {
                     } 
                     }
                   }),
-                  h('span',{},val['name'])
+                  h('span',{
+                    style: {
+                      marginLeft: '-7px'
+                    }
+                  },val['name'])
                 ]);
               renderData.push(pushData);
             })
@@ -218,6 +225,7 @@ export default {
           title: "操作",
           key: "list",
           align: "center",
+          width: 100,
           render: (h, params) => {
             return h("div", [
               h(

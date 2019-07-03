@@ -153,7 +153,7 @@ export default {
                 props: {
                   src: params.row.photo
                     ? params.row.photo
-                    : "resources/images/icon/defaultUserPhoto.jpg"
+                    : "resources/images/icon/defaultUserPhoto.png"
                 }
               })
             ]);
@@ -247,7 +247,7 @@ export default {
                 props: {
                   src: params.row.photo
                     ? params.row.photo
-                    : "resources/images/icon/defaultUserPhoto.jpg"
+                    : "resources/images/icon/defaultUserPhoto.png"
                 }
               })
             ]);

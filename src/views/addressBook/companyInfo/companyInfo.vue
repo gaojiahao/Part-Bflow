@@ -22,20 +22,18 @@
         <span @click="goCompanyList" class="detail-com-header-bread-user">公司</span>
         <span class="detail-com-header-bread-others">/</span>
         <span class="detail-com-header-bread-others">{{ (companyInformation&&companyInformation.groupName)?companyInformation.groupName:'创建'}}</span>
-      </div>
-      <Tag 
+        <Tag 
         v-show="groupId"
         class="radius10 marlr10 color_fff" 
         v-instanceStateDirective="{status:companyInformation.status}"></Tag>
-    </Row>
-    <Row class="detail-tabs">
-      <div @click="onClickTab(index)" v-if="groupId?item.isShow:item.isShowAcive" :class="{'detail-tabs-child':true,'active-item':item.isShowAcive}" v-for="(item,index) of relativeInstance" :key="index">
-        <img v-if="!item.type" :src="item.imgUrl" />
-        <Icon v-else :type="item.type" class="icon" />
-        <div class="detail-tabs-child-right">
-          <span>{{ item.relativeNum }}</span>
-          <p>{{ item.name }}</p>
-        </div>
+      </div>
+        <div @click="onClickTab(index)" v-if="groupId?item.isShow:item.isShowAcive" :class="{'detail-tabs-child':true,'active-item':item.isShowAcive}" v-for="(item,index) of relativeInstance" :key="index">
+          <img v-if="!item.type" :src="item.imgUrl" />
+          <Icon v-else :type="item.type" class="icon" />
+          <div class="detail-tabs-child-right">
+            <span>{{ item.relativeNum }}</span>
+            <p>{{ item.name }}</p>
+          </div>
       </div>
     </Row>
     <Row class="detail-content">
@@ -87,7 +85,7 @@ export default {
           isShow: true,
           isShowAcive: false,
           relativeNum: 0,
-          imgUrl: "resources/images/icon/company.png"
+          imgUrl: "https://lab.roletask.com/resource/app-icon/company.png"
         },
         {
           name: "上级公司",
@@ -95,7 +93,7 @@ export default {
           isShow: true,
           isShowAcive: false,
           relativeNum: 0,
-          imgUrl: "resources/images/icon/company.png"
+          imgUrl: "https://lab.roletask.com/resource/app-icon/company.png"
         },
         {
           name: "公司成员",
@@ -103,7 +101,7 @@ export default {
           isShow: true,
           isShowAcive: false,
           relativeNum: 0,
-          imgUrl: "resources/images/icon/user.png"
+          imgUrl: "https://lab.roletask.com/resource/app-icon/user.png"
         },
         {
           name: "基本信息",
@@ -147,7 +145,7 @@ export default {
     }
   },
   mounted() {
-    let tabsMaxHeight = document.body.clientHeight - 120;
+    let tabsMaxHeight = document.body.clientHeight - 100;
     window.document.getElementsByClassName("detail-content")[0].style.height =
       tabsMaxHeight + "px";
     let groupId =

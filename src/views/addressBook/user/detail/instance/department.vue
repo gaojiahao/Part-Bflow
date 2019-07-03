@@ -170,11 +170,15 @@ export default {
           maxWidth: 120,
           align: 'center',
           render: (h,params) => {
+            let isDefault = false;
+            if (params.row.isDefault === 1) {
+              isDefault = true;
+            }
             return h('Button',{
               props: {
                 type: 'error',
                 size: 'small',
-                disabled: !this.isUpdate
+                disabled: !this.isUpdate || isDefault
               },
               on: {
                 click: () => {
@@ -255,6 +259,11 @@ export default {
         this.loading = true;
         getDepartmentData(this.userId,this.pageSize,this.currentPage).then(res => {
           this.departmentData = res.tableContent;
+
+          this.departmentData.forEach(val => {
+            if(val.isDefault === 1) val._disabled = true;
+          });
+
           this.total = res.dataCount;
           this.loading = false;
         })
@@ -316,7 +325,7 @@ export default {
         this.selectGroup.forEach(val => {
           groupIds.push(val.groupId);
         });
-        addMember('sys_group_user',groupIds.join(','),this.userId).then(res => {
+        addMember('group',groupIds.join(','),this.userId).then(res => {
           if(res.success){
             this.selectGroup = [];
             this.$Message.success('更新成功');

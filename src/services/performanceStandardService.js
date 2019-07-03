@@ -52,3 +52,11 @@ export const saveCheckItem = (data) =>  request('/H_roleplay-si/check/saveCheckI
  * @description 修改新增点检表
  */
 export const updateCheckItem = (data) =>  request('/H_roleplay-si/check/updateCheckContent',{},'POST',data);
+
+/**
+ * @author XiaoYing
+ * @description 删除新增点检表
+ */
+export const deleteCheckItem = (checkItemId) =>  request('/H_roleplay-si/check/deleteCheckItem',{
+    checkItemId: checkItemId
+},'POST');

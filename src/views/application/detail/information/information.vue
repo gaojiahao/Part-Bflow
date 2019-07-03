@@ -13,12 +13,37 @@
       </Breadcrumb>
     </header>
 
-    <Row class="font14">
-        <Col span="2" class="pad15">
-          <img :src="appData.icon" class="appIcon" />
-        </Col>
-        <Col span="21" class="pad15">
-          <h3> 
+    <Row class="font14" style="height:185px;">
+        <div class="app-left">
+          <Upload v-if="!showEditBtn" ref="upload"  
+              :show-upload-list="false" 
+              :on-success="handleSuccess" 
+              :format="['jpg','jpeg','png']" 
+              :max-size="2048" 
+              :on-format-error="handleFormatError" 
+              :on-exceeded-size="handleMaxSize" 
+              type="drag"
+              action="/H_roleplay-si/ds/upload" 
+              class="info-upload"
+              :headers="httpHeaders">
+              <div class="info-upload-container" v-if="!appData.icon">
+                  <img v-if="appData.icon" :src="appData.icon">
+                  <i v-if="!appData.icon" class="iconfont">&#xe63b;</i>
+              </div>
+              <div class="demo-upload-list info-upload-container" v-if="appData.icon">
+                  <img :src="appData.icon">
+                  <div class="demo-upload-list-cover">
+                      <Icon type="ios-trash-outline" color="#fff" size="30" @click.stop="handleRemove"></Icon>
+                      <Poptip trigger="hover" transfer content="还原为默认图标" placement="right">
+                        <Icon type="md-share-alt" color="#fff" size="30" @click.stop="handleReview" />
+                      </Poptip>
+                  </div>
+              </div>
+          </Upload>
+          <img v-else :src="appData.icon?appData.icon:false" class="appIcon">
+        </div>
+        <div class="app-middle">
+          <h3 style="padding-left:5px;"> 
             <span 
               @click="goList" 
               class="app-detail-title">{{ appData.title?appData.title:'待加载' }}
@@ -59,12 +84,13 @@
             <Col span="6">修改时间： <span>{{ appData.modTime }}</span></Col>
           </Row>
           <Row class="pad5">
-            <Col span="24">说明：<span v-if="showAppEditAdmin" v-html="appData.comment"></span>
-              <div v-show="!showAppEditAdmin" ref="infoeditor"></div>
+            <Col span="24">说明：
+              <pre class="app-pre" v-if="showAppEditAdmin">{{appData.comment}}</pre>
+              <Input v-show="!showAppEditAdmin" v-model="appData.comment" type="textarea" style="border-bottom:1px solid #ddd" />
             </Col>
           </Row>
-        </Col>
-        <Col span="1">
+        </div>
+        <div class="app-right">
           <Dropdown @on-click="changeAppStatus" class="app-dropdown">
                 <a href="javascript:void(0)">
                     操作
@@ -75,7 +101,7 @@
                     <DropdownItem name="forbidden">停用</DropdownItem>
                 </DropdownMenu>
             </Dropdown>
-        </Col>
+        </div>
     </Row>
     <!-- 应用管理员modal -->
     <Modal v-model="showAdminModal" title="请选择管理员" @on-ok="confirmModal" width="800">
@@ -126,7 +152,7 @@ import {
   getAllPermissionData,
   enabledForbiddenApp
 } from "@/services/appService.js";
-import E from 'wangeditor';
+import { getToken } from "@/utils/utils";
 
 export default {
   name: "appInfo",
@@ -139,6 +165,9 @@ export default {
   },
   data() {
     return {
+      httpHeaders: {
+        Authorization: getToken()
+      },
       showEditAppInfo: true,
       showAppEditAdmin: true,
       showEditBtn: true,
@@ -157,7 +186,7 @@ export default {
             return h('div',[
               h('img',{
                  attrs: {
-                  src: params.row.photo?params.row.photo:'/resources/images/icon/defaultUserPhoto.jpg'
+                  src: params.row.photo?params.row.photo:'resources/images/icon/defaultUserPhoto.png'
                 },
                 style: {
                   borderRadius:'50%',
@@ -190,6 +219,35 @@ export default {
     };
   },
   methods: {
+     //还原默认图标
+    handleReview() {
+        this.appData.icon = this.appData.defaultIcon;
+    },
+    //删除图标
+    handleRemove() {
+        this.appData.icon = '';
+        this.$refs['upload'].fileList.splice(0,this.$refs['upload'].fileList.length);
+    },
+    handleSuccess(res, file) {
+      this.appData.icon =
+        "/H_roleplay-si/ds/download?width=100&height=100&url=" +
+        res.data[0].attacthment;
+    },
+    //判断上传头像大小
+    handleMaxSize(file) {
+      this.$Notice.warning({
+        title: "文件大小超出范围",
+        desc: "文件大小最大为2M"
+      });
+    },
+
+    //判断上传图片格式是否有误
+    handleFormatError(file) {
+      this.$Notice.warning({
+        title: "文件格式不对",
+        desc: "请上传格式为png 、jpeg 或者 jpg 的图片"
+      });
+    },
     goList() {
       if(this.appData.uniqueId === '000001'){
         window.top.location.href = '/Site/index.html#page/users';
@@ -199,6 +257,8 @@ export default {
         window.top.location.href = '/Site/index.html#page/jobs';
       }else if(this.appData.uniqueId === '000004'){
         window.top.location.href = '/Site/index.html#page/companys';
+      }else if(this.appData.type === 'subject'){
+        window.top.location.href = '/Site/index.html#subject/'+this.appData.uniqueId;
       }else{
         window.top.location.href = '/Site/index.html#list/'+this.appData.uniqueId;
       }
@@ -217,25 +277,26 @@ export default {
     editAppinfo() {
       if(this.isAdmin){
         this.showEditAppInfo = !this.showEditAppInfo;
-        this.infoeditor.txt.html(this.appData.comment);
       }
       //只有企业管理员可编辑应用管理员
       if(this.isCompanyAdmin){
         this.showAppEditAdmin = false;
       }
       if (!this.showEditBtn) {
+
         let params = {
           uniqueId: this.appData.uniqueId,
           title: this.appData.title,
           administrator: this.appData.userId,
-          comment: this.$refs.infoeditor?this.infoeditor.txt.html():''
+          comment: this.appData.comment.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>').replace(/\s/g, ' '),
+          customIcon: this.appData.icon
         };
+
         saveAppInformation(params).then(res => {
           if (res.success) {
             this.$Message.success('更新成功!');
             this.showAppEditAdmin = true;
             this.$emit('reloadData');
-            this.$emit('changeAdmin');
           }
         });
       }
@@ -269,9 +330,6 @@ export default {
         this.adminData = res.tableContent; 
         this.total = res.dataCount;
         this.adminLoading = false;
-        if(!this.infoeditor){
-          this.createEditor();
-        }
       });
     },
     //启用禁用应用动作权限
@@ -324,36 +382,8 @@ export default {
       let filter = JSON.stringify([
         {operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
       ]);
+      this.currentPage = 1;
       this.getAdmintrstorData(filter);
-    },
-    //create富文本编辑器
-    createEditor() {
-      this.infoeditor = new E(this.$refs.infoeditor)
-      this.infoeditor.customConfig.onchange = (html) => {
-        this.appData.comment = html;
-      }
-      this.infoeditor.customConfig.zIndex = 100;
-      this.infoeditor.customConfig.menus = [
-        'head',  // 标题
-        'bold',  // 粗体
-        'fontSize',  // 字号
-        'fontName',  // 字体
-        'italic',  // 斜体
-        'underline',  // 下划线
-        'strikeThrough',  // 删除线
-        'foreColor',  // 文字颜色
-        'backColor',  // 背景颜色
-        'link',  // 插入链接
-        'list',  // 列表
-        'justify',  // 对齐方式
-        'quote',  // 引用
-        'emoticon',  // 表情
-        'code',  // 插入代码
-        'undo',  // 撤销
-        'redo'  // 重复
-      ]
-      this.infoeditor.create();
-      this.infoeditor.txt.html(`<div></div>`);
     }
   },
   mounted() {

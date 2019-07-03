@@ -8,7 +8,7 @@
             <h2>{{ workguideData.title }}</h2>
         </Row>
         <Row class="workguide-type">
-            <img :src="workguideData.creatorImage"/>
+            <img @error="errorimg" :src="workguideData.creatorImage?workguideData.creatorImage:'resources/images/icon/defaultUserPhoto.png'"/>
             <span class="workguide-type-worktype">{{ workguideData.creatorName }}</span>
             <span class="workguide-type-crtTime">{{ workguideData.crtTime }}</span>
         </Row>
@@ -34,7 +34,7 @@
                   </div>
                 </TimelineItem>
             </Timeline>
-            <work-comments></work-comments>
+            <user-comments :listId="workguideId" :type="'workGuide'"></user-comments>
         </Row>
         <Row class="workguide-toolbar">
             <router-link :to="{ name:'wokdGuideDetail',params:{id: workguideData.id}}">
@@ -49,11 +49,11 @@
 
 <script>
 import { getworkDataById } from "@/services/workGuideService.js";
-import WorkComments from './work-comments';
+import UserComments from '@/views/application/detail/interaction/user-comments.vue';
 
 export default {
   name: "wokdGuideView",
-  components: { WorkComments },
+  components: { UserComments },
   data() {
     return {
       workguideId: this.$route.params.id,
@@ -62,6 +62,9 @@ export default {
     };
   },
   methods: {
+    errorimg() {
+        this.workguideData.creatorImage = 'resources/images/icon/defaultUserPhoto.png';
+    },
     //查询作业指导数据
     getWorkGuideDataById() {
         getworkDataById(this.$route.params.id).then(res => {

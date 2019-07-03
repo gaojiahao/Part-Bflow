@@ -22,6 +22,56 @@ export const getListById = (listId) => request('/H_roleplay-si/ds/list/getListBy
 
 /**
  * @author XiaoYing
+ * @description 获取组织利润表数据
+ */
+export const getTeamProfitData = (groupCode,startDate,endDate) => request('/H_roleplay-si/account/GroupProfitStatement', {
+  groupId: groupCode,
+  startDate: startDate,
+  endDate: endDate
+});
+
+/**
+ * @author XiaoYing
+ * @description 获取组织利润表下钻数据
+ */
+export const getTeamProfitDetail = (groupCode,classify,startDate,endDate) => request('/H_roleplay-si/account/getGroupProfitWater', {
+  groupId: groupCode,
+  classify: classify,
+  startDate: startDate,
+  endDate: endDate
+});
+
+/**
+ * @author XiaoYing
+ * @description 获取员工绩效数据
+ */
+export const getPerformanceData = (userId,startDate,endDate) => request('/H_roleplay-si/account/personProfitStatement', {
+  userId: userId,
+  startDate: startDate,
+  endDate: endDate
+});
+
+/**
+ * @author XiaoYing
+ * @description 获取员工绩效明细数据
+ */
+export const getPerformanceDetail = (userId,classify,startDate,endDate) => request('/H_roleplay-si/account/getPersonProfitWater', {
+  userId: userId,
+  classify: classify,
+  startDate: startDate,
+  endDate: endDate
+});
+
+/**
+ * @author XiaoYing
+ * @description 获取通讯录员工往来标签
+ */
+export const getDealerLabels = () => request('/H_roleplay-si/ds/getObjDealerLabelSource', {
+  filter: JSON.stringify([{"operator":"ne","value":"员工","property":"dealerLabelName"}])
+});
+
+/**
+ * @author XiaoYing
  * @description 添加权限
  */
 export const addPermission = (permissionIds,menuIds, objId,type) => request(`/H_roleplay-si/ps/${type}/save`, {
@@ -155,11 +205,10 @@ export const getGroupData = (parentId,filter) => request('/H_roleplay-si/ds/getU
  * @author XiaoYing
  * @description 添加组织或职位
  */
-export const addMember = (list, groupId, userId) => request('/H_roleplay-si/ps/updateRelation', {
+export const addMember = (list, groupId, userId) => request('/H_roleplay-si/userInfo/addRelation', {
   list: list,
-  single: groupId,
-  multi: userId,
-  status: 0
+  multi: groupId,
+  userId: userId
 }, 'POST');
 
 /**
@@ -187,6 +236,15 @@ export const getAllRoleData = (pageSize, currentPage, filter) => request('/H_rol
  * @description 获取所用权限数据
  */
 export const getAllPermissionData = (parentId,objId,type) => request(`/H_roleplay-si/ps/${type}/getChildNode`, {
+  parentId: parentId,
+  objId: objId
+});
+
+/**
+ * @author XiaoYing
+ * @description 获取间接权限数据
+ */
+export const getIndirectData = (parentId,objId) => request('/H_roleplay-si/ps/user/indirectAuthority', {
   parentId: parentId,
   objId: objId
 });
@@ -482,11 +540,11 @@ export const deleteRolePermission = (single, multi) => request('/H_roleplay-si/p
  * @author zhaohuai
  * 根据公司Id获取所属成员信息
  */
-export const getAllUser = (currentPage, pageSize) => request('/H_roleplay-si/ds/listUsers', {
+export const getAllUser = (currentPage, pageSize,filter) => request('/H_roleplay-si/ds/listUsers', {
   entityId: 20000,
   page: currentPage,
   limit: pageSize,
-  start: 0,
+  filter: filter
 });
 
 /**
@@ -517,7 +575,9 @@ export const saveCompanyInfo = (data) => {
     companyType,
     status,
     groupCode,
-    groupPic
+    groupPic,
+    taxpayerType,
+    taxCompanyRelList
   } = data;
   return request('/H_roleplay-si/sysGroup/saveBatch', {}, 'POST', [{
     groupName: groupName,
@@ -528,19 +588,51 @@ export const saveCompanyInfo = (data) => {
     groupType: 'C',
     parentId: '1',
     groupCode: groupCode,
-    groupPic: groupPic
+    groupPic: groupPic,
+    taxpayerType: taxpayerType,
+    taxCompanyRelList: taxCompanyRelList
   }]);
 };
+
+/**
+ * @author zhaohuai
+ * 更新公司信息
+ * 
+ */
+export const updateConpanyInfo = (data) => {
+  let {
+    groupName,
+    groupShortName,
+    companyType,
+    status,
+    groupId,
+    groupPic,
+    taxpayerType,
+    taxCompanyRelList
+  } = data
+  return request('/H_roleplay-si/sysGroup/company/updateBatch', {}, 'POST', [{
+    groupName: groupName,
+    groupShortName: groupShortName,
+    companyType: companyType,
+    status: status,
+    groupId: groupId,
+    groupPic: groupPic,
+    taxpayerType: taxpayerType,
+    taxCompanyRelList: taxCompanyRelList
+  }])
+}
+
 /**
  * @author zhaohuai
  * 获取公司列表信息
  * 
  */
-export const getCompanyList = (groupId, target, currentPage, pageSize) => request('/H_roleplay-si/sysGroup/getCompanyList', {
+export const getCompanyList = (groupId, target, currentPage, pageSize,search) => request('/H_roleplay-si/sysGroup/getCompanyList', {
   groupId: groupId,
   target: target,
   currentPage: currentPage,
-  pageSize: pageSize
+  pageSize: pageSize,
+  search: search
 });
 /**
  * @author zhaohuai
@@ -647,36 +739,6 @@ export const getAllCompanys = (pageSize, currentPage, searchValue, targer) => re
   target: targer
 });
 
-/**
- * @author zhaohuai
- * 更新公司信息
- * 
- */
-export const updateConpanyInfo = (data) => {
-  let {
-    groupName,
-    groupShortName,
-    companyType,
-    status,
-    groupId,
-    groupPic
-  } = data
-  return request('/H_roleplay-si/sysGroup/company/updateBatch', {}, 'POST', [{
-    groupName: groupName,
-    groupShortName: groupShortName,
-    companyType: companyType,
-    status: status,
-    groupId: groupId,
-    groupPic: groupPic
-  }])
-}
-/**
- * @author zhaohuai
- * 搜索公司
- */
-export const searchCompany = (groupName) => request('/H_roleplay-si/sysGroup/getCompanyList', {
-  search: groupName
-});
 /**
  * @author zhaohuai
  * 唯一校验

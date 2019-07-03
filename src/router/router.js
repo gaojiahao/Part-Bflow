@@ -11,6 +11,12 @@ export const loginRouter = {
     import('@/views/login.vue')
 };
 
+export const entryRouter = {
+  path: '/',
+  name: 'entry',
+  redirect: '/login'
+};
+
 export const flowRouter = {
   path: '/pulse_graph/:caseId',
   name: 'pulse_graph',
@@ -41,8 +47,20 @@ export const homepageRouter = {
     title: 'homepage - 首页导航'
   },
   component: () =>
-    import('@/views/home/HomePage.vue')
+    import('@/views/home/home.vue')
 };
+
+
+export const home = {
+  path: '/home',
+  name: 'home',
+  meta: {
+    title: 'home - 首页导航'
+  },
+  component: () =>
+    import('@/views/home/home.vue')
+};
+
 
 
 
@@ -67,7 +85,7 @@ export const instanceCommetns = {
 }
 
 export const taskLog = {
-  path: '/taskLog/:transCode/:projectTaskId',
+  path: '/taskLog/:transCode',
   name: 'taskLog',
   meta: {
     title: 'RoleTask - 任务日志'
@@ -79,7 +97,7 @@ export const taskLog = {
 
 
 export const appRouter = [{
-  path: '/',
+  path: '/home_index',
   name: 'home_index',
   component: () =>
     import('@/components/home.vue')
@@ -104,14 +122,6 @@ export const bigProcess = {
     import('@/views/end-to-end/bigProcess.vue')
 }
 
-//消息通知页面
-export const notifications = {
-  path: '/notifications',
-  name: 'notifications',
-  component: () =>
-    import('@/views/notifications/notifications.vue')
-}
-
 //用户激活页面
 export const activation = {
   path: '/activation',
@@ -126,38 +136,6 @@ export const dictionaryManage = {
     import('@/views/dictionaryManage/dictionaryManage.vue')
 }
 
-export const BusinessModuleConfig = {
-  path: '/BusinessModuleConfig',
-  name: 'BusinessModuleConfig',
-
-  meta: {
-    title: 'BusinessModuleConfig - 应用模块配置'
-  },
-  component: () =>
-    import('@/views/flow/business-module/BusinessModuleConfig.vue')
-};
-
-export const BusinessModuleConfigDetails = {
-  path: '/BusinessModuleConfig/:moduleId',
-  name: 'BusinessModuleConfig',
-
-  meta: {
-    title: 'BusinessModuleConfig - 应用模块配置'
-  },
-  component: () =>
-    import('@/views/flow/business-module/BusinessModuleConfig.vue')
-};
-
-export const BusinessModuleGraph = {
-  path: '/BusinessModuleGraph/:moduleId',
-  name: 'BusinessModuleGraph',
-
-  meta: {
-    title: 'BusinessModuleGraph - 应用模块图'
-  },
-  component: () =>
-    import('@/views/flow/business-module/BusinessModuleGraph.vue')
-};
 
 //应用模块
 import { applicationRouter} from '@/views/application/router';
@@ -178,19 +156,17 @@ import { fileCabinetRouter } from '@/views/file-cabinet/router';
 
 export const routers = [
   loginRouter,
+  entryRouter,
   flowRouter,
+  home,
   homepageRouter,
   addressBookRouter,
   technologyRouter,
-  BusinessModuleConfig,
-  BusinessModuleConfigDetails,
-  BusinessModuleGraph,
   bigProcess,
   fieldChangeHistoryRouter,
   taskLog,
   instanceCommetns,
   enterpriseInfo,
-  notifications,
   activation,
   dictionaryManage,
   socialRouter,

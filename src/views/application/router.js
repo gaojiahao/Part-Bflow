@@ -4,6 +4,7 @@ export const  applicationRouter = {
     meta: {
         title: '应用'
     },
+    redirect: '/application/list',
     component: () =>import('@/views/application/layout.vue'),
     children: [
         {
@@ -12,6 +13,7 @@ export const  applicationRouter = {
             meta: {
                 title: '应用详情',
             },
+            redirect: { name: 'change-log' },
             component: () => import('@/views/application/detail/detail-layout.vue'),
             children:[
                 {
@@ -53,7 +55,15 @@ export const  applicationRouter = {
                         title: '连接',
                     },
                     component: () => import('@/views/application/detail/connection/connection-layout.vue'),
-                }   
+                },
+                {
+                    path: 'features',
+                    name: 'features',
+                    meta: {
+                        title: '特性管理',
+                    },
+                    component: () => import('@/views/application/detail/features/features-layout.vue'),
+                }    
             ]
         },{
             path: 'list',

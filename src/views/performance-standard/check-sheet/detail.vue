@@ -59,7 +59,8 @@ import {
   saveCheckContent,
   updateCheckContent,
   saveCheckItem,
-  updateCheckItem
+  updateCheckItem,
+  deleteCheckItem
 } from "@/services/performanceStandardService.js";
 
 export default {
@@ -270,7 +271,16 @@ export default {
                 {
                   on: {
                     click: () => {
-                      this.data.splice(params.index,1);
+                      deleteCheckItem(params.row.id).then(res => {
+                        if(res.success){
+                          this.$Message.success(res.message);
+                          this.getCheckSheetItemData();
+                          this.searchValue = '';
+                        }
+                      })
+                      .catch(err => {
+                        this.$Message.error(err.data.message);
+                      });
                     }
                   }
                 },

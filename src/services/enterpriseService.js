@@ -19,28 +19,7 @@ export const getEnterpriseById = (url) => request('/H_roleplay-si/app/getEnterpr
  * 保存企业信息
 */
 export const addOrUpdateEnterprise = (data) => {
-    let {
-        id,
-        logo,
-        nickname,
-        name,
-        instruction,
-        address,
-        phone,
-        backgroundImg,
-        backgroundName
-    } = data
-    return request('/H_roleplay-si/app/addOrUpdateEnterprise', {
-        id: id,
-        logo: logo,
-        nickname: nickname,
-        name: name,
-        instruction: instruction,
-        address: address,
-        phone: phone,
-        backgroundImg:backgroundImg,
-        backgroundName:backgroundName
-    }, "POST");
+    return request('/H_roleplay-si/app/updateEnterpriseProperty', {}, "POST",data);
 }
 
 /** 
@@ -64,3 +43,41 @@ export const getAllUsers = (pageSize, currentPage, filter) => request('/H_rolepl
     limit: pageSize,
     filter: filter
   });
+
+/**
+ * @author WangXiaoYing
+ * @description 同步第三方平台用户
+ */
+export const importThirdPlat= () => request('/H_roleplay-si/importThirdPlatId');
+
+/**
+ * @author WangXiaoYing
+ * @description 获取汇率数据
+ */
+export const getExchangeRateData= () => request('/H_roleplay-si/foreignExchange/get',{
+    filter: []
+});
+
+/** 
+ * @author WangXiaoYing
+ * 添加汇率
+*/
+export const addExchangeRateData = (data) => {
+    return request('/H_roleplay-si/foreignExchange/add', {}, "POST",data);
+}
+
+/** 
+ * @author WangXiaoYing
+ * 删除汇率
+*/
+export const deleteExchangeRateData = (data) => {
+    return request('/H_roleplay-si/foreignExchange/deleteByIds', {}, "POST",data);
+}
+
+/** 
+ * @author WangXiaoYing
+ * 修改汇率
+*/
+export const updateExchangeRateData = (data) => {
+    return request('/H_roleplay-si/foreignExchange/updateById', {}, "POST",data);
+}

@@ -22,7 +22,7 @@
       <div :class="[prefixCls+'-dropdown-select']">
         <Poptip content="content" width="560" v-model="visible">
           <span style="margin-left:10px" :class="[prefixCls+'dropdown-select-item']" @click="getSaleOrderList">
-            <Tag closable color="primary" @on-close='onHandleClearOrderTag'>{{orderCode?orderCode:'销售订单'}}</Tag>
+            <Tag closable color="primary" @on-close='onHandleClearOrderTag'>{{orderCode?orderCode:'加工订单'}}</Tag>
             <Icon type="ios-arrow-down"></Icon>
           </span>
           <div slot="content">
@@ -92,7 +92,7 @@
             <g v-if="defaultDisplayTask[item.procedureCode]>0">
               <circle :cx="item.pointX" :cy="item.pointY" r="12" stroke-width="1" fill="red" />
               <text :x="item.pointX" :y="item.pointY-4" fill="#fff" class="svg-text-common-style" style="font-size:10px;font-weight:bold" @click="openTask(item)">
-                {{defaultDisplayTask[item.procedureCode]}}
+                {{defaultDisplayTask[item.procedureCode]>=100?'99+':defaultDisplayTask[item.procedureCode]}}
               </text>
             </g>
 
@@ -105,7 +105,7 @@
       </div>
     </main>
 
-    <task-detail-modal v-model="modalVisable" width="721" footerBtnAlign="right" title="任务列表" :footerHide="true">
+    <task-detail-modal v-model="modalVisable" width="721" footerBtnAlign="right" :title="modalTitle" :footerHide="true">
       <div style="margin-top: 10px">
         <Table :loading="taskTableLoading" :data="taskTableData" :columns="taskTableColumns" size="small" stripe></Table>
         <div style="margin: 10px;overflow: hidden">
@@ -205,7 +205,7 @@ export default {
       ordersPageSize: 6,
 
       modalVisable: false,
-
+      modalTitle:'',
       taskTableLoading: false,
       taskTableColumns: [],
       todoColumns: [
@@ -394,7 +394,7 @@ export default {
           xCount--;
         }
 
-        this.defaultDisplayTask[data[i].procedureCode] = data[i].myTodo;
+        this.defaultDisplayTask[data[i].procedureCode] = data[i].myToDo;
       }
 
       data.forEach((item, itemIndex) => {
@@ -491,7 +491,7 @@ export default {
                 percent[item.procedureCode] = 0;
               } else {
                 percent[item.procedureCode] = Math.round(
-                  (item["myTodo"] / item["mytask"]) * 100
+                  (item["myToDo"] / item["mytask"]) * 100
                 );
               }
             });
@@ -543,7 +543,7 @@ export default {
       if (value) {
         filter = JSON.stringify([
           {
-            property: "a.orderCode",
+            property: "t1.processCode",
             value: value,
             operator: "eq"
           }
@@ -620,7 +620,7 @@ export default {
       this.visible = false;
       let filter = JSON.stringify([
         {
-          property: "a.orderCode",
+          property: "t1.processCode",
           value: row.transCode,
           operator: "eq"
         }
@@ -678,8 +678,10 @@ export default {
       let type = this.type,
           filter = "";
       this.modalVisable = true;
+      this.modalTitle = `任务列表 (${this.defaultDisplayTask[item.procedureCode]})`
       this.taskTableLoading = true;
       this.taskModalPage.procedureCode = item.procedureCode;
+      this.taskModalPage.currentPage = 1;
       //判断当前是已办任务还是待办任务
       if (~type.toLowerCase().indexOf("todo")) {
         this.taskTableColumns = [...this.todoColumns]
@@ -689,7 +691,7 @@ export default {
      
       if (this.orderCode) {
         filter = JSON.stringify([
-          { operator: "eq", value: this.orderCode, property: "a.orderCode" }
+          { operator: "eq", value: this.orderCode, property: "t1.processCode" }
         ]);
       }
       getProcedureInfoFilter(

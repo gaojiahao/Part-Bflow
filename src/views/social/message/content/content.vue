@@ -10,7 +10,7 @@
                 <span v-if="appInfo.administrator">管理员:{{appInfo.administrator}}</span>
                  <Icon class="fr" @click="handleExpend" type="ios-more" size="40" style="font-size: 40px;cursor: pointer;"/>
             </div>
-           <p class="content-header-comment" v-html="appInfo.comment"></p>
+           <pre class="content-header-comment">{{appInfo.comment}}</pre>
         </div>
         <Row class="content-container" >
             <Col :span="$route.name !='list'?'16':'24'" class="content-container-msglist messagescrollbar" id='msgList'>
@@ -51,6 +51,9 @@
 
                     <cancel-project-task :data="n" v-if="n.type=='projectTaskRecall'"></cancel-project-task>
                     
+                    <business-opportunity-task :data="n" v-if="n.type=='processStatusTime'"></business-opportunity-task>
+
+                    <task-log-notice :data="n" v-if="n.type=='jobLog'" v-bind:class="{'notice-unread':!n.isRead}"></task-log-notice>
                 </div>
             </Col>
             <Col span="8" v-if="$route.name !='list'" class="content-container-history" >
@@ -72,6 +75,8 @@ import InstanceChangeNotice from "@/views/social/message/notice-tpl/instance-cha
 import ExportImportNotice from "@/views/social/message/notice-tpl/export-import-notice";
 import ProjectTask from "@/views/social/message/notice-tpl/project-task";
 import CancelProjectTask from "@/views/social/message/notice-tpl/cancel-project-task";
+import BusinessOpportunityTask from "@/views/social/message/notice-tpl/business-opportunity-notice";
+import TaskLogNotice from "@/views/social/message/notice-tpl/task-log-notice";
 
 import Messageistory from "@/views/social/message/content/messageistory";
 
@@ -91,7 +96,9 @@ export default {
         Messageistory,
         ExportImportNotice,
         ProjectTask,
-        CancelProjectTask
+        CancelProjectTask,
+        BusinessOpportunityTask,
+        TaskLogNotice
     },
     data(){
         return {
@@ -154,10 +161,12 @@ export default {
         refreshAppInfo(){
             getListData(this.listId).then(res =>{
                 this.appInfo = res[0];
+                this.appInfo.comment = this.appInfo.comment.replace(/<br>/g,'\r\n');
+                console.log(this.appInfo);
             });
         },
         handleViewDetail:function () {
-            window.open('/Site/index.html#appSetting/' + this.listId);
+            window.open('/Site/index.html#list/' + this.listId);
         },
         handleExpend:function () {
 

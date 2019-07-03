@@ -8,49 +8,151 @@
       <section class="info-warp-main-section">
         <div class="select-logo">
           <label class="left-leble">企业LOGO</label>
-          <Upload v-if="$currentUser.isAdmin" ref="upload" :show-upload-list="false" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" type="drag" action="/H_roleplay-si/ds/upload" style="display: inline-block;width:256px;vertical-align: middle;" :headers="httpHeaders">
-            <div style="width: 256px;height:64px;line-height: 64px;" v-if="!enterpriseInfo.logo">
-              <img v-if="enterpriseInfo.logo" :src="enterpriseInfo.logo">
-              <i v-if="!enterpriseInfo.logo" class="iconfont">&#xe63b;</i>
-            </div>
-            <div style="width: 256px;height:64px;line-height: 64px;" class="demo-upload-list" v-if="enterpriseInfo.logo">
-              <img :src="enterpriseInfo.logo">
-              <div class="demo-upload-list-cover">
-                <Icon type="camera" color="#fff" size="30"></Icon>
-              </div>
-            </div>
-          </Upload>
-          <img v-else :src="enterpriseInfo.logo" />
+          <div class="logo" >
+            <Upload 
+              v-if="$currentUser.isAdmin" 
+              ref="upload" 
+              :show-upload-list="false" 
+              :on-success="handleSuccess" 
+              :format="['jpg','jpeg','png']" 
+              :max-size="2048" 
+              :on-format-error="handleFormatError" 
+              :on-exceeded-size="handleMaxSize" 
+              type="drag" 
+              action="/H_roleplay-si/ds/upload" 
+              :headers="httpHeaders">
+                <div style="width: 256px;height:64px;line-height: 64px;" v-if="!enterpriseInfo.logo">
+                  <img v-if="enterpriseInfo.logo" :src="enterpriseInfo.logo">
+                  <i v-if="!enterpriseInfo.logo" class="iconfont">&#xe63b;</i>
+                </div>
+                <div style="width: 256px;height:64px;line-height: 64px;" class="demo-upload-list" v-if="enterpriseInfo.logo">
+                  <img :src="enterpriseInfo.logo">
+                  <div class="demo-upload-list-cover">
+                    <Icon type="camera" color="#fff" size="30"></Icon>
+                  </div>
+                </div>
+            </Upload>
+            <img v-else :src="enterpriseInfo.logo" />
+            <p style="font-size: 12px;color:#999;margin-top: 5px;">推荐尺寸702*180</p>
+          </div>
+         
         </div>
         <div class="select-explain">
           <label class="left-leble">企业简称</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.nickname}}</span>
-          <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.nickname" class="input-common-att" />
+          <input v-else type="text" v-model="enterpriseInfo.nickname" class="input-common-att" />
           <a @click="handleEditName" v-if="$currentUser.isAdmin">{{edit}}</a>
         </div>
         <div class="select-explain">
           <label class="left-leble">企业全称</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.name}}</span>
-          <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.name" class="input-common-att" />
+          <input v-else type="text" v-model="enterpriseInfo.name" class="input-common-att" />
         </div>
         <div class="select-explain-textarea">
           <label class="left-leble">企业说明</label>
-          <span v-if="!editEnterpriseName">{{enterpriseInfo.instruction}}</span>
-          <textarea rows="3" cols="20" v-if="editEnterpriseName" v-model="enterpriseInfo.instruction" type="textarea" class="select-explain-textarea-text"></textarea>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.instraction}}</span>
+          <textarea rows="3" cols="20" v-else v-model="enterpriseInfo.instraction" type="textarea" class="select-explain-textarea-text"></textarea>
         </div>
       </section>
+
       <section class="info-warp-main-section">
         <div class="select-explain">
           <label class="left-leble">企业地址</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.address}}</span>
-          <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.address" class="input-common-att" />
+          <input v-else type="text" v-model="enterpriseInfo.address" class="input-common-att" />
         </div>
         <div class="select-explain">
           <label class="left-leble">联系电话</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.phone}}</span>
-          <input v-if="editEnterpriseName" type="text" v-model="enterpriseInfo.phone" class="input-common-att" />
+          <input v-else type="text" v-model="enterpriseInfo.phone" class="input-common-att" />
         </div>
       </section>
+
+      <section class="info-warp-main-section">
+        <div v-if="$currentUser.isAdmin" :style="{marginBottom:'5px'}">
+          <Button type="info" size="small" @click="showAddExchange">添加汇率</Button>
+          <Button type="info" size="small" @click="deleteExchange">删除</Button>
+        </div>
+        <Table :columns="rateColumns" border :data="rateData" @on-selection-change="onSelectChange" width="600" size="small">
+          <template slot-scope="{ row }" slot="currency">
+              <span @click="editExchangeRate(row,'currencyEdit')" :class="{'cell-click':row.currencyValue !== 'rmb'}" v-if="!row.currencyEdit">{{ row.currency }}</span>
+              <Select 
+                v-else 
+                v-model="row.currency" 
+                style="width:150px"
+                transfer
+                label-in-value
+                filterable
+                @on-change="onCurrencyChange($event,row)">
+                  <Option v-for="item in currencyList" :value="item.label" :key="item.value">{{ item.label }}</Option>
+              </Select>
+          </template>
+          <template slot-scope="{ row }" slot="exchangeRate">
+              <span @click="editExchangeRate(row,'exchangeEdit')" :class="{'cell-click':row.currencyValue !== 'rmb'}" v-if="!row.exchangeEdit">{{ row.exchangeRate }}</span>
+              <Input @on-blur="onExchangeRateBlur(row)" v-else v-model="row.exchangeRate"></Input>
+          </template>
+          <template slot-scope="{ row }" slot="localCurrency">
+              <Radio @on-change="onLocalCurrencyChange($event,row)" :disabled="!$currentUser.isAdmin" :value="row.localCurrency===1?true:false"></Radio>
+          </template>
+      </Table>
+      </section>
+
+      <section class="info-warp-main-section">
+        <div class="select-explain">
+          <label class="left-leble">企业微信企业ID</label>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.qwCorpid}}</span>
+          <input v-else type="text" v-model="enterpriseInfo.qwCorpid" class="input-common-att" />
+          <Button 
+            type="info" 
+            shape="circle" 
+            @click="handleSyncInfo" 
+            v-if="$currentUser.isAdmin" 
+            :style="{marginLeft:'50px'}">
+            同步第三方平台用户
+          </Button>
+        </div>
+        <div class="select-explain">
+          <label class="left-leble">企业微信应用代理ID</label>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.qwAppAgentId}}</span>
+          <input v-else type="text" v-model="enterpriseInfo.qwAppAgentId" class="input-common-att" />
+        </div>
+         <div class="select-explain">
+          <label class="left-leble">企业微信应用密钥</label>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.qwAppsecret}}</span>
+          <input v-else type="text" v-model="enterpriseInfo.qwAppsecret" class="input-common-att" />
+        </div>
+         <div class="select-explain">
+          <label class="left-leble">钉钉企业ID</label>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.ddCorpid}}</span>
+          <input v-else type="text" v-model="enterpriseInfo.ddCorpid" class="input-common-att" />
+        </div>
+        <div class="select-explain">
+          <label class="left-leble">钉钉应用ID</label>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.ddAppAgentId}}</span>
+          <input v-else type="text" v-model="enterpriseInfo.ddAppAgentId" class="input-common-att" />
+        </div>
+        <div class="select-explain">
+          <label class="left-leble">钉钉应用Key</label>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.ddAppKey}}</span>
+          <input v-else type="text" v-model="enterpriseInfo.ddAppKey" class="input-common-att" />
+        </div>
+        <div class="select-explain">
+          <label class="left-leble">钉钉应用密钥</label>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.ddAppsecret}}</span>
+          <input v-else type="text" v-model="enterpriseInfo.ddAppsecret" class="input-common-att" />
+        </div>
+        <div class="select-explain">
+          <label class="left-leble">钉钉扫码登录授权应用ID</label>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.ddOauth2AppId}}</span>
+          <input v-else type="text" v-model="enterpriseInfo.ddOauth2AppId" class="input-common-att" />
+        </div>
+         <div class="select-explain">
+          <label class="left-leble">路塔实例详情资源地址</label>
+             <span v-if="!editEnterpriseName">{{enterpriseInfo.rtRedirectUrl}}</span>
+          <input v-else type="text" v-model="enterpriseInfo.rtRedirectUrl" class="input-common-att" />
+        </div>
+      </section>
+
       <section class="info-warp-main-section">
         <div>
           <label class="left-leble">
@@ -102,6 +204,28 @@
         </Tag>
       </div>
     </user-modal>
+    <!-- 添加汇率modal -->
+    <Modal v-model="showExchangeRateModal" title="新增汇率">
+        <Form :model="exchangeRateInfo" ref="exchangeRateInfoItem" :label-width="100" :rules="ruleValidate">
+          <FormItem label="币种:" prop="currency">
+            <Select 
+              @on-change="onModalCurrencyChange" 
+              v-model="exchangeRateInfo.currency"
+              filterable
+              style="width:200px">
+                  <Option v-for="item in currencyList" :value="item.label" :key="item.value">{{ item.label }}</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="默认汇率:" prop="exchangeRate">
+            <InputNumber :min="0" v-model="exchangeRateInfo.exchangeRate"></InputNumber>
+          </FormItem>
+        </Form>
+        <div slot="footer">
+          <Button type="text" size="small" @click="showExchangeRateModal=false">取消</Button>
+          <Button type="primary" size="small" @click="addExchangeRate">保存</Button>
+          <Button type="primary" size="small" @click="addExchangeRate('update')">保存并新建</Button>
+        </div>
+    </Modal>
   </div>
 </template>
 
@@ -112,8 +236,14 @@ import {
   addOrUpdateEnterprise,
   updateRelation,
   deleteRelation,
-  getAllUsers
+  getAllUsers,
+  importThirdPlat,
+  getExchangeRateData,
+  addExchangeRateData,
+  deleteExchangeRateData,
+  updateExchangeRateData
 } from "@/services/enterpriseService";
+import { getDictByValue } from "@/services/commonService";
 import { getToken } from "@/utils/utils";
 import UserModal from "@/components/modal/Modal";
 
@@ -126,17 +256,47 @@ export default {
   data() {
     return {
       enterpriseInfo: {
-        logo: "",
-        nickname: "",
-        name: "",
-        instruction: "",
-        address: "",
-        phone: "",
-        admins: [],
+        logo: "",   //企业LOGO
+        nickname: "",   //企业简称
+        name: "",   //企业全称
+        instraction: "",    //企业说明
+        address: "",    //企业地址
+        phone: "",    //联系电话
+        qwCorpid:"",  //企业微信企业ID
+        qwAppAgentId:"",    //企业微信应用代理ID
+        qwAppsecret:"",    //企业微信应用密钥
+        ddCorpid:"",    //钉钉企业ID
+        ddAppAgentId:"",    //钉钉应用ID
+        ddAppKey:"",    //钉钉应用Key
+        ddAppsecret:"",    //钉钉应用应用密钥
+        ddOauth2AppId:"",   //钉钉扫码登录授权应用ID
+        rtRedirectUrl:"", //
+        admins: [],   //企业管理员
         backgroundImg: "",
         backgroundName: ""
       },
+      exchangeRateInfo: {
+        currency: "",
+        exchangeRate: 0,
+      },
+      ruleValidate: {
+        currency: [
+          {
+            required: true,
+            message: "币种不能为空",
+            trigger: "change"
+          }
+        ],
+        exchangeRate: [
+          {
+            required: true,
+            message: "汇率不能为空",
+            type: "number"
+          }
+        ]
+      },
       editEnterpriseName: false,
+      showExchangeRateModal: false,
       edit: "修改",
 
       httpHeaders: {
@@ -165,15 +325,193 @@ export default {
       ],
       closable: false,
 
+      rateColumns: [
+        {
+          type: "selection",
+          width: 60,
+          align: "center"
+        },
+        {
+          title: "币种",
+          slot: "currency",
+          sortable: true
+        },
+        {
+          title: "默认汇率",
+          slot: "exchangeRate",
+          sortable: true
+        },
+        {
+          title: "是否本位币",
+          align: 'center',
+          slot: "localCurrency"
+        },
+        {
+          title: "操作",
+          key: "action",
+          render: (h, params) => {
+            return h("Button",{
+              props: {
+                type: 'text',
+                size: 'small',
+                disabled: !this.$currentUser.isAdmin || params.row.currencyValue === 'rmb'
+              },
+              style: {
+                color: '#39f'
+              },
+              on: {
+                click: () => {
+                  let deleteData = [];
+                  deleteData.push(params.row.id);
+                  this.deleteRateCommon(deleteData);
+                }
+              }
+            },"删除");
+          }
+        }
+      ],
+      rateData: [],
+      currencyList: [],
+
       searchValue: "",
       pageTotal: 0, //table总数
       pageSize: 8,
       currentPage: 1, //table当前页
-      loading: false
+      loading: false,
+      hasNoCurrency: true,
+      selectExchange: []
     };
   },
 
   methods: {
+    //删除统一方法
+    deleteRateCommon(deleteData) {
+      this.$Modal.confirm({
+            title: "确认",
+            content: "确认删除所选汇率？",
+            onOk: () => {
+              deleteExchangeRateData(deleteData).then(res => {
+                    if(res.success){
+                      this.$Message.success(res.message);
+                      this.getExchangeRateDatas();
+                    }
+                  })
+              }
+          });
+    },
+    showAddExchange() {
+      this.showExchangeRateModal = true;
+    },
+    editExchangeRate(row, isEdit) {
+      if(this.$currentUser.isAdmin){
+        row.currencyValue !== 'rmb' && this.$set(row, isEdit, true);
+      }
+    },
+    onCurrencyChange(value,row) {
+      for(let item of this.rateData){
+        if(item.currency === value.value){
+          this.$Message.error('不可选择汇率已有币种！');
+          this.hasNoCurrency = false;
+          break;
+        }else{
+          this.hasNoCurrency = true;
+        }
+      }
+
+      if(this.hasNoCurrency){
+        if(row){
+          row.currency = value.label;
+          updateExchangeRateData(row).then(res => {
+            if(res.success){
+                this.$Message.success(res.message);
+                this.getExchangeRateDatas();
+              }else{
+                this.$Message.error(res.message);
+              }
+          }).catch(error => {
+            this.$Message.error(res.data.message);
+          })
+        }
+      }
+    },
+    onSelectChange(selection) {
+      this.selectExchange = selection;
+    },
+    //汇率添加币种唯一校验
+    onModalCurrencyChange(value) {
+      for(let item of this.rateData){
+        if(item.currency === value){
+          this.$Message.error('不可选择汇率已有币种！');
+          break;
+        }
+      }
+    },
+    onExchangeRateBlur(row) {
+      if(row){
+        if(!isNaN(row.exchangeRate)){
+          row.exchangeRate = Number(row.exchangeRate);
+          updateExchangeRateData(row).then(res => {
+            if(res.success){
+                this.$Message.success(res.message);
+                this.getExchangeRateDatas();
+              }else{
+                this.$Message.error(res.message);
+              }
+          }).catch(error => {
+            this.$Message.error(res.data.message);
+          })
+        }else{
+          this.$Message.error('请输入数字！');
+        }
+      }
+    },
+    onLocalCurrencyChange(status, row) {
+      if(row){
+        status ? row.localCurrency = 1 : row.localCurrency = 0;
+        updateExchangeRateData(row).then(res => {
+            if(res.success){
+                this.$Message.success(res.message);
+                this.getExchangeRateDatas();
+              }else{
+                this.$Message.error(res.message);
+              }
+          }).catch(error => {
+            this.$Message.error(res.data.message);
+          })
+      }
+    },
+    //添加汇率
+    addExchangeRate(type) {
+      this.$refs["exchangeRateInfoItem"].validate(valid => {
+        if(valid){
+          addExchangeRateData(this.exchangeRateInfo).then(res => {
+            if(res.success){
+              this.$Message.success(res.message);
+              this.$refs["exchangeRateInfoItem"].resetFields();
+              type !== 'update' && (this.showExchangeRateModal = false)
+              this.getExchangeRateDatas();
+            }else{
+              this.$Message.error(res.message);
+            }
+          }).catch(error => {
+            this.$Message.error(res.data.message);
+          })
+        }
+      })
+    },
+    //删除汇率
+    deleteExchange() {
+      let deleteData = [];
+      if(this.selectExchange.length > 0){
+        for(let item of this.selectExchange){
+          deleteData.push(item.id);
+        }
+
+        this.deleteRateCommon(deleteData);
+      }else{
+        this.$Message.error('请先选择要删除的选项！');
+      }
+    },
     //管理员选择modal展示
     selectAdminModal() {
       this.showAdminModal = true;
@@ -350,17 +688,33 @@ export default {
     handleEditName() {
       this.edit = this.editEnterpriseName ? "修改" : "保存";
       this.closable = !this.closable;
-
+   
       //保存修改的数据
       if (this.editEnterpriseName) {
-        let data = {
-          id: this.enterpriseInfo.id,
+        let values = {
           nickname: this.enterpriseInfo.nickname,
           name: this.enterpriseInfo.name,
-          instruction: this.enterpriseInfo.instruction,
+          instraction: this.enterpriseInfo.instraction,
           address: this.enterpriseInfo.address,
-          phone: this.enterpriseInfo.phone
+          phone: this.enterpriseInfo.phone,
+          qwCorpid: this.enterpriseInfo.qwCorpid,
+          qwAppAgentId: this.enterpriseInfo.qwAppAgentId,
+          qwAppsecret: this.enterpriseInfo.qwAppsecret,
+          ddCorpid: this.enterpriseInfo.ddCorpid,
+          ddAppAgentId: this.enterpriseInfo.ddAppAgentId,
+          ddAppKey: this.enterpriseInfo.ddAppKey,
+          ddAppsecret: this.enterpriseInfo.ddAppsecret,
+          ddOauth2AppId:this.enterpriseInfo.ddOauth2AppId,
+          rtRedirectUrl:this.enterpriseInfo.rtRedirectUrl
         };
+        let data = [];
+        for(let key in values){
+          data.push({
+            "property":key,
+            "value":values[key]
+          })
+        }
+
         addOrUpdateEnterprise(data).then(res => {
           if (res.success) {
             this.$Message.info("保存成功");
@@ -371,6 +725,27 @@ export default {
       }
 
       this.editEnterpriseName = !this.editEnterpriseName;
+    },
+
+    //同步
+    handleSyncInfo(){
+      let fontDDColor = '#8DE427',
+          fontqywxColor = '#8DE427';
+      importThirdPlat().then(res => {
+        if(res.success){
+          this.$Message.success('同步成功！');
+        }else{
+          res.dd.success && (fontqywxColor = '#E4393C');
+          res.qywx.success && (fontDDColor = '#E4393C');
+            
+          this.$Message.info({
+            content: `<div style="color:${fontDDColor}">${res.dd.message}</div>
+                      <div style="color:${fontqywxColor}">${res.qywx.message}</div>`
+          });
+        }
+      }).catch(err => {
+        this.$Message.error(err.data.message);
+      });
     },
 
     //上传
@@ -388,11 +763,14 @@ export default {
 
     upload() {
       this.loadingStatus = true;
-      let data = {
-        id: this.enterpriseInfo.id,
-        backgroundImg: this.enterpriseInfo.backgroundImg,
-        backgroundName: this.enterpriseInfo.backgroundName
-      };
+      let data = [{
+        "property":"backgroundImg",
+        "value": this.enterpriseInfo.backgroundImg,
+      },{
+        "property":"backgroundName",
+        "value":this.enterpriseInfo.backgroundName
+      }];
+
       addOrUpdateEnterprise(data).then(res => {
         if (res.success) {
           this.$Message.info("图片上传成功");
@@ -408,7 +786,10 @@ export default {
         "/H_roleplay-si/ds/download?width=256&height=64&url=" +
         res.data[0].attacthment;
 
-      let data = { id: this.enterpriseInfo.id, logo: this.enterpriseInfo.logo };
+      let data = [{ 
+        "property":"logo",
+        "value":this.enterpriseInfo.logo 
+      }];
       addOrUpdateEnterprise(data).then(res => {
         if (res.success) {
           this.$Message.info("图片上传成功");
@@ -431,10 +812,39 @@ export default {
         title: "文件格式不对",
         desc: "请上传格式为png 或者 jpg 的图片"
       });
+    },
+    //获取币种数据
+    getCurrencyDatas() {
+      getDictByValue('fundCurrency').then(res => {
+        if(res){
+          for(let item of res) {
+            this.currencyList.push({
+              label: item.name,
+              value: item.value
+            });
+          }
+        }
+      })
+    },
+    //获取汇率数据
+    getExchangeRateDatas() {
+      this.selectExchange = [];
+      getExchangeRateData().then(res => {
+        if(res.success){
+          this.rateData = res.list;
+          this.rateData.forEach(val => {
+            val.currencyValue === 'rmb' && (val._disabled = true);
+            val.exchangeEdit = false;
+            val.currencyEdit = false;
+          })
+        }
+      })
     }
   },
   created() {
     this.getAdmintrstorData();
+    this.getCurrencyDatas()
+    this.getExchangeRateDatas();
   }
 };
 </script>

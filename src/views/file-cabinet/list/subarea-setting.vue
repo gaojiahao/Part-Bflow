@@ -107,7 +107,7 @@ export default {
       searchValue: "",
       subareaName: "",
       showModal: false,
-      loading: true,
+      loading: false,
       isEditSubarea: false,
       columns: [],
       data: [],

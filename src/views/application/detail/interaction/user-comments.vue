@@ -5,8 +5,8 @@
 <template>
   <div class="bg_ff ">
     <Row class="app-resource-group-title">
-        <h3>评论 
-            <b class="fr subscribe-bar">
+        <div class="commnet-title">评论 
+            <span class="fr subscribe-bar">
                <span > 
                     <span 
                         class="subcribeing" 
@@ -33,7 +33,7 @@
 
                 <span>
                     <Dropdown class="user-dropdown" @on-click="addSubscribeUsers" trigger="click" >
-                         <Icon type="md-person" size=18  /> {{subscribeInfo.subscribeNum}}
+                         <Icon type="md-person" size=18  /> <b>{{subscribeInfo.subscribeNum}}</b>
                          <Icon type="ios-arrow-down"></Icon>
                         <DropdownMenu slot="list">
                             <DropdownItem name="add">
@@ -46,8 +46,8 @@
                         </DropdownMenu>
                     </Dropdown>
                 </span>
-            </b>
-        </h3>
+            </span>
+        </div>
     </Row>
 
     <Row class="user-comment">
@@ -59,7 +59,8 @@
 
         <comments 
             :comments="comments" 
-            :refreshRootComments="refreshComments"></comments>
+            :refreshRootComments="refreshComments"
+            @refreshDeleteComments="refreshDeleteComments"></comments>
 
         <Page 
             class="pad20"
@@ -100,6 +101,7 @@ import {
 import comments from "@/components/discussion/comments";
 import commentPublish from "@/components/discussion/publish";
 import UserSelector from '@/views/application/detail/permission/custom-datasource/user-selector';
+import { EMOTION } from "@/assets/const";
 
 export default {
   name: "userComments",
@@ -108,11 +110,18 @@ export default {
     commentPublish,
     UserSelector
   },
-  props: {},
+  props: {
+      listId: {
+          type: String,
+          default: ''
+      },
+      type: {
+          type: String,
+          default: ''
+      }
+  },
   data() {
     return {
-        listId:this.$route.params.listId,
-        type:'list',
         comments:[],
         commentsCount:0,
         pageInfo:{
@@ -135,6 +144,9 @@ export default {
     };
   },
   methods: {
+    refreshDeleteComments () {
+        this.refreshComments();
+    },
     emitUserModal() {
       this.showUserModal = false;
     },
@@ -201,21 +213,35 @@ export default {
             if(!res.success){
                 this.$Notice.warning({
                     title: '系统提示',
-                    desc: '添加评论失败,请联系企业管理员!'
+                    desc: res.message
                 });
                 return;
             }
             this.refreshComments();
         });
     },
+  
     refreshComments:function () {
-        var params = {
+        let emotion = [...EMOTION];
+        let reg = /\[(.+?)\]/g;
+        let params = {
             relationKey:this.listId,
             sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
         };
         params = Object.assign(params,this.pageInfo);
 
         getComments(params).then(res=>{
+             res.tableContent.forEach(item=>{
+               item.content = item.content .replace(reg, (word) => {
+                    // 寻找表情索引
+                    let idx = emotion.findIndex(item => item === word.replace(/(\[|\])/g, ''));
+                    // 没有匹配项则返回原文字
+                    if (idx === -1) {
+                    return word
+                    }
+                    return `<span class="comments-content-item-content-img-emotion" style="background-position: -${24 * idx}px 0;"></span>`
+                });
+            })
             this.comments = res.tableContent;
           
             this.pageInfo.total = res.dataCount;
@@ -227,7 +253,7 @@ export default {
     },
     handleSubscribeApp:function () {
         subscribeApp({
-            type:'list',
+            type: this.type,
             relationKey:this.listId
         }).then(res=>{
             this.subscribeInfo.isSubscribe = 1;

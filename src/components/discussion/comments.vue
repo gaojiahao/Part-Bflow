@@ -1,4 +1,4 @@
-<style lang="less" scoped >
+<style lang="less" >
 @import "./comments.less";
 </style>
 <template>
@@ -14,9 +14,9 @@
                 :userInfo="userInfo" 
                 trigger="click">
                     <img   
-                    @click="showUserInfo(comment.creator)" 
-                    onerror="src='resources/images/icon/defaultUserPhoto.jpg'"
-                    slot="userCard" :src="comment.photo?comment.photo:'resources/images/icon/contactor.png'">
+                    @click="showUserInfo(comment.creator)"
+                    @error="errorimg(comment)" 
+                    slot="userCard" :src="comment.photo?comment.photo:'resources/images/icon/defaultUserPhoto.png'">
                 </my-pop-tip>
             </Col>
 
@@ -24,7 +24,7 @@
 
                 <p><b>{{comment.creatorName}}</b></p>
 
-                <div class="comments-content-item-content-text" v-html="comment.content">
+                <div class="comments-content-item-content-text "  @click="handleViewTextImg($event)" v-html="comment.content">
                 </div>
 
                 <div class="comments-content-item-img" v-if="comment.commentAttachments.length>0">
@@ -63,7 +63,12 @@
                             class="cursor-pointer"
                             @click="handleShowChilds(comment)" 
                             v-if="comment.childCommentNum>0">|&nbsp;查看<strong> {{comment.childCommentNum}}</strong>条回复
-                            </span>
+                        </span>
+                        <span 
+                            v-if="$currentUser.userId == comment.creator" 
+                            @click="deleteComments(comment)" 
+                            class="comments-delete">
+                            <span style="color:#333">|&nbsp;</span>删除</span>
                     </span>
 
                     <span  class="comments-content-item-content-bar-right" >
@@ -87,7 +92,7 @@
                 </div>
 
                 <div  v-if="comment.showReply || comment.showChilds" 
-                    class="comments-content-item-content-reply">
+                    class="comments-content-item-content-reply" @click="handleViewTextImg($event)">
                     <commentPublish 
                         v-if="comment.showReply" 
                         :handlePublish="handleReplyPublish" 
@@ -102,6 +107,7 @@
                         v-if="comment.showChilds" 
                         :superComment ="comment"
                         :isInIframe="isInIframe"
+                        @hiddenChildComments="hiddenChildComments"
                         >
                     </child-comments>
                 </div>
@@ -126,7 +132,8 @@ import {
     cancelCommentThumbsUp,
     saveComment,
     getComments,
-    getUserInfoByUserId
+    getUserInfoByUserId,
+    deleteComment
     } from "@/services/appService.js";
 
 import MyPopTip from "@/components/poptip/MyPopTip";
@@ -169,6 +176,12 @@ export default {
         
     },
     methods: {
+        hiddenChildComments () {
+            this.$emit('refreshDeleteComments');
+        },
+        errorimg(comment) {
+            comment.photo = 'resources/images/icon/defaultUserPhoto.png';
+        },
         handlerShowThumbsUpInfo:function (comment) {
             this.$forceUpdate();
             this.comments.map(c=>{
@@ -218,6 +231,25 @@ export default {
 
            
         },
+        //删除评论
+        deleteComments (comment) {
+            if(comment.id){
+                this.$Modal.confirm({
+                    title: "确认",
+                    content: "确认删除此条评论？",
+                    onOk: () => {
+                        deleteComment(comment.id).then(res => {
+                            if(res.success){
+                                this.$Message.success(res.message);
+                                this.$emit('refreshDeleteComments');
+                            }
+                        }).catch(err => {
+                            this.$Message.success(err.data.message);
+                        });
+                    }
+                });
+            }
+        },
         handleShowChilds:function (comment) {
             this.$forceUpdate();
             this.comments.map(c=>{
@@ -228,6 +260,13 @@ export default {
                 c.showPraises = false;
             });
             comment.showChilds = !comment.showChilds;
+            if(window.top.setInstaceCommentsIframeHeight){
+                this.$nextTick(function () {
+                    setTimeout(() => {
+                        window.top.setInstaceCommentsIframeHeight();
+                    },200);
+                })
+            }
         },
         handleShowReply:function (comment) {
             this.$forceUpdate();
@@ -239,13 +278,17 @@ export default {
 
             
             if(window.top.setInstaceCommentsIframeHeight){
-                window.top.setInstaceCommentsIframeHeight();
+                this.$nextTick(function () {
+                    setTimeout(() => {
+                        window.top.setInstaceCommentsIframeHeight();
+                    },200);
+                })
             }
 
             comment.showReply = !comment.showReply;
             
         },
-        handleReplyPublish:function (content,uploadList,superComment,commentAndReply) {
+        handleReplyPublish:function (content,uploadList,userIds=[],superComment,commentAndReply) {
             this.$forceUpdate();
             let comment ={
                 type:superComment.type,       
@@ -262,7 +305,7 @@ export default {
                 if(!res.success){
                     this.$Notice.warning({
                         title: '系统提示',
-                        desc: '添加回复,请联系企业管理员!'
+                        desc: res.message
                     });
                     return;
                 }
@@ -271,6 +314,13 @@ export default {
                 this.$refs.childComments[0].handleLoadMore();
             });
         },
+        handleViewTextImg:function(event){
+            var tagName = event.target.tagName;
+
+            if(tagName === 'IMG' && !~event.target.getAttribute('src').indexOf('resources/images')){
+                this.handleViewImg(event.target.getAttribute('src'));
+            }
+        },
         handleViewImg:function (img) {
             if(window.top.viewInsCommentsImg){
                 window.top.viewInsCommentsImg(img);
@@ -278,7 +328,6 @@ export default {
                 this.imgName = img;
                 this.imgModalVisible = true;
             }
-            
         },
         handleViewFile:function (file) {
           window.open(file.attachment)  
@@ -294,8 +343,7 @@ export default {
     created(){
        
     },
-    mounted () {
-    }
+    mounted () {}
 };
 </script>
 

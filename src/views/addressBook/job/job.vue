@@ -5,28 +5,25 @@
 <template>
   <div class="job-wrap">
     <header class="job-wrap-header">
-      <span @click="goRoleList" class="job-wrap-header-job">职位</span>
-      <span class="job-wrap-header-others">/</span>
-      <span v-show="jobId" class="job-wrap-header-others">{{name}}</span>
-      <span v-show="!jobId" class="job-wrap-header-others">创建</span>
-      <Tag v-show="jobId" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status}" style="margin-bottom: 7px;"></Tag>
-    </header>
-
-    <div class="job-wrap-action">
-      <ul>
-        <li v-for="(item,index) in actionBtn" :key="index" v-if="!item.hidden" class="job-wrap-action-li" v-bind:class="index===actionIndex?'job-wrap-action-li-active':''" @click="handlerViewChange(index)">
-          <div>
-            <img v-if="!item.type" :src="item.imgPath" class="job-wrap-action-li-img" />
-            <Icon v-else :type="item.type" class="icon" />
-            <div class="left-content">
-              <span v-show="item.number!=='undefine'">{{item.number}}</span>
-              <h3>{{item.label}}</h3>
-            </div>
+      <div class="l-info">
+        <span @click="goRoleList" class="l-info-job">职位</span>
+        <span class="l-info-others">/</span>
+        <span v-show="jobId" class="l-info-others">{{name}}</span>
+        <span v-show="!jobId" class="l-info-others">创建</span>
+        <Tag v-show="jobId" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status}" style="margin-bottom: 7px;"></Tag>
+      </div>
+    
+      <ul class="r-action">
+        <li v-for="(item,index) in actionBtn" :key="index" v-if="!item.hidden" class="r-action-li" v-bind:class="index===actionIndex?'r-action-li-active':''" @click="handlerViewChange(index)">
+          <img v-if="!item.type" :src="item.imgPath" class="r-action-li-img" />
+          <Icon v-else :type="item.type" class="icon" />
+          <div class="left-content">
+            <span v-show="item.number!=='undefine'">{{item.number}}</span>
+            <p>{{item.label}}</p>
           </div>
         </li>
       </ul>
-    </div>
-
+    </header>
     <div class="job-wrap-tabs">
       <!-- 基本信息 -->
       <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===2">
@@ -60,7 +57,7 @@
             <Select 
               v-model="formItem.rankPass" 
               @on-change="onHandleRankValueChange"
-              placeholder="请选择职位类型" 
+              placeholder="请选择职级通道" 
               :disabled="isEdit" 
               :class="isEdit?'input-status-isedit':''"
               >
@@ -72,7 +69,7 @@
              <Select 
               v-model="formItem.rank" 
               @on-open-change="getFunctionType($event,'rank')"
-              placeholder="请选择职位类型" 
+              placeholder="请选择职级" 
               :disabled="isEdit" 
               :class="isEdit?'input-status-isedit':''"
               >
@@ -83,7 +80,7 @@
               <InputNumber v-model="formItem.hourCost" :step="0.1" :min="0.1" :readonly="isEdit"></InputNumber>
           </FormItem>
             <FormItem :labelWidth="120" label="职责描述" style="font-size:16px">
-             <Input v-model="formItem.describe" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="职位描述" :readonly="isEdit" ></Input>
+             <Input v-model="formItem.describe" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="职责描述" :readonly="isEdit" ></Input>
           </FormItem>
           <div class="baseinfo-container-divider" v-if="jobId && isEdit"></div>
           <FormItem label="创建者:" v-if="jobId && isEdit">
@@ -102,10 +99,11 @@
         <div class="baseinfo-container-action" @click="handleSubmitBoxs">
           <input type='submit' value="关闭" style="background-color:rgb(81, 90, 110)" class="baseinfo-container-action-submit" id="close" />
           <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" id="edit" v-if="jobId && isPermission" />
-          <input type='submit' value="保存"  class="baseinfo-container-action-submit" id="save" v-show="!isEdit" />
+          <input type='submit' value="保存"  class="baseinfo-container-action-submit" id="save" v-show="!isEdit && formItem.status !== -2" />
           <input type='submit' value="归档" style="background-color:rgb(31, 94, 197)" class="baseinfo-container-action-submit" id="file" v-show="!isEdit && formItem.status === 1" />
+          <input type='submit' value="还原" style="background-color:rgb(31, 94, 197)" class="baseinfo-container-action-submit" id="restore" v-show="!isEdit && formItem.status === -2" />
           <input type='submit' value="保存并新建" class="baseinfo-container-action-submit" id="saveAndAdd" v-if="!jobId"/>
-          <input type='submit' value="保存草稿" class="baseinfo-container-action-submit" id="draft" v-show="!isEdit || !jobId" />
+          <input type='submit' value="保存草稿" class="baseinfo-container-action-submit" id="draft" v-show="(!isEdit && formItem.status === 0) || !jobId" />
         </div>
       </section>
       <!-- 成员信息 -->
@@ -113,8 +111,8 @@
         <member-info :isPermission="isPermission" :jobId="jobId" @on-member-info-change='handleChangeObjDetailsCount'></member-info>
       </section>
       <!-- 权限 -->
-      <section class="permission-container rfd-tab-container-common" v-if="actionIndex===0">
-        <permission :isPermission="isPermission" :jobId="jobId" @on-permission-change='handleChangeObjDetailsCount'></permission>
+      <section class="permission-container" v-if="actionIndex===0">
+        <permission :target="target" :isPermission="isPermission" :jobId="jobId" @on-permission-change='handleChangeObjDetailsCount'></permission>
       </section>
     </div>
 
@@ -133,7 +131,7 @@ import {
 } from "@/services/addressBookService.js";
 import MemberModal from "@/components/modal/Modal";
 import MemberInfo from "./instance/job-member-info";
-import Permission from "./instance/job-permission";
+import Permission from "../user/detail/instance/direct-permission";
 export default {
   name: "job",
 
@@ -176,7 +174,7 @@ export default {
         },
         {
           label: "成员信息",
-          imgPath: "resources/images/icon/user.png",
+          imgPath: "https://lab.roletask.com/resource/app-icon/user.png",
           number: 0,
           hidden: false,
           id: "user"
@@ -237,10 +235,18 @@ export default {
       checkout: true,
 
       jobId: this.$route.params.jobId,
-      isPermission: true
+      isPermission: true,
+      target: {
+        type: 'role',
+        targetId: this.$route.params.jobId
+      }
     };
   },
-
+  watch: {
+    $route(to, from) {
+      window.location.reload();
+    }
+  },
   methods: {
     goRoleList() {
         location.href = '/Site/index.html#page/jobs';
@@ -329,6 +335,10 @@ export default {
             this.formItem.status = 0;
             this.save();
             break;
+          case "restore":
+            this.formItem.status = 1;
+            this.save();
+            break;
         }
       }
     },
@@ -385,7 +395,6 @@ export default {
                   this.$router.push({
                     path: "/addressBook/job/detail/" + res.id
                   });
-                  window.location.reload();
                 }
               })
               .catch(errer => {

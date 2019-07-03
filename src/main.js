@@ -3,8 +3,10 @@ import App from './App';
 import router from './router';
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
+// import '../my-theme/index.less';
 import fontIcon from './assets/App.css';
 import { deepstream } from './plugin/deepstream';
+import VueLazyload from 'vue-lazyload'
 
 import './plugin/jquery-vender.js'
 import './plugin/jqorg/js/jquery.min.js'
@@ -21,7 +23,7 @@ require('./assets/App.css');
 import { getCurrentUserInfo } from "@/services/flowService";
 
 Vue.config.productionTip = false;
-
+Vue.use(VueLazyload);
 Vue.use(iView);
 let cache = window.sessionStorage.getItem('roletask.com.r2.cache');
 let deepstreamAddress = window.localStorage.getItem('r2-cached-properties');

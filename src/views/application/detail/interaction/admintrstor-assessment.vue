@@ -24,25 +24,11 @@
                 v-model="adminAssessData.duringDate">
               </DatePicker>
             </FormItem>
-            <FormItem label="效率与成本改进成果:" prop="result" style="margin-bottom: 65px;">
-              <!-- <vue-wangeditor 
-                ref="result" 
-                id="editorResult" 
-                :menus="menu" 
-                height="143" 
-                width="100%"
-                 class="editor-result">
-                 </vue-wangeditor> -->
-                 <div ref="resulteditor"></div>
+            <FormItem label="效率与成本改进成果:" prop="result">
+                 <div contenteditable="true" ref="resulteditor" class="result-content"></div>
             </FormItem>
-            <FormItem label="效率与成本改进机会:" prop="opportunity" style="margin-bottom: 40px;">
-              <!-- <vue-wangeditor 
-                ref="oppor" id="editorOppor" 
-                :menus="menu" 
-                height="143" 
-                width="100%">
-                </vue-wangeditor> -->
-                <div ref="opporeditor"></div>
+            <FormItem label="效率与成本改进机会:" prop="opportunity">
+                <div contenteditable="true" ref="opporeditor" class="result-content"></div>
             </FormItem>
           </Form>
           <div style="text-align:right;margin-bottom:5px;">
@@ -155,13 +141,13 @@ export default {
     },
     //添加管理员自评
     submitAdminAssess() {
-      if(this.opporeditor.txt.html() === '<div></div>'){
+      if(this.$refs['opporeditor'].innerHTML === ''){
         this.$Message.error('必填项请输入！');
-      }else if(this.resulteditor.txt.html() === '<div></div>'){
+      }else if(this.$refs['resulteditor'].innerHTML === ''){
         this.$Message.error('必填项请输入！');
       }else{
-        this.adminAssessData.opportunity = this.opporeditor.txt.html();
-        this.adminAssessData.result = this.resulteditor.txt.html();
+        this.adminAssessData.opportunity = this.$refs['opporeditor'].innerHTML;
+        this.adminAssessData.result = this.$refs['resulteditor'].innerHTML;
       }
       let params = {
         listId: this.listId,
@@ -183,8 +169,8 @@ export default {
             this.getAssessmentData();
             this.showAssessModal = false;
             this.$refs["formValidate"].resetFields();
-            this.resulteditor.txt.html(`<div></div>`);
-            this.opporeditor.txt.html(`<div></div>`);
+            this.$refs['resulteditor'].innerHTML = '';
+            this.$refs['opporeditor'].innerHTML = '';
             this.isEdit = "";
           } else {
             this.$Message.error(res.message);
@@ -201,9 +187,6 @@ export default {
           this.isPage = false;
         }else{
           this.isPage = true;
-        }
-        if(!this.resulteditor){
-          this.createEditor();
         }
       });
     },
@@ -226,62 +209,6 @@ export default {
         relDate = year + "-" + month + "-1";
       }
       return relDate;
-    },
-    //create富文本编辑器
-    createEditor() {
-      this.resulteditor = new E(this.$refs.resulteditor)
-      this.resulteditor.customConfig.onchange = (html) => {
-        this.modalFormData.content = html;
-      }
-      this.resulteditor.customConfig.zIndex = 100
-      this.resulteditor.customConfig.menus = [
-        'head',  // 标题
-        'bold',  // 粗体
-        'fontSize',  // 字号
-        'fontName',  // 字体
-        'italic',  // 斜体
-        'underline',  // 下划线
-        'strikeThrough',  // 删除线
-        'foreColor',  // 文字颜色
-        'backColor',  // 背景颜色
-        'link',  // 插入链接
-        'list',  // 列表
-        'justify',  // 对齐方式
-        'quote',  // 引用
-        'emoticon',  // 表情
-        'code',  // 插入代码
-        'undo',  // 撤销
-        'redo'  // 重复
-      ]
-      this.resulteditor.create();
-      this.resulteditor.txt.html(`<div></div>`);
-
-      this.opporeditor = new E(this.$refs.opporeditor)
-      this.opporeditor.customConfig.onchange = (html) => {
-        this.modalFormData.content = html;
-      }
-      this.opporeditor.customConfig.zIndex = 100
-      this.opporeditor.customConfig.menus = [
-        'head',  // 标题
-        'bold',  // 粗体
-        'fontSize',  // 字号
-        'fontName',  // 字体
-        'italic',  // 斜体
-        'underline',  // 下划线
-        'strikeThrough',  // 删除线
-        'foreColor',  // 文字颜色
-        'backColor',  // 背景颜色
-        'link',  // 插入链接
-        'list',  // 列表
-        'justify',  // 对齐方式
-        'quote',  // 引用
-        'emoticon',  // 表情
-        'code',  // 插入代码
-        'undo',  // 撤销
-        'redo'  // 重复
-      ]
-      this.opporeditor.create();
-      this.opporeditor.txt.html(`<div></div>`);
     }
   },
   created() {

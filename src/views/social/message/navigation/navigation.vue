@@ -5,10 +5,9 @@
     <ul class="navigation-list messagescrollbar">
         <router-link  :to="'/social/message/list/'+ nav.listId" v-for="(nav,index) in  navs" :key="index" >
             <li  class="navigation-list-item" @click="handleActiveNavigation(nav)"  v-bind:class="{ 'active':$route.params.listId==nav.listId }">
-                <img width="40" :src="nav.icon" >
+                <img width="40" :src="handlerGetIcon(nav.icon)" >
                 <div class="navigation-list-item-appinfo">
                     <div class="font14"> {{nav.listName}}</div>
-                    <div style="color: #5c7893;"><p v-html="nav.comment"></p></div>
                 </div>
 
                 <Badge class="navigation-list-item-msgcount" :count="nav.unreadNum" overflow-count="99" >
@@ -36,7 +35,6 @@ export default {
         refreshNavListByMessage:function (params) {
               getNavListByMessage(this.params).then(res=>{
                 this.navs = res.tableContent;
-                
             });
         },
         //订阅消息
@@ -102,6 +100,14 @@ export default {
             readNotice(nav.listId).then(res=>{
                 nav.unreadNum = 0;
             });
+        },
+        handlerGetIcon(icon){
+            if(icon){
+                if(icon.indexOf('resource')=== 0 ){
+                    return icon = `https://lab.roletask.com/resource/app-icon/${icon.split('/').pop()}`
+                }
+            }
+            return icon;
         }
     },
     mounted(){

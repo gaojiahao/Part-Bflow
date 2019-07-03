@@ -12,8 +12,7 @@
       :isAdmin="isAdmin" 
       :isCompanyAdmin="isCompanyAdmin" 
       :appData="appData" 
-      @reloadData="reloadData" 
-      @changeAdmin="changeAdmin" 
+      @reloadData="reloadData"
       @enabledForbiddenAppPermission="enabledForbiddenAppPermission">
     </app-info>
 
@@ -47,12 +46,19 @@
           连接&API
         </MenuItem>
       </router-link>
+
+      <router-link :to="{ name:'features'}">
+        <MenuItem name="features">
+          配置
+        </MenuItem>
+      </router-link>
     </Menu>
 
   <div class="detail-content">
     <router-view 
       :listId="this.$route.params.listId" 
       :isAdmin="isAdmin"
+      :isOperator="isOperator"
       :isAddress="isAddress" 
       :appType="appType"
       :appTransType="appTransType" 
@@ -82,6 +88,7 @@ export default {
       isAdmin: false,       //应用管理员权限
       isCompanyAdmin: false,  //企业管理员权限
       isAddress: false,   //通讯录权限
+      isOperator: false, //运营管理员权限
       appType: "",
       appTransType: "",
       enabledForbidden: -1
@@ -92,9 +99,6 @@ export default {
     enabledForbiddenAppPermission() {
       this.enabledForbidden++;
     },
-    changeAdmin() {
-      this.getAppInfoDatas();
-    },
     //获取应用详情信息
     getAppInfoDatas() {
       let uniqueId = this.listId,
@@ -103,14 +107,25 @@ export default {
       //请求应用详情信息
       getListData(uniqueId).then(res => {
         this.appData = res[0];
+        if(this.appData.comment){
+          this.appData.comment = this.appData.comment.replace(/<br>/g,'\r\n'); 
+        } 
         this.appType = this.appData.type;
         this.appTransType = this.appData.transType;
+
+
+        if(this.appData.icon){
+          if(this.appData.icon.indexOf('resource')=== 0 ){
+              this.appData.icon = `https://lab.roletask.com/resource/app-icon/${this.appData.icon.split('/').pop()}`
+          }
+        }
 
         //获取当前登录用户角色id
         currentUser.isSysRoleList.forEach(val => {
           currentUserIds.push(val.id);
         });
         //判断当前用户是否有当前应用权限
+        currentUserIds.indexOf(-1) > -1 && (this.isOperator = true);
         if (this.appData.administrator) {
           if (
             currentUser.nickname === this.appData.administrator &&

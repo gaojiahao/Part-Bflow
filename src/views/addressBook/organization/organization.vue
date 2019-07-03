@@ -5,31 +5,31 @@
 <template>
   <div class="organization-wrap">
     <header class="organization-wrap-header">
-      <span @click="goOrgList" class="organization-wrap-header-org">组织</span>
-      <span class="organization-wrap-header-others">/</span>
-      <span v-show="groupId" class="organization-wrap-header-others">{{name}}</span>
-      <span v-show="!groupId" class="organization-wrap-header-others">创建</span>
-      <Tag v-show="groupId" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status}" style="margin-bottom: 7px; padding-right: 13px;"></Tag>
-    </header>
+     <div class="l-info">
+        <span @click="goOrgList" class="l-info-org">组织</span>
+        <span class="l-info-others">/</span>
+        <span v-show="groupId" class="l-info-others">{{name}}</span>
+        <span v-show="!groupId" class="l-info-others">创建</span>
+        <Tag v-show="groupId" class="radius10 marlr10 color_fff" v-instanceStateDirective="{status:formItem.status}" style="margin-bottom: 7px; padding-right: 13px;"></Tag>
+     </div>
 
-    <div class="organization-wrap-action">
-      <ul>
-        <li v-for="(item,index) in actionBtn" :key="index" v-if="!item.hidden" class="organization-wrap-action-li" v-bind:class="index===actionIndex?'organization-wrap-action-li-active':''" @click="handlerViewChange(index)">
-          <div>
-            <img v-if="!item.type" :src="item.imgPath" class="organization-wrap-action-li-img" />
-            <Icon v-else :type="item.type" class="icon" />
-            <div class="left-content">
-              <span v-show="item.number!=='undefine'">{{item.number}}</span>
-              <h3>{{item.label}}</h3>
-            </div>
-          </div>
+      <ul class="r-action">
+        <li v-for="(item,index) in actionBtn" :key="index+12" v-if="!item.hidden" class="r-action-li" v-bind:class="index===actionIndex?'r-action-li-active':''" @click="handlerViewChange(index)">
+          <img v-if="!item.type" :src="item.imgPath" class="r-action-li-img" />
+          <Icon v-else :type="item.type" class="icon" />
+          <div class="left-content">
+            <span v-show="item.number!=='undefine'">{{item.number}}</span>
+            <p>{{item.label}}</p>
+          </div> 
         </li>
       </ul>
-    </div>
+    </header>
+
+  
 
     <div class="organization-wrap-tabs">
       <!-- 基本信息 -->
-      <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===5">
+      <section class="baseinfo-container rfd-tab-container-common" v-if="actionIndex===6">
         <Form :model="formItem" :labelWidth="120" ref="formItem" :rules="ruleValidate" :class="{'is-required':isEdit}" style="background-color: #fff">
           <FormItem label="组织名称:" style="font-size:16px" prop="groupName">
             <Input v-model="formItem.groupName" @on-blur="onGroupNameOutBlur" :readonly="isEdit" :class="isEdit?'input-status-isedit':''" />
@@ -82,11 +82,16 @@
         <div class="baseinfo-container-action" @click="handleSubmitBoxs">
           <input type='submit' value="关闭" style="background-color:rgb(81, 90, 110)" class="baseinfo-container-action-submit" id="close" />
           <input type='submit' :value="editBtnName" class="baseinfo-container-action-submit" id="edit" v-if="groupId && isPermission" />
-          <input type='submit' value="保存" class="baseinfo-container-action-submit" id="save" v-show="!isEdit" />
-          <input type='submit' value="归档" class="baseinfo-container-action-submit" id="file" v-show="!isEdit && formItem.status === 1" />
+          <input type='submit' value="保存" class="baseinfo-container-action-submit" id="save" v-show="!isEdit && formItem.status !== -2" />
+          <input type='submit' value="归档" style="background-color:rgb(31, 94, 197)" class="baseinfo-container-action-submit" id="file" v-show="!isEdit && formItem.status === 1" />
+          <input type='submit' value="还原" style="background-color:rgb(31, 94, 197)" class="baseinfo-container-action-submit" id="restore" v-show="!isEdit && formItem.status === -2" />
           <input type='submit' value="保存并新建" class="baseinfo-container-action-submit" id="saveAndAdd" v-if="!groupId" />
-          <input type='submit' value="保存草稿" class="baseinfo-container-action-submit" id="draft" v-show="!isEdit || !groupId" />
+          <input type='submit' value="保存草稿" class="baseinfo-container-action-submit" id="draft" v-show="(!isEdit && formItem.status === 0) || !groupId" />
         </div>
+      </section>
+      <!-- 组织利润表 -->
+      <section v-if="actionIndex===5">
+        <team-profit :groupId="groupId"></team-profit>
       </section>
       <!-- 上级组织 -->
       <section class="memberinfo-container rfd-tab-container-common" v-if="actionIndex===4">
@@ -105,8 +110,8 @@
         <member-info :isPermission="isPermission" :groupId="groupId" @on-member-info-change='handleChangeObjDetailsCount'></member-info>
       </section>
       <!-- 权限 -->
-      <section class="permission-container rfd-tab-container-common" v-if="actionIndex===0">
-        <permission :isPermission="isPermission" :groupId="groupId" @on-permission-change='handleChangeObjDetailsCount'></permission>
+      <section class="permission-container" v-if="actionIndex===0">
+        <permission :isPermission="isPermission" :target="target" :groupId="groupId" @on-permission-change='handleChangeObjDetailsCount'></permission>
       </section>
     </div>
 
@@ -162,7 +167,8 @@ import HighOrganization from "./instance/higher-organization";
 import LowerOrganization from "./instance/lower-origanization";
 import MemberInfo from "./instance/member-info";
 import Principal from "./instance/principal";
-import Permission from "./instance/permission";
+import Permission from "../user/detail/instance/direct-permission";
+import TeamProfit from './instance/team-profit';
 export default {
   name: "organization",
 
@@ -173,7 +179,8 @@ export default {
     MemberInfo,
     Principal,
     Permission,
-    PrincipalModal
+    PrincipalModal,
+    TeamProfit
   },
 
   data() {
@@ -205,31 +212,37 @@ export default {
         },
         {
           label: "成员信息",
-          imgPath: "resources/images/icon/user.png",
+          imgPath: "https://lab.roletask.com/resource/app-icon/user.png",
           number: 0,
           hidden: false,
           id: "user"
         },
         {
           label: "负责人",
-          imgPath: "resources/images/icon/user.png",
+          imgPath: "https://lab.roletask.com/resource/app-icon/user.png",
           number: 0,
           hidden: false,
           id: "groupPrincipal"
         },
         {
           label: "下级组织",
-          imgPath: "resources/images/icon/organization.png",
+          imgPath: "https://lab.roletask.com/resource/app-icon/organization.png",
           number: 0,
           hidden: false,
           id: "childGroup"
         },
         {
           label: "上级组织",
-          imgPath: "resources/images/icon/organization.png",
+          imgPath: "https://lab.roletask.com/resource/app-icon/organization.png",
           number: 0,
           hidden: false,
           id: "parentGroup"
+        },
+        {
+          label: "组织利润表",
+          imgPath: "https://lab.roletask.com/resource/app-icon/team-profit.png",
+          hidden: false,
+          id: "teamProfit"
         },
         {
           label: "基本信息",
@@ -239,7 +252,7 @@ export default {
         }
       ],
 
-      actionIndex: 5,
+      actionIndex: 6,
 
       //上级组织模态框属性
       isShowMemberModal: false,
@@ -430,14 +443,18 @@ export default {
       checkout: true,
 
       groupId: this.$route.params.groupId,
-      isPermission: true
+      isPermission: true,
+      target: {
+        type: 'group',
+        targetId: this.$route.params.groupId
+      }
     };
   },
 
   computed: {
     formItemGroupType() {
 　　　　return this.formItem.groupType;
-　　}
+　　},
   },
 
   watch:{
@@ -445,6 +462,9 @@ export default {
       if(oldValue !== newValue && !this.isEdit){
         this.formItem.highGroup=""
       }
+    },
+    $route(to, from) {
+      window.location.reload();
     }
   },
 
@@ -494,6 +514,10 @@ export default {
             this.formItem.status = 0;
             this.save();
             break;
+          case "restore":
+            this.formItem.status = 1;
+            this.save();
+            break;
         }
       }
     },
@@ -517,7 +541,7 @@ export default {
               };
           }).catch(error=>{
               this.$Message.error(error.data.message)
-            });;
+            });
         }
         if (!this.checkout) {
           this.$Message.error("名称已经存在!");
@@ -538,11 +562,10 @@ export default {
                 this.$router.push({
                   path: "/addressBook/organization/detail/" + res.groupId
                 });
-                window.location.reload();
               }
             }).catch(error=>{
               this.$Message.error(error.data.message)
-            });;
+            });
           } else if (this.groupId && this.checkout) {
             this.formItem.groupId = this.groupId;
             updateBaseinfo(this.formItem).then(res => {
@@ -567,8 +590,10 @@ export default {
     */
     getObjDetailsCountByGroupId(groupId) {
       getObjDetailsCountByGroupId(groupId).then(res => {
-        this.actionBtn.forEach(element => {
-          element.number = res[element.id];
+        this.actionBtn.forEach((element,index) => {
+          if( element.id !== 'baseinfo' && element.id !== 'teamProfit' ){
+            element.number =res[element.id]?res[element.id]:0;
+          }
         });
       });
     },

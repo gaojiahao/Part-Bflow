@@ -172,32 +172,28 @@ export default {
           key: "name"
         },
         {
-          title: "职位类型",
-          key: "type",
-          render: (h,params) => {
-              let type = '';
-              switch(params.row.type){
-                case 'Y': 
-                  type = '营销类';
-                  break;
-                case 'C': 
-                  type = '操作类';
-                  break;
-                case 'J': 
-                  type = '技术类';
-                  break;
-                case 'M': 
-                  type = '管理类';
-                  break;
-                case 'Z': 
-                  type = '专职类';
-                  break;
-              }
-              return h('span',{},type);
-          }
+          title: "职能类型",
+          key: "functionType",
+        },
+         {
+          title: "职能",
+          key: "function",
+        },
+         {
+          title: "职级通道",
+          key: "rankPass",
+        },
+         {
+          title: "职级",
+          key: "rank",
+       
+        },
+         {
+          title: "小时成本",
+          key: "hourCost",
         },
         {
-          title: "说明",
+          title: "职责描述",
           key: "describe"
         },
         {
@@ -228,11 +224,15 @@ export default {
           maxWidth: 150,
           align: 'center',
           render: (h,params) => {
+            let isDefault = false;
+            if (params.row.isDefault === 1) {
+              isDefault = true;
+            }
             return h('Button',{
               props: {
                 type: 'error',
                 size: 'small',
-                disabled: !this.isUpdate
+                disabled: !this.isUpdate || isDefault
               },
               on: {
                 click: () => {
@@ -268,32 +268,11 @@ export default {
           key: "name"
         },
         {
-          title: "职位类型",
-          key: "type",
-          render: (h,params) => {
-              let type = '';
-              switch(params.row.type){
-                case 'Y': 
-                  type = '营销类';
-                  break;
-                case 'C': 
-                  type = '操作类';
-                  break;
-                case 'J': 
-                  type = '技术类';
-                  break;
-                case 'M': 
-                  type = '管理类';
-                  break;
-                case 'Z': 
-                  type = '专职类';
-                  break;
-              }
-              return h('span',{},type);
-          }
+          title: "职能类型",
+          key: "functionType",
         },
         {
-          title: "说明",
+          title: "职责描述",
           key: "describe"
         }
       ],
@@ -330,7 +309,7 @@ export default {
     },
     //重新渲染默认职位columns方法
     reRenderDefaultView() {
-      this.columns[4].render = (h, params) => {
+      this.columns[8].render = (h, params) => {
         let defaultView = false;
         if (params.row.isDefault === 1) {
           defaultView = true;
@@ -353,6 +332,11 @@ export default {
         this.loading = true;
         getRoleData(this.userId,this.rolePage.pageSize,this.rolePage.currentPage).then(res => {
           this.roleData = res.tableContent;
+
+           this.roleData.forEach(val => {
+            if(val.isDefault === 1) val._disabled = true;
+          });
+
           this.rolePage.total = res.dataCount;
           this.loading = false;
         })
@@ -427,7 +411,7 @@ export default {
         });
       }
       if(multiId.length>0 && this.userId){
-        addMember('sys_user_role',this.userId,multiId.join(',')).then(res => {
+        addMember('role',multiId.join(','),this.userId).then(res => {
           if(res.success){
             this.$Message.success('更新成功');
             if(this.roleData.length === 0){

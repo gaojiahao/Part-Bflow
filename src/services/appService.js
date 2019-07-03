@@ -29,7 +29,7 @@ export const getNavData = (params) => request('/H_roleplay-si/ds/list/getMenuByP
  * @author XiaoYing
  * @description 获取所有流程数据
  */
-export const getAllProcessData = (page, limit,filter) => request('/H_roleplay-si/ds/getDeployedProcess', {
+export const getAllProcessData = (page, limit, filter) => request('/H_roleplay-si/ds/getDeployedProcess', {
   page: page,
   limit: limit,
   filter: filter
@@ -123,7 +123,7 @@ export const getAllUserData = (currentPage, pageSize, filter) => request('/H_rol
  * @author XiaoYing
  * @description 获取评论关注用户数据
  */
-export const getAllUserCommentData = (currentPage, pageSize, filter,relationkey,type) => request('/H_roleplay-si/ds/listUserWithoutSubcribeByRelationKey', {
+export const getAllUserCommentData = (currentPage, pageSize, filter, relationkey, type) => request('/H_roleplay-si/ds/listUserWithoutSubcribeByRelationKey', {
   page: currentPage,
   limit: pageSize,
   search: filter,
@@ -234,7 +234,8 @@ export const saveAppInformation = (params) => request('/H_roleplay-si/app/update
   uniqueId: params.uniqueId,
   title: params.title,
   administrator: params.administrator,
-  comment: params.comment
+  comment: params.comment,
+  customIcon: params.customIcon
 }, 'POST');
 
 /**
@@ -255,6 +256,22 @@ export const getAppviews = (params) => request('/H_roleplay-si/ds/getListViewOrT
 
 /**
  * @author XiaoYing
+ * @description 获取所有应用名称
+ */
+export const getProcessAppNames = (parentId) => request('/H_roleplay-si/ds/getTreeListByParentId', {
+  parentId: parentId
+});
+
+/**
+ * @author XiaoYing
+ * @description 搜索应用名称
+ */
+export const searchProcessAppNames = (text) => request('/H_roleplay-si/ds/getMenuLeafByText', {
+  text: text
+});
+
+/**
+ * @author XiaoYing
  * @description 启用禁用工作流
  */
 export const enabledForbiddenWorkFlow = (enabledIds, forbiddenIds, deleteId) => request('/H_roleplay-si/app/prohibitProc', {
@@ -265,9 +282,30 @@ export const enabledForbiddenWorkFlow = (enabledIds, forbiddenIds, deleteId) => 
 
 /**
  * @author XiaoYing
- * @description 设置默认视图
+ * @description 添加相关应用
+ */
+export const addAppRelate = (param) => request('/H_roleplay-si/trans/addExampleDetails', {}, 'POST', param);
+
+/**
+ * @author XiaoYing
+ * @description 删除相关应用
+ */
+export const deleteAppRelate = (param) => request('/H_roleplay-si/trans/deleteExampleDetails', {}, 'POST', param);
+
+/**
+ * @author XiaoYing
+ * @description 设置报表PC默认视图
  */
 export const saveDefaultView = (params) => request('/H_roleplay-si/app/setAppDefaultView', {
+  viewId: params.viewId,
+  listId: params.listId
+}, 'POST');
+
+/**
+ * @author XiaoYing
+ * @description 设置报表移动默认视图
+ */
+export const saveMobileDefaultView = (params) => request('/H_roleplay-si/app/setAppMobileView', {
   viewId: params.viewId,
   listId: params.listId
 }, 'POST');
@@ -306,7 +344,7 @@ export const getChangeLog = (listId, currentPage = 1) => request('/H_roleplay-si
  * @author XiaoYing
  * 获取应用科目
  */
-export const getAppSubjectData = (listId,transType) => request('/H_roleplay-si/calc/app/getSubSubjectByTransTypeAndAppId', {
+export const getAppSubjectData = (listId, transType) => request('/H_roleplay-si/calc/app/getSubSubjectByTransTypeAndAppId', {
   app_id: listId,
   trans_type: transType
 });
@@ -315,7 +353,7 @@ export const getAppSubjectData = (listId,transType) => request('/H_roleplay-si/c
  * @author XiaoYing
  * 启用禁用应用科目
  */
-export const updateAccountRel = (data) => request('/H_roleplay-si/calc/app/updateAccountRel', data, 'POST');
+export const updateAccountRel = (data) => request('/H_roleplay-si/calc/app/updateAccountRel', {}, 'POST', data);
 
 /** 
  * @author XiaoYing
@@ -464,6 +502,15 @@ export const getBigProcessByOrderCode = (treansCode) => request('/corebiz-api/la
  * }
  */
 export const saveComment = (comment) => request('/H_roleplay-si/comment/saveComment', {}, 'POST', comment)
+
+/**
+ * @author XiaoYing
+ * @description 删除评论信息
+ * @param { id } id 评论id
+ */
+export const deleteComment = (id) => request('/H_roleplay-si/comment/deleteComment', {
+  id: id
+}, 'POST')
 
 /**
  * @author snack.huang
@@ -769,15 +816,47 @@ export const serachProcess = (listId, currentPage, pageSize, filter) => request(
  * @description 保存任务日志
  * @param {*} param 
  */
-export const saveTaskLog = (data) => request('/H_roleplay-si/jobLog/save', {}, "POST",data)
+export const saveTaskLog = (data) => request('/H_roleplay-si/jobLog/batchSave', {}, "POST", data)
 
 /**
  * @author guozheng
  * @description 获取任务日志
  * @param {*} param 
  */
-export const getTaskLog = (transCode,currentPage,pageSize) => request('/H_roleplay-si/jobLog/findAllJobLog', {
-  transCode:transCode,
-  pageIndex:currentPage,
-  pageSize:pageSize
+export const getTaskLog = (transCode, currentPage, pageSize) => request('/H_roleplay-si/jobLog/findAllJobLog', {
+  transCode: transCode,
+  pageIndex: currentPage,
+  pageSize: pageSize
 })
+
+/**
+ * @author snack.huang
+ * @description 更新任务日志状态
+ * @param {*} param 
+ */
+export const updateLogStatus = (jobLogId, transCode, processStatus, taskDate) => request('/H_roleplay-si/jobLog/updateLogStatus', {}, "POST", {
+  jobLogId: jobLogId,
+  transCode: transCode,
+  taskDate: taskDate,
+  processStatus: processStatus
+})
+
+/**
+ * @author XiaoYing
+ * @description 获取特性管理数据
+ * @param {String} listId 应用ID
+ */
+export const getAppFeaturesList = (listId) => request('/H_roleplay-si/app/feature/list', {
+  listId: listId
+})
+
+/**
+ * @author XiaoYing
+ * @description 获取特性管理数据
+ * @param {String} listId 应用ID
+ */
+export const switchAppFeatures = (listId, featureId) => request('/H_roleplay-si/app/feature/switch', {
+  listId: listId,
+  featureId: featureId
+}, 'POST')
+

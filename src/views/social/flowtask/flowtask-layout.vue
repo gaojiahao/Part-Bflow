@@ -16,7 +16,10 @@
                 
                     <div class="flowtask-sider-list-item" v-bind:class="{ 'active':$route.name=='todo' }">
                         <Icon type="ios-cloud" color="#e76838" size=30 />
-                        所有待办
+                         <Badge :count="taskTodoCount" overflow-count="99" :offset="[0,-10]">
+                            我的待办
+                         </Badge>
+                        
                     </div>
                 </router-link>
 
@@ -25,7 +28,7 @@
                 <router-link :to="{ name:'done'}">
                     <div class="flowtask-sider-list-item" v-bind:class="{ 'active':$route.name=='done' }">
                         <Icon type="md-cloud-done" color="#00adb5" size=30 />
-                        所有已办
+                        我的已办
                     </div>
                 </router-link>
 
@@ -33,7 +36,14 @@
                 <router-link :to="{ name:'all'}">
                     <div class="flowtask-sider-list-item" v-bind:class="{ 'active':$route.name=='all' }">
                         <Icon type="md-laptop" color="#1fe5bd" size=30 />
-                        所有任务
+                        我的所有任务
+                    </div>
+                </router-link>
+
+                <router-link v-if="this.$currentUser.isAdmin" :to="{ name:'allFlowtask'}">
+                    <div class="flowtask-sider-list-item" v-bind:class="{ 'active':$route.name=='allFlowtask' }">
+                        <Icon type="md-menu" color="rgb(236, 114, 156)" size=30 />
+                        所有工作流任务
                     </div>
                 </router-link>
 
@@ -58,18 +68,41 @@
     </div>
 </template>
 <script>
+import {getFlowTodoTasks} from "@/services/socialService";
 export default {
     name:'FlowTaskLayout',
     data(){
         return {
+            taskTodoCount:0
         }
     },
     watch:{
         $route(to, from) {
         }
     },
+
+    methods:{
+        //订阅消息
+        subscribeMessage: function() {
+            let deepstream = this.$deepstream;
+            //消息订阅
+            deepstream.event.subscribe("taskChange/" + this.$currentUser.userId, msg => {
+                this.getFlowTodoTasks();
+            });
+        },
+
+        getFlowTodoTasks:function(){
+            getFlowTodoTasks().then(res=>{
+                this.taskTodoCount = res.dataCount;
+            });
+        }
+
+    },
+
     mounted(){
         // this.routeName = this.$route.name;
+        this.subscribeMessage();
+        this.getFlowTodoTasks();
     }
 }
 </script>

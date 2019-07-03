@@ -4,7 +4,7 @@
 <template>
     <div class="donetask">
         <div class="donetask-header">
-            所有已办任务
+            我的已办
         </div>
         <div class="donetask-content">
             <div class="donetask-content-container shadow">
@@ -15,9 +15,13 @@
                         @on-change="handleSearch" 
                         v-model="searchkeywords" 
                         class="donetask-content-container-toolbar-search" 
-                        placeholder="输入交易号查询" />
+                        placeholder="输入交易号或往来对象查询" />
                 </div>
-                <Table :columns="columns" :data="data" :height="tableHeight"  class="donetask-content-table"></Table>
+                <Table :columns="columns" :data="data" :height="tableHeight"  class="donetask-content-table">
+                    <template slot-scope="{ row }" slot="transId">
+                        <a :href="'/Form/index.html?data='+row.transId" target="_blank">{{row.transId}}</a>
+                    </template>
+                </Table>
                 <Page 
                 class="donetask-content-page"
                 :total="pageInfo.total" 
@@ -49,17 +53,13 @@ export default {
                 },
                 {
                     title: '交易号',
-                    key: 'transId',
-                     width:160,
-                     render: (h,params) => {
-                        return h('a',{
-                            on: {
-                                click: () => {
-                                    window.open("/Form/index.html?data=" + params.row.transId);
-                                }
-                            }
-                        },params.row.transId);
-                    }
+                    slot: 'transId',
+                    width:160,
+                },
+                {
+                    title: '往来',
+                    key: 'dealerName',
+                    width:140,
                 },
                 {
                     title: '操作名称',
@@ -106,6 +106,10 @@ export default {
     },
     methods:{
         getFlowDoneTasks:function () {
+            this.pageInfo.filter = JSON.stringify([
+                {"link":"or","operator_1":"like","value_1":this.searchkeywords,"property_1":"transId",
+                "operator_2":"like","value_2":this.searchkeywords,"property_2":"dealerName"}
+            ]);
             getFlowDoneTasks(this.pageInfo).then(res=>{
                 this.data = res.tableContent;
                 this.pageInfo.total = res.dataCount;
@@ -120,9 +124,7 @@ export default {
             this.getFlowDoneTasks();
         },
         handleSearch:function () {
-            this.pageInfo.filter = JSON.stringify([
-                {"operator":"like","value":this.searchkeywords,"property":"transId"}
-            ]);
+            this.pageInfo.page = 1;
             this.getFlowDoneTasks();
         },
         //订阅消息

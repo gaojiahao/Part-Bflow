@@ -27,11 +27,18 @@
                 </my-pop-tip>
 
                 <span>:</span>
-                <span v-html="comment.content"></span>
+                <span v-html="comment.content" class="child-comment-content"></span>
             </p>
-            <p >
+            <p>
                 <span>
                     {{comment.times}}
+                </span>
+                <span 
+                    v-if="comment.replyUserId == $currentUser.userId" 
+                    @click="deleteComments(comment)" 
+                    class="comments-delete">
+                    <span style="color:#333">|&nbsp;</span>
+                    删除
                 </span>
                 <span class="fr">
                     <span  class="cursor-pointer" @click="handleShowReply(comment)">回复</span>
@@ -78,7 +85,8 @@ import {
     commentThumbsUp,
     saveComment,
     getCommentsByParentId,
-    getUserInfoByUserId
+    getUserInfoByUserId,
+    deleteComment
     } from "@/services/appService.js";
 
 import MyPopTip from "@/components/poptip/MyPopTip";
@@ -156,8 +164,15 @@ export default {
             });
 
             comment.showReply = !comment.showReply;
+            if(window.top.setInstaceCommentsIframeHeight){
+                this.$nextTick(function () {
+                    setTimeout(() => {
+                        window.top.setInstaceCommentsIframeHeight();
+                    },200);
+                })
+            }
         },
-        handleReplyPublish:function (content,uploadList,superComment,commentAndReply) {
+        handleReplyPublish:function (content,uploadList,userIds=[],superComment,commentAndReply) {
              this.$forceUpdate();
             let comment ={
                 type:superComment.type,       
@@ -171,13 +186,32 @@ export default {
                 if(!res.success){
                     this.$Notice.warning({
                         title: '系统提示',
-                        desc: '添加回复,请联系企业管理员!'
+                        desc: res.message
                     });
                     return;
                 }
                 comment.showReply = false;
                 this.refreshComments();
             });
+        },
+        //删除评论
+        deleteComments (comment) {
+            if(comment.id){
+                this.$Modal.confirm({
+                    title: "确认",
+                    content: "确认删除此条评论？",
+                    onOk: () => {
+                        deleteComment(comment.id).then(res => {
+                            if(res.success){
+                                this.$Message.success(res.message);
+                                this.refreshComments();
+                            }
+                        }).catch(err => {
+                            this.$Message.success(err.data.message);
+                        });
+                    }
+                });
+            }
         },
         showUserInfo(userId) {
             getUserInfoByUserId(userId).then(res => {
@@ -196,11 +230,20 @@ export default {
             getCommentsByParentId(params).then(res=>{
                 this.comments = res.tableContent;
                 this.superComment.childCommentNum = res.dataCount;
+                res.dataCount === 0 && this.$emit('hiddenChildComments');
                 if(this.comments.length<res.dataCount){
                     this.showloadMore = true;
                 }
             }).then(res=>{
-                if(this.isInIframe)  window.top.setInstaceCommentsIframeHeight();
+                if(this.isInIframe){
+                    if(window.top.setInstaceCommentsIframeHeight){
+                        this.$nextTick(function () {
+                            setTimeout(() => {
+                                window.top.setInstaceCommentsIframeHeight();
+                            },200);
+                        })
+                    }
+                }
             });
         }
         

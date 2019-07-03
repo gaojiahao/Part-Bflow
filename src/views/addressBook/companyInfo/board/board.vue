@@ -7,7 +7,7 @@
     <Card class="radius0 rfd-card" v-for="(company, index) of companys" :key="index">
       <Row class="rfd-card-container">
         <Col span="3" class="rfd-card-left">
-        <img :src="company.groupPic || 'resources/images/icon/defaultUserPhoto.jpg'" class="rfd-card-img" @click="goDetail(company)">
+        <img :src="company.groupPic || 'resources/images/icon/defaultUserPhoto.png'" class="rfd-card-img" @click="goDetail(company)">
         </Col>
         <Col span="17" class="rfd-card-content">
         <h5 class="text-nowrap font14">{{ company.groupName }}

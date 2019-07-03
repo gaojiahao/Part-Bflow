@@ -3,10 +3,10 @@
 </style>
 
 <template>
-  <div class="bg_ff ">
+  <div class="bg_ff" style="padding:5px;">
        <Row class="app-resource-group-title">
-            <h3>评论 
-                <b class="fr subscribe-bar">
+            <div  class="commnet-title">评论 
+                <span class="fr subscribe-bar">
                 <span > 
                         <span 
                             class="subcribeing" 
@@ -33,7 +33,7 @@
 
                     <span>
                         <Dropdown class="instance-dropdown" @on-click="addSubUsers" trigger="click" >
-                         <Icon type="md-person" size=18  /> {{subscribeInfo.subscribeNum}}
+                         <Icon type="md-person" size=18  /> <b>{{subscribeInfo.subscribeNum}}</b>
                          <Icon type="ios-arrow-down"></Icon>
                         <DropdownMenu slot="list">
                             <DropdownItem name="add">
@@ -46,8 +46,8 @@
                         </DropdownMenu>
                     </Dropdown>
                     </span>
-                </b>
-            </h3>
+                </span>
+            </div>
        </Row>
         <Row class="comments">
             <commentPublish :handlePublish="handlePublish" ></commentPublish>
@@ -59,7 +59,8 @@
             <comments 
                 :isInIframe="true" 
                 :comments="comments" 
-                :refreshRootComments="refreshComments"></comments>
+                :refreshRootComments="refreshComments"
+                @refreshDeleteComments="refreshDeleteComments"></comments>
 
             <Page 
                 class="pad20"
@@ -88,7 +89,7 @@ import {
 
 import comments from "@/components/discussion/comments";
 import commentPublish from "@/components/discussion/publish";
-
+import { EMOTION } from "@/assets/const";
 
 export default {
   name: "userComments",
@@ -130,6 +131,9 @@ export default {
   },
  
   methods: {
+    refreshDeleteComments () {
+        this.refreshComments();
+    },
     addUserData(value) {
         let userIds = [],
             data = {};
@@ -182,20 +186,21 @@ export default {
         }
       });
     },
-    handlePublish:function (content,uploadList) {
+    handlePublish:function (content,uploadList,userIds=[]) {
         let comment ={
             type:this.type,       
             content:content, 
             relationKey:this.transCode,
             parentId: -1,
             commentAndReply:false,
-            commentAttachments:uploadList
+            commentAttachments:uploadList,
+            userIds:userIds
         };
         saveComment(comment).then(res=>{
             if(!res.success){
                 this.$Notice.warning({
                     title: '系统提示',
-                    desc: '添加评论失败,请联系企业管理员!'
+                    desc: res.message
                 });
                 return;
             }
@@ -203,17 +208,38 @@ export default {
         });
     },
     refreshComments:function () {
-        var params = {
+        let emotion = [...EMOTION];
+        let reg = /\[(.+?)\]/g;
+        let params = {
                 relationKey:this.transCode,
                 sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
         }
         params = Object.assign(params,this.pageInfo)
 
         getComments(params).then(res=>{
+             
+            res.tableContent.forEach(item=>{
+               item.content = item.content .replace(reg, (word) => {
+                    // 寻找表情索引
+                    let idx = emotion.findIndex(item => item === word.replace(/(\[|\])/g, ''));
+                    // 没有匹配项则返回原文字
+                    if (idx === -1) {
+                    return word
+                    }
+                    return `<span class="comments-content-item-content-img-emotion" style="background-position: -${24 * idx}px 0;"></span>`
+                });
+            })
+
             this.comments = res.tableContent;
+
             this.pageInfo.total = res.dataCount;
         }).then(res=>{
-            window.top.setInstaceCommentsIframeHeight();
+             this.$nextTick(function () {
+                 setTimeout(() => {
+                     window.top.setInstaceCommentsIframeHeight && window.top.setInstaceCommentsIframeHeight();
+                 },1000);
+            })
+            
         });
     },
 

@@ -41,7 +41,7 @@ export default {
                   },
                   on: {
                       click: () => { 
-                          window.top.location.href = `/Site/index.html#list/${params.row.appId}`;
+                          window.open(`/Site/index.html#list/${params.row.appId}`);
                       }
                   }
               },params.row.appName)

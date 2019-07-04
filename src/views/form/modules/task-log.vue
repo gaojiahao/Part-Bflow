@@ -4,7 +4,7 @@
 
 <template>
   <div  class="timeline-box">
-
+    <div class="task-modal" :style="{display: showTaskModal?'block':'none'}"></div>
     <div class="app-resource-group-title">
         <span class="font16">工作日志</span>
         <span v-if="logData.length>0">
@@ -192,6 +192,7 @@ export default {
         logHours: "",
         logCosts: "",
         logData: [],
+        showTaskModal: false,
         modalVisible:false,
         hiddenForm: true,
         logTypeList:[],
@@ -261,6 +262,7 @@ export default {
      * 提交变更日志
      */
     submitLog(event) {
+        this.showTaskModal = true;
         //校验提交的数据是否为空
         let valid;
         this.$refs["logForm"].validate(v => {
@@ -304,12 +306,13 @@ export default {
           
         saveTaskLog(formdata).then(res => {
             if (res.success) {
-                window.top.Ext.toast(res.message);
+              // window.top.Ext.toast(res.message);
               this.modalFormData.users = [];
               this.$nextTick(() => {
                this.$refs['logForm'].resetFields();
               });
-                this.getTaskLog(this.transCode);
+              this.getTaskLog(this.transCode);
+              this.showTaskModal = false;
             }else{
                 window.top.Ext.toast(res.message)
             }

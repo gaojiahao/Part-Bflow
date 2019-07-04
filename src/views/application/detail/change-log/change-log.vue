@@ -34,6 +34,7 @@
       </Form>
     </div>
 
+    <div class="show-empty" v-show="logData.length===0">暂无数据</div>
     <div  class="timeline-box-log" v-show="logData.length===0?false:true">
       <div class="timeline-box-log-item" v-for="(item,index) in logData" :key="index">
         <div class="timeline-item-content-header">

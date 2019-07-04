@@ -4,12 +4,25 @@
 
 <template>
   <div  class="timeline-box">
-
+    <div class="task-modal" :style="{display: showTaskModal?'block':'none'}"></div>
     <div class="app-resource-group-title">
-        <span class="font16">工作日志  </span>
+        <span class="font16">工作日志</span>
+        <span v-if="logData.length>0">
+          <Tooltip class="hidden-form" v-if="!hiddenForm" content="打开工作日志表单" placement="left">
+          <span @click="openForm">
+              <Icon type="md-arrow-dropup-circle" />
+          </span>
+          </Tooltip>
+          <Tooltip class="hidden-form" v-else content="关闭工作日志表单" placement="left">
+            <span @click="closeForm">
+                <Icon type="md-arrow-dropdown-circle" />
+            </span>
+          </Tooltip>
+        </span>
+        
     </div>
 
-    <div class="timeline-box-form">
+    <div class="timeline-box-form" v-if="hiddenForm">
       <Form ref="logForm" :label-width="80"   :model="modalFormData"  :rules="ruleValidate">
          <Row>
             <Col :xs="24" :sm="12" :md="8" :lg="8">
@@ -100,7 +113,7 @@
         <span :style="{marginLeft:'15px'}">总成本：<b>{{ logCosts }}</b></span>
       </div>
       <ul class="timeline-box-log-item" v-for="(item,index) in logData" :key="index">
-        <img :src="item.photo?item.photo:'resources/images/icon/defaultUserPhoto.png'" class="head-portrait"/>
+        <img  @error="errorimg(item,index)" :src="item.photo?item.photo:'resources/images/icon/defaultUserPhoto.png'" class="head-portrait"/>
         <ul class="timeline-item-content-ul">
           <li>
            
@@ -179,7 +192,9 @@ export default {
         logHours: "",
         logCosts: "",
         logData: [],
+        showTaskModal: false,
         modalVisible:false,
+        hiddenForm: true,
         logTypeList:[],
         loading:false,
         userList:[],
@@ -224,10 +239,30 @@ export default {
 
 
   methods: {
+    openForm() {
+      this.hiddenForm = true;
+      if(window.top.setTaskLogIframeHeight){
+        setTimeout(function(){
+          window.top.setTaskLogIframeHeight();
+        },500)
+      }
+    },
+    closeForm() {
+      this.hiddenForm = false;
+      if(window.top.setTaskLogIframeHeight){
+        setTimeout(function(){
+          window.top.setTaskLogIframeHeight();
+        },500)
+      }
+    },
+    errorimg(item,index) {
+      this.logData[index].photo = 'resources/images/icon/defaultUserPhoto.png';
+    },
     /**
      * 提交变更日志
      */
     submitLog(event) {
+        this.showTaskModal = true;
         //校验提交的数据是否为空
         let valid;
         this.$refs["logForm"].validate(v => {
@@ -271,12 +306,13 @@ export default {
           
         saveTaskLog(formdata).then(res => {
             if (res.success) {
-                window.top.Ext.toast(res.message);
+              // window.top.Ext.toast(res.message);
               this.modalFormData.users = [];
               this.$nextTick(() => {
                this.$refs['logForm'].resetFields();
               });
-                this.getTaskLog(this.transCode);
+              this.getTaskLog(this.transCode);
+              this.showTaskModal = false;
             }else{
                 window.top.Ext.toast(res.message)
             }

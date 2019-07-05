@@ -268,7 +268,10 @@ export default {
         this.$refs["logForm"].validate(v => {
             valid = v;
         });
-        if(!valid) {return;}
+        if(!valid) {
+          this.showTaskModal = false;
+          return;
+        }
        
         let currentUser = this.$currentUser;
         this.modalFormData.comments.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>').replace(/\s/g, ' ')
@@ -306,7 +309,7 @@ export default {
           
         saveTaskLog(formdata).then(res => {
             if (res.success) {
-              // window.top.Ext.toast(res.message);
+              window.top.Ext.toast(res.message);
               this.modalFormData.users = [];
               this.$nextTick(() => {
                this.$refs['logForm'].resetFields();

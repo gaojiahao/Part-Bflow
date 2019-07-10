@@ -2,7 +2,7 @@
 
 // 不作为Main组件的子页面展示的页面单独写，如下
 export const loginRouter = {
-  path: '/',
+  path: '/login',
   name: 'login',
   meta: {
     title: 'Login - 登录'
@@ -32,7 +32,6 @@ export const technologyRouter = {
   component: () =>
     import('@/views/flow/technologyGraph.vue')
 };
-
 
 export const homepageRouter = {
   path: '/homepage',

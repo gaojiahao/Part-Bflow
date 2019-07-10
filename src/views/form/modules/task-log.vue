@@ -352,7 +352,10 @@ export default {
 
     getAllUsers(query){
         this.loading = true;
-        const filter = query?JSON.stringify([{"operator":"like","value":query,"property":"nickname"}]):'';
+        const filter = query?JSON.stringify([
+          {"operator":"like","value":query,"property":"nickname"},
+          {"operator":"in","value":"1","property":"status"}]):
+          JSON.stringify([{"operator":"in","value":"1","property":"status"}]);
         getAllUsers(200,1,filter).then(res=>{
             this.userList = res.tableContent;
             this.loading = false;

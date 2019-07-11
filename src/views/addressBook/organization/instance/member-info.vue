@@ -170,9 +170,6 @@ export default {
   },
 
   props: {
-    groupId: {
-      type: String
-    },
     isPermission: {
       type: Boolean
     }
@@ -182,7 +179,7 @@ export default {
     return {
       memberInfoLoading: false,
       memberInfoParams: {
-        groupId: this.groupId,
+        groupId: this.$route.params.groupId,
         page: 1,
         limit: 10
       },
@@ -258,7 +255,7 @@ export default {
                       title: "确认",
                       content: "确认删除该成员？",
                       onOk: () => {
-                        deleteOrgMember(this.groupId, params.row.userId, 0)
+                        deleteOrgMember(this.$route.params.groupId, params.row.userId, 0)
                           .then(res => {
                             if (res.success) {
                               this.$Message.success("删除成功!");
@@ -421,7 +418,7 @@ export default {
         multiId.push(val.userId);
       });
       if (multiId) {
-        addOrgMember(this.groupId, multiId.join(","), 1).then(res => {
+        addOrgMember(this.$route.params.groupId, multiId.join(","), 1).then(res => {
           if (res.success) {
             this.$Message.success("更新成功");
             this.reload = true;
@@ -439,7 +436,7 @@ export default {
           multiId.push(val.userId);
         });
         if (multiId) {
-          deleteOrgMember(this.groupId, multiId.join(","), 0).then(res => {
+          deleteOrgMember(this.$route.params.groupId, multiId.join(","), 0).then(res => {
             if (res.success) {
               this.$Message.success("删除成功!");
               this.reload = true;
@@ -542,6 +539,10 @@ export default {
       this.memberInfoParams.filter = filter;
       this.reload = true;
     }
+  },
+  mounted(){
+    // this.$route.params.groupId = this.$router.params.groupId;
+    // this.memberInfoParams.groupId = this.$route.params.groupId;
   }
 };
 </script>

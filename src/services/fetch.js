@@ -65,7 +65,6 @@ axios.interceptors.response.use(response => {
   return Promise.reject(err.message)
 })
 
-axios.interceptors
 
 
 /**

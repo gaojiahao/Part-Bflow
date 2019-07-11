@@ -326,7 +326,7 @@ export default {
         groupName: "",
         groupType: "",
         depFunction: "",
-        status: -3,
+        status: 1,
         principal: "",
         principalName: "",
         highGroup: "",
@@ -336,8 +336,6 @@ export default {
         modifier:"",
         modTime:""
       },
-    //   formItem: {},
-
       isEdit: true,
       editBtnName: "编辑",
 
@@ -596,6 +594,16 @@ export default {
       model: "create"
     };
   },
+   watch: {
+    
+    $route(to, from) {
+      if(to.name === 'create'){
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
+      }
+    }
+  },
 
   methods: {
     //点击关闭按钮
@@ -611,7 +619,7 @@ export default {
     },
     //点击保存
     handlerSave(){
-        this.formItem.status = 1;
+        // this.formItem.status = 1;
         this.save();
     },
     handlerSaveAndNew(){
@@ -644,19 +652,19 @@ export default {
       this.$refs["formItem"].validate(valid => {
         if (valid) {
           if (this.model === "create") {
-            // delete this.formItem.groupId;
             saveBaseinfo(this.formItem)
               .then(res => {
                 if (res) {
                     this.$Message.success('保存成功!');
-                    if(this.newAfterSave){
-                        window.location.reload();
-                    }else{
+
+                    if(!this.newAfterSave){
                         this.$router.push({
                             path: `/addressBook/organization/detail/${res.groupId}`
                         });
                     }
-                  
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 100);
                 }
               })
               .catch(error => {
@@ -668,8 +676,9 @@ export default {
               .then(res => {
                 if (res) {
                   this.$Message.success(res.message);
-                //   window.location.reload();
-                this.setOrgInfo();
+                  setTimeout(() => {
+                      window.location.reload();
+                    }, 100);
                 }
               })
               .catch(error => {
@@ -819,7 +828,9 @@ export default {
     selectPrincipalModal() {
       this.isShowPrincipalModal = true;
       this.searchPrincipalValue = "";
-      this.getListUsers(this.principalCurrentPage, this.principalPageSize);
+      let filter = JSON.stringify([{"operator":"in","value":"1","property":"status"}]); 
+
+      this.getListUsers(this.principalCurrentPage, this.principalPageSize,filter);
     },
 
     //获取用户列表
@@ -914,7 +925,7 @@ export default {
           operator_2: "like",
           value_2: this.searchPrincipalValue,
           property_2: "userCode"
-        }
+        },{operator:"in",value:"1",property:"status"}
       ]);
       this.getListUsers(this.listUserCurrentPage, this.pageSize, filter);
     },

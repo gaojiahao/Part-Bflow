@@ -351,6 +351,14 @@ export const getAppSubjectData = (listId, transType) => request('/H_roleplay-si/
 
 /** 
  * @author XiaoYing
+ * 获取与科目有关系的业务
+ */
+export const getRelatedBusinessData = (listId) => request('/H_roleplay-si/calc/app/getListByAccountCode', {
+  calcCode: listId
+});
+
+/** 
+ * @author XiaoYing
  * 启用禁用应用科目
  */
 export const updateAccountRel = (data) => request('/H_roleplay-si/calc/app/updateAccountRel', {}, 'POST', data);

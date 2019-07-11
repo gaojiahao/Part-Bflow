@@ -45,17 +45,21 @@ export const getTeamProfitDetail = (groupCode,classify,startDate,endDate) => req
  * @author XiaoYing
  * @description 获取员工绩效数据
  */
-export const getPerformanceData = (userId) => request('/H_roleplay-si/account/personProfitStatement', {
-  userId: userId
+export const getPerformanceData = (userId,startDate,endDate) => request('/H_roleplay-si/account/personProfitStatement', {
+  userId: userId,
+  startDate: startDate,
+  endDate: endDate
 });
 
 /**
  * @author XiaoYing
  * @description 获取员工绩效明细数据
  */
-export const getPerformanceDetail = (userId,classify) => request('/H_roleplay-si/account/getPersonProfitWater', {
+export const getPerformanceDetail = (userId,classify,startDate,endDate) => request('/H_roleplay-si/account/getPersonProfitWater', {
   userId: userId,
-  classify: classify
+  classify: classify,
+  startDate: startDate,
+  endDate: endDate
 });
 
 /**

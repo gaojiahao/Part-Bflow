@@ -18,10 +18,10 @@
                 <div class="form-con">
                     <Form ref="loginForm" :model="form" :rules="rules">
                         <FormItem prop="userName">
-                            <Input prefix="ios-contact" v-model="form.userName" placeholder="请输入用户名"></Input>
+                            <Input prefix="ios-contact" @keyup.enter="handleSubmit" v-model="form.userName" placeholder="请输入用户名"></Input>
                         </FormItem>
                         <FormItem prop="password">
-                            <Input prefix="md-lock" type="password" v-model="form.password" placeholder="请输入密码"></Input>
+                            <Input prefix="md-lock" type="password" @keyup.enter="handleSubmit" v-model="form.password" placeholder="请输入密码"></Input>
                         </FormItem>
                         <FormItem>
                             <Button @click="handleSubmit" type="primary" long>登录</Button>
@@ -80,13 +80,19 @@ export default {
                                         if(role.id === -1) user.isOperationAdmin = true;
                                     });
                                     Vue.prototype.$currentUser = user;
+
+                                    sessionStorage.setItem('roletask.com.r2.cache',JSON.stringify({
+                                        currentUser:user
+                                    }));
+
                                     
                                     getDsUrl().then(async (r) =>{
                                         if(r.success){
                                             let dsUri = {
                                                 'deepstream.uri2':r.message
                                             };
-                                            localStorage.setItem('r2-cached-properties',JSON.stringify(dsUri));
+                                            
+                                            sessionStorage.setItem('r2-cached-properties',JSON.stringify(dsUri));
                                             Vue.prototype.$deepstream = await deepstream(user,JSON.stringify(dsUri));
                                             this.$router.push({
                                                 name: 'home_index'

@@ -54,7 +54,7 @@
 
                     <label v-if="row.type !== 'instance'">{{ row.name }}</label>
                     <label v-else><b class="attach-instance" @click="goInstance(row)">{{ row.name }}</b></label>
-                    <Poptip trigger="hover" placement="right-start" style="float:right;">
+                    <Poptip trigger="hover" transfer placement="right-start" style="float:right;">
                         <span class="subarea-more">
                           <Icon type="ios-arrow-dropright-circle" />
                         </span>

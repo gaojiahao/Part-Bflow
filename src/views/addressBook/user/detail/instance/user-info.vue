@@ -50,7 +50,7 @@
                 </FormItem>
                 <FormItem label="工号：" prop="jobNumber">
                     <Input 
-                        :class="{'info-edit':isEdit}" 
+                        :class="{'info-edit':isEdit}"
                         :readonly="isEdit" 
                         @on-blur="userCodeBlur" 
                         v-model="formItem.jobNumber" 
@@ -293,15 +293,15 @@ export default {
           jobNumber: [
           {
             required: false,
-            message: "用户工号只能包含字母或数字或汉字或下划线",
+            message: "员工工号应不大于8位！",
             trigger: "blur",
-            pattern: /^[\u4e00-\u9fa5a-zA-Z\d]{1,8}$/
+            pattern: /^[\w\W]{1,8}$/
           }
         ],
         nickname: [
           {
             required: true,
-            message: "用户名称只能包含字母或数字或汉字或下划线",
+            message: "员工名称只能包含字母或数字或汉字或下划线",
             trigger: "blur",
             pattern: /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/
           }
@@ -444,27 +444,28 @@ export default {
         this.$refs["formItem"].validate(valid => {
             if(valid){
                 if(this.checkout){
-                    this.formItem.photo = this.logo;
-                    this.formItem.status = Number(this.formItem.status);
-                    this.formItem.dealerLabel = this.formItem.dealerLabel.join(',');
+                    let saveFormItem = Object.assign({}, this.formItem);
+                    saveFormItem.photo = this.logo;
+                    saveFormItem.status = Number(saveFormItem.status);
+                    saveFormItem.dealerLabel = saveFormItem.dealerLabel.join(',');
 
                     if(saveType === 'draft'){
-                        this.formItem.status = 0;
+                        saveFormItem.status = 0;
                     }else if(saveType === 'file'){
-                        this.formItem.status = -2;
+                        saveFormItem.status = -2;
                     }else if(saveType === 'restore'){
-                        this.formItem.status = 1;
+                        saveFormItem.status = 1;
                     }else{
-                        this.formItem.status = 1;
+                        saveFormItem.status = 1;
                     }
 
-                    if(this.formItem.termOfValidity){
-                        this.formItem.termOfValidity = this.formatDate(this.formItem.termOfValidity);
+                    if(saveFormItem.termOfValidity){
+                        saveFormItem.termOfValidity = this.formatDate(saveFormItem.termOfValidity);
                     }
                     
                     if(this.userInfo.userId){
-                        this.formItem.userId = this.userInfo.userId;
-                        updateUser(this.formItem).then(res => {
+                        saveFormItem.userId = this.userInfo.userId;
+                        updateUser(saveFormItem).then(res => {
                             if(res.success){
                                 this.$Message.success('更新成功');
                                 window.location.reload();
@@ -474,12 +475,12 @@ export default {
                         })
                     }else{
                         if(saveType === 'draft'){
-                            this.formItem.status = 0;
+                            saveFormItem.status = 0;
                         }else{
-                            this.formItem.status = 1;
+                            saveFormItem.status = 1;
                         }
                         
-                        addUser(this.formItem).then(res => {
+                        addUser(saveFormItem).then(res => {
                             if(res){
                                 this.$Message.success('保存成功');
                                 this.$router.push({ path: '/addressBook/user/detail/'+res.user_id});
@@ -492,7 +493,7 @@ export default {
                     this.$Message.error('工号已存在，请重新输入！');
                 }
             }
-        })
+        }).bind(this);
     },
     //展示公司modal
     selectCompanyModal() {
@@ -542,16 +543,17 @@ export default {
         this.$refs["formItem"].validate(valid => {
             if(valid){
                 if(this.checkout){
-                    this.formItem.photo = this.logo;
-                    this.formItem.status = 1;
-                    this.formItem.dealerLabel = this.formItem.dealerLabel.join(',');
-                    if(this.formItem.termOfValidity){
-                        this.formItem.termOfValidity = this.formatDate(this.formItem.termOfValidity);
+                    let saveFormItem = Object.assign({}, this.formItem);
+                    saveFormItem.photo = this.logo;
+                    saveFormItem.status = 1;
+                    saveFormItem.dealerLabel = saveFormItem.dealerLabel.join(',');
+                    if(saveFormItem.termOfValidity){
+                        saveFormItem.termOfValidity = this.formatDate(saveFormItem.termOfValidity);
                     }
                     
                     if(this.userInfo.userId){
-                        this.formItem.userId = this.userInfo.userId;
-                        updateUser(this.formItem).then(res => {
+                        saveFormItem.userId = this.userInfo.userId;
+                        updateUser(saveFormItem).then(res => {
                             if(res.success){
                                 this.$Message.success(res.message);
                                 this.$router.push({ path: '/addressBook/user/add'});
@@ -560,7 +562,7 @@ export default {
                             this.$Message.error(error.data.message);
                         }) 
                     }else{
-                        addUser(this.formItem).then(res => {
+                        addUser(saveFormItem).then(res => {
                             if(res){
                                 this.$Message.success('新增成功！');
                                 this.$refs["formItem"].resetFields();

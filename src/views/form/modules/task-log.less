@@ -1,7 +1,7 @@
 .timeline-box {
     &-form {
       background-color: #ffffff;
-      padding:0px 15px 0px 0px;
+      padding: 10px 15px 0px 0px;
       border-bottom: 1px solid transparent;
       //form表单标签字体样式
       .ivu-form-item-label {
@@ -24,7 +24,7 @@
     &-log {
       margin: 0 0 15px 0;
       background-color: #ffffff;
-      padding: 0 20px;
+      padding: 10px 20px;
       &-item {
         padding: 15px 0px;
         border-bottom: 1px dotted #ddd;
@@ -54,6 +54,7 @@
     .timeline-box-log {
       &-sum{
         border-bottom: 1px dotted #ddd;
+        padding: 5px 0px;
       }
     }
   
@@ -73,4 +74,22 @@
   h3{
     display: -webkit-inline-box;
   }
+  .hidden-form{
+    float: right;
+    color: #39f;
+    font-size: 18px;
+    cursor: pointer;
+  }
+}
+.task-modal{
+  width:100%;
+  height:100%;
+  background-color:#000;
+  position:absolute;
+  top:0;
+  left:0;
+  z-index:2;
+  opacity:0.3;
+  /*兼容IE8及以下版本浏览器*/
+  filter: alpha(opacity=30);
 }

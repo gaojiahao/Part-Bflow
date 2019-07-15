@@ -87,8 +87,6 @@
                <FormItem label="申报工时:" prop="logDeclarationHours">
                 <InputNumber 
                   v-model="modalFormData.logDeclarationHours"
-                  :max='24' 
-                  :min="0.1" 
                   :step="0.1"/>单位/时
               </FormItem>
             </Col>
@@ -225,7 +223,7 @@ export default {
               {validator:validateTaskStatus}
             ],
             logDeclarationHours: [
-              {required: true, message: "必填项且在0.1到24之间",type: "number"}
+              {required: true, message: "必填项且在0.1到24之间",type: "number",min:0.1,max:24}
             ],
             taskDate: [
               {required: true,message: "不允许为空" }

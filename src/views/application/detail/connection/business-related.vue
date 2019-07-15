@@ -9,7 +9,20 @@
          <h3>业务关系</h3>
     </Row>
     <Row class="subject-content">
-         <Table :columns="columns" :loading="loading" :data="businessRelateds" height="400" size="small"></Table>
+         <Table :columns="columns" :loading="loading" :data="businessRelateds" height="400" size="small">
+            <template slot-scope="{ row }" slot="status">
+              <Checkbox 
+              :value="row.status===1" 
+              :disabled="!row.accountStatus || row.builtIn"
+              @on-change="updateAccountRelation($event,row,'relation')">启用</Checkbox>
+            </template>
+            <template slot-scope="{ row }" slot="matchType">
+              <Checkbox 
+              :value="row.matchType===2" 
+              :disabled="!row.accountStatus || row.accountType"
+              @on-change="updateAccountRelation($event,row,'matchType')">按单核销</Checkbox>
+            </template>
+         </Table>
     </Row>
 
   </div>
@@ -21,9 +34,6 @@ import { getRelatedBusinessData,updateAccountRel } from "@/services/appService.j
 export default {
   name: "BusinessRelated",
   components: {},
-  props: {
-    appTransType: String
-  },
   data() {
     return {
       listId: this.$route.params.listId,
@@ -80,47 +90,13 @@ export default {
         },
         {
           title: "关系管理",
-          key: "status",
-          align: "left",
-          render: (h, params) => {
-            let isDisabled = false;
-            if(!params.row.accountStatus){
-              isDisabled = true;
-            }
-            return h('Checkbox', {
-              props: {
-                value: params.row.status === 1?true:false,
-                disabled: isDisabled
-              },
-              on: {
-                'on-change': (status) => {
-                  this.updateAccountRelation(status,params,'relation');
-                }
-              }
-            }, '启用');
-          }
+          slot: "status",
+          align: "left"
         },
         {
           title: "核销方式",
-          key: "matchType",
-          align: "left",
-          render: (h, params) => {
-            let isDisabled = false;
-            if (!params.row.accountStatus || params.row.accountType){
-              isDisabled = true;
-            }
-              return h('Checkbox', {
-                props: {
-                  value: params.row.matchType === 2?true:false,
-                  disabled: isDisabled
-                },
-                on: {
-                  'on-change': (status) => {
-                    this.updateAccountRelation(status,params,'matchType');
-                  }
-                }
-              }, '按单核销');
-          }
+          slot: "matchType",
+          align: "left"
         }
       ],
       businessRelateds: []
@@ -130,19 +106,14 @@ export default {
     
   },
   methods: {
-    updateAccountRelation(status,params,type) {
-      let data = {},transType;
-      if(this.appTransType){
-        transType = this.appTransType;
-      }else{
-        transType = localStorage.getItem('appTransType');
-      }
-      data.calcRelCode = params.row.calcRelCode;
-      data.componentId =  params.row.componentId;
-      data.transType = transType;
-      data.appId = this.listId;
-      data.status = params.row.status;
-      data.matchType = params.row.matchType;
+    updateAccountRelation(status,row,type) {
+      let data = {};
+      data.calcRelCode = row.calcRelCode;
+      data.componentId = row.componentId;
+      data.transType = row.transType;
+      data.appId = row.appId;
+      data.status = row.status;
+      data.matchType = row.matchType;
 
       switch(type) {
         case 'relation': 
@@ -170,7 +141,6 @@ export default {
       });
     },
     getAllAppSubjectData() {
-      localStorage.setItem('appTransType', this.appTransType);
       this.loading = true;
       getRelatedBusinessData(this.listId).then(res => {
         if (res.success) {

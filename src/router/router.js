@@ -14,7 +14,7 @@ export const loginRouter = {
 export const entryRouter = {
   path: '/',
   name: 'entry',
-  redirect: '/login'
+  redirect: '/home_index'
 };
 
 export const flowRouter = {

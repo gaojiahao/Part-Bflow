@@ -177,7 +177,7 @@ export default {
                   return h('a',{
                     on: {
                       click: () => {
-                        this.showModal(params.row,currentYear,currentMonth);
+                        this.showModal(params,currentYear,currentMonth);
                       }
                     }
                   },realText);
@@ -202,7 +202,7 @@ export default {
                     return h('a',{
                       on: {
                         click: () => {
-                          this.showModal(params.row,currentYear,currentMonth);
+                          this.showModal(params,currentYear,currentMonth);
                         }
                       }
                     },realText);
@@ -226,7 +226,7 @@ export default {
                     return h('a',{
                       on: {
                         click: () => {
-                          this.showModal(params.row,currentYear,currentMonth);
+                          this.showModal(params,currentYear,currentMonth);
                         }
                       }
                     },realText);
@@ -257,7 +257,7 @@ export default {
                   return h('a',{
                     on: {
                       click: () => {
-                        this.showModal(params.row,currentYear,currentMonth);
+                        this.showModal(params,currentYear,currentMonth);
                       }
                     }
                   },realText);
@@ -288,7 +288,7 @@ export default {
     showModal (row,currentYear,currentMonth) {
         let startDate, endDate;
         this.showAccountDetail = true;
-        this.modalTitle = row.performanceType;
+        currentYear ? this.modalTitle = row.row.performanceType : row.performanceType;
         this.modalLoading = true;
         if(currentYear){
           let lastMonthDay = getLastDay(currentYear,currentMonth);
@@ -298,10 +298,14 @@ export default {
           startDate =  `${this.formatDate(this.startDate)}-01`;
           endDate =  this.formatDate(this.endDate,true);
         }
-        getPerformanceDetail(this.userId,row.performanceType,startDate,endDate).then(res => {
+        getPerformanceDetail(this.userId,this.modalTitle,startDate,endDate).then(res => {
           if(res.success){
             this.modalData = res.obj;
-            res.obj.length > 0 ? this.modalSum = row.profitSum : this.modalSum = 0;
+            if(res.obj.length > 0){
+              currentYear ? this.modalSum = row.row[row.column.key] : this.modalSum = row.profitSum;
+            }else{
+              this.modalSum = 0;
+            }
             this.modalLoading = false;
           }
         })
@@ -368,7 +372,7 @@ export default {
             }
         ];
       }
-      
+
       return performanceData;
     }
   },

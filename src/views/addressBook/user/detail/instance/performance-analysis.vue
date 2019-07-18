@@ -42,6 +42,10 @@
               <template slot-scope="{ row }" slot="profitSum">
                     <a @click="showModal(row)">{{ row.profitSum | toThousandFilter }}</a>
               </template>
+              <template slot-scope="{ row }" slot="performanceType">
+                    <b v-if="row.performanceType === '汇总'">{{ row.performanceType }}</b>
+                    <span v-else>{{ row.performanceType }}</span>
+              </template>
             </Table>
         </div>
         <!-- 绩效分析modal -->
@@ -311,7 +315,7 @@ export default {
         if(createColumn.length > 0){
             createColumn.unshift({
               title: "绩效类型",
-              key: "performanceType",
+              slot: "performanceType",
               width: 150,
               fixed: 'left'
             });
@@ -332,18 +336,29 @@ export default {
           {performanceType:'工时绩效',key:'workBenefit'},
           {performanceType:'销售佣金绩效',key:'saleBenefit'},
           {performanceType:'项目利润分配',key:'projectBenefit'},
-          {performanceType:'组织利润分配',key:'groupBenefit'}
+          {performanceType:'组织利润分配',key:'groupBenefit'},
+          {performanceType:'汇总',key:'monthSum'}
       ];
+
+      data.map(val => {
+        val['monthSum'] = 0;
+        for(let k in val){
+          if( k !== 'month' && k !== 'monthSum'){
+            val['monthSum'] += val[k]
+          }
+        }
+      })
       performanceData.map(p => {
         data.map(k => {
           p[k.month] = k[p['key']];
         })
       });
+
       if(data.length === 2) {
         this.columns = [
             {
               title: "绩效类型",
-              key: "performanceType",
+              slot: "performanceType",
               fixed: 'left'
             },
             {
@@ -353,6 +368,7 @@ export default {
             }
         ];
       }
+      
       return performanceData;
     }
   },

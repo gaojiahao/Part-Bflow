@@ -378,8 +378,8 @@ export default {
       onSelectionPrincipal: [],
       principalColumnsModel: [
         {
-          title: "工号",
-          key: "userCode"
+          title: "用户账号",
+          key: "jobNumber"
         },
         {
           title: "姓名",
@@ -730,7 +730,7 @@ export default {
           link: "or",
           operator_2: "like",
           value_2: this.searchPrincipalValue,
-          property_2: "userCode"
+          property_2: "jobNumber"
         }
       ]);
       this.getListUsers(currentPage, this.principalPageSize, filter);
@@ -758,7 +758,7 @@ export default {
           link: "or",
           operator_2: "like",
           value_2: this.searchPrincipalValue,
-          property_2: "userCode"
+          property_2: "jobNumber"
         }
       ]);
       this.principalPageSize = size;
@@ -802,7 +802,7 @@ export default {
           link: "or",
           operator_2: "like",
           value_2: this.searchPrincipalValue,
-          property_2: "userCode"
+          property_2: "jobNumber"
         }
       ]);
       this.getListUsers(this.listUserCurrentPage, this.pageSize, filter);

@@ -276,9 +276,12 @@ export default {
         property: "type"
       }
     ]);
+
+    this.$loading.show();
     getAppListData(filterParam).then(res => {
       this.tableData = res.tableContent;
       this.sameTableData = res.tableContent;
+      this.$loading.hide();
     });
   }
 };

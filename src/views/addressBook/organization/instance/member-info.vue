@@ -157,8 +157,8 @@ export default {
           }
         },
         {
-          title: "工号",
-          key: "userCode"
+          title: "用户账号",
+          key: "jobNumber"
         },
         {
           title: "姓名",
@@ -250,8 +250,8 @@ export default {
           }
         },
         {
-          title: "工号",
-          key: "userCode"
+          title: "用户账号",
+          key: "jobNumber"
         },
         {
           title: "姓名",
@@ -429,7 +429,7 @@ export default {
           link: "or",
           operator_2: "like",
           value_2: this.searchValue,
-          property_2: "userCode"
+          property_2: "jobNumber"
         }
       ]);
       this.getListUsers(currentPage, this.pageSize, filter);
@@ -446,7 +446,7 @@ export default {
           link: "or",
           operator_2: "like",
           value_2: this.searchValue,
-          property_2: "userCode"
+          property_2: "jobNumber"
         }
       ]);
       this.getListUsers(1, size, filter);
@@ -470,7 +470,7 @@ export default {
           link: "or",
           operator_2: "like",
           value_2: this.searchValue,
-          property_2: "userCode"
+          property_2: "jobNumber"
         }
       ]);
       this.getListUsers(this.listUserCurrentPage, this.pageSize, filter);
@@ -485,7 +485,7 @@ export default {
           link: "or",
           operator_2: "like",
           value_2: this.searchTableValue,
-          property_2: "userCode"
+          property_2: "jobNumber"
         }
       ]);
       this.memberInfoParams.filter = filter;

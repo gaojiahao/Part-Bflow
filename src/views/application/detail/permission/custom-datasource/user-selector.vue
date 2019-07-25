@@ -133,7 +133,7 @@ export default {
           }
         },
         { title: "姓名", key: "nickname" },
-        { title: "工号", key: "userCode" },
+        { title: "用户账号", key: "jobNumber" },
         { title: "手机",key: "mobile" },
         { title: "邮箱",key: "email" }
       ],
@@ -157,7 +157,7 @@ export default {
           this.userColumns = [
             { type: "selection", width: 60, align: "center" },
             { title: "姓名", key: "nickname" },
-            { title: "工号", key: "userCode" }
+            { title: "用户账号", key: "jobNumber" }
           ];
           this.tableHeight = 200;
         }
@@ -174,7 +174,7 @@ export default {
           link: "or",
           operator_2: "like",
           value_2: this.searchUserValue,
-          property_2: "userCode"
+          property_2: "jobNumber"
         }
       ]),
       currentPageFilter = 1;
@@ -303,7 +303,7 @@ export default {
           link: "or",
           operator_2: "like",
           value_2: this.searchUserValue,
-          property_2: "userCode"
+          property_2: "jobNumber"
         }
       ]);
       this.userCurrentPage = currentPage;

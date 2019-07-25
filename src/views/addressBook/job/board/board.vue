@@ -21,7 +21,10 @@
                     <Row  style="min-width: 260px;">
                         <Col span="3" class="marright5" style="min-width: 60px;">
                         <!-- principalPhoto -->
-                            <img src="resources/images/icon/sales-order.png"  style="width:50px;">
+                            <img 
+                            :src="org.principalPhoto  || 'resources/images/icon/defaultUserPhoto.png'"  
+                            style="width:50px;cursor:pointer" 
+                            @click="goDetail(org)">
                         </Col>
                         <Col span="17" style="min-width:180px;">
                             <h5 class="org-name">{{ org.groupName }}
@@ -57,6 +60,9 @@ export default {
             return res.dataCount;
         }
       });
+    },
+    goDetail(org) {
+      window.open('/dist/index.html#/addressBook/job/detail/' + org.groupId);
     }
   },
   watch: {

@@ -354,7 +354,7 @@ export default {
           {"operator":"like","value":query,"property":"nickname"},
           {"operator":"in","value":"1","property":"status"}]):
           JSON.stringify([{"operator":"in","value":"1","property":"status"}]);
-        getAllUsers(200,1,filter).then(res=>{
+        getAllUsers(200,1,filter,this.$currentUser.entityId).then(res=>{
             this.userList = res.tableContent;
             this.loading = false;
         })

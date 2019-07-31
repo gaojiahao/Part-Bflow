@@ -204,13 +204,13 @@ export default {
             users:[],
             comments: "",
             logType:"",
-            logStatus:"已办"
+            logStatus:"待办"
         },
         ruleValidate: {
             //变更日志表单校验
             logTitle: [
               {required: true,message: "不允许为空" },
-              { type: 'string', max: 20, message: '标题不能超过20个字符'}
+              { type: 'string', max: 100, message: '标题不能超过100个字符'}
             ],
             users: [
               {required: true,message: "不允许为空" , type: 'array'}

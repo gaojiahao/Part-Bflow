@@ -31,7 +31,20 @@ export default {
         {
           title: "科目名称",
           key: "accountName",
-          align: "left"
+          align: "left",
+          render: (h, params) => {
+              return h('span',{
+                  style: {
+                      color: '#39f',
+                      cursor: 'pointer'
+                  },
+                  on: {
+                      click: () => { 
+                          window.open(`/Site/index.html#subject/${params.row.accountCode}`);
+                      }
+                  }
+              },params.row.accountName)
+          }
         },
         {
           title: "科目类型",

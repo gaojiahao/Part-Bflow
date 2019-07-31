@@ -48,7 +48,7 @@
                         style="width:60%">
                     </Input>
                 </FormItem>
-                <FormItem label="工号：" prop="jobNumber">
+                <FormItem label="账号：" prop="jobNumber">
                     <Input 
                         :class="{'info-edit':isEdit}"
                         :readonly="isEdit" 

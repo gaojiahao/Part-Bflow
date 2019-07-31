@@ -112,8 +112,8 @@ export default {
           }
         },
         {
-          title: "工号",
-          key: "userCode"
+          title: "用户账号",
+          key: "jobNumber"
         },
         {
           title: "姓名",

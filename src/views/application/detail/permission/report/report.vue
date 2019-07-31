@@ -81,6 +81,8 @@ export default {
     getViewsData() {
       getListViewPermission(this.listId).then(res => {
         res.forEach(element => {
+          var content = JSON.parse(element.content);
+
           if (!element.users) {
             element.users = [];
           }
@@ -95,6 +97,7 @@ export default {
             ...element.roles,
             ...element.users
           ];
+          element.title = content.viewName;
         });
         this.reportSources = res;
       });
@@ -155,12 +158,15 @@ export default {
     reloadViewData() {
       getListViewPermission(this.listId).then(res => {
         res.forEach(element => {
+          var content = JSON.stringify(element.content);
+
           element.permissionList = [
             ...element.groups,
             ...element.roles,
             ...element.users
           ];
-        });
+          element.title = content.viewName;
+        });        
         this.reportSources = res;
       });
     },

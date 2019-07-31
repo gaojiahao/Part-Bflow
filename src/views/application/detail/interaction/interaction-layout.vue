@@ -1,6 +1,7 @@
 <style lang="less" scoped>
 .interaction-layout{
     margin-top: 15px;
+    margin-bottom: 20px;
 }
 </style>
 

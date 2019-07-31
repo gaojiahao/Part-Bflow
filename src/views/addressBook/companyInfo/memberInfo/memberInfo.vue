@@ -13,7 +13,7 @@
           <span style="color: #7a7676;">-移除成员</span>
         </div>
         <div class="table-search">
-          <Input @on-search="tableSearch" :search="true" placeholder="请输入工号或姓名" class="search-btn" v-model="searchTableValue" />
+          <Input @on-search="tableSearch" :search="true" placeholder="请输入账号或姓名" class="search-btn" v-model="searchTableValue" />
           <Button type="primary" size="small" @click="tableSearch">查询</Button>
         </div>
       </div>
@@ -84,8 +84,8 @@ export default {
           }
         },
         {
-          title: "工号",
-          key: "userCode"
+          title: "用户账号",
+          key: "jobNumber"
         },
         {
           title: "姓名",
@@ -171,9 +171,9 @@ export default {
           }
         },
         {
-          title: "工号",
+          title: "用户账号",
           width: 100,
-          key: "userCode"
+          key: "jobNumber"
         },
         {
           title: "姓名",
@@ -240,7 +240,7 @@ export default {
   methods: {
     //获取所有公司成员信息
     getAllUser() {
-      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"jobNumber"}
       ]);
       this.allMemberLoading = true;
       getAllUser(this.allMemberCurrentPage, this.allMemberPageSize,filter).then(

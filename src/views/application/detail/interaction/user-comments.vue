@@ -7,7 +7,7 @@
     <Row class="app-resource-group-title">
         <div class="commnet-title">评论 
             <span class="fr subscribe-bar">
-               <span > 
+                <span > 
                     <span 
                         class="subcribeing" 
                         @mouseover="unsubcribeVisible=true;subcribeVisible=false;" 
@@ -46,12 +46,24 @@
                         </DropdownMenu>
                     </Dropdown>
                 </span>
+                <span v-if="comments.length>0">
+                    <Tooltip class="hidden-form" v-if="!hiddenForm" content="打开评论表单" placement="left">
+                        <span @click="openForm">
+                            <Icon type="md-arrow-dropup-circle" />
+                        </span>
+                    </Tooltip>
+                    <Tooltip class="hidden-form" v-else content="关闭评论表单" placement="left">
+                        <span @click="closeForm">
+                            <Icon type="md-arrow-dropdown-circle" />
+                        </span>
+                    </Tooltip>
+                </span>
             </span>
         </div>
     </Row>
 
     <Row class="user-comment">
-        <commentPublish :handlePublish="handlePublish" ></commentPublish>
+        <commentPublish v-if="hiddenForm" :handlePublish="handlePublish" ></commentPublish>
 
         <div class="user-comment-header" v-if="comments.length>0">
             <strong>最新评论({{pageInfo.total}})</strong>
@@ -131,6 +143,7 @@ export default {
         },
         unsubcribeVisible:false,
         subcribeVisible:true,
+        hiddenForm: true,
         showUserModal: false,
         subscribeInfo:{
             isSubscribe:0,
@@ -144,6 +157,22 @@ export default {
     };
   },
   methods: {
+    openForm() {
+      this.hiddenForm = true;
+      if(window.top.setInstaceCommentsIframeHeight){
+        setTimeout(function(){
+          window.top.setInstaceCommentsIframeHeight();
+        },500)
+      }
+    },
+    closeForm() {
+      this.hiddenForm = false;
+      if(window.top.setInstaceCommentsIframeHeight){
+        setTimeout(function(){
+          window.top.setInstaceCommentsIframeHeight();
+        },500)
+      }
+    },
     refreshDeleteComments () {
         this.refreshComments();
     },

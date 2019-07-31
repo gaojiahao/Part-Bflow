@@ -48,6 +48,8 @@ export default {
   created() {},
   methods: {
     getUsers: function() {
+      this.$loading.show();
+
       let pageData = this.$route.query,filter;
       if(pageData.filterProperty === 'all'){
         let value = pageData.filterValue.split(',');
@@ -58,6 +60,7 @@ export default {
         filter = [{operator:"like",value:pageData.filterValue,property:"userCode"}];
       }
       getAllUsers( pageData.limit,pageData.page,JSON.stringify(filter)).then(res => {
+        this.$loading.hide();
         this.users = res.tableContent;
         window.top.getTotal = function () {
             return res.dataCount;

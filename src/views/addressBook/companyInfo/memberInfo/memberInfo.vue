@@ -28,7 +28,7 @@
     <Modal v-model="showModal" title="选择公司成员" @on-ok="addCompanyMember" :styles="{top: '15px'}" width="870">
       <div class="search">
         <!-- <Input placeholder="请输入工号" class="serach-btn" v-model="userCode" /> -->
-        <Input @on-search="search" :search="true" placeholder="请输入工号或姓名" class="search-btn" v-model="searchValue" />
+        <Input @on-search="search" :search="true" placeholder="请输入账号或姓名" class="search-btn" v-model="searchValue" />
         <Button type="primary" @click="search">搜索</Button>
       </div>
       <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" @on-select-all="onSelectAll" @on-select-cancel="onSelectCancel" height="400" :loading="allMemberLoading" :columns="columns2" :data="allMemberData">

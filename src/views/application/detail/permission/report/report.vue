@@ -65,12 +65,7 @@ export default {
 
     //创建视图
     goCreateView() {
-      window.top.location.href =
-        "/Site/index.html#appSetting/" +
-        this.listId +
-        "/" +
-        this.appType +
-        "/viewTypes";
+      window.top.location.href = `/Site/index.html#appSetting/${this.listId}/null/new`;
     },
 
     reGetData() {
@@ -80,24 +75,11 @@ export default {
     //获取视图数据
     getViewsData() {
       getListViewPermission(this.listId).then(res => {
-        res.forEach(element => {
-          var content = JSON.parse(element.content);
-
-          if (!element.users) {
-            element.users = [];
-          }
-          if (!element.roles) {
-            element.roles = [];
-          }
-          if (!element.groups) {
-            element.groups = [];
-          }
-          element.permissionList = [
-            ...element.groups,
-            ...element.roles,
-            ...element.users
-          ];
-          element.title = content.viewName;
+        res.forEach(t => {
+          t.users || (t.users = []),
+            t.roles || (t.roles = []),
+            t.groups || (t.groups = []),
+            (t.permissionList = [...t.groups, ...t.roles, ...t.users]);
         });
         this.reportSources = res;
       });
@@ -158,15 +140,12 @@ export default {
     reloadViewData() {
       getListViewPermission(this.listId).then(res => {
         res.forEach(element => {
-          var content = JSON.stringify(element.content);
-
           element.permissionList = [
             ...element.groups,
             ...element.roles,
             ...element.users
           ];
-          element.title = content.viewName;
-        });        
+        });
         this.reportSources = res;
       });
     },
@@ -192,14 +171,14 @@ export default {
         viewId: params.row.viewId,
         listId: this.listId
       };
-      if(isMobile){
+      if (isMobile) {
         saveMobileDefaultView(defaultParams).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
             this.reloadViewData();
           }
         });
-      }else{
+      } else {
         saveDefaultView(defaultParams).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
@@ -316,11 +295,7 @@ export default {
                   {
                     on: {
                       click: () => {
-                        let href =
-                          "/Site/index.html#appSetting/viewConfig/" +
-                          this.listId +
-                          "/" +
-                          params.row.viewUniqueId;
+                        let href = `/Site/index.html#appSetting/${this.listId}/${params.row.viewUniqueId}/edit`;
                         window.top.location.href = href;
                       }
                     },

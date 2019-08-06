@@ -81,7 +81,7 @@ export default {
     getViewsData() {
       getListViewPermission(this.listId).then(res => {
         res.forEach(element => {
-          var content = JSON.parse(element.content);
+          var content = element.content && JSON.parse(element.content);
 
           if (!element.users) {
             element.users = [];
@@ -97,7 +97,7 @@ export default {
             ...element.roles,
             ...element.users
           ];
-          element.title = content.viewName;
+          element.title = content ? content.viewName : element.title;
         });
         this.reportSources = res;
       });

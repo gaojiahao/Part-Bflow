@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     handleSubmit() {
-        let data = {};
+      let data = {};
       this.$refs.activeForm.validate(valid => {
         if (valid) {
           if (this.form.password === this.form.confirmPassword) {
@@ -95,7 +95,8 @@ export default {
             activationUser(data).then(res => {
                 if (res.success) {
                   this.$Message.success(res.message);
-                  this.$router.push({ path:`/Login/index.html` });
+                  this.$router.push({ path:`${location.host}/Login/index.html` });
+                  window.location.reload();
                 }else{
                     this.$Message.error(res.message);
                 }

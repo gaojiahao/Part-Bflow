@@ -85,25 +85,28 @@ export default {
     handleSubmit() {
       let data = {};
       this.$refs.activeForm.validate(valid => {
-        if (valid) {
-          if (this.form.password === this.form.confirmPassword) {
-            data = {
-                userCode: this.form.userCode,
-                verifiCode: this.form.verificationCode,
-                password: this.form.password
-            }
-            activationUser(data).then(res => {
-                if (res.success) {
-                  this.$Message.success(res.message);
-                location.href=location.origin+'/Login/index.html';
-                }else{
-                    this.$Message.error(res.message);
-                }
-              })
-          } else {
-            this.$Message.error("两次输入的密码不一致！请重新输入");
-          }
+        if (!valid) {
+            return;
         }
+
+        if (this.form.password !== this.form.confirmPassword) {
+            this.$Message.error("两次输入的密码不一致！请重新输入");
+            return;
+        }
+        
+        data = {
+            userCode: this.form.userCode,
+            verifiCode: this.form.verificationCode,
+            password: this.form.password
+        }
+        activationUser(data).then(res => {
+            if (res.success) {
+                this.$Message.success(res.message);
+            location.href=location.origin+'/Login/index.html';
+            }else{
+                this.$Message.error(res.message);
+            }
+            })
       });
     },
     //失去焦点再次确定密码一致性

@@ -95,7 +95,7 @@ export default {
             activationUser(data).then(res => {
                 if (res.success) {
                   this.$Message.success(res.message);
-                  window.open(`${location.host}/Login/index.html`);
+                location.href=location.origin+'/Login/index.html';
                 }else{
                     this.$Message.error(res.message);
                 }

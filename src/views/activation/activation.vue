@@ -17,7 +17,7 @@
                       <FormItem prop="userCode" label="账号：">
                           <Input v-model="form.userCode" placeholder="请输入账号"></Input>
                       </FormItem>
-                      <FormItem v-if="showNickname" prop="userName" label="昵称：">
+                      <FormItem prop="userName" label="昵称：">
                           <Input v-model="form.userName" placeholder="请输入昵称"></Input>
                       </FormItem>
                       <FormItem prop="password" label="密码：(密码必须同时包含字母和数字,且在8-20位之间！)">
@@ -46,7 +46,6 @@ export default {
   data() {
     return {
       email: this.$route.query,
-      showNickname: true,
       form: {
         userCode: "",
         userName: "",

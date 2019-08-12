@@ -95,8 +95,7 @@ export default {
             activationUser(data).then(res => {
                 if (res.success) {
                   this.$Message.success(res.message);
-                  this.$router.push({ path:`${location.host}/Login/index.html` });
-                  window.location.reload();
+                  window.open(`${location.host}/Login/index.html`);
                 }else{
                     this.$Message.error(res.message);
                 }

@@ -6,6 +6,9 @@
             border-bottom-left-radius: 4px !important;
             border-top-left-radius: 4px !important;
         }
+        .formItem-label{
+            font-size: 14px;
+        }
     }
 </style>
 
@@ -21,20 +24,24 @@
               <p class="active-welcome">欢迎激活账号！</p>
               <div class="form-con">
                   <Form ref="activeForm" :model="form" :rules="rules" label-position="top">
-                      <FormItem prop="userCode" label="手机号：">
+                      <FormItem prop="userCode">
+                          <span slot="label" class="formItem-label">手机号：</span>
                           <Input v-model="form.userCode" placeholder="请输入手机号"></Input>
                       </FormItem>
-                      <FormItem prop="verificationCode" label="短信验证码：" class="verification-code">
+                      <FormItem prop="verificationCode" class="verification-code">
+                          <span slot="label" class="formItem-label">短信验证码：</span>
                           <Input v-model="form.verificationCode" placeholder="请输入短信验证码">
                             <span slot="append">
                                 <Button @click="getVerificationCode" :style="{float:'right'}" :disabled="isVerification">{{ isVerification ? `${codeSeconds}秒` : '获取验证码' }}</Button>
                             </span>
                           </Input>
                       </FormItem>
-                      <FormItem prop="password" label="密码：(必须同时包含字母和数字,且在8-20位之间！)">
+                      <FormItem prop="password">
+                          <span slot="label" class="formItem-label">密码：(必须同时包含字母和数字,且在8-20位之间！)</span>
                           <Input type="password" v-model="form.password" placeholder="请输入密码"></Input>
                       </FormItem>
-                      <FormItem prop="confirmPassword" label="确认密码：">
+                      <FormItem prop="confirmPassword">
+                          <span slot="label" class="formItem-label">确认密码：</span>
                           <Input type="password" @on-blur="blurConfirmPwd" v-model="form.confirmPassword" placeholder="请确认密码"></Input>
                       </FormItem>
                       <FormItem>
@@ -93,7 +100,7 @@ export default {
             this.$Message.error("两次输入的密码不一致！请重新输入");
             return;
         }
-        
+
         data = {
             userCode: this.form.userCode,
             verifiCode: this.form.verificationCode,

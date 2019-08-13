@@ -10,6 +10,10 @@
         padding: 15px 0px;
         .profit-date{
           margin-bottom: 5px;
+          .exclude-zero{
+            float: right;
+            margin-top: 10px;
+          }
         }
       }
   }
@@ -31,7 +35,12 @@
                       v-model="endDate" 
                       placeholder="请选择月份" 
                       style="width: 100px"></DatePicker>
+              <div class="exclude-zero">
+                <Checkbox v-model="excludeZero" @on-change="excludeZeroChange">排除金额为0</Checkbox>
+              </div>
             </div>
+              <!-- :height="tableHeight" -->
+
             <Table 
               border
               stripe
@@ -85,8 +94,10 @@ export default {
     return {
       loading: false,
       showAccountDetail: false,
+      excludeZero: true,
       modalTitle: "",
       startDate: "",
+      tableHeight: 400,
       endDate: new Date(),
       columns: [],
       performanceData: [],
@@ -132,6 +143,9 @@ export default {
     };
   },
   methods: {
+      excludeZeroChange (status) {
+        this.getPerformanceData(this.startDate,this.endDate)
+      },
       onStartDateChange (date, dateType) {
         date && (this.startDate = new Date(date));
         if(this.startDate && this.endDate){
@@ -396,6 +410,13 @@ export default {
             }
         ];
       }
+
+      if(this.excludeZero){
+        profitData = profitData.filter(item => {
+          return item.profitSum !== 0 || !item.isChild;
+        });
+      }
+      
       return profitData;
     }
   },
@@ -404,6 +425,8 @@ export default {
     let currentHalfMonth = getPreMonthDay(new Date(), 5);
     this.startDate = currentHalfMonth;
     this.getPerformanceData(this.startDate,this.formatDate(this.endDate));
+
+    document.body.clientHeight > 700 && (this.tableHeight = 500);
   }
 };
 </script>

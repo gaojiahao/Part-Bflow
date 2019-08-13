@@ -142,7 +142,7 @@ export default {
                               this.$Message.success("删除成功!");
                               this.reload = true;
                               this.isShowModal = false;
-                              this.$emit("on-permission-change", true);
+                              this.$emit("relevantInstChange", true);
                             }
                           }
                         );
@@ -173,7 +173,7 @@ export default {
     //添加权限后更新数据
     permissionChange() {
       this.reload = true;
-      this.$emit("on-permission-change", true);
+      this.$emit("relevantInstChange", true);
     },
     //监听modal状态变化
     changeModalStatus() {
@@ -200,7 +200,7 @@ export default {
             that.$Message.success("删除成功!");
             that.reload = true;
             that.isShowModal = false;
-            this.$emit("on-permission-change", true);
+            this.$emit("relevantInstChange", true);
           }
         });
       }

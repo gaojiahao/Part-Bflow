@@ -133,15 +133,12 @@ export default {
   },
 
   props: {
-    groupId: {
-      type: String
-    },
-    groupType: {
-      type: String
-    },
     isPermission: {
       type: Boolean
-    }
+    },
+    groupType:{
+      type:String
+    },
   },
 
   data() {
@@ -286,7 +283,7 @@ export default {
                           if (res.success) {
                             this.$Message.success("删除成功!");
                             this.reload = true;
-                            this.$emit("on-lower-organization-change", true);
+                            this.$emit("relevantInstChange", true);
                           }
                         });
                       }
@@ -522,7 +519,7 @@ export default {
           this.$Message.success("更新成功");
           this.isShowMemberModal = false;
           this.reload = true;
-          this.$emit("on-lower-organization-change", true);
+          this.$emit("relevantInstChange", true);
         } else {
           this.$Message.error(res.message);
         }
@@ -541,7 +538,7 @@ export default {
               if (res.success) {
                 this.$Message.success("删除成功!");
                 this.reload = true;
-                this.$emit("on-lower-organization-change", true);
+                this.$emit("relevantInstChange", true);
               }
             })
             .catch(error => {
@@ -585,6 +582,9 @@ export default {
       ];
       this.getAllLowerGroupByGroupType(this.listUserCurrentPage, filter);
     }
+  },
+  mounted(){
+    this.groupId = this.$route.params.groupId;
   }
 };
 </script>

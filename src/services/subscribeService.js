@@ -62,8 +62,9 @@ export const uploadImage = (data) => request('/H_roleplay-si/ds/upload_image', {
  * @author guozheng
  * @description 获取所有用户数据
  */
-export const getAllUsers = (pageSize, currentPage, filter) => request('/H_roleplay-si/ds/getAllUsers', {
+export const getAllUsers = (pageSize, currentPage, filter, entityId) => request('/H_roleplay-si/ds/getAllUsers', {
     page: currentPage,
     limit: pageSize,
-    filter: filter
+    filter: filter,
+    entityId: entityId
   });

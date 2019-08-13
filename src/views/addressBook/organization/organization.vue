@@ -8,7 +8,7 @@
       <div class="l-info">
         <span @click="goOrgList" class="l-info-org">组织</span>
         <span class="l-info-others">/</span>
-        <span v-show="groupId" class="l-info-others">{{org.name}}</span>
+        <span v-show="groupId" class="l-info-others">{{org.groupName}}</span>
         <span v-show="!groupId" class="l-info-others">创建</span>
         <Tag
           v-show="groupId"
@@ -38,12 +38,14 @@
     </header>
 
     <div class="org-container">
-        <!-- :groupType="formItem.groupType"  -->
-
       <router-view 
         :isPermission="isPermission" 
         :target="target" 
-        ></router-view>
+        :formItem="org"
+        @relevantInstChange="setRelevantInstCount"
+        :groupType="org.groupType"
+        >
+      </router-view>
     </div>
   </div>
 </template>
@@ -52,33 +54,29 @@
 import {
   getOrgBaseInfo,
   getObjDetailsCountByGroupId,
-  saveBaseinfo,
-  updateBaseinfo,
-  checkoutFieldIsOnly,
-  getAllHigherGroupByGroupType,
-  getAllUsers,
   getListById,
   getOrgById
 } from "@/services/addressBookService.js";
 export default {
   name: "organization",
-
   components: {
   },
-
   data() {
     return {
       org:{
-        name:"",
-        status: -3
+        groupName: "",
+        groupType: "",
+        depFunction: "",
+        status: 1,
+        principal: "",
+        principalName: "",
+        highGroup: "",
+        parentId: "",
+        creator:"",
+        crtTime:"",
+        modifier:"",
+        modTime:""
       },
-      tableContent: {},
-
-      isEdit: true,
-      editBtnName: "编辑",
-
-      hiddenInput: false,
-
       actionBtn: [
         {
           label: "权限",
@@ -138,27 +136,6 @@ export default {
           id: "baseinfo"
         }
       ],
-
-      actionIndex: 6,
-
-      //上级组织模态框属性
-      isShowMemberModal: false,
-      highOrgModalLoading: true,
-      //存放编辑时的上级组织
-      editHighOrg: "",
-      editHighOrgParentId: "",
-      name: "",
-      groupType: "",
-      parentType: "",
-      listUserData: [],
-      listUserPageTotal: 0,
-      listUserCurrentPage: 1,
-      pageSize: 10,
-      searchHighOrgValue: "",
-      onSelectionModal: [],
-
-      checkout: true,
-
       groupId: this.$route.params.groupId,
       isPermission: true,
       target: {
@@ -193,21 +170,59 @@ export default {
      * 获取相关实例数量
      * @param groupId 组织id
      */
-    getObjDetailsCountByGroupId(groupId) {
-      getObjDetailsCountByGroupId(groupId).then(res => {
+    setRelevantInstCount() {
+      getObjDetailsCountByGroupId(this.$route.params.groupId).then(res => {
         this.actionBtn.forEach((element, index) => {
           if (element.id !== "baseinfo" && element.id !== "teamProfit") {
             element.number = res[element.id] ? res[element.id] : 0;
           }
         });
       });
+    },
+        //设置组织信息
+    setOrgInfo(){
+        getOrgById(this.groupId).then(res => {
+        if (res.length > 0) {
+          let org = res[0];
+          this.org.groupName = org.groupName;
+          this.org.groupType = org.groupType;
+          this.org.depFunction = org.depFunction;
+          this.org.status = org.status;
+          this.org.principal = org.principal; //负责人id
+          this.org.principalName = org.principalName; //负责人名称
+          this.org.highGroup = org.parentGroupName;
+          this.org.parentId = org.parentId;
+
+          this.org.creator = org.creatorName;
+          this.org.crtTime = org.crtTime;
+          this.org.modifier= org.modifierName;
+          this.org.modTime = org.modTime;
+
+          switch (org.groupType) {
+            case "M":
+              this.groupType = "管理层";
+              break;
+            case "A":
+              this.groupType = "事业部";
+              break;
+            case "O":
+              this.groupType = "部门";
+              break;
+            case "G":
+              this.groupType = "小组";
+              break;
+          }
+        }
+      });
     }
   },
 
   mounted() {
     if(this.$route.params.groupId){
-      this.getObjDetailsCountByGroupId(this.$route.params.groupId);
+      this.setRelevantInstCount();
+      this.setOrgInfo();
     }
+    
     getListById("000002").then(res => {
       if (!res[0].action.update) {
         this.isPermission = false;

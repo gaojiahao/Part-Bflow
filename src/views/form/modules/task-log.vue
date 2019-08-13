@@ -6,14 +6,14 @@
   <div  class="timeline-box">
     <div class="task-modal" :style="{display: showTaskModal?'block':'none'}"></div>
     <div class="app-resource-group-title">
-        <span class="font16">工作日志</span>
+        <span class="font16">任务日志</span>
         <span v-if="logData.length>0">
-          <Tooltip class="hidden-form" v-if="!hiddenForm" content="打开工作日志表单" placement="left">
+          <Tooltip class="hidden-form" v-if="!hiddenForm" content="打开任务日志表单" placement="left">
           <span @click="openForm">
               <Icon type="md-arrow-dropup-circle" />
           </span>
           </Tooltip>
-          <Tooltip class="hidden-form" v-else content="关闭工作日志表单" placement="left">
+          <Tooltip class="hidden-form" v-else content="关闭任务日志表单" placement="left">
             <span @click="closeForm">
                 <Icon type="md-arrow-dropdown-circle" />
             </span>
@@ -56,7 +56,7 @@
           <Row>
            <Col span="24">
             <FormItem label="标题:" prop="logTitle" >
-              <Input v-model="modalFormData.logTitle" placeholder="请输入工作日志标题" />
+              <Input v-model="modalFormData.logTitle" placeholder="请输入任务日志标题" />
             </FormItem> 
             </Col>
          </Row>
@@ -87,8 +87,6 @@
                <FormItem label="申报工时:" prop="logDeclarationHours">
                 <InputNumber 
                   v-model="modalFormData.logDeclarationHours"
-                  :max='24' 
-                  :min="0.1" 
                   :step="0.1"/>单位/时
               </FormItem>
             </Col>
@@ -110,7 +108,7 @@
     <div  class="timeline-box-log" v-show="logData.length===0?false:true">
       <div class="timeline-box-log-sum">
         <span>总工时：<b>{{ logHours }}</b></span>
-        <span :style="{marginLeft:'15px'}">总成本：<b>{{ logCosts }}</b></span>
+        <span :style="{marginLeft:'15px'}">总成本：<b>{{ logCosts | toThousandFilter }}</b></span>
       </div>
       <ul class="timeline-box-log-item" v-for="(item,index) in logData" :key="index">
         <img  @error="errorimg(item,index)" :src="item.photo?item.photo:'resources/images/icon/defaultUserPhoto.png'" class="head-portrait"/>
@@ -208,13 +206,13 @@ export default {
             users:[],
             comments: "",
             logType:"",
-            logStatus:"已办"
+            logStatus:"待办"
         },
         ruleValidate: {
             //变更日志表单校验
             logTitle: [
               {required: true,message: "不允许为空" },
-              { type: 'string', max: 20, message: '标题不能超过20个字符'}
+              { type: 'string', max: 100, message: '标题不能超过100个字符'}
             ],
             users: [
               {required: true,message: "不允许为空" , type: 'array'}
@@ -227,7 +225,7 @@ export default {
               {validator:validateTaskStatus}
             ],
             logDeclarationHours: [
-              {required: true, message: "必填项且在0.1到24之间",type: "number"}
+              {required: true, message: "必填项且在0.1到24之间",type: "number",min:0.1,max:24}
             ],
             taskDate: [
               {required: true,message: "不允许为空" }
@@ -358,7 +356,7 @@ export default {
           {"operator":"like","value":query,"property":"nickname"},
           {"operator":"in","value":"1","property":"status"}]):
           JSON.stringify([{"operator":"in","value":"1","property":"status"}]);
-        getAllUsers(200,1,filter).then(res=>{
+        getAllUsers(200,1,filter,this.$currentUser.entityId).then(res=>{
             this.userList = res.tableContent;
             this.loading = false;
         })

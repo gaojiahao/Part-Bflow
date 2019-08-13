@@ -33,24 +33,36 @@
 
                     <span>
                         <Dropdown class="instance-dropdown" @on-click="addSubUsers" trigger="click" >
-                         <Icon type="md-person" size=18  /> <b>{{subscribeInfo.subscribeNum}}</b>
-                         <Icon type="ios-arrow-down"></Icon>
-                        <DropdownMenu slot="list">
-                            <DropdownItem name="add">
-                               添加关注者
-                            </DropdownItem>
-                            <DropdownItem  v-for="(user,index) in  subscribeInfo.subscribeUsers" :key="index">
-                               {{user.nickname}}
-                               <span @click.stop="deleteSubscribeUsers(user.userId,user.nickname)" class="delete-user"><Icon type="md-close"/></span>
-                            </DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
+                            <Icon type="md-person" size=18  /> <b>{{subscribeInfo.subscribeNum}}</b>
+                            <Icon type="ios-arrow-down"></Icon>
+                            <DropdownMenu slot="list">
+                                <DropdownItem name="add">
+                                添加关注者
+                                </DropdownItem>
+                                <DropdownItem  v-for="(user,index) in  subscribeInfo.subscribeUsers" :key="index">
+                                {{user.nickname}}
+                                <span @click.stop="deleteSubscribeUsers(user.userId,user.nickname)" class="delete-user"><Icon type="md-close"/></span>
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                    </span>
+                    <span v-if="comments.length>0">
+                        <Tooltip class="hidden-form" v-if="!hiddenForm" content="打开评论表单" placement="left">
+                            <span @click="openForm">
+                                <Icon type="md-arrow-dropup-circle" />
+                            </span>
+                        </Tooltip>
+                        <Tooltip class="hidden-form" v-else content="关闭评论表单" placement="left">
+                            <span @click="closeForm">
+                                <Icon type="md-arrow-dropdown-circle" />
+                            </span>
+                        </Tooltip>
                     </span>
                 </span>
             </div>
        </Row>
         <Row class="comments">
-            <commentPublish :handlePublish="handlePublish" ></commentPublish>
+            <commentPublish v-if="hiddenForm" :handlePublish="handlePublish" ></commentPublish>
 
             <div class="comments-header martop10" v-if="comments.length>0">
                 <strong>最新评论({{pageInfo.total}})</strong>
@@ -116,6 +128,7 @@ export default {
         subcribeVisible:true,
         showUserModal: false,
         isInstance: false,
+        hiddenForm: true,
         subscribeInfo:{
             isSubscribe:0,
             subscribeNum:0,
@@ -131,6 +144,22 @@ export default {
   },
  
   methods: {
+    openForm() {
+      this.hiddenForm = true;
+      if(window.top.setInstaceCommentsIframeHeight){
+        setTimeout(function(){
+          window.top.setInstaceCommentsIframeHeight();
+        },500)
+      }
+    },
+    closeForm() {
+      this.hiddenForm = false;
+      if(window.top.setInstaceCommentsIframeHeight){
+        setTimeout(function(){
+          window.top.setInstaceCommentsIframeHeight();
+        },500)
+      }
+    },
     refreshDeleteComments () {
         this.refreshComments();
     },

@@ -8,6 +8,9 @@
 }
 
 .org-form{
+  width:40%;
+  margin:auto;
+  padding-bottom: 50px;
     /deep/ .ivu-form-item-label{
         font-size: 14px;
         font-weight: bold;
@@ -37,7 +40,7 @@
 </style>
 
 <template>
-  <div style="width:40%;margin:auto;" class="org-form">
+  <div  class="org-form">
     <Form
       :model="formItem"
       :labelWidth="100"
@@ -320,86 +323,21 @@ export default {
     MemberModal,
     PrincipalModal
   },
+  props:{
+     formItem: {
+       type:Object,
+       default:()=>{
+         return {}
+       }
+     }
+  },
   data() {
     return {
-      formItem: {
-        groupName: "",
-        groupType: "",
-        depFunction: "",
-        status: 1,
-        principal: "",
-        principalName: "",
-        highGroup: "",
-        parentId: "",
-        creator:"",
-        crtTime:"",
-        modifier:"",
-        modTime:""
-      },
       isEdit: true,
       editBtnName: "编辑",
 
       hiddenInput: false,
-
-      actionBtn: [
-        {
-          label: "权限",
-          type: "md-person",
-          number: 0,
-          hidden: false,
-          routeName: "permission",
-          id: "objectPermission"
-        },
-        {
-          label: "成员信息",
-          imgPath: "https://lab.roletask.com/resource/app-icon/user.png",
-          number: 0,
-          hidden: false,
-          routeName: "memberinfo",
-          id: "user"
-        },
-        {
-          label: "负责人",
-          imgPath: "https://lab.roletask.com/resource/app-icon/user.png",
-          number: 0,
-          hidden: false,
-          routeName: "principal",
-          id: "groupPrincipal"
-        },
-        {
-          label: "下级组织",
-          imgPath:
-            "https://lab.roletask.com/resource/app-icon/organization.png",
-          number: 0,
-          hidden: false,
-          routeName: "lowerOrg",
-          id: "childGroup"
-        },
-        {
-          label: "上级组织",
-          imgPath:
-            "https://lab.roletask.com/resource/app-icon/organization.png",
-          number: 0,
-          hidden: false,
-          routeName: "higherOrg",
-          id: "parentGroup"
-        },
-        {
-          label: "组织利润表",
-          imgPath: "https://lab.roletask.com/resource/app-icon/team-profit.png",
-          hidden: false,
-          routeName: "teamProfit",
-          id: "teamProfit"
-        },
-        {
-          label: "基本信息",
-          type: "ios-home",
-          hidden: false,
-          routeName: "basic",
-          id: "baseinfo"
-        }
-      ],
-
+     
       //上级组织模态框属性
       isShowMemberModal: false,
       highOrgModalLoading: true,
@@ -928,49 +866,6 @@ export default {
         },{operator:"in",value:"1",property:"status"}
       ]);
       this.getListUsers(this.listUserCurrentPage, this.pageSize, filter);
-    },
-    //设置组织信息
-    setOrgInfo(){
-        getOrgById(this.groupId).then(res => {
-        if (res.length > 0) {
-          let org = res[0];
-          this.formItem.groupName = org.groupName;
-          this.$parent.org.name = org.groupName;
-          this.$parent.org.status = org.status;
-          this.formItem.groupType = org.groupType;
-          this.formItem.depFunction = org.depFunction;
-          this.formItem.status = org.status;
-          this.formItem.principal = org.principal; //负责人id
-          this.formItem.principalName = org.principalName; //负责人名称
-          this.formItem.highGroup = org.parentGroupName;
-          this.formItem.parentId = org.parentId;
-
-          this.formItem.creator = org.creatorName;
-          this.formItem.crtTime = org.crtTime;
-          this.formItem.modifier= org.modifierName;
-          this.formItem.modTime = org.modTime;
-
-          this.org = org;
-          this.parentType = org.parentType;
-          this.editHighOrg = this.formItem.highGroup;
-          this.editHighOrgParentId = this.formItem.parentId;
-          
-          switch (org.groupType) {
-            case "M":
-              this.groupType = "管理层";
-              break;
-            case "A":
-              this.groupType = "事业部";
-              break;
-            case "O":
-              this.groupType = "部门";
-              break;
-            case "G":
-              this.groupType = "小组";
-              break;
-          }
-        }
-      });
     }
   },
 
@@ -980,7 +875,6 @@ export default {
 
     if (this.groupId) {
       this.model = "view";
-      this.setOrgInfo();
     }
   }
 };

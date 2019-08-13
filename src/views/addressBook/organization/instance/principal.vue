@@ -56,13 +56,7 @@
     >
       <div>
         <div class="app-search">
-          <Input
-            @on-search="userFilter"
-            :search="true"
-            v-model="searchValue"
-            placeholder="搜索工号或者名称"
-            style="width: 300px"
-          ></Input>
+          <Input @on-search="userFilter" :search="true" v-model="searchValue" placeholder="搜索账号或者名称" style="width: 300px"></Input>
           <a @click="userFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </a>
@@ -149,10 +143,10 @@ export default {
             ]);
           }
         },
-        {
-          title: "工号",
+         {
+          title: "用户账号",
           width: 100,
-          key: "USER_CODE"
+          key: "jobNumber"
         },
         {
           title: "名称",
@@ -234,8 +228,8 @@ export default {
           }
         },
         {
-          title: "工号",
-          key: "userCode"
+          title: "用户账号",
+          key: "jobNumber"
         },
         {
           title: "姓名",
@@ -295,16 +289,7 @@ export default {
     },
 
     listUserChangePage(currentPage) {
-      let filter = JSON.stringify([
-        {
-          operator_1: "like",
-          value_1: this.searchValue,
-          property_1: "nickname",
-          link: "or",
-          operator_2: "like",
-          value_2: this.searchValue,
-          property_2: "userCode"
-        }
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"jobNumber"}
       ]);
       this.getListUsers(currentPage, this.pageSize, filter);
     },
@@ -312,16 +297,7 @@ export default {
     //点击切换每页显示条数
     onPageSizeChange(size) {
       this.pageSize = size;
-      let filter = JSON.stringify([
-        {
-          operator_1: "like",
-          value_1: this.searchValue,
-          property_1: "nickname",
-          link: "or",
-          operator_2: "like",
-          value_2: this.searchValue,
-          property_2: "userCode"
-        }
+       let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"jobNumber"}
       ]);
       this.getListUsers(1, size, filter);
     },
@@ -363,7 +339,7 @@ export default {
             this.$Message.success(message ? message : "更新成功");
             this.isShowPrincipalModal = false;
             this.reload = true;
-            this.$emit("on-principal-change", true);
+            this.$emit("relevantInstChange", true);
           }
         })
         .catch(error => {
@@ -372,16 +348,7 @@ export default {
     },
     //过滤
     userFilter() {
-      let filter = JSON.stringify([
-        {
-          operator_1: "like",
-          value_1: this.searchValue,
-          property_1: "nickname",
-          link: "or",
-          operator_2: "like",
-          value_2: this.searchValue,
-          property_2: "userCode"
-        }
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"jobNumber"}
       ]);
       this.getListUsers(this.listUserCurrentPage, this.pageSize, filter);
     }

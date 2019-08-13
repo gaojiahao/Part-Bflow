@@ -115,11 +115,8 @@ export default {
   },
 
   props: {
-    // groupId: {
-    //   type: String
-    // },
-    groupType: {
-      type: String
+    groupType:{
+      type:String
     },
     isPermission: {
       type: Boolean
@@ -370,7 +367,7 @@ export default {
           this.$Message.success("更新成功");
           this.isShowMemberModal = false;
           this.reload = true;
-          this.$emit("on-high-organization-change", true);
+          this.$emit("relevantInstChange", true);
         } else {
           this.$Message.error(res.message);
         }
@@ -411,7 +408,7 @@ export default {
           this.$Message.success("更新成功");
           this.isShowMemberModal = false;
           this.reload = true;
-          this.$emit("on-high-organization-change", true);
+          this.$emit("relevantInstChange", true);
         } else {
           this.$Message.error(res.message);
         }
@@ -447,7 +444,7 @@ export default {
   },
 
   mounted(){
-     this.groupId = this.$route.params.groupId;
+    this.groupId = this.$route.params.groupId;
   }
 };
 </script>

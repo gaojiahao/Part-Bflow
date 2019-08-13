@@ -48,7 +48,7 @@
                         style="width:60%">
                     </Input>
                 </FormItem>
-                <FormItem label="工号：" prop="jobNumber">
+                <FormItem label="账号：" prop="jobNumber">
                     <Input 
                         :class="{'info-edit':isEdit}"
                         :readonly="isEdit" 
@@ -293,15 +293,15 @@ export default {
           jobNumber: [
           {
             required: false,
-            message: "员工工号应不大于8位！",
+            message: "账号应不大于24位！",
             trigger: "blur",
-            pattern: /^[\w\W]{1,8}$/
+            pattern: /^[\w\W]{1,24}$/
           }
         ],
         nickname: [
           {
             required: true,
-            message: "员工名称只能包含字母或数字或汉字或下划线",
+            message: "名称只能包含字母或数字或汉字或下划线",
             trigger: "blur",
             pattern: /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/
           }

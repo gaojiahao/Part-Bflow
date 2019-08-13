@@ -255,7 +255,7 @@ export default {
         },
 
         getAllUsers(filter=""){
-            getAllUsers(5,1,filter).then(res=>{
+            getAllUsers(8,1,filter).then(res=>{
                 this.userList = res.tableContent;
                 if(res.tableContent.length === 0){
                     this.userListVisible = false;

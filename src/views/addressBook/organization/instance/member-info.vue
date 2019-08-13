@@ -206,8 +206,8 @@ export default {
           }
         },
         {
-          title: "工号",
-          key: "userCode"
+          title: "用户账号",
+          key: "jobNumber"
         },
         {
           title: "姓名",
@@ -260,7 +260,7 @@ export default {
                             if (res.success) {
                               this.$Message.success("删除成功!");
                               this.reload = true;
-                              this.$emit("on-member-info-change", true);
+                              this.$emit("relevantInstChange", true);
                             }
                           })
                           .catch(error => {
@@ -299,8 +299,8 @@ export default {
           }
         },
         {
-          title: "工号",
-          key: "userCode"
+          title: "用户账号",
+          key: "jobNumber"
         },
         {
           title: "姓名",
@@ -423,7 +423,7 @@ export default {
             this.$Message.success("更新成功");
             this.reload = true;
             this.isShowMemberModal = false;
-            this.$emit("on-member-info-change", true);
+            this.$emit("relevantInstChange", true);
           }
         });
       }
@@ -440,7 +440,7 @@ export default {
             if (res.success) {
               this.$Message.success("删除成功!");
               this.reload = true;
-              this.$emit("on-member-info-change", true);
+              this.$emit("relevantInstChange", true);
             }
           });
         }
@@ -477,7 +477,7 @@ export default {
           link: "or",
           operator_2: "like",
           value_2: this.searchValue,
-          property_2: "userCode"
+          property_2: "jobNumber"
         }
       ]);
       this.getListUsers(currentPage, this.pageSize, filter);
@@ -494,7 +494,7 @@ export default {
           link: "or",
           operator_2: "like",
           value_2: this.searchValue,
-          property_2: "userCode"
+          property_2: "jobNumber"
         }
       ]);
       this.getListUsers(1, size, filter);
@@ -518,7 +518,7 @@ export default {
           link: "or",
           operator_2: "like",
           value_2: this.searchValue,
-          property_2: "userCode"
+          property_2: "jobNumber"
         }
       ]);
       this.getListUsers(this.listUserCurrentPage, this.pageSize, filter);
@@ -533,7 +533,7 @@ export default {
           link: "or",
           operator_2: "like",
           value_2: this.searchTableValue,
-          property_2: "userCode"
+          property_2: "jobNumber"
         }
       ]);
       this.memberInfoParams.filter = filter;

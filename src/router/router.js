@@ -128,6 +128,13 @@ export const activation = {
   component: () =>
     import('@/views/activation/activation.vue')
 }
+//用户登录激活页面
+export const userActivation = {
+  path: '/userActivate',
+  name: 'userActivate',
+  component: () =>
+    import('@/views/activation/user-activate.vue')
+}
 export const dictionaryManage = {
   path: '/dictionaryManage/:dicId',
   name: 'dictionaryManage',
@@ -174,5 +181,6 @@ export const routers = [
   knowledgeBaseRouter,
   wrokGuideRouter,
   fileCabinetRouter,
+  userActivation,
   ...appRouter
 ];

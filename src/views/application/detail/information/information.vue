@@ -198,8 +198,8 @@ export default {
           }
         },
         {
-          title: "工号",
-          key: "userCode"
+          title: "用户账号",
+          key: "jobNumber"
         },
         {
           title: "姓名",
@@ -373,14 +373,14 @@ export default {
     onPageChange(currentPage) {
       this.currentPage = currentPage;
       let filter = JSON.stringify([
-        {operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+        {operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"jobNumber"}
       ]);
       this.getAdmintrstorData(filter);
     },
     //查询管理员
     adminFilter() {
       let filter = JSON.stringify([
-        {operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"}
+        {operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"jobNumber"}
       ]);
       this.currentPage = 1;
       this.getAdmintrstorData(filter);

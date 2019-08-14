@@ -24,18 +24,28 @@
               <p class="active-welcome">欢迎激活账号！</p>
               <div class="form-con">
                   <Form ref="activeForm" :model="form" :rules="rules" label-position="top">
-                      <FormItem prop="userCode">
-                          <span slot="label" class="formItem-label">手机号：</span>
-                          <Input v-model="form.userCode" placeholder="请输入手机号"></Input>
-                      </FormItem>
-                      <FormItem prop="verificationCode" class="verification-code">
-                          <span slot="label" class="formItem-label">短信验证码：</span>
-                          <Input v-model="form.verificationCode" placeholder="请输入短信验证码">
-                            <span slot="append">
-                                <Button @click="getVerificationCode" :style="{float:'right'}" :disabled="isVerification">{{ isVerification ? `${codeSeconds}秒` : '获取验证码' }}</Button>
-                            </span>
-                          </Input>
-                      </FormItem>
+                     <Row>
+                        <Col span="24">
+                          <FormItem prop="userCode">
+                            <span slot="label" class="formItem-label">手机号：</span>
+                            <Input v-model="form.userCode" placeholder="请输入手机号"></Input>
+                          </FormItem>
+                        </Col>
+                     </Row>
+                     <Row>
+                        <Col span="20">
+                          <FormItem prop="verificationCode" class="verification-code">
+                              <span slot="label" class="formItem-label">短信验证码：</span>
+                              <Input v-model="form.verificationCode" placeholder="请输入短信验证码">
+                              </Input>
+                          </FormItem>
+                        </Col>
+                        <Col span="4">
+                          <!-- <span slot="append"> -->
+                                <Button @click="getVerificationCode" style="position: absolute;top: 27px;right: -8px;" :disabled="isVerification">{{ isVerification ? `${codeSeconds}秒` : '获取验证码' }}</Button>
+                            <!-- </span> -->
+                        </Col>
+                     </Row>
                       <FormItem prop="password">
                           <span slot="label" class="formItem-label">密码：(必须同时包含字母和数字,且在8-20位之间！)</span>
                           <Input type="password" v-model="form.password" placeholder="请输入密码"></Input>

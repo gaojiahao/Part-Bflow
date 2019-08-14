@@ -171,7 +171,7 @@
         style="background-color:rgb(31, 94, 197)"
         class="baseinfo-container-action-submit"
         id="file"
-        v-show="formItem.status === 1"
+        v-show="formItem.status === 1 && (groupId)"
       >
       <input
         type="submit"
@@ -557,7 +557,7 @@ export default {
     },
     //点击保存
     handlerSave(){
-        // this.formItem.status = 1;
+        this.formItem.status = 1;
         this.save();
     },
     handlerSaveAndNew(){
@@ -587,45 +587,33 @@ export default {
         delete this.formItem.modifier;
         delete this.formItem.modTime;
 
+        let saveOption = saveBaseinfo;
+
+
       this.$refs["formItem"].validate(valid => {
         if (valid) {
-          if (this.model === "create") {
-            saveBaseinfo(this.formItem)
-              .then(res => {
-                if (res) {
-                    this.$Message.success('保存成功!');
 
-                    if(!this.newAfterSave){
-                        this.$router.push({
-                            path: `/addressBook/organization/detail/${res.groupId}`
-                        });
-                    }
-                    setTimeout(() => {
-                      window.location.reload();
-                    }, 100);
-                }
-              })
-              .catch(error => {
-                this.$Message.error(error.data.message);
-              });
-          } else if (this.groupId && this.checkout) {
+          if(this.model !='create'){
+            saveOption = updateBaseinfo;
             this.formItem.groupId = this.groupId;
-            updateBaseinfo(this.formItem)
-              .then(res => {
-                if (res) {
-                  this.$Message.success(res.message);
-                  setTimeout(() => {
-                      window.location.reload();
-                    }, 100);
-                }
-              })
-              .catch(error => {
-                this.$Message.error(error.data.message);
-              });
           }
-          //   if (!this.checkout) {
-          //     this.$Message.error("名称已经存在!");
-          //   }
+
+          saveOption(this.formItem).then(res =>{
+            if (res) {
+              this.$Message.success('保存成功!');
+
+              if(!this.newAfterSave && this.model === 'create'){
+                  this.$router.push({
+                      path: `/addressBook/organization/detail/${res.groupId}`
+                  });
+              }
+              setTimeout(() => {
+                window.location.reload();
+              }, 100);
+            }
+          }).catch(error =>{
+            this.$Message.error(error.data.message);
+          });
         }
       });
     },

@@ -144,24 +144,6 @@ export default {
       }
     };
   },
-
-  computed: {
-    // formItemGroupType() {
-    //   return this.formItem.groupType;
-    // }
-  },
-
-  watch: {
-    // formItemGroupType: function(oldValue, newValue) {
-    //   if (oldValue !== newValue && !this.isEdit) {
-    //     this.formItem.highGroup = "";
-    //   }
-    // },
-    $route(to, from) {
-     
-    }
-  },
-
   methods: {
     goOrgList() {
       location.href = "/Site/index.html#page/origanizations";

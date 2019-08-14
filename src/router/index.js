@@ -13,7 +13,7 @@ export const router = new Router({
 
 
 router.beforeEach((to, from, next) => {
-  if (!Vue.prototype.$currentUser && to.name !== 'login') {
+  if (!Vue.prototype.$currentUser && to.name !== 'login' && to.name !== 'userActivate') {
     let cache = window.sessionStorage.getItem('roletask.com.r2.cache');
 
     if (cache) {

@@ -16,7 +16,7 @@
     <div class="active-body">
       <Row justify="center" type="flex" :style="{height:'100%',alignItems:isMobile?'':'center'}">
         <Col :xs="24" :sm="12" :md="8" :lg="7" style="z-index: 10000;">
-          <div class="active-con" :style="{height:isMobile?'100%':''}">
+          <div class="active-con">
               <div style="text-align:center;">
                   <img src="static/favicon.ico" style="width: 40px;"></img>
                   <b>Roletask</b>

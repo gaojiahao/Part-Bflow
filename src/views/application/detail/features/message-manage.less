@@ -1,0 +1,120 @@
+@gray-color: #ddd;
+
+.message-title{
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #e8e8e8;
+    padding: 0px 15px;
+    background-color: #fff;
+}
+.message-content{
+    margin-left: 20px;
+    .all-fields{
+        margin: 10px 0px;
+        border: 1px solid @gray-color;
+        float: left;
+        border-radius: 4px;
+        &-header{
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+            padding: 10px;
+            text-align: center;
+        }
+        &-content{
+            padding: 10px 30px;
+            overflow-y: auto;
+            height: 400px;
+            .field-name{
+                background-color: @gray-color;
+                padding: 1px 10px;
+                margin: 5px 0px;
+                border-radius: 20px;
+                text-align: center;
+                cursor: move;
+            }
+        }
+    }
+    .message-fields{
+        margin: 10px 0px;
+        margin-left: 30px;
+        border: 1px solid @gray-color;
+        float: left;
+        border-radius: 4px;
+        &-header{
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+            padding: 10px;
+            text-align: center;
+        }
+        &-content{
+            padding: 10px 30px;
+            .field-list{
+                margin: 5px 0px;
+                padding-bottom: 5px;
+                border-bottom: 1px solid @gray-color;
+                &-name{
+                    display: inline-block;
+                    background-color: @gray-color;
+                    padding: 1px 10px;
+                    border-radius: 20px;
+                    text-align: center;
+                    cursor: move;
+                }
+                &-action{
+                    display: block;
+                    float: right;
+                    margin-left: 10px;
+                    &-impor{
+                        border: 1px solid @gray-color;
+                        padding: 1px 5px;
+                        border-radius: 20px;
+                        background-color: #f8f5f5;
+                        font-size: 12px;
+                        cursor: pointer;
+                    }
+                    &-sum{
+                        border: 1px solid @gray-color;
+                        padding: 1px 5px;
+                        border-radius: 20px;
+                        background-color: #f8f5f5;
+                        font-size: 12px;
+                        margin-left: 5px;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+    .message-template{
+        margin: 10px 0px;
+        margin-left: 100px;
+        border: 1px solid @gray-color;
+        border-radius: 4px;
+        float: left;
+        .template-header{
+            padding: 10px;
+            font-weight: bold;
+            border-bottom: 1px solid @gray-color;
+            &-type{
+                border: 1px solid #ff9900;
+                padding: 3px;
+                font-size: 12px;
+                border-radius: 20px;
+                margin-left: 70px;
+                background-color: #ff9900;
+                color: #fff;
+            }
+        }
+        .template-content{
+            padding: 10px 30px;
+            text-align: center;
+            &-list{
+                text-align: left;
+                .list-impor{
+                    color: #39f;
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+}

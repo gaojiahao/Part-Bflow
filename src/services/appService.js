@@ -701,6 +701,22 @@ export const getCustomFieldResorce = (listId) => request('/H_roleplay-si/resourc
 
 /**
  * @author XiaoYing
+ * @description 获取消息配置应用字段
+ * @param {String} listId
+ */
+export const getMessageConfigFields = (listId) => request('/H_roleplay-si/app/msg/get', {
+  listId: listId
+})
+
+/**
+ * @author XiaoYing
+ * @description 保存消息配置应用字段
+ * @param {Object} data
+ */
+export const saveMessageConfigFields = (data) => request('/H_roleplay-si/app/msg/save', {}, 'POST', data)
+
+/**
+ * @author XiaoYing
  * @description 获取自定义数据源列表
  * @param {String} listId
  */

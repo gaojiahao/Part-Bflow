@@ -50,7 +50,7 @@
                         </Col>
                      </Row>
                       <FormItem prop="password">
-                          <span slot="label" class="formItem-label">密码：(必须同时包含字母和数字,且在8-20位之间！)</span>
+                          <span slot="label" class="formItem-label">密码：</span>
                           <Input type="password" v-model="form.password" placeholder="请输入密码"></Input>
                       </FormItem>
                       <FormItem prop="confirmPassword">
@@ -102,7 +102,8 @@ export default {
           { required: true, message: "密码必须同时包含字母和数字，且在8-20位之间！",pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$/, trigger: "blur" }
         ],
         confirmPassword: [
-          { required: true, message: "确认密码不能为空",pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$/, trigger: "blur" }
+          { required: true, message: "确认密码不能为空", trigger: "blur" },
+          { message: "密码必须同时包含字母和数字，且在8-20位之间！",pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$/, trigger: "blur" }
         ]
       }
     };

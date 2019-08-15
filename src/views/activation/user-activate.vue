@@ -41,9 +41,12 @@
                           </FormItem>
                         </Col>
                         <Col span="4">
-                          <!-- <span slot="append"> -->
-                                <Button @click="getVerificationCode" style="position: absolute;top: 27px;right: -8px;" :disabled="isVerification">{{ isVerification ? `${codeSeconds}秒` : '获取验证码' }}</Button>
-                            <!-- </span> -->
+                            <Button 
+                              @click="getVerificationCode" 
+                              style="position: absolute;top: 27px;right: -8px;" 
+                              :disabled="isVerification">
+                              {{ isVerification ? `${codeSeconds}秒` : '获取验证码' }}
+                            </Button>
                         </Col>
                      </Row>
                       <FormItem prop="password">
@@ -52,7 +55,12 @@
                       </FormItem>
                       <FormItem prop="confirmPassword">
                           <span slot="label" class="formItem-label">确认密码：</span>
-                          <Input type="password" @on-blur="blurConfirmPwd" v-model="form.confirmPassword" placeholder="请确认密码"></Input>
+                          <Input 
+                            type="password" 
+                            @on-blur="blurConfirmPwd" 
+                            v-model="form.confirmPassword" 
+                            placeholder="请确认密码">
+                          </Input>
                       </FormItem>
                       <FormItem>
                           <Button @click="handleSubmit" type="primary" long>激活</Button>
@@ -69,13 +77,14 @@
 
 <script>
 import { activationUser, sendVerificationCode } from "@/services/loginService.js";
+import { platformDevice } from '@/utils/platform-device-utils';
 
 export default {
   data() {
     return {
-      isVerification: false,
       codeSeconds: 60,
       isMobile: false,
+      isVerification: false,
       form: {
         userCode: "",
         verificationCode: "",
@@ -118,12 +127,12 @@ export default {
         }
         activationUser(data).then(res => {
             if (res.success) {
-                this.$Message.success(res.message);
-            location.href=location.origin+'/Login/index.html';
+              this.$Message.success(res.message);
+              location.href = location.origin + '/Login/index.html';
             }else{
-                this.$Message.error(res.message);
+              this.$Message.error(res.message);
             }
-            })
+          })
       });
     },
     //失去焦点再次确定密码一致性
@@ -133,52 +142,35 @@ export default {
     //获取验证码
     getVerificationCode() {
       let data = {};
-      if(this.form.userCode){
-        data.userCode = this.form.userCode;
-        sendVerificationCode(data).then(res => {
-          if(res.success){
-            this.$Message.success(res.message);
-            this.isVerification = true;
-            let interval = setInterval(() => {
-              if(this.codeSeconds === 0){
-                clearInterval(interval);
-                this.isVerification = false;
-                this.codeSeconds = 60;
-              }else{
-                this.codeSeconds --;
-              }
-            },1000)
-          }
-        }).catch(err => {
-            this.$Message.error(err.data.message);
-        })
-      }else{
+
+      if(!this.form.userCode){
         this.$Message.error('请先输入手机号！');
+        return;
       }
-    },
-    //检测当前是手机端还是PC端
-    getCurrentSystem() {
-      let platform = navigator.platform,
-          system = {
-            win: false,
-        　　mac: false,
-        　　xll: false,
-        　　ipad:false
-          };
-  　　system.win = platform.indexOf("Win") == 0;
-  　　system.mac = platform.indexOf("Mac") == 0;
-  　　system.x11 = (platform == "X11") || (platform.indexOf("Linux") == 0);
-  　　system.ipad = (navigator.userAgent.match(/iPad/i) != null)?true:false;
-  　　
-  　　if (system.win || system.mac || system.xll||system.ipad) {
-        this.isMobile = false;
-  　　} else {
-        this.isMobile = true;
-  　　}
+
+      data.userCode = this.form.userCode;
+      sendVerificationCode(data).then(res => {
+        if(res.success){
+          this.$Message.success(res.message);
+          this.isVerification = true;
+          let interval = setInterval(() => {
+            if(this.codeSeconds === 0){
+              clearInterval(interval);
+              this.isVerification = false;
+              this.codeSeconds = 60;
+            }else{
+              this.codeSeconds --;
+            }
+          },1000)
+        }
+      }).catch(err => {
+          this.$Message.error(err.data.message);
+      })
     }
   },
   mounted() {
-    // this.getCurrentSystem();
+    let versions = platformDevice();
+    if (versions.versions.mobile) this.isMobile = true;
   }
 };
 </script>

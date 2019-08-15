@@ -35,8 +35,8 @@
         </MenuItem>
       </router-link>
 
-      <router-link :to="{ name:'permission'}">
-        <MenuItem name="permission">
+      <router-link :to="{ name:'apppermission'}">
+        <MenuItem name="apppermission">
           资源授权
         </MenuItem>
       </router-link>

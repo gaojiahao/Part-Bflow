@@ -41,8 +41,8 @@ export const applicationRouter = {
                     component: () => import('@/views/application/detail/interaction/interaction-layout.vue'),
                 },
                 {
-                    path: 'permission',
-                    name: 'permission',
+                    path: 'apppermission',
+                    name: 'apppermission',
                     meta: {
                         title: '资源授权',
                     },

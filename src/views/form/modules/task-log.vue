@@ -87,7 +87,7 @@
                <FormItem label="申报工时:" prop="logDeclarationHours">
                 <InputNumber 
                   v-model="modalFormData.logDeclarationHours"
-                  :step="0.1"/>单位/时
+                  :step="1"/>单位/时
               </FormItem>
             </Col>
 

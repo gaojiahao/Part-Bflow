@@ -15,7 +15,7 @@
 <template>
     <div class="active-body">
       <Row justify="center" type="flex" :style="{height:'100%',alignItems:isMobile?'':'center'}">
-        <Col :xs="24" :sm="12" :md="8" :lg="7" style="z-index: 10000;">
+        <Col :xs="24" :sm="12" :md="8" :lg="7">
           <div class="active-con">
               <div style="text-align:center;">
                   <img src="static/favicon.ico" style="width: 40px;"></img>
@@ -81,6 +81,13 @@ import { platformDevice } from '@/utils/platform-device-utils';
 
 export default {
   data() {
+    const  validateConfirmPwd = (rule, value, callback) => {
+      if(this.form.password !== this.form.confirmPassword){
+        callback(new Error('两次输入的密码不一致！请重新输入'));
+      }
+
+      callback();
+    };
     return {
       codeSeconds: 60,
       isMobile: false,
@@ -103,7 +110,8 @@ export default {
         ],
         confirmPassword: [
           { required: true, message: "确认密码不能为空", trigger: "blur" },
-          { message: "密码必须同时包含字母和数字，且在8-20位之间！",pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$/, trigger: "blur" }
+          { message: "密码必须同时包含字母和数字，且在8-20位之间！",pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$/, trigger: "blur" },
+          {validator: validateConfirmPwd}
         ]
       }
     };
@@ -135,10 +143,6 @@ export default {
             }
           })
       });
-    },
-    //失去焦点再次确定密码一致性
-    blurConfirmPwd() {
-      if (this.form.password !== this.form.confirmPassword) this.$Message.error("两次输入的密码不一致！请重新输入");
     },
     //获取验证码
     getVerificationCode() {

@@ -74,7 +74,7 @@
         </div>
         <div class="message-template">
             <div class="template-header">
-                <span>销售订单-xxxx</span>
+                <span>{{ appTitle }}-xxxx</span>
                 <span class="template-header-type">消息类型</span>
             </div>
             <div class="template-content">
@@ -113,7 +113,8 @@ export default {
   },
   props: {
     isAdmin: Boolean,
-    listId: String
+    listId: String,
+    appTitle: String
   },
   data() {
     return {

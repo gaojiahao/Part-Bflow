@@ -39,7 +39,8 @@
 
                     <pro-status-tpl :data="n" v-if="n.type=='processStatus'" ></pro-status-tpl>
 
-                    <instance-create-notice :data="n" v-if="n.type=='instanceCreate'"></instance-create-notice>
+                    <!-- <instance-create-notice :data="n" v-if="n.type=='instanceCreate'"></instance-create-notice> -->
+                    <message-config :data="n" v-if="n.type=='instanceCreate'"></message-config>
 
                     <change-log-notice :data="n" v-if="n.type=='appChangeLog'"></change-log-notice>
 
@@ -77,6 +78,7 @@ import ProjectTask from "@/views/social/message/notice-tpl/project-task";
 import CancelProjectTask from "@/views/social/message/notice-tpl/cancel-project-task";
 import BusinessOpportunityTask from "@/views/social/message/notice-tpl/business-opportunity-notice";
 import TaskLogNotice from "@/views/social/message/notice-tpl/task-log-notice";
+import MessageConfig from '@/views/social/message/notice-tpl/message-config'
 
 import Messageistory from "@/views/social/message/content/messageistory";
 
@@ -98,7 +100,8 @@ export default {
         ProjectTask,
         CancelProjectTask,
         BusinessOpportunityTask,
-        TaskLogNotice
+        TaskLogNotice,
+        MessageConfig
     },
     data(){
         return {
@@ -162,7 +165,6 @@ export default {
             getListData(this.listId).then(res =>{
                 this.appInfo = res[0];
                 this.appInfo.comment = this.appInfo.comment.replace(/<br>/g,'\r\n');
-                console.log(this.appInfo);
             });
         },
         handleViewDetail:function () {

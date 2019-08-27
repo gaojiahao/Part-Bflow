@@ -19,11 +19,6 @@
                     v-bind:class="{'createbyme':n.creatorName===$currentUser.nickname}"
                     v-for="(n,index) in  notifications" 
                     :key="index">
-                    <comment-notice-tpl 
-                        :data="n" 
-                        v-if="n.type=='comment'" 
-                        v-bind:class="{'notice-unread':!n.isRead}">
-                    </comment-notice-tpl>
 
                     <praise-notice-tpl  
                         :data="n" 
@@ -31,28 +26,15 @@
                         v-bind:class="{'notice-unread':!n.isRead}">
                     </praise-notice-tpl>
 
-                    <flow-task-tpl 
-                        :data="n" 
-                        v-if="n.type=='flowTask'" 
-                        v-bind:class="{'notice-unread':!n.isRead}">
-                    </flow-task-tpl>
-
-                    <pro-status-tpl :data="n" v-if="n.type=='processStatus'" ></pro-status-tpl>
-
-                    <!-- <instance-create-notice :data="n" v-if="n.type=='instanceCreate'"></instance-create-notice> -->
-                    <message-config :data="n" v-if="n.type=='instanceCreate'"></message-config>
+                    <message-config :data="n" v-if="displayArr.indexOf(n.type) < 0"></message-config>
 
                     <change-log-notice :data="n" v-if="n.type=='appChangeLog'"></change-log-notice>
-
-                    <instance-change-notice :data="n" v-if="n.type=='instanceStatusChange'"></instance-change-notice>
 
                     <export-import-notice :data="n" v-if="n.type=='fileOut'"></export-import-notice>
 
                     <project-task :data="n" v-if="n.type=='projectType'"></project-task>
 
                     <cancel-project-task :data="n" v-if="n.type=='projectTaskRecall'"></cancel-project-task>
-                    
-                    <business-opportunity-task :data="n" v-if="n.type=='processStatusTime'"></business-opportunity-task>
 
                     <task-log-notice :data="n" v-if="n.type=='jobLog'" v-bind:class="{'notice-unread':!n.isRead}"></task-log-notice>
                 </div>
@@ -66,17 +48,12 @@
 </template>
 
 <script>
-import flowTaskTpl from "@/views/social/message/notice-tpl/flowTaskTpl";
-import commentNoticeTpl from "@/views/social/message/notice-tpl/commentNoticeTpl";
 import praiseNoticeTpl from "@/views/social/message/notice-tpl/praiseNoticeTpl";
-import ProStatusTpl from "@/views/social/message/notice-tpl/pro-status-tpl";
 import InstanceCreateNotice from "@/views/social/message/notice-tpl/instance-create-notice";
 import ChangeLogNotice from "@/views/social/message/notice-tpl/change-log-notice";
-import InstanceChangeNotice from "@/views/social/message/notice-tpl/instance-change-notice";
 import ExportImportNotice from "@/views/social/message/notice-tpl/export-import-notice";
 import ProjectTask from "@/views/social/message/notice-tpl/project-task";
 import CancelProjectTask from "@/views/social/message/notice-tpl/cancel-project-task";
-import BusinessOpportunityTask from "@/views/social/message/notice-tpl/business-opportunity-notice";
 import TaskLogNotice from "@/views/social/message/notice-tpl/task-log-notice";
 import MessageConfig from '@/views/social/message/notice-tpl/message-config'
 
@@ -88,18 +65,13 @@ import {getListData} from "@/services/appService";
 export default {
     name:'Content',
     components:{
-        flowTaskTpl,
-        commentNoticeTpl,
         praiseNoticeTpl,
-        ProStatusTpl,
         InstanceCreateNotice,
         ChangeLogNotice,
-        InstanceChangeNotice,
         Messageistory,
         ExportImportNotice,
         ProjectTask,
         CancelProjectTask,
-        BusinessOpportunityTask,
         TaskLogNotice,
         MessageConfig
     },
@@ -115,8 +87,12 @@ export default {
             isRolling:false,
             listId:'',
             appInfo:{},
-            expendHistoryVisible:false
+            expendHistoryVisible:false,
+            displayArr: ['appChangeLog','projectType','jobLog','fileOut','processStatus']
         }
+    },
+    computed: {
+        
     },
     methods:{
         //滚动加载

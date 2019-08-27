@@ -1,10 +1,15 @@
 <style lang="less" scoped>
 @import "./notice-common.less";
-
+.message-container{
+    margin: 8px;
+    &-content{
+        max-width: 95%;
+    }
+}
 </style>
 <template>
     
-    <div class="message-container" v-bind:class="{'noticefromme':data.creatorName===$currentUser.nickname}">
+    <div class="message-container">
         <div>{{data.crtTime}}</div>
         <div >
             <template v-if="data.sourceContent.objContent || data.sourceContent.objAttachment">

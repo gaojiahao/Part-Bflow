@@ -1,8 +1,13 @@
 <style lang="less" scoped>
 @import "./notice-common.less";
+.msg-comment{
+    border:none;
+    width:95%;
+    margin: 8px;
+}
 </style>
 <template>
-    <div class="msg-comment">
+    <div class="msg-comment" :style="{borderTop:isBorderTop}">
         <div class="msg-comment-title">
             <Icon type="ios-notifications-outline" :size=18 color="red"/>
             <span v-if="data.noticeSource=='taskCreate'"> 工作流-新任务通知</span>
@@ -52,6 +57,12 @@ export default {
     name:'flowTaskNotice',
     props:{
         data:{},
+        isBorderTopProp: Boolean
+    },
+    computed: {
+        isBorderTop: function() {
+            return this.data.tempContent.primaryInfo && this.isBorderTopProp && this.data.tempContent.primaryInfo.length>0 ? '1px solid #ddd' : 'none';
+        }
     },
     methods:{
         handleViewDetail:function () {

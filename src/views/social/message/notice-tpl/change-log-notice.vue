@@ -10,8 +10,8 @@
             <span class="message-container-content">
                 
                 <span class="message-container-creator notice-creator">{{ data.tempContent.creator }}</span>
-                <span>:应用有更新,点击</span>
-                <a @click="handleViewDetail">了解</a>更多
+                <span>:应用有更新：</span>
+                <b>{{ data.updateLog }}</b>
             </span>
         </div>
     </div>

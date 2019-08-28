@@ -498,6 +498,8 @@ export default {
     //展示公司modal
     selectCompanyModal() {
         this.showCompanyModal = true;
+        this.searchValue = "";
+        this.getAllCompanysData();
     },
     //双击选择公司
     onDbClick(selection,index) {

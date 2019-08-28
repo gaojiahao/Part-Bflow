@@ -79,8 +79,12 @@ export default {
           containLabel: true
         },
         toolbox: {
+          right: 10,
+          top: 5,
           feature: {
-            saveAsImage: {}
+            saveAsImage: {
+              title: '存为图片'
+            }
           }
         },
         xAxis: {

@@ -64,6 +64,7 @@ export default {
         color: [this.primaryColor],
         legend: {
           selectedMode: false,
+          left: 5,
           x: 30,
           y: 8,
           data: [

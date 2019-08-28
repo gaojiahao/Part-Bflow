@@ -24,7 +24,7 @@
 
 <script>
 export default {
-    name:'CancelProjectTask',
+    name:'CancelProjectTaskNotice',
     props:{
         data:'',
     },

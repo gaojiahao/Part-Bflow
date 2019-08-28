@@ -162,21 +162,21 @@
                 </div>
             </div>
             <div class="footer-content">
-                <comment-notice-tpl 
+                <comment-notice 
                     :data="data" 
                     v-if="data.type=='comment'" 
                     v-bind:class="{'notice-unread':!data.isRead}">
-                </comment-notice-tpl>
-                <flow-task-tpl 
+                </comment-notice>
+                <flow-task-notice 
                     :data="data" 
                     v-if="data.type=='flowTask'" 
                     :isBorderTopProp="isBorderTopProp"
                     v-bind:class="{'notice-unread':!data.isRead}">
-                </flow-task-tpl>
-                <pro-status-tpl 
+                </flow-task-notice>
+                <process-status-change-notice 
                     :data="data" 
                     v-if="data.type=='processStatus'" >
-                </pro-status-tpl>
+                </process-status-change-notice>
             </div>
         </div>
     </div>
@@ -184,17 +184,17 @@
 
 <script>
 import InstanceCreateNotice from "@/views/social/message/notice-tpl/instance-create-notice";
-import commentNoticeTpl from "@/views/social/message/notice-tpl/commentNoticeTpl";
-import flowTaskTpl from "@/views/social/message/notice-tpl/flowTaskTpl";
-import ProStatusTpl from "@/views/social/message/notice-tpl/pro-status-tpl";
+import CommentNotice from "@/views/social/message/notice-tpl/comment-notice";
+import FlowTaskNotice from "@/views/social/message/notice-tpl/flow-task-notice";
+import ProcessStatusChangeNotice from "@/views/social/message/notice-tpl/process-status-change-notice";
 
 export default {
     name:'MessageConfig',
     components:{
         InstanceCreateNotice,
-        commentNoticeTpl,
-        flowTaskTpl,
-        ProStatusTpl
+        CommentNotice,
+        FlowTaskNotice,
+        ProcessStatusChangeNotice
     },
     props:{
         data:{},

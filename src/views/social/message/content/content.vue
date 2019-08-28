@@ -20,11 +20,11 @@
                     v-for="(n,index) in  notifications" 
                     :key="index">
 
-                    <praise-notice-tpl  
+                    <praise-notice 
                         :data="n" 
                         v-if="n.type=='praise'" 
                         v-bind:class="{'notice-unread':!n.isRead}">
-                    </praise-notice-tpl>
+                    </praise-notice>
 
                     <message-config :data="n" v-if="displayArr.indexOf(n.type) < 0"></message-config>
 
@@ -32,9 +32,9 @@
 
                     <export-import-notice :data="n" v-if="n.type=='fileOut'"></export-import-notice>
 
-                    <project-task :data="n" v-if="n.type=='projectType'"></project-task>
+                    <project-task-notice :data="n" v-if="n.type=='projectType'"></project-task-notice>
 
-                    <cancel-project-task :data="n" v-if="n.type=='projectTaskRecall'"></cancel-project-task>
+                    <cancel-project-task-notice :data="n" v-if="n.type=='projectTaskRecall'"></cancel-project-task-notice>
 
                     <task-log-notice :data="n" v-if="n.type=='jobLog'" v-bind:class="{'notice-unread':!n.isRead}"></task-log-notice>
                 </div>
@@ -48,12 +48,12 @@
 </template>
 
 <script>
-import praiseNoticeTpl from "@/views/social/message/notice-tpl/praiseNoticeTpl";
+import PraiseNotice from "@/views/social/message/notice-tpl/praise-notice";
 import InstanceCreateNotice from "@/views/social/message/notice-tpl/instance-create-notice";
 import ChangeLogNotice from "@/views/social/message/notice-tpl/change-log-notice";
 import ExportImportNotice from "@/views/social/message/notice-tpl/export-import-notice";
-import ProjectTask from "@/views/social/message/notice-tpl/project-task";
-import CancelProjectTask from "@/views/social/message/notice-tpl/cancel-project-task";
+import ProjectTaskNotice from "@/views/social/message/notice-tpl/project-task-notice";
+import CancelProjectTaskNotice from "@/views/social/message/notice-tpl/cancel-project-task-notice";
 import TaskLogNotice from "@/views/social/message/notice-tpl/task-log-notice";
 import MessageConfig from '@/views/social/message/notice-tpl/message-config'
 
@@ -65,13 +65,13 @@ import {getListData} from "@/services/appService";
 export default {
     name:'Content',
     components:{
-        praiseNoticeTpl,
+        PraiseNotice,
         InstanceCreateNotice,
         ChangeLogNotice,
         Messageistory,
         ExportImportNotice,
-        ProjectTask,
-        CancelProjectTask,
+        ProjectTaskNotice,
+        CancelProjectTaskNotice,
         TaskLogNotice,
         MessageConfig
     },

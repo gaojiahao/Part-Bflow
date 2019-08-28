@@ -15,7 +15,7 @@
 
 <script>
 export default {
-    name:'ProStatusTpl',
+    name:'ProcessStatusChangeNotice',
     props:{
         data:'',
     },

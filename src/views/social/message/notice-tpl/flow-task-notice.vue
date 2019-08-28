@@ -54,7 +54,7 @@
 
 <script>
 export default {
-    name:'flowTaskNotice',
+    name:'FlowTaskNotice',
     props:{
         data:{},
         isBorderTopProp: Boolean

@@ -111,7 +111,7 @@
 
 <script>
 export default {
-    name:'commentNoticeTpl',
+    name:'CommentNotice',
     props:{
         data:{
         }

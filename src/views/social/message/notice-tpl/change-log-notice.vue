@@ -1,5 +1,8 @@
 <style lang="less" scoped>
 @import "./notice-common.less";
+.message-container-content{
+    width: auto;
+}
 </style>
 <template>
     <div class="message-container" 
@@ -11,7 +14,7 @@
                 
                 <span class="message-container-creator notice-creator">{{ data.tempContent.creator }}</span>
                 <span>:应用有更新：</span>
-                <b>{{ data.updateLog }}</b>
+                <div v-html="data.updateLog"></div>
             </span>
         </div>
     </div>

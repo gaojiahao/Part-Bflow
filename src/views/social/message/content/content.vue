@@ -134,6 +134,8 @@ export default {
                 }else{
                    item.tempContent = JSON.parse(item.content); 
                 }
+
+                item.primaryInfoContent = JSON.parse(item.content); 
                 
             });
         },

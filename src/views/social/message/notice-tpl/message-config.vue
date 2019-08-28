@@ -110,11 +110,15 @@
         text-align: center;
     }
 }
+.message-crtTime{
+    margin: 0px 5%;
+}
 </style>
 <template>
     <div class="message-container" 
         :class="{'noticefromme':isOwn}"
         style="overflow:hidden">
+        <div class="message-crtTime" >{{data.crtTime}}</div>
         <div class="message-photo" :style="{float:isOwn?'right':'left'}">
             <img 
                 @error="imgError" 
@@ -128,19 +132,19 @@
             <div :class="{'message-pop':true,'message-right':isOwn}"></div>
             <div :class="{'message-pop-one':true,'message-right-one':isOwn}"></div>
             <div class="header" :style="{borderBottom:isBorderBottom?'1px solid #ddd':'none'}">
-                <span 
+                <a 
                     class="header-code"
                     v-if="isTransCode" 
                     @click="handleViewDetail">
                     {{ displayTransCode }}
-                </span>
+                </a>
                 <span class="header-type">{{ instanceType }}</span>
                 <span 
                     class="header-status" 
                     v-if="isStatus">
-                    {{ data.tempContent.status || 
-                    data.tempContent.newStatus || 
-                    data.tempContent.processStatus }}
+                    {{ data.primaryInfoContent.status || 
+                    data.primaryInfoContent.newStatus || 
+                    data.primaryInfoContent.processStatus }}
                 </span>
             </div>
             <div class="content">
@@ -154,7 +158,7 @@
                 </div>
                 <div v-if="isOpen">
                     <p 
-                        v-for="(item,index) of data.tempContent.primaryInfo" 
+                        v-for="(item,index) of data.primaryInfoContent.primaryInfo" 
                         :key="index" 
                         :class="{'content-list':item.emphases,'content-gray':!item.emphases}">
                         {{ `${item.fieldName}：${item.value || '未知'}` }}
@@ -207,26 +211,26 @@ export default {
     },
     computed: {
         isOwn() {
-            return this.data.tempContent.creator || this.data.creatorName === this.$currentUser.nickname;
+            return  this.data.creatorName === this.$currentUser.nickname;
         },
         isShowOpen() {
-            return this.data.tempContent.primaryInfo && this.data.tempContent.primaryInfo.length > 0;
+            return this.data.primaryInfoContent.primaryInfo && this.data.primaryInfoContent.primaryInfo.length > 0;
         },
         isBorderBottom() {
-            return (this.data.tempContent.primaryInfo && this.data.tempContent.primaryInfo.length>0) || (this.data.type==='comment' || this.data.type==='flowTask');
+            return (this.data.primaryInfoContent.primaryInfo && this.data.primaryInfoContent.primaryInfo.length>0) || (this.data.type==='comment' || this.data.type==='flowTask');
         },
         isTransCode() {
-            let content = 'tempContent';
+            let content = 'primaryInfoContent';
             if(this.data.type === 'comment') content = 'sourceContent';
             return this.data[content].transCode || this.data[content].relationKey ? true : false;
         },
         displayTransCode() {
-            let content = 'tempContent';
+            let content = 'primaryInfoContent';
             if(this.data.type === 'comment') content = 'sourceContent';
             return this.data[content].transCode || this.data[content].relationKey;
         },
         isStatus() {
-            return this.data.tempContent.status || this.data.tempContent.newStatus || this.data.tempContent.processStatus ? true : false;
+            return this.data.primaryInfoContent.status || this.data.primaryInfoContent.newStatus || this.data.primaryInfoContent.processStatus ? true : false;
         },
         instanceType() {
             let type = "";
@@ -260,7 +264,7 @@ export default {
             !this.isOpen ? this.isBorderTopProp = false : this.isBorderTopProp = true;
         },
         handleViewDetail() {
-            let href = `/Form/index.html?data=${this.data.tempContent.transCode}`;
+            let href = `/Form/index.html?data=${this.displayTransCode}`;
             window.open(href);
         }
     },

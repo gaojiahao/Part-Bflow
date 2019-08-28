@@ -3,14 +3,14 @@
 .message-container{
     margin: 8px;
     &-content{
-        max-width: 95%;
+        max-width: 100%;
+        width: 100%;
     }
 }
 </style>
 <template>
     
     <div class="message-container">
-        <div>{{data.crtTime}}</div>
         <div >
             <template v-if="data.sourceContent.objContent || data.sourceContent.objAttachment">
                 
@@ -26,7 +26,7 @@
                     <div class="notice-container-relpy">
                         <div class="notice-container-relpy-content">
                             <span class="notice-creator">@{{data.sourceContent.objCreator}}</span>:
-                            <a v-if="data.sourceContent.type ==='instance'" class="notice-relationKey" @click="handleViewDetail">{{data.sourceContent.relationKey}}</a>:
+                            <!-- <a v-if="data.sourceContent.type ==='instance'" class="notice-relationKey" @click="handleViewDetail">{{data.sourceContent.relationKey}}</a>: -->
                             <span  class="notice-container" v-html="data.sourceContent.objContent"></span>
                             <div 
                                 class="comimg"

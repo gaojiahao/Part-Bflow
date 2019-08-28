@@ -42,12 +42,12 @@
     }
     .content{
         &-list{
-            padding: 2px 10px;
+            padding: 2px 20px;
             color: #ea971c;
             font-weight: bold;
         }
         &-gray{
-            padding: 2px 10px;
+            padding: 2px 20px;
             color: #999;
         }
         &-open{

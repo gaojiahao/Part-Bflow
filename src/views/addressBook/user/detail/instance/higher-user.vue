@@ -61,7 +61,7 @@
                 @on-search="userFilter" 
                 :search="true" 
                 v-model="searchValue" 
-                placeholder="搜索工号或名称" 
+                placeholder="搜索账号或名称" 
                 style="width: 300px">
               </Input>
               <p @click="userFilter" class="app-search-icon">
@@ -144,8 +144,8 @@ export default {
           }
         },
         {
-          title: "工号",
-          key: "userCode"
+          title: "用户账号",
+          key: "jobNumber"
         },
         {
           title: "姓名",
@@ -218,8 +218,8 @@ export default {
           }
         },
         {
-          title: "工号",
-          key: "userCode"
+          title: "用户账号",
+          key: "jobNumber"
         },
         {
           title: "姓名",
@@ -274,14 +274,14 @@ export default {
     },
     //点击切换所有用户每页显示条数
     onAllUserPageSizeChange(size) {
-      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"},
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"jobNumber"},
       {operator:"ne",value:this.userId,property:"userId"},{operator:"ne",value:0,property:"status"},{operator:"ne",value:-2,property:"status"}
       ]);
       this.highUser.allUserpageSize = size;
       this.getAllUsersData(filter);
     },
     onUserPageChange(currentPage) {
-      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"},
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"jobNumber"},
       {operator:"ne",value:this.userId,property:"userId"},{operator:"ne",value:0,property:"status"},{operator:"ne",value:-2,property:"status"}
       ]);
       this.highUser.usercurrentPage = currentPage;
@@ -338,10 +338,10 @@ export default {
     },
     //查询用户
     userFilter() {
-      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"userCode"},
+      let filter = JSON.stringify([{operator_1:"like",value_1:this.searchValue,property_1:"nickname",link:"or",operator_2:"like",value_2:this.searchValue,property_2:"jobNumber"},
       {operator:"ne",value:this.userId,property:"userId"},{operator:"ne",value:0,property:"status"},{operator:"ne",value:-2,property:"status"}
       ]);
-      this,highUser.usercurrentPage = 1;
+      this.highUser.usercurrentPage = 1;
       this.getAllUsersData(filter);
     }
   },

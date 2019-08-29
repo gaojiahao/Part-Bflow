@@ -4,13 +4,13 @@
 <template>
     <div class="content">
         <div class="content-header">
-            <div class="content-header-title" v-if="appInfo.title">
+            <div class="content-header-title" v-if="appInfo.title" :style="{lineHeight:appInfo.comment?'none':'50px'}">
                 <a  @click="handleViewDetail">{{appInfo.title}}</a>
                 【{{appInfo.TRANS_NAME}}】
                 <span v-if="appInfo.administrator">管理员:{{appInfo.administrator}}</span>
                  <Icon class="fr" @click="handleExpend" type="ios-more" size="40" style="font-size: 40px;cursor: pointer;"/>
             </div>
-           <pre class="content-header-comment">{{appInfo.comment}}</pre>
+           <pre class="content-header-comment" v-if="appInfo.comment">{{appInfo.comment}}</pre>
         </div>
         <Row class="content-container" >
             <Col :span="$route.name !='list'?'16':'24'" class="content-container-msglist messagescrollbar" id='msgList'>
@@ -88,7 +88,7 @@ export default {
             listId:'',
             appInfo:{},
             expendHistoryVisible:false,
-            displayArr: ['appChangeLog','projectType','jobLog','fileOut','processStatus']
+            displayArr: ['appChangeLog','projectType','jobLog','fileOut','projectTaskRecall','praise']
         }
     },
     computed: {

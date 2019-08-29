@@ -1,15 +1,62 @@
 <style lang="less" scoped>
 @import "./notice-common.less";
+.message-container-content{
+    width: auto;
+}
+.message-pop{
+    position: relative;
+    .message-pop{
+        width: 0; 
+        height: 0; 
+        border-width: 12px; 
+        border-style: solid; 
+        border-color: transparent #f0f0f0  transparent transparent; 
+        font-size: 0; 
+        line-height: 0;
+        position: absolute;
+        left: -24px;
+        top: 10px;
+    }
+    .message-right{
+        border-color: transparent  transparent transparent #B3E5FC;
+        left: 100%;
+    }
+}
+.message-photo{
+    width: 5%;
+    img{
+        width: 70%;
+        border-radius: 50%;
+        border: 1px solid #ddd;
+    }
+    p{
+        text-align: center;
+    }
+}
 </style>
 <template>
-    <div class="message-container" v-bind:class="{'noticefromme':data.creatorName===$currentUser.nickname}">
-        <div>{{data.crtTime}}</div>
-        <div class="message-container-content">
+    <div class="message-container" 
+        :class="{'noticefromme':isOwn}" 
+        style="overflow:hidden">
+        <div 
+            :style="{'margin-left':!isOwn?'5%':'none','margin-right':isOwn?'5%':'none'}">
+            {{data.crtTime}}
+        </div>
+        <div class="message-photo" :style="{float:isOwn?'right':'left'}">
+            <img 
+                @error="imgError" 
+                :src="data.photo?data.photo:'resources/images/icon/defaultUserPhoto.png'">
+            <p 
+                :style="{margin:isOwn?'0px 0px 0px 11px':'0px 11px 0px 0px'}">
+                {{ data.creatorName || '未知' }}
+            </p>
+        </div>
+        <div class="message-container-content message-pop" :style="{float:isOwn?'right':'left'}">
+            <div :class="{'message-pop':true,'message-right':isOwn}"></div>
             <span 
                 class="notice-creator">
                 {{data.creatorName}}
             </span>
-            :
             <span>
                 <span v-if="data.sourceContent.type ==='instance'">对实例 </span>
                 <span v-if="data.sourceContent.type ==='list'">对应用</span>
@@ -24,9 +71,8 @@
                     <div class="notice-comment-images">
                         <div 
                             class="comimg"
-                            v-for="(c,index) in data.sourceContent.attachment" 
-                            :key="index" 
-                            v-if="c.type==='image'">
+                            v-for="(c,index) in imgArray" 
+                            :key="index">
                             <img 
                             :src="c.attachment?c.attachment:'resources/images/icon/defaultUserPhoto.png'" >
                             <div class="comimg-cover">
@@ -39,9 +85,8 @@
                     </div>
 
                     <div class="notice-comment-files">
-                        <p  v-for="(f,index) in data.sourceContent.attachment" 
-                            :key="index"   
-                            v-if="f.type==='file'" >
+                        <p  v-for="(f,index) in fileArray" 
+                            :key="index" >
                             <a @click="handleViewFile(f)">{{f.name}}
                             </a>
                         </p>
@@ -71,7 +116,25 @@ export default {
             imgName:''
         }
     },
+    computed: {
+        isOwn() {
+            return  this.data.creatorName === this.$currentUser.nickname;
+        },
+        imgArray() {
+            return this.data.sourceContent.attachment.filter(item => {
+                return item.type === 'image';
+            })
+        },
+        fileArray() {
+            return this.data.sourceContent.attachment.filter(item => {
+                return item.type === 'file';
+            })
+        }
+    },
     methods:{
+        imgError() {
+            this.data.photo = 'resources/images/icon/defaultUserPhoto.png';
+        },
         handleViewDetail:function () {
             let href;
             switch (this.data.sourceContent.type) {

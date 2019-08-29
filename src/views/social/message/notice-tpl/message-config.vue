@@ -87,7 +87,7 @@
         font-size: 0; 
         line-height: 0;
         position: absolute;
-        left: -22px;
+        left: -23px;
         top: 10px;
     }
     .message-right{

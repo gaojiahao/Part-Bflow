@@ -53,15 +53,15 @@
         </div>
         <div class="message-container-content message-pop" :style="{float:isOwn?'right':'left'}">
             <div :class="{'message-pop':true,'message-right':isOwn}"></div>
-            <span 
+            <!-- <span 
                 class="notice-creator">
                 {{data.creatorName}}
-            </span>
+            </span> -->
             <span>
-                <span v-if="data.sourceContent.type ==='instance'">对实例 </span>
-                <span v-if="data.sourceContent.type ==='list'">对应用</span>
+                <!-- <span v-if="data.sourceContent.type ==='instance'">对实例 </span>
+                <span v-if="data.sourceContent.type ==='list'">对应用</span> -->
                 <a v-if="data.sourceContent.type ==='instance'" class="notice-relationKey" @click="handleViewDetail">{{data.sourceContent.relationKey}}</a>
-                的评论发表了态度
+                我给你点个赞
                 <Icon type="md-thumbs-up" size=18  color='#FF5722'/>
                 <div  class="notice-container-comment" >
                     <div class="notice-container-comment-content">

@@ -220,14 +220,10 @@ export default {
             return (this.data.primaryInfoContent.primaryInfo && this.data.primaryInfoContent.primaryInfo.length>0) || (this.data.type==='comment' || this.data.type==='flowTask');
         },
         isTransCode() {
-            let content = 'primaryInfoContent';
-            if(this.data.type === 'comment') content = 'sourceContent';
-            return this.data[content].transCode || this.data[content].relationKey ? true : false;
+            return this.data.primaryInfoContent.type !== 'list' && (this.data.primaryInfoContent.transCode || this.data.primaryInfoContent.relationKey) ? true : false;
         },
         displayTransCode() {
-            let content = 'primaryInfoContent';
-            if(this.data.type === 'comment') content = 'sourceContent';
-            return this.data[content].transCode || this.data[content].relationKey;
+            return this.data.primaryInfoContent.transCode || this.data.primaryInfoContent.relationKey;
         },
         isStatus() {
             return this.data.primaryInfoContent.status || this.data.primaryInfoContent.newStatus || this.data.primaryInfoContent.processStatus ? true : false;

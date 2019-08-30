@@ -62,6 +62,8 @@ import Messageistory from "@/views/social/message/content/messageistory";
 import {getAllnotifications} from "@/services/notificationsService";
 import {getListData} from "@/services/appService";
 
+import Bus from "@/assets/eventBus.js";
+
 export default {
     name:'Content',
     components:{
@@ -180,6 +182,9 @@ export default {
         this.handleScroll();
         this.refreshAppInfo();
         this.refreshNotifics();
+        Bus.$on('refreshNotice',()=>{
+            this.refreshNotifics();
+        })
     }
 
 }

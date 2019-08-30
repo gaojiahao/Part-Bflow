@@ -55,8 +55,7 @@
             </div>
             <span class="message-container-content message-pop" :style="{float:isOwn?'right':'left'}">
                 <div :class="{'message-pop':true,'message-right':isOwn}"></div>
-                <span class="message-container-creator notice-creator">路塔</span>
-                <span>:您的项目任务已取消</span>
+                <span>您的项目任务已取消</span>
                 <a @click="handleViewDetail">{{data.tempContent.transCode}}</a>
                 <span>项目名称</span>
                 【<strong>{{ data.tempContent.projectName }}</strong>】

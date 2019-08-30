@@ -60,13 +60,6 @@
             <template v-else>
                 
                 <div class="message-container-content">
-                    <div class="message-container-creator " >
-                    <span class="notice-creator">{{data.creatorName}}:</span>
-                    <span v-if="data.sourceContent.type ==='instance'">对实例 </span>
-                    <span v-if="data.sourceContent.type ==='list'">对<a @click="handleViewDetail"><strong>应用</strong></a></span>
-                    <a v-if="data.sourceContent.type ==='instance'" class="notice-relationKey" @click="handleViewDetail">{{data.sourceContent.relationKey}}</a>
-                    发表了评论
-                </div>
                     <div  class="notice-content" v-html="data.tempContent" >
                     
                     </div>

@@ -63,7 +63,8 @@
       :appType="appType"
       :appTransType="appTransType" 
       :isCompanyAdmin="isCompanyAdmin"
-      :enabledForbidden="enabledForbidden">
+      :enabledForbidden="enabledForbidden"
+      :appTitle="appData.title">
     </router-view>
   </div>
 

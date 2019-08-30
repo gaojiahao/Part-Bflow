@@ -7,12 +7,12 @@
         <div>{{data.tempContent.crtTime}}</div>
         
         <div>
-            <span class="message-container-content">
-                <span class="message-container-creator notice-creator">路塔</span>
-                <span>:您有新的经办实例</span>
+            <span>
+                <!-- <span class="message-container-creator notice-creator">路塔</span> -->
+                <span>您有新的经办实例</span>
                 <a @click="handleViewDetail">{{data.tempContent.transCode}}</a>
-                <span>当前状态</span>
-                <strong>{{ data.tempContent.status }}</strong>
+                <!-- <span>当前状态</span>
+                <strong>{{ data.tempContent.status }}</strong> -->
             </span>
         </div>
     </div>

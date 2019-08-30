@@ -39,6 +39,7 @@
             <Col :xs="24" :sm="12" :md="8" :lg="8">
               <FormItem label='员工'  prop="users"> 
                 <Select
+                  ref="selectUser"
                   v-model="modalFormData.users"
                   multiple
                   filterable
@@ -46,6 +47,7 @@
                   placeholder="请选择或搜索员工"
                   :remote-method="remoteFilterSearch"
                   @on-query-change="handleQueryChange"
+                  @on-change="onSelectChange"
                   :loading="loading">
                   <Option v-for="(option) in userList" :value="option.userId" :key="option.userId">{{option.nickname}}</Option>
                 </Select>
@@ -239,6 +241,9 @@ export default {
 
 
   methods: {
+    onSelectChange() {
+      this.$refs['selectUser'].hideMenu();
+    },
     openForm() {
       this.hiddenForm = true;
       if(window.top.setTaskLogIframeHeight){
@@ -315,10 +320,11 @@ export default {
                this.$refs['logForm'].resetFields();
               });
               this.getTaskLog(this.transCode);
-              this.showTaskModal = false;
             }else{
-                window.top.Ext.toast(res.message)
+                window.top.Ext.toast(res.message);
             }
+
+            this.showTaskModal = false;
         });
         
     }, 

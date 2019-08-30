@@ -94,6 +94,29 @@ export const toThousandFilter  = (num) => {
     return t;
 }
 
+/**
+ * @author XiaoYing
+ * @param  cloneObject 克隆对象
+ * @description 深度克隆
+ */
+export const deepClone  = (cloneObject) => {
+    if (cloneObject === null || typeof cloneObject !== 'object') return cloneObject;
+
+    let result = cloneObject.constructor();
+
+    for(let key in cloneObject){
+        if (cloneObject.hasOwnProperty(key)) {
+            if(cloneObject[key] && typeof cloneObject[key] === 'object'){
+                result[key] = this.deepClone(cloneObject[key]);
+            }else{
+                result[key] = cloneObject[key];
+            }
+        }
+    }
+
+    return result;
+}
+
 /** 
  * 格式化Json数据
 */

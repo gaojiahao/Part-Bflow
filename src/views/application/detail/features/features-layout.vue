@@ -6,7 +6,7 @@
 <template>
     <div class="feature-layout">
         <features-manage :isAdmin="isAdmin" :listId="listId"></features-manage>
-        <!-- <message-manage :isAdmin="isAdmin" :listId="listId"></message-manage> -->
+        <message-manage :isAdmin="isAdmin" :listId="listId" :appTitle="appTitle"></message-manage>
     </div>
 </template>
 <script>
@@ -25,7 +25,8 @@ export default {
         enabledForbidden: Number,
         isCompanyAdmin:Boolean,
         isAdmin: Boolean,
-        isAddress: Boolean
+        isAddress: Boolean,
+        appTitle: String
     }
 }
 </script>

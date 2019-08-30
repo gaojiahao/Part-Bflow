@@ -4,13 +4,13 @@
 <template>
     <div class="content">
         <div class="content-header">
-            <div class="content-header-title" v-if="appInfo.title">
+            <div class="content-header-title" v-if="appInfo.title" :style="{lineHeight:appInfo.comment?'none':'50px'}">
                 <a  @click="handleViewDetail">{{appInfo.title}}</a>
                 【{{appInfo.TRANS_NAME}}】
                 <span v-if="appInfo.administrator">管理员:{{appInfo.administrator}}</span>
                  <Icon class="fr" @click="handleExpend" type="ios-more" size="40" style="font-size: 40px;cursor: pointer;"/>
             </div>
-           <pre class="content-header-comment">{{appInfo.comment}}</pre>
+           <pre class="content-header-comment" v-if="appInfo.comment">{{appInfo.comment}}</pre>
         </div>
         <Row class="content-container" >
             <Col :span="$route.name !='list'?'16':'24'" class="content-container-msglist messagescrollbar" id='msgList'>
@@ -19,39 +19,22 @@
                     v-bind:class="{'createbyme':n.creatorName===$currentUser.nickname}"
                     v-for="(n,index) in  notifications" 
                     :key="index">
-                    <comment-notice-tpl 
-                        :data="n" 
-                        v-if="n.type=='comment'" 
-                        v-bind:class="{'notice-unread':!n.isRead}">
-                    </comment-notice-tpl>
 
-                    <praise-notice-tpl  
+                    <praise-notice 
                         :data="n" 
                         v-if="n.type=='praise'" 
                         v-bind:class="{'notice-unread':!n.isRead}">
-                    </praise-notice-tpl>
+                    </praise-notice>
 
-                    <flow-task-tpl 
-                        :data="n" 
-                        v-if="n.type=='flowTask'" 
-                        v-bind:class="{'notice-unread':!n.isRead}">
-                    </flow-task-tpl>
-
-                    <pro-status-tpl :data="n" v-if="n.type=='processStatus'" ></pro-status-tpl>
-
-                    <instance-create-notice :data="n" v-if="n.type=='instanceCreate'"></instance-create-notice>
+                    <message-config :data="n" v-if="displayArr.indexOf(n.type) < 0"></message-config>
 
                     <change-log-notice :data="n" v-if="n.type=='appChangeLog'"></change-log-notice>
 
-                    <instance-change-notice :data="n" v-if="n.type=='instanceStatusChange'"></instance-change-notice>
-
                     <export-import-notice :data="n" v-if="n.type=='fileOut'"></export-import-notice>
 
-                    <project-task :data="n" v-if="n.type=='projectType'"></project-task>
+                    <project-task-notice :data="n" v-if="n.type=='projectType'"></project-task-notice>
 
-                    <cancel-project-task :data="n" v-if="n.type=='projectTaskRecall'"></cancel-project-task>
-                    
-                    <business-opportunity-task :data="n" v-if="n.type=='processStatusTime'"></business-opportunity-task>
+                    <cancel-project-task-notice :data="n" v-if="n.type=='projectTaskRecall'"></cancel-project-task-notice>
 
                     <task-log-notice :data="n" v-if="n.type=='jobLog'" v-bind:class="{'notice-unread':!n.isRead}"></task-log-notice>
                 </div>
@@ -65,18 +48,14 @@
 </template>
 
 <script>
-import flowTaskTpl from "@/views/social/message/notice-tpl/flowTaskTpl";
-import commentNoticeTpl from "@/views/social/message/notice-tpl/commentNoticeTpl";
-import praiseNoticeTpl from "@/views/social/message/notice-tpl/praiseNoticeTpl";
-import ProStatusTpl from "@/views/social/message/notice-tpl/pro-status-tpl";
+import PraiseNotice from "@/views/social/message/notice-tpl/praise-notice";
 import InstanceCreateNotice from "@/views/social/message/notice-tpl/instance-create-notice";
 import ChangeLogNotice from "@/views/social/message/notice-tpl/change-log-notice";
-import InstanceChangeNotice from "@/views/social/message/notice-tpl/instance-change-notice";
 import ExportImportNotice from "@/views/social/message/notice-tpl/export-import-notice";
-import ProjectTask from "@/views/social/message/notice-tpl/project-task";
-import CancelProjectTask from "@/views/social/message/notice-tpl/cancel-project-task";
-import BusinessOpportunityTask from "@/views/social/message/notice-tpl/business-opportunity-notice";
+import ProjectTaskNotice from "@/views/social/message/notice-tpl/project-task-notice";
+import CancelProjectTaskNotice from "@/views/social/message/notice-tpl/cancel-project-task-notice";
 import TaskLogNotice from "@/views/social/message/notice-tpl/task-log-notice";
+import MessageConfig from '@/views/social/message/notice-tpl/message-config'
 
 import Messageistory from "@/views/social/message/content/messageistory";
 
@@ -86,19 +65,15 @@ import {getListData} from "@/services/appService";
 export default {
     name:'Content',
     components:{
-        flowTaskTpl,
-        commentNoticeTpl,
-        praiseNoticeTpl,
-        ProStatusTpl,
+        PraiseNotice,
         InstanceCreateNotice,
         ChangeLogNotice,
-        InstanceChangeNotice,
         Messageistory,
         ExportImportNotice,
-        ProjectTask,
-        CancelProjectTask,
-        BusinessOpportunityTask,
-        TaskLogNotice
+        ProjectTaskNotice,
+        CancelProjectTaskNotice,
+        TaskLogNotice,
+        MessageConfig
     },
     data(){
         return {
@@ -112,8 +87,12 @@ export default {
             isRolling:false,
             listId:'',
             appInfo:{},
-            expendHistoryVisible:false
+            expendHistoryVisible:false,
+            displayArr: ['appChangeLog','projectType','jobLog','fileOut','projectTaskRecall','praise']
         }
+    },
+    computed: {
+        
     },
     methods:{
         //滚动加载
@@ -155,6 +134,8 @@ export default {
                 }else{
                    item.tempContent = JSON.parse(item.content); 
                 }
+
+                item.primaryInfoContent = JSON.parse(item.content); 
                 
             });
         },
@@ -162,7 +143,6 @@ export default {
             getListData(this.listId).then(res =>{
                 this.appInfo = res[0];
                 this.appInfo.comment = this.appInfo.comment.replace(/<br>/g,'\r\n');
-                console.log(this.appInfo);
             });
         },
         handleViewDetail:function () {

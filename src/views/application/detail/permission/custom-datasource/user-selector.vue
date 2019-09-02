@@ -289,9 +289,7 @@ export default {
     },
     //通知父组件modal的状态
     modalVisibleChange(state) {
-      if (!state) {
-        this.$emit("emitUserModal", { modal: false });
-      }
+      if (!state) this.$emit("emitUserModal", { modal: false });
     },
     //用户page点击
     onUserPageChange(currentPage) {

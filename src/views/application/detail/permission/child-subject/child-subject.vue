@@ -68,7 +68,7 @@ export default {
             }
             return h('Checkbox', {
               props: {
-                value: params.row.status === 1? true : false,
+                value: params.row.status === 1,
                 disabled: isDisabled
               },
               on: {

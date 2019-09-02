@@ -25,22 +25,56 @@
 <template>
     <div>
       <!-- 公司modal -->
-      <Modal v-model="showCompanyModal" title="公司选择" :mask-closable="false" @on-ok="confirmCompany" @on-cancel="cancelSelectCom" :transfer="false">
+      <Modal 
+        v-model="showCompanyModal" 
+        title="公司选择" 
+        :mask-closable="false" 
+        @on-ok="confirmCompany" 
+        @on-cancel="cancelSelectCom" 
+        :transfer="false">
         <div class="app-search">
-          <Input v-model="searchComValue" @on-search="comFilter" :search="true" placeholder="搜索" style="width: 300px"></Input>
+          <Input 
+            v-model="searchComValue" 
+            @on-search="comFilter" 
+            :search="true" 
+            placeholder="搜索" 
+            style="width: 300px">
+          </Input>
           <p @click="comFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </p>
         </div>
-        <Table ref="companyTable" @on-select-cancel="selectComCancel" @on-select-all="onCompanySelectAll" @on-selection-change="selectCompanyClick" height="400" stripe size="small" :loading="comLoading" :columns="companyColumns" :data="companyData">
+        <Table 
+          ref="companyTable" 
+          @on-select-cancel="selectComCancel" 
+          @on-select-all="onCompanySelectAll" 
+          @on-selection-change="selectCompanyClick" 
+          height="400" stripe size="small" 
+          :loading="comLoading" 
+          :columns="companyColumns" 
+          :data="companyData">
         </Table>
         <div class="user-page">
           <div style="float: right;">
-            <Page :total="comTotal" :current="comCurrentPage" :page-size="pageSize" @on-change="onComPageChange" size="small" show-total></Page>
+            <Page 
+              :total="comTotal" 
+              :current="comCurrentPage" 
+              :page-size="pageSize" 
+              @on-change="onComPageChange" 
+              size="small" 
+              show-total>
+            </Page>
           </div>
         </div>
         <div class="page-selection-warp" v-show="companySelection[0] ">
-          <Tag v-for="(item,index) in companySelection" :key="item.id" @on-close="deleteSelectCompany(item,index)" closable type="border" color="primary" size="small">
+          <Tag 
+            v-for="(item,index) in companySelection" 
+            :key="item.id" 
+            @on-close="deleteSelectCompany(item,index)" 
+            closable 
+            type="border" 
+            color="primary" 
+            size="small">
             {{item.groupName}}
           </Tag>
         </div>
@@ -180,9 +214,7 @@ export default {
     },
     //通知父组件modal的状态
     modalVisibleChange(state) {
-      if (!state) {
-        this.$emit("emitCompanyModal", { modal: false });
-      }
+      if (!state) this.$emit("emitCompanyModal", { modal: false });
     },
     //公司page点击
     onComPageChange(currentPage) {

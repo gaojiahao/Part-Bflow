@@ -22,30 +22,74 @@
 
 <template>
   <div>
-    <Modal v-model="showPermissionModal" :title="modalTitle" width="1000" :transfer="false" :styles="{top: '15px'}" :mask-closable="false" @on-visible-change="modalVisibleChange">
+    <Modal 
+      v-model="showPermissionModal" 
+      :title="modalTitle" 
+      width="1000" 
+      :transfer="false" 
+      :styles="{top: '15px'}" 
+      :mask-closable="false" 
+      @on-visible-change="modalVisibleChange">
       <div>
         <Row :gutter="8" style="margin-bottom:10px;">
           <div class="field-toolbar">
-              <Button @click="addNewField" type="info" shape="circle" style="margin-bottom:5px;">新增</Button>
-              <i-switch v-model="isBlack" @on-change="changeBlackWhiteList" size="large" class="black-white">
-                  <span slot="close">白名单</span>
-                  <span slot="open">黑名单</span>
+              <Button 
+                @click="addNewField" 
+                type="info" 
+                shape="circle" 
+                style="margin-bottom:5px;">
+                新增
+              </Button>
+              <i-switch 
+                v-model="isBlack" 
+                @on-change="changeBlackWhiteList" 
+                size="large" 
+                class="black-white">
+                <span slot="close">白名单</span>
+                <span slot="open">黑名单</span>
               </i-switch>
           </div>
-          <Table ref="actionRef" stripe height="200" :columns="fieldColumns" size="small" no-data-text="请点击新增添加" :data="fieldData">
+          <Table 
+            ref="actionRef" 
+            tripe 
+            height="200" 
+            :columns="fieldColumns" 
+            size="small" 
+            no-data-text="请点击新增添加" 
+            :data="fieldData">
             <template slot-scope="{ row,index }" slot="fieldName">
-              <Select ref="selectMenu" :value="row.fieldCode" transfer filterable @on-change="fieldSelectChange($event,index)" style="width:300px">
-                  <Option v-for="(item,idx) of allFieldData" :label="item.fieldName" :value="item.fieldCode" :key="idx">
-                      <span class="select-field">{{ item.fieldName }}</span>
-                      <Poptip v-if="item.fieldAlias" trigger="hover" style="float:right;" transfer title="对应视图字段名称" placement="right">
-                        <span style="color: #39f;"><Icon type="md-help" /></span>
-                        <div slot="content">
-                          <ul class="hidden-field">
-                            <li v-for="(alia,k) of item.fieldAlias" :key="k">{{ `${alia.view}—${alia.alias}` }}</li>
-                          </ul>
-                        </div>
-                      </Poptip>
-                  </Option>
+              <Select 
+                ref="selectMenu" 
+                :value="row.fieldCode" 
+                transfer 
+                filterable 
+                @on-change="fieldSelectChange($event,index)" 
+                style="width:300px">
+                <Option 
+                  v-for="(item,idx) of allFieldData" 
+                  :label="item.fieldName" 
+                  :value="item.fieldCode" 
+                  :key="idx">
+                  <span class="select-field">{{ item.fieldName }}</span>
+                  <Poptip 
+                    v-if="item.fieldAlias" 
+                    trigger="hover" 
+                    style="float:right;" 
+                    transfer 
+                    title="对应视图字段名称" 
+                    placement="right">
+                    <span style="color: #39f;"><Icon type="md-help" /></span>
+                    <div slot="content">
+                      <ul class="hidden-field">
+                        <li 
+                          v-for="(alia,k) of item.fieldAlias" 
+                          :key="k">
+                          {{ `${alia.view}—${alia.alias}` }}
+                        </li>
+                      </ul>
+                    </div>
+                  </Poptip>
+                </Option>
               </Select>
             </template>
           </Table>
@@ -71,7 +115,13 @@
                 <b class="permission-title">用户</b>
               </Col>
               <Col span="21" class="member-body">
-                <Tag @on-close="deleteUser" v-for="(userData, index) of userSelectData" :key="index" :userId="userData.userId" closable color="warning">
+                <Tag 
+                  @on-close="deleteUser" 
+                  v-for="(userData, index) of userSelectData" 
+                  :key="index" 
+                  :userId="userData.userId" 
+                  closable 
+                  color="warning">
                   {{ userData.nickname }}
                 </Tag>
               </Col>
@@ -82,7 +132,13 @@
               <b class="permission-title">组织</b>
               </Col>
               <Col span="21" class="member-body">
-              <Tag @on-close="deleteOrg" v-for="(orgData, index) of orgSelectData" :key="index" :orgId="orgData.id" closable color="success">
+              <Tag 
+                @on-close="deleteOrg" 
+                v-for="(orgData, index) of orgSelectData" 
+                :key="index" 
+                :orgId="orgData.id" 
+                closable 
+                color="success">
                 {{ orgData.name }}
               </Tag>
               </Col>
@@ -93,7 +149,13 @@
               <b class="permission-title">职位</b>
               </Col>
               <Col span="21" class="member-body">
-              <Tag @on-close="deleteDepartment" v-for="(departmentData, index) of departmentSelectData" :key="index" :depId="departmentData.id" closable color="primary">
+              <Tag 
+                @on-close="deleteDepartment" 
+                v-for="(departmentData, index) of departmentSelectData" 
+                :key="index" 
+                :depId="departmentData.id" 
+                closable 
+                color="primary">
                 {{ departmentData.name }}
               </Tag>
               </Col>
@@ -104,7 +166,13 @@
               <b class="permission-title">公司</b>
               </Col>
               <Col span="21" class="member-body">
-              <Tag @on-close="deleteCompany" v-for="(companyData, index) of companySelectData" :key="index" :comId="companyData.groupId" closable color="primary">
+              <Tag 
+                @on-close="deleteCompany" 
+                v-for="(companyData, index) of companySelectData" 
+                :key="index" 
+                :comId="companyData.groupId" 
+                closable 
+                color="primary">
                 {{ companyData.groupName }}
               </Tag>
               </Col>

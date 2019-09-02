@@ -149,8 +149,10 @@ export default {
           })
       },
       changeImportantSatus(field) {
-          this.$set(field,'emphases',!field.emphases);
-          this.dragChangeSave();
+        if(!this.isAdmin) return;
+
+        this.$set(field,'emphases',!field.emphases);
+        this.dragChangeSave();
       },
       //所有字段列表搜索
       searchFields() {

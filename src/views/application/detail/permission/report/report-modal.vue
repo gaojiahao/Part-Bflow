@@ -29,7 +29,13 @@
           <b class="permission-title">用户</b>
           </Col>
           <Col span="21" class="member-body">
-          <Tag @on-close="deleteUser" v-for="(userData, index) of userSelectData" :key="index" :userId="userData.userId" closable color="warning">
+          <Tag 
+            @on-close="deleteUser" 
+            v-for="(userData, index) of userSelectData" 
+            :key="index" 
+            :userId="userData.userId" 
+            closable 
+            color="warning">
             {{ userData.nickname }}
           </Tag>
           </Col>
@@ -40,7 +46,13 @@
           <b class="permission-title">组织</b>
           </Col>
           <Col span="21" class="member-body">
-          <Tag @on-close="deleteOrg" v-for="(orgData, index) of orgSelectData" :key="index" :orgId="orgData.id" closable color="success">
+          <Tag 
+            @on-close="deleteOrg" 
+            v-for="(orgData, index) of orgSelectData" 
+            :key="index" 
+            :orgId="orgData.id" 
+            closable 
+            color="success">
             {{ orgData.name }}
           </Tag>
           </Col>
@@ -51,7 +63,13 @@
           <b class="permission-title">职位</b>
           </Col>
           <Col span="21" class="member-body">
-          <Tag @on-close="deleteDepartment" v-for="(departmentData, index) of departmentSelectData" :key="index" :depId="departmentData.id" closable color="primary">
+          <Tag 
+            @on-close="deleteDepartment" 
+            v-for="(departmentData, index) of departmentSelectData" 
+            :key="index" 
+            :depId="departmentData.id" 
+            closable 
+            color="primary">
             {{ departmentData.name }}
           </Tag>
           </Col>

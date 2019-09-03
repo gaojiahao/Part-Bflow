@@ -4,11 +4,30 @@
       <slot name="header"></slot>
     </header>
     <div class="rfd-cs-table">
-      <Table :loading="loading" :columns="columns" :data="columnsData" ref="selection" @on-selection-change='onSelectionChange' :height="height" size="small"></Table>
+      <Table
+        :loading="loading"
+        :columns="columns"
+        :data="columnsData"
+        ref="selection"
+        @on-selection-change="onSelectionChange"
+        size="small"
+      ></Table>
+        <!-- :height="height" -->
+
     </div>
     <div class="rfd-cs-table" v-if="!isHiddenPage">
-      <div style="float: right;">
-        <Page :total="pageTotal" :current="currentPage" :page-size="pageSize" size="small" @on-change="changeCurrentPage" @on-page-size-change="onPageSizeChange" show-total show-elevator show-sizer></Page>
+      <div style="text-align: right;">
+        <Page
+          :total="pageTotal"
+          :current="currentPage"
+          :page-size="pageSize"
+          size="small"
+          @on-change="changeCurrentPage"
+          @on-page-size-change="onPageSizeChange"
+          show-total
+          show-elevator
+          show-sizer
+        ></Page>
       </div>
     </div>
     <footer class="rfd-cs-footer">
@@ -41,16 +60,16 @@ export default {
     },
 
     height: {
-      type: [Number, String],
+      type: [Number, String]
     },
 
-     styles: {
+    styles: {
       type: Object
     },
 
-    isHiddenPage:{
-      type:Boolean,
-      default:false
+    isHiddenPage: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -64,12 +83,12 @@ export default {
     };
   },
 
-  computed:{
-    mainStyle(){
+  computed: {
+    mainStyle() {
       let style = {};
       const height = parseInt(this.height);
       const styleheight = {
-        height: height <= 100 ? `${height}%` : `${height+44}px`
+        height: height <= 100 ? `${height}%` : `${height + 44}px`
       };
       const customStyle = this.styles ? this.styles : {};
       Object.assign(style, styleheight, customStyle);
@@ -84,8 +103,8 @@ export default {
       }
     },
 
-    apiParams:{
-      handler:function(newVal,oldVal){
+    apiParams: {
+      handler: function(newVal, oldVal) {
         this.getTableData(newVal);
       },
       deep: true
@@ -113,11 +132,11 @@ export default {
     getTableData(params) {
       this.loading = true;
       getTableData(this.apiUrl, params).then(res => {
-          this.pageTotal = 'dataCount' in res?res.dataCount:res.summary.total;
-          this.columnsData = res.tableContent;
-          if (this.value) {
-            this.$emit("on-refesh-change", false);
-          }
+        this.pageTotal = "dataCount" in res ? res.dataCount : res.summary.total;
+        this.columnsData = res.tableContent;
+        if (this.value) {
+          this.$emit("on-refesh-change", false);
+        }
         this.loading = false;
       });
     }
@@ -132,7 +151,7 @@ export default {
 <style lang="less">
 .rfd-cs {
   width: 100%;
-  min-height: 500px;
+  // min-height: 500px;
   background-color: #fff;
   padding: 20px 20px;
 

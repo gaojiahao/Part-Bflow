@@ -55,8 +55,14 @@
             </div>
             <span class="message-container-content message-pop" :style="{float:isOwn?'right':'left'}">
                 <div :class="{'message-pop':true,'message-right':isOwn}"></div>
-                <span>应用有更新：</span>
-                <div v-html="data.updateLog"></div>
+                <span>您的项目任务已取消</span>
+                <a @click="handleViewDetail">{{data.tempContent.transCode}}</a>
+                <span>项目名称</span>
+                【<strong>{{ data.tempContent.projectName }}</strong>】
+                <span>项目经理</span>
+                【<strong>{{ data.tempContent.projectManagerName }}</strong>】
+                <span>任务名称</span>
+                【<strong>{{ data.tempContent.taskName }}</strong>】
             </span>
         </div>
     </div>
@@ -64,13 +70,13 @@
 
 <script>
 export default {
-    name:'changeLogNotice',
+    name:'CancelProjectTaskNotice',
     props:{
         data:'',
     },
     computed: {
         isOwn() {
-            return  this.data.creatorName === this.$currentUser.nickname;
+            return  this.data.creatorName || this.data.tempContent.creator === this.$currentUser.nickname;
         }
     },
     methods:{
@@ -78,7 +84,8 @@ export default {
             this.data.photo = 'resources/images/icon/defaultUserPhoto.png';
         },
         handleViewDetail:function () {
-            window.open('/Site/index.html#appSetting/' + this.data.listId);
+            let href = '/Form/index.html?data='+this.data.tempContent.transCode;
+            window.open(href);
         }
     }
 }

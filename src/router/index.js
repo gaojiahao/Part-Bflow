@@ -2,22 +2,47 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import {routers} from '@/router/router'
+import { deepstream } from '@/plugin/deepstream'
 
 Vue.use(Router)
 
-const router = new Router({
-  routes:routers,
-  // mode: 'history', //去除根路由#
+export const router = new Router({
+  routes: routers,
+  // mode: 'history' //去除根路由#
 });
 
+
 router.beforeEach((to, from, next) => {
-  if (localStorage['roleplay-token']) {// 判断是否登录
-    next()
-  } else {// 没登录则跳转到登录界面
-    next({
-      path: '/login'
-    })
+  if (!Vue.prototype.$currentUser && to.name !== 'login' && to.name !== 'userActivate') {
+    let cache = window.sessionStorage.getItem('roletask.com.r2.cache');
+
+    if (cache) {
+      init(cache)
+    } else {
+      next({
+        name: 'login'
+      })
+    }
   }
+  next()
 })
 
-export default router;
+async function init (cache) {
+  let dsUri = window.localStorage.getItem('r2-cached-properties');
+  let data = cache ? JSON.parse(cache) : {};
+  let currentUser = data['currentUser'];
+  currentUser.isAdmin = false;
+  currentUser.isBusinessAdmin = false;
+  currentUser.isOperationAdmin = false;
+  currentUser.isSysRoleList.map(role => {
+    // 企业管理员
+    if (role.id === 1) {
+      currentUser.isBusinessAdmin = true;
+    }
+    // 运营管理员
+    if (role.id === -1) currentUser.isOperationAdmin = true;
+  })
+
+  Vue.prototype.$currentUser = currentUser
+  Vue.prototype.$deepstream = await deepstream(currentUser, dsUri)
+}

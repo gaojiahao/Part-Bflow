@@ -73,6 +73,7 @@ export default {
   },
 
   mounted(){
+    debugger
      this.subscribeMessage();
 
        //获取当前用户所有待办任务

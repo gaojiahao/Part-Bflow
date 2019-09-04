@@ -11,7 +11,7 @@
                 @error="imgError" 
                 :src="data.photo?data.photo:'resources/images/icon/defaultUserPhoto.png'">
             <p 
-                :style="{margin:isOwn?'0px 0px 0px 10px':'0px 10px 0px 0px'}">
+                >
                 {{ data.creatorName || '未知' }}
             </p>
         </div>

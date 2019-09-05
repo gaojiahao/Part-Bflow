@@ -29,7 +29,8 @@
                     :list="fieldsList"
                     group="people"
                     :disabled="!isAdmin"
-                    :sort="allSort">
+                    :sort="allSort"
+                    :style="{padding:'10px 0px'}">
                     <div 
                         class="field-name" 
                         v-for="field of fieldsList" 
@@ -49,7 +50,8 @@
                     :disabled="!isAdmin"
                     @add="dragAdd"
                     @remove="dragRemove"
-                    @update="dragSort">
+                    @update="dragSort"
+                    :style="{padding:'10px 0px'}">
                     <div class="field-list" v-for="field of messageFieldsConfig" :key="field.fieldCode">
                         <span class="field-list-name">{{ field.fieldName }}</span>
                         <span class="field-list-action">

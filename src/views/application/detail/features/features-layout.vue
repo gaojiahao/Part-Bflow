@@ -6,7 +6,7 @@
 <template>
     <div class="feature-layout">
         <features-manage :isAdmin="isAdmin" :listId="listId"></features-manage>
-        <message-manage :isAdmin="isAdmin" :listId="listId" :appTitle="appTitle"></message-manage>
+        <message-manage v-if="!isAddress && appType !=='subject'" :isAdmin="isAdmin" :listId="listId" :appTitle="appTitle"></message-manage>
     </div>
 </template>
 <script>

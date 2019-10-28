@@ -36,7 +36,7 @@
                 @on-search="userFilter" 
                 :search="true" 
                 v-model="searchValue" 
-                placeholder="搜索账号或姓名" 
+                placeholder="搜索账号或名称" 
                 style="width: 300px">
               </Input>
               <p @click="userFilter" class="app-search-icon">

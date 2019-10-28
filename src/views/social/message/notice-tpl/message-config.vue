@@ -11,7 +11,7 @@
                 @error="imgError" 
                 :src="data.photo?data.photo:'resources/images/icon/defaultUserPhoto.png'">
             <p 
-                :style="{margin:isOwn?'0px 0px 0px 10px':'0px 10px 0px 0px'}">
+                >
                 {{ data.creatorName || '未知' }}
             </p>
         </div>
@@ -48,7 +48,7 @@
                         v-for="(item,index) of data.primaryInfoContent.primaryInfo" 
                         :key="index" 
                         :class="{'content-list':item.emphases,'content-gray':!item.emphases}">
-                        {{ `${item.fieldName}：${item.value || '未知'}` }}
+                        {{ `${item.fieldName}：${item.value}` }}
                     </p>
                 </div>
             </div>
@@ -92,8 +92,8 @@ export default {
     },
     data() {
         return {
-            isOpen: true,
-            isBorderTopProp: true
+            isOpen: false,
+            isBorderTopProp: false
         };
     },
     computed: {

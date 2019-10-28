@@ -23,9 +23,11 @@
     }
 }
 .message-photo{
-    width: 5%;
+    width: 65px;
+    text-align: center;
     img{
-        width: 70%;
+        width: 35px;
+        height: 35px;
         border-radius: 50%;
         border: 1px solid #ddd;
     }
@@ -48,8 +50,7 @@
                 <img 
                     @error="imgError" 
                     :src="data.photo?data.photo:'resources/images/icon/defaultUserPhoto.png'">
-                <p 
-                    :style="{margin:isOwn?'0px 0px 0px 15px':'0px 11px 0px 0px'}">
+                <p>
                     {{ data.creatorName || '未知' }}
                 </p>
             </div>

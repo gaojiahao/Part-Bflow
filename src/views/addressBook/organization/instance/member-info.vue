@@ -79,7 +79,7 @@
             @on-search="userTableFilter"
             :search="true"
             v-model="searchTableValue"
-            placeholder="搜索工号或名称"
+            placeholder="搜索账号或名称"
             style="width: 300px"
           ></Input>
           <a @click="userTableFilter" class="app-search-icon">
@@ -102,7 +102,7 @@
             @on-search="userFilter"
             :search="true"
             v-model="searchValue"
-            placeholder="搜索工号或名称"
+            placeholder="搜索账号或名称"
             style="width: 300px"
           ></Input>
           <a @click="userFilter" class="app-search-icon">

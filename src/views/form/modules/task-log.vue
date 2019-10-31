@@ -136,7 +136,7 @@
 
           </li>
           <li>
-            <pre>{{item.comment}}</pre>
+            <pre class="comment-pre" >{{item.comment}}</pre>
           </li>
         </ul>
       </ul>
@@ -424,4 +424,16 @@ export default {
   }
 };
 </script>
+
+<style lang="less" scoped>
+.comment-pre{
+    word-break: break-all;
+    white-space: pre-wrap; /* css3.0 */
+    white-space:-moz-pre-wrap; /* Firefox */
+    white-space:-pre-wrap; /* Opera 4-6 */
+    white-space:-o-pre-wrap; /* Opera 7 */
+    word-wrap:break-word; /* Internet Explorer 5.5+ */
+
+}
+</style>
 

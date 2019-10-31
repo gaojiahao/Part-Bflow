@@ -85,6 +85,7 @@
             <Option value="R">研发</Option>
             <Option value="O">运营</Option>
             <Option value="E">工程</Option>
+            <Option value="D">开发</Option>
           </Select>
         </FormItem>
       </div>
@@ -404,6 +405,9 @@ export default {
                 break;
               case "E":
                 depFunction = "工程";
+                break;
+              case "D":
+                depFunction = "开发";
                 break;
             }
             return h("span", depFunction);

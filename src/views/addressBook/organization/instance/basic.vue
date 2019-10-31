@@ -405,6 +405,9 @@ export default {
               case "E":
                 depFunction = "工程";
                 break;
+              case "D":
+                depFunction = "开发";
+                break;
             }
             return h("span", depFunction);
           }

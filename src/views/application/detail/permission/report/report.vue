@@ -97,7 +97,7 @@ export default {
           };
           this.$Modal.confirm({
             title: "确认",
-            content: "确认删除此视图？",
+            content: `确认删除<b style="color:#e4393c;">${params.row.title}</b>视图？`,
             onOk: () => {
               deleteAppViews(deleteParams).then(res => {
                 if (res.success) {
@@ -122,7 +122,7 @@ export default {
           };
           this.$Modal.confirm({
             title: "确认",
-            content: "确认删除此视图？",
+            content: `确认删除<b style="color:#e4393c;">${params.row.title}</b>视图？`,
             onOk: () => {
               deleteAppViews(deleteParams).then(res => {
                 if (res.success) {

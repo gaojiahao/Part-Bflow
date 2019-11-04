@@ -172,7 +172,7 @@ export default {
                 })
             }
         },
-        handleReplyPublish:function (content,uploadList,userIds=[],superComment,commentAndReply) {
+        handleReplyPublish:function (content,uploadList,userIds=[],superComment,commentAndReply,sendComponent) {
              this.$forceUpdate();
             let comment ={
                 type:superComment.type,       
@@ -190,6 +190,18 @@ export default {
                     });
                     return;
                 }
+
+                if(sendComponent){
+                    sendComponent.innerText = '';
+                    sendComponent.discContent.txt = '';
+                    sendComponent.$refs.editor.innerHTML = "";
+                    sendComponent.atUsers = [];
+                    sendComponent.$refs.upload.clearFiles();
+                    sendComponent.$refs.uploadFile.clearFiles();
+                    sendComponent.uploadList = sendComponent.$refs.upload.fileList;
+                    sendComponent.uploadFileList = sendComponent.$refs.uploadFile.fileList;
+                }
+                
                 comment.showReply = false;
                 this.refreshComments();
             });

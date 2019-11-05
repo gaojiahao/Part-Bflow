@@ -237,12 +237,12 @@ export default {
             if(sendComponent){
                 sendComponent.innerText = '';
                 sendComponent.discContent.txt = '';
-                sendComponent.$refs.editor.innerHTML = "";
+                sendComponent.$refs.editor && (sendComponent.$refs.editor.innerHTML = "");
                 sendComponent.atUsers = [];
-                sendComponent.$refs.upload.clearFiles();
-                sendComponent.$refs.uploadFile.clearFiles();
-                sendComponent.uploadList = sendComponent.$refs.upload.fileList;
-                sendComponent.uploadFileList = sendComponent.$refs.uploadFile.fileList;
+                sendComponent.$refs.upload && (sendComponent.$refs.upload.clearFiles());
+                sendComponent.$refs.uploadFile && (sendComponent.$refs.uploadFile.clearFiles());
+                sendComponent.uploadList = sendComponent.$refs.upload && sendComponent.$refs.upload.fileList;
+                sendComponent.uploadFileList = sendComponent.$refs.uploadFile && sendComponent.$refs.uploadFile.fileList;
             }
 
             this.refreshComments();

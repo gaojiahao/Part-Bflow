@@ -39,11 +39,12 @@
                 <Checkbox v-model="excludeZero" @on-change="excludeZeroChange">排除金额为0</Checkbox>
               </div>
             </div>
+              <!-- :height="tableHeight" -->
+
             <Table 
               border
               stripe
               size="small"
-              :height="tableHeight"
               :columns="columns" 
               :loading="loading" 
               :data="performanceData">
@@ -85,9 +86,9 @@ export default {
   name: "TeamProfit",
   components: {},
   props: {
-    groupId: {
-      type: String
-    }
+    // groupId: {
+    //   type: String
+    // }
   },
   data() {
     return {
@@ -420,6 +421,7 @@ export default {
     }
   },
   mounted() {
+    this.groupId = this.$route.params.groupId;
     let currentHalfMonth = getPreMonthDay(new Date(), 5);
     this.startDate = currentHalfMonth;
     this.getPerformanceData(this.startDate,this.formatDate(this.endDate));

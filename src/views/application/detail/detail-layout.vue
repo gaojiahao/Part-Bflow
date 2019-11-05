@@ -35,8 +35,8 @@
         </MenuItem>
       </router-link>
 
-      <router-link :to="{ name:'permission'}">
-        <MenuItem name="permission">
+      <router-link :to="{ name:'apppermission'}">
+        <MenuItem name="apppermission">
           资源授权
         </MenuItem>
       </router-link>
@@ -63,7 +63,8 @@
       :appType="appType"
       :appTransType="appTransType" 
       :isCompanyAdmin="isCompanyAdmin"
-      :enabledForbidden="enabledForbidden">
+      :enabledForbidden="enabledForbidden"
+      :appTitle="appData.title">
     </router-view>
   </div>
 

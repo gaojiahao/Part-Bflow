@@ -39,6 +39,7 @@
             <Col :xs="24" :sm="12" :md="8" :lg="8">
               <FormItem label='员工'  prop="users"> 
                 <Select
+                  ref="selectUser"
                   v-model="modalFormData.users"
                   multiple
                   filterable
@@ -46,6 +47,7 @@
                   placeholder="请选择或搜索员工"
                   :remote-method="remoteFilterSearch"
                   @on-query-change="handleQueryChange"
+                  @on-change="onSelectChange"
                   :loading="loading">
                   <Option v-for="(option) in userList" :value="option.userId" :key="option.userId">{{option.nickname}}</Option>
                 </Select>
@@ -87,7 +89,7 @@
                <FormItem label="申报工时:" prop="logDeclarationHours">
                 <InputNumber 
                   v-model="modalFormData.logDeclarationHours"
-                  :step="0.1"/>单位/时
+                  :step="1"/>单位/时
               </FormItem>
             </Col>
 
@@ -134,7 +136,7 @@
 
           </li>
           <li>
-            <pre>{{item.comment}}</pre>
+            <pre class="comment-pre" >{{item.comment}}</pre>
           </li>
         </ul>
       </ul>
@@ -144,8 +146,10 @@
             :current="currentPage"
             :page-size="pageSize" 
             @on-change="changeCurrentPage"
-            prev-text="上一页" 
-            next-text="下一页"
+            @on-page-size-change="onPageSizeChange"
+            show-total
+            show-elevator
+            show-sizer
             size="small"  
             ></Page>
       </div>
@@ -204,13 +208,13 @@ export default {
             users:[],
             comments: "",
             logType:"",
-            logStatus:"已办"
+            logStatus:"待办"
         },
         ruleValidate: {
             //变更日志表单校验
             logTitle: [
               {required: true,message: "不允许为空" },
-              { type: 'string', max: 20, message: '标题不能超过20个字符'}
+              { type: 'string', max: 100, message: '标题不能超过100个字符'}
             ],
             users: [
               {required: true,message: "不允许为空" , type: 'array'}
@@ -231,12 +235,15 @@ export default {
         },
         currentPage: 1,
         pageTotal:0,
-        pageSize:6
+        pageSize:10
         };
   },
 
 
   methods: {
+    onSelectChange() {
+      this.$refs['selectUser'].hideMenu();
+    },
     openForm() {
       this.hiddenForm = true;
       if(window.top.setTaskLogIframeHeight){
@@ -313,10 +320,11 @@ export default {
                this.$refs['logForm'].resetFields();
               });
               this.getTaskLog(this.transCode);
-              this.showTaskModal = false;
             }else{
-                window.top.Ext.toast(res.message)
+                window.top.Ext.toast(res.message);
             }
+
+            this.showTaskModal = false;
         });
         
     }, 
@@ -354,7 +362,7 @@ export default {
           {"operator":"like","value":query,"property":"nickname"},
           {"operator":"in","value":"1","property":"status"}]):
           JSON.stringify([{"operator":"in","value":"1","property":"status"}]);
-        getAllUsers(200,1,filter).then(res=>{
+        getAllUsers(200,1,filter,this.$currentUser.entityId).then(res=>{
             this.userList = res.tableContent;
             this.loading = false;
         })
@@ -363,6 +371,10 @@ export default {
     changeCurrentPage(currentPage) {
      this.currentPage = currentPage;
      this.getTaskLog();
+    },
+    onPageSizeChange(size){
+      this.pageSize = size;
+      this.getTaskLog();
     },
     /**
      * 更新日志状态
@@ -412,4 +424,16 @@ export default {
   }
 };
 </script>
+
+<style lang="less" scoped>
+.comment-pre{
+    word-break: break-all;
+    white-space: pre-wrap; /* css3.0 */
+    white-space:-moz-pre-wrap; /* Firefox */
+    white-space:-pre-wrap; /* Opera 4-6 */
+    white-space:-o-pre-wrap; /* Opera 7 */
+    word-wrap:break-word; /* Internet Explorer 5.5+ */
+
+}
+</style>
 

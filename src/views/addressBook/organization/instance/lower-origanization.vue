@@ -28,12 +28,22 @@
   margin-bottom: 10px;
   padding: 1px 5px;
 }
+.lowerOrgWarp {
+  width: 80%;
+  margin: auto;
+}
 </style>
 
 <template>
-  <div>
-    <custom-table apiUrl="/ds/getAllGroup" :columns="lowerOrgColumns" :apiParams="lowOrganizationParams" v-model="reload" @on-refesh-change='onRefeshChange' @on-selection-change="onSelectionChange">
-
+  <div class="lowerOrgWarp">
+    <custom-table
+      apiUrl="/ds/getAllGroup"
+      :columns="lowerOrgColumns"
+      :apiParams="lowOrganizationParams"
+      v-model="reload"
+      @on-refesh-change="onRefeshChange"
+      @on-selection-change="onSelectionChange"
+    >
       <div v-if="isPermission" slot="header" class="header-action">
         <label @click="showLoverOrgModal">添加下级组织</label>
         <span>-添加下级组织</span>
@@ -43,25 +53,64 @@
       </div>
     </custom-table>
 
-    <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择组织" @on-ok="saveSelectionLowerOrg">
+    <member-modal
+      v-model="isShowMemberModal"
+      width="1000"
+      footerBtnAlign="right"
+      title="选择组织"
+      @on-ok="saveSelectionLowerOrg"
+    >
       <div style="margin-top:10px;">
         <div class="app-search">
-          <Input @on-search="orgFilter" :search="true" v-model="searchValue" placeholder="搜索组织名称" style="width: 300px"></Input>
+          <Input
+            @on-search="orgFilter"
+            :search="true"
+            v-model="searchValue"
+            placeholder="搜索组织名称"
+            style="width: 300px"
+          ></Input>
           <a @click="orgFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </a>
         </div>
-        <Table height="400" :loading="listUserLoading" :columns="lowerOrgColumnsModel" :data="listUserData" size='small' ref="selection" @on-select-all="onSelectAll" @on-selection-change="handerSelectionChange" @on-select-cancel="onSelectCancel"></Table>
+        <Table
+          height="400"
+          :loading="listUserLoading"
+          :columns="lowerOrgColumnsModel"
+          :data="listUserData"
+          size="small"
+          ref="selection"
+          @on-select-all="onSelectAll"
+          @on-selection-change="handerSelectionChange"
+          @on-select-cancel="onSelectCancel"
+        ></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
-            <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-page-size-change="onPageSizeChange" @on-change="listUserChangePage" show-total show-elevator show-sizer></Page>
+            <Page
+              :total="listUserPageTotal"
+              :current="listUserCurrentPage"
+              :page-size="pageSize"
+              size="small"
+              @on-page-size-change="onPageSizeChange"
+              @on-change="listUserChangePage"
+              show-total
+              show-elevator
+              show-sizer
+            ></Page>
           </div>
         </div>
       </div>
       <div class="page-selection-warp" v-show="onPageSelection[0] ">
-        <Tag v-for="item in onPageSelection" :key="item.groupId" :groupId="item.groupId" :closable="true" @on-close="deletePageSelection" type="border" color="primary" size="small">
-          {{item.groupName}}
-        </Tag>
+        <Tag
+          v-for="item in onPageSelection"
+          :key="item.groupId"
+          :groupId="item.groupId"
+          :closable="true"
+          @on-close="deletePageSelection"
+          type="border"
+          color="primary"
+          size="small"
+        >{{item.groupName}}</Tag>
       </div>
     </member-modal>
   </div>
@@ -84,15 +133,12 @@ export default {
   },
 
   props: {
-    groupId: {
-      type: String
-    },
-    groupType: {
-      type: String
-    },
     isPermission: {
       type: Boolean
-    }
+    },
+    groupType:{
+      type:String
+    },
   },
 
   data() {
@@ -100,7 +146,11 @@ export default {
       //下级组织
       lowOrganizationParams: {
         filter: JSON.stringify([
-          { operator: "eq", value: this.groupId, property: "parentId" }
+          {
+            operator: "eq",
+            value: this.$route.params.groupId,
+            property: "parentId"
+          }
         ]),
         page: 1,
         limit: 10
@@ -233,7 +283,7 @@ export default {
                           if (res.success) {
                             this.$Message.success("删除成功!");
                             this.reload = true;
-                            this.$emit("on-lower-organization-change", true);
+                            this.$emit("relevantInstChange", true);
                           }
                         });
                       }
@@ -464,12 +514,12 @@ export default {
       this.onPageSelection.forEach(val => {
         childrenId.push(val.groupId);
       });
-      saveBatchChildGroup(this.groupId, childrenId.join(",")).then(res => {
+      saveBatchChildGroup(this.$route.params.groupId, childrenId.join(",")).then(res => {
         if (res.success) {
           this.$Message.success("更新成功");
           this.isShowMemberModal = false;
           this.reload = true;
-          this.$emit("on-lower-organization-change", true);
+          this.$emit("relevantInstChange", true);
         } else {
           this.$Message.error(res.message);
         }
@@ -488,7 +538,7 @@ export default {
               if (res.success) {
                 this.$Message.success("删除成功!");
                 this.reload = true;
-                this.$emit("on-lower-organization-change", true);
+                this.$emit("relevantInstChange", true);
               }
             })
             .catch(error => {
@@ -532,6 +582,9 @@ export default {
       ];
       this.getAllLowerGroupByGroupType(this.listUserCurrentPage, filter);
     }
+  },
+  mounted(){
+    this.groupId = this.$route.params.groupId;
   }
 };
 </script>

@@ -22,7 +22,7 @@
               <DatePicker 
                 type="month" 
                 placeholder="选择月份" 
-                style="width: 120px;margin-left:10px;" 
+                style="width: 90px;margin-left:10px;" 
                 v-model="month" 
                 format="yyyy-MM" 
                 :clearable="false">
@@ -46,7 +46,7 @@
               查看范围:
               <DatePicker type="month" 
                 placeholder="选择月份" 
-                style="width: 120px;margin-left:10px;" 
+                style="width: 90px;margin-left:10px;" 
                 v-model="workFlowMonth" 
                 format="yyyy-MM" 
                 :clearable="false">

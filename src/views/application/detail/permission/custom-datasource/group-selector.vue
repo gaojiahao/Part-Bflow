@@ -134,7 +134,10 @@ export default {
     //组织数据加载
     selectOrgModal(filter,currentPageFilter) {
       this.orgLoading = true;
-      getAllOrgData(currentPageFilter?currentPageFilter:this.orgCurrentPage, this.pageSize, filter).then(res => {
+      getAllOrgData(
+        currentPageFilter?currentPageFilter:this.orgCurrentPage, 
+        this.pageSize, 
+        filter).then(res => {
         this.orgData = res.tableContent;
         this.orgTotal = res.dataCount;
         this.orgLoading = false;

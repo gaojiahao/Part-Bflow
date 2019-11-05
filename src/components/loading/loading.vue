@@ -5,8 +5,12 @@
 </template>
 
 <script>
+
+  import { Spin } from 'iview';
+
   export default {
     name: "Loading",
+    components: { Spin },
     data(){
       return{
         show : false

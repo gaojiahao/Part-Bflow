@@ -64,6 +64,7 @@ export default {
         color: [this.primaryColor],
         legend: {
           selectedMode: false,
+          left: 5,
           x: 30,
           y: 8,
           data: [
@@ -79,8 +80,12 @@ export default {
           containLabel: true
         },
         toolbox: {
+          right: 10,
+          top: 5,
           feature: {
-            saveAsImage: {}
+            saveAsImage: {
+              title: '存为图片'
+            }
           }
         },
         xAxis: {

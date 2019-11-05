@@ -6,14 +6,18 @@
 <template>
     <div class="feature-layout">
         <features-manage :isAdmin="isAdmin" :listId="listId"></features-manage>
+        <message-manage v-if="!isAddress && appType !=='subject'" :isAdmin="isAdmin" :listId="listId" :appTitle="appTitle"></message-manage>
     </div>
 </template>
 <script>
 import FeaturesManage from './features';
+import MessageManage from './message-manage';
+
 export default {
     name:'FeaturesLayout',
     components:{
-        FeaturesManage
+        FeaturesManage,
+        MessageManage
     },
     props: {
         listId: String,
@@ -21,7 +25,8 @@ export default {
         enabledForbidden: Number,
         isCompanyAdmin:Boolean,
         isAdmin: Boolean,
-        isAddress: Boolean
+        isAddress: Boolean,
+        appTitle: String
     }
 }
 </script>

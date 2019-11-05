@@ -6,11 +6,20 @@
     <div class="app" style="margin-top:15px;">
         <Row class="app-action">
             <Row v-if="!row" class="app-action-title">
-                <h3>字段或字段组<a v-if="isAdmin" @click="showModal" class="app-action-title-add">添加</a></h3>
+                <h3>
+                  字段或字段组
+                  <a v-if="isAdmin" @click="showModal" class="app-action-title-add">添加</a>
+                </h3>
                 <span class="marlr" :style="{color:'#aaaaaa'}">应用字段授权给用户或用户组</span>
             </Row>
             <div :class="{'app-action-source':!row}">
-                <h3 v-if="isAdmin && row" @click="showModal" class="app-action-title-add"><Icon type="md-add" />添加</h3>
+                <h3 
+                  v-if="isAdmin && row"
+                  @click="showModal" 
+                  class="app-action-title-add">
+                  <Icon type="md-add" />
+                  添加
+                </h3>
                 <Row>
                     <Table :columns="columns" :data="userSources" size="small"></Table>
                 </Row>

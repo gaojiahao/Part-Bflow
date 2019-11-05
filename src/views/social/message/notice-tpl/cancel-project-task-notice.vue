@@ -42,7 +42,7 @@
         style="overflow:hidden">
         <div 
             :style="{'margin-left':!isOwn?'5%':'none','margin-right':isOwn?'5%':'none'}">
-            {{data.crtTime}}
+            {{data.tempContent.crtTime}}
         </div>
         
         <div>
@@ -56,9 +56,14 @@
             </div>
             <span class="message-container-content message-pop" :style="{float:isOwn?'right':'left'}">
                 <div :class="{'message-pop':true,'message-right':isOwn}"></div>
-                <span class="message-container-creator notice-creator">路塔</span>
-                <span>:您有新的消息</span>
-                <b v-html="data.tempContent.result"></b>
+                <span>您的项目任务已取消</span>
+                <a @click="handleViewDetail">{{data.tempContent.transCode}}</a>
+                <span>项目名称</span>
+                【<strong>{{ data.tempContent.projectName }}</strong>】
+                <span>项目经理</span>
+                【<strong>{{ data.tempContent.projectManagerName }}</strong>】
+                <span>任务名称</span>
+                【<strong>{{ data.tempContent.taskName }}</strong>】
             </span>
         </div>
     </div>
@@ -66,18 +71,22 @@
 
 <script>
 export default {
-    name:'ExportImportNotice',
+    name:'CancelProjectTaskNotice',
     props:{
         data:'',
     },
     computed: {
         isOwn() {
-            return  this.data.creatorName === this.$currentUser.nickname;
+            return  this.data.creatorName || this.data.tempContent.creator === this.$currentUser.nickname;
         }
     },
     methods:{
         imgError() {
             this.data.photo = 'resources/images/icon/defaultUserPhoto.png';
+        },
+        handleViewDetail:function () {
+            let href = '/Form/index.html?data='+this.data.tempContent.transCode;
+            window.open(href);
         }
     }
 }

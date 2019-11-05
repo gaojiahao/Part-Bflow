@@ -10,7 +10,7 @@
           <label class="left-leble">企业LOGO</label>
           <div class="logo" >
             <Upload 
-              v-if="$currentUser.isAdmin" 
+              v-if="$currentUser.isBusinessAdmin || $currentUser.isOperationAdmin" 
               ref="upload" 
               :show-upload-list="false" 
               :on-success="handleSuccess" 
@@ -41,7 +41,7 @@
           <label class="left-leble">企业简称</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.nickname}}</span>
           <input v-else type="text" v-model="enterpriseInfo.nickname" class="input-common-att" />
-          <a @click="handleEditName" v-if="$currentUser.isAdmin">{{edit}}</a>
+          <a @click="handleEditName" v-if="$currentUser.isBusinessAdmin || $currentUser.isOperationAdmin">{{edit}}</a>
         </div>
         <div class="select-explain">
           <label class="left-leble">企业全称</label>
@@ -69,7 +69,7 @@
       </section>
 
       <section class="info-warp-main-section">
-        <div v-if="$currentUser.isAdmin" :style="{marginBottom:'5px'}">
+        <div v-if="$currentUser.isBusinessAdmin || $currentUser.isOperationAdmin" :style="{marginBottom:'5px'}">
           <Button type="info" size="small" @click="showAddExchange">添加汇率</Button>
           <Button type="info" size="small" @click="deleteExchange">删除</Button>
         </div>
@@ -92,7 +92,7 @@
               <Input @on-blur="onExchangeRateBlur(row)" v-else v-model="row.exchangeRate"></Input>
           </template>
           <template slot-scope="{ row }" slot="localCurrency">
-              <Radio @on-change="onLocalCurrencyChange($event,row)" :disabled="!$currentUser.isAdmin" :value="row.localCurrency===1?true:false"></Radio>
+              <Radio @on-change="onLocalCurrencyChange($event,row)" :disabled="!$currentUser.isBusinessAdmin" :value="row.localCurrency===1?true:false"></Radio>
           </template>
       </Table>
       </section>
@@ -106,7 +106,7 @@
             type="info" 
             shape="circle" 
             @click="handleSyncInfo" 
-            v-if="$currentUser.isAdmin" 
+            v-if="$currentUser.isBusinessAdmin || $currentUser.isOperationAdmin" 
             :style="{marginLeft:'50px'}">
             同步第三方平台用户
           </Button>
@@ -163,7 +163,7 @@
             <Tag v-for="item in enterpriseInfo.admins" :key="item.userId" :userId="item.userId" type="border" :closable="closable" color="blue" size="small" @on-close="deleteEnterpriseAdmin">
               {{item.nickname}}
             </Tag>
-            <a @click="selectAdminModal" v-if="$currentUser.isAdmin" style="font-size:14px;">添加</a>
+            <a @click="selectAdminModal" v-if="$currentUser.isBusinessAdmin || $currentUser.isOperationAdmin" style="font-size:14px;">添加</a>
           </div>
         </div>
       </section>
@@ -171,12 +171,12 @@
         <div>
           <label class="left-leble">网站登录页背景图</label>
           <div style="display: inline-block;vertical-align: middle;">
-            <Upload v-if="$currentUser.isAdmin" :show-upload-list="false" :before-upload="handleUploadBefore" :on-success="handleBackgroundSuccess" action="/H_roleplay-si/ds/upload" :headers="httpHeaders">
+            <Upload v-if="$currentUser.isBusinessAdmin || $currentUser.isOperationAdmin" :show-upload-list="false" :before-upload="handleUploadBefore" :on-success="handleBackgroundSuccess" action="/H_roleplay-si/ds/upload" :headers="httpHeaders">
               <Button icon="ios-cloud-upload-outline">选择背景图</Button>
             </Upload>
             <div v-if="enterpriseInfo.backgroundName">上传文件名称:
               <a :href="enterpriseInfo.backgroundImg" target="_blank">{{ enterpriseInfo.backgroundName }}</a>
-              <Button v-if="$currentUser.isAdmin" type="text" @click="upload" :loading="loadingStatus">{{ loadingStatus ? '上传中' : '点击上传' }}</Button>
+              <Button v-if="$currentUser.isBusinessAdmin || $currentUser.isOperationAdmin" type="text" @click="upload" :loading="loadingStatus">{{ loadingStatus ? '上传中' : '点击上传' }}</Button>
             </div>
           </div>
         </div>
@@ -354,7 +354,7 @@ export default {
               props: {
                 type: 'text',
                 size: 'small',
-                disabled: !this.$currentUser.isAdmin || params.row.currencyValue === 'rmb'
+                disabled: !this.$currentUser.isBusinessAdmin || params.row.currencyValue === 'rmb'
               },
               style: {
                 color: '#39f'
@@ -403,7 +403,7 @@ export default {
       this.showExchangeRateModal = true;
     },
     editExchangeRate(row, isEdit) {
-      if(this.$currentUser.isAdmin){
+      if(this.$currentUser.isBusinessAdmin){
         row.currencyValue !== 'rmb' && this.$set(row, isEdit, true);
       }
     },

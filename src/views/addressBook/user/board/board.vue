@@ -12,7 +12,7 @@
             <Row  class="rfd-card-container">
                 <Col span="3" class="rfd-card-left">
                     <img 
-                      :src="user.photo || 'resources/images/icon/defaultUserPhoto.png'" 
+                      :src="getUserPhoto(user)" 
                       class="rfd-card-img" 
                       @click="goDetail(user)">
                 </Col>
@@ -47,6 +47,16 @@ export default {
   },
   created() {},
   methods: {
+    getUserPhoto(user){
+      if(user.photo) return user.photo;
+
+      let p = 'male.png';
+      
+      if(user.gender === 1){
+        p='female.png';
+      }
+      return `https://lab.roletask.com/resource/common-icon/${p}`;
+    },
     getUsers: function() {
       this.$loading.show();
 

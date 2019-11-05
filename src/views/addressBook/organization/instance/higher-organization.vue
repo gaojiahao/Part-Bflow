@@ -24,29 +24,74 @@
 .rfd-table .ivu-table-row-highlight td {
   background-color: #81b2e59c !important;
 }
+
+.higherOrgWarp{
+  width: 80%;
+  margin: 0 auto;
+}
 </style>
 
 <template>
-  <div>
-    <custom-table apiUrl="/ds/getParentGroupByGroupId" :columns="highOrgColumns" :apiParams="highOrganizationParams" v-model="reload" @on-refesh-change='onRefeshChange' :isHiddenPage="true">
+  <div class="higherOrgWarp">
+    <custom-table
+      apiUrl="/ds/getParentGroupByGroupId"
+      :columns="highOrgColumns"
+      :apiParams="highOrganizationParams"
+      v-model="reload"
+      @on-refesh-change="onRefeshChange"
+      :isHiddenPage="true"
+    >
       <div v-if="isPermission" slot="header" class="header-action">
         <label @click="showHighOrgModal">上级组织</label>
         <span>-选择上级组织</span>
       </div>
     </custom-table>
 
-    <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择组织" @on-ok="saveSelectionHighOrg">
+    <member-modal
+      v-model="isShowMemberModal"
+      width="1000"
+      footerBtnAlign="right"
+      title="选择组织"
+      @on-ok="saveSelectionHighOrg"
+    >
       <div style="margin-top:10px;">
         <div class="app-search">
-          <Input @on-search="orgFilter" :search="true" v-model="searchValue" placeholder="搜索组织名称" style="width: 300px"></Input>
+          <Input
+            @on-search="orgFilter"
+            :search="true"
+            v-model="searchValue"
+            placeholder="搜索组织名称"
+            style="width: 300px"
+          ></Input>
           <a @click="orgFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </a>
         </div>
-        <Table class="rfd-table" height="400" :loading="listUserLoading" :columns="highOrgColumnsModal" :data="listUserData" size='small' highlight-row ref="currentRowTable" @on-row-dblclick="handleDblclick" @on-current-change="onSelectUserList"></Table>
+        <Table
+          class="rfd-table"
+          height="400"
+          :loading="listUserLoading"
+          :columns="highOrgColumnsModal"
+          :data="listUserData"
+          size="small"
+          highlight-row
+          ref="currentRowTable"
+          @on-row-dblclick="handleDblclick"
+          @on-current-change="onSelectUserList"
+        ></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
-            <Page :total="listUserPageTotal" :current="listUserCurrentPage" :page-size="pageSize" size="small" @on-change="listUserChangePage" @on-page-size-change="onPageSizeChange" show-total show-elevator show-sizer></Page>
+            <Page
+              :total="listUserPageTotal"
+              :current="listUserCurrentPage"
+              :page-size="pageSize"
+              size="small"
+              @on-change="listUserChangePage"
+              @on-page-size-change="onPageSizeChange"
+              show-total
+              show-elevator
+              show-sizer
+            ></Page>
           </div>
         </div>
       </div>
@@ -56,7 +101,10 @@
 
 <script>
 import MemberModal from "@/components/modal/Modal";
-import { updateBaseinfo, getAllHigherGroupByGroupType } from "@/services/addressBookService.js";
+import {
+  updateBaseinfo,
+  getAllHigherGroupByGroupType
+} from "@/services/addressBookService.js";
 import CustomTable from "./CustomTable";
 export default {
   name: "higher-organization",
@@ -67,11 +115,8 @@ export default {
   },
 
   props: {
-    groupId: {
-      type: String
-    },
-    groupType: {
-      type: String
+    groupType:{
+      type:String
     },
     isPermission: {
       type: Boolean
@@ -82,7 +127,7 @@ export default {
     return {
       //上级组织
       highOrganizationParams: {
-        groupId: this.groupId,
+        groupId: this.$route.params.groupId,
         page: 1,
         limit: 10
       },
@@ -322,7 +367,7 @@ export default {
           this.$Message.success("更新成功");
           this.isShowMemberModal = false;
           this.reload = true;
-          this.$emit("on-high-organization-change", true);
+          this.$emit("relevantInstChange", true);
         } else {
           this.$Message.error(res.message);
         }
@@ -345,7 +390,10 @@ export default {
     showHighOrgModal() {
       this.isShowMemberModal = true;
       this.searchValue = "";
-      this.getAllHigherGroupByGroupType(this.listUserCurrentPage, this.pageSize);
+      this.getAllHigherGroupByGroupType(
+        this.listUserCurrentPage,
+        this.pageSize
+      );
     },
 
     //添加上级组织
@@ -360,7 +408,7 @@ export default {
           this.$Message.success("更新成功");
           this.isShowMemberModal = false;
           this.reload = true;
-          this.$emit("on-high-organization-change", true);
+          this.$emit("relevantInstChange", true);
         } else {
           this.$Message.error(res.message);
         }
@@ -370,8 +418,13 @@ export default {
     getAllHigherGroupByGroupType(currentPage, pageSize, relfilter) {
       this.listUserLoading = true;
       let filter = relfilter ? relfilter : [];
-      
-      getAllHigherGroupByGroupType(currentPage, pageSize,this.groupType, JSON.stringify(filter)).then(res => {
+
+      getAllHigherGroupByGroupType(
+        currentPage,
+        pageSize,
+        this.groupType,
+        JSON.stringify(filter)
+      ).then(res => {
         this.listUserPageTotal = res.summary.total;
         this.listUserData = res.tableContent;
         this.listUserLoading = false;
@@ -382,8 +435,16 @@ export default {
       let filter = [
         { operator: "like", value: this.searchValue, property: "groupName" }
       ];
-      this.getAllHigherGroupByGroupType(this.listUserCurrentPage, this.pageSize, filter);
+      this.getAllHigherGroupByGroupType(
+        this.listUserCurrentPage,
+        this.pageSize,
+        filter
+      );
     }
+  },
+
+  mounted(){
+    this.groupId = this.$route.params.groupId;
   }
 };
 </script>

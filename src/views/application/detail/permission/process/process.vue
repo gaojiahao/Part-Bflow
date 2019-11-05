@@ -30,7 +30,17 @@
       <Table :loading="loading" :columns="columns" :data="processData" size="small"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div class="fr">
-          <Page @on-page-size-change="onPageSizeChange" :total="dataTotal" show-elevator show-sizer :current="pageIndex" :page-size="pageSize" @on-change="pageChange" size="small" show-total></Page>
+          <Page 
+            @on-page-size-change="onPageSizeChange" 
+            :total="dataTotal" 
+            show-elevator 
+            show-sizer 
+            :current="pageIndex" 
+            :page-size="pageSize" 
+            @on-change="pageChange" 
+            size="small" 
+            show-total>
+          </Page>
         </div>
       </div>
     </Row>

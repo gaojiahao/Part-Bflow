@@ -23,7 +23,7 @@ function render (el, bind) {
             el.innerText = "已失效";
             break;
         case -2:
-            el.style.backgroundColor = 'rgb(169, 89, 223)';
+            el.style.backgroundColor = '#1f5ec5';
             el.innerText = "已归档";
             break;
     }

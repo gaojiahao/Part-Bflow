@@ -163,6 +163,9 @@ export default {
         isInIframe:{
             type:Boolean,
             default:false
+        },
+        refreshRootComments: {
+            type: Function
         }
     },
     data() {
@@ -311,7 +314,11 @@ export default {
                 }
                 superComment.showReply = false;
                 
-                this.$refs.childComments[0].handleLoadMore();
+                if(this.$refs.childComments[0]){
+                    this.$refs.childComments[0].handleLoadMore();
+                }else{
+                    this.refreshRootComments();
+                }
             });
         },
         handleViewTextImg:function(event){

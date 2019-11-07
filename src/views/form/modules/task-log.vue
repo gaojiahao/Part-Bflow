@@ -148,8 +148,6 @@
             @on-change="changeCurrentPage"
             @on-page-size-change="onPageSizeChange"
             show-total
-            show-elevator
-            show-sizer
             size="small"  
             ></Page>
       </div>

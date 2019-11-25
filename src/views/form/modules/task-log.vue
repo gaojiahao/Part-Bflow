@@ -125,7 +125,7 @@
               false-value='待办'>
             </Checkbox>
 
-            <strong>{{item.logTitle}}</strong>
+            <strong style="word-break:break-all">{{item.logTitle}}</strong>
           </li>
           <li>
             <span>{{item.handlerName}}</span>

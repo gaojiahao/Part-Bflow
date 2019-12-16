@@ -323,7 +323,7 @@ export const getUsersByGroupId = (groupId, currentPage, pageSize) => request('/H
  * @author snack.huang
  * @description 按组织ID查询组织信息
  */
-export const getOrgById = (groupId) => request('/H_roleplay-si/ds/list/getOrgById', {
+export const getOrgById = (groupId) => request('/H_roleplay-si/sysGroup/getGroupById', {
   groupId: groupId
 })
 

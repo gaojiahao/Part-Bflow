@@ -75,7 +75,9 @@ export default {
         creator:"",
         crtTime:"",
         modifier:"",
-        modTime:""
+        modTime:"",
+        taxpayerType: "",
+        taxCompanyRelList: []
       },
       actionBtn: [
         {
@@ -164,8 +166,7 @@ export default {
         //设置组织信息
     setOrgInfo(){
         getOrgById(this.groupId).then(res => {
-        if (res.length > 0) {
-          let org = res[0];
+          let org = res;
           this.org.groupName = org.groupName;
           this.org.groupType = org.groupType;
           this.org.depFunction = org.depFunction;
@@ -174,10 +175,11 @@ export default {
           this.org.principalName = org.principalName; //负责人名称
           this.org.highGroup = org.parentGroupName;
           this.org.parentId = org.parentId;
+          this.org.taxCompanyRelList = org.taxCompanyRelList;
 
-          this.org.creator = org.creatorName;
+          this.org.creator = org.creator;
           this.org.crtTime = org.crtTime;
-          this.org.modifier= org.modifierName;
+          this.org.modifier= org.modifier;
           this.org.modTime = org.modTime;
 
           switch (org.groupType) {
@@ -194,7 +196,6 @@ export default {
               this.groupType = "小组";
               break;
           }
-        }
       });
     }
   },

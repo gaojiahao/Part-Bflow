@@ -7,8 +7,20 @@
   background-color: rgb(255, 255, 255);
 }
 
+.tax-rate{
+  position: absolute;
+  top: -2px;
+  left: -8px;
+  color: #e4393c
+}
+.tax-date{
+  position: absolute;
+  top: -2px;
+  left: -7px;
+  color: #e4393c
+}
 .org-form{
-  width:40%;
+  width:50%;
   margin:auto;
   padding-bottom: 50px;
     /deep/ .ivu-form-item-label{
@@ -114,6 +126,32 @@
         <FormItem v-if="hiddenInput" label="上级组织parentId" style="font-size:16px">
           <Input v-model="formItem.parentId"/>
         </FormItem>
+        <FormItem label="税率关系:">
+            <div v-if="model!=='view'">
+              <Button type="info" size="small" @click="addTaxCompany">新增</Button>
+              <Table border size="small" :columns="taxColumns" :data="formItem.taxCompanyRelList">
+                <template slot-scope="{ row,index }" slot="trTaxRate">
+                  <div :style="{position:'relative'}">
+                    <b class="tax-rate">*</b>
+                    <Input @on-blur="onTaxBlur(row,index)" v-model="row.trTaxRate"></Input>
+                  </div>
+                </template>
+                <template slot-scope="{ row,index }" slot="trStartEffectiveTime">
+                  <div :style="{position:'relative'}">
+                    <b class="tax-date">*</b>
+                    <DatePicker format="yyyy-MM-dd" @on-change="onDateChange(row,index)" transfer type="date" v-model="row.trStartEffectiveTime"></DatePicker>
+                  </div>
+                </template>
+                <template slot-scope="{ row,index }" slot="trComment">
+                    <Input @on-blur="onTaxCommentBlur(row,index)" :autosize="true" type="textarea" v-model="row.trComment"></Input>
+                </template>
+                <template slot-scope="{ row, index }" slot="action">
+                    <Icon @click="deleteTaxCompany(index)" type="md-close" :style="{color:'#39f',fontSize:'18px'}" />
+                </template>
+              </Table>
+            </div>
+            <Table v-else border size="small" :columns="taxViewColumns" :data="formItem.taxCompanyRelList"></Table>
+          </FormItem>
       </div>
 
       <div class="shadow formsection" v-if="groupId">
@@ -349,6 +387,36 @@ export default {
       groupType: "",
       parentType: "",
       listUserData: [],
+      taxColumns: [{
+          title: "税率",
+          slot: "trTaxRate"
+        },
+        {
+          title: "开始生效时间",
+          slot: "trStartEffectiveTime"
+        },
+        {
+          title: "说明",
+          slot: "trComment"
+        },
+        {
+          title: "动作",
+          slot: "action",
+          align: 'center',
+          width: 70
+      }],
+      taxViewColumns: [{
+          title: "税率",
+          key: "trTaxRate"
+        },
+        {
+          title: "开始生效时间",
+          key: "trStartEffectiveTime"
+        },
+        {
+          title: "说明",
+          key: "trComment"
+      }],
       highOrgColumnsModal: [
         {
           title: "组织名称",
@@ -548,6 +616,43 @@ export default {
   },
 
   methods: {
+    //格式化日期方法
+    formatDate(currentDate) {
+      let date = new Date(currentDate),
+          year = date.getFullYear(),
+          month = date.getMonth() + 1,
+          day = date.getDate(),
+          relDate;
+      if (month >= 1 && month <= 9) {
+        month = `0${month}`;
+      }
+      relDate = `${year}-${month}-${day}`;
+
+      return relDate;
+    },
+    addTaxCompany () {
+      this.formItem.taxCompanyRelList.push({trTaxRate:null,trStartEffectiveTime:"",trComment:"",action:""});
+    },
+    deleteTaxCompany (index) {
+      this.formItem.taxCompanyRelList.splice(index,1);
+    },
+    onTaxBlur(row,index){
+      if(!isNaN(row.trTaxRate) && row.trTaxRate > 0){
+        row.trStartEffectiveTime && (row.trStartEffectiveTime = this.formatDate(row.trStartEffectiveTime));
+        this.formItem.taxCompanyRelList[index] = row;
+      }else{
+        this.$Message.error('请输入数字且大于0！');
+        this.$set(row,'trTaxRate',null);
+      }
+    },
+    onDateChange(row,index){
+      row.trStartEffectiveTime && (row.trStartEffectiveTime = this.formatDate(row.trStartEffectiveTime));
+      this.formItem.taxCompanyRelList[index] = row;
+    },
+    onTaxCommentBlur(row,index){
+      row.trStartEffectiveTime && (row.trStartEffectiveTime = this.formatDate(row.trStartEffectiveTime));
+      this.formItem.taxCompanyRelList[index] = row;
+    },
     //点击关闭按钮
     handlerCloseWin(){
         this.$Modal.confirm({
@@ -864,7 +969,7 @@ export default {
   mounted() {
     this.groupId = this.$route.params.groupId;
     this.newAfterSave = false;
-
+    
     if (this.groupId) {
       this.model = "view";
     }

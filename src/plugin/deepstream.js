@@ -14,7 +14,7 @@ function getDeepstream() {
 export async function deepstream(currentUser,address) {
     let deepstreamAddress = '';
     if(address){
-       deepstreamAddress =JSON.parse(address)['deepstream.uri2'];
+       deepstreamAddress =JSON.parse(address)['deepStreamUrl'];
     }else{
         deepstreamAddress = await getDeepstream();
     }

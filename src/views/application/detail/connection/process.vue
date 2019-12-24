@@ -16,7 +16,13 @@
             <Input v-model="processInfoItem.fieldValue"></Input>
           </FormItem>
           <FormItem label="排序:" prop="sort">
-            <Input v-model="processInfoItem.sort"></Input>
+            <InputNumber :min="1" v-model="processInfoItem.sort"></InputNumber>
+          </FormItem>
+          <FormItem label="open/close:" prop="openOrClose">
+            <i-switch size="large" v-model="processInfoItem.openOrClose">
+                <span slot="open">开启</span>
+                <span slot="close">关闭</span>
+            </i-switch>
           </FormItem>
           <FormItem label="颜色:" prop="color">
             <ColorPicker
@@ -44,6 +50,16 @@
               :value="row.color || '#fff'" 
               recommend
               transfer/>
+        </template>
+        <template slot-scope="{ row, index }" slot="openOrClose">
+            <i-switch 
+              size="large" 
+              :disabled="!isAdmin" 
+              v-model="row.openOrClose"
+              @on-change="onOpenOrCloseChange(row,index)">
+                <span slot="open">开启</span>
+                <span slot="close">关闭</span>
+            </i-switch>
         </template>
       </Table>
       <div style="margin: 10px;overflow: hidden">
@@ -165,6 +181,10 @@ export default {
           slot: 'color'
         },
         {
+          title: 'open/close',
+          slot: 'openOrClose'
+        },
+        {
           title: "操作",
           key: "opt",
           align: "center",
@@ -259,7 +279,8 @@ export default {
       processInfoItem: {
         fieldValue: "",
         fieldCode: "biProcessStatus",
-        sort: "",
+        sort: 1,
+        openOrClose: true,
         color: ""
       },
       ruleValidate: {
@@ -281,7 +302,7 @@ export default {
           {
             required: true,
             message: "排序值不能为空",
-            trigger: "blur"
+            type: "number"
           }
         ]
       }
@@ -304,11 +325,17 @@ export default {
     onActiveColorChange(color) {
       this.currentColor = color;
     },
+    onOpenOrCloseChange(row) {
+      this.handleSave(row);
+    },
     getProcessStatusByListId() {
       this.loading = true;
       getProcessStatusByListId(this.listId, this.pageIndex, this.pageSize).then(
         res => {
           this.loading = false;
+          res.tableContent.forEach(it => {
+            it.openOrClose ? it.openOrClose = true : it.openOrClose = false;
+          })
           this.processData = res.tableContent;
           this.dataTotal = res.dataCount;
         }
@@ -400,6 +427,8 @@ export default {
               this.$Message.info("添加成功");
               this.getProcessStatusByListId();
               this.$refs["processInfoItem"].resetFields();
+              this.processInfoItem.openOrClose = true;
+              this.processInfoItem.color = "";
               type !== 'update' && (this.showModal = false);
             } else {
               this.$Message.error({
@@ -419,7 +448,9 @@ export default {
     addProcess() {
       this.showModal = true;
       this.processInfoItem.fieldValue = "";
-      this.processInfoItem.sort = "";
+      this.processInfoItem.color = "";
+      this.processInfoItem.openOrClose = true;
+      this.processInfoItem.sort = 1;
     },
     search() {
       this.loading = true;

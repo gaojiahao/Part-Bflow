@@ -66,6 +66,12 @@
           <span v-if="!editEnterpriseName">{{enterpriseInfo.phone}}</span>
           <input v-else type="text" v-model="enterpriseInfo.phone" class="input-common-att" />
         </div>
+        <div class="select-explain">
+          <label class="left-leble">是否启用组织核算</label>
+          <Checkbox :disabled="!editEnterpriseName" v-model="enterpriseInfo.depAccount">
+            <span></span>
+          </Checkbox>
+        </div>
       </section>
 
       <section class="info-warp-main-section">
@@ -262,6 +268,7 @@ export default {
         instraction: "",    //企业说明
         address: "",    //企业地址
         phone: "",    //联系电话
+        depAccount: false, //是否启用组织核算
         qwCorpid:"",  //企业微信企业ID
         qwAppAgentId:"",    //企业微信应用代理ID
         qwAppsecret:"",    //企业微信应用密钥
@@ -661,6 +668,7 @@ export default {
 
     getAdmintrstorData() {
       getEnterpriseById().then(res => {
+        res.depAccount = res.depAccount === 'true' ? true : false;
         this.enterpriseInfo = res;
       });
     },
@@ -701,6 +709,7 @@ export default {
           qwAppAgentId: this.enterpriseInfo.qwAppAgentId,
           qwAppsecret: this.enterpriseInfo.qwAppsecret,
           ddCorpid: this.enterpriseInfo.ddCorpid,
+          depAccount: this.enterpriseInfo.depAccount,
           ddAppAgentId: this.enterpriseInfo.ddAppAgentId,
           ddAppKey: this.enterpriseInfo.ddAppKey,
           ddAppsecret: this.enterpriseInfo.ddAppsecret,

@@ -125,7 +125,7 @@
               false-value='待办'>
             </Checkbox>
 
-            <strong>{{item.logTitle}}</strong>
+            <strong style="word-break:break-all">{{item.logTitle}}</strong>
           </li>
           <li>
             <span>{{item.handlerName}}</span>
@@ -148,8 +148,6 @@
             @on-change="changeCurrentPage"
             @on-page-size-change="onPageSizeChange"
             show-total
-            show-elevator
-            show-sizer
             size="small"  
             ></Page>
       </div>

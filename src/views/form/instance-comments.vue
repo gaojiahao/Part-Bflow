@@ -215,7 +215,7 @@ export default {
         }
       });
     },
-    handlePublish:function (content,uploadList,userIds=[]) {
+    handlePublish:function (content,uploadList,userIds=[],superComment,commentAndReply,sendComponent) {
         let comment ={
             type:this.type,       
             content:content, 
@@ -233,6 +233,18 @@ export default {
                 });
                 return;
             }
+
+            if(sendComponent){
+                sendComponent.innerText = '';
+                sendComponent.discContent.txt = '';
+                sendComponent.$refs.editor && (sendComponent.$refs.editor.innerHTML = "");
+                sendComponent.atUsers = [];
+                sendComponent.$refs.upload && (sendComponent.$refs.upload.clearFiles());
+                sendComponent.$refs.uploadFile && (sendComponent.$refs.uploadFile.clearFiles());
+                sendComponent.uploadList = sendComponent.$refs.upload && sendComponent.$refs.upload.fileList;
+                sendComponent.uploadFileList = sendComponent.$refs.uploadFile && sendComponent.$refs.uploadFile.fileList;
+            }
+
             this.refreshComments();
         });
     },

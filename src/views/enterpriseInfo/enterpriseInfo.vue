@@ -668,7 +668,7 @@ export default {
 
     getAdmintrstorData() {
       getEnterpriseById().then(res => {
-        res.depAccount = res.depAccount === 'true' ? true : false;
+        res.depAccount = res.depAccount == '1' ? true : false;
         this.enterpriseInfo = res;
       });
     },
@@ -709,7 +709,7 @@ export default {
           qwAppAgentId: this.enterpriseInfo.qwAppAgentId,
           qwAppsecret: this.enterpriseInfo.qwAppsecret,
           ddCorpid: this.enterpriseInfo.ddCorpid,
-          depAccount: this.enterpriseInfo.depAccount,
+          depAccount: this.enterpriseInfo.depAccount ? 1 : 0,
           ddAppAgentId: this.enterpriseInfo.ddAppAgentId,
           ddAppKey: this.enterpriseInfo.ddAppKey,
           ddAppsecret: this.enterpriseInfo.ddAppsecret,

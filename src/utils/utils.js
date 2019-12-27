@@ -29,6 +29,11 @@ export const FormatDate = (date, fmt) => {
     return fmt;
 }
 
+//解决浮点数*100、10后精度变化，例如：0.56*100 = 56.00000000000001
+export const toPercent = (num) => {
+    return (num + '00').replace(/\.([\d]{2})/,'$1.') * 1;
+}
+
 /**
  * @param  {Date} date 日期
  * @param  {monthNum} Number  前几个月

@@ -127,7 +127,7 @@
 </template>
 
 <script>
-import { getToken } from "@/utils/utils";
+import { getToken, toPercent } from "@/utils/utils";
 import {
   saveCompanyInfo,
   getCompanyInfoByGroupId,
@@ -365,7 +365,7 @@ export default {
       getCompanyInfoByGroupId(groupId).then(res => {
         if (res.length > 0) {
           res[0].taxCompanyRelList.forEach(it => {
-            it.trTaxRate = it.trTaxRate*100;
+            it.trTaxRate = toPercent(it.trTaxRate);
           })
           this.baseInfoItem = res[0];
           this.logo = res[0].groupPic;

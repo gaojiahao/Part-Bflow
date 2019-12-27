@@ -222,6 +222,23 @@ export default {
     }
   },
   methods: {
+    deepClone(cloneObject) {
+      if (cloneObject === null || typeof cloneObject !== 'object') return cloneObject;
+
+      let result = cloneObject.constructor();
+
+      for(let key in cloneObject){
+          if (cloneObject.hasOwnProperty(key)) {
+              if(cloneObject[key] && typeof cloneObject[key] === 'object'){
+                  result[key] = this.deepClone(cloneObject[key]);
+              }else{
+                  result[key] = cloneObject[key];
+              }
+          }
+      }
+
+      return result;
+  },
     //格式化日期方法
     formatDate(currentDate) {
       let date = new Date(currentDate),
@@ -293,7 +310,7 @@ export default {
     },
     //保存公司基本信息
     addCompanyData(saveType) {
-      let baseInfo = this.baseInfoItem,
+      let baseInfo = this.deepClone(this.baseInfoItem),
           groupId = this.$route.name == "company-add" ? "add" : this.$route.params.groupId,
           data = {};
 
@@ -355,6 +372,8 @@ export default {
               } else {
                 this.$Message.error(res.message);
               }
+            }).catch(error => {
+                this.$Message.error(error.data.message);
             });
           }
         }
@@ -403,7 +422,7 @@ export default {
     },
     //保存并新增
     saveAndAddCompany() {
-      let baseInfo = this.baseInfoItem;
+      let baseInfo = this.deepClone(this.baseInfoItem);
       let data = {};
       baseInfo.taxCompanyRelList.forEach(it => {
         it.trTaxRate = it.trTaxRate/100;

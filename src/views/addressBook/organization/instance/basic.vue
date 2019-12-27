@@ -359,6 +359,7 @@ import {
 
 import MemberModal from "@/components/modal/Modal";
 import PrincipalModal from "@/components/modal/Modal";
+import { toPercent } from "@/utils/utils";
 
 export default {
   name: "OrgBasic",
@@ -620,6 +621,23 @@ export default {
   },
 
   methods: {
+    deepClone(cloneObject) {
+      if (cloneObject === null || typeof cloneObject !== 'object') return cloneObject;
+
+      let result = cloneObject.constructor();
+
+      for(let key in cloneObject){
+          if (cloneObject.hasOwnProperty(key)) {
+              if(cloneObject[key] && typeof cloneObject[key] === 'object'){
+                  result[key] = this.deepClone(cloneObject[key]);
+              }else{
+                  result[key] = cloneObject[key];
+              }
+          }
+      }
+
+      return result;
+  },
     //格式化日期方法
     formatDate(currentDate) {
       let date = new Date(currentDate),
@@ -710,11 +728,11 @@ export default {
             saveOption = updateBaseinfo;
             this.formItem.groupId = this.groupId;
           }
-
-          this.formItem.taxCompanyRelList.forEach(it => {
+          let data = this.deepClone(this.formItem);
+          data.taxCompanyRelList.forEach(it => {
             it.trTaxRate = it.trTaxRate/100;
           })
-          saveOption(this.formItem).then(res =>{
+          saveOption(data).then(res =>{
             if (res) {
               this.$Message.success('保存成功!');
 

@@ -167,6 +167,9 @@ export default {
     setOrgInfo(){
         getOrgById(this.groupId).then(res => {
           let org = res;
+          org.taxCompanyRelList.forEach(it => {
+            it.trTaxRate = it.trTaxRate*100;
+          })
           this.org.groupName = org.groupName;
           this.org.groupType = org.groupType;
           this.org.depFunction = org.depFunction;

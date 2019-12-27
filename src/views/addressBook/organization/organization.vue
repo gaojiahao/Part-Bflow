@@ -57,6 +57,8 @@ import {
   getListById,
   getOrgById
 } from "@/services/addressBookService.js";
+import { toPercent } from "@/utils/utils";
+
 export default {
   name: "organization",
   components: {
@@ -167,6 +169,9 @@ export default {
     setOrgInfo(){
         getOrgById(this.groupId).then(res => {
           let org = res;
+          org.taxCompanyRelList.forEach(it => {
+            it.trTaxRate = toPercent(it.trTaxRate);
+          })
           this.org.groupName = org.groupName;
           this.org.groupType = org.groupType;
           this.org.depFunction = org.depFunction;

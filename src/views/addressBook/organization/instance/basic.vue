@@ -133,7 +133,7 @@
                 <template slot-scope="{ row,index }" slot="trTaxRate">
                   <div :style="{position:'relative'}">
                     <b class="tax-rate">*</b>
-                    <Input @on-blur="onTaxBlur(row,index)" v-model="row.trTaxRate"></Input>
+                    <Input @on-blur="onTaxBlur(row,index)" v-model="row.trTaxRate" style="width:60px"></Input>%
                   </div>
                 </template>
                 <template slot-scope="{ row,index }" slot="trStartEffectiveTime">
@@ -150,7 +150,11 @@
                 </template>
               </Table>
             </div>
-            <Table v-else border size="small" :columns="taxViewColumns" :data="formItem.taxCompanyRelList"></Table>
+            <Table v-else border size="small" :columns="taxViewColumns" :data="formItem.taxCompanyRelList">
+              <template slot-scope="{ row }" slot="trTaxRate">
+                <div>{{ row.trTaxRate }}%</div>
+              </template>
+            </Table>
           </FormItem>
       </div>
 
@@ -407,7 +411,7 @@ export default {
       }],
       taxViewColumns: [{
           title: "税率",
-          key: "trTaxRate"
+          slot: "trTaxRate"
         },
         {
           title: "开始生效时间",
@@ -707,6 +711,9 @@ export default {
             this.formItem.groupId = this.groupId;
           }
 
+          this.formItem.taxCompanyRelList.forEach(it => {
+            it.trTaxRate = it.trTaxRate/100;
+          })
           saveOption(this.formItem).then(res =>{
             if (res) {
               this.$Message.success('保存成功!');

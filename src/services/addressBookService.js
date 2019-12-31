@@ -43,6 +43,15 @@ export const getTeamProfitDetail = (groupCode,classify,startDate,endDate) => req
 
 /**
  * @author XiaoYing
+ * @description 获取组织可分配利润表下钻数据
+ */
+export const getDistributableProfitDetail = (groupCode,classify) => request('/H_roleplay-si/ds/getOrgDistributableProfitWater', {
+  orgId: groupCode,
+  classify: classify
+});
+
+/**
+ * @author XiaoYing
  * @description 获取员工绩效数据
  */
 export const getPerformanceData = (userId,startDate,endDate) => request('/H_roleplay-si/account/personProfitStatement', {
@@ -295,6 +304,14 @@ export const getWorkFlowTaskByUserId = (userId, currentPage, pageSize) => reques
   userId: userId,
   page: currentPage,
   limit: pageSize
+});
+
+/**
+ * @author XiaoYing
+ * @description 获取组织可分配利润表数据
+ */
+export const getOrgDistributableProfit = (orgId) => request('/H_roleplay-si/ds/getOrgDistributableProfit', {
+  orgId: orgId
 });
 
 

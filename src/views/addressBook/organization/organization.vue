@@ -132,6 +132,13 @@ export default {
           id: "teamProfit"
         },
         {
+          label: "可分配利润表",
+          imgPath: "https://lab.roletask.com/resource/app-icon/team-profit.png",
+          hidden: this.$route.params.groupId==undefined,
+          routeName: "distributableProfit",
+          id: "distributableProfit"
+        },
+        {
           label: "基本信息",
           type: "ios-home",
           hidden: false,
@@ -159,7 +166,7 @@ export default {
     setRelevantInstCount() {
       getObjDetailsCountByGroupId(this.$route.params.groupId).then(res => {
         this.actionBtn.forEach((element, index) => {
-          if (element.id !== "baseinfo" && element.id !== "teamProfit") {
+          if (element.id !== "baseinfo" && element.id !== "teamProfit" && element.id !== "distributableProfit") {
             element.number = res[element.id] ? res[element.id] : 0;
           }
         });

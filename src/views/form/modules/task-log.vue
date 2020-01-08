@@ -6,7 +6,7 @@
   <div  class="timeline-box">
     <div class="task-modal" :style="{display: showTaskModal?'block':'none'}"></div>
     <div class="app-resource-group-title">
-        <span class="font16">任务日志</span>
+        <span class="font16">日志任务</span>
         <span v-if="logData.length>0">
           <Tooltip class="hidden-form" v-if="!hiddenForm" content="打开任务日志表单" placement="left">
           <span @click="openForm">

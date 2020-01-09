@@ -322,7 +322,7 @@ export default {
           align: "center"
         },
         {
-          title: "工号",
+          title: "编号",
           key: "userCode"
         },
         {

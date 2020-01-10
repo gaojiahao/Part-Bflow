@@ -191,7 +191,7 @@
     <user-modal v-model="showAdminModal" title="选择用户" @on-ok="confirmModal" width="600">
       <div>
         <div class="app-search">
-          <Input v-model="searchValue" placeholder="请输入用户名或用户ID" style="width: 300px" clearable @on-enter="adminFilter" @on-change="handleInputValueChange"></Input>
+          <Input v-model="searchValue" placeholder="请输入姓名或编号" style="width: 300px" clearable @on-enter="adminFilter" @on-change="handleInputValueChange"></Input>
           <p class="app-search-icon">
             <Button @click="adminFilter" type="primary" size="small">查询</Button>
           </p>

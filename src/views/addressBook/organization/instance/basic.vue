@@ -201,7 +201,7 @@
       <input
         type="submit"
         value="放弃编辑"
-        @click="model='view'"
+        @click="abandonEdit"
         class="baseinfo-container-action-submit"
         id="edit"
         v-if="model=='edit'"
@@ -988,6 +988,10 @@ export default {
         },{operator:"in",value:"1",property:"status"}
       ]);
       this.getListUsers(this.listUserCurrentPage, this.pageSize, filter);
+    },
+    abandonEdit() {
+      this.model = 'view';
+      this.$emit('resetOrg');
     }
   },
 

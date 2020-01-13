@@ -432,6 +432,7 @@ export default {
     },
     editUserInfo() {
         this.isEdit = !this.isEdit;
+        this.isEdit && this.$emit('resetUser');
     },
     //获取往来标签信息
     getDealerLabelDatas() {

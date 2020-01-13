@@ -44,6 +44,7 @@
         :formItem="org"
         @relevantInstChange="setRelevantInstCount"
         :groupType="org.groupType"
+        @resetOrg="resetOrg"
         >
       </router-view>
     </div>
@@ -209,6 +210,9 @@ export default {
               break;
           }
       });
+    },
+    resetOrg() {
+      this.setOrgInfo();
     }
   },
 

@@ -318,6 +318,7 @@ export default {
           case "edit":
             this.isEdit = !this.isEdit;
             this.editBtnName = this.isEdit ? "编辑" : "放弃编辑";
+            this.isEdit && this.getAllRolesInfo();
             break;
           case "save":
             this.formItem.status = 1;
@@ -463,19 +464,14 @@ export default {
             this.$Message.error(error.data.message);
           });
       }
-    }
-  },
-
-  mounted() {
-    let tabsMaxHight = document.body.clientHeight - 95;
-    window.document.getElementsByClassName("job-wrap-tabs")[0].style.height =
-      tabsMaxHight + "px";
-
-    let filter = JSON.stringify([
-      { operator: "eq", value: this.jobId, property: "id" }
-    ]);
-    let that = this;
-    if (this.jobId) {
+    },
+    //获取职位信息
+    getAllRolesInfo() {
+      let filter = JSON.stringify([
+        { operator: "eq", value: this.jobId, property: "id" }
+      ]);
+      let that = this;
+      
       getAllRole(filter).then(res => {
         if (res.tableContent[0]) {
           let tableContent = res.tableContent[0];
@@ -501,6 +497,16 @@ export default {
           })
         }
       });
+    }
+  },
+
+  mounted() {
+    let tabsMaxHight = document.body.clientHeight - 95;
+    window.document.getElementsByClassName("job-wrap-tabs")[0].style.height =
+      tabsMaxHight + "px";
+
+    if (this.jobId) {
+      this.getAllRolesInfo();
       this.getObjDetailsCountByRoleId(this.jobId);
     } else if (!this.jobId && this.$route.name == "job-add") {
       this.isEdit = false;

@@ -26,13 +26,13 @@ export const addOrUpdateEnterprise = (data) => {
  * @author GuoZheng
  * 添加企业管理员
 */
-export const updateRelation = (single) => request('/H_roleplay-si/ps/updateRelation', { list: 'sys_user_role', single: single, multi: 1 }, "POST")
+export const updateRelation = (single,type) => request('/H_roleplay-si/ps/updateRelation', { list: 'sys_user_role', single: single, multi: type }, "POST")
 
 /** 
  * @author GuoZheng
  * 删除企业管理员
 */
-export const deleteRelation = (single) => request('/H_roleplay-si/ps/deleteRelation', { list: 'sys_user_role', single: single, multi: 1 }, "POST")
+export const deleteRelation = (single,type) => request('/H_roleplay-si/ps/deleteRelation', { list: 'sys_user_role', single: single, multi: type }, "POST")
 
 /**
  * @author GuoZheng

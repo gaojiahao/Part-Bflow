@@ -159,6 +159,21 @@
         </div>
       </section>
 
+      <section class="info-warp-main-section" v-if="$currentUser.isOperationAdmin">
+        <div>
+          <label class="left-leble">
+            运营管理员
+          </label>
+
+          <div class="user-container">
+            <Tag v-for="item in enterpriseInfo.operationsManager" :key="item.userId" :userId="item.userId" type="border" :closable="closable" color="blue" size="small" @on-close="deleteEnterpriseOperatorAdmin">
+              {{item.nickname}}
+            </Tag>
+            <a @click="selectAdminModal('operator')" style="font-size:14px;">添加</a>
+          </div>
+        </div>
+      </section>
+
       <section class="info-warp-main-section">
         <div>
           <label class="left-leble">
@@ -169,7 +184,7 @@
             <Tag v-for="item in enterpriseInfo.admins" :key="item.userId" :userId="item.userId" type="border" :closable="closable" color="blue" size="small" @on-close="deleteEnterpriseAdmin">
               {{item.nickname}}
             </Tag>
-            <a @click="selectAdminModal" v-if="$currentUser.isBusinessAdmin || $currentUser.isOperationAdmin" style="font-size:14px;">添加</a>
+            <a @click="selectAdminModal('admin')" v-if="$currentUser.isBusinessAdmin || $currentUser.isOperationAdmin" style="font-size:14px;">添加</a>
           </div>
         </div>
       </section>
@@ -520,9 +535,10 @@ export default {
       }
     },
     //管理员选择modal展示
-    selectAdminModal() {
+    selectAdminModal(type) {
       this.showAdminModal = true;
       this.searchValue = "";
+      this.modalType = type;
       this.onPageSelection = []; //清空选中的用户
       this.getListUsers(this.currentPage, this.pageSize);
     },
@@ -585,20 +601,29 @@ export default {
     //管理员选择确认
     confirmModal() {
       let obj = {},
-        singleId = [];
-      this.enterpriseInfo["admins"].push(...this.onPageSelection);
-      this.enterpriseInfo["admins"] = this.enterpriseInfo["admins"].reduce(
+          singleId = [],
+          type = 1,
+          typeName = 'admins';
+
+      if(this.modalType !== 'admin'){
+        typeName = 'operationsManager';
+        type = -1;
+      }
+
+      this.enterpriseInfo[typeName].push(...this.onPageSelection);
+      this.enterpriseInfo[typeName] = this.enterpriseInfo[typeName].reduce(
         (cur, next) => {
           obj[next.userId] ? "" : (obj[next.userId] = true && cur.push(next));
           return cur;
         },
         []
       );
+      
       this.onPageSelection.map(item => {
         singleId.push(item.userId);
       });
 
-      updateRelation(singleId.join(",")).then(res => {
+      updateRelation(singleId.join(","),type).then(res => {
         if (res.success) {
           this.$Message.info("添加成功！");
           this.showAdminModal = false;
@@ -617,7 +642,24 @@ export default {
         }
       );
 
-      deleteRelation(userId).then(res => {
+      deleteRelation(userId,1).then(res => {
+        if (res.success) {
+          this.$Message.info("删除成功！");
+        } else {
+          this.$Message.error(res.message);
+        }
+      });
+    },
+    //删除运营管理员节点
+    deleteEnterpriseOperatorAdmin(event) {
+      let userId = Number(event.target.parentElement.getAttribute("userid"));
+      this.enterpriseInfo["operationsManager"] = this.enterpriseInfo["operationsManager"].filter(
+        f => {
+          return userId !== f.userId;
+        }
+      );
+
+      deleteRelation(userId,-1).then(res => {
         if (res.success) {
           this.$Message.info("删除成功！");
         } else {
@@ -854,6 +896,7 @@ export default {
     this.getAdmintrstorData();
     this.getCurrencyDatas()
     this.getExchangeRateDatas();
+    this.modalType = 'admin';
   }
 };
 </script>

@@ -59,7 +59,12 @@
             </Table>
         </div>
         <!-- 项目modal -->
-        <Modal v-model="showAccountDetail" width="800" :title="modalTitle">
+        <Modal 
+            v-model="showAccountDetail" 
+            width="800" 
+            footer-hide
+            :styles="{top: '15px'}" 
+            :title="modalTitle">
             <Table 
               border
               size="small"
@@ -73,7 +78,16 @@
                     <span>{{ row.cr | toThousandFilter }}</span>
               </template>
             </Table>
-            <div slot="footer"></div>
+            <div style="overflow:hidden;margin:10px;">
+              <div style="float: right;">
+                <Page 
+                  :total="total" 
+                  :current="currentPage" 
+                  :page-size="pageSize" 
+                  @on-change="onPageChange" 
+                  size="small" show-total></Page>
+              </div>
+            </div>
         </Modal>
     </div>
 </template>
@@ -98,6 +112,9 @@ export default {
       modalTitle: "",
       startDate: "",
       tableHeight: 400,
+      total: 0,
+      currentPage: 1,
+      pageSize: 10,
       endDate: new Date(),
       columns: [],
       performanceData: [],
@@ -323,7 +340,10 @@ export default {
     },
        
     showModal (row,currentYear,currentMonth) {
-        let startDate, endDate; 
+        let startDate, 
+            endDate,
+            projectName = ""; 
+
         this.showAccountDetail = true;
         this.modalTitle = row.project;
         if(currentYear){
@@ -334,13 +354,26 @@ export default {
           startDate =  `${this.formatDate(this.startDate)}-01`;
           endDate =  this.formatDate(this.endDate,true);
         }
-        getTeamProfitDetail(this.groupId,row.project,startDate,endDate).then(res => {
-          if(res.success){
-            this.modalData = res.obj.data;
-          }
-        })
+        row.projectCode ? projectName = row.projectCode : projectName = row.project;
+        this.projectName = projectName;
+        this.currentStartDate = startDate;
+        this.currentEndDate = endDate;
+        this.start = 0;
+        this.getTeamProfitWaterData(this.projectName,this.currentStartDate,this.currentEndDate);
     },
-    //获取绩效分析数据
+    //获取组织利润流水数据
+    getTeamProfitWaterData(projectName,startDate,endDate) {
+      getTeamProfitDetail(this.groupId,projectName,startDate,endDate,this.currentPage,this.pageSize,this.start).then(res => {
+          this.modalData = res.data;
+          this.total = res.count;
+      });
+    },
+    onPageChange(currentPage) {
+      this.currentPage = currentPage;
+      this.start = (currentPage - 1) * this.pageSize;
+      this.getTeamProfitWaterData(this.projectName,this.currentStartDate,this.currentEndDate);
+    },
+    //获取组织利润数据
     getPerformanceData(startDate,endDate) {
       let createColumn = [];
       if(this.groupId){
@@ -366,31 +399,65 @@ export default {
     },
     createProfitData(data) {
       let profitData = [
-        {project: '收入(小计)',keyone: 'income',key:'incomeSum'},
+        {project: '收入',keyone: 'income',key:'incomeSum'},
         {project: '销售收入',keyone: 'income',key:'groupIncome',isChild: true},
         {project: '任务收入',keyone: 'income',key:'taskIncome',isChild: true},
         {project: '其他收入',keyone: 'income',key:'otherIncome',isChild: true},
-        {project: '成本(小计)',keyone: 'productsCost',key:'productsCostSum'},
+        {project: '成本',keyone: 'productsCost',key:'productsCostSum'},
         {project: '标准用料',keyone: 'productsCost',key:'material',isChild: true},
         {project: '直接人工',keyone: 'productsCost',key:'artificial',isChild: true},
         {project: '制造费用',keyone: 'productsCost',key:'madeCost',isChild: true},
         {project: '外部服务采购',keyone: 'productsCost',key:'outsideServerPurchase',isChild: true},
-        {project: '费用(小计)',keyone: 'cost',key:'costSum'},
-        {project: '工资与福利',keyone: 'cost',key:'wages',isChild: true},
-        {project: '超标用料',keyone: 'cost',key:'overProof',isChild: true},
-        {project: '报销费用',keyone: 'cost',key:'claimingExpenses',isChild: true},
-        {project: '资金费用',keyone: 'cost',key:'fundCost',isChild: true},
-        {project: '设备改造',keyone: 'cost',key:'facilityReform',isChild: true},
-        {project: '佣金',keyone: 'cost',key:'commission',isChild: true},
-        {project: '税金',keyone: 'cost',key:'taxAmount',isChild: true},
-        {project: '手续费',keyone: 'cost',key:'transferCharge',isChild: true},
-        {project: '利润额',key:'profit'},
-        {project: '利润率',key:'profitRate'}
+        {project: '费用',keyone: 'cost',key:'costSum'}
       ];
+
+      for(let i = 0;i < data.length;i++){
+        if(data[i].month === 'profitSum'){
+          if(data[i].cost.costList){
+            for(let o = 0;o < data[i].cost.costList.length;o++){
+              profitData.push({
+                project: data[i].cost.costList[o].costName,
+                projectCode: data[i].cost.costList[o].costCode,
+                keyone: 'cost',
+                key: data[i].cost.costList[o].costCode,
+                isChild: true
+              });
+            }
+          }
+          break;
+        }
+      }
+      
+      profitData.push({
+        project: '利润额',
+        key:'profit'
+      });
+      profitData.push({
+        project: '利润率',
+        key:'profitRate'
+      });
+
       profitData.map(p => {
         data.map(k => {
           if(p['keyone']){
-            p[k.month] = k[p['keyone']][p['key']];
+            if(p['keyone'] === 'cost'){
+              if(!p.isChild){
+                p[k.month] = k[p['keyone']][p['key']];
+              }else{
+                if(k.cost.costList.length > 0){
+                  for(let v = 0;v < k.cost.costList.length;v++){
+                    if(p.key === k.cost.costList[v].costCode){
+                      p[k.month] = k.cost.costList[v].amount;
+                      break;
+                    }
+                  }
+                }else{
+                  p[k.month] = 0;
+                }
+              }
+            }else{
+              p[k.month] = k[p['keyone']][p['key']];
+            }
           }else{
             p[k.month] = k[p['key']];
           }

@@ -34,11 +34,14 @@ export const getTeamProfitData = (groupCode,startDate,endDate) => request('/H_ro
  * @author XiaoYing
  * @description 获取组织利润表下钻数据
  */
-export const getTeamProfitDetail = (groupCode,classify,startDate,endDate) => request('/H_roleplay-si/account/getGroupProfitWater', {
+export const getTeamProfitDetail = (groupCode,classify,startDate,endDate,page,limit,start) => request('/H_roleplay-si/account/getGroupProfitWater', {
   groupId: groupCode,
   classify: classify,
   startDate: startDate,
-  endDate: endDate
+  endDate: endDate,
+  page: page,
+  limit: limit,
+  start: start
 });
 
 /**

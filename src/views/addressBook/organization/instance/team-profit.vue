@@ -442,7 +442,7 @@ export default {
           if(p['keyone']){
             if(p['keyone'] === 'cost'){
               if(!p.isChild){
-                p[k.month] = k[p['keyone']][p['key']];
+                p[k.month] = k[p['keyone']][p['key']] === 0 ? '-' : k[p['keyone']][p['key']];
               }else{
                 if(k.cost.costList.length > 0){
                   for(let v = 0;v < k.cost.costList.length;v++){
@@ -450,18 +450,18 @@ export default {
                       p[k.month] = k.cost.costList[v].amount;
                       break;
                     }else{
-                      p[k.month] = 0;
+                      p[k.month] = '-';
                     }
                   }
                 }else{
-                  p[k.month] = 0;
+                  p[k.month] = '-';
                 }
               }
             }else{
-              p[k.month] = k[p['keyone']][p['key']];
+              p[k.month] = k[p['keyone']][p['key']] === 0 ? '-' : k[p['keyone']][p['key']];
             }
           }else{
-            p[k.month] = k[p['key']];
+            p[k.month] = k[p['key']] === 0 ? '-' : k[p['key']];
           }
         })
       });
@@ -482,7 +482,7 @@ export default {
 
       if(this.excludeZero){
         profitData = profitData.filter(item => {
-          return item.profitSum !== 0 || !item.isChild;
+          return item.profitSum !== '-' || !item.isChild;
         });
       }
       

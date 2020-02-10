@@ -449,6 +449,8 @@ export default {
                     if(p.key === k.cost.costList[v].costCode){
                       p[k.month] = k.cost.costList[v].amount;
                       break;
+                    }else{
+                      p[k.month] = 0;
                     }
                   }
                 }else{

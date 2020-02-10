@@ -20,6 +20,7 @@
             </my-pop-tip>
         </span>
         </div>
+        
         <div class="pageBar">
             <Button  @click="handlePre" v-if="pageInfo.page>1">上一页</Button>
             <Button @click="handleNext" v-if="pageInfo.page<Math.ceil(comment.praiseNum/20)">下一页</Button>

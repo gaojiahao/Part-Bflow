@@ -29,7 +29,7 @@
         </FormItem>
         
         <FormItem>
-          <input type="button" class="timeline-box-form-submit" @click="submitLog" value="提交"></input>
+          <input type="button" class="timeline-box-form-submit" @click.native="submitLog" value="提交"></input>
         </FormItem>
       </Form>
     </div>

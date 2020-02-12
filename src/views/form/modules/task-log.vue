@@ -48,7 +48,8 @@
                   :remote-method="remoteFilterSearch"
                   @on-query-change="handleQueryChange"
                   @on-change="onSelectChange"
-                  :loading="loading">
+                  :loading="loading"
+                  class="task-user">
                   <Option v-for="(option) in userList" :value="option.userId" :key="option.userId">{{option.nickname}}</Option>
                 </Select>
               </FormItem>

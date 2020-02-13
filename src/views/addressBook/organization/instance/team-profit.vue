@@ -214,7 +214,8 @@ export default {
                     if(params.row.isChild){
                       return h('a',{
                         on: {
-                          click: () => {
+                          click: (e) => {
+                            if (e.target.text === '-') return;
                             this.showModal(params.row,currentYear,currentMonth);
                           }
                         }
@@ -243,7 +244,8 @@ export default {
                       if(params.row.isChild){
                         return h('a',{
                           on: {
-                            click: () => {
+                            click: (e) => {
+                              if (e.target.text === '-') return;
                               this.showModal(params.row,currentYear,currentMonth);
                             }
                           }
@@ -271,7 +273,8 @@ export default {
                       if(params.row.isChild){
                         return h('a',{
                           on: {
-                            click: () => {
+                            click: (e) => {
+                              if (e.target.text === '-') return;
                               this.showModal(params.row,currentYear,currentMonth);
                             }
                           }
@@ -306,7 +309,8 @@ export default {
                     if(params.row.isChild){
                       return h('a',{
                         on: {
-                          click: () => {
+                          click: (e) => {
+                            if (e.target.text === '-') return;
                             this.showModal(params.row,currentYear,currentMonth);
                           }
                         }
@@ -447,7 +451,7 @@ export default {
                 if(k.cost.costList.length > 0){
                   for(let v = 0;v < k.cost.costList.length;v++){
                     if(p.key === k.cost.costList[v].costCode){
-                      p[k.month] = k.cost.costList[v].amount;
+                      p[k.month] = k.cost.costList[v].amount === 0 ? '-' : k.cost.costList[v].amount;
                       break;
                     }else{
                       p[k.month] = '-';

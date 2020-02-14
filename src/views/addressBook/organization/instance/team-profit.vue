@@ -363,6 +363,7 @@ export default {
         this.currentStartDate = startDate;
         this.currentEndDate = endDate;
         this.start = 0;
+        this.currentPage = 1;
         this.getTeamProfitWaterData(this.projectName,this.currentStartDate,this.currentEndDate);
     },
     //获取组织利润流水数据

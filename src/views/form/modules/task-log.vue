@@ -158,7 +158,7 @@
         title="系统提示"
         @on-ok="handlerUpdateLogStatus(curLog)"
         @on-cancel="getTaskLog();modalVisible=false">
-        <p>如果更新为已办，日志的日期将自动更新为今天!</p>
+        <p>您要更改的日志任务日期大于今日，应为待办，如果更新为已办，日志的日期将自动更新为今天!</p>
     </Modal>
   </div>
 </template>
@@ -393,9 +393,7 @@ export default {
         taskDate = FormatDate(new Date(),"yyyy-MM-dd");
       }
       updateLogStatus(log.jobLogId,log.transCode,log.logStatus,taskDate).then(res=>{
-        if(res.success){
-          
-        }
+        if(res.success) this.getTaskLog();
          window.top.Ext.toast(res.message);
       })
     },

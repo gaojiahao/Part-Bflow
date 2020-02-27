@@ -279,6 +279,7 @@ export default {
 
         if(this.modalFormData.taskDate < new Date()){
           window.top.Ext.toast('提交日期小于今日，请重新选择日期！');
+          this.showTaskModal = false;
           return;
         }
 

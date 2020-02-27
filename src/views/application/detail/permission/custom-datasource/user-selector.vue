@@ -121,12 +121,17 @@ export default {
             return h("div", [
               h("img", {
                 attrs: {
-                  src: params.row.photo?params.row.photo:'resources/images/icon/defaultUserPhoto.png'
+                  src: params.row.photo?params.row.photo:'/resources/images/icon/defaultUserPhoto.png'
                 },
                 style: {
                   borderRadius:'50%',
                   height:'32px',
                   width:'32px'
+                },
+                on:{
+                  'error': (e) => {
+                    e.target.src = '/resources/images/icon/defaultUserPhoto.png';
+                  }
                 }
               })
             ]);

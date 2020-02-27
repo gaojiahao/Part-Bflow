@@ -17,7 +17,7 @@
           <Button type="primary" size="small" @click="tableSearch">查询</Button>
         </div>
       </div>
-      <Table style="margin-top:10px;" :loading="memberLoading" :columns="columns1" :data="memberData" @on-selection-change="onMemberSelectionChange">
+      <Table style="margin-top:10px;" :loading="memberLoading" :columns="memberColumns" :data="memberData" @on-selection-change="onMemberSelectionChange">
       </Table>
       <div style="margin: 10px;overflow: hidden">
         <div class="fr" style="padding-bottom: 5px;">
@@ -63,7 +63,7 @@ export default {
   },
   data() {
     return {
-      columns1: [
+      memberColumns: [
         {
           type: "selection",
           width: 60,
@@ -77,7 +77,12 @@ export default {
             return h("div", [
               h("Avatar", {
                 props: {
-                  src: params.row.photo?params.row.photo:'resources/images/icon/defaultUserPhoto.png'
+                  src: params.row.photo?params.row.photo:'/resources/images/icon/defaultUserPhoto.png'
+                },
+                on:{
+                  'on-error': (e) => {
+                    e.target.src = '/resources/images/icon/defaultUserPhoto.png';
+                  }
                 }
               })
             ]);
@@ -164,7 +169,12 @@ export default {
             return h("div", [
               h("Avatar", {
                 props: {
-                  src: params.row.photo?params.row.photo:'resources/images/icon/defaultUserPhoto.png'
+                  src: params.row.photo?params.row.photo:'/resources/images/icon/defaultUserPhoto.png'
+                },
+                on:{
+                  'on-error': (e) => {
+                    e.target.src = '/resources/images/icon/defaultUserPhoto.png';
+                  }
                 }
               })
             ]);

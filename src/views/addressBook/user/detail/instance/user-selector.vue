@@ -125,7 +125,12 @@ export default {
             return h('div',[
               h('Avatar',{
                 props: {
-                  src: params.row.photo?params.row.photo:'resources/images/icon/defaultUserPhoto.png'
+                  src: params.row.photo?params.row.photo:'/resources/images/icon/defaultUserPhoto.png'
+                },
+                on:{
+                  'on-error': (e) => {
+                    e.target.src = '/resources/images/icon/defaultUserPhoto.png';
+                  }
                 }
               })
             ])

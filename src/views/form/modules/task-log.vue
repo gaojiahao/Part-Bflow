@@ -276,7 +276,12 @@ export default {
           this.showTaskModal = false;
           return;
         }
-       
+
+        if(this.modalFormData.taskDate < new Date()){
+          window.top.Ext.toast('提交日期小于今日，请重新选择日期！');
+          return;
+        }
+
         let currentUser = this.$currentUser;
         this.modalFormData.comments.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>').replace(/\s/g, ' ')
         let formdata = {
@@ -311,20 +316,19 @@ export default {
             } 
         };
           
-        saveTaskLog(formdata).then(res => {
-            if (res.success) {
-              window.top.Ext.toast(res.message);
-              this.modalFormData.users = [];
-              this.$nextTick(() => {
-               this.$refs['logForm'].resetFields();
-              });
-              this.getTaskLog(this.transCode);
-            }else{
-                window.top.Ext.toast(res.message);
-            }
+        // saveTaskLog(formdata).then(res => {
+        //     if (res.success) {
+        //       this.modalFormData.users = [];
+        //       this.$nextTick(() => {
+        //        this.$refs['logForm'].resetFields();
+        //       });
+        //       this.getTaskLog(this.transCode);
+        //     }
 
-            this.showTaskModal = false;
-        });
+        //     window.top.Ext.toast(res.message);
+
+        //     this.showTaskModal = false;
+        // });
         
     }, 
     /**

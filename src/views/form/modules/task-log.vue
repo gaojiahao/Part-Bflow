@@ -317,19 +317,19 @@ export default {
             } 
         };
           
-        // saveTaskLog(formdata).then(res => {
-        //     if (res.success) {
-        //       this.modalFormData.users = [];
-        //       this.$nextTick(() => {
-        //        this.$refs['logForm'].resetFields();
-        //       });
-        //       this.getTaskLog(this.transCode);
-        //     }
+        saveTaskLog(formdata).then(res => {
+            if (res.success) {
+              this.modalFormData.users = [];
+              this.$nextTick(() => {
+               this.$refs['logForm'].reseatFields();
+              });
+              this.getTaskLog(this.transCode);
+            }
 
-        //     window.top.Ext.toast(res.message);
+            window.top.Ext.toast(res.message);
 
-        //     this.showTaskModal = false;
-        // });
+            this.showTaskModal = false;
+        });
         
     }, 
     /**

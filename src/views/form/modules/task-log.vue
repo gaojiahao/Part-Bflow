@@ -320,7 +320,8 @@ export default {
         saveTaskLog(formdata).then(res => {
             if (res.success) {
               this.$nextTick(() => {
-               this.$refs['logForm'].reseatFields();
+               this.$refs['logForm'].resetFields();
+               this.modalFormData.logType = this.logTypeList[0].name;
               });
               this.getTaskLog(this.transCode);
             }

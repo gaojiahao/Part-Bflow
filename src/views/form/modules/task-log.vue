@@ -319,7 +319,6 @@ export default {
           
         saveTaskLog(formdata).then(res => {
             if (res.success) {
-              this.modalFormData.users = [];
               this.$nextTick(() => {
                this.$refs['logForm'].reseatFields();
               });
@@ -415,11 +414,13 @@ export default {
     initLogTypeList(){
       getDictByValue('logType').then(res=>{
         this.logTypeList = res;
+        this.modalFormData.logType = res[0].name;
       })
     }
   },
   created() {
     this.transCode = this.$route.params.transCode; 
+    this.modalFormData.users.push(this.$currentUser.userId);
     this.initLogTypeList();
     this.getTaskLog();
     this.getAllUsers();

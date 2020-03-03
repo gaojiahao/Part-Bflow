@@ -298,10 +298,6 @@ export default {
                         let href = `/Site/index.html#appSetting/${this.listId}/${params.row.viewUniqueId}/edit`;
                         window.top.location.href = href;
                       }
-                    },
-                    style: {
-                      display:
-                        this.appType !== "subject" ? "inline-block" : "none"
                     }
                   },
                   "修改"
@@ -310,8 +306,7 @@ export default {
                   style: {
                     height: "20px",
                     borderLeft: "1px solid #39f",
-                    margin: "0px 5px",
-                    display: this.appType !== "subject" ? "inline" : "none"
+                    margin: "0px 5px"
                   }
                 }),
                 h(
@@ -331,12 +326,10 @@ export default {
             }
           }
         ];
-      if (this.isAdmin && this.appType !== "subject") {
+      if (this.isAdmin) {
         this.columns = defaultColumns
           .concat(defaultViewColumn)
           .concat(optColumns);
-      } else if (this.isAdmin) {
-        this.columns = defaultColumns.concat(optColumns);
       } else {
         this.columns = defaultColumns;
       }

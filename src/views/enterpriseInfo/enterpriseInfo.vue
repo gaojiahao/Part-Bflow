@@ -68,9 +68,14 @@
         </div>
         <div class="select-explain">
           <label class="left-leble">是否启用组织核算</label>
-          <Checkbox :disabled="!editEnterpriseName" v-model="enterpriseInfo.depAccount">
-            <span></span>
-          </Checkbox>
+          <span>
+            <Checkbox 
+              :disabled="!editEnterpriseName" 
+              v-model="enterpriseInfo.depAccount"
+              style="display:inline;">
+              <span></span>
+            </Checkbox>
+          </span>
         </div>
       </section>
 

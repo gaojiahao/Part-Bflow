@@ -71,7 +71,7 @@
 
 <script>
 import { getPerformanceData, getPerformanceDetail } from "@/services/addressBookService.js";
-import { toThousandFilter, getLastDay, getPreMonthDay } from "@/utils/utils";
+import { toThousandFilter, getLastDay, getPreMonthDay, toAdd } from "@/utils/utils";
 
 export default {
   name: "PerformanceAnalysis",
@@ -348,7 +348,7 @@ export default {
         val['monthSum'] = 0;
         for(let k in val){
           if( k !== 'month' && k !== 'monthSum'){
-            val['monthSum'] += val[k]
+            val['monthSum'] = toAdd(val[k], val['monthSum']);
           }
         }
       })

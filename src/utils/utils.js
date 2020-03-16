@@ -34,6 +34,15 @@ export const toPercent = (num) => {
     return (num + '00').replace(/\.([\d]{2})/,'$1.') * 1;
 }
 
+//解决js加法运算精度丢失问题，例如：7812.22+850 = 8662.220000000001
+export const toAdd = (arg1, arg2) => {
+    let r1, r2, m;
+    try { r1 = arg1.toString().split(".")[1].length } catch (e) { r1 = 0 }
+    try { r2 = arg2.toString().split(".")[1].length } catch (e) { r2 = 0 }
+    m = Math.pow(10, Math.max(r1, r2));
+    return (arg1 * m + arg2 * m) / m;
+}
+
 /**
  * @param  {Date} date 日期
  * @param  {monthNum} Number  前几个月

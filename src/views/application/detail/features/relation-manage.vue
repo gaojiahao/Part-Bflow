@@ -39,7 +39,12 @@
                   @on-change="onAppSelectChange" 
                   transfer 
                   style="width:200px">
-                    <Option v-for="item in dataList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    <Option 
+                      v-for="item in dataList" 
+                      :value="item.value" 
+                      :key="item.value">
+                      {{ item.label }}
+                    </Option>
                 </Select>
             </template>
             <template slot-scope="{ row }" slot="cashFlowName">
@@ -51,14 +56,19 @@
                   @on-change="onSelectChange(row,$event)" 
                   transfer 
                   style="width:350px">
-                    <Option v-for="item in cashFlowList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    <Option 
+                      v-for="item in cashFlowList" 
+                      :value="item.value" 
+                      :key="item.value">
+                      {{ item.label }}
+                    </Option>
                 </Select>
             </template>
-            <template slot-scope="{ row }" slot="action">
+            <template slot-scope="{ row,index }" slot="action">
                 <a @click="editRelation(row)" v-if="!row.isEdit">编辑</a>
                 <a @click="saveRelation(row)" v-if="row.isEdit">保存</a>
                 <span class="separate-line"></span>
-                <a @click="deleteRelation(row)">删除</a>
+                <a @click="deleteRelation(row,index)">删除</a>
             </template>
             <template slot-scope="{ row }" slot="sort">
                 <span v-if="!row.isEdit">{{ row.sort }}</span>
@@ -94,7 +104,9 @@ export default {
         cashFlowList: [],
         dataList: [],
         columns: [],
-        data: []
+        data: [],
+        isSave: true,
+        saveError: ''
     };
   },
   watch: {
@@ -114,48 +126,60 @@ export default {
       },
       onAppSelectChange(value) {
         let testArray = [];
-        this.dataList.forEach(item => {
-          testArray.push(item.label);
+        JSON.parse(this.copyData).forEach((item) => {
+          testArray.push(item.value);
         })
         if(testArray.indexOf(value) > -1){
-          this.$Message.error(`${this.appName}：<b>${value}</b>已存在`);
+          this.isSave = false;
+          this.saveError = `${this.appName}：<b>${value}</b>已存在`;
+          this.$Message.error(this.saveError);
           return;
+        }else{
+          this.isSave = true;
         }
       },
       editRelation(row) {
         this.$set(row, "isEdit", true);
       },
-      deleteRelation(row) {
-        deleteCashFlowRelById(row.id).then(res =>{
-          if(res.success){
-            this.$Message.success(res.message);
-            this.getData();
-          }
-        }).catch(err => {
-          this.$Message.error(res.data.message);
-        });;
-      },
-      saveRelation(row) {
-        let params = {
-            type: this.type,
-            value: row.value,
-            cashFlowName: row.cashFlowName,
-            cashFlowId: row.cashFlowId,
-            sort: row.sort
-        },
-        requestInterface = saveCashFlowRel;
+      deleteRelation(row,index) {
         if(row.id){
-          params.id = row.id;
-          requestInterface = updateCashFlowRel
-        }
-        requestInterface(params).then(res => {
-            if(res.success) {
+          deleteCashFlowRelById(row.id).then(res =>{
+            if(res.success){
               this.$Message.success(res.message);
               this.getData();
             }
-        }).catch(err => {
-          this.$Message.error(res.data.message);
-        });
+          }).catch(err => {
+            this.$Message.error(res.data.message);
+          });
+        }else{
+          this.data.splice(index,1);
+        }
+      },
+      saveRelation(row) {
+        if(this.isSave){
+          let params = {
+              type: this.type,
+              value: row.value,
+              cashFlowName: row.cashFlowName,
+              cashFlowId: row.cashFlowId,
+              sort: row.sort
+          },
+          requestInterface = saveCashFlowRel;
+          if(row.id){
+            params.id = row.id;
+            requestInterface = updateCashFlowRel
+          }
+          requestInterface(params).then(res => {
+              if(res.success) {
+                this.$Message.success(res.message);
+                this.getData();
+              }
+          }).catch(err => {
+            this.$Message.error(res.data.message);
+          });
+        }else{
+          this.$Message.error(this.saveError);
+        }
       },
       getCashFlowData() {
           getCashFlowItem().then(res => {
@@ -207,7 +231,10 @@ export default {
       },
       getData() {
         findCashFlowRelByType(this.type).then(res => {
-            if(res.data) this.data = res.data;
+            if(res.data){
+              this.data = res.data;
+              this.copyData = JSON.stringify(res.data);
+            } 
         });
       }
   },

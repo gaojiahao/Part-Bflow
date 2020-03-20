@@ -50,7 +50,7 @@
                   filterable 
                   @on-change="onSelectChange(row,$event)" 
                   transfer 
-                  style="width:200px">
+                  style="width:350px">
                     <Option v-for="item in cashFlowList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
             </template>
@@ -198,7 +198,7 @@ export default {
         }
         columns = [
           {title: this.appName,slot: 'value'},
-          {title: '现金流项目',slot: 'cashFlowName'},
+          {title: '现金流项目',width: 450,slot: 'cashFlowName'},
           // {title: '现金流项目ID',key: 'cashFlowId'},
           {title: '排序',slot: 'sort'}
         ];

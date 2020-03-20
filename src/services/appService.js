@@ -222,6 +222,52 @@ export const addTemplateApp = (params) => request('/H_roleplay-si/app/saveList',
 
 /**
  * @author XiaoYing
+ * @description 获取关系管理数据
+ */
+export const findCashFlowRelByType = (type) => request('/H_roleplay-si/cashFlow/findCashFlowRelByType', {
+  type: type
+});
+
+/**
+ * @author XiaoYing
+ * @description 保存关系管理
+ */
+export const saveCashFlowRel = (param) => request('/H_roleplay-si/cashFlow/saveCashFlowRel', {},'POST',param);
+
+/**
+ * @author XiaoYing
+ * @description 更新关系管理
+ */
+export const updateCashFlowRel = (param) => request('/H_roleplay-si/cashFlow/updateCashFlowRel', {},'POST',param);
+
+/**
+ * @author XiaoYing
+ * @description 删除关系管理
+ */
+export const deleteCashFlowRelById = (id) => request('/H_roleplay-si/cashFlow/deleteCashFlowRelById', {
+  id: id
+});
+
+/**
+ * @author XiaoYing
+ * @description 获取关系管理费用数据
+ */
+export const getCostType = () => request('/H_roleplay-si/ds/getCostType');
+
+/**
+ * @author XiaoYing
+ * @description 获取关系管理往来数据
+ */
+export const getObjDealerLabelSource = () => request('/H_roleplay-si/ds/getObjDealerLabelSource');
+
+/**
+ * @author XiaoYing
+ * @description 获取关系管理现金流数据
+ */
+export const getCashFlowItem = () => request('/H_roleplay-si/ds/getCashFlowItem');
+
+/**
+ * @author XiaoYing
  * @description 删除应用
  */
 export const deleteApp = (params) => request('/H_roleplay-si/ds/procu/removeList', params);

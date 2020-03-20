@@ -36,7 +36,7 @@
                   v-else 
                   filterable 
                   v-model="row.value"
-                  @on-change="onAppSelectChange" 
+                  @on-change="onAppSelectChange(row,$event)" 
                   transfer 
                   style="width:200px">
                     <Option 
@@ -124,10 +124,16 @@ export default {
           }
         }
       },
-      onAppSelectChange(value) {
+      onAppSelectChange(row,value) {
         let testArray = [];
         JSON.parse(this.copyData).forEach((item) => {
-          testArray.push(item.value);
+          if(row.id){
+            if(row.id !== item.id){
+              testArray.push(item.value);
+            }
+          }else{
+            testArray.push(item.value);
+          }
         })
         if(testArray.indexOf(value) > -1){
           this.isSave = false;

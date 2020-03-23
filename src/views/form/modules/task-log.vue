@@ -98,8 +98,8 @@
          </Row>
 
 
-        <FormItem label="备注:" prop="comments">
-          <Input  v-model="modalFormData.comments" type="textarea" placeholder="输入您特别想备注的信息" />
+        <FormItem label="成果:" prop="comments">
+          <Input  v-model="modalFormData.comments" type="textarea" placeholder="请输入您的成果" />
         </FormItem>
 
         <FormItem>

@@ -207,7 +207,7 @@ export default {
             users:[],
             comments: "",
             logType:"",
-            logStatus:"待办"
+            logStatus:"已办"
         },
         ruleValidate: {
             //变更日志表单校验

@@ -230,6 +230,12 @@ export const findCashFlowRelByType = (type) => request('/H_roleplay-si/cashFlow/
 
 /**
  * @author XiaoYing
+ * @description 获取关系管理所有应用
+ */
+export const getAllListInfo = (type) => request('/H_roleplay-si/ds/getAllListInfo');
+
+/**
+ * @author XiaoYing
  * @description 保存关系管理
  */
 export const saveCashFlowRel = (param) => request('/H_roleplay-si/cashFlow/saveCashFlowRel', {},'POST',param);

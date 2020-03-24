@@ -36,9 +36,9 @@
                   v-else 
                   filterable 
                   v-model="row.value"
-                  @on-change="onAppSelectChange(row,$event)" 
+                  @on-change="onRelationSelectChange(row,$event)" 
                   transfer 
-                  style="width:200px">
+                  style="width:150px">
                     <Option 
                       v-for="item in dataList" 
                       :value="item.value" 
@@ -47,17 +47,37 @@
                     </Option>
                 </Select>
             </template>
-            <template slot-scope="{ row }" slot="cashFlowName">
+            <template slot-scope="{ row }" slot="cashFlowId">
                 <span v-if="!row.isEdit">{{ row.cashFlowName }}</span>
                 <Select 
                   v-else 
-                  v-model="row.cashFlowName" 
+                  v-model="row.cashFlowId" 
                   filterable 
+                  label-in-value
                   @on-change="onSelectChange(row,$event)" 
                   transfer 
                   style="width:350px">
                     <Option 
                       v-for="item in cashFlowList" 
+                      :value="item.value" 
+                      :key="item.value">
+                      {{ item.label }}
+                    </Option>
+                </Select>
+            </template>
+            <template slot-scope="{ row }" slot="listId">
+                <span v-if="!row.isEdit">{{ row.transName }}</span>
+                <Select 
+                  v-else 
+                  v-model="row.listId" 
+                  filterable 
+                  label-in-value
+                  multiple
+                  @on-change="onAppSelectChange(row,$event)" 
+                  transfer 
+                  style="width:250px">
+                    <Option 
+                      v-for="item in appList" 
                       :value="item.value" 
                       :key="item.value">
                       {{ item.label }}
@@ -89,7 +109,8 @@ import {
   updateCashFlowRel,
   getCashFlowItem,
   getObjDealerLabelSource,
-  saveCashFlowRel } from "@/services/appService.js";
+  saveCashFlowRel,
+  getAllListInfo } from "@/services/appService.js";
 
 export default {
   name: "RelationManage",
@@ -100,9 +121,10 @@ export default {
   },
   data() {
     return {
-        type: 'cost',
+        apptype: 'cost',
         cashFlowList: [],
         dataList: [],
+        appList: [],
         columns: [],
         data: [],
         isSave: true,
@@ -114,30 +136,102 @@ export default {
   },
   methods: {
       addRelation(){
-        this.data.push({value: '',cashFlowName: '',cashFlowId: '',sort: 1,isEdit:true});
+        this.data.push({value: '',cashFlowName: '',cashFlowId: '',transName:'',listId:'',sort: 1,isEdit:true});
       },
       onSelectChange(row,value) {
-        for(let item of this.cashFlowList){
-          if(item.value == value){
-            this.$set(row, "cashFlowId", item.cashFlowId);
-            return;
-          }
-        }
+        this.$set(row, "cashFlowName", value.label);
       },
-      onAppSelectChange(row,value) {
-        let testArray = [];
+      onRelationSelectChange(row,value) {
+        let testRelationArray = [],
+            testAppArray = [],
+            isCost;
         JSON.parse(this.copyData).forEach((item) => {
           if(row.id){
             if(row.id !== item.id){
-              testArray.push(item.value);
+              testRelationArray.push(item.value);
+              testAppArray.push({
+                relation: item.value,
+                app: item.listId.split(',')
+              });
             }
           }else{
-            testArray.push(item.value);
+            testRelationArray.push(item.value);
+            testAppArray.push({
+                relation: item.value,
+                app: item.listId.split(',')
+              });
           }
         })
-        if(testArray.indexOf(value) > -1){
-          this.isSave = false;
+        if(this.apptype === 'dealer'){
+          for(let i=0;i<testAppArray.length;i++){
+            if(testAppArray[i].relation === row.value){
+              for(let k = 0;k<row.listId.length;k++){
+                  if(testAppArray[i].app.indexOf(row.listId[k]) > -1){
+                    isCost = true;
+                    this.saveError = `${this.appName}：<b>${value}</b>和选择的应用中有重复存在的！`;
+                    break;
+                  }
+              }
+            }
+          }
+        }else{
+          isCost = testRelationArray.indexOf(value) > -1;
           this.saveError = `${this.appName}：<b>${value}</b>已存在`;
+        }
+        if(isCost){
+          this.isSave = false;
+          this.$Message.error(this.saveError);
+          return;
+        }else{
+          this.isSave = true;
+        }
+      },
+      onAppSelectChange(row,value) {
+        let testRelationArray = [],
+            testAppArray = [],
+            testApp = [],
+            appNames = [],
+            isCost;
+        
+        value.forEach(i => {
+          appNames.push(i.label)
+        });
+        this.$set(row, "transName", appNames.join());
+        JSON.parse(this.copyData).forEach((item) => {
+          if(row.id){
+            if(row.id !== item.id){
+              testRelationArray.push(item.value);
+              testAppArray.push({
+                relation: item.value,
+                app: item.listId.split(',')
+              });
+            }
+          }else{
+            testRelationArray.push(item.value);
+            testAppArray.push({
+                relation: item.value,
+                app: item.listId.split(',')
+              });
+          }
+        })
+        if(this.apptype === 'dealer'){
+          for(let i=0;i<testAppArray.length;i++){
+            if(testAppArray[i].relation === row.value){
+              for(let k = 0;k<row.listId.length;k++){
+                  if(testAppArray[i].app.indexOf(row.listId[k]) > -1){
+                    isCost = true;
+                    this.saveError = `${this.appName}：<b>${row.value}</b>和选择的应用中有重复存在的`;
+                    break;
+                  }
+              }
+            }
+          }
+        }else{
+          isCost = testRelationArray.indexOf(row.value) > -1;
+          this.saveError = `${this.appName}：<b>${row.value}</b>已存在`;
+        }
+        if(isCost){
+          this.isSave = false;
           this.$Message.error(this.saveError);
           return;
         }else{
@@ -164,13 +258,16 @@ export default {
       saveRelation(row) {
         if(this.isSave){
           let params = {
-              type: this.type,
+              type: this.apptype,
               value: row.value,
               cashFlowName: row.cashFlowName,
               cashFlowId: row.cashFlowId,
               sort: row.sort
           },
           requestInterface = saveCashFlowRel;
+          if(this.apptype === 'dealer'){
+            params.listId = row.listId.join();
+          }
           if(row.id){
             params.id = row.id;
             requestInterface = updateCashFlowRel
@@ -192,8 +289,7 @@ export default {
               res.tableContent.forEach(item => {
                   this.cashFlowList.push({
                     label: item.cashFlowItem,
-                    value: item.cashFlowItem,
-                    cashFlowId: item.cashFlowId
+                    value: item.cashFlowId
                   });
               });
           });
@@ -221,22 +317,34 @@ export default {
       },
       createColumns() {
         let columns = [];
-        this.appName = '费用子类';
-        if(this.listId === 'c0375170-d537-4f23-8ed0-a79cf75f5b04') {
-          this.appName = '关系标签';
-          this.type = 'dealer';
-        }
+
         columns = [
           {title: this.appName,slot: 'value'},
-          {title: '现金流项目',width: 450,slot: 'cashFlowName'},
-          // {title: '现金流项目ID',key: 'cashFlowId'},
+          {title: '现金流项目',width: 450,slot: 'cashFlowId'},
           {title: '排序',slot: 'sort'}
         ];
+        this.listId === 'c0375170-d537-4f23-8ed0-a79cf75f5b04' && columns.splice(2,0,{title: '应用名称',width: 300,slot: 'listId'})
         this.isAdmin && columns.push({title: '动作',slot: 'action'});
         this.columns = columns;
       },
+      getAllAppData() {
+        if (this.listId === 'c0375170-d537-4f23-8ed0-a79cf75f5b04'){
+          getAllListInfo().then(res => {
+            res.tableContent.forEach(item => {
+                this.appList.push({
+                  label: item.trasnName,
+                  value: item.listId
+                });
+              });
+          })
+        }
+      },
       getData() {
-        findCashFlowRelByType(this.type).then(res => {
+        if(this.listId === 'c0375170-d537-4f23-8ed0-a79cf75f5b04') {
+          this.appName = '关系标签';
+          this.apptype = 'dealer';
+        }
+        findCashFlowRelByType(this.apptype).then(res => {
             if(res.data){
               this.data = res.data;
               this.copyData = JSON.stringify(res.data);
@@ -245,9 +353,11 @@ export default {
       }
   },
   created() {
+    this.appName = '费用子类';
     this.createColumns();
     this.getCashFlowData();
     this.getDataList();
+    this.getAllAppData();
     this.getData();
   }
 };

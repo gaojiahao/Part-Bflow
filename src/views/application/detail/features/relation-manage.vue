@@ -37,8 +37,7 @@
                   filterable 
                   v-model="row.value"
                   @on-change="onRelationSelectChange(row,$event)" 
-                  transfer 
-                  style="width:150px">
+                  transfer >
                     <Option 
                       v-for="item in dataList" 
                       :value="item.value" 
@@ -55,8 +54,7 @@
                   filterable 
                   label-in-value
                   @on-change="onSelectChange(row,$event)" 
-                  transfer 
-                  style="width:350px">
+                  transfer>
                     <Option 
                       v-for="item in cashFlowList" 
                       :value="item.value" 
@@ -74,8 +72,7 @@
                   label-in-value
                   multiple
                   @on-change="onAppSelectChange(row,$event)" 
-                  transfer 
-                  style="width:250px">
+                  transfer >
                     <Option 
                       v-for="item in appList" 
                       :value="item.value" 
@@ -142,61 +139,21 @@ export default {
         this.$set(row, "cashFlowName", value.label);
       },
       onRelationSelectChange(row,value) {
-        let testRelationArray = [],
-            testAppArray = [],
-            isCost;
-        JSON.parse(this.copyData).forEach((item) => {
-          if(row.id){
-            if(row.id !== item.id){
-              testRelationArray.push(item.value);
-              testAppArray.push({
-                relation: item.value,
-                app: item.listId.split(',')
-              });
-            }
-          }else{
-            testRelationArray.push(item.value);
-            testAppArray.push({
-                relation: item.value,
-                app: item.listId.split(',')
-              });
-          }
-        })
-        if(this.apptype === 'dealer'){
-          for(let i=0;i<testAppArray.length;i++){
-            if(testAppArray[i].relation === row.value){
-              for(let k = 0;k<row.listId.length;k++){
-                  if(testAppArray[i].app.indexOf(row.listId[k]) > -1){
-                    isCost = true;
-                    this.saveError = `${this.appName}：<b>${value}</b>和选择的应用中有重复存在的！`;
-                    break;
-                  }
-              }
-            }
-          }
-        }else{
-          isCost = testRelationArray.indexOf(value) > -1;
-          this.saveError = `${this.appName}：<b>${value}</b>已存在`;
-        }
-        if(isCost){
-          this.isSave = false;
-          this.$Message.error(this.saveError);
-          return;
-        }else{
-          this.isSave = true;
-        }
+        this.changePublicMethod(row,value);
       },
       onAppSelectChange(row,value) {
-        let testRelationArray = [],
-            testAppArray = [],
-            testApp = [],
-            appNames = [],
-            isCost;
-        
+        let appNames = [];
         value.forEach(i => {
           appNames.push(i.label)
         });
         this.$set(row, "transName", appNames.join());
+        this.changePublicMethod(row,value);
+      },
+      changePublicMethod(row,value) {
+        let testRelationArray = [],
+            testAppArray = [],
+            isCost;
+        
         JSON.parse(this.copyData).forEach((item) => {
           if(row.id){
             if(row.id !== item.id){
@@ -257,6 +214,17 @@ export default {
       },
       saveRelation(row) {
         if(this.isSave){
+          if(this.apptype === 'dealer'){
+            if(!row.value || !row.cashFlowId || !row.listId || row.listId.length === 0){
+              this.$Message.error('有选择项未填！');
+              return;
+            }
+          }else{
+            if(!row.value || !row.cashFlowId){
+              this.$Message.error('有选择项未填！');
+              return;
+            }
+          }
           let params = {
               type: this.apptype,
               value: row.value,
@@ -324,7 +292,7 @@ export default {
           this.apptype = 'dealer';
         }
         columns = [
-          {title: this.appName,slot: 'value'},
+          {title: this.appName,slot: 'value',width: 250},
           {title: '现金流项目',width: 450,slot: 'cashFlowId'},
           {title: '排序',slot: 'sort'}
         ];

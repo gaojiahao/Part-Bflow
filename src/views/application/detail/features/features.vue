@@ -59,6 +59,11 @@
                                     v-if="item.status === '1'">
                                     关闭
                                 </Button>
+                                <!-- <Button 
+                                    v-if="item.title === '工作日志'"
+                                    @click="setFeatureConfig(item)">
+                                    设置
+                                </Button> -->
                             </p>
                         </div>
                      </div>
@@ -66,12 +71,30 @@
             </Row>
         </div>
     </Row>
-
+    <Modal
+        v-model="showFeatureConfig"
+        :title="configTitle"
+        @on-ok="saveFeatureConfig">
+        <label>标题默认值：</label>
+        <Select 
+            v-model="defaultConfigValue" 
+            filterable
+            @on-change="onConfigSelectChange" 
+            transfer 
+            style="width:250px">
+            <Option 
+                v-for="item in fieldList" 
+                :value="item.fieldCode" 
+                :key="item.fieldCode">
+                {{ item.fieldName }}
+            </Option>
+        </Select>
+    </Modal>
   </div>
 </template>
 
 <script>
-import { getAppFeaturesList, switchAppFeatures } from "@/services/appService.js";
+import { getAppFeaturesList, switchAppFeatures, getCustomFieldResorce } from "@/services/appService.js";
 
 export default {
   name: "FeatureManage",
@@ -82,7 +105,11 @@ export default {
   },
   data() {
     return {
-        featureList: []
+        showFeatureConfig: false,
+        configTitle: '',
+        defaultConfigValue: '',
+        featureList: [],
+        fieldList: []
     };
   },
   watch: {
@@ -105,10 +132,22 @@ export default {
                   this.$Message.error(res.data.message)
               });
           }
+      },
+      setFeatureConfig(item) {
+          this.configTitle = item.title;
+          this.showFeatureConfig = true;
+      },
+      onConfigSelectChange() {},
+      saveFeatureConfig() {},
+      getAllFormFields() {
+          getCustomFieldResorce(this.listId).then(res => {
+              this.fieldList = res;
+          })
       }
   },
   created() {
     this.getFeaturesData();
+    this.getAllFormFields();
   }
 };
 </script>

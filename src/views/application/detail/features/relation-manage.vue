@@ -317,7 +317,12 @@ export default {
       },
       createColumns() {
         let columns = [];
-
+        
+        this.appName = '费用子类';
+        if(this.listId === 'c0375170-d537-4f23-8ed0-a79cf75f5b04') {
+          this.appName = '关系标签';
+          this.apptype = 'dealer';
+        }
         columns = [
           {title: this.appName,slot: 'value'},
           {title: '现金流项目',width: 450,slot: 'cashFlowId'},
@@ -340,10 +345,6 @@ export default {
         }
       },
       getData() {
-        if(this.listId === 'c0375170-d537-4f23-8ed0-a79cf75f5b04') {
-          this.appName = '关系标签';
-          this.apptype = 'dealer';
-        }
         findCashFlowRelByType(this.apptype).then(res => {
             if(res.data){
               this.data = res.data;
@@ -353,7 +354,6 @@ export default {
       }
   },
   created() {
-    this.appName = '费用子类';
     this.createColumns();
     this.getCashFlowData();
     this.getDataList();

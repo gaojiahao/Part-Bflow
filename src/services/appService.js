@@ -936,3 +936,22 @@ export const switchAppFeatures = (listId, featureId) => request('/H_roleplay-si/
   featureId: featureId
 }, 'POST')
 
+/**
+ * @author XiaoYing
+ * @description 保存特性管理默认字段
+ */
+export const saveFeaturesConfig = (listId, featureId, defaultTitle) => request('/H_roleplay-si/app/feature/config/save', {
+  listId: listId,
+  featureId: featureId,
+  defaultTitle: defaultTitle
+}, 'POST')
+
+/**
+ * @author XiaoYing
+ * @description 获取特性管理默认字段
+ */
+export const getFeaturesConfig = (listId, featureId) => request('/H_roleplay-si/app/feature/config', {
+  listId: listId,
+  featureId: featureId
+})
+

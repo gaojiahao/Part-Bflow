@@ -164,7 +164,7 @@
 </template>
 
 <script>
-import { getTaskLog, saveTaskLog,updateLogStatus} from "@/services/appService.js";
+import { getTaskLog, saveTaskLog,updateLogStatus,getFeaturesConfig} from "@/services/appService.js";
 import { getDictByValue} from "@/services/commonService.js";
 import { getAllUsers } from "@/services/subscribeService";
 import { FormatDate } from "@/utils/utils";
@@ -418,17 +418,26 @@ export default {
         this.modalFormData.logType = res[0].name;
       })
     },
-    setDefaultTitle() {
-      let formData = JSON.parse('{"baseinfo":{"id":"a7eea3fc-0416-4360-b2b8-9d40c2443299","referenceId":"c829aaf0-9605-47bd-905d-b3ec1ca7b4dc","listId":"630a9b96-f257-48b6-b0bc-fd64c455d92b","transType":"YW56","transCode":"PINI2003240007","handler":"778","handlerName":"潘1","handlerArea":null,"handlerAreaName":null,"handlerUnit":"140","handlerUnitName":"组织1","handlerRole":"1","handlerRoleName":"企业管理员","effectiveTime":"2020-03-24 19:43:25","creatorName":"潘1","creator":"778","crtTime":"2020-03-24 19:43:25","modifer":"778","modiferName":"潘1","modTime":"2020-03-24 19:43:25","comment":"","status":1,"activeTime":null,"handlerEntity":"a3034317-0706-01ef-3b08-eb399895a648","handlerEntityName":"RFD测试","biProcessStatus":"未启动"},"biReferenceId":"c829aaf0-9605-47bd-905d-b3ec1ca7b4dc","comment":{"biComment":""},"projectApproval":{"projectApprovalId":"a4195c44-6649-472f-afe8-27ce203b028c","referenceId":"c829aaf0-9605-47bd-905d-b3ec1ca7b4dc","projectName":"sdas","projectType":"其他","projectBotTaskId":null,"projectSubclass":"323","projectManager":"0026","budgetIncome":1,"address":"","projectManagerName":"潘1","phoneNumber":"15250376221","projectDescribe":null,"expectStartDate":"2020-03-04","expectEndDate":"2020-03-24","projectStatus":1,"comment":"","actualStartTimes":null,"actualCompleteTimes":null,"handlerNames":null,"handlerUnitNames":null,"handlerRoleNames":null,"biProcessStatus":null,"comments":null,"transCode":null,"projectBotTaskTitle":null},"order":[{"projectPartnerName":"FRANK","shareOfProfits":"0.010000","comment":"","projectPartnerCode":"002","id":3,"divisionOfResponsibilities":"客户经理","projectId":"a4195c44-6649-472f-afe8-27ce203b028c"}]}');
-      this.getDefaultFormValue(formData,defaultField);
+    setDefaultTitle(defaultField) {
+      let formData = window.top.formData;
+      this.getDefaultFormValue(JSON.parse(formData),defaultField);
     },
     getDefaultFormValue(obj,defaultField) {
-      for(k in obj){
+      for(let k in obj){
         if(k === defaultField){
-          return obj[k];
+          this.modalFormData.logTitle = obj[k];
+          return;
         }
         obj[k] instanceof Object && this.getDefaultFormValue(obj[k],defaultField);
       }
+    },
+    getDefultTitle() {
+      getFeaturesConfig(window.top.listId,'d2fdcf18-76e8-11e9-9199-005056a136d0').then(con => {
+          if(con.success){
+            let defaultField = con.data.defaultTitle && JSON.parse(con.data.defaultTitle).fieldCode;
+            this.setDefaultTitle(defaultField);
+          }
+      })
     }
   },
   created() {
@@ -437,6 +446,7 @@ export default {
     this.initLogTypeList();
     this.getTaskLog();
     this.getAllUsers();
+    this.getDefultTitle();
   }
 };
 </script>

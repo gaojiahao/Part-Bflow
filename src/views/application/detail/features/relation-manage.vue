@@ -160,14 +160,14 @@ export default {
               testRelationArray.push(item.value);
               testAppArray.push({
                 relation: item.value,
-                app: item.listId.split(',')
+                app: item.listId
               });
             }
           }else{
             testRelationArray.push(item.value);
             testAppArray.push({
                 relation: item.value,
-                app: item.listId.split(',')
+                app: item.listId
               });
           }
         })
@@ -292,11 +292,11 @@ export default {
           this.apptype = 'dealer';
         }
         columns = [
-          {title: this.appName,slot: 'value',width: 250},
-          {title: '现金流项目',width: 450,slot: 'cashFlowId'},
+          {title: this.appName,slot: 'value',width: 180},
+          {title: '现金流项目',width: 350,slot: 'cashFlowId'},
           {title: '排序',slot: 'sort'}
         ];
-        this.listId === 'c0375170-d537-4f23-8ed0-a79cf75f5b04' && columns.splice(2,0,{title: '应用名称',width: 300,slot: 'listId'})
+        this.listId === 'c0375170-d537-4f23-8ed0-a79cf75f5b04' && columns.splice(2,0,{title: '应用名称',width: 250,slot: 'listId'})
         this.isAdmin && columns.push({title: '动作',slot: 'action'});
         this.columns = columns;
       },
@@ -315,6 +315,9 @@ export default {
       getData() {
         findCashFlowRelByType(this.apptype).then(res => {
             if(res.data){
+              res.data.forEach(item => {
+                item.listId && (item.listId = item.listId.split(','));
+              })
               this.data = res.data;
               this.copyData = JSON.stringify(res.data);
             } 

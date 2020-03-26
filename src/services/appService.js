@@ -224,8 +224,11 @@ export const addTemplateApp = (params) => request('/H_roleplay-si/app/saveList',
  * @author XiaoYing
  * @description 获取关系管理数据
  */
-export const findCashFlowRelByType = (type) => request('/H_roleplay-si/cashFlow/findCashFlowRelByType', {
-  type: type
+export const findCashFlowRelByType = (type,currentPage,pageSize,value) => request('/H_roleplay-si/cashFlow/findCashFlowRelByType', {
+  type: type,
+  pageIndex: currentPage,
+  pageSize: pageSize,
+  searchValue: value
 });
 
 /**

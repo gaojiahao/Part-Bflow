@@ -178,7 +178,7 @@ export default {
           getCustomFieldResorce(this.listId).then(res => {
               this.fieldList = res;
               this.fieldList.forEach(item => {
-                  item.parentCode ? item.fieldCode = `${item.fieldCode}_${item.parentCode}` : item.fieldCode = item.fieldCode;
+                  item.parentCode && (item.fieldCode = `${item.fieldCode}_${item.parentCode}`);
               })
           })
       }

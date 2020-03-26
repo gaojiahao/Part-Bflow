@@ -8,6 +8,13 @@
          border-left: 1px solid #39f;
          margin: 0px 5px;
        }
+       .relation-page{
+         margin-top: 5px;
+         float: right;
+       }
+       .relation-toolbar{
+         margin-bottom: 5px;
+       }
     }
  }
 
@@ -28,13 +35,23 @@
     </Row>
     <Row class="relation-content">
         <div class="relation-body">
-          <Button type="info" size="small" v-if="isAdmin" @click="addRelation" style="margin-bottom:5px;">新增</Button>
-          <Table border stripe :columns="columns" :data="data">
+          <div class="relation-toolbar">
+            <Button type="info" size="small" v-if="isAdmin" @click="addRelation">新增</Button>
+            <Input 
+              v-model="searchValue" 
+              @on-search="relationFilter" 
+              :search="true" 
+              placeholder="搜索" 
+              style="width: 300px">
+            </Input>
+          </div>
+          <Table max-height=521 border stripe :columns="columns" :data="data">
             <template slot-scope="{ row }" slot="value">
                 <span v-if="!row.isEdit">{{ row.value }}</span>
                 <Select 
                   v-else 
                   filterable 
+                  size="small"
                   v-model="row.value"
                   @on-change="onRelationSelectChange(row,$event)" 
                   transfer >
@@ -52,6 +69,7 @@
                   v-else 
                   v-model="row.cashFlowId" 
                   filterable 
+                  size="small"
                   label-in-value
                   @on-change="onSelectChange(row,$event)" 
                   transfer>
@@ -69,6 +87,7 @@
                   v-else 
                   v-model="row.listId" 
                   filterable 
+                  size="small"
                   label-in-value
                   multiple
                   @on-change="onAppSelectChange(row,$event)" 
@@ -92,6 +111,14 @@
                 <InputNumber v-else :min="1" v-model="row.sort"></InputNumber>
             </template>
           </Table>
+          <div class="relation-page">
+            <Page 
+              @on-change="onPageChange" 
+              :current="currentPage"
+              :page-size="pageSize"
+              :total="total" 
+              show-total />
+          </div>
         </div>
     </Row>
 
@@ -119,13 +146,17 @@ export default {
   data() {
     return {
         apptype: 'cost',
+        isSave: true,
+        saveError: '',
+        searchValue: '',
+        currentPage: 1,
+        pageSize: 10,
+        total: 0,
         cashFlowList: [],
         dataList: [],
         appList: [],
         columns: [],
         data: [],
-        isSave: true,
-        saveError: ''
     };
   },
   watch: {
@@ -133,7 +164,15 @@ export default {
   },
   methods: {
       addRelation(){
-        this.data.push({value: '',cashFlowName: '',cashFlowId: '',transName:'',listId:'',sort: 1,isEdit:true});
+        this.data.unshift({value: '',cashFlowName: '',cashFlowId: '',transName:'',listId:'',sort: this.data.length+1,isEdit:true});
+      },
+      relationFilter() {
+        this.currentPage = 1;
+        this.getData();
+      },
+      onPageChange(currentPage) {
+        this.currentPage = currentPage;
+        this.getData();
       },
       onSelectChange(row,value) {
         this.$set(row, "cashFlowName", value.label);
@@ -144,7 +183,7 @@ export default {
       onAppSelectChange(row,value) {
         let appNames = [];
         value.forEach(i => {
-          appNames.push(i.label)
+          appNames.push(i.label.replace(/[\r\n]/g,"").replace(/[ ]/g,""))
         });
         this.$set(row, "transName", appNames.join());
         this.changePublicMethod(row,value);
@@ -177,7 +216,7 @@ export default {
               for(let k = 0;k<row.listId.length;k++){
                   if(testAppArray[i].app.indexOf(row.listId[k]) > -1){
                     isCost = true;
-                    this.saveError = `${this.appName}：<b>${row.value}</b>和选择的应用中有重复存在的`;
+                    this.saveError = `${this.appName}：<b>${row.value}</b>和选择的应用<b>${row.transName.split(',')[k]}</b>有重复存在的`;
                     break;
                   }
               }
@@ -203,6 +242,7 @@ export default {
           deleteCashFlowRelById(row.id).then(res =>{
             if(res.success){
               this.$Message.success(res.message);
+              this.currentPage = 1;
               this.getData();
             }
           }).catch(err => {
@@ -215,12 +255,12 @@ export default {
       saveRelation(row) {
         if(this.isSave){
           if(this.apptype === 'dealer'){
-            if(!row.value || !row.cashFlowId || !row.listId || row.listId.length === 0){
+            if(!row.value || !row.cashFlowId || !row.sort || !row.listId || row.listId.length === 0){
               this.$Message.error('有选择项未填！');
               return;
             }
           }else{
-            if(!row.value || !row.cashFlowId){
+            if(!row.value || !row.cashFlowId || !row.sort){
               this.$Message.error('有选择项未填！');
               return;
             }
@@ -243,6 +283,7 @@ export default {
           requestInterface(params).then(res => {
               if(res.success) {
                 this.$Message.success(res.message);
+                this.currentPage = 1;
                 this.getData();
               }
           }).catch(err => {
@@ -313,12 +354,13 @@ export default {
         }
       },
       getData() {
-        findCashFlowRelByType(this.apptype).then(res => {
-            if(res.data){
-              res.data.forEach(item => {
+        findCashFlowRelByType(this.apptype,this.currentPage,this.pageSize,this.searchValue).then(res => {
+            if(res.tableContent){
+              res.tableContent.forEach(item => {
                 item.listId && (item.listId = item.listId.split(','));
               })
-              this.data = res.data;
+              this.data = res.tableContent;
+              this.total = res.dataCount;
               this.copyData = JSON.stringify(res.data);
             } 
         });

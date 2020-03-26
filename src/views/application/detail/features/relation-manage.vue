@@ -175,7 +175,8 @@ export default {
         this.getData();
       },
       onSelectChange(row,value) {
-        this.$set(row, "cashFlowName", value.label);
+        let name = value && value.label
+        this.$set(row, "cashFlowName", name);
       },
       onRelationSelectChange(row,value) {
         this.changePublicMethod(row,value);
@@ -361,7 +362,7 @@ export default {
               })
               this.data = res.tableContent;
               this.total = res.dataCount;
-              this.copyData = JSON.stringify(res.data);
+              this.copyData = JSON.stringify(res.tableContent);
             } 
         });
       }

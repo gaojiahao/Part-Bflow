@@ -164,7 +164,7 @@ export default {
   },
   methods: {
       addRelation(){
-        this.data.unshift({value: '',cashFlowName: '',cashFlowId: '',transName:'',listId:'',sort: this.data.length+1,isEdit:true});
+        this.data.unshift({value: '',cashFlowName: '',cashFlowId: '',transName:'',listId:'',sort: this.total+1,isEdit:true});
       },
       relationFilter() {
         this.currentPage = 1;

@@ -288,7 +288,7 @@ export default {
     showModal (row,currentYear,currentMonth) {
         let startDate, endDate;
         this.showAccountDetail = true;
-        currentYear ? this.modalTitle = row.row.performanceType : row.performanceType;
+        this.modalTitle = currentYear ? row.row.performanceType : row.performanceType;
         this.modalLoading = true;
         if(currentYear){
           let lastMonthDay = getLastDay(currentYear,currentMonth);

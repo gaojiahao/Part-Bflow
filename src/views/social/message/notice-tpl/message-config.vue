@@ -37,10 +37,10 @@
             <div class="content">
                 <div v-if="isShowOpen">
                     <div v-if="isOpen" @click="openMessageConfig" class="content-open">
-                        <Icon type="ios-arrow-down" />
+                        <Icon type="ios-arrow-up" />
                     </div>
                     <div v-if="!isOpen" @click="openMessageConfig" class="content-open">
-                        <Icon type="ios-arrow-up" />
+                        <Icon type="ios-arrow-down" />
                     </div>
                 </div>
                 <div v-if="isOpen">
@@ -92,8 +92,8 @@ export default {
     },
     data() {
         return {
-            isOpen: false,
-            isBorderTopProp: false
+            isOpen: true,
+            isBorderTopProp: true
         };
     },
     computed: {

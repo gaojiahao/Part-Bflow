@@ -3,7 +3,12 @@
 </style>
 <template>
     <ul class="navigation-list messagescrollbar">
-        <router-link  :to="'/social/message/list/'+ nav.listId" v-for="(nav,index) in  navs" :key="index" >
+         <router-link :to="'/social/message/group/'+ g.groupId" v-for="(g,index) in  imGroups" :key="index">
+            <li>
+                <div>{{g.groupName}}</div>
+            </li>
+        </router-link>
+        <!-- <router-link  :to="'/social/message/list/'+ nav.listId" v-for="(nav,index) in  navs" :key="index" >
             <li  class="navigation-list-item" @click="handleActiveNavigation(nav)"  v-bind:class="{ 'active':$route.params.listId==nav.listId }">
                 <img width="40" :src="handlerGetIcon(nav.icon)" >
                 <div class="navigation-list-item-appinfo">
@@ -13,12 +18,15 @@
                 <Badge class="navigation-list-item-msgcount" :count="nav.unreadNum" overflow-count="99" >
                 </Badge>
             </li>
-        </router-link>
+            
+        </router-link> -->
+       
     </ul>
 </template>
 <script>
 
 import {getNavListByMessage,readNotice} from "@/services/notificationsService";
+import {getMyImGroups} from "@/services/imService";
 import Bus from "@/assets/eventBus.js";
 export default {
     name:'Navigation',
@@ -29,7 +37,8 @@ export default {
                 limit:1000,
                 filter:''
             },
-            navs:[]
+            navs:[],
+            imGroups:[]
         }
     },
     methods:{
@@ -37,6 +46,11 @@ export default {
               getNavListByMessage(this.params).then(res=>{
                 this.navs = res.tableContent;
             });
+
+            getMyImGroups().then(res=>{
+                this.imGroups = res;
+            });
+            
         },
         //订阅消息
         subscribeMessage: function() {

@@ -50,6 +50,13 @@ export const  socialRouter = {
                             ]
                         }
                     ]
+                },{
+                    path: 'group/:groupId',
+                    name:'group',
+                    meta:{
+                        title:'即时通讯'
+                    },
+                    component: () => import('@/views/social/message/content/content.vue'),
                 }
             ]
         },{

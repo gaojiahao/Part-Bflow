@@ -4,43 +4,53 @@
 <template>
     <div class="content">
         <div class="content-header">
-            <div class="content-header-title" v-if="appInfo.title" :style="{lineHeight:appInfo.comment?'none':'50px'}">
+            <!-- <div class="content-header-title" v-if="appInfo.title" :style="{lineHeight:appInfo.comment?'none':'50px'}">
                 <a  @click="handleViewDetail">{{appInfo.title}}</a>
                 【{{appInfo.TRANS_NAME}}】
                 <span v-if="appInfo.administrator">管理员:{{appInfo.administrator}}</span>
                  <Icon class="fr" @click="handleExpend" type="ios-more" size="40" style="font-size: 40px;cursor: pointer;"/>
-            </div>
-           <pre class="content-header-comment" v-if="appInfo.comment">{{appInfo.comment}}</pre>
+            </div> -->
+           <!-- <pre class="content-header-comment" v-if="appInfo.comment">{{appInfo.comment}}</pre> -->
         </div>
         <Row class="content-container" >
-            <Col :span="$route.name !='list'?'16':'24'" class="content-container-msglist messagescrollbar" id='msgList'>
-                <div 
-                    class="content-container-msglist-item"
-                    v-bind:class="{'createbyme':n.creatorName===$currentUser.nickname}"
-                    v-for="(n,index) in  notifications" 
-                    :key="index">
+            <Col :span="$route.name !='list'?'16':'24'" 
+                style="height:100%"
+                >
+                <div class="content-container-msglist messagescrollbar" id='msgList'>
+                    <!-- <div 
+                        class="content-container-msglist-item"
+                        v-bind:class="{'createbyme':n.creatorName===$currentUser.nickname}"
+                        v-for="(n,index) in  notifications" 
+                        :key="index">
 
-                    <praise-notice 
-                        :data="n" 
-                        v-if="n.type=='praise'" 
-                        v-bind:class="{'notice-unread':!n.isRead}">
-                    </praise-notice>
+                        <praise-notice 
+                            :data="n" 
+                            v-if="n.type=='praise'" 
+                            v-bind:class="{'notice-unread':!n.isRead}">
+                        </praise-notice>
 
-                    <message-config :data="n" v-if="displayArr.indexOf(n.type) < 0"></message-config>
+                        <message-config :data="n" v-if="displayArr.indexOf(n.type) < 0"></message-config>
 
-                    <change-log-notice :data="n" v-if="n.type=='appChangeLog'"></change-log-notice>
+                        <change-log-notice :data="n" v-if="n.type=='appChangeLog'"></change-log-notice>
 
-                    <export-import-notice :data="n" v-if="n.type=='fileOut'"></export-import-notice>
+                        <export-import-notice :data="n" v-if="n.type=='fileOut'"></export-import-notice>
 
-                    <project-task-notice :data="n" v-if="n.type=='projectType'"></project-task-notice>
+                        <project-task-notice :data="n" v-if="n.type=='projectType'"></project-task-notice>
 
-                    <cancel-project-task-notice :data="n" v-if="n.type=='projectTaskRecall'"></cancel-project-task-notice>
+                        <cancel-project-task-notice :data="n" v-if="n.type=='projectTaskRecall'"></cancel-project-task-notice>
 
-                    <task-log-notice :data="n" v-if="n.type=='jobLog'" v-bind:class="{'notice-unread':!n.isRead}"></task-log-notice>
+                        <task-log-notice :data="n" v-if="n.type=='jobLog'" v-bind:class="{'notice-unread':!n.isRead}"></task-log-notice>
+                    </div> -->
+                    ////
+                    {{groupId}}
+                    <imContents :groupId="groupId"></imContents>
+                </div>
+                <div class="content-message-input">
+                    <commentPublish :handlePublish="handlePublish" ></commentPublish>
                 </div>
             </Col>
-            <Col span="8" v-if="$route.name !='list'" class="content-container-history" >
-            
+            <Col span="8" v-if="$route.name !='list'" 
+                class="content-container-history" >
                 <router-view></router-view>
             </Col>
         </Row>
@@ -59,7 +69,14 @@ import MessageConfig from '@/views/social/message/notice-tpl/message-config'
 
 import Messageistory from "@/views/social/message/content/messageistory";
 
+import commentPublish from "@/components/discussion/publish";
+
+import imContents from "@/views/social/message/content/im-contents";
+
 import {getAllnotifications} from "@/services/notificationsService";
+
+
+
 import {getListData} from "@/services/appService";
 
 import Bus from "@/assets/eventBus.js";
@@ -75,7 +92,9 @@ export default {
         ProjectTaskNotice,
         CancelProjectTaskNotice,
         TaskLogNotice,
-        MessageConfig
+        MessageConfig,
+        commentPublish,
+        imContents
     },
     data(){
         return {
@@ -97,22 +116,25 @@ export default {
         
     },
     methods:{
+        handlePublish(){
+            debugger
+        },
         //滚动加载
         handleScroll () {
-            let scrollDiv = document.getElementById('msgList'),
-                that= this,
-                scrollTop;
-            scrollDiv.addEventListener('scroll', function() {
-                scrollTop = scrollDiv.scrollTop;
+            // let scrollDiv = document.getElementById('msgList'),
+            //     that= this,
+            //     scrollTop;
+            // scrollDiv.addEventListener('scroll', function() {
+            //     scrollTop = scrollDiv.scrollTop;
 
-                if(Math.ceil(scrollDiv.clientHeight+scrollTop) +2 >= scrollDiv.scrollHeight){
-                    if(that.params.total > that.notifications.length){
-                        that.params.page++;
-                        that.isRolling = true;
-                        that.refreshNotifics();
-                    }
-                }
-            });
+            //     if(Math.ceil(scrollDiv.clientHeight+scrollTop) +2 >= scrollDiv.scrollHeight){
+            //         if(that.params.total > that.notifications.length){
+            //             that.params.page++;
+            //             that.isRolling = true;
+            //             that.refreshNotifics();
+            //         }
+            //     }
+            // });
         },
          //请求所有消息
         refreshNotifics(){
@@ -170,21 +192,28 @@ export default {
         $route(to, from) {
             this.params.page=1;
             this.isRolling = false;
-            this.listId = this.$route.params.listId;
+            // this.listId = this.$route.params.listId;
             this.handleScroll();
-            this.refreshAppInfo();
-            this.refreshNotifics();
-            localStorage.setItem('activeNavigatioIdOfNotice',this.listId);
+            // this.refreshAppInfo();
+            // this.refreshNotifics();
+            // localStorage.setItem('activeNavigatioIdOfNotice',this.listId);
+            this.groupId = this.$route.params.groupId;
         }
     },
     mounted(){
         this.listId = this.$route.params.listId;
-        this.handleScroll();
-        this.refreshAppInfo();
-        this.refreshNotifics();
-        Bus.$on('refreshNotice',()=>{
+        this.groupId = this.$route.params.groupId;
+
+        if(this.listId){
+            this.refreshAppInfo();
             this.refreshNotifics();
-        })
+            Bus.$on('refreshNotice',()=>{
+                this.refreshNotifics();
+            })
+        }
+
+        this.handleScroll();
+       
     }
 
 }

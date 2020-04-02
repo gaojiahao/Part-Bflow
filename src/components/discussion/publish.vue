@@ -4,37 +4,7 @@
 
 <template>
  <div class="publish">
-    <Row class="publish-container">
-        <div 
-            class="publish-container-content" 
-            id = "contentWrap"
-            contenteditable="true" 
-            ref="editor"
-            v-html="innerText"
-            @input="changeTxt"
-            @blur="onPopperShow"
-            @focus="lock=true" 
-            @keydown="handleDOMRemoved"
-            ></div>
-
-        <div class="atwho-view" id="at-view-64" v-show="userListVisible" :style="{top:`${top}px`,left:`${left}px`}" >
-            <ul class="atwho-view-ul" @click="handleSelectUser" >
-               <li 
-                    v-for="(item,index) in userList" 
-                    :key="item.userId" 
-                    :userId="item.userId" 
-                    :class="{'at-high-light': index === currentWho.index}"
-                    @mousedown="OnMouseDown"
-                    @mouseover="handleMouseover(index)"
-                 
-                    >
-                    {{item.nickname}}
-                </li>
-            </ul>
-        </div>    
-    </Row>
-    <br>
-    <Row class="publish-bar">
+      <Row class="publish-bar">
         <Col class="publish-bar-left" span="12">
             <Poptip 
                 placement="bottom-start" 
@@ -149,11 +119,42 @@
                    
                 </div>
             </Poptip>
-            <!-- <span v-if="ischild">
-                <Checkbox v-model="commentAndReply">同时评论到此应用</Checkbox>
-            </span> -->
         </Col>
-        <Col class="publish-bar-right" span="12">
+        <!-- <Col class="publish-bar-right" span="12">
+            <Button  @click.native="handleSend" >发送</Button>
+        </Col> -->
+    </Row>
+    <Row class="publish-container">
+        <div 
+            class="publish-container-content" 
+            id = "contentWrap"
+            contenteditable="true" 
+            ref="editor"
+            v-html="innerText"
+            @input="changeTxt"
+            @blur="onPopperShow"
+            @focus="lock=true" 
+            @keydown="handleDOMRemoved"
+            ></div>
+
+        <div class="atwho-view" id="at-view-64" v-show="userListVisible" :style="{top:`${top}px`,left:`${left}px`}" >
+            <ul class="atwho-view-ul" @click="handleSelectUser" >
+               <li 
+                    v-for="(item,index) in userList" 
+                    :key="item.userId" 
+                    :userId="item.userId" 
+                    :class="{'at-high-light': index === currentWho.index}"
+                    @mousedown="OnMouseDown"
+                    @mouseover="handleMouseover(index)"
+                 
+                    >
+                    {{item.nickname}}
+                </li>
+            </ul>
+        </div>    
+    </Row>
+    <Row class="publish-bar">
+        <Col class="publish-bar-right" span="24">
             <Button  @click.native="handleSend" >发送</Button>
         </Col>
     </Row>

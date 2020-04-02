@@ -140,6 +140,39 @@
                         style="width:60%">
                     </Input>
                 </FormItem>
+                <div class="info-line"></div>
+                <FormItem label="开户银行：">
+                    <Input 
+                        :class="{'info-edit':isEdit}" 
+                        :readonly="isEdit" 
+                        v-model="formItem.openBank" 
+                        style="width:60%">
+                    </Input>
+                </FormItem>
+                <FormItem label="户名：">
+                    <Input 
+                        :class="{'info-edit':isEdit}" 
+                        :readonly="isEdit" 
+                        v-model="formItem.bankName" 
+                        style="width:60%">
+                    </Input>
+                </FormItem>
+                <FormItem label="银行账号：">
+                    <Input 
+                        :class="{'info-edit':isEdit}" 
+                        :readonly="isEdit" 
+                        v-model="formItem.bankAccount" 
+                        style="width:60%">
+                    </Input>
+                </FormItem>
+                <FormItem label="开户地区：">
+                    <Input 
+                        :class="{'info-edit':isEdit}" 
+                        :readonly="isEdit" 
+                        v-model="formItem.openArea" 
+                        style="width:60%">
+                    </Input>
+                </FormItem>
                 <div v-if="isAdd && isEdit" class="info-line"></div>
                 <FormItem v-if="isAdd && isEdit" label="创建者：">
                     <span>{{ userInfo.creatorName }}</span>
@@ -281,6 +314,10 @@ export default {
         dealerLabel: [],
         mobile: "",
         officePhone: "",
+        openBank: "",
+        bankName: "",
+        bankAccount: "",
+        openArea: "",
         email: "",
         status: -3,
         gender: "1",
@@ -347,6 +384,10 @@ export default {
                 this.formItem.mobile = this.userInfo.mobile;
                 this.formItem.officePhone = this.userInfo.officePhone;
                 this.formItem.email = this.userInfo.email;
+                this.formItem.openBank = this.userInfo.openBank;
+                this.formItem.bankName = this.userInfo.bankName;
+                this.formItem.bankAccount = this.userInfo.bankAccount;
+                this.formItem.openArea = this.userInfo.openArea;
                 this.formItem.termOfValidity = this.userInfo.termOfValidity;
                 this.formItem.gender = String(this.userInfo.gender);
                 this.formItem.status = this.userInfo.status;

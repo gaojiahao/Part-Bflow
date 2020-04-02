@@ -145,7 +145,7 @@
                     <Input 
                         :class="{'info-edit':isEdit}" 
                         :readonly="isEdit" 
-                        v-model="formItem.openBank" 
+                        v-model="formItem.depositBank" 
                         style="width:60%">
                     </Input>
                 </FormItem>
@@ -153,7 +153,7 @@
                     <Input 
                         :class="{'info-edit':isEdit}" 
                         :readonly="isEdit" 
-                        v-model="formItem.bankName" 
+                        v-model="formItem.accountName" 
                         style="width:60%">
                     </Input>
                 </FormItem>
@@ -169,7 +169,7 @@
                     <Input 
                         :class="{'info-edit':isEdit}" 
                         :readonly="isEdit" 
-                        v-model="formItem.openArea" 
+                        v-model="formItem.accountArea" 
                         style="width:60%">
                     </Input>
                 </FormItem>
@@ -314,10 +314,10 @@ export default {
         dealerLabel: [],
         mobile: "",
         officePhone: "",
-        openBank: "",
-        bankName: "",
+        depositBank: "",
+        accountName: "",
         bankAccount: "",
-        openArea: "",
+        accountArea: "",
         email: "",
         status: -3,
         gender: "1",
@@ -384,10 +384,10 @@ export default {
                 this.formItem.mobile = this.userInfo.mobile;
                 this.formItem.officePhone = this.userInfo.officePhone;
                 this.formItem.email = this.userInfo.email;
-                this.formItem.openBank = this.userInfo.openBank;
-                this.formItem.bankName = this.userInfo.bankName;
+                this.formItem.depositBank = this.userInfo.depositBank;
+                this.formItem.accountName = this.userInfo.accountName;
                 this.formItem.bankAccount = this.userInfo.bankAccount;
-                this.formItem.openArea = this.userInfo.openArea;
+                this.formItem.accountArea = this.userInfo.accountArea;
                 this.formItem.termOfValidity = this.userInfo.termOfValidity;
                 this.formItem.gender = String(this.userInfo.gender);
                 this.formItem.status = this.userInfo.status;
@@ -614,6 +614,10 @@ export default {
                                 this.logo = '';
                                 this.formItem.photo = '';
                                 this.formItem.jobNumber = '';
+                                this.formItem.depositBank = '';
+                                this.formItem.accountName = '';
+                                this.formItem.bankAccount = '';
+                                this.formItem.accountArea = '';
                                 this.formItem.gender = "1";
                                 this.formItem.status = -3;
                                 this.formItem.userType = "1";

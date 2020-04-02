@@ -2,6 +2,10 @@
     <div>
         <div v-for="(m,index) in  messages" :key="index">
             {{m.content}}
+
+            <!-- 文本消息组件 -->
+            <!-- 图片消息组件 -->
+            <!-- 文件消息组件 -->
         </div>
     </div>
 </template>

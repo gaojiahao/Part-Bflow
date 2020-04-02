@@ -41,8 +41,6 @@
 
                         <task-log-notice :data="n" v-if="n.type=='jobLog'" v-bind:class="{'notice-unread':!n.isRead}"></task-log-notice>
                     </div> -->
-                    ////
-                    {{groupId}}
                     <imContents :groupId="groupId"></imContents>
                 </div>
                 <div class="content-message-input">

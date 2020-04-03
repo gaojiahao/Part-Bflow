@@ -4,8 +4,25 @@
 <template>
     <ul class="navigation-list messagescrollbar">
          <router-link :to="'/social/message/group/'+ g.groupId" v-for="(g,index) in  imGroups" :key="index">
-            <li>
+            <!-- <li>
                 <div>{{g.groupName}}</div>
+            </li> -->
+
+            <li  class="navigation-list-item"   v-bind:class="{ 'active':$route.params.groupId==g.groupId }">
+                <img width="40" src="https://lab.roletask.com/resource/roletask-logo.png" style="border: 1px solid #ddd;">
+                <div class="navigation-list-item-appinfo">
+                    <div class="font14">
+                        <strong>{{g.groupName}}</strong>
+                    </div>
+                    <div class="font12 navigation-list-item-appinfo-name">
+                        <!-- {{g.lastMsg}} -->
+                        <span>{{g.lastMsg.nickname}}:</span>
+                        <span v-html="g.lastMsg.content"></span>
+                    </div>
+                </div>
+
+                <Badge class="navigation-list-item-msgcount" :count="g.msgCount" overflow-count="99" >
+                </Badge>
             </li>
         </router-link>
         <!-- <router-link  :to="'/social/message/list/'+ nav.listId" v-for="(nav,index) in  navs" :key="index" >
@@ -113,9 +130,9 @@ export default {
         },
         //点击某个菜单
         handleActiveNavigation(nav){
-            readNotice(nav.listId).then(res=>{
-                nav.unreadNum = 0;
-            });
+            // readNotice(nav.listId).then(res=>{
+            //     nav.unreadNum = 0;
+            // });
         },
         handlerGetIcon(icon){
             if(icon){

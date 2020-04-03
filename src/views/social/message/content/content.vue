@@ -72,7 +72,7 @@ import commentPublish from "@/components/discussion/publish";
 import imContents from "@/views/social/message/content/im-contents";
 
 import {getAllnotifications} from "@/services/notificationsService";
-
+import {sendMessage} from "@/services/imService";
 
 
 import {getListData} from "@/services/appService";
@@ -114,8 +114,24 @@ export default {
         
     },
     methods:{
-        handlePublish(){
-            debugger
+        handlePublish(content,uploadList,userIds,superComment,commentAndReply,sendComponent){
+            var message = {
+                groupId:this.groupId,
+                content:content,
+			    imType:1
+            }
+            sendMessage(message).then(res=>{
+                 if(res.success && sendComponent){
+                    sendComponent.innerText = '';
+                    sendComponent.discContent.txt = '';
+                    sendComponent.$refs.editor && (sendComponent.$refs.editor.innerHTML = "");
+                    sendComponent.atUsers = [];
+                    sendComponent.$refs.upload && (sendComponent.$refs.upload.clearFiles());
+                    sendComponent.$refs.uploadFile && (sendComponent.$refs.uploadFile.clearFiles());
+                    sendComponent.uploadList = sendComponent.$refs.upload && sendComponent.$refs.upload.fileList;
+                    sendComponent.uploadFileList = sendComponent.$refs.uploadFile && sendComponent.$refs.uploadFile.fileList;
+                }
+            });
         },
         //滚动加载
         handleScroll () {

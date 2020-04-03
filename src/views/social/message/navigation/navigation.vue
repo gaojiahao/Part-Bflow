@@ -14,7 +14,7 @@
                     <div class="font14">
                         <strong>{{g.groupName}}</strong>
                     </div>
-                    <div class="font12 navigation-list-item-appinfo-name">
+                    <div class="font12 navigation-list-item-appinfo-name" v-if="g.lastMsg">
                         <!-- {{g.lastMsg}} -->
                         <span>{{g.lastMsg.nickname}}:</span>
                         <span v-html="g.lastMsg.content"></span>
@@ -60,9 +60,9 @@ export default {
     },
     methods:{
         refreshNavListByMessage:function (params) {
-              getNavListByMessage(this.params).then(res=>{
-                this.navs = res.tableContent;
-            });
+            //   getNavListByMessage(this.params).then(res=>{
+            //     this.navs = res.tableContent;
+            // });
 
             getMyImGroups().then(res=>{
                 this.imGroups = res;

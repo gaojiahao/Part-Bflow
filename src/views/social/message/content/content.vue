@@ -94,8 +94,17 @@ export default {
         commentPublish,
         imContents
     },
+    props:{
+       group: {
+            type:Object,
+            default(){
+                return {}
+            }
+        }
+    },
     data(){
         return {
+            groupId:'',
             params:{
                 page:1,
                 limit:10,

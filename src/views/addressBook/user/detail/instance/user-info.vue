@@ -140,6 +140,39 @@
                         style="width:60%">
                     </Input>
                 </FormItem>
+                <div class="info-line"></div>
+                <FormItem label="开户银行：">
+                    <Input 
+                        :class="{'info-edit':isEdit}" 
+                        :readonly="isEdit" 
+                        v-model="formItem.depositBank" 
+                        style="width:60%">
+                    </Input>
+                </FormItem>
+                <FormItem label="户名：">
+                    <Input 
+                        :class="{'info-edit':isEdit}" 
+                        :readonly="isEdit" 
+                        v-model="formItem.accountName" 
+                        style="width:60%">
+                    </Input>
+                </FormItem>
+                <FormItem label="银行账号：">
+                    <Input 
+                        :class="{'info-edit':isEdit}" 
+                        :readonly="isEdit" 
+                        v-model="formItem.bankAccount" 
+                        style="width:60%">
+                    </Input>
+                </FormItem>
+                <FormItem label="开户地区：">
+                    <Input 
+                        :class="{'info-edit':isEdit}" 
+                        :readonly="isEdit" 
+                        v-model="formItem.accountArea" 
+                        style="width:60%">
+                    </Input>
+                </FormItem>
                 <div v-if="isAdd && isEdit" class="info-line"></div>
                 <FormItem v-if="isAdd && isEdit" label="创建者：">
                     <span>{{ userInfo.creatorName }}</span>
@@ -281,6 +314,10 @@ export default {
         dealerLabel: [],
         mobile: "",
         officePhone: "",
+        depositBank: "",
+        accountName: "",
+        bankAccount: "",
+        accountArea: "",
         email: "",
         status: -3,
         gender: "1",
@@ -347,6 +384,10 @@ export default {
                 this.formItem.mobile = this.userInfo.mobile;
                 this.formItem.officePhone = this.userInfo.officePhone;
                 this.formItem.email = this.userInfo.email;
+                this.formItem.depositBank = this.userInfo.depositBank;
+                this.formItem.accountName = this.userInfo.accountName;
+                this.formItem.bankAccount = this.userInfo.bankAccount;
+                this.formItem.accountArea = this.userInfo.accountArea;
                 this.formItem.termOfValidity = this.userInfo.termOfValidity;
                 this.formItem.gender = String(this.userInfo.gender);
                 this.formItem.status = this.userInfo.status;
@@ -573,6 +614,10 @@ export default {
                                 this.logo = '';
                                 this.formItem.photo = '';
                                 this.formItem.jobNumber = '';
+                                this.formItem.depositBank = '';
+                                this.formItem.accountName = '';
+                                this.formItem.bankAccount = '';
+                                this.formItem.accountArea = '';
                                 this.formItem.gender = "1";
                                 this.formItem.status = -3;
                                 this.formItem.userType = "1";

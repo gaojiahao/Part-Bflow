@@ -2,7 +2,6 @@
   .text-message{
     margin: 15px 0px;
     .text-content{
-      background-color: #eee;
       padding: 5px;
       margin: 5px;
       border-radius: 4px;
@@ -13,9 +12,13 @@
   }
 </style>
 <template>
-    <div class="text-message">
-        <p class="text-creator">{{ textMessage.creator }}</p>
-        <span class="text-content" v-html="textMessage.content"></span>
+    <div class="text-message" :style="{textAlign: textMessage.isMySelf?'right':'left'}">
+        <p class="text-creator" v-if="!textMessage.isMySelf">{{ textMessage.creator }}</p>
+        <span 
+          class="text-content" 
+          :style="{backgroundColor:textMessage.isMySelf?'rgb(229, 243, 237)':'#eee'}" 
+          v-html="textMessage.content">
+        </span>
     </div>
 </template>
 

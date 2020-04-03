@@ -1,10 +1,8 @@
 <template>
     <div>
         <div v-for="(m,index) in  messages" :key="index">
-            {{m.content}}
-
-            <!-- 文本消息组件 -->
-            <!-- 图片消息组件 -->
+            <!-- 消息组件 -->
+            <content-message :textMessage="m"></content-message>
             <!-- 文件消息组件 -->
         </div>
     </div>
@@ -13,8 +11,12 @@
 <script>
 
 import {getMessagesByGroupId} from "@/services/imService";
+import ContentMessage from "../message-tpl/content-message";
 export default {
     name:'imContents',
+    components:{
+        ContentMessage
+    },
     data(){
         return {
             messages:[]
@@ -23,7 +25,7 @@ export default {
     watch:{
         groupId:function (val, oldVal) {
             this.getMessages();
-        },
+        }
     },
     props:{
         groupId:{
@@ -31,7 +33,7 @@ export default {
             default:function(){
                 return '';
             }
-        },
+        }
     },
     methods:{
         getMessages(){

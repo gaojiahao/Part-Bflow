@@ -27,6 +27,15 @@ export const sendMessage = (params) => request('/H_roleplay-si/im/message/save',
  */
 export const getMembers = (groupId) => request('/H_roleplay-si/im/group/getMembers',{groupId:groupId})
 
+/**
+ * @author XiaoYing
+ * @description 查看消息的阅读情况
+ */
+export const getMsgCheckStatus = (msgId, checkType) => request('/H_roleplay-si/im/message/getMsgCheckStatus',{
+  msgId: msgId,
+  checkType: checkType
+})
+
 
 
 

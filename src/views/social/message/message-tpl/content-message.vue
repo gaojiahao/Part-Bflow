@@ -5,7 +5,13 @@
       padding: 10px;
       margin: 5px;
       border-radius: 4px;
+      max-width: 80%;
+      word-wrap: break-word;
       display: inline-block;
+      text-align: left;
+      /deep/ .paste-img{
+        width: 150px;
+      }
     }
     .text-creator{
       margin: 0px 0px 0px 5px;
@@ -58,7 +64,7 @@
           class="text-content"
           @mouseenter="enter"
           @mouseleave="leave" 
-          :style="{backgroundColor:textMessage.isMySelf?'rgb(199, 232, 226)':'#eee'}" 
+          :style="{backgroundColor:textMessage.isMySelf?'rgb(191, 221, 255)':'#eee'}" 
           v-html="textMessage.content">
         </span>
     </div>

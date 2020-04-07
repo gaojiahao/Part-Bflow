@@ -9,20 +9,21 @@
             :to="{name:'group',params:{groupId: g.groupId},query:{groupName:g.groupName,groupType:g.groupType}}" 
             v-for="(g,index) in  imGroups" 
             :key="index">
-            <!-- <li>
-                <div>{{g.groupName}}</div>
-            </li> -->
-
+          
             <li  class="navigation-list-item"   v-bind:class="{ 'active':$route.params.groupId==g.groupId }">
-                <img width="40" :src="g.groupIcon?g.groupIcon:'resources/images/icon/defaultUserPhoto.png'" onerror="src='resources/images/icon/defaultUserPhoto.png'" style="border: 1px solid #ddd;">
+                <img width="45" :src="g.groupIcon?g.groupIcon:'resources/images/icon/defaultUserPhoto.png'" onerror="src='resources/images/icon/defaultUserPhoto.png'" style="border: 1px solid #ddd;">
                 <div class="navigation-list-item-appinfo">
                     <div class="font14">
-                        <strong>{{g.groupName}}</strong>
+                        <p>{{g.groupName}}</p>
                     </div>
                     <div class="font12 navigation-list-item-appinfo-name" v-if="g.lastMsg">
-                        <!-- {{g.lastMsg}} -->
-                        <span>{{g.lastMsg.nickname}}:</span>
-                        <span v-html="g.lastMsg.content"></span>
+                        <div class="navigation-list-item-appinfo-name-lastcontent">
+                            <span>{{g.lastMsg.creatorName}}:</span>
+                            <span v-html="g.lastMsg.content"></span>
+                        </div>
+                        <div class="navigation-list-item-appinfo-name-lastTime">
+                            <Time :time="g.lastMsg.crtTime" />
+                        </div>
                     </div>
                 </div>
 

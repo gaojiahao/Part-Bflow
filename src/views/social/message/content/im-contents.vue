@@ -1,9 +1,15 @@
+<style lang="less" scoped>
+  .message-list{
+      
+  }
+</style>
 <template>
-    <div>
+    <div class="message-list">
         <div v-for="(m,index) in  messages" :key="index">
             <!-- 消息组件 -->
             <content-message :textMessage="m"></content-message>
             <!-- 文件消息组件 -->
+            <!-- <file-message :fileMessage="m"></file-message> -->
         </div>
     </div>
 </template>
@@ -12,10 +18,12 @@
 
 import {getMessagesByGroupId} from "@/services/imService";
 import ContentMessage from "../message-tpl/content-message";
+import FileMessage from "../message-tpl/file-message";
 export default {
     name:'imContents',
     components:{
-        ContentMessage
+        ContentMessage,
+        FileMessage
     },
     data(){
         return {

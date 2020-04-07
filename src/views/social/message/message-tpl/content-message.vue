@@ -2,21 +2,63 @@
   .text-message{
     margin: 15px 0px;
     .text-content{
-      padding: 5px;
+      padding: 10px;
       margin: 5px;
       border-radius: 4px;
+      display: inline-block;
     }
     .text-creator{
-      margin: 0px 0px 5px 5px;
+      margin: 0px 0px 0px 5px;
+      .text-crtTime{
+        color: #afaaaa;
+        font-size: 10px;
+        margin: 0px 2px;
+      }
+    }
+    .read-message{
+      .message-noread{
+        border:2px solid #ddd;
+        width: 15px;
+        height: 15px;
+        display: inline-block;
+        border-radius: 50%;
+      }
+      .message-read, 
+      .message-allread
+      {
+        border:1px solid #ddd;
+        width: 15px;
+        height: 15px;
+        display: inline-block;
+        border-radius: 50%;
+        font-size: 10px;
+        color: #ddd;
+        text-align: center;
+        line-height: 15px;
+      }
     }
   }
 </style>
 <template>
     <div class="text-message" :style="{textAlign: textMessage.isMySelf?'right':'left'}">
-        <p class="text-creator" v-if="!textMessage.isMySelf">{{ textMessage.creator }}</p>
+        <div class="text-creator">
+          <span v-if="!textMessage.isMySelf">{{ textMessage.creatorName }}</span>
+          <span 
+            :style="{visibility:showTime?'visible':'hidden'}" 
+            class="text-crtTime">
+            {{ textMessage.crtTime }}
+          </span>
+        </div>
+        <span class="read-message" v-if="textMessage.isMySelf">
+          <span v-if="textMessage.allRead" class="message-allread">✓</span>
+          <span v-else-if="textMessage.checked === 0" class="message-noread"></span>
+          <span v-else class="message-read">{{ textMessage.checked }}</span>
+        </span>
         <span 
-          class="text-content" 
-          :style="{backgroundColor:textMessage.isMySelf?'rgb(229, 243, 237)':'#eee'}" 
+          class="text-content"
+          @mouseenter="enter"
+          @mouseleave="leave" 
+          :style="{backgroundColor:textMessage.isMySelf?'rgb(199, 232, 226)':'#eee'}" 
           v-html="textMessage.content">
         </span>
     </div>
@@ -27,7 +69,7 @@ export default {
     name:'ContentMessage',
     data(){
         return {
-           
+           showTime: false
         }
     },
     props:{
@@ -39,7 +81,12 @@ export default {
         }
     },
     methods:{
-        
+        enter() {
+          this.showTime = true;
+        },
+        leave() {
+          this.showTime = false;
+        }
     },
     mounted(){
         

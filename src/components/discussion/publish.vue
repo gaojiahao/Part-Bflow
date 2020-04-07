@@ -152,9 +152,10 @@
                 </div>
             </Poptip>
         </Col>
-        <!-- <Col class="publish-bar-right" span="12">
-            <Button  @click.native="handleSend" >发送</Button>
-        </Col> -->
+        <Col class="publish-bar-right" span="12">
+            <!-- <Button  @click.native="handleSend" >发送</Button> -->
+            <Icon type="ios-list-box-outline" size=24 title="消息记录" v-on:click="onViewHistory" />
+        </Col>
     </Row>
     <Row class="publish-container">
         <div 
@@ -279,6 +280,9 @@ export default {
         },
     },
     methods: {
+        onViewHistory(){
+            this.$router.push({name:"history"});
+        },
         OnMouseDown(e) {
             e.preventDefault()
         },

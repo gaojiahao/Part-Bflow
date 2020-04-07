@@ -13,7 +13,7 @@
             <li  class="navigation-list-item"   v-bind:class="{ 'active':$route.params.groupId==g.groupId }">
                 <img width="45" :src="g.groupIcon?g.groupIcon:'resources/images/icon/defaultUserPhoto.png'" onerror="src='resources/images/icon/defaultUserPhoto.png'" style="border: 1px solid #ddd;">
                 <div class="navigation-list-item-appinfo">
-                    <div class="font14">
+                    <div class="font14 font12 navigation-list-item-appinfo-groupName">
                         <p>{{g.groupName}}</p>
                     </div>
                     <div class="font12 navigation-list-item-appinfo-name" v-if="g.lastMsg">
@@ -93,7 +93,7 @@ export default {
         subscribeIm:function(){
             let deepstream = this.$deepstream;
             //消息订阅
-            deepstream.event.subscribe("toUser/" + JSON.parse(localStorage.getItem('roleplay-token')).token, res => {
+            deepstream.event.subscribe("roletaskIm/" + JSON.parse(localStorage.getItem('roleplay-token')).token, res => {
                 debugger
             });
         },

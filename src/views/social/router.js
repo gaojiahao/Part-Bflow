@@ -21,16 +21,65 @@ export const  socialRouter = {
                         title: '应用消息',
                     },
                     component: () => import('@/views/social/message/content/content.vue'),
+                    // children:[
+                    //     {
+                    //         path:'history',
+                    //         name:'history',
+                    //         meta:{
+                    //             title:'历史纪录'
+                    //         },
+                    //         redirect: 'history/files',
+                    //         component: () => import('@/views/social/message/content/messageistory.vue'),
+                    //         children: [
+                    //             {
+                    //                 path: 'files',
+                    //                 name: 'files',
+                    //                 meta: {
+                    //                     title: '附件'
+                    //                 },
+                    //                 component: () => import('@/views/social/message/content/history/files.vue'),
+                    //             },
+                    //             {
+                    //                 path: 'images',
+                    //                 name: 'images',
+                    //                 meta: {
+                    //                     title: '图片'
+                    //                 },
+                    //                 component: () => import('@/views/social/message/content/history/images.vue'),
+                    //             }
+                    //         ]
+                    //     }
+                    // ]
+                },{
+                    path: 'group/:groupId',
+                    name:'group',
+                    meta:{
+                        title:'即时通讯'
+                    },
+                    component: () => import('@/views/social/message/content/content.vue'),
                     children:[
+                        {
+                            path:'member',
+                            name:'member',
+                            meta:{
+                                title:'群成员'
+                            },
+                            component:() => import('@/views/social/message/content/groupMember.vue'),
+                        },
                         {
                             path:'history',
                             name:'history',
-                            meta:{
-                                title:'历史纪录'
-                            },
-                            redirect: 'history/files',
-                            component: () => import('@/views/social/message/content/messageistory.vue'),
+                            redirect: 'history/all',
+                            component: () => import('@/views/social/message/content/history/history-layout.vue'),
                             children: [
+                                {
+                                    path: 'all',
+                                    name: 'all',
+                                    meta: {
+                                        title: '全部'
+                                    },
+                                    component: () => import('@/views/social/message/content/history/all-message.vue'),
+                                },
                                 {
                                     path: 'files',
                                     name: 'files',
@@ -48,23 +97,6 @@ export const  socialRouter = {
                                     component: () => import('@/views/social/message/content/history/images.vue'),
                                 }
                             ]
-                        }
-                    ]
-                },{
-                    path: 'group/:groupId',
-                    name:'group',
-                    meta:{
-                        title:'即时通讯'
-                    },
-                    component: () => import('@/views/social/message/content/content.vue'),
-                    children:[
-                        {
-                            path:'member',
-                            name:'member',
-                            meta:{
-                                title:'群成员'
-                            },
-                            component:() => import('@/views/social/message/content/groupMember.vue'),
                         }
                     ]
                 }

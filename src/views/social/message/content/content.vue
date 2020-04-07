@@ -7,7 +7,7 @@
             <groupHeader></groupHeader>
         </div>
         <Row class="content-container" >
-            <Col :span="$route.name =='member'?'16':'24'" 
+            <Col :span="['member','all','files'].includes(this.$route.name)?'16':'24'" 
                 style="height:100%"
                 >
                 <div class="content-container-msglist messagescrollbar" id='msgList'>
@@ -42,7 +42,7 @@
                 </div>
             </Col>
             <Col span="8"
-                class="content-container-history" v-if="$route.name =='member'" >
+                class="content-container-history" v-if="['member','all','files'].includes(this.$route.name)">
                 <router-view></router-view>
             </Col>
         </Row>
@@ -68,7 +68,7 @@ import groupHeader from "@/views/social/message/content/groupHeader";
 import imContents from "@/views/social/message/content/im-contents";
 
 import {getAllnotifications} from "@/services/notificationsService";
-import {sendMessage} from "@/services/imService";
+import {sendMessage,checkMessage} from "@/services/imService";
 
 
 import {getListData} from "@/services/appService";
@@ -217,6 +217,9 @@ export default {
         },
         msgInputClick:function(){
             //to:签收消息
+            checkMessage(this.groupId).then(res=>{
+                debugger
+            });
         }
     },
     watch: {

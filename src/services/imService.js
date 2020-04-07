@@ -27,6 +27,15 @@ export const sendMessage = (params) => request('/H_roleplay-si/im/message/save',
  */
 export const getMembers = (groupId) => request('/H_roleplay-si/im/group/getMembers',{groupId:groupId})
 
+/**
+ * @author snack.haugng
+ * @description 签收消息
+ */
+export const checkMessage = (groupId) => request('/H_roleplay-si/im/message/check',{},'POST',{groupId:groupId})
+
+
+
+
 
 
 

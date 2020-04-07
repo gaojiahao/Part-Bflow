@@ -155,14 +155,18 @@ export default {
         this.members = this.noreadMembers;
       },
       getReadMembers() {
-        getMsgCheckStatus(this.detailMessage.id,1).then(res => {
+        getMsgCheckStatus(this.detailMessage.id, 1).then(res => {
           this.readMembers = res;
           this.members = this.readMembers;
+        }).catch(err => {
+            this.$Message.error(err.data.message);
         })
       },
       getNoreadMembers() {
-        getMsgCheckStatus(this.detailMessage.id,0).then(res => {
+        getMsgCheckStatus(this.detailMessage.id, 0).then(res => {
           this.noreadMembers = res;
+        }).catch(err => {
+            this.$Message.error(err.data.message);
         })
       }
     },

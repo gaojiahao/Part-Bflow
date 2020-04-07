@@ -161,6 +161,9 @@ export default {
         this.refreshNavListByMessage();
         // this.subscribeMessage();
         this.subscribeIm();
+        Bus.$on('updateGroupName', () => {
+            this.refreshNavListByMessage();
+        })
     }
 
 }

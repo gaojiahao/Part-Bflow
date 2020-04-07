@@ -12,9 +12,10 @@
           </span>
         </div>
         <span class="read-message" v-if="textMessage.isMySelf">
-          <!-- <span v-if="textMessage.allRead" class="message-allread">✓</span>
-          <span v-else-if="textMessage.checked === 0" class="message-noread"></span> -->
+          <span v-if="textMessage.allRead" class="message-allread">✓</span>
+          <span v-else-if="textMessage.checked === 0" class="message-noread"></span>
           <span
+            v-else
             class="message-read" 
             @click="openMessageDetail"
             :style="{color:'#8bc8da',cursor:'pointer',borderColor: '#8bc8da'}">
@@ -55,7 +56,7 @@ export default {
           this.showTime = false;
         },
         openMessageDetail() {
-          this.$emit('showDetailModal',this.textMessage);
+          this.$emit('showDetailModal', this.textMessage);
         }
     },
     mounted(){

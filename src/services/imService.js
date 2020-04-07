@@ -36,6 +36,15 @@ export const getMsgCheckStatus = (msgId, checkType) => request('/H_roleplay-si/i
   checkType: checkType
 })
 
+/**
+ * @author XiaoYing
+ * @description 设置群名称
+ */
+export const setGroupName = (groupId, name) => request('/H_roleplay-si/im/group/setName',{
+  groupId: groupId,
+  name: name
+},'POST')
+
 
 
 

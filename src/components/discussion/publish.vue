@@ -23,8 +23,28 @@
                                 style="float:left;margin: 2px;cursor: pointer;">
                         </div>
             </Poptip>
-
-            <Poptip 
+            
+               <Upload
+                    v-show="uploadList.length<9"
+                    ref="upload"
+                    :show-upload-list="false"
+                    :default-file-list="defaultList"
+                    :on-success="handleSuccess"
+                    :format="['jpg','jpeg','png']"
+                    :max-size="2048"
+                    :headers="httpHeaders"
+                    :on-format-error="handleFormatError"
+                    :on-exceeded-size="handleMaxSize"
+                    :before-upload="handleBeforeImgUpload"
+                    multiple
+                    action="/H_roleplay-si/ds/upload"
+                    style="display: inline-block;position: relative;">
+                    <Icon 
+                    type="md-images" 
+                    class="choice-img"  
+                    size=24 />图片
+                </Upload>
+            <!-- <Poptip 
                 v-show="allowFile"
                 placement="bottom-start" 
                 width="235">
@@ -87,8 +107,20 @@
                                 v-if="visible" style="width: 100%">
                         </Modal>
                     </div>
-            </Poptip>
-
+            </Poptip> -->
+             <Upload
+                    multiple
+                    ref="uploadFile"
+                    :max-size="10240"
+                    :headers="httpHeaders"
+                    :on-success="handleFileSuccess"
+                    :on-exceeded-size="handleFileMaxSize"
+                    :default-file-list="defaultFileList"
+                    :before-upload="handleBeforeFileUpload"
+                     style="display: inline-block;position: relative;"
+                    action="/H_roleplay-si/ds/upload">
+                    <Icon icon="ios-cloud-upload-outline"/>上传文件
+                    </Upload>
             <Poptip 
                 
                 v-show="allowFile"
@@ -287,7 +319,7 @@ export default {
         choice_face: function(n) {
             // 创建需追加到光标处节点的文档片段
             const range = this.range.cloneRange();
-            let fragment = range.createContextualFragment('<img src="'+ n +'" width="20" paste="1">')
+            let fragment = range.createContextualFragment('<img class="face" src="'+ n +'" width="20" paste="1">')
             // 将创建的文档片段插入到光标处
             this.range.insertNode(fragment.lastChild)
       
@@ -485,6 +517,13 @@ export default {
         handleSuccess (res, file) {
             file.url ='/H_roleplay-si/ds/download?url=' +  res.data[0].attacthment;
             file.name  =res.data[0].attacthment;
+             // 创建需追加到光标处节点的文档片段
+            const range = this.range.cloneRange();
+            let fragment = range.createContextualFragment('<img class="paste-img" src="'+  file.url +'"  paste="1">');
+            // 将创建的文档片段插入到光标处
+            this.range.insertNode(fragment.lastChild)
+      
+            this.faceVisible = false;
         },
         handleFileSuccess(res, file){
             file.url ='/H_roleplay-si/ds/download?url=' +  res.data[0].attacthment;
@@ -529,9 +568,10 @@ export default {
         uploadImageByBase64(referenceID,file){
             let target = this.$refs.editor;
             uploadImage({
-                  referenceId:referenceID,
+                     referenceId:referenceID,
                     file:file
             }).then(res=>{
+                
                 if(res.length>0){
                     let imgArr = Array.from(target.getElementsByTagName('img'));
                     let f = imgArr.filter(item=>{
@@ -545,6 +585,7 @@ export default {
                         f[0].parentNode.replaceChild(img,f[0]);
                         this.discContent.txt =  target.innerHTML;
                     }else{
+                        debugger
                          document.execCommand('insertImage', false, `/H_roleplay-si/ds/download?url=${res[0].attacthment}`) 
                     }
                 }

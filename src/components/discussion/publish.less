@@ -4,13 +4,14 @@
         margin-bottom: 10px;
         // border: 1px solid #ddd;
         &-content{
-            min-height: 120px;
-            max-height: 120px;
+            min-height: 160px;
+            max-height: 160px;
             overflow-y: auto;
             padding: 5px;
 
-            /deep/ img{
-                width: 150px;
+            /deep/ .paste-img{
+                // width: 150px;
+                height: 80px;
             }
 
            
@@ -105,6 +106,22 @@
 }
 
 
+
+/*滚动条样式*/
+.api-emotion::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 4px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 4px;
+}
+.api-emotion::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+}
+.api-emotion::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: #e6ecf0;
+}
 .comment-upload-list{
         float: left;
         width: 60px;

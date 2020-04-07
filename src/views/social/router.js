@@ -57,6 +57,16 @@ export const  socialRouter = {
                         title:'即时通讯'
                     },
                     component: () => import('@/views/social/message/content/content.vue'),
+                    children:[
+                        {
+                            path:'member',
+                            name:'member',
+                            meta:{
+                                title:'群成员'
+                            },
+                            component:() => import('@/views/social/message/content/groupMember.vue'),
+                        }
+                    ]
                 }
             ]
         },{

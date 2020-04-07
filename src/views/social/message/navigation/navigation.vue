@@ -3,18 +3,23 @@
 </style>
 <template>
     <ul class="navigation-list messagescrollbar">
-         <router-link :to="'/social/message/group/'+ g.groupId" v-for="(g,index) in  imGroups" :key="index">
+        <!-- :to="{name:'detail',params:{name:1}}" -->
+        <!-- :to="'/social/message/group/'+ g.groupId" -->
+         <router-link 
+            :to="{name:'group',params:{groupId: g.groupId},query:{groupName:g.groupName,groupType:g.groupType}}" 
+            v-for="(g,index) in  imGroups" 
+            :key="index">
             <!-- <li>
                 <div>{{g.groupName}}</div>
             </li> -->
 
             <li  class="navigation-list-item"   v-bind:class="{ 'active':$route.params.groupId==g.groupId }">
-                <img width="40" src="https://lab.roletask.com/resource/roletask-logo.png" style="border: 1px solid #ddd;">
+                <img width="40" :src="g.groupIcon?g.groupIcon:'resources/images/icon/defaultUserPhoto.png'" onerror="src='resources/images/icon/defaultUserPhoto.png'" style="border: 1px solid #ddd;">
                 <div class="navigation-list-item-appinfo">
                     <div class="font14">
                         <strong>{{g.groupName}}</strong>
                     </div>
-                    <div class="font12 navigation-list-item-appinfo-name">
+                    <div class="font12 navigation-list-item-appinfo-name" v-if="g.lastMsg">
                         <!-- {{g.lastMsg}} -->
                         <span>{{g.lastMsg.nickname}}:</span>
                         <span v-html="g.lastMsg.content"></span>
@@ -60,9 +65,9 @@ export default {
     },
     methods:{
         refreshNavListByMessage:function (params) {
-              getNavListByMessage(this.params).then(res=>{
-                this.navs = res.tableContent;
-            });
+            //   getNavListByMessage(this.params).then(res=>{
+            //     this.navs = res.tableContent;
+            // });
 
             getMyImGroups().then(res=>{
                 this.imGroups = res;
@@ -71,6 +76,7 @@ export default {
         },
         //订阅消息
         subscribeMessage: function() {
+            debugger
             let deepstream = this.$deepstream,
                 userId = this.$currentUser.userId;
                 console.log('订阅');
@@ -81,6 +87,13 @@ export default {
                 if(res.dataCount>0){
                     this.hanleWindowNotification('您有'+ res.dataCount + '未读消息');
                 }
+            });
+        },
+        subscribeIm:function(){
+            let deepstream = this.$deepstream;
+            //消息订阅
+            deepstream.event.subscribe("toUser/" + JSON.parse(localStorage.getItem('roleplay-token')).token, res => {
+                debugger
             });
         },
         //桌面消息通知
@@ -145,7 +158,8 @@ export default {
     },
     mounted(){
         this.refreshNavListByMessage();
-        this.subscribeMessage();
+        // this.subscribeMessage();
+        this.subscribeIm();
     }
 
 }

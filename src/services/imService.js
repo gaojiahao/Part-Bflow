@@ -21,4 +21,12 @@ export const getMessagesByGroupId = (groupId) => request('/H_roleplay-si/im/mess
 export const sendMessage = (params) => request('/H_roleplay-si/im/message/save',{},'POST',params)
 
 
+/**
+ * @author snack.haugng
+ * @description 通过群ID获取群成员
+ */
+export const getMembers = (groupId) => request('/H_roleplay-si/im/group/getMembers',{groupId:groupId})
+
+
+
 

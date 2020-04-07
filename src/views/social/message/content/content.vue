@@ -4,13 +4,7 @@
 <template>
     <div class="content">
         <div class="content-header">
-            <!-- <div class="content-header-title" v-if="appInfo.title" :style="{lineHeight:appInfo.comment?'none':'50px'}">
-                <a  @click="handleViewDetail">{{appInfo.title}}</a>
-                【{{appInfo.TRANS_NAME}}】
-                <span v-if="appInfo.administrator">管理员:{{appInfo.administrator}}</span>
-                 <Icon class="fr" @click="handleExpend" type="ios-more" size="40" style="font-size: 40px;cursor: pointer;"/>
-            </div> -->
-           <!-- <pre class="content-header-comment" v-if="appInfo.comment">{{appInfo.comment}}</pre> -->
+            <groupHeader></groupHeader>
         </div>
         <Row class="content-container" >
             <Col :span="$route.name !='list'?'16':'24'" 
@@ -47,8 +41,8 @@
                     <commentPublish :handlePublish="handlePublish" ></commentPublish>
                 </div>
             </Col>
-            <Col span="8" v-if="$route.name !='list'" 
-                class="content-container-history" >
+            <Col span="8"
+                class="content-container-history" v-if="$route.name =='member'" >
                 <router-view></router-view>
             </Col>
         </Row>
@@ -68,6 +62,8 @@ import MessageConfig from '@/views/social/message/notice-tpl/message-config'
 import Messageistory from "@/views/social/message/content/messageistory";
 
 import commentPublish from "@/components/discussion/publish";
+
+import groupHeader from "@/views/social/message/content/groupHeader";
 
 import imContents from "@/views/social/message/content/im-contents";
 
@@ -92,10 +88,20 @@ export default {
         TaskLogNotice,
         MessageConfig,
         commentPublish,
-        imContents
+        imContents,
+        groupHeader
+    },
+    props:{
+       group: {
+            type:Object,
+            default(){
+                return {}
+            }
+        }
     },
     data(){
         return {
+            groupId:'',
             params:{
                 page:1,
                 limit:10,
@@ -115,10 +121,18 @@ export default {
     },
     methods:{
         handlePublish(content,uploadList,userIds,superComment,commentAndReply,sendComponent){
+            function uuid() {
+                    function S4() {
+                        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+                    }
+                    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+                }
+
             var message = {
                 groupId:this.groupId,
                 content:content,
-			    imType:1
+                imType:1,
+                id:uuid()
             }
             sendMessage(message).then(res=>{
                  if(res.success && sendComponent){
@@ -212,6 +226,9 @@ export default {
             // this.refreshNotifics();
             // localStorage.setItem('activeNavigatioIdOfNotice',this.listId);
             this.groupId = this.$route.params.groupId;
+            if(this.$route.query.groupType == 'G'){
+                this.$router.push({ name: 'member',query: to.query});
+            }
         }
     },
     mounted(){

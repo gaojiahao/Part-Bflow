@@ -42,6 +42,12 @@ export default {
     watch:{
         groupId:function (val, oldVal) {
             this.getMessages();
+            let deepstream = this.$deepstream;
+            //消息订阅
+            deepstream.event.subscribe("toGroup/" + val, res => {
+                debugger
+            });
+
         }
     },
     props:{

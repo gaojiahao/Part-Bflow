@@ -25,7 +25,7 @@
           class="text-content"
           @mouseenter="enter"
           @mouseleave="leave" 
-          :style="{backgroundColor:textMessage.isMySelf?'rgb(199, 232, 226)':'#eee'}" 
+          :style="{backgroundColor:textMessage.isMySelf?'rgb(191, 221, 255)':'#eee'}" 
           v-html="textMessage.content">
         </span>
     </div>

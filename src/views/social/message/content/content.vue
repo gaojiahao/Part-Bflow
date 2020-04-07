@@ -7,7 +7,7 @@
             <groupHeader></groupHeader>
         </div>
         <Row class="content-container" >
-            <Col :span="$route.name !='list'?'16':'24'" 
+            <Col :span="$route.name =='member'?'16':'24'" 
                 style="height:100%"
                 >
                 <div class="content-container-msglist messagescrollbar" id='msgList'>
@@ -37,7 +37,7 @@
                     </div> -->
                     <imContents :groupId="groupId"></imContents>
                 </div>
-                <div class="content-message-input">
+                <div class="content-message-input" v-on:click="msgInputClick()">
                     <commentPublish :handlePublish="handlePublish" ></commentPublish>
                 </div>
             </Col>
@@ -214,6 +214,9 @@ export default {
             // }else{
             //     this.$router.push({name:'list'});
             // }
+        },
+        msgInputClick:function(){
+            //to:签收消息
         }
     },
     watch: {
@@ -241,6 +244,9 @@ export default {
             Bus.$on('refreshNotice',()=>{
                 this.refreshNotifics();
             })
+        }
+        if(this.$route.query.groupType == 'G'){
+            this.$router.push({ name: 'member',query: this.$route.query});
         }
 
         this.handleScroll();

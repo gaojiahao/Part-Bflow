@@ -56,10 +56,13 @@ export const setGroupName = (groupId, name) => request('/H_roleplay-si/im/group/
  * @author XiaoYing
  * @description 添加成员
  */
-export const addMember = (groupId, users) => request('/H_roleplay-si/im/group/addMember',{
-  groupId: groupId,
-  users: users
-},'POST')
+export const addMember = (params) => request('/H_roleplay-si/im/group/addMember',params,'POST')
+
+/**
+ * @author XiaoYing
+ * @description 新增群组
+ */
+export const createGroup = (params) => request('/H_roleplay-si/im/group/create',params,'POST')
 
 
 

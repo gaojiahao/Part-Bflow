@@ -44,7 +44,7 @@
     </div>
 </template>
 <script>
-import { setGroupName ,addMember} from "@/services/imService";
+import { setGroupName ,addMember } from "@/services/imService";
 import Bus from "@/assets/eventBus.js";
 import AddGroupMember from "../message-tpl/add-group-member";
 export default {
@@ -103,8 +103,37 @@ export default {
         showAddGroupMemberModal() {
             this.$refs["addGroupMember"].showModal = true;
         },
-        addMember(userIds){
-            debugger
+        addMember(userList){
+            let userIds = [],
+                userNames = [],
+                params = {},
+                requestUrl = addMember;
+
+            userList.forEach(user =>{
+                userIds.push(user.userId);
+                userNames.push(user.nickname);
+            })
+
+            params = {
+                groupId: this.group.groupId || null,
+                users: userIds.join(','),
+                name: userNames.join(',')
+            };
+            if(this.group.groupType === 'G'){
+                delete params.name;
+            }else{
+                requestUrl = createGroup;
+            }
+            
+            requestUrl(params).then(res => {
+                if(res.success){
+                    this.$Message.success(res.message);
+                    this.$refs["addGroupMember"].showModal = false;
+                    this.group.groupType === 'G' ? Bus.$emit('addMembers') : Bus.$emit('updateGroupName');
+                }
+            }).catch(err => {
+                this.$Message.error(res.data.message);
+            })
         }
     },
     mounted(){

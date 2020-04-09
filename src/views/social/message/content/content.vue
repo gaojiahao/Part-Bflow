@@ -39,9 +39,9 @@
                 </div>
                 <div class="content-message-input" v-on:click="msgInputClick()">
                     <commentPublish :handlePublish="handlePublish" >
-                        <template v-slot:publish-bar-right>
-                            <Icon type="ios-list-box-outline" size=24 title="消息记录" v-on:click="onViewHistory" />
-                        </template>
+                        <div  slot="rightBars">
+                            <Icon type="ios-list-box-outline" size=24 title="消息记录" style=" cursor: pointer;" v-on:click="onViewHistory" />
+                        </div>
                     </commentPublish>
                 </div>
             </Col>
@@ -215,6 +215,19 @@ export default {
             //to:签收消息
             checkMessage(this.groupId).then(res=>{
             });
+        },
+        onViewHistory(){
+            if(['all','files'].includes(this.$route.name)){
+                this.$router.push({ 
+                    name: this.$route.query.type==="G"?'member':'group',
+                    query: this.$route.query
+                });
+            }else{
+                this.$router.push({
+                    name:`history`,
+                    query:this.$route.query
+                });
+            }
         }
     },
     watch: {
@@ -227,7 +240,8 @@ export default {
             // this.refreshNotifics();
             // localStorage.setItem('activeNavigatioIdOfNotice',this.listId);
             this.groupId = this.$route.params.groupId;
-            if(this.$route.query.groupType == 'G'){
+            
+            if(this.$route.query.groupType == 'G' &&  ['all','files'].includes[this.$route.name]){
                 this.$router.push({ name: 'member',query: to.query});
             }
         }

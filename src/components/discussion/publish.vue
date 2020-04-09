@@ -156,9 +156,7 @@
             </Poptip> -->
         </Col>
         <Col class="publish-bar-right" span="12">
-            <slot name="publish-bar-right"></slot>
-            <!-- <Button  @click.native="handleSend" >发送</Button> -->
-            <Icon type="ios-list-box-outline" size=24 title="消息记录" v-on:click="onViewHistory" />
+            <slot name="rightBars"></slot>
         </Col>
     </Row>
     <Row class="publish-container">
@@ -284,20 +282,6 @@ export default {
         },
     },
     methods: {
-        onViewHistory(){
-            var groupId = this.$route.params.groupId;
-            var groupName = this.$route.query.groupName;
-            var groupType=this.$route.query.groupType;
-
-            // this.$router.push({ path: `/social/message/group/${groupId}/history/all?groupName=${groupName}&groupType=${groupType}` });
-            this.$router.push({
-                name:"history", 
-                query: { 
-                    groupName: this.$route.query.groupName,
-                    groupType:this.$route.query.groupType
-                }
-            });
-        },
         OnMouseDown(e) {
             e.preventDefault()
         },

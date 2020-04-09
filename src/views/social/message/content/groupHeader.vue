@@ -1,37 +1,57 @@
 <style lang="less" scoped>
-  .group-header /deep/ .ivu-input{
+  .group-header{
+       .group-add{
+           float: right;
+           font-size: 19px;
+           color: #6d6a6a;
+           cursor: pointer;
+       } 
+       .group-title{
+           display: inline-block;
+       }
+  }
+  .group-title /deep/ .ivu-input{
       border: 1px solid #dcdee2;
   }
-  .group-title{
+  .group-title > b{
       font-size: 18px;
       padding: 5px;
   }
-  .group-title:hover{
+  .group-title > b:hover{
       background-color: #ddd;
   }
 </style>
 <template>
     <div class="group-header">
-        <Input 
-        v-if="isEdit"
-        ref="inputGroup" 
-        v-model="group.groupName" 
-        placeholder="未知"
-        @on-blur="onBlur"
-        :style="{maxWidth:inputWidth}" />
-        <b
-            v-else 
-            class="group-title"
-            @click="editGroupName">
-            {{group.groupName}}
-        </b>
+        <div class="group-title">
+            <Input 
+                v-if="isEdit"
+                ref="inputGroup" 
+                v-model="group.groupName" 
+                placeholder="未知"
+                @on-blur="onBlur"
+                :style="{maxWidth:inputWidth}" />
+                <b
+                    v-else 
+                    @click="editGroupName">
+                    {{group.groupName}}
+                </b>
+        </div>
+        <div class="group-add" @click="showAddGroupMemberModal">
+            <Icon type="md-person-add" />
+        </div>
+        <add-group-member ref="addGroupMember"></add-group-member>
     </div>
 </template>
 <script>
 import { setGroupName } from "@/services/imService";
 import Bus from "@/assets/eventBus.js";
+import AddGroupMember from "../message-tpl/add-group-member";
 export default {
     name:'groupHeader',
+    components:{
+        AddGroupMember
+    },
     data(){
         return {
             isEdit: false,
@@ -79,6 +99,9 @@ export default {
             }).catch(err => {
                 this.$Message.error(err.data.message);
             })
+        },
+        showAddGroupMemberModal() {
+            this.$refs["addGroupMember"].showModal = true;
         }
     },
     mounted(){

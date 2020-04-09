@@ -4,7 +4,7 @@
 <template>
     <div class="content">
         <div class="content-header">
-            <groupHeader></groupHeader>
+            <groupHeader v-if="!!groupId"></groupHeader>
         </div>
         <Row class="content-container" >
             <Col :span="$route.name =='member'?'16':'24'" 

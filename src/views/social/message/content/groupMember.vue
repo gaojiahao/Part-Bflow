@@ -9,6 +9,7 @@
 
 <script>
 import {getMembers} from "@/services/imService";
+import Bus from "@/assets/eventBus.js";
 export default {
     name:'groupMenber',
     data(){
@@ -20,6 +21,7 @@ export default {
         init(){
             getMembers(this.$route.params.groupId).then(res=>{
                 this.members = res;
+                Bus.$emit('getGroupMembers',this.members);
             });
         }
     },
@@ -32,6 +34,9 @@ export default {
         this.$nextTick(()=>{
            this.init();
         })
+        Bus.$on('addMembers',() => {
+            this.init();
+        });
     },
     updated: function () {
             // this.init();

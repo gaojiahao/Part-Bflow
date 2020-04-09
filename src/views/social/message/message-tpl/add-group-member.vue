@@ -25,6 +25,7 @@
                 @on-check-change="onCheckChange" 
                 show-checkbox>
               </Tree>
+              <Spin class="spin" v-if="isLoading"></Spin>
             </div>
           </div>
           <div class="content-right">
@@ -57,16 +58,17 @@ export default {
       groupTitle: {
         type: String,
         default:function(){
-            return "添加群成员";
+            return "添加群聊成员";
         }
       },
       confirmCallback:{
-        type:Function
+        type: Function
       }
     },
     data(){
         return {
           showModal: false,
+          isLoading: false,
           searchValue: "",
           treeList: [],
           selectList: [],
@@ -87,25 +89,13 @@ export default {
           this.showModal = false;
         },
         confirmModal() {
-          let userIds = [];
           if(this.selectList.length === 0) {
             this.$Message.error('请先选择要添加的成员！');
             return;
           }
 
-          this.selectList.forEach(user =>{
-            userIds.push(user.userId);
-          })
-
-          this.confirmCallback(userIds.join(','));
+          this.confirmCallback(this.selectList);
           
-          // addMember(this.$route.params.groupId,userIds.join(',')).then(res => {
-          //   if(res.success){
-          //     this.$Message.success(res.message);
-          //     this.showModal = false;
-          //     Bus.$emit('addMembers');
-          //   }
-          // })
         },
         deleteSelectMember(list,index) {
           let allCheckedNodes = this.$refs["tree"].getCheckedNodes(),
@@ -129,6 +119,7 @@ export default {
           }
         },
         getAllGroups() {
+          this.isLoading = true;
           getOrgBaseInfo().then(res => {
             res.tableContent.forEach(item => {
               let treeItem = {
@@ -155,6 +146,7 @@ export default {
 
               this.treeList.push(treeItem);
             })
+            this.isLoading = false;
           })
         },
         loadData(item, callback) {

@@ -38,6 +38,8 @@
         }
         .member{
           margin-top: 15px;
+          height: 270px;
+          overflow: auto;
           .list{
             padding: 8px 0px;
             img{
@@ -51,16 +53,16 @@
       }
   }
     /*滚动条样式*/
-  .detail-modal /deep/ .ivu-modal-content::-webkit-scrollbar {/*滚动条整体样式*/
+  .detail-modal /deep/ .member::-webkit-scrollbar {/*滚动条整体样式*/
       width: 4px;     /*高宽分别对应横竖滚动条的尺寸*/
       height: 4px;
   }
-  .detail-modal /deep/ .ivu-modal-content::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+  .detail-modal /deep/ .member::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
       border-radius: 5px;
       -webkit-box-shadow: inset 0 0 5px rgba(117, 112, 112, 0.2);
       background: rgba(117, 112, 112, 0.2);
   }
-  .detail-modal /deep/ .ivu-modal-content::-webkit-scrollbar-track {/*滚动条里面轨道*/
+  .detail-modal /deep/ .member::-webkit-scrollbar-track {/*滚动条里面轨道*/
       -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
       border-radius: 0;
       background: #f4f6f8;
@@ -70,7 +72,6 @@
   }
   .detail-modal /deep/ .ivu-modal-content{
       height: 500px;
-      overflow: auto;
   }
 </style>
 <template>

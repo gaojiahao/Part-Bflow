@@ -1,13 +1,43 @@
+<style lang="less" scoped>
+  .group-header /deep/ .ivu-input{
+      border: 1px solid #dcdee2;
+  }
+  .group-title{
+      font-size: 18px;
+      padding: 5px;
+  }
+  .group-title:hover{
+      background-color: #ddd;
+  }
+</style>
 <template>
-    <h3>{{group.groupName}}
-        <Icon class="fr" type="ios-more" size="40" style="font-size: 40px;cursor: pointer;"/>
-    </h3>
+    <div class="group-header">
+        <Input 
+        v-if="isEdit"
+        ref="inputGroup" 
+        v-model="group.groupName" 
+        placeholder="未知"
+        @on-blur="onBlur"
+        :style="{maxWidth:inputWidth}" />
+        <b
+            v-else 
+            class="group-title"
+            @click="editGroupName">
+            {{group.groupName}}
+        </b>
+        <Icon class="fr" type="ios-person-add-outline" size="25" style="flot:right;"/>
+    </div>
 </template>
 <script>
+import { setGroupName } from "@/services/imService";
+import Bus from "@/assets/eventBus.js";
 export default {
     name:'groupHeader',
     data(){
         return {
+            isEdit: false,
+            inputWidth: '',
+            initGroupName:'',
             group:{
                 groupName:'',
                 groupId:'',
@@ -25,7 +55,31 @@ export default {
              this.group = {
                 groupId:this.$route.params.groupId,
                 ...this.$route.query
-            }
+             }
+             this.initGroupName = this.$route.query.groupName;
+        },
+        editGroupName() {
+            if(this.group.groupType !== 'G') return;
+
+            this.isEdit = true;
+            this.$nextTick(() => {
+                this.$refs["inputGroup"].focus();
+                this.inputWidth = this.group.groupName.length * 15 + "px";
+            })
+        },
+        onBlur() {
+            this.isEdit = false;
+            if(this.initGroupName === this.group.groupName) return;
+
+            setGroupName(this.group.groupId,this.group.groupName).then(res => {
+                if(res.success){
+                    this.$Message.success(res.message);
+                    Bus.$emit('updateGroupName');
+                    this.initGroupName = this.group.groupName;
+                }
+            }).catch(err => {
+                this.$Message.error(err.data.message);
+            })
         }
     },
     mounted(){

@@ -8,9 +8,6 @@
       display: flex;
       justify-content: space-between;
       background-color: #fff;
-      &-left{
-        
-      }
       &-right{
         img{
           width: 50px;
@@ -47,7 +44,7 @@
             <p>13k</p>
           </div>
           <div class="file-content-right">
-            <img src="resources/images/file/excel.png" />
+            <img src="resources/images/file/all.png" />
           </div>
         </div>
     </div>

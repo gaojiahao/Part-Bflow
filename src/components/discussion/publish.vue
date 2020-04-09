@@ -14,7 +14,7 @@
                     <Icon 
                         class="choice-face" 
                         type="ios-happy-outline"  
-                        size=24 />表情
+                        size=24 />
                         <div class="api-emotion" slot="content">
                             <img 
                                 :src="n" 
@@ -42,7 +42,7 @@
                     <Icon 
                     type="md-images" 
                     class="choice-img"  
-                    size=24 />图片
+                    size=24 />
                 </Upload>
             <!-- <Poptip 
                 v-show="allowFile"
@@ -113,15 +113,18 @@
                     ref="uploadFile"
                     :max-size="10240"
                     :headers="httpHeaders"
+                    :show-upload-list='false'
                     :on-success="handleFileSuccess"
                     :on-exceeded-size="handleFileMaxSize"
                     :default-file-list="defaultFileList"
                     :before-upload="handleBeforeFileUpload"
                      style="display: inline-block;position: relative;"
                     action="/H_roleplay-si/ds/upload">
-                    <Icon icon="ios-cloud-upload-outline"/>上传文件
+                    <Icon type="ios-folder-open-outline" size=24  class="choice-file" />
+                    <!-- <Icon type="ios-folder-open-outline" /> -->
+                    
                     </Upload>
-            <Poptip 
+            <!-- <Poptip 
                 
                 v-show="allowFile"
                 placement="bottom-start" >
@@ -150,9 +153,10 @@
                     </Upload>
                    
                 </div>
-            </Poptip>
+            </Poptip> -->
         </Col>
         <Col class="publish-bar-right" span="12">
+            <slot name="publish-bar-right"></slot>
             <!-- <Button  @click.native="handleSend" >发送</Button> -->
             <Icon type="ios-list-box-outline" size=24 title="消息记录" v-on:click="onViewHistory" />
         </Col>
@@ -281,7 +285,18 @@ export default {
     },
     methods: {
         onViewHistory(){
-            this.$router.push({name:"history"});
+            var groupId = this.$route.params.groupId;
+            var groupName = this.$route.query.groupName;
+            var groupType=this.$route.query.groupType;
+
+            // this.$router.push({ path: `/social/message/group/${groupId}/history/all?groupName=${groupName}&groupType=${groupType}` });
+            this.$router.push({
+                name:"history", 
+                query: { 
+                    groupName: this.$route.query.groupName,
+                    groupType:this.$route.query.groupType
+                }
+            });
         },
         OnMouseDown(e) {
             e.preventDefault()
@@ -530,7 +545,30 @@ export default {
             this.faceVisible = false;
         },
         handleFileSuccess(res, file){
+            var getFileSize = function(fileByte) {
+                var fileSizeByte = fileByte;
+                var fileSizeMsg = "";
+                if (fileSizeByte < 1048576) fileSizeMsg = (fileSizeByte / 1024).toFixed(2) + "KB";
+                else if (fileSizeByte == 1048576) fileSizeMsg = "1MB";
+                else if (fileSizeByte > 1048576 && fileSizeByte < 1073741824) fileSizeMsg = (fileSizeByte / (1024 * 1024)).toFixed(2) + "MB";
+                else if (fileSizeByte > 1048576 && fileSizeByte == 1073741824) fileSizeMsg = "1GB";
+                else if (fileSizeByte > 1073741824 && fileSizeByte < 1099511627776) fileSizeMsg = (fileSizeByte / (1024 * 1024 * 1024)).toFixed(2) + "GB";
+                else fileSizeMsg = "文件超过1TB";
+                return fileSizeMsg;
+            }
+
             file.url ='/H_roleplay-si/ds/download?url=' +  res.data[0].attacthment;
+            //  创建需追加到光标处节点的文档片段
+            const range = this.range.cloneRange();
+            let fragment = range.createContextualFragment(`<span contenteditable="false" class="file-content">
+                <img class="flie-img" width="38" src="resources/images/file/excel.png"  paste="1">
+                <div class="file-content-info"><p><a href="${file.url}">${res.data[0].attr1}</a></p><p>${getFileSize(file.size)}</p>
+                </div>
+            </span>`);
+
+            // 将创建的文档片段插入到光标处
+            this.range.insertNode(fragment.lastChild);
+
         },
         handleFormatError (file) {
             window.top.limitNotice('系统提示','图片 ' + file.name + '格式不支持, 请选择格式为jpg或者png的图片');

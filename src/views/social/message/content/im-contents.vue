@@ -7,10 +7,16 @@
     <div class="message-list">
         <div v-for="(m,index) in  messages" :key="index">
             <!-- 消息组件 -->
-            <content-message :textMessage="m"></content-message>
+            <content-message @showDetailModal="showDetailModal" :textMessage="m"></content-message>
             <!-- 文件消息组件 -->
             <!-- <file-message :fileMessage="m"></file-message> -->
         </div>
+        
+        <!-- 未读消息详情 -->
+        <message-read-detail 
+            ref="messageReadDetail" 
+            :detailMessage="detailMessage">
+        </message-read-detail>
     </div>
 </template>
 
@@ -19,26 +25,23 @@
 import {getMessagesByGroupId} from "@/services/imService";
 import ContentMessage from "../message-tpl/content-message";
 import FileMessage from "../message-tpl/file-message";
+import MessageReadDetail from "../message-tpl/message-read-detail";
 export default {
     name:'imContents',
     components:{
         ContentMessage,
-        FileMessage
+        FileMessage,
+        MessageReadDetail
     },
     data(){
         return {
-            messages:[]
+            messages:[],
+            detailMessage: {}
         }
     },
     watch:{
         groupId:function (val, oldVal) {
             this.getMessages();
-            let deepstream = this.$deepstream;
-            //消息订阅
-            deepstream.event.subscribe("toGroup/" + val, res => {
-                debugger
-            });
-
         }
     },
     props:{
@@ -54,9 +57,23 @@ export default {
             getMessagesByGroupId(this.groupId).then(res=>{
                 this.messages = res;
             });
-        }
+        },
+        showDetailModal(message) {
+            this.detailMessage = message;
+            this.$refs["messageReadDetail"].showModal = true;
+        },
+        subscribeIm:function(){
+            let deepstream = this.$deepstream;
+            //消息订阅
+            deepstream.event.subscribe("roletaskIm/" + JSON.parse(localStorage.getItem('roleplay-token')).token, res => {
+                if(res.imType === '1' && this.groupId == res.groupId){
+                    this.messages.push(res);
+                }
+            });
+        },
     },
     mounted(){
+        this.subscribeIm();
         this.getMessages();
     }
 }

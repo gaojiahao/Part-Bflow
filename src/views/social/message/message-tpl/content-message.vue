@@ -1,49 +1,5 @@
 <style lang="less" scoped>
-  .text-message{
-    margin: 15px 0px;
-    .text-content{
-      padding: 10px;
-      margin: 5px;
-      border-radius: 4px;
-      max-width: 80%;
-      word-wrap: break-word;
-      display: inline-block;
-      text-align: left;
-      /deep/ .paste-img{
-        width: 150px;
-      }
-    }
-    .text-creator{
-      margin: 0px 0px 0px 5px;
-      .text-crtTime{
-        color: #afaaaa;
-        font-size: 10px;
-        margin: 0px 2px;
-      }
-    }
-    .read-message{
-      .message-noread{
-        border:2px solid #ddd;
-        width: 15px;
-        height: 15px;
-        display: inline-block;
-        border-radius: 50%;
-      }
-      .message-read, 
-      .message-allread
-      {
-        border:1px solid #ddd;
-        width: 15px;
-        height: 15px;
-        display: inline-block;
-        border-radius: 50%;
-        font-size: 10px;
-        color: #ddd;
-        text-align: center;
-        line-height: 15px;
-      }
-    }
-  }
+  @import "./content-message.less";
 </style>
 <template>
     <div class="text-message" :style="{textAlign: textMessage.isMySelf?'right':'left'}">
@@ -58,7 +14,13 @@
         <span class="read-message" v-if="textMessage.isMySelf">
           <span v-if="textMessage.allRead" class="message-allread">✓</span>
           <span v-else-if="textMessage.checked === 0" class="message-noread"></span>
-          <span v-else class="message-read">{{ textMessage.checked }}</span>
+          <span
+            v-else
+            class="message-read" 
+            @click="openMessageDetail"
+            :style="{color:'#8bc8da',cursor:'pointer',borderColor: '#8bc8da'}">
+            {{ textMessage.checked }}
+          </span>
         </span>
         <span 
           class="text-content"
@@ -92,6 +54,9 @@ export default {
         },
         leave() {
           this.showTime = false;
+        },
+        openMessageDetail() {
+          this.$emit('showDetailModal', this.textMessage);
         }
     },
     mounted(){

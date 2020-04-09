@@ -38,7 +38,11 @@
                     <imContents :groupId="groupId"></imContents>
                 </div>
                 <div class="content-message-input" v-on:click="msgInputClick()">
-                    <commentPublish :handlePublish="handlePublish" ></commentPublish>
+                    <commentPublish :handlePublish="handlePublish" >
+                        <template v-slot:publish-bar-right>
+                            <Icon type="ios-list-box-outline" size=24 title="消息记录" v-on:click="onViewHistory" />
+                        </template>
+                    </commentPublish>
                 </div>
             </Col>
             <Col span="8"
@@ -121,18 +125,10 @@ export default {
     },
     methods:{
         handlePublish(content,uploadList,userIds,superComment,commentAndReply,sendComponent){
-            function uuid() {
-                    function S4() {
-                        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-                    }
-                    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
-                }
-
             var message = {
                 groupId:this.groupId,
                 content:content,
-                imType:1,
-                id:uuid()
+                imType:1
             }
             sendMessage(message).then(res=>{
                  if(res.success && sendComponent){
@@ -218,7 +214,6 @@ export default {
         msgInputClick:function(){
             //to:签收消息
             checkMessage(this.groupId).then(res=>{
-                debugger
             });
         }
     },

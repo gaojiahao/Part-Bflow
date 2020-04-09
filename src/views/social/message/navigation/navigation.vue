@@ -94,7 +94,27 @@ export default {
             let deepstream = this.$deepstream;
             //消息订阅
             deepstream.event.subscribe("roletaskIm/" + JSON.parse(localStorage.getItem('roleplay-token')).token, res => {
-                debugger
+                switch (res.imType) {
+                    case '1':
+                        this.imGroups.map(g=>{
+                            if(g.groupId === res.groupId){
+
+                                (!res.isMySelf)&& g.msgCount++;
+
+                                g.lastMsg = res;
+                                return false;
+                            }
+                        });
+                        break;
+                    case '103':
+                        this.imGroups.map(g=>{
+                            if(g.groupId === res.groupId){
+                                g.msgCount=0;
+                                return false;
+                            }
+                        });
+                        break;
+                }
             });
         },
         //桌面消息通知
@@ -161,6 +181,9 @@ export default {
         this.refreshNavListByMessage();
         // this.subscribeMessage();
         this.subscribeIm();
+        Bus.$on('updateGroupName', () => {
+            this.refreshNavListByMessage();
+        })
     }
 
 }

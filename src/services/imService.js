@@ -31,10 +31,26 @@ export const getMembers = (groupId) => request('/H_roleplay-si/im/group/getMembe
  * @author snack.haugng
  * @description 签收消息
  */
-export const checkMessage = (groupId) => request('/H_roleplay-si/im/message/check',{},'POST',{groupId:groupId})
+export const checkMessage = (groupId) => request('/H_roleplay-si/im/message/check?groupId='+groupId,{},'POST',{})
 
 
+/**
+ * @author XiaoYing
+ * @description 查看消息的阅读情况
+ */
+export const getMsgCheckStatus = (msgId, checkType) => request('/H_roleplay-si/im/message/getMsgCheckStatus',{
+  msgId: msgId,
+  checkType: checkType
+})
 
+/**
+ * @author XiaoYing
+ * @description 设置群名称
+ */
+export const setGroupName = (groupId, name) => request('/H_roleplay-si/im/group/setName',{
+  groupId: groupId,
+  name: name
+},'POST')
 
 
 

@@ -47,7 +47,7 @@
                  @contextmenu.prevent="showContextmenu"
                 class="member-content-list">
                 <Tooltip placement="right" transfer>
-                    <Poptip trigger="click" placement="bottom-start" transfer>
+                    <Poptip trigger="click" placement="bottom-start">
                         <div>
                             <span class="img">
                                 <Icon type="ios-person" /> 

@@ -11,7 +11,7 @@
             :key="index">
           
             <li  class="navigation-list-item"   v-bind:class="{ 'active':$route.params.groupId==g.groupId }">
-                <img width="45" :src="g.groupIcon?g.groupIcon:'resources/images/icon/defaultUserPhoto.png'" onerror="src='resources/images/icon/defaultUserPhoto.png'" style="border: 1px solid #ddd;">
+                <img width="45" :src="g.groupIcon" onerror="src='resources/images/icon/defaultUserPhoto.png'" style="border: 1px solid #ddd;">
                 <div class="navigation-list-item-appinfo">
                     <div class="font14 font12 navigation-list-item-appinfo-groupName">
                         <p>{{g.groupName}}</p>

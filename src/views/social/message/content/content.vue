@@ -241,7 +241,7 @@ export default {
             // localStorage.setItem('activeNavigatioIdOfNotice',this.listId);
             this.groupId = this.$route.params.groupId;
             
-            if(this.$route.query.groupType == 'G' &&  ['all','files'].includes[this.$route.name]){
+            if(this.$route.query.groupType == 'G'){
                 this.$router.push({ name: 'member',query: to.query});
             }
         }

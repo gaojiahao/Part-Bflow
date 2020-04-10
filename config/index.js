@@ -22,6 +22,10 @@ module.exports = {
       '/account-api': {
         target: 'http://172.roletask.com',
         changeOrigin: true
+      },
+      '/gimgs': {
+        target: 'http://172.roletask.com',
+        changeOrigin: true
       }
 
     },

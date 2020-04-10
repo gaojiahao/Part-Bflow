@@ -44,7 +44,7 @@
     </div>
 </template>
 <script>
-import { setGroupName ,addMember } from "@/services/imService";
+import { setGroupName ,addMember, getGroupByUserId } from "@/services/imService";
 import Bus from "@/assets/eventBus.js";
 import AddGroupMember from "../message-tpl/add-group-member";
 export default {
@@ -110,29 +110,34 @@ export default {
                 requestUrl = addMember;
 
             userList.forEach(user =>{
-                userIds.push(user.userId);
-                userNames.push(user.nickname);
+                userIds.push(user.id);
+                userNames.push(user.name);
             })
 
-            params = {
-                groupId: this.group.groupId || null,
-                users: userIds.join(','),
-                name: userNames.join(',')
-            };
-            if(this.group.groupType === 'G'){
-                delete params.name;
+            if(userList.length === 1){
+                params = {
+                    userId: userIds.join(',')
+                };
+                requestUrl = getGroupByUserId;
             }else{
-                requestUrl = createGroup;
-            }
-            
-            requestUrl(params).then(res => {
-                if(res.success){
-                    this.$Message.success(res.message);
-                    this.$refs["addGroupMember"].showModal = false;
-                    this.group.groupType === 'G' ? Bus.$emit('addMembers') : Bus.$emit('updateGroupName');
+                params = {
+                    groupId: this.group.groupId || null,
+                    users: userIds.join(','),
+                    name: userNames.join(',')
+                };
+                if(this.group.groupType === 'G'){
+                    delete params.name;
+                }else{
+                    requestUrl = createGroup;
                 }
+            }
+
+            requestUrl(params).then(res => {
+                res.message && this.$Message.success(res.message);
+                this.$refs["addGroupMember"].showModal = false;
+                this.group.groupType === 'G' ? Bus.$emit('addMembers') : Bus.$emit('updateGroupName');
             }).catch(err => {
-                this.$Message.error(res.data.message);
+                this.$Message.error(err.data.message);
             })
         }
     },

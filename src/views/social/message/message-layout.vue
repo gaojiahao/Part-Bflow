@@ -31,7 +31,7 @@
     </div>
 </template>
 <script>
-import { createGroup } from "@/services/imService";
+import { createGroup, getGroupByUserId } from "@/services/imService";
 import Navigation from './navigation/navigation';
 import Bus from "@/assets/eventBus.js";
 import AddGroupMember from "./message-tpl/add-group-member";
@@ -57,26 +57,33 @@ export default {
         addGroup(userList) {
             let userIds = [],
                 userNames = [],
-                params = {};
+                params = {},
+                requestUrl = createGroup;
 
             userList.forEach(user =>{
-                userIds.push(user.userId);
-                userNames.push(user.nickname);
+                userIds.push(user.id);
+                userNames.push(user.name);
             })
 
-            params = {
-                groupId: null,
-                users: userIds.join(','),
-                name: userNames.join(',')
-            };
-            createGroup(params).then(res => {
-                if(res.success){
-                    this.$Message.success(res.message);
-                    this.$refs["addGroupMember"].showModal = false;
-                    Bus.$emit('updateGroupName');
-                }
+            if(userList.length === 1){
+                params = {
+                    userId: userIds.join(',')
+                };
+                requestUrl = getGroupByUserId;
+            }else{
+                params = {
+                    groupId: null,
+                    users: userIds.join(','),
+                    name: userNames.join(',')
+                };
+            }
+            
+            requestUrl(params).then(res => {
+                res.message && this.$Message.success(res.message);
+                this.$refs["addGroupMember"].showModal = false;
+                Bus.$emit('updateGroupName');
             }).catch(err => {
-                this.$Message.error(res.data.message);
+                this.$Message.error(err.data.message);
             })
         }
     },

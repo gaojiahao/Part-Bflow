@@ -37,7 +37,7 @@
               <img 
                 :src="list.photo || '/resources/images/icon/defaultUserPhoto.png'" 
                 @error="onError"/>
-              <span>{{ list.nickname }}</span>
+              <span>{{ list.name }}</span>
               <b @click="deleteSelectMember(list,index)"><Icon type="md-close" /></b>
             </p>
             <div class="content-right-btn">
@@ -49,9 +49,8 @@
     </Modal>
 </template>
 <script>
-import { getOrgBaseInfo, getUsersByGroupId } from "@/services/addressBookService";
 import Bus from "@/assets/eventBus.js";
-import { addMember } from "@/services/imService";
+import { addMember, getAddressBook } from "@/services/imService";
 export default {
     name:'AddGroupMember',
     props: {
@@ -101,43 +100,64 @@ export default {
           let allCheckedNodes = this.$refs["tree"].getCheckedNodes(),
               deleteItem = this.getDeleteSelect(allCheckedNodes, list);
           
-          if(deleteItem) deleteItem.checked = false;
+          if(deleteItem) {
+            deleteItem.checked = false;
+            this.parentNodes = [];
+            this.setParentStatus(allCheckedNodes,deleteItem);
+          }
           this.selectList.splice(index,1);
         },
         //获取删除选项在树中的节点
         getDeleteSelect(allCheckedNodes,list) {
           let deleteItem;
           for(let i = 0;i<allCheckedNodes.length;i++){
-            if(allCheckedNodes[i].leaf === 0){
+            if(!allCheckedNodes[i].leaf){
               this.getDeleteSelect(allCheckedNodes[i].children,list);
             }else{
-              if(allCheckedNodes[i].userId == list.userId){
+              if(allCheckedNodes[i].id == list.id){
                 deleteItem = allCheckedNodes[i];
                 return deleteItem;
               }
             }
           }
         },
+        //设置删除选项在树中父节点为未选中状态
+        setParentStatus(allCheckedNodes,deleteItem) {
+          for(let i = 0;i<allCheckedNodes.length;i++){
+            if(!allCheckedNodes[i].leaf){
+              if(allCheckedNodes[i].id == deleteItem.parentId){
+                this.parentNodes.push(allCheckedNodes[i]);
+                if(allCheckedNodes[i].parentId === "7") break;
+                this.setParentStatus(allCheckedNodes,allCheckedNodes[i]);
+              }
+            }
+          }
+          this.parentNodes.forEach(item => {
+            item.checked = false;
+          })
+        },
         getAllGroups() {
           this.isLoading = true;
-          getOrgBaseInfo().then(res => {
-            res.tableContent.forEach(item => {
-              let treeItem = {
-                  title: item.groupName,
-                  groupId: item.groupId,
-                  userId: item.groupId,
-                  nickname: item.groupName,
+          getAddressBook(null).then(res => {
+            res.forEach(item => {
+              if(item.id !== 7){
+                let treeItem = {
+                  title: item.name,
+                  id: item.id,
+                  name: item.name,
                   leaf: item.leaf,
+                  parentId: item.parentId,
+                  photo: item.photo,
                   render: this.renderImgContent
               }
 
-              if(item.leaf === 0){
+              if(!item.leaf){
                 treeItem.loading = false;
                 treeItem.children = [];
                 treeItem.render = this.renderFileContent;
               }else{
                 this.selectMembers.forEach(sel => {
-                  if(sel.userId == treeItem.userId){
+                  if(sel.id == treeItem.id){
                     treeItem.checked = true;
                     treeItem.disabled = true;
                   }
@@ -145,37 +165,39 @@ export default {
               }
 
               this.treeList.push(treeItem);
+              }
             })
             this.isLoading = false;
           })
         },
         loadData(item, callback) {
           let data = [];
-          getUsersByGroupId(item.groupId).then(res => {
-            res.tableContent.forEach(item => {
-              if(item.leaf === 0){
+          getAddressBook(item.id).then(res => {
+            res.forEach(item => {
+              if(!item.leaf){
                 data.push({
-                  title: item.nickname,
-                  userId: item.userId,
+                  title: item.name,
+                  id: item.id,
                   photo: item.photo,
-                  groupId: item.groupId,
-                  nickname: item.nickname,
+                  name: item.name,
                   children: [],
                   leaf: item.leaf,
+                  parentId: item.parentId,
                   loading: false,
                   render: this.renderFileContent
                 })
               }else{
                 let treeItem = {
-                  title: item.nickname,
-                  userId: item.userId,
+                  title: item.name,
+                  id: item.id,
                   photo: item.photo,
-                  nickname: item.nickname,
-                  leaf: 1,
+                  name: item.name,
+                  parentId: item.parentId,
+                  leaf: item.leaf,
                   render: this.renderImgContent
                 }
                 this.selectMembers.forEach(sel => {
-                  if(sel.userId == treeItem.userId){
+                  if(sel.id == treeItem.id){
                     treeItem.checked = true;
                     treeItem.disabled = true;
                   }
@@ -197,7 +219,7 @@ export default {
                 h('span', [
                     h('img', {
                         attrs: {
-                            src: data.photo || '/resources/images/icon/defaultUserPhoto.png'
+                            src: (data && data.photo) || '/resources/images/icon/defaultUserPhoto.png'
                         },
                         on:{
                           'error': (e) => {
@@ -240,21 +262,13 @@ export default {
           e.target.src = '/resources/images/icon/defaultUserPhoto.png';
         },
         onCheckChange(currentArray, currentSelect) {
-          if(currentSelect.leaf === 0){
-            getUsersByGroupId(currentSelect.groupId).then(res => {
-              if(!currentSelect.checked){
-                this.deleteUnselect(this.selectList,res.tableContent);
-                this.selectExistMember(currentSelect);
-              }else{
-                this.selectList = this.selectList.concat(res.tableContent);
-                this.selectList = this.uniqueArray(this.selectList);
-                this.deleteUnselect(this.selectList,this.selectMembers);
-              }
-            })
+          if(!currentSelect.leaf){
+            this.resultArr = [];
+            this.getAllChildrenNodes(currentSelect);
           }else{
             if(!currentSelect.checked){
               this.selectList.forEach((o,i) => {
-                  if(o.userId === currentSelect.userId){
+                  if(o.id === currentSelect.id){
                     this.selectList.splice(i,1);
                   }
               })
@@ -266,11 +280,11 @@ export default {
         },
         //数组去重
         uniqueArray(arr) {
-          let resultArr = [],userIds = [];
+          let resultArr = [],ids = [];
           //数组去重
           arr.forEach(item => {
-            if(userIds.indexOf(item.userId) < 0) {
-              userIds.push(item.userId);
+            if(ids.indexOf(item.id) < 0) {
+              ids.push(item.id);
               resultArr.push(item);
             }
           });
@@ -281,7 +295,7 @@ export default {
         deleteUnselect(old,newArr) {
           for (var i = 0; i < old.length; i++) {
             for (var j = 0; j < newArr.length; j++) {
-              if (old[i].userId == newArr[j].userId) {
+              if (old[i].id == newArr[j].id) {
                 old.splice(i, 1);
                 i = i - 1;
                 break;
@@ -295,7 +309,7 @@ export default {
           if(parentTreeItem.children.length > 0){
             for(let p=0;p<parentTreeItem.children.length;p++){
               for(let c=0;c<this.selectMembers.length;c++){
-                if(parentTreeItem.children[p].userId == this.selectMembers[c].userId){
+                if(parentTreeItem.children[p].id == this.selectMembers[c].id){
                   parentTreeItem.children[p].checked = true;
                   break;
                 }
@@ -308,8 +322,8 @@ export default {
           let parentTreeItem,
               originArr = arr || this.treeList;
           for(let i=0;i<originArr.length;i++){
-            if(originArr[i].leaf === 0){
-              if(currentSelect.groupId == originArr[i].groupId){
+            if(!originArr[i].leaf){
+              if(currentSelect.id == originArr[i].id){
                 parentTreeItem = originArr[i];
                 return parentTreeItem;
               }else{
@@ -319,11 +333,39 @@ export default {
               }
             }
           }
+        },
+        //获取选中父节点下所有子节点
+        getAllChildrenNodes(currentSelect,child) {
+          let parentId = child ? child.id : currentSelect.id; 
+          getAddressBook(parentId).then(res => {
+            res.forEach(child => {
+              if(!child.leaf){
+                  this.getAllChildrenNodes(currentSelect,child);
+              }else{
+                this.resultArr.push(child);
+              }
+            })
+            if(!currentSelect.checked){
+              this.deleteUnselect(this.selectList,this.resultArr);
+              this.selectExistMember(currentSelect);
+            }else{
+              this.selectList = this.resultArr ? this.selectList.concat(this.resultArr) : this.selectList;
+              this.selectList = this.uniqueArray(this.selectList);
+              this.deleteUnselect(this.selectList,this.selectMembers);
+            }
+          })
         }
     },
     mounted(){
         Bus.$on('getGroupMembers', (value) => {
-            this.selectMembers = value;
+          this.selectMembers = [];
+          value.forEach(user =>{
+            this.selectMembers.push({
+              name: user.nickname,
+              id: user.userId,
+              photo: user.photo
+            })
+          })
         })
     }
 }

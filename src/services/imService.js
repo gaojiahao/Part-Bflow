@@ -60,9 +60,29 @@ export const addMember = (params) => request('/H_roleplay-si/im/group/addMember'
 
 /**
  * @author XiaoYing
+ * @description 移除成员
+ */
+export const removeMember = (params) => request('/H_roleplay-si/im/group/removeMember',params,'POST')
+
+/**
+ * @author XiaoYing
  * @description 新增群组
  */
 export const createGroup = (params) => request('/H_roleplay-si/im/group/create',params,'POST')
+
+/**
+ * @author XiaoYing
+ * @description 新增单聊
+ */
+export const getGroupByUserId = (params) => request('/H_roleplay-si/im/group/getGroupByUserId',params)
+
+/**
+ * @author XiaoYing
+ * @description 获取通讯录信息
+ */
+export const getAddressBook = (groupId) => request('/H_roleplay-si/im/group/getAddressBook',{
+  groupId: groupId
+})
 
 
 

@@ -20,19 +20,6 @@
                   border-radius: 2px;
               }
           }
-          .member-header{
-              display: flex;
-              &-left{
-                  img{
-                    border: 1px solid #ddd;
-                    width: 70px;
-                  }
-              }
-              &-right{
-                  line-height: 60px;
-                  margin-left: 10px;
-              }
-          }
           .member-detail{
               border-top: 1px solid #ddd;
               p{
@@ -59,8 +46,8 @@
                 :key="index" 
                  @contextmenu.prevent="showContextmenu"
                 class="member-content-list">
-                <Tooltip placement="right">
-                    <Poptip trigger="click" placement="bottom-start">
+                <Tooltip placement="right" transfer>
+                    <Poptip trigger="click" placement="bottom-start" transfer>
                         <div>
                             <span class="img">
                                 <Icon type="ios-person" /> 
@@ -80,11 +67,13 @@
                         </div>
                     </Poptip>
                     <div slot="content">
-                        <div class="member-header">
+                        <div class="member-header" :style="{display: 'flex'}">
                             <div class="member-header-left">
-                                <img :src="m.photo || '/resources/images/icon/defaultUserPhoto.png'" />
+                                <img 
+                                :src="m.photo || '/resources/images/icon/defaultUserPhoto.png'"
+                                :style="{width:'70px',height:'70px',border:'1px solid #ddd'}" />
                             </div>
-                            <div class="member-header-right">
+                            <div :style="{lineHeight:'70px',marginLeft:'10px'}">
                                 <p>{{m.nickname}}</p>
                             </div>
                         </div>

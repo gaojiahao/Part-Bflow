@@ -544,11 +544,11 @@ export default {
             file.url ='/H_roleplay-si/ds/download?url=' +  res.data[0].attacthment;
             //  创建需追加到光标处节点的文档片段
             const range = this.range.cloneRange();
-            let fragment = range.createContextualFragment(`<span contenteditable="false" class="file-content">
-                <img class="flie-img" width="38" src="resources/images/file/excel.png"  paste="1">
-                <div class="file-content-info"><p><a href="${file.url}">${res.data[0].attr1}</a></p><p>${getFileSize(file.size)}</p>
-                </div>
-            </span>`);
+            let fragment = range.createContextualFragment('<span contenteditable="false" class="file-content">'+
+                '<img class="flie-img" width="38" src="resources/images/file/excel.png"  paste="1">'+
+                '<div class="file-content-info"><p><a href="'+file.url+'">'+res.data[0].attr1+'</a></p><p>'+getFileSize(file.size)+'</p>'+
+                '</div>'+
+            '</span>');
 
             // 将创建的文档片段插入到光标处
             this.range.insertNode(fragment.lastChild);

@@ -7,7 +7,7 @@
             <groupHeader v-if="!!groupId"></groupHeader>
         </div>
         <Row class="content-container" >
-            <Col :span="['member','all','files'].includes(this.$route.name)?'16':'24'" 
+            <Col :span="['member','all','files','images'].includes(this.$route.name)?'16':'24'" 
                 style="height:100%"
                 >
                 <div class="content-container-msglist messagescrollbar" id='msgList'>
@@ -46,7 +46,7 @@
                 </div>
             </Col>
             <Col span="8"
-                class="content-container-history" v-if="['member','all','files'].includes(this.$route.name)">
+                class="content-container-history" v-if="['member','all','files','images'].includes(this.$route.name)">
                 <router-view></router-view>
             </Col>
         </Row>
@@ -130,6 +130,7 @@ export default {
                 content:content,
                 imType:1
             }
+            console.log(content);
             sendMessage(message).then(res=>{
                  if(res.success && sendComponent){
                     sendComponent.innerText = '';
@@ -241,7 +242,7 @@ export default {
             // localStorage.setItem('activeNavigatioIdOfNotice',this.listId);
             this.groupId = this.$route.params.groupId;
             
-            if(this.$route.query.groupType == 'G'){
+            if(this.$route.query.groupType == 'G' && to.name === 'group'){
                 this.$router.push({ name: 'member',query: to.query});
             }
         }
@@ -257,12 +258,12 @@ export default {
                 this.refreshNotifics();
             })
         }
-        if(this.$route.query.groupType == 'G'){
+        if(this.$route.query.groupType == 'G' && this.$route.name == 'group'){
             this.$router.push({ name: 'member',query: this.$route.query});
+        }else{
+            
         }
-
         this.handleScroll();
-       
     }
 
 }

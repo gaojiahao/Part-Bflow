@@ -63,7 +63,8 @@
                         </div>
                         <div slot="content">
                             <p v-if="$currentUser.userId==groupOwner && !m.isOwner" class="menu-list" @click="removeMembers(m,index)">移除成员</p>
-                            <p v-else class="menu-list" @click="removeMembers(m,index)">退出群聊</p>
+                            <p v-if="m.isOwner" class="menu-list" @click="removeMembers(m,index)">退出群聊</p>
+                            <p class="menu-list">复制手机号</p>
                         </div>
                     </Poptip>
                     <div slot="content">

@@ -72,7 +72,7 @@
                 <template slot-scope="{ row,index }" slot="trTaxRate">
                   <div :style="{position:'relative'}">
                     <b class="tax-rate">*</b>
-                    <Input @on-blur="onTaxBlur(row,index)" v-model="row.trTaxRate"></Input>
+                    <Input @on-blur="onTaxBlur(row,index)" v-model="row.trTaxRate" style="width:60px"></Input>%
                   </div>
                 </template>
                 <template slot-scope="{ row,index }" slot="trStartEffectiveTime">
@@ -89,7 +89,11 @@
                 </template>
               </Table>
             </div>
-            <Table v-else border size="small" :columns="taxViewColumns" :data="taxViewdata"></Table>
+            <Table v-else border size="small" :columns="taxViewColumns" :data="taxViewdata">
+              <template slot-scope="{ row }" slot="trTaxRate">
+                <div>{{ row.trTaxRate }}%</div>
+              </template>
+            </Table>
           </FormItem>
         </Form>
       </div>
@@ -123,7 +127,7 @@
 </template>
 
 <script>
-import { getToken } from "@/utils/utils";
+import { getToken, toPercent } from "@/utils/utils";
 import {
   saveCompanyInfo,
   getCompanyInfoByGroupId,
@@ -200,7 +204,7 @@ export default {
       taxViewdata: [],
       taxViewColumns: [{
           title: "税率",
-          key: "trTaxRate"
+          slot: "trTaxRate"
         },
         {
           title: "开始生效时间",
@@ -218,6 +222,23 @@ export default {
     }
   },
   methods: {
+    deepClone(cloneObject) {
+      if (cloneObject === null || typeof cloneObject !== 'object') return cloneObject;
+
+      let result = cloneObject.constructor();
+
+      for(let key in cloneObject){
+          if (cloneObject.hasOwnProperty(key)) {
+              if(cloneObject[key] && typeof cloneObject[key] === 'object'){
+                  result[key] = this.deepClone(cloneObject[key]);
+              }else{
+                  result[key] = cloneObject[key];
+              }
+          }
+      }
+
+      return result;
+  },
     //格式化日期方法
     formatDate(currentDate) {
       let date = new Date(currentDate),
@@ -289,17 +310,22 @@ export default {
     },
     //保存公司基本信息
     addCompanyData(saveType) {
-      let baseInfo = this.baseInfoItem,
+      let baseInfo = this.deepClone(this.baseInfoItem),
           groupId = this.$route.name == "company-add" ? "add" : this.$route.params.groupId,
-          data = {
-            groupName: baseInfo.groupName,
-            groupShortName: baseInfo.groupShortName,
-            companyType: baseInfo.companyType,
-            status: baseInfo.status,
-            groupPic: this.logo,
-            taxpayerType: baseInfo.taxpayerType,
-            taxCompanyRelList: baseInfo.taxCompanyRelList
-        };
+          data = {};
+
+      baseInfo.taxCompanyRelList.forEach(it => {
+        it.trTaxRate = it.trTaxRate/100;
+      })
+      data = {
+          groupName: baseInfo.groupName,
+          groupShortName: baseInfo.groupShortName,
+          companyType: baseInfo.companyType,
+          status: baseInfo.status,
+          groupPic: this.logo,
+          taxpayerType: baseInfo.taxpayerType,
+          taxCompanyRelList: baseInfo.taxCompanyRelList
+      }
       
       if(saveType === 'draft'){
         data.status = 0;
@@ -346,6 +372,8 @@ export default {
               } else {
                 this.$Message.error(res.message);
               }
+            }).catch(error => {
+                this.$Message.error(error.data.message);
             });
           }
         }
@@ -355,6 +383,9 @@ export default {
     getCompanyInfo(groupId) {
       getCompanyInfoByGroupId(groupId).then(res => {
         if (res.length > 0) {
+          res[0].taxCompanyRelList.forEach(it => {
+            it.trTaxRate = toPercent(it.trTaxRate);
+          })
           this.baseInfoItem = res[0];
           this.logo = res[0].groupPic;
           this.cacheShortName = res[0].groupShortName;
@@ -391,8 +422,12 @@ export default {
     },
     //保存并新增
     saveAndAddCompany() {
-      let baseInfo = this.baseInfoItem;
-      let data = {
+      let baseInfo = this.deepClone(this.baseInfoItem);
+      let data = {};
+      baseInfo.taxCompanyRelList.forEach(it => {
+        it.trTaxRate = it.trTaxRate/100;
+      })
+      data = {
         groupName: baseInfo.groupName,
         groupShortName: baseInfo.groupShortName,
         companyType: baseInfo.companyType,

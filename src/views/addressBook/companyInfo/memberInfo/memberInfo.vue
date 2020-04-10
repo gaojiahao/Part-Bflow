@@ -13,11 +13,11 @@
           <span style="color: #7a7676;">-移除成员</span>
         </div>
         <div class="table-search">
-          <Input @on-search="tableSearch" :search="true" placeholder="请输入账号或姓名" class="search-btn" v-model="searchTableValue" />
+          <Input @on-search="tableSearch" :search="true" placeholder="搜索账号或名称" class="search-btn" v-model="searchTableValue" />
           <Button type="primary" size="small" @click="tableSearch">查询</Button>
         </div>
       </div>
-      <Table style="margin-top:10px;" :loading="memberLoading" :columns="columns1" :data="memberData" @on-selection-change="onMemberSelectionChange">
+      <Table style="margin-top:10px;" :loading="memberLoading" :columns="memberColumns" :data="memberData" @on-selection-change="onMemberSelectionChange">
       </Table>
       <div style="margin: 10px;overflow: hidden">
         <div class="fr" style="padding-bottom: 5px;">
@@ -28,7 +28,7 @@
     <Modal v-model="showModal" title="选择公司成员" @on-ok="addCompanyMember" :styles="{top: '15px'}" width="870">
       <div class="search">
         <!-- <Input placeholder="请输入工号" class="serach-btn" v-model="userCode" /> -->
-        <Input @on-search="search" :search="true" placeholder="请输入工号或姓名" class="search-btn" v-model="searchValue" />
+        <Input @on-search="search" :search="true" placeholder="搜索账号或名称" class="search-btn" v-model="searchValue" />
         <Button type="primary" @click="search">搜索</Button>
       </div>
       <Table ref="selection" :highlight-row="true" @on-selection-change="onSelectionChange" @on-select-all="onSelectAll" @on-select-cancel="onSelectCancel" height="400" :loading="allMemberLoading" :columns="columns2" :data="allMemberData">
@@ -63,7 +63,7 @@ export default {
   },
   data() {
     return {
-      columns1: [
+      memberColumns: [
         {
           type: "selection",
           width: 60,
@@ -77,7 +77,12 @@ export default {
             return h("div", [
               h("Avatar", {
                 props: {
-                  src: params.row.photo?params.row.photo:'resources/images/icon/defaultUserPhoto.png'
+                  src: params.row.photo?params.row.photo:'/resources/images/icon/defaultUserPhoto.png'
+                },
+                on:{
+                  'on-error': (e) => {
+                    e.target.src = '/resources/images/icon/defaultUserPhoto.png';
+                  }
                 }
               })
             ]);
@@ -164,7 +169,12 @@ export default {
             return h("div", [
               h("Avatar", {
                 props: {
-                  src: params.row.photo?params.row.photo:'resources/images/icon/defaultUserPhoto.png'
+                  src: params.row.photo?params.row.photo:'/resources/images/icon/defaultUserPhoto.png'
+                },
+                on:{
+                  'on-error': (e) => {
+                    e.target.src = '/resources/images/icon/defaultUserPhoto.png';
+                  }
                 }
               })
             ]);

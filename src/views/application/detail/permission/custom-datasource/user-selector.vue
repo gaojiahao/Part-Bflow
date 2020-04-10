@@ -121,12 +121,17 @@ export default {
             return h("div", [
               h("img", {
                 attrs: {
-                  src: params.row.photo?params.row.photo:'resources/images/icon/defaultUserPhoto.png'
+                  src: params.row.photo?params.row.photo:'/resources/images/icon/defaultUserPhoto.png'
                 },
                 style: {
                   borderRadius:'50%',
                   height:'32px',
                   width:'32px'
+                },
+                on:{
+                  'error': (e) => {
+                    e.target.src = '/resources/images/icon/defaultUserPhoto.png';
+                  }
                 }
               })
             ]);
@@ -289,9 +294,7 @@ export default {
     },
     //通知父组件modal的状态
     modalVisibleChange(state) {
-      if (!state) {
-        this.$emit("emitUserModal", { modal: false });
-      }
+      if (!state) this.$emit("emitUserModal", { modal: false });
     },
     //用户page点击
     onUserPageChange(currentPage) {

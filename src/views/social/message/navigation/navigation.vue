@@ -19,6 +19,7 @@
 <script>
 
 import {getNavListByMessage,readNotice} from "@/services/notificationsService";
+import Bus from "@/assets/eventBus.js";
 export default {
     name:'Navigation',
      data(){
@@ -45,6 +46,7 @@ export default {
             //消息订阅
             deepstream.event.subscribe("commentMessage/" + userId, res => {
                 this.refreshNavListByMessage();
+                Bus.$emit("refreshNotice");
                 if(res.dataCount>0){
                     this.hanleWindowNotification('您有'+ res.dataCount + '未读消息');
                 }

@@ -3,11 +3,32 @@
 </style>
 
 <template>
-  <Modal v-model="showPermissionModal" title="自定义数据源" width="1000" :transfer="false" :styles="{top: '15px'}" :mask-closable="false" @on-visible-change="modalVisibleChange">
+  <Modal 
+    v-model="showPermissionModal" 
+    title="自定义数据源" 
+    width="1000" 
+    :transfer="false" 
+    :styles="{top: '15px'}" 
+    :mask-closable="false" 
+    @on-visible-change="modalVisibleChange">
     <div>
       <Row :gutter="8" style="margin-bottom:10px;">
-        <Button @click="addNewField" type="info" shape="circle" style="margin-bottom:5px;">新增字段</Button>
-        <Table ref="actionRef" stripe height="200" :columns="fieldColumns" size="small" no-data-text="请添加新字段" :data="fieldData"></Table>
+        <Button 
+          @click="addNewField" 
+          type="info" 
+          shape="circle" 
+          style="margin-bottom:5px;">
+          新增字段
+        </Button>
+        <Table 
+          ref="actionRef" 
+          stripe 
+          height="200" 
+          :columns="fieldColumns" 
+          size="small" 
+          no-data-text="请添加新字段" 
+          :data="fieldData">
+        </Table>
       </Row>
       <Row :gutter="8" style="margin-bottom:10px;">
         <Col span="4">
@@ -30,7 +51,13 @@
               <b class="permission-title">用户</b>
             </Col>
             <Col span="21" class="member-body">
-              <Tag @on-close="deleteUser" v-for="(userData, index) of userSelectData" :key="index" :userId="userData.userId" closable color="warning">
+              <Tag 
+                @on-close="deleteUser" 
+                v-for="(userData, index) of userSelectData" 
+                :key="index" 
+                :userId="userData.userId" 
+                closable 
+                color="warning">
                 {{ userData.nickname }}
               </Tag>
             </Col>
@@ -41,7 +68,13 @@
             <b class="permission-title">组织</b>
             </Col>
             <Col span="21" class="member-body">
-            <Tag @on-close="deleteOrg" v-for="(orgData, index) of orgSelectData" :key="index" :orgId="orgData.id" closable color="success">
+            <Tag 
+              @on-close="deleteOrg" 
+              v-for="(orgData, index) of orgSelectData" 
+              :key="index" 
+              :orgId="orgData.id" 
+              closable 
+              color="success">
               {{ orgData.name }}
             </Tag>
             </Col>
@@ -52,18 +85,30 @@
             <b class="permission-title">职位</b>
             </Col>
             <Col span="21" class="member-body">
-            <Tag @on-close="deleteDepartment" v-for="(departmentData, index) of departmentSelectData" :key="index" :depId="departmentData.id" closable color="primary">
+            <Tag 
+              @on-close="deleteDepartment" 
+              v-for="(departmentData, index) of departmentSelectData" 
+              :key="index" 
+              :depId="departmentData.id" 
+              closable 
+              color="primary">
               {{ departmentData.name }}
             </Tag>
             </Col>
           </Row>
-          <!-- <Row class="permission-line"></Row> -->
+          <!-- <Row class="permission-line"></Row> 公司暂时不放出来，以后会用-->
           <Row v-if="false">
             <Col span="3">
             <b class="permission-title">公司</b>
             </Col>
             <Col span="21" class="member-body">
-            <Tag @on-close="deleteCompany" v-for="(companyData, index) of companySelectData" :key="index" :comId="companyData.groupId" closable color="primary">
+            <Tag 
+              @on-close="deleteCompany" 
+              v-for="(companyData, index) of companySelectData" 
+              :key="index" 
+              :comId="companyData.groupId" 
+              closable 
+              color="primary">
               {{ companyData.groupName }}
             </Tag>
             </Col>
@@ -459,9 +504,7 @@ export default {
     },
     //通知父组件modal的状态
     modalVisibleChange(state) {
-      if (!state) {
-        this.$emit("emitPermissionModal", { modal: false });
-      }
+      if (!state) this.$emit("emitPermissionModal", { modal: false });
     },
     //展开userModal
     selectUserModal() {

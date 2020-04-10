@@ -36,7 +36,7 @@
     </Row>
     <Row class="detail-content-tabs">
       <!-- 用户信息 -->
-      <user-info v-show="whichShow.userinfo" :userInfo="userInformation" :isUpdate="isUpdate"></user-info>
+      <user-info v-show="whichShow.userinfo" :userInfo="userInformation" @resetUser="resetUser" :isUpdate="isUpdate"></user-info>
       <!-- 上级用户 -->
       <higher-user @changeInstance="getInstanceCount" v-if="whichShow.highuser" :isUpdate="isUpdate"></higher-user>
       <!-- 下级用户 -->
@@ -141,7 +141,10 @@ export default {
         });
       }
     },
-
+    //监听放弃编辑
+    resetUser() {
+      this.getUserInfoData();
+    },
     //更新相关实例数量{}
     getInstanceCount() {
       if(this.userId){

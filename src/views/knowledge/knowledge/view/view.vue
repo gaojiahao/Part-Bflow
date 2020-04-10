@@ -1,5 +1,10 @@
 <style lang="less" scoped>
   @import "./view.less";
+  .handle-view-img /deep/ .ivu-modal-body{
+    text-align: center;
+    overflow: auto;
+    height: 550px;
+  }
 </style>
 
 <template>
@@ -30,7 +35,7 @@
           <Row class="knowledge-text">
               <div ref="toolbar" style="display:none"></div>
               <div ref="text" style="display:none"></div>
-              <div v-html="knowledgeForm.content" class="w-e-text"></div>
+              <div v-html="knowledgeForm.content"  @click="handleViewTextImg($event)" class="w-e-text"></div>
               <div class="knowledge-text-comment" v-if="comments.length>0">
                   <div>最新评论({{pageInfo.total}})</div>
                   <comments 
@@ -59,6 +64,16 @@
             </div>
         </Row>
         <add-modal ref="addModal" :modalTitle="'编辑知识'" @editUpdate="editUpdate" :knowledgeId="this.knowledgeId"></add-modal>
+        <Modal 
+          :styles="{top:'15px'}"
+          class="handle-view-img" 
+          v-model="imgModalVisible" 
+          width='80%'
+          footer-hide>
+          <img 
+              :src="imgName" 
+              v-if="imgModalVisible">
+      </Modal>
     </div>
 </template>
 
@@ -89,6 +104,8 @@ export default {
     return {
       knowledgeId: this.$route.params.id,
       comments: [],
+      imgModalVisible:false,
+      imgName: '',
       pageInfo:{
             limit:10, 
             page:1, 
@@ -120,6 +137,21 @@ export default {
     },
     updateComment: function() {
       this.refreshComments();
+    },
+    handleViewTextImg:function(event){
+        var tagName = event.target.tagName;
+
+        if(tagName === 'IMG' && !~event.target.getAttribute('src').indexOf('resources/images')){
+            this.handleViewImg(event.target.getAttribute('src'));
+        }
+    },
+    handleViewImg:function (img,e) {
+        if(window.top.viewInsCommentsImg){
+            window.top.viewInsCommentsImg(img);
+        }else{
+            this.imgName = img;
+            this.imgModalVisible = true;
+        }
     },
     refreshComments:function () {
         let emotion = [...EMOTION];

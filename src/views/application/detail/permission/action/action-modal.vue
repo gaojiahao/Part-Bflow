@@ -407,9 +407,7 @@ export default {
     },
     //通知父组件modal的状态
     modalVisibleChange(state) {
-      if (!state) {
-        this.$emit("emitPermissionModal", { modal: false });
-      }
+      if (!state) this.$emit("emitPermissionModal", { modal: false });
     },
     //获取权限数据
     getData() {
@@ -465,7 +463,7 @@ export default {
         this.allPermissionData.map(ac => {
           ac.desc = APP_ACTION[ac.resourceName];
         });
-    })
+      })
     }
   },
   mounted() {

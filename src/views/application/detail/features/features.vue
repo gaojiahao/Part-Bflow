@@ -59,6 +59,11 @@
                                     v-if="item.status === '1'">
                                     关闭
                                 </Button>
+                                <Button 
+                                    v-if="item.title === '工作日志'"
+                                    @click="setFeatureConfig(item)">
+                                    设置
+                                </Button>
                             </p>
                         </div>
                      </div>
@@ -66,12 +71,36 @@
             </Row>
         </div>
     </Row>
-
+    <Modal
+        v-model="showFeatureConfig"
+        :title="configTitle"
+        @on-ok="saveFeatureConfig">
+        <label>标题默认值：</label>
+        <Select 
+            v-model="defaultConfigValue" 
+            label-in-value
+            filterable
+            @on-change="onConfigSelectChange" 
+            transfer 
+            style="width:250px">
+            <Option 
+                v-for="item in fieldList" 
+                :value="item.fieldCode" 
+                :key="item.fieldCode">
+                {{ item.fieldName }}
+            </Option>
+        </Select>
+    </Modal>
   </div>
 </template>
 
 <script>
-import { getAppFeaturesList, switchAppFeatures } from "@/services/appService.js";
+import { 
+    getAppFeaturesList, 
+    switchAppFeatures, 
+    getCustomFieldResorce,
+    saveFeaturesConfig,
+    getFeaturesConfig } from "@/services/appService.js";
 
 export default {
   name: "FeatureManage",
@@ -82,7 +111,12 @@ export default {
   },
   data() {
     return {
-        featureList: []
+        showFeatureConfig: false,
+        configTitle: '',
+        defaultConfigValue: '',
+        featureList: [],
+        fieldList: [],
+        defaultTitle: {}
     };
   },
   watch: {
@@ -91,7 +125,19 @@ export default {
   methods: {
       getFeaturesData() {
           getAppFeaturesList(this.listId).then(res => {
-              res.success && (this.featureList = res.data);
+              if(res.success){
+                  this.featureList = res.data;
+                  for(let item of this.featureList){
+                      if(item.title === '工作日志'){
+                          getFeaturesConfig(this.listId,item.id).then(con => {
+                              if(con.success){
+                                  if(con.data.defaultTitle) this.defaultConfigValue = JSON.parse(con.data.defaultTitle).fieldCode;
+                              }
+                          })
+                          break;
+                      }
+                  }
+              }
           });
       },
       openOrCloseFeatures(featureId) {
@@ -105,10 +151,41 @@ export default {
                   this.$Message.error(res.data.message)
               });
           }
+      },
+      setFeatureConfig(item) {
+          this.configTitle = item.title;
+          this.featureId = item.id;
+          this.showFeatureConfig = true;
+      },
+      onConfigSelectChange(value) {
+          this.defaultTitle = {
+              fieldCode: value.value,
+              fieldName: value.label
+          };
+      },
+      saveFeatureConfig() {
+          saveFeaturesConfig(this.listId,this.featureId,JSON.stringify(this.defaultTitle)).then(res => {
+              if(res.success){
+                  this.$Message.success(res.message);
+                  this.showFeatureConfig = false;
+                  this.getFeaturesData();
+              } 
+          }).catch(err => {
+              this.$Message.error(err.data.message);
+          })
+      },
+      getAllFormFields() {
+          getCustomFieldResorce(this.listId).then(res => {
+              this.fieldList = res;
+              this.fieldList.forEach(item => {
+                  item.parentCode && (item.fieldCode = `${item.fieldCode}_${item.parentCode}`);
+              })
+          })
       }
   },
   created() {
     this.getFeaturesData();
+    this.getAllFormFields();
   }
 };
 </script>

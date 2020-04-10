@@ -36,16 +36,15 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie';
-import { login } from  '../services/loginService';
-
-
+import Vue from 'vue'
+import {login,getDsUrl,getCurrentUserInfo} from  '../services/loginService';
+import { deepstream } from '@/plugin/deepstream';
 export default {
     data () {
         return {
             form: {
-                userName: 'admin',
-                password: '123456'
+                userName: '',
+                password: ''
             },
             rules: {
                 userName: [
@@ -61,36 +60,57 @@ export default {
         handleSubmit () {
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
-                    Cookies.set('userCode', this.form.userName);
-                    Cookies.set('password', this.form.password);
-
                     login({
                         userCode:this.form.userName,
                         password:this.form.password
                     }).then(res =>{
                         if(res.success){
                             localStorage.setItem('roleplay-token', JSON.stringify(res));
-                            this.$router.push({
-                                name: 'home_index'
+
+                            getCurrentUserInfo().then( res=>{
+                                if(res){
+                                    let user = res;
+                                        user.isBusinessAdmin  = false;
+                                        user.isOperationAdmin = false;
+                                
+                                    user.isSysRoleList.map(role=>{
+                                        //企业管理员
+                                        if(role.id === 1) user.isBusinessAdmin = true;
+                                        //运营管理员
+                                        if(role.id === -1) user.isOperationAdmin = true;
+                                    });
+                                    Vue.prototype.$currentUser = user;
+
+                                    sessionStorage.setItem('roletask.com.r2.cache',JSON.stringify({
+                                        currentUser:user
+                                    }));
+
+                                    
+                                    getDsUrl().then(async (r) =>{
+                                        if(r.success){
+                                            let dsUri = {
+                                                'deepstream.uri2':r.message
+                                            };
+                                            
+                                            sessionStorage.setItem('r2-cached-properties',JSON.stringify(dsUri));
+                                            Vue.prototype.$deepstream = await deepstream(user,JSON.stringify(dsUri));
+                                            this.$router.push({
+                                                name: 'home_index'
+                                            });
+                                        }
+                                    });
+                                }
+                               
                             });
+                            
+                            
                         }
                     }).catch(err => {
                         this.$Message.error(err.data.message);
                     });
-                    // this.$store.commit('setAvator', 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg');
-                    // if (this.form.userName === 'iview_admin') {
-                    //     Cookies.set('access', 0);
-                    // } else {
-                    //     Cookies.set('access', 1);
-                    // }
-                    
                 }
             });
         }
     }
 };
 </script>
-
-<style>
-
-</style>

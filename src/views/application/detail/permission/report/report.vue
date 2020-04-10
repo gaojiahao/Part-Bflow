@@ -7,7 +7,7 @@
     <Row class="app-report-title">
       <h3>
         报表
-        <a v-if="isAdmin && appType!='subject'" @click="goCreateView">添加报表</a>
+        <a v-if="isAdmin" @click="goCreateView">添加报表</a>
       </h3>
       <span class="marlr" :style="{color:'#aaaaaa'}">用户默认拥有此应用默认报表的权限</span>
     </Row>
@@ -65,12 +65,7 @@ export default {
 
     //创建视图
     goCreateView() {
-      window.top.location.href =
-        "/Site/index.html#appSetting/" +
-        this.listId +
-        "/" +
-        this.appType +
-        "/viewTypes";
+      window.top.location.href = `/Site/index.html#appSetting/${this.listId}/null/new`;
     },
 
     reGetData() {
@@ -80,24 +75,11 @@ export default {
     //获取视图数据
     getViewsData() {
       getListViewPermission(this.listId).then(res => {
-        res.forEach(element => {
-          var content = JSON.parse(element.content);
-
-          if (!element.users) {
-            element.users = [];
-          }
-          if (!element.roles) {
-            element.roles = [];
-          }
-          if (!element.groups) {
-            element.groups = [];
-          }
-          element.permissionList = [
-            ...element.groups,
-            ...element.roles,
-            ...element.users
-          ];
-          element.title = content.viewName;
+        res.forEach(t => {
+          t.users || (t.users = []),
+            t.roles || (t.roles = []),
+            t.groups || (t.groups = []),
+            (t.permissionList = [...t.groups, ...t.roles, ...t.users]);
         });
         this.reportSources = res;
       });
@@ -115,7 +97,7 @@ export default {
           };
           this.$Modal.confirm({
             title: "确认",
-            content: "确认删除此视图？",
+            content: `确认删除<b style="color:#e4393c;">${params.row.title}</b>视图？`,
             onOk: () => {
               deleteAppViews(deleteParams).then(res => {
                 if (res.success) {
@@ -140,7 +122,7 @@ export default {
           };
           this.$Modal.confirm({
             title: "确认",
-            content: "确认删除此视图？",
+            content: `确认删除<b style="color:#e4393c;">${params.row.title}</b>视图？`,
             onOk: () => {
               deleteAppViews(deleteParams).then(res => {
                 if (res.success) {
@@ -158,15 +140,12 @@ export default {
     reloadViewData() {
       getListViewPermission(this.listId).then(res => {
         res.forEach(element => {
-          var content = JSON.stringify(element.content);
-
           element.permissionList = [
             ...element.groups,
             ...element.roles,
             ...element.users
           ];
-          element.title = content.viewName;
-        });        
+        });
         this.reportSources = res;
       });
     },
@@ -192,14 +171,14 @@ export default {
         viewId: params.row.viewId,
         listId: this.listId
       };
-      if(isMobile){
+      if (isMobile) {
         saveMobileDefaultView(defaultParams).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
             this.reloadViewData();
           }
         });
-      }else{
+      } else {
         saveDefaultView(defaultParams).then(res => {
           if (res.success) {
             this.$Message.success(res.message);
@@ -316,17 +295,9 @@ export default {
                   {
                     on: {
                       click: () => {
-                        let href =
-                          "/Site/index.html#appSetting/viewConfig/" +
-                          this.listId +
-                          "/" +
-                          params.row.viewUniqueId;
+                        let href = `/Site/index.html#appSetting/${this.listId}/${params.row.viewUniqueId}/edit`;
                         window.top.location.href = href;
                       }
-                    },
-                    style: {
-                      display:
-                        this.appType !== "subject" ? "inline-block" : "none"
                     }
                   },
                   "修改"
@@ -335,8 +306,7 @@ export default {
                   style: {
                     height: "20px",
                     borderLeft: "1px solid #39f",
-                    margin: "0px 5px",
-                    display: this.appType !== "subject" ? "inline" : "none"
+                    margin: "0px 5px"
                   }
                 }),
                 h(
@@ -356,12 +326,10 @@ export default {
             }
           }
         ];
-      if (this.isAdmin && this.appType !== "subject") {
+      if (this.isAdmin) {
         this.columns = defaultColumns
           .concat(defaultViewColumn)
           .concat(optColumns);
-      } else if (this.isAdmin) {
-        this.columns = defaultColumns.concat(optColumns);
       } else {
         this.columns = defaultColumns;
       }

@@ -220,9 +220,7 @@ export default {
     },
     //通知父组件modal的状态
     modalVisibleChange(state) {
-      if (!state) {
-        this.$emit("emitRoleModal", { modal: false });
-      }
+      if (!state) this.$emit("emitRoleModal", { modal: false });
     },
     //职位page点击
     onDepPageChange(currentPage) {

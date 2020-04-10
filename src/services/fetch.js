@@ -3,6 +3,8 @@ import qs from 'qs'
 import {
   getToken
 } from '@/utils/utils'
+import { router } from '@/router';
+
 
 axios.defaults.timeout = 10000
 
@@ -24,7 +26,8 @@ axios.interceptors.response.use(response => {
         err.message = err.response
         break;
       case 401:
-        err.message = '未授权，请重新登录'
+        router.push('/login');
+        err.message = '未授权，请重新登录';
         break;
       case 403:
         err.message = '拒绝访问'
@@ -65,7 +68,6 @@ axios.interceptors.response.use(response => {
   return Promise.reject(err.message)
 })
 
-axios.interceptors
 
 
 /**

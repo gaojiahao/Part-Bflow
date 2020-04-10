@@ -1,11 +1,16 @@
 <style lang="less" scoped>
 @import "./notice-common.less";
-
+.message-container{
+    margin: 8px;
+    &-content{
+        max-width: 100%;
+        width: 100%;
+    }
+}
 </style>
 <template>
     
-    <div class="message-container" v-bind:class="{'noticefromme':data.creatorName===$currentUser.nickname}">
-        <div>{{data.crtTime}}</div>
+    <div class="message-container">
         <div >
             <template v-if="data.sourceContent.objContent || data.sourceContent.objAttachment">
                 
@@ -21,7 +26,7 @@
                     <div class="notice-container-relpy">
                         <div class="notice-container-relpy-content">
                             <span class="notice-creator">@{{data.sourceContent.objCreator}}</span>:
-                            <a v-if="data.sourceContent.type ==='instance'" class="notice-relationKey" @click="handleViewDetail">{{data.sourceContent.relationKey}}</a>:
+                            <!-- <a v-if="data.sourceContent.type ==='instance'" class="notice-relationKey" @click="handleViewDetail">{{data.sourceContent.relationKey}}</a>: -->
                             <span  class="notice-container" v-html="data.sourceContent.objContent"></span>
                             <div 
                                 class="comimg"
@@ -55,13 +60,6 @@
             <template v-else>
                 
                 <div class="message-container-content">
-                    <div class="message-container-creator " >
-                    <span class="notice-creator">{{data.creatorName}}:</span>
-                    <span v-if="data.sourceContent.type ==='instance'">对实例 </span>
-                    <span v-if="data.sourceContent.type ==='list'">对<a @click="handleViewDetail"><strong>应用</strong></a></span>
-                    <a v-if="data.sourceContent.type ==='instance'" class="notice-relationKey" @click="handleViewDetail">{{data.sourceContent.relationKey}}</a>
-                    发表了评论
-                </div>
                     <div  class="notice-content" v-html="data.tempContent" >
                     
                     </div>
@@ -106,7 +104,7 @@
 
 <script>
 export default {
-    name:'commentNoticeTpl',
+    name:'CommentNotice',
     props:{
         data:{
         }

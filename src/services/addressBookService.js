@@ -34,11 +34,23 @@ export const getTeamProfitData = (groupCode,startDate,endDate) => request('/H_ro
  * @author XiaoYing
  * @description 获取组织利润表下钻数据
  */
-export const getTeamProfitDetail = (groupCode,classify,startDate,endDate) => request('/H_roleplay-si/account/getGroupProfitWater', {
+export const getTeamProfitDetail = (groupCode,classify,startDate,endDate,page,limit,start) => request('/H_roleplay-si/account/getGroupProfitWater', {
   groupId: groupCode,
   classify: classify,
   startDate: startDate,
-  endDate: endDate
+  endDate: endDate,
+  page: page,
+  limit: limit,
+  start: start
+});
+
+/**
+ * @author XiaoYing
+ * @description 获取组织可分配利润表下钻数据
+ */
+export const getDistributableProfitDetail = (groupCode,classify) => request('/H_roleplay-si/ds/getOrgDistributableProfitWater', {
+  orgId: groupCode,
+  classify: classify
 });
 
 /**
@@ -297,6 +309,14 @@ export const getWorkFlowTaskByUserId = (userId, currentPage, pageSize) => reques
   limit: pageSize
 });
 
+/**
+ * @author XiaoYing
+ * @description 获取组织可分配利润表数据
+ */
+export const getOrgDistributableProfit = (orgId) => request('/H_roleplay-si/ds/getOrgDistributableProfit', {
+  orgId: orgId
+});
+
 
 /************  组织  **************/
 
@@ -316,10 +336,16 @@ export const getUsersByGroupId = (groupId, currentPage, pageSize) => request('/H
   groupId: groupId,
   page: currentPage,
   limit: pageSize,
-  start: 0,
-});
+  start: 0
+})
 
-
+/**
+ * @author snack.huang
+ * @description 按组织ID查询组织信息
+ */
+export const getOrgById = (groupId) => request('/H_roleplay-si/sysGroup/getGroupById', {
+  groupId: groupId
+})
 
 /**
  * @author GuoZheng

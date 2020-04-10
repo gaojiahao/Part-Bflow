@@ -16,7 +16,7 @@
 </style>
 
 <template>
-    <div class="performance">
+    <div class="performance" ref="performance">
         <div class="performance-detail">
             <div class="profit-date">
               开始：<DatePicker 
@@ -71,7 +71,7 @@
 
 <script>
 import { getPerformanceData, getPerformanceDetail } from "@/services/addressBookService.js";
-import { toThousandFilter, getLastDay, getPreMonthDay } from "@/utils/utils";
+import { toThousandFilter, getLastDay, getPreMonthDay, toAdd } from "@/utils/utils";
 
 export default {
   name: "PerformanceAnalysis",
@@ -288,7 +288,7 @@ export default {
     showModal (row,currentYear,currentMonth) {
         let startDate, endDate;
         this.showAccountDetail = true;
-        currentYear ? this.modalTitle = row.row.performanceType : row.performanceType;
+        this.modalTitle = currentYear ? row.row.performanceType : row.performanceType;
         this.modalLoading = true;
         if(currentYear){
           let lastMonthDay = getLastDay(currentYear,currentMonth);
@@ -324,6 +324,10 @@ export default {
               fixed: 'left'
             });
             this.columns = createColumn;
+            this.$nextTick(() => {
+              if (this.columns.length < 7)
+              this.$refs.performance.style.width = `${452 + (this.columns.length-2)*150}px`;
+            });
         }
         getPerformanceData(this.userId,this.formatDate(startDate),this.formatDate(endDate)).then(res => {
           if(res.success){
@@ -348,7 +352,7 @@ export default {
         val['monthSum'] = 0;
         for(let k in val){
           if( k !== 'month' && k !== 'monthSum'){
-            val['monthSum'] += val[k]
+            val['monthSum'] = toAdd(val[k], val['monthSum']);
           }
         }
       })

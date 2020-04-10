@@ -31,6 +31,7 @@
         </Row>
         <!-- 工作流modal -->
         <workflow-modal 
+          ref="workFlowModal"
           :modalWorkflowStatus="showModal" 
           :deleteRelationWorkflow="deleteRelationWorkflow"
           @emitWorkFlowModal="emitWorkFlowModal"
@@ -80,6 +81,8 @@ export default {
     //展示工作流modal
     showWorkflowModal() {
       this.showModal = true;
+      this.$refs.workFlowModal.getAllWorkflowData();
+      this.$refs.workFlowModal.getRelativeWorkflowData();
     },
     //获取已关联流程数据
     getRelativeWorkflowData() {

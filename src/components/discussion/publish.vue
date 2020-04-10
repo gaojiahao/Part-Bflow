@@ -467,17 +467,7 @@ export default {
                 return cur;
             }, []);
 
-            this.handlePublish(content,files,userIds,this.superComment,this.commentAndReply);
-
-            this.innerText = '';
-            this.discContent.txt = '';
-            this.$refs.editor.innerHTML = "";
-            this.atUsers = [];
-            this.$refs.upload.clearFiles();
-            this.$refs.uploadFile.clearFiles();
-           
-            this.uploadList = this.$refs.upload.fileList;
-            this.uploadFileList = this.$refs.uploadFile.fileList;
+            this.handlePublish(content,files,userIds,this.superComment,this.commentAndReply,this);
         },
         handleView (name) {
             if(window.top.viewInsCommentsImg){

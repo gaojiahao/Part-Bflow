@@ -36,7 +36,7 @@
                 @on-search="userFilter" 
                 :search="true" 
                 v-model="searchValue" 
-                placeholder="搜索账号或姓名" 
+                placeholder="搜索账号或名称" 
                 style="width: 300px">
               </Input>
               <p @click="userFilter" class="app-search-icon">
@@ -125,7 +125,12 @@ export default {
             return h('div',[
               h('Avatar',{
                 props: {
-                  src: params.row.photo?params.row.photo:'resources/images/icon/defaultUserPhoto.png'
+                  src: params.row.photo?params.row.photo:'/resources/images/icon/defaultUserPhoto.png'
+                },
+                on:{
+                  'on-error': (e) => {
+                    e.target.src = '/resources/images/icon/defaultUserPhoto.png';
+                  }
                 }
               })
             ])

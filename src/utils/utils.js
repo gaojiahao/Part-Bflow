@@ -29,6 +29,20 @@ export const FormatDate = (date, fmt) => {
     return fmt;
 }
 
+//解决浮点数*100、10后精度变化，例如：0.56*100 = 56.00000000000001
+export const toPercent = (num) => {
+    return (num + '00').replace(/\.([\d]{2})/,'$1.') * 1;
+}
+
+//解决js加法运算精度丢失问题，例如：7812.22+850 = 8662.220000000001
+export const toAdd = (arg1, arg2) => {
+    let r1, r2, m;
+    try { r1 = arg1.toString().split(".")[1].length } catch (e) { r1 = 0 }
+    try { r2 = arg2.toString().split(".")[1].length } catch (e) { r2 = 0 }
+    m = Math.pow(10, Math.max(r1, r2));
+    return (arg1 * m + arg2 * m) / m;
+}
+
 /**
  * @param  {Date} date 日期
  * @param  {monthNum} Number  前几个月
@@ -92,6 +106,29 @@ export const toThousandFilter  = (num) => {
     num < 0 && (t = '-' + t); 
 
     return t;
+}
+
+/**
+ * @author XiaoYing
+ * @param  cloneObject 克隆对象
+ * @description 深度克隆
+ */
+export const deepClone  = (cloneObject) => {
+    if (cloneObject === null || typeof cloneObject !== 'object') return cloneObject;
+
+    let result = cloneObject.constructor();
+
+    for(let key in cloneObject){
+        if (cloneObject.hasOwnProperty(key)) {
+            if(cloneObject[key] && typeof cloneObject[key] === 'object'){
+                result[key] = this.deepClone(cloneObject[key]);
+            }else{
+                result[key] = cloneObject[key];
+            }
+        }
+    }
+
+    return result;
 }
 
 /** 

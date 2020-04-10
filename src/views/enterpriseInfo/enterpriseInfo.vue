@@ -10,7 +10,7 @@
           <label class="left-leble">企业LOGO</label>
           <div class="logo" >
             <Upload 
-              v-if="$currentUser.isAdmin" 
+              v-if="$currentUser.isBusinessAdmin || $currentUser.isOperationAdmin" 
               ref="upload" 
               :show-upload-list="false" 
               :on-success="handleSuccess" 
@@ -41,7 +41,7 @@
           <label class="left-leble">企业简称</label>
           <span v-if="!editEnterpriseName">{{enterpriseInfo.nickname}}</span>
           <input v-else type="text" v-model="enterpriseInfo.nickname" class="input-common-att" />
-          <a @click="handleEditName" v-if="$currentUser.isAdmin">{{edit}}</a>
+          <a @click="handleEditName" v-if="$currentUser.isBusinessAdmin || $currentUser.isOperationAdmin">{{edit}}</a>
         </div>
         <div class="select-explain">
           <label class="left-leble">企业全称</label>
@@ -66,10 +66,21 @@
           <span v-if="!editEnterpriseName">{{enterpriseInfo.phone}}</span>
           <input v-else type="text" v-model="enterpriseInfo.phone" class="input-common-att" />
         </div>
+        <div class="select-explain">
+          <label class="left-leble">是否启用组织核算</label>
+          <span>
+            <Checkbox 
+              :disabled="!editEnterpriseName" 
+              v-model="enterpriseInfo.depAccount"
+              style="display:inline;">
+              <span></span>
+            </Checkbox>
+          </span>
+        </div>
       </section>
 
       <section class="info-warp-main-section">
-        <div v-if="$currentUser.isAdmin" :style="{marginBottom:'5px'}">
+        <div v-if="$currentUser.isBusinessAdmin || $currentUser.isOperationAdmin" :style="{marginBottom:'5px'}">
           <Button type="info" size="small" @click="showAddExchange">添加汇率</Button>
           <Button type="info" size="small" @click="deleteExchange">删除</Button>
         </div>
@@ -92,7 +103,7 @@
               <Input @on-blur="onExchangeRateBlur(row)" v-else v-model="row.exchangeRate"></Input>
           </template>
           <template slot-scope="{ row }" slot="localCurrency">
-              <Radio @on-change="onLocalCurrencyChange($event,row)" :disabled="!$currentUser.isAdmin" :value="row.localCurrency===1?true:false"></Radio>
+              <Radio @on-change="onLocalCurrencyChange($event,row)" :disabled="!$currentUser.isBusinessAdmin" :value="row.localCurrency===1?true:false"></Radio>
           </template>
       </Table>
       </section>
@@ -106,7 +117,7 @@
             type="info" 
             shape="circle" 
             @click="handleSyncInfo" 
-            v-if="$currentUser.isAdmin" 
+            v-if="$currentUser.isBusinessAdmin || $currentUser.isOperationAdmin" 
             :style="{marginLeft:'50px'}">
             同步第三方平台用户
           </Button>
@@ -153,6 +164,21 @@
         </div>
       </section>
 
+      <section class="info-warp-main-section" v-if="$currentUser.isOperationAdmin">
+        <div>
+          <label class="left-leble">
+            运营管理员
+          </label>
+
+          <div class="user-container">
+            <Tag v-for="item in enterpriseInfo.operationsManager" :key="item.userId" :userId="item.userId" type="border" :closable="closable" color="blue" size="small" @on-close="deleteEnterpriseOperatorAdmin">
+              {{item.nickname}}
+            </Tag>
+            <a @click="selectAdminModal('operator')" style="font-size:14px;">添加</a>
+          </div>
+        </div>
+      </section>
+
       <section class="info-warp-main-section">
         <div>
           <label class="left-leble">
@@ -163,7 +189,7 @@
             <Tag v-for="item in enterpriseInfo.admins" :key="item.userId" :userId="item.userId" type="border" :closable="closable" color="blue" size="small" @on-close="deleteEnterpriseAdmin">
               {{item.nickname}}
             </Tag>
-            <a @click="selectAdminModal" v-if="$currentUser.isAdmin" style="font-size:14px;">添加</a>
+            <a @click="selectAdminModal('admin')" v-if="$currentUser.isBusinessAdmin || $currentUser.isOperationAdmin" style="font-size:14px;">添加</a>
           </div>
         </div>
       </section>
@@ -171,12 +197,12 @@
         <div>
           <label class="left-leble">网站登录页背景图</label>
           <div style="display: inline-block;vertical-align: middle;">
-            <Upload v-if="$currentUser.isAdmin" :show-upload-list="false" :before-upload="handleUploadBefore" :on-success="handleBackgroundSuccess" action="/H_roleplay-si/ds/upload" :headers="httpHeaders">
+            <Upload v-if="$currentUser.isBusinessAdmin || $currentUser.isOperationAdmin" :show-upload-list="false" :before-upload="handleUploadBefore" :on-success="handleBackgroundSuccess" action="/H_roleplay-si/ds/upload" :headers="httpHeaders">
               <Button icon="ios-cloud-upload-outline">选择背景图</Button>
             </Upload>
             <div v-if="enterpriseInfo.backgroundName">上传文件名称:
               <a :href="enterpriseInfo.backgroundImg" target="_blank">{{ enterpriseInfo.backgroundName }}</a>
-              <Button v-if="$currentUser.isAdmin" type="text" @click="upload" :loading="loadingStatus">{{ loadingStatus ? '上传中' : '点击上传' }}</Button>
+              <Button v-if="$currentUser.isBusinessAdmin || $currentUser.isOperationAdmin" type="text" @click="upload" :loading="loadingStatus">{{ loadingStatus ? '上传中' : '点击上传' }}</Button>
             </div>
           </div>
         </div>
@@ -185,7 +211,7 @@
     <user-modal v-model="showAdminModal" title="选择用户" @on-ok="confirmModal" width="600">
       <div>
         <div class="app-search">
-          <Input v-model="searchValue" placeholder="请输入用户名或用户ID" style="width: 300px" clearable @on-enter="adminFilter" @on-change="handleInputValueChange"></Input>
+          <Input v-model="searchValue" placeholder="请输入姓名或编号" style="width: 300px" clearable @on-enter="adminFilter" @on-change="handleInputValueChange"></Input>
           <p class="app-search-icon">
             <Button @click="adminFilter" type="primary" size="small">查询</Button>
           </p>
@@ -262,6 +288,7 @@ export default {
         instraction: "",    //企业说明
         address: "",    //企业地址
         phone: "",    //联系电话
+        depAccount: false, //是否启用组织核算
         qwCorpid:"",  //企业微信企业ID
         qwAppAgentId:"",    //企业微信应用代理ID
         qwAppsecret:"",    //企业微信应用密钥
@@ -315,7 +342,7 @@ export default {
           align: "center"
         },
         {
-          title: "工号",
+          title: "编号",
           key: "userCode"
         },
         {
@@ -354,7 +381,7 @@ export default {
               props: {
                 type: 'text',
                 size: 'small',
-                disabled: !this.$currentUser.isAdmin || params.row.currencyValue === 'rmb'
+                disabled: !this.$currentUser.isBusinessAdmin || params.row.currencyValue === 'rmb'
               },
               style: {
                 color: '#39f'
@@ -403,7 +430,7 @@ export default {
       this.showExchangeRateModal = true;
     },
     editExchangeRate(row, isEdit) {
-      if(this.$currentUser.isAdmin){
+      if(this.$currentUser.isBusinessAdmin){
         row.currencyValue !== 'rmb' && this.$set(row, isEdit, true);
       }
     },
@@ -513,9 +540,10 @@ export default {
       }
     },
     //管理员选择modal展示
-    selectAdminModal() {
+    selectAdminModal(type) {
       this.showAdminModal = true;
       this.searchValue = "";
+      this.modalType = type;
       this.onPageSelection = []; //清空选中的用户
       this.getListUsers(this.currentPage, this.pageSize);
     },
@@ -578,20 +606,29 @@ export default {
     //管理员选择确认
     confirmModal() {
       let obj = {},
-        singleId = [];
-      this.enterpriseInfo["admins"].push(...this.onPageSelection);
-      this.enterpriseInfo["admins"] = this.enterpriseInfo["admins"].reduce(
+          singleId = [],
+          type = 1,
+          typeName = 'admins';
+
+      if(this.modalType !== 'admin'){
+        typeName = 'operationsManager';
+        type = -1;
+      }
+
+      this.enterpriseInfo[typeName].push(...this.onPageSelection);
+      this.enterpriseInfo[typeName] = this.enterpriseInfo[typeName].reduce(
         (cur, next) => {
           obj[next.userId] ? "" : (obj[next.userId] = true && cur.push(next));
           return cur;
         },
         []
       );
+      
       this.onPageSelection.map(item => {
         singleId.push(item.userId);
       });
 
-      updateRelation(singleId.join(",")).then(res => {
+      updateRelation(singleId.join(","),type).then(res => {
         if (res.success) {
           this.$Message.info("添加成功！");
           this.showAdminModal = false;
@@ -610,7 +647,24 @@ export default {
         }
       );
 
-      deleteRelation(userId).then(res => {
+      deleteRelation(userId,1).then(res => {
+        if (res.success) {
+          this.$Message.info("删除成功！");
+        } else {
+          this.$Message.error(res.message);
+        }
+      });
+    },
+    //删除运营管理员节点
+    deleteEnterpriseOperatorAdmin(event) {
+      let userId = Number(event.target.parentElement.getAttribute("userid"));
+      this.enterpriseInfo["operationsManager"] = this.enterpriseInfo["operationsManager"].filter(
+        f => {
+          return userId !== f.userId;
+        }
+      );
+
+      deleteRelation(userId,-1).then(res => {
         if (res.success) {
           this.$Message.info("删除成功！");
         } else {
@@ -661,6 +715,7 @@ export default {
 
     getAdmintrstorData() {
       getEnterpriseById().then(res => {
+        res.depAccount = res.depAccount == '1' ? true : false;
         this.enterpriseInfo = res;
       });
     },
@@ -701,6 +756,7 @@ export default {
           qwAppAgentId: this.enterpriseInfo.qwAppAgentId,
           qwAppsecret: this.enterpriseInfo.qwAppsecret,
           ddCorpid: this.enterpriseInfo.ddCorpid,
+          depAccount: this.enterpriseInfo.depAccount ? 1 : 0,
           ddAppAgentId: this.enterpriseInfo.ddAppAgentId,
           ddAppKey: this.enterpriseInfo.ddAppKey,
           ddAppsecret: this.enterpriseInfo.ddAppsecret,
@@ -845,6 +901,7 @@ export default {
     this.getAdmintrstorData();
     this.getCurrencyDatas()
     this.getExchangeRateDatas();
+    this.modalType = 'admin';
   }
 };
 </script>

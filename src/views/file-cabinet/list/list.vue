@@ -35,6 +35,7 @@
               :action="`/H_roleplay-si/filing/upload?directory=${filePath}&cover=false`"
               :show-upload-list="false" 
               :on-success="handleSuccess"
+              :on-progress="handleProgress"
               :headers="httpHeaders">
               <Button class="toolbar-btn" type="info">上传</Button>
             </Upload>
@@ -112,6 +113,14 @@
           :subareaDetail="subareaDetail"
           @refresh="refresh">
         </subarea-setting>
+        <Modal
+            v-model="uploadProgress"
+            footer-hide>
+            <Progress :percent="percent" status="active" />
+                <Icon type="checkmark-circled"></Icon>
+                <span>正在上传</span>
+            </Progress>
+        </Modal>
     </div>
 </template>
 
@@ -150,7 +159,9 @@ export default {
       showActionModal: false,
       isCopy: true,
       loading: true,
+      uploadProgress: false,
       permissionSattus: true,
+      percent: 0,
       columns: [
           {
           title: "名称",
@@ -309,11 +320,17 @@ export default {
     },
     handleSuccess(res, file) {
       if(res.success){
+        this.percent = 100;
+        this.uploadProgress = false;
         this.$Message.success(res.message);
         this.getAllFileData(this.filePath);
       }else{
         this.$Message.error(res.message);
       }
+    },
+    handleProgress() {
+      this.uploadProgress = true;
+      this.percent = 80;
     },
     renameFile(row) {
       this.showModal = true;

@@ -1,5 +1,10 @@
-<style lang="less" >
+<style lang="less" scoped>
 @import "./comments.less";
+.handle-view-img /deep/ .ivu-modal-body{
+    text-align: center;
+    overflow: auto;
+    height: 550px;
+}
 </style>
 <template>
 <div class="comments">
@@ -39,7 +44,7 @@
                         <div class="comimg-cover">
                             <Icon 
                             type="ios-eye-outline" 
-                            @click.native="handleViewImg(c.attachment)">
+                            @click.native="handleViewImg(c.attachment,$event)">
                             </Icon>
                         </div>
                     </div>
@@ -116,10 +121,16 @@
             </Col>
         </Row>
     </div>
-     <Modal title="查看图片" v-model="imgModalVisible" width='80%'>
+     <Modal 
+     :styles="{top:'15px'}"
+     class="handle-view-img" 
+     v-model="imgModalVisible" 
+     width='80%'
+     footer-hide>
+        <p slot="header"></p>
         <img 
             :src="imgName" 
-            v-if="imgModalVisible" style="width: 100%">
+            v-if="imgModalVisible">
     </Modal>
  </div>
 
@@ -163,6 +174,9 @@ export default {
         isInIframe:{
             type:Boolean,
             default:false
+        },
+        refreshRootComments: {
+            type: Function
         }
     },
     data() {
@@ -288,7 +302,7 @@ export default {
             comment.showReply = !comment.showReply;
             
         },
-        handleReplyPublish:function (content,uploadList,userIds=[],superComment,commentAndReply) {
+        handleReplyPublish:function (content,uploadList,userIds=[],superComment,commentAndReply,sendComponent) {
             this.$forceUpdate();
             let comment ={
                 type:superComment.type,       
@@ -309,19 +323,40 @@ export default {
                     });
                     return;
                 }
+
+                if(sendComponent){
+                    sendComponent.innerText = '';
+                    sendComponent.discContent.txt = '';
+                    sendComponent.$refs.editor && (sendComponent.$refs.editor.innerHTML = "");
+                    sendComponent.atUsers = [];
+                    sendComponent.$refs.upload && (sendComponent.$refs.upload.clearFiles());
+                    sendComponent.$refs.uploadFile && (sendComponent.$refs.uploadFile.clearFiles());
+                    sendComponent.uploadList = sendComponent.$refs.upload && sendComponent.$refs.upload.fileList;
+                    sendComponent.uploadFileList = sendComponent.$refs.uploadFile && sendComponent.$refs.uploadFile.fileList;
+                }
+
                 superComment.showReply = false;
                 
-                this.$refs.childComments[0].handleLoadMore();
+                if(this.$refs.childComments[0]){
+                    this.$refs.childComments[0].handleLoadMore();
+                }else{
+                    this.refreshRootComments();
+                }
             });
         },
         handleViewTextImg:function(event){
             var tagName = event.target.tagName;
 
+            if(tagName === 'A' && !!event.target.getAttribute('href')){
+                event.preventDefault();
+                window.open(event.target.getAttribute('href'));
+            }
+
             if(tagName === 'IMG' && !~event.target.getAttribute('src').indexOf('resources/images')){
                 this.handleViewImg(event.target.getAttribute('src'));
             }
         },
-        handleViewImg:function (img) {
+        handleViewImg:function (img,e) {
             if(window.top.viewInsCommentsImg){
                 window.top.viewInsCommentsImg(img);
             }else{

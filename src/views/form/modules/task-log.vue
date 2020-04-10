@@ -6,7 +6,7 @@
   <div  class="timeline-box">
     <div class="task-modal" :style="{display: showTaskModal?'block':'none'}"></div>
     <div class="app-resource-group-title">
-        <span class="font16">任务日志</span>
+        <span class="font16">日志任务</span>
         <span v-if="logData.length>0">
           <Tooltip class="hidden-form" v-if="!hiddenForm" content="打开任务日志表单" placement="left">
           <span @click="openForm">
@@ -39,6 +39,7 @@
             <Col :xs="24" :sm="12" :md="8" :lg="8">
               <FormItem label='员工'  prop="users"> 
                 <Select
+                  ref="selectUser"
                   v-model="modalFormData.users"
                   multiple
                   filterable
@@ -46,7 +47,9 @@
                   placeholder="请选择或搜索员工"
                   :remote-method="remoteFilterSearch"
                   @on-query-change="handleQueryChange"
-                  :loading="loading">
+                  @on-change="onSelectChange"
+                  :loading="loading"
+                  class="task-user">
                   <Option v-for="(option) in userList" :value="option.userId" :key="option.userId">{{option.nickname}}</Option>
                 </Select>
               </FormItem>
@@ -87,7 +90,7 @@
                <FormItem label="申报工时:" prop="logDeclarationHours">
                 <InputNumber 
                   v-model="modalFormData.logDeclarationHours"
-                  :step="0.1"/>单位/时
+                  :step="1"/>单位/时
               </FormItem>
             </Col>
 
@@ -95,8 +98,8 @@
          </Row>
 
 
-        <FormItem label="备注:" prop="comments">
-          <Input  v-model="modalFormData.comments" type="textarea" placeholder="输入您特别想备注的信息" />
+        <FormItem label="成果:" prop="comments">
+          <Input  v-model="modalFormData.comments" type="textarea" placeholder="请输入您的成果" />
         </FormItem>
 
         <FormItem>
@@ -123,7 +126,7 @@
               false-value='待办'>
             </Checkbox>
 
-            <strong>{{item.logTitle}}</strong>
+            <strong style="word-break:break-all">{{item.logTitle}}</strong>
           </li>
           <li>
             <span>{{item.handlerName}}</span>
@@ -134,7 +137,7 @@
 
           </li>
           <li>
-            <pre>{{item.comment}}</pre>
+            <pre class="comment-pre" >{{item.comment}}</pre>
           </li>
         </ul>
       </ul>
@@ -144,8 +147,8 @@
             :current="currentPage"
             :page-size="pageSize" 
             @on-change="changeCurrentPage"
-            prev-text="上一页" 
-            next-text="下一页"
+            @on-page-size-change="onPageSizeChange"
+            show-total
             size="small"  
             ></Page>
       </div>
@@ -155,13 +158,13 @@
         title="系统提示"
         @on-ok="handlerUpdateLogStatus(curLog)"
         @on-cancel="getTaskLog();modalVisible=false">
-        <p>如果更新为已办，日志的日期将自动更新为今天!</p>
+        <p>您要更改的日志任务日期大于今日，应为待办，如果更新为已办，日志的日期将自动更新为今天!</p>
     </Modal>
   </div>
 </template>
 
 <script>
-import { getTaskLog, saveTaskLog,updateLogStatus} from "@/services/appService.js";
+import { getTaskLog, saveTaskLog,updateLogStatus,getFeaturesConfig} from "@/services/appService.js";
 import { getDictByValue} from "@/services/commonService.js";
 import { getAllUsers } from "@/services/subscribeService";
 import { FormatDate } from "@/utils/utils";
@@ -204,7 +207,7 @@ export default {
             users:[],
             comments: "",
             logType:"",
-            logStatus:"待办"
+            logStatus:"已办"
         },
         ruleValidate: {
             //变更日志表单校验
@@ -231,12 +234,15 @@ export default {
         },
         currentPage: 1,
         pageTotal:0,
-        pageSize:6
+        pageSize:10
         };
   },
 
 
   methods: {
+    onSelectChange() {
+      this.$refs['selectUser'].hideMenu();
+    },
     openForm() {
       this.hiddenForm = true;
       if(window.top.setTaskLogIframeHeight){
@@ -270,7 +276,13 @@ export default {
           this.showTaskModal = false;
           return;
         }
-       
+
+        if(FormatDate(this.modalFormData.taskDate,"yyyy-MM-dd") < FormatDate(new Date(),"yyyy-MM-dd")){
+          window.top.Ext.toast('提交日期小于今日，请重新选择日期！');
+          this.showTaskModal = false;
+          return;
+        }
+
         let currentUser = this.$currentUser;
         this.modalFormData.comments.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>').replace(/\s/g, ' ')
         let formdata = {
@@ -307,16 +319,16 @@ export default {
           
         saveTaskLog(formdata).then(res => {
             if (res.success) {
-              window.top.Ext.toast(res.message);
-              this.modalFormData.users = [];
               this.$nextTick(() => {
                this.$refs['logForm'].resetFields();
+               this.modalFormData.logType = this.logTypeList[0].name;
               });
               this.getTaskLog(this.transCode);
-              this.showTaskModal = false;
-            }else{
-                window.top.Ext.toast(res.message)
             }
+
+            window.top.Ext.toast(res.message);
+
+            this.showTaskModal = false;
         });
         
     }, 
@@ -364,6 +376,10 @@ export default {
      this.currentPage = currentPage;
      this.getTaskLog();
     },
+    onPageSizeChange(size){
+      this.pageSize = size;
+      this.getTaskLog();
+    },
     /**
      * 更新日志状态
      */
@@ -382,9 +398,7 @@ export default {
         taskDate = FormatDate(new Date(),"yyyy-MM-dd");
       }
       updateLogStatus(log.jobLogId,log.transCode,log.logStatus,taskDate).then(res=>{
-        if(res.success){
-          
-        }
+        if(res.success) this.getTaskLog();
          window.top.Ext.toast(res.message);
       })
     },
@@ -401,15 +415,51 @@ export default {
     initLogTypeList(){
       getDictByValue('logType').then(res=>{
         this.logTypeList = res;
+        this.modalFormData.logType = res[0].name;
+      })
+    },
+    setDefaultTitle(defaultField) {
+      let formData = window.top.formData;
+      this.getDefaultFormValue(JSON.parse(formData),defaultField);
+    },
+    getDefaultFormValue(obj,defaultField) {
+      for(let k in obj){
+        if(k === defaultField){
+          this.modalFormData.logTitle = obj[k];
+          return;
+        }
+        obj[k] instanceof Object && this.getDefaultFormValue(obj[k],defaultField);
+      }
+    },
+    getDefultTitle() {
+      getFeaturesConfig(window.top.listId,'d2fdcf18-76e8-11e9-9199-005056a136d0').then(con => {
+          if(con.success){
+            let defaultField = con.data.defaultTitle && JSON.parse(con.data.defaultTitle).fieldCode;
+            this.setDefaultTitle(defaultField);
+          }
       })
     }
   },
   created() {
     this.transCode = this.$route.params.transCode; 
+    this.modalFormData.users.push(this.$currentUser.userId);
     this.initLogTypeList();
     this.getTaskLog();
     this.getAllUsers();
+    this.getDefultTitle();
   }
 };
 </script>
+
+<style lang="less" scoped>
+.comment-pre{
+    word-break: break-all;
+    white-space: pre-wrap; /* css3.0 */
+    white-space:-moz-pre-wrap; /* Firefox */
+    white-space:-pre-wrap; /* Opera 4-6 */
+    white-space:-o-pre-wrap; /* Opera 7 */
+    word-wrap:break-word; /* Internet Explorer 5.5+ */
+
+}
+</style>
 

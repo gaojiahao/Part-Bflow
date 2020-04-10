@@ -67,7 +67,7 @@
         </div>
 
         <div class="app-table-search">
-          <Input @on-search="userTableFilter" :search="true" v-model="searchTableValue" placeholder="搜索工号或名称" style="width: 300px"></Input>
+          <Input @on-search="userTableFilter" :search="true" v-model="searchTableValue" placeholder="搜索账号或名称" style="width: 300px"></Input>
           <a @click="userTableFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </a>
@@ -79,7 +79,7 @@
     <member-modal v-model="isShowMemberModal" width="1000" footerBtnAlign="right" title="选择用户" @on-ok="saveSelectionUser">
       <div style="margin-top:10px">
         <div class="app-search">
-          <Input @on-search="userFilter" :search="true" v-model="searchValue" placeholder="搜索工号或名称" style="width: 300px"></Input>
+          <Input @on-search="userFilter" :search="true" v-model="searchValue" placeholder="搜索账号或名称" style="width: 300px"></Input>
           <a @click="userFilter" class="app-search-icon">
             <Button type="primary" size="small">查询</Button>
           </a>
@@ -153,7 +153,12 @@ export default {
                 props: {
                   src: params.row.photo
                     ? params.row.photo
-                    : "resources/images/icon/defaultUserPhoto.png"
+                    : "/resources/images/icon/defaultUserPhoto.png"
+                },
+                on:{
+                  'on-error': (e) => {
+                    e.target.src = '/resources/images/icon/defaultUserPhoto.png';
+                  }
                 }
               })
             ]);
@@ -247,7 +252,12 @@ export default {
                 props: {
                   src: params.row.photo
                     ? params.row.photo
-                    : "resources/images/icon/defaultUserPhoto.png"
+                    : "/resources/images/icon/defaultUserPhoto.png"
+                },
+                on:{
+                  'on-error': (e) => {
+                    e.target.src = '/resources/images/icon/defaultUserPhoto.png';
+                  }
                 }
               })
             ]);

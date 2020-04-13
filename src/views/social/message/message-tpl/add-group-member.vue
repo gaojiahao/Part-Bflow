@@ -23,7 +23,7 @@
               <Tree 
                 :data="treeList"
                 ref="tree"
-                empty-text="暂无数据"
+                empty-text=" "
                 @on-check-change="onCheckChange" 
                 show-checkbox>
               </Tree>
@@ -80,6 +80,7 @@ export default {
     watch: {
       showModal: function(value) {
         if(value) {
+          this.searchValue = "";
           this.treeList = [];
           this.copyTreeData = [];
           this.selectList = [];
@@ -279,13 +280,13 @@ export default {
         },
         onCheckChange(currentArray, currentSelect) {
           if(!currentSelect.leaf){
+            this.allChildrenNodes = [];
             let selectNodes = this.getAllChildrenNodes(currentSelect);
             if(!currentSelect.checked){
-              this.deleteUnselect(this.selectList,selectNodes);
-              
+              this.deleteUnselect(this.selectList,this.allChildrenNodes);
               this.selectExistMember(currentSelect);
             }else{
-              this.selectList = this.selectList.concat(selectNodes);
+              this.selectList = this.selectList.concat(this.allChildrenNodes);
               this.selectList = this.uniqueArray(this.selectList);
               this.deleteUnselect(this.selectList,this.selectMembers);
             }
@@ -307,24 +308,22 @@ export default {
         },
         //选中节点关联其他节点相同的也选中
         selectOtherNodes(currentSelect) {
-          let selectChildNodes = [];
+          this.selectChildNodes = [];
           if(!currentSelect.leaf){
-            selectChildNodes = this.getAllChildrenNodes(currentSelect);
+           this.getAllChildrenNodes(currentSelect);
           }else{
-            selectChildNodes.push(currentSelect);
+            this.selectChildNodes.push(currentSelect);
           }
-          selectChildNodes.forEach(sel => {
+          this.deleteUnselect(this.selectChildNodes,this.selectMembers);
+          this.selectChildNodes && this.selectChildNodes.forEach(sel => {
             this.setSelectedSameNode(sel,currentSelect);
             this.setSelectedSameNodeCopy(sel,currentSelect);
-            // this.getParentByTreelist(sel);
-            // this.getParentByTreelistCopy(sel);
           })
         },
         setSelectedSameNode(sel,currentSelect,data) {
           let allData = data || this.copyTreeData;
           allData.forEach(all => {
             if(sel.id == all.id){
-              // this.$refs.tree.handleCheck({checked:currentSelect.checked,nodeKey:all.nodeKey});
               all.checked = currentSelect.checked;
             }else{
               if(!all.leaf){
@@ -337,11 +336,10 @@ export default {
           let allData = data || this.treeList;
           allData.forEach(all => {
             if(sel.id == all.id){
-              // this.$refs.tree.handleCheck({checked:currentSelect.checked,nodeKey:all.nodeKey});
               all.checked = currentSelect.checked;
             }else{
               if(!all.leaf){
-                this.setSelectedSameNode(sel,currentSelect,all.children);
+                this.setSelectedSameNodeCopy(sel,currentSelect,all.children);
               }
             }
           })
@@ -349,37 +347,6 @@ export default {
         //获取树列表中指定选中的父节点
         getParentByTreelist(sel,arr) {
           let originArr = arr || this.copyTreeData;
-          for(let i=0;i<originArr.length;i++){
-            if(!originArr[i].leaf){
-              if(sel.parentId == originArr[i].id){
-                let checkedArr = [];
-                for(let k of originArr[i].children){
-                  checkedArr.push(k.checked);
-                }
-                if(checkedArr.indexOf(true)>-1 && checkedArr.indexOf(false)>-1){
-                  originArr[i].checked = false;
-                  originArr[i].indeterminate = true;
-                }else if(checkedArr.indexOf(true)>-1){
-                  originArr[i].checked = true;
-                  originArr[i].indeterminate = false;
-                }else{
-                  originArr[i].checked = false;
-                  originArr[i].indeterminate = false;
-                }
-                if(originArr[i].parentId != "7"){
-                  this.getParentByTreelist(originArr[i]);
-                }
-              }else{
-                if(originArr[i].children.length > 0){
-                  this.getParentByTreelist(sel,originArr[i].children);
-                }
-              }
-            }
-          }
-        },
-        //获取树列表中指定选中的父节点
-        getParentByTreelistCopy(sel,arr) {
-          let originArr = arr || this.treeList;
           for(let i=0;i<originArr.length;i++){
             if(!originArr[i].leaf){
               if(sel.parentId == originArr[i].id){
@@ -437,10 +404,14 @@ export default {
         selectExistMember(currentSelect) {
           if(currentSelect.children.length > 0){
             for(let p=0;p<currentSelect.children.length;p++){
-              for(let c=0;c<this.selectMembers.length;c++){
-                if(currentSelect.children[p].id == this.selectMembers[c].id){
-                  this.$refs.tree.handleCheck({checked:true,nodeKey:currentSelect.children[p].nodeKey});
-                  break;
+              if(!currentSelect.children[p].leaf){
+                this.selectExistMember(currentSelect.children[p]);
+              }else{
+                for(let c=0;c<this.selectMembers.length;c++){
+                  if(currentSelect.children[p].id == this.selectMembers[c].id){
+                    this.$refs.tree.handleCheck({checked:true,nodeKey:currentSelect.children[p].nodeKey});
+                    break;
+                  }
                 }
               }
             }
@@ -448,15 +419,14 @@ export default {
         },
         //获取选中父节点下所有子节点
         getAllChildrenNodes(currentSelect) {
-          let resultArr = [];
           for(let child of currentSelect.children){
             if(!child.leaf){
                 this.getAllChildrenNodes(child);
             }else{
-              resultArr.push(child);
+              this.allChildrenNodes && this.allChildrenNodes.push(child);
+              this.selectChildNodes && this.selectChildNodes.push(child);
             }
           }
-          return resultArr;
         }
     },
     mounted(){

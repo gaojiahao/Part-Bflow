@@ -44,7 +44,7 @@
     </div>
 </template>
 <script>
-import { setGroupName ,addMember, getGroupByUserId } from "@/services/imService";
+import { setGroupName ,addMember,createGroup } from "@/services/imService";
 import Bus from "@/assets/eventBus.js";
 import AddGroupMember from "../message-tpl/add-group-member";
 export default {
@@ -114,22 +114,16 @@ export default {
                 userNames.push(user.name);
             })
 
-            if(userList.length === 1){
-                params = {
-                    userId: userIds.join(',')
-                };
-                requestUrl = getGroupByUserId;
+            
+            params = {
+                groupId: this.group.groupId || null,
+                users: userIds.join(','),
+                name: userNames.join(',')
+            };
+            if(this.group.groupType === 'G'){
+                delete params.name;
             }else{
-                params = {
-                    groupId: this.group.groupId || null,
-                    users: userIds.join(','),
-                    name: userNames.join(',')
-                };
-                if(this.group.groupType === 'G'){
-                    delete params.name;
-                }else{
-                    requestUrl = createGroup;
-                }
+                requestUrl = createGroup;
             }
 
             requestUrl(params).then(res => {

@@ -44,10 +44,15 @@
             <div 
                 v-for="(m,index) in members" 
                 :key="index" 
-                 @contextmenu.prevent="showContextmenu"
+                 @contextmenu.prevent="showContextmenu(m)"
                 class="member-content-list">
-                <Tooltip placement="right" transfer>
-                    <Poptip trigger="click" placement="bottom-start">
+                <Tooltip placement="right" transfer :disabled="isDisabled">
+                    <Poptip 
+                        disabled
+                        :ref="m.userId" 
+                        placement="bottom-start" 
+                        @on-popper-show="onPopperShow"
+                        @on-popper-hide="onPopperHide">
                         <div>
                             <span class="img">
                                 <Icon type="ios-person" /> 
@@ -108,7 +113,8 @@ export default {
         return{
             groupOwner: "",
             members:[],
-            showPop: false
+            showPop: false,
+            isDisabled: false
         }
     },
     methods:{
@@ -121,8 +127,14 @@ export default {
                 Bus.$emit('getGroupMembers',this.members);
             });
         },
-        showContextmenu() {
-            this.showPop = true;
+        onPopperShow() {
+            this.isDisabled = true;
+        },
+        onPopperHide() {
+            this.isDisabled = false;
+        },
+        showContextmenu(m) {
+            this.$refs[m.userId][0].visible = true;
         },
         removeMembers(m, index) {
             let params = {

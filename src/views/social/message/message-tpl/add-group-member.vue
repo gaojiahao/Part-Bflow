@@ -97,26 +97,29 @@ export default {
           
         },
         deleteSelectMember(list,index) {
-          let allCheckedNodes = this.$refs["tree"].getCheckedNodes(),
-              deleteItem = this.getDeleteSelect(allCheckedNodes, list);
-          
-          if(deleteItem) {
-            deleteItem.checked = false;
-            this.parentNodes = [];
-            this.setParentStatus(allCheckedNodes,deleteItem);
-          }
+          this.getChildAndSetParentStatus(list);
           this.selectList.splice(index,1);
+        },
+        //获取删除子节点并设置父节点状态
+        getChildAndSetParentStatus(list) {
+          let allCheckedNodes = this.$refs["tree"].getCheckedNodes();
+          
+          this.deleteItems = [];
+          this.getDeleteSelect(allCheckedNodes, list)
+          this.deleteItems.forEach(d => {
+            d.checked = false;
+            this.parentNodes = [];
+            this.setParentStatus(allCheckedNodes,d);
+          }) 
         },
         //获取删除选项在树中的节点
         getDeleteSelect(allCheckedNodes,list) {
-          let deleteItem;
           for(let i = 0;i<allCheckedNodes.length;i++){
             if(!allCheckedNodes[i].leaf){
               this.getDeleteSelect(allCheckedNodes[i].children,list);
             }else{
               if(allCheckedNodes[i].id == list.id){
-                deleteItem = allCheckedNodes[i];
-                return deleteItem;
+                 this.deleteItems.push(allCheckedNodes[i]);
               }
             }
           }
@@ -272,6 +275,7 @@ export default {
                     this.selectList.splice(i,1);
                   }
               })
+              this.getChildAndSetParentStatus(currentSelect);
             }else{
               this.selectList.push(currentSelect);
               this.selectList = this.uniqueArray(this.selectList);
@@ -338,20 +342,20 @@ export default {
         getAllChildrenNodes(currentSelect,child) {
           let parentId = child ? child.id : currentSelect.id; 
           getAddressBook(parentId).then(res => {
-            res.forEach(child => {
+            for(let child of res){
               if(!child.leaf){
                   this.getAllChildrenNodes(currentSelect,child);
               }else{
                 this.resultArr.push(child);
               }
-            })
-            if(!currentSelect.checked){
-              this.deleteUnselect(this.selectList,this.resultArr);
-              this.selectExistMember(currentSelect);
-            }else{
-              this.selectList = this.resultArr ? this.selectList.concat(this.resultArr) : this.selectList;
-              this.selectList = this.uniqueArray(this.selectList);
-              this.deleteUnselect(this.selectList,this.selectMembers);
+              if(!currentSelect.checked){
+                this.deleteUnselect(this.selectList,this.resultArr);
+                this.selectExistMember(currentSelect);
+              }else{
+                this.selectList = this.resultArr ? this.selectList.concat(this.resultArr) : this.selectList;
+                this.selectList = this.uniqueArray(this.selectList);
+                this.deleteUnselect(this.selectList,this.selectMembers);
+              }
             }
           })
         }

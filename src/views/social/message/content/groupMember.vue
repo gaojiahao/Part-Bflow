@@ -66,10 +66,23 @@
                                 </span>
                             </span>
                         </div>
-                        <div slot="content">
-                            <p v-if="$currentUser.userId==groupOwner && !m.isOwner" class="menu-list" @click="removeMembers(m,index)">移除成员</p>
-                            <p v-if="m.isOwner" class="menu-list" @click="removeMembers(m,index)">退出群聊</p>
-                            <p class="menu-list">复制手机号</p>
+                        <div slot="content" :style="{width:'100px'}">
+                            <p 
+                                v-if="$currentUser.userId==groupOwner && !m.isOwner" 
+                                class="menu-list" 
+                                @click="removeMembers(m,index)">
+                                移除成员
+                            </p>
+                            <p 
+                                v-if="m.isOwner || $currentUser.userId==m.userId" 
+                                class="menu-list" 
+                                @click="removeMembers(m,index)">
+                                退出群聊
+                            </p>
+                            <p class="menu-list" @click="sentMemberMessage(m)">发送消息</p>
+                            <p class="menu-list" @click="linkMember(m)">@{{m.nickname}}</p>
+                            <p class="menu-list" @click="isDisabled=false">查看资料</p>
+                            <p class="menu-list" @click="copyEmail(m)">复制邮箱</p>
                         </div>
                     </Poptip>
                     <div slot="content">
@@ -105,7 +118,7 @@
 </template>
 
 <script>
-import { getMembers, removeMember } from "@/services/imService";
+import { getMembers, removeMember, getGroupByUserId } from "@/services/imService";
 import Bus from "@/assets/eventBus.js";
 export default {
     name:'groupMenber',
@@ -135,6 +148,33 @@ export default {
         },
         showContextmenu(m) {
             this.$refs[m.userId][0].visible = true;
+        },
+        sentMemberMessage(m) {
+            let params = {
+                userId: m.userId
+            };
+            getGroupByUserId(params).then(res => {
+                Bus.$emit('updateGroupName');
+            }).catch(err => {
+                this.$Message.error(err.data.message);
+            })
+        },
+        linkMember(m) {
+            Bus.$emit('setLinkMember',`@${m.nickname}&nbsp;`);
+        },
+        copyEmail(m) {
+            let input = document.createElement('input');
+            input.value = '135623569846@163.com';
+            document.body.appendChild(input);
+            input.select();
+            if(document.execCommand("Copy")){
+                document.execCommand("Copy"); // 执行浏览器复制命令
+                this.$Message.success('复制成功!');
+            }else{
+                this.$Message.error('无法复制！');
+            }
+            
+            input.remove()
         },
         removeMembers(m, index) {
             let params = {

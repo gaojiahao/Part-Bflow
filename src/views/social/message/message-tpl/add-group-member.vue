@@ -6,6 +6,7 @@
         class="add-group"
         v-model="showModal"
         :styles="{top:'30px'}"
+        :mask-closable="false"
         footer-hide>
         <p class="title">{{ groupTitle }}</p>
         <div class="content">
@@ -14,14 +15,15 @@
               <Input
                 v-model="searchValue"
                 autofocus 
+                search
+                @on-search="onSearch"
                 placeholder="搜索" />
             </div>
             <div class="content-left-list">
               <Tree 
                 :data="treeList"
                 ref="tree"
-                empty-text=" "
-                :load-data="loadData"
+                empty-text="暂无数据"
                 @on-check-change="onCheckChange" 
                 show-checkbox>
               </Tree>
@@ -50,7 +52,7 @@
 </template>
 <script>
 import Bus from "@/assets/eventBus.js";
-import { addMember, getAddressBook } from "@/services/imService";
+import { addMember, getAddressBook, getAddressBookName } from "@/services/imService";
 export default {
     name:'AddGroupMember',
     props: {
@@ -70,6 +72,7 @@ export default {
           isLoading: false,
           searchValue: "",
           treeList: [],
+          copyTreeData: [],
           selectList: [],
           selectMembers: []
         }
@@ -78,6 +81,7 @@ export default {
       showModal: function(value) {
         if(value) {
           this.treeList = [];
+          this.copyTreeData = [];
           this.selectList = [];
           this.getAllGroups();
         }
@@ -96,6 +100,34 @@ export default {
           this.confirmCallback(this.selectList);
           
         },
+        onSearch() {
+          let searchArr = [];
+          if(this.searchValue){
+            this.treeList = [];
+            this.getDataBySearchValue();
+          }else{
+            this.treeList = this.copyTreeData;
+          }
+          
+        },
+        getDataBySearchValue(arr) {
+          let resultArr = [],
+              treeArr = arr || this.copyTreeData;
+          treeArr.forEach(child => {
+            if(!child.leaf){
+              if(child.name.indexOf(this.searchValue) > -1){
+                this.treeList.push(child);
+              }else{
+                this.getDataBySearchValue(child.children);
+              }
+            }else{
+              if(child.name.indexOf(this.searchValue) > -1){
+                this.treeList.push(child);
+              }
+            }
+          })
+          this.treeList = this.uniqueArray(this.treeList);
+        },
         deleteSelectMember(list,index) {
           this.getChildAndSetParentStatus(list);
           this.selectList.splice(index,1);
@@ -106,11 +138,6 @@ export default {
           
           this.deleteItems = [];
           this.getDeleteSelect(allCheckedNodes, list)
-          this.deleteItems.forEach(d => {
-            d.checked = false;
-            this.parentNodes = [];
-            this.setParentStatus(allCheckedNodes,d);
-          }) 
         },
         //获取删除选项在树中的节点
         getDeleteSelect(allCheckedNodes,list) {
@@ -119,98 +146,84 @@ export default {
               this.getDeleteSelect(allCheckedNodes[i].children,list);
             }else{
               if(allCheckedNodes[i].id == list.id){
-                 this.deleteItems.push(allCheckedNodes[i]);
+                this.$refs.tree.handleCheck({checked:false,nodeKey:allCheckedNodes[i].nodeKey});
               }
             }
           }
-        },
-        //设置删除选项在树中父节点为未选中状态
-        setParentStatus(allCheckedNodes,deleteItem) {
-          for(let i = 0;i<allCheckedNodes.length;i++){
-            if(!allCheckedNodes[i].leaf){
-              if(allCheckedNodes[i].id == deleteItem.parentId){
-                this.parentNodes.push(allCheckedNodes[i]);
-                if(allCheckedNodes[i].parentId === "7") break;
-                this.setParentStatus(allCheckedNodes,allCheckedNodes[i]);
-              }
-            }
-          }
-          this.parentNodes.forEach(item => {
-            item.checked = false;
-          })
         },
         getAllGroups() {
           this.isLoading = true;
-          getAddressBook(null).then(res => {
-            res.forEach(item => {
-              if(item.id !== 7){
-                let treeItem = {
-                  title: item.name,
-                  id: item.id,
-                  name: item.name,
-                  leaf: item.leaf,
-                  parentId: item.parentId,
-                  photo: item.photo,
-                  render: this.renderImgContent
-              }
-
-              if(!item.leaf){
-                treeItem.loading = false;
-                treeItem.children = [];
-                treeItem.render = this.renderFileContent;
-              }else{
-                this.selectMembers.forEach(sel => {
-                  if(sel.id == treeItem.id){
-                    treeItem.checked = true;
-                    treeItem.disabled = true;
-                  }
-                })
-              }
-
-              this.treeList.push(treeItem);
-              }
-            })
+          getAddressBook().then(res => {
+            this.createTreeData(res);
             this.isLoading = false;
           })
         },
-        loadData(item, callback) {
-          let data = [];
-          getAddressBook(item.id).then(res => {
-            res.forEach(item => {
-              if(!item.leaf){
-                data.push({
-                  title: item.name,
-                  id: item.id,
-                  photo: item.photo,
-                  name: item.name,
-                  children: [],
-                  leaf: item.leaf,
-                  parentId: item.parentId,
-                  loading: false,
-                  render: this.renderFileContent
-                })
-              }else{
-                let treeItem = {
-                  title: item.name,
-                  id: item.id,
-                  photo: item.photo,
-                  name: item.name,
-                  parentId: item.parentId,
-                  leaf: item.leaf,
-                  render: this.renderImgContent
-                }
-                this.selectMembers.forEach(sel => {
-                  if(sel.id == treeItem.id){
-                    treeItem.checked = true;
-                    treeItem.disabled = true;
-                  }
-                })
+        createTreeData(data) {
+          let me = this;
+          for(let item of data){
+            if(item.parentId === "7"){
+              this.treeList.push(this.createTreeItem(item));
+              this.copyTreeData.push(this.createTreeItem(item));
+            }
+          }
+          this.setChildren(data);
+          this.setChildrenCopy(data);
+        },
+        createTreeItem(item) {
+          let treeItem = {
+              title: item.name,
+              id: item.id,
+              name: item.name,
+              leaf: item.leaf,
+              parentId: item.parentId,
+              photo: item.photo,
+              render: this.renderImgContent
+          }
 
-                data.push(treeItem); 
+          if(!item.leaf){
+            treeItem.children = [];
+            treeItem.render = this.renderFileContent;
+          }else{
+            this.selectMembers.forEach(sel => {
+              if(sel.id == treeItem.id){
+                treeItem.checked = true;
+                treeItem.disabled = true;
               }
             })
-            callback(data);
-          })
+          }
+          return treeItem;
+        },
+        //递归设置子节点
+        setChildren(data,arr){
+          let childArr = arr || this.treeList;
+          for(let i=0;i<childArr.length;i++){
+            if(!childArr[i].leaf){
+                for(let c=0;c<data.length;c++){
+                  if(data[c].parentId == childArr[i].id){
+                    if(data[c].parentId != "0"){
+                      childArr[i].children.push(this.createTreeItem(data[c]));
+                    }
+                  }
+               }
+               this.setChildren(data,childArr[i].children);
+            }
+          }
+        },
+        //递归设置子节点
+        setChildrenCopy(data,arr){
+          let childArr = arr || this.copyTreeData;
+          for(let i=0;i<childArr.length;i++){
+            if(!childArr[i].leaf){
+                for(let c=0;c<data.length;c++){
+                  if(data[c].parentId == childArr[i].id){
+                    if(data[c].parentId != "0"){
+                      childArr[i].children.push(this.createTreeItem(data[c]));
+                    }
+                  }
+               }
+               this.setChildren(data,childArr[i].children);
+            }
+          }
         },
         renderImgContent(h, { root, node, data }) {
             return h('span', {
@@ -266,8 +279,16 @@ export default {
         },
         onCheckChange(currentArray, currentSelect) {
           if(!currentSelect.leaf){
-            this.resultArr = [];
-            this.getAllChildrenNodes(currentSelect);
+            let selectNodes = this.getAllChildrenNodes(currentSelect);
+            if(!currentSelect.checked){
+              this.deleteUnselect(this.selectList,selectNodes);
+              
+              this.selectExistMember(currentSelect);
+            }else{
+              this.selectList = this.selectList.concat(selectNodes);
+              this.selectList = this.uniqueArray(this.selectList);
+              this.deleteUnselect(this.selectList,this.selectMembers);
+            }
           }else{
             if(!currentSelect.checked){
               this.selectList.forEach((o,i) => {
@@ -279,6 +300,111 @@ export default {
             }else{
               this.selectList.push(currentSelect);
               this.selectList = this.uniqueArray(this.selectList);
+              this.deleteUnselect(this.selectList,this.selectMembers);
+            }
+          }
+          this.selectOtherNodes(currentSelect);
+        },
+        //选中节点关联其他节点相同的也选中
+        selectOtherNodes(currentSelect) {
+          let selectChildNodes = [];
+          if(!currentSelect.leaf){
+            selectChildNodes = this.getAllChildrenNodes(currentSelect);
+          }else{
+            selectChildNodes.push(currentSelect);
+          }
+          selectChildNodes.forEach(sel => {
+            this.setSelectedSameNode(sel,currentSelect);
+            this.setSelectedSameNodeCopy(sel,currentSelect);
+            // this.getParentByTreelist(sel);
+            // this.getParentByTreelistCopy(sel);
+          })
+        },
+        setSelectedSameNode(sel,currentSelect,data) {
+          let allData = data || this.copyTreeData;
+          allData.forEach(all => {
+            if(sel.id == all.id){
+              // this.$refs.tree.handleCheck({checked:currentSelect.checked,nodeKey:all.nodeKey});
+              all.checked = currentSelect.checked;
+            }else{
+              if(!all.leaf){
+                this.setSelectedSameNode(sel,currentSelect,all.children);
+              }
+            }
+          })
+        },
+        setSelectedSameNodeCopy(sel,currentSelect,data) {
+          let allData = data || this.treeList;
+          allData.forEach(all => {
+            if(sel.id == all.id){
+              // this.$refs.tree.handleCheck({checked:currentSelect.checked,nodeKey:all.nodeKey});
+              all.checked = currentSelect.checked;
+            }else{
+              if(!all.leaf){
+                this.setSelectedSameNode(sel,currentSelect,all.children);
+              }
+            }
+          })
+        },
+        //获取树列表中指定选中的父节点
+        getParentByTreelist(sel,arr) {
+          let originArr = arr || this.copyTreeData;
+          for(let i=0;i<originArr.length;i++){
+            if(!originArr[i].leaf){
+              if(sel.parentId == originArr[i].id){
+                let checkedArr = [];
+                for(let k of originArr[i].children){
+                  checkedArr.push(k.checked);
+                }
+                if(checkedArr.indexOf(true)>-1 && checkedArr.indexOf(false)>-1){
+                  originArr[i].checked = false;
+                  originArr[i].indeterminate = true;
+                }else if(checkedArr.indexOf(true)>-1){
+                  originArr[i].checked = true;
+                  originArr[i].indeterminate = false;
+                }else{
+                  originArr[i].checked = false;
+                  originArr[i].indeterminate = false;
+                }
+                if(originArr[i].parentId != "7"){
+                  this.getParentByTreelist(originArr[i]);
+                }
+              }else{
+                if(originArr[i].children.length > 0){
+                  this.getParentByTreelist(sel,originArr[i].children);
+                }
+              }
+            }
+          }
+        },
+        //获取树列表中指定选中的父节点
+        getParentByTreelistCopy(sel,arr) {
+          let originArr = arr || this.treeList;
+          for(let i=0;i<originArr.length;i++){
+            if(!originArr[i].leaf){
+              if(sel.parentId == originArr[i].id){
+                let checkedArr = [];
+                for(let k of originArr[i].children){
+                  checkedArr.push(k.checked);
+                }
+                if(checkedArr.indexOf(true)>-1 && checkedArr.indexOf(false)>-1){
+                  originArr[i].checked = false;
+                  originArr[i].indeterminate = true;
+                }else if(checkedArr.indexOf(true)>-1){
+                  originArr[i].checked = true;
+                  originArr[i].indeterminate = false;
+                }else{
+                  originArr[i].checked = false;
+                  originArr[i].indeterminate = false;
+                }
+                if(originArr[i].parentId != "7"){
+                  this.getParentByTreelist(originArr[i]);
+                }
+              }else{
+                if(originArr[i].children.length > 0){
+                  this.getParentByTreelist(sel,originArr[i].children);
+                }
+              }
             }
           }
         },
@@ -309,55 +435,28 @@ export default {
         },
         //选中已有成员
         selectExistMember(currentSelect) {
-          let parentTreeItem = this.getParentByTreelist(currentSelect);
-          if(parentTreeItem.children.length > 0){
-            for(let p=0;p<parentTreeItem.children.length;p++){
+          if(currentSelect.children.length > 0){
+            for(let p=0;p<currentSelect.children.length;p++){
               for(let c=0;c<this.selectMembers.length;c++){
-                if(parentTreeItem.children[p].id == this.selectMembers[c].id){
-                  parentTreeItem.children[p].checked = true;
+                if(currentSelect.children[p].id == this.selectMembers[c].id){
+                  this.$refs.tree.handleCheck({checked:true,nodeKey:currentSelect.children[p].nodeKey});
                   break;
                 }
               }
             }
           }
         },
-        //获取树列表中指定选中的父节点
-        getParentByTreelist(currentSelect,arr) {
-          let parentTreeItem,
-              originArr = arr || this.treeList;
-          for(let i=0;i<originArr.length;i++){
-            if(!originArr[i].leaf){
-              if(currentSelect.id == originArr[i].id){
-                parentTreeItem = originArr[i];
-                return parentTreeItem;
-              }else{
-                if(originArr[i].children.length > 0){
-                  this.getParentByTreelist(currentSelect,originArr[i]);
-                }
-              }
+        //获取选中父节点下所有子节点
+        getAllChildrenNodes(currentSelect) {
+          let resultArr = [];
+          for(let child of currentSelect.children){
+            if(!child.leaf){
+                this.getAllChildrenNodes(child);
+            }else{
+              resultArr.push(child);
             }
           }
-        },
-        //获取选中父节点下所有子节点
-        getAllChildrenNodes(currentSelect,child) {
-          let parentId = child ? child.id : currentSelect.id; 
-          getAddressBook(parentId).then(res => {
-            for(let child of res){
-              if(!child.leaf){
-                  this.getAllChildrenNodes(currentSelect,child);
-              }else{
-                this.resultArr.push(child);
-              }
-              if(!currentSelect.checked){
-                this.deleteUnselect(this.selectList,this.resultArr);
-                this.selectExistMember(currentSelect);
-              }else{
-                this.selectList = this.resultArr ? this.selectList.concat(this.resultArr) : this.selectList;
-                this.selectList = this.uniqueArray(this.selectList);
-                this.deleteUnselect(this.selectList,this.selectMembers);
-              }
-            }
-          })
+          return resultArr;
         }
     },
     mounted(){

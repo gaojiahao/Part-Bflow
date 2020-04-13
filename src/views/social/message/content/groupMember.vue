@@ -74,7 +74,7 @@
                                 移除成员
                             </p>
                             <p 
-                                v-if="m.isOwner || $currentUser.userId==m.userId" 
+                                v-if="($currentUser.userId==groupOwner && m.isOwner) || $currentUser.userId==m.userId" 
                                 class="menu-list" 
                                 @click="removeMembers(m,index)">
                                 退出群聊

@@ -53,6 +53,7 @@ export default {
     methods: {
         showAddGroupModal() {
             this.$refs["addGroupMember"].showModal = true;
+            this.$refs["addGroupMember"].selectMembers = [];
         },
         addGroup(userList) {
             let userIds = [],

@@ -14,6 +14,7 @@
                     <Icon 
                         class="choice-face" 
                         type="ios-happy-outline"  
+                        title="表情"
                         size=24 />
                         <div class="api-emotion" slot="content">
                             <img 
@@ -24,136 +25,41 @@
                         </div>
             </Poptip>
             
-               <Upload
-                    v-show="uploadList.length<9"
-                    ref="upload"
-                    :show-upload-list="false"
-                    :default-file-list="defaultList"
-                    :on-success="handleSuccess"
-                    :format="['jpg','jpeg','png']"
-                    :max-size="2048"
-                    :headers="httpHeaders"
-                    :on-format-error="handleFormatError"
-                    :on-exceeded-size="handleMaxSize"
-                    :before-upload="handleBeforeImgUpload"
-                    multiple
-                    action="/H_roleplay-si/ds/upload"
-                    style="display: inline-block;position: relative;">
-                    <Icon 
-                    type="md-images" 
-                    class="choice-img"  
-                    size=24 />
-                </Upload>
-            <!-- <Poptip 
-                v-show="allowFile"
-                placement="bottom-start" 
-                width="235">
-                    <Icon 
-                    type="md-images" 
-                    class="choice-img"  
-                    size=24 />图片
-                    <span v-if="uploadList.length>0">({{uploadList.length}})</span>
-                    <div class="api" slot="content" >
-                        <p class="lh25 marbottom10">
-                            <span>共{{uploadList.length}}张,您还能上传<span style="color:#e4393c;">{{9-uploadList.length}}</span>张</span>
-                            <Button class="fr" type="warning" v-if="uploadList.length>0" @click="handleClearImg">清空全部</Button>
-                        </p>
-                        <div 
-                            class="comment-upload-list" 
-                            v-for="(item,index) in uploadList" 
-                            :key="index" >
-                                <template v-if="item.status === 'finished'">
-                                    <img :src="item.url">
-                                    <div class="comment-upload-list-cover">
-                                        <Icon 
-                                        type="ios-eye-outline" 
-                                        @click.native="handleView(item.name)">
-                                        </Icon>
-                                        <Icon 
-                                        type="ios-trash-outline" 
-                                        @click.native="handleRemove(item)"></Icon>
-                                    </div>
-                                </template>
-                                <template v-else>
-                                    <Progress 
-                                    v-if="item.showProgress" 
-                                    :percent="item.percentage" 
-                                    hide-info></Progress>
-                                </template>
-                        </div>
-                        <Upload
-                            v-show="uploadList.length<9"
-                            ref="upload"
-                            :show-upload-list="false"
-                            :default-file-list="defaultList"
-                            :on-success="handleSuccess"
-                            :format="['jpg','jpeg','png']"
-                            :max-size="2048"
-                            :headers="httpHeaders"
-                            :on-format-error="handleFormatError"
-                            :on-exceeded-size="handleMaxSize"
-                            :before-upload="handleBeforeImgUpload"
-                            multiple
-                            type="drag"
-                            action="/H_roleplay-si/ds/upload"
-                            style="display: table;width:58px;">
-                            <div style="width: 58px;height:58px;line-height: 58px;">
-                                <Icon type="ios-camera" size="20"></Icon>
-                            </div>
-                        </Upload>
-                        <Modal title="查看图片" v-model="visible">
-                            <img 
-                                :src="'/H_roleplay-si/ds/download?url=' + imgName + ''" 
-                                v-if="visible" style="width: 100%">
-                        </Modal>
-                    </div>
-            </Poptip> -->
-             <Upload
-                    multiple
-                    ref="uploadFile"
-                    :max-size="10240"
-                    :headers="httpHeaders"
-                    :show-upload-list='false'
-                    :on-success="handleFileSuccess"
-                    :on-exceeded-size="handleFileMaxSize"
-                    :default-file-list="defaultFileList"
-                    :before-upload="handleBeforeFileUpload"
-                     style="display: inline-block;position: relative;"
-                    action="/H_roleplay-si/ds/upload">
-                    <Icon type="ios-folder-open-outline" size=24  class="choice-file" />
-                    <!-- <Icon type="ios-folder-open-outline" /> -->
-                    
-                    </Upload>
-            <!-- <Poptip 
-                
-                v-show="allowFile"
-                placement="bottom-start" >
-                <Icon type="md-attach" size=24  class="choice-file" />文件
-                 <span v-if="uploadFileList.length>0">({{uploadFileList.length}})</span>
-                <div slot="content" style="max-height:200px;max-width:280px;">
-                    <p class="lh25 marbottom10" style="min-width:230px;">
-                        <span>共{{uploadFileList.length}}份,您还能上传<span style="color:#e4393c;">{{9-uploadFileList.length}}</span>份</span>
-                        <Button 
-                            class="fr" 
-                            v-if="uploadFileList.length>0"
-                            type="warning" 
-                            @click="handleClearFile">清空全部</Button>
-                    </p>
-                    <Upload
-                    multiple
-                    ref="uploadFile"
-                    :max-size="10240"
-                    :headers="httpHeaders"
-                    :on-success="handleFileSuccess"
-                    :on-exceeded-size="handleFileMaxSize"
-                    :default-file-list="defaultFileList"
-                    :before-upload="handleBeforeFileUpload"
-                    action="/H_roleplay-si/ds/upload">
-                    <Button icon="ios-cloud-upload-outline">上传文件</Button>
-                    </Upload>
-                   
-                </div>
-            </Poptip> -->
+            <Upload
+                v-show="uploadList.length<9"
+                ref="upload"
+                :show-upload-list="false"
+                :default-file-list="defaultList"
+                :on-success="handleSuccess"
+                :format="['jpg','jpeg','png']"
+                :max-size="2048"
+                :headers="httpHeaders"
+                :on-format-error="handleFormatError"
+                :on-exceeded-size="handleMaxSize"
+                :before-upload="handleBeforeImgUpload"
+                multiple
+                accept=".jpg,.png"
+                action="/H_roleplay-si/ds/upload"
+                style="display: inline-block;position: relative;">
+                <Icon type="md-images" class="choice-img"  title="图片" size=24 />
+            </Upload>
+        
+            <Upload
+                multiple
+                ref="uploadFile"
+                :max-size="10240"
+                :headers="httpHeaders"
+                :show-upload-list='false'
+                :on-success="handleFileSuccess"
+                accept=".xls,.xlsx"
+                :format="['ex','jpeg','png']"
+                :on-exceeded-size="handleFileMaxSize"
+                :default-file-list="defaultFileList"
+                :before-upload="handleBeforeFileUpload"
+                style="display: inline-block;position: relative;"
+                action="/H_roleplay-si/ds/upload">
+                <Icon type="ios-folder-open-outline" size=24 title="文件"  class="choice-file" />
+            </Upload>
         </Col>
         <Col class="publish-bar-right" span="12">
             <slot name="rightBars"></slot>
@@ -170,7 +76,8 @@
             @blur="onPopperShow"
             @focus="lock=true" 
             @keydown="handleDOMRemoved"
-            ></div>
+            >
+        </div>
 
         <div class="atwho-view" id="at-view-64" v-show="userListVisible" :style="{top:`${top}px`,left:`${left}px`}" >
             <ul class="atwho-view-ul" @click="handleSelectUser" >
@@ -543,11 +450,31 @@ export default {
             }
 
             file.url ='/H_roleplay-si/ds/download?url=' +  res.data[0].attacthment;
+            file.name = res.data[0].attr1;
+            if(/.jpg|.png|.PNG/.test(file.name)){
+                file.icon = 'image.png';
+            }
+
+            if(/.xlsx/.test(file.name)){
+                file.icon = 'excel.png';
+            }
+
+            if(/.docx/.test(file.name)){
+                file.icon = 'word.png';
+            }
+
+            if(/.txt/.test(file.name)){
+                file.icon = 'txt.png';
+            }
+
+            if(!file.icon){
+                file.icon = 'word.png';
+            }
             //  创建需追加到光标处节点的文档片段
             const range = this.range.cloneRange();
             let fragment = range.createContextualFragment('<span contenteditable="false" class="file-content">'+
-                '<img class="flie-img" width="38" src="resources/images/file/excel.png"  paste="1">'+
-                '<div class="file-content-info"><p><a href="'+file.url+'">'+res.data[0].attr1+'</a></p><p>'+getFileSize(file.size)+'</p>'+
+                '<img class="flie-img" width="38" src="resources/images/file/'+ file.icon+'"  paste="1">'+
+                '<div class="file-content-info"><p><a href="'+file.url+'">'+file.name+'</a></p><p>'+getFileSize(file.size)+'</p>'+
                 '</div>'+
             '</span>');
 
@@ -620,22 +547,6 @@ export default {
         },
 
         initEvent(){
-            // // demo 程序将粘贴事件绑定到 document 上
-            // this.$refs.editor.addEventListener('compositionstart',(e)=>{
-            //     this.isCN = true;
-            // });
-
-            // //中文输入完成触发事件
-            // this.$refs.editor.addEventListener('compositionend',(e)=>{
-            //     if(this.isFilter){
-            //         this.filterContent = this.filterContent+e.data;
-            //         let filter = JSON.stringify([{"operator":"like","value":this.filterContent,"property":"nickname"}]);
-            //         this.getAllUsers(filter);
-            //         this.isCN = false;
-            //     }  
-            // });
-
-
             const that = this;
             this.$refs.editor.addEventListener("paste",  (e)=> {
                 let clipboardData = e.clipboardData;

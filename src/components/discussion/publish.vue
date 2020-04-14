@@ -105,6 +105,7 @@
 
 <script>
 import { getToken } from "@/utils/utils";
+import Bus from "@/assets/eventBus.js";
 import {
   getDomValue, insertHtmlAtCaret, getCursortPosition
 } from '@/utils/dom-utils'
@@ -601,6 +602,10 @@ export default {
         })
         //初始化事件
         this.initEvent();
+        let me = this;
+        Bus.$on('setLinkMember',text => {
+            this.$refs.editor.innerHTML = `${this.$refs.editor.innerHTML}${text}`;
+        });
     },
 
 };

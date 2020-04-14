@@ -85,30 +85,42 @@
                             <p class="menu-list" @click="copyEmail(m)">复制邮箱</p>
                         </div>
                     </Poptip>
-                    <div slot="content">
+                    <div slot="content" style="padding:10px">
                         <div class="member-header" :style="{display: 'flex'}">
                             <div class="member-header-left">
                                 <img 
                                 :src="m.photo || '/resources/images/icon/defaultUserPhoto.png'"
                                 :style="{width:'70px',height:'70px',border:'1px solid #ddd'}" />
                             </div>
-                            <div :style="{lineHeight:'70px',marginLeft:'10px'}">
-                                <p>{{m.nickname}}</p>
+                            <div :style="{marginLeft:'10px',marginTop:'10px'}">
+                                <p>
+                                    <p
+                                        :style="{fontSize:'15px'}">
+                                        {{m.nickname}}
+                                    </p>
+                                    <span 
+                                        :style="{}">
+                                        {{m.role}}
+                                    </span>
+                                </p>
                             </div>
                         </div>
                         <div class="member-detail">
                             <p>
                                 <span class="label">手机：</span>
-                                <span>135623569846</span>
+                                <span>{{m.mobile}}</span>
                             </p>
                             <p>
                                 <span class="label">邮箱：</span>
-                                <span>135623569846@163.com</span>
+                                <span>{{m.email}}</span>
                             </p>
                             <p>
                                 <span class="label">部门：</span>
-                                <span>开发中心</span>
+                                <span>{{m.group}}</span>
                             </p>
+                        </div>
+                        <div :style="{marginTop:'10px'}" @click="sentMemberMessage(m)">
+                            <Button long>发消息</Button>
                         </div>
                     </div>
                 </Tooltip>
@@ -160,11 +172,11 @@ export default {
             })
         },
         linkMember(m) {
-            Bus.$emit('setLinkMember',`@${m.nickname}&nbsp;`);
+            Bus.$emit('setLinkMember',{name:`@${m.nickname}&nbsp;`});
         },
         copyEmail(m) {
             let input = document.createElement('input');
-            input.value = '135623569846@163.com';
+            input.value = m.email;
             document.body.appendChild(input);
             input.select();
             if(document.execCommand("Copy")){

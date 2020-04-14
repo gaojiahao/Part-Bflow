@@ -693,7 +693,13 @@ export default {
         this.initEvent();
         let me = this;
         Bus.$on('setLinkMember',text => {
-            this.$refs.editor.innerHTML = `${this.$refs.editor.innerHTML}${text}`;
+            let content;
+            if(text.value){
+                content = `${text.value}${this.$refs.editor.innerHTML}${text.name}`;
+            }else{
+                content = `${this.$refs.editor.innerHTML}${text.name}`;
+            }
+            this.$refs.editor.innerHTML = content;
         });
     },
 

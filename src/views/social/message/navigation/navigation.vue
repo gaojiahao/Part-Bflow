@@ -19,7 +19,8 @@
                     <div class="font12 navigation-list-item-appinfo-name" v-if="g.lastMsg">
                         <div class="navigation-list-item-appinfo-name-lastcontent">
                             <span>{{g.lastMsg.creatorName}}:</span>
-                            <span v-html="g.lastMsg.content"></span>
+                            <span v-html="g.lastMsg.content" v-if="g.lastMsg.imType==1"></span>
+                            <span  v-if="g.lastMsg.imType==2">文件</span>
                         </div>
                         <div class="navigation-list-item-appinfo-name-lastTime">
                             <Time :time="g.lastMsg.crtTime" />

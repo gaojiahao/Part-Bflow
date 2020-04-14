@@ -11,7 +11,7 @@ export const getMyImGroups = () => request('/H_roleplay-si/im/group/getMyGroups'
  * @author snack.haugng
  * @description 获取当前用户关联群聊，单聊信息内容
  */
-export const getMessagesByGroupId = (groupId) => request('/H_roleplay-si/im/message/getGroupMessage',{ groupId:groupId })
+export const getMessagesByGroupId = (params) => request('/H_roleplay-si/im/message/getGroupMessage',params)
 
 
 /**
@@ -83,6 +83,15 @@ export const getGroupByUserId = (params) => request('/H_roleplay-si/im/group/get
 export const getAddressBook = (groupId) => request('/H_roleplay-si/im/group/getAddressBook',{
   groupId: groupId
 })
+
+/**
+ * @author snack.huang 
+ * @description 通过类型获取消息
+ */
+export const getMessagesByImType = (groupId,imType) => request('/H_roleplay-si/im/message/getMessageByImType',{
+  groupId: groupId,
+  imType:imType
+});
 
 
 

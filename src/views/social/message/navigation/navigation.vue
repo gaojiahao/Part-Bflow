@@ -9,28 +9,43 @@
             :to="{name:'group',params:{groupId: g.groupId},query:{groupName:g.groupName,groupType:g.groupType}}" 
             v-for="(g,index) in  imGroups" 
             :key="index">
-          
-            <li  class="navigation-list-item"   v-bind:class="{ 'active':$route.params.groupId==g.groupId }">
-                <img width="45" :src="g.groupIcon" onerror="src='resources/images/icon/defaultUserPhoto.png'" style="border: 1px solid #ddd;">
-                <div class="navigation-list-item-appinfo">
-                    <div class="font14 font12 navigation-list-item-appinfo-groupName">
-                        <p>{{g.groupName}}</p>
-                    </div>
-                    <div class="font12 navigation-list-item-appinfo-name" v-if="g.lastMsg">
-                        <div class="navigation-list-item-appinfo-name-lastcontent">
-                            <span>{{g.lastMsg.creatorName}}:</span>
-                            <span v-html="g.lastMsg.content" v-if="g.lastMsg.imType==1"></span>
-                            <span  v-if="g.lastMsg.imType==2">文件</span>
+            <Poptip 
+                disabled
+                :ref="g.groupId"
+                width="100%"
+                placement="bottom">
+                <li 
+                    class="navigation-list-item" 
+                    :class="{ 'active':$route.params.groupId==g.groupId }"
+                    @contextmenu.prevent="onContextmenu(g)" >
+                    <img 
+                        width="45" 
+                        :src="g.groupIcon" 
+                        onerror="src='resources/images/icon/defaultUserPhoto.png'" 
+                        style="border: 1px solid #ddd;">
+                    <div class="navigation-list-item-appinfo">
+                        <div class="font14 font12 navigation-list-item-appinfo-groupName">
+                            <p>{{g.groupName}}</p>
                         </div>
-                        <div class="navigation-list-item-appinfo-name-lastTime">
-                            <Time :time="g.lastMsg.crtTime" />
+                        <div class="font12 navigation-list-item-appinfo-name" v-if="g.lastMsg">
+                            <div class="navigation-list-item-appinfo-name-lastcontent">
+                                <span>{{g.lastMsg.creatorName}}:</span>
+                                <span v-html="g.lastMsg.content" v-if="g.lastMsg.imType==1"></span>
+                                <span  v-if="g.lastMsg.imType==2">文件</span>
+                            </div>
+                            <div class="navigation-list-item-appinfo-name-lastTime">
+                                <Time :time="g.lastMsg.crtTime" />
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <Badge class="navigation-list-item-msgcount" :count="g.msgCount" overflow-count="99" >
-                </Badge>
-            </li>
+                    <Badge class="navigation-list-item-msgcount" :count="g.msgCount" overflow-count="99" >
+                    </Badge>
+                </li>
+                <div slot="content" :style="{width:'100px'}" @click="hiddenPop(g)">
+                    <p class="menu-list" @click="setTop(g)">{{g.focus?'取消置顶':'置顶'}}</p>
+                </div>
+            </Poptip>
         </router-link>
         <!-- <router-link  :to="'/social/message/list/'+ nav.listId" v-for="(nav,index) in  navs" :key="index" >
             <li  class="navigation-list-item" @click="handleActiveNavigation(nav)"  v-bind:class="{ 'active':$route.params.listId==nav.listId }">
@@ -50,7 +65,7 @@
 <script>
 
 import {getNavListByMessage,readNotice} from "@/services/notificationsService";
-import {getMyImGroups} from "@/services/imService";
+import { getMyImGroups,setFocus,deleteFocus } from "@/services/imService";
 import Bus from "@/assets/eventBus.js";
 export default {
     name:'Navigation',
@@ -66,6 +81,21 @@ export default {
         }
     },
     methods:{
+        hiddenPop(g) {
+          this.$refs[g.groupId][0].visible = false;
+        },
+        setTop(g) {
+            let requestUrl = setFocus;
+            if(g.groupId){
+                g.focus && (requestUrl = deleteFocus);
+                requestUrl(g.groupId).then(res => {
+                    if(res.success){
+                        this.$Message.success(res.message);
+                        this.refreshNavListByMessage();
+                    }
+                })
+            }
+        },
         refreshNavListByMessage:function (params) {
             //   getNavListByMessage(this.params).then(res=>{
             //     this.navs = res.tableContent;
@@ -176,6 +206,9 @@ export default {
                 }
             }
             return icon;
+        },
+        onContextmenu(g) {
+            this.$refs[g.groupId][0].visible = true;
         }
     },
     mounted(){

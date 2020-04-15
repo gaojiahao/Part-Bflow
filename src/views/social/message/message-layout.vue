@@ -6,11 +6,7 @@
         <div class="message-sider">
             <div class="message-sider-header">
                 <span class="message-search">
-                    <Input
-                        v-model="searchValue"
-                        autofocus 
-                        placeholder="搜索"
-                        :style="{width:'205px'}" />
+                    <nav-search></nav-search>
                 </span>
                 <span class="add-group" @click="showAddGroupModal">
                     <Icon type="md-add" />
@@ -35,15 +31,16 @@ import { createGroup, getGroupByUserId } from "@/services/imService";
 import Navigation from './navigation/navigation';
 import Bus from "@/assets/eventBus.js";
 import AddGroupMember from "./message-tpl/add-group-member";
+import NavSearch from "./message-tpl/nav-search";
 export default {
     name:'MessageLayout',
     components:{
         Navigation,
-        AddGroupMember
+        AddGroupMember,
+        NavSearch
     },
     data(){
         return {
-            searchValue: "",
             groupTitle: "发起群聊"
         }
     },

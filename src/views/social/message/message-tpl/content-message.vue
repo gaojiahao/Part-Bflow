@@ -26,9 +26,7 @@
             disabled
             :ref="textMessage.id"
             width="100%"
-            placement="bottom-start" 
-            @on-popper-show="onPopperShow"
-            @on-popper-hide="onPopperHide">
+            placement="bottom-start" >
             <span 
               :class="{'text-content':true}"
               @mouseenter="enter"
@@ -56,8 +54,7 @@ export default {
     },
     data(){
         return {
-           showTime: false,
-           isDisabled: true
+           showTime: false
         }
     },
     props:{
@@ -86,12 +83,6 @@ export default {
             }
           }
         },
-        onPopperShow() {
-            this.isDisabled = true;
-        },
-        onPopperHide() {
-            this.isDisabled = false;
-        },
         openMessageDetail() {
           this.$emit('showDetailModal', this.textMessage);
         },
@@ -113,7 +104,6 @@ export default {
           Bus.$emit('setLinkMember',{
             name:`@${text.creatorName}&nbsp;`,
             value:`<div style="
-                    -webkit-user-modify: read-only;
                     color:#999;
                     font-size:12px;
                     border-left:3px solid #ddd;

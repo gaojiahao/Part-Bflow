@@ -99,6 +99,30 @@ export const getMessagesByImType = (groupId,imType) => request('/H_roleplay-si/i
   imType:imType
 });
 
+/**
+ * @author XiaoYing
+ * @description 用群关键字查询通讯录及我所在的群
+ */
+export const getGroupsByName = (name) => request('/H_roleplay-si/im/group/getGroupsByName',{
+  name: name
+})
+
+/**
+ * @author XiaoYing
+ * @description 消息置顶
+ */
+export const setFocus = (groupId) => request('/H_roleplay-si/im/group/setFocus',{
+  groupId: groupId
+},'POST')
+
+/**
+ * @author XiaoYing
+ * @description 取消消息置顶
+ */
+export const deleteFocus = (groupId) => request('/H_roleplay-si/im/group/delFocus',{
+  groupId: groupId
+},'POST')
+
 
 
 

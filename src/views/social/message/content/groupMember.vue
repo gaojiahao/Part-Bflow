@@ -167,6 +167,11 @@ export default {
             };
             getGroupByUserId(params).then(res => {
                 Bus.$emit('updateGroupName');
+                this.$router.push({
+                    name: 'group',
+                    params: {groupId: res.groupId},
+                    query: {groupName: res.groupName,groupType: res.groupType}
+                })
             }).catch(err => {
                 this.$Message.error(err.data.message);
             })

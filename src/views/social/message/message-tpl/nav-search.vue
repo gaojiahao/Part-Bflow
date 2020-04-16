@@ -67,7 +67,7 @@
                 </div>
                 <Option v-for="option in item.children" :value="option.id" :key="option.id">
                     <span class="demo-auto-complete-title">{{ option.name }}</span>
-                    <p class="demo-auto-complete-count">包括：王小英</p>
+                    <p class="demo-auto-complete-count" v-if="option.type==='群聊'">包括：{{option.users}}</p>
                 </Option>
             </div>
         </AutoComplete>
@@ -107,30 +107,49 @@ export default {
           this.getSearchName();
         },
         onSelect(id) {
-          // this.$router.push({
-          //   name: 'group',
-          //   params: {groupId: g.groupId},
-          //   query: {groupName:g.groupName,groupType:g.groupType}
-          // })
+          let itemId = JSON.parse(id);
+          if(itemId.groupId){
+            this.$router.push({
+              name: 'group',
+              params: {groupId: itemId.groupId},
+              query: {groupName: itemId.groupName,groupType: itemId.groupType}
+            })
+          }else{
+            getGroupByUserId({userId: itemId.userId}).then(res => {
+              res.message && this.$Message.success(res.message);
+              Bus.$emit('updateGroupName');
+              this.$router.push({
+                name: 'group',
+                params: {groupId: res.groupId},
+                query: {groupName: res.groupName,groupType: res.groupType}
+              })
+            })
+          }
+          this.searchValue = "";
         },
         getSearchName() {
-          this.data[1].children = [];
-          this.data[0].children = [];
-          getGroupsByName(this.searchValue).then(res => {
-            res.forEach(item => {
-              if(item.type === "群聊"){
-                this.data[1].children.push({
-                  name: item.groupName,
-                  id: JSON.stringify({groupId: item.groupId,groupType: item.groupType,groupName: item.groupName,userId: item.userId})
-                })
-              }else{
-                this.data[0].children.push({
-                  name: item.nickname,
-                  id: JSON.stringify({groupId: item.groupId,groupType: item.groupType,groupName: item.groupName,userId: item.userId})
-                })
-              }
+          if(this.searchValue){
+            this.data[1].children = [];
+            this.data[0].children = [];
+            getGroupsByName(this.searchValue).then(res => {
+              res.forEach(item => {
+                if(item.type === "群聊"){
+                  this.data[1].children.push({
+                    name: item.groupName,
+                    users: item.users,
+                    type: item.type,
+                    id: JSON.stringify({groupId: item.groupId,groupType: item.groupType,groupName: item.groupName,userId: item.userId})
+                  })
+                }else{
+                  this.data[0].children.push({
+                    name: item.nickname,
+                    type: item.type,
+                    id: JSON.stringify({groupId: item.groupId,groupType: item.groupType,groupName: item.nickname,userId: item.userId})
+                  })
+                }
+              })
             })
-          })
+          }
         }
     },
     mounted(){

@@ -39,7 +39,32 @@
                     word-break: break-all;
 
                     /deep/ img{
-                        max-width: 50%;
+                        // max-width: 50%;
+                        max-width: 150px;
+                    }
+
+                    /deep/ .file-content{
+                        display: inline-block;
+                        cursor: pointer;
+                        width: 200px;
+                        border: 1px solid #ddd;
+                        border-radius: 3px;
+                        padding: 5px;
+                        margin: 3px;
+        
+                        &-info{
+                            display: inline-table;
+                            vertical-align: top;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            p{
+                              width: 145px;
+                              overflow: hidden;
+                              text-overflow: ellipsis;
+                              white-space: nowrap;
+                            }
+                          }
                     }
 
                     .paste-img{

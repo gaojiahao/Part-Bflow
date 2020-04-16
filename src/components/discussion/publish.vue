@@ -3,18 +3,19 @@
 </style>
 
 <template>
- <div class="publish">
-      <Row class="publish-bar">
-        <Col class="publish-bar-left" span="12">
+ <div class="publish" >
+    <Row class="publish-bar" >
+        <Col class="publish-bar-left" span="12" >
+            <div @mouseenter="onLeftBarHover">
             <Poptip 
                 placement="bottom-start" 
                 v-model="faceVisible"
-                @on-popper-show="onPopShow"
                 width="300">
                     <Icon 
                         class="choice-face" 
                         type="ios-happy-outline"  
                         title="表情"
+                        
                         size=24 />
                         <div class="api-emotion" slot="content">
                             <img 
@@ -24,19 +25,16 @@
                                 style="float:left;margin: 2px;cursor: pointer;">
                         </div>
             </Poptip>
-            
+               
+            <!--  :default-file-list="defaultList" -->
             <Upload
-                v-show="uploadList.length<9"
                 ref="upload"
                 :show-upload-list="false"
-                :default-file-list="defaultList"
                 :on-success="handleSuccess"
                 :format="['jpg','jpeg','png']"
                 :max-size="2048"
                 :headers="httpHeaders"
-                :on-format-error="handleFormatError"
                 :on-exceeded-size="handleMaxSize"
-                :before-upload="handleBeforeImgUpload"
                 multiple
                 accept=".jpg,.png"
                 action="/H_roleplay-si/ds/upload"
@@ -52,14 +50,14 @@
                 :show-upload-list='false'
                 :on-success="handleFileSuccess"
                 accept=".xls,.xlsx"
-                :format="['ex','jpeg','png']"
+                :format="['xls','xlsx']"
                 :on-exceeded-size="handleFileMaxSize"
                 :default-file-list="defaultFileList"
-                :before-upload="handleBeforeFileUpload"
                 style="display: inline-block;position: relative;"
                 action="/H_roleplay-si/ds/upload">
                 <Icon type="ios-folder-open-outline" size=24 title="文件"  class="choice-file" />
             </Upload>
+            </div>
         </Col>
         <Col class="publish-bar-right" span="12">
             <slot name="rightBars"></slot>
@@ -73,7 +71,6 @@
             ref="editor"
             v-html="innerText"
             @input="changeTxt"
-            @blur="onPopperShow"
             @focus="lock=true" 
             @keydown="handleDOMRemoved"
             >
@@ -97,14 +94,16 @@
     </Row>
     <Row class="publish-bar">
         <Col class="publish-bar-right" span="24">
-            <Button  @click.native="handleSend" >发送</Button>
+            <Tooltip content="不能发送空白消息!" placement="top-end" v-model="blankTipVisible">
+                <Button  @click.native="handleSend" >发送</Button>
+            </Tooltip>
         </Col>
     </Row>
 </div>
 </template>
 
 <script>
-import { getToken } from "@/utils/utils";
+import { getToken,getFileSize } from "@/utils/utils";
 import Bus from "@/assets/eventBus.js";
 import {
   getDomValue, insertHtmlAtCaret, getCursortPosition
@@ -160,10 +159,9 @@ export default {
             defaultFileList:[],
             imgName: '',
             visible: false,
-            uploadList: [],
-            uploadFileList:[],
             commentAndReply:false,
             faceVisible:false,
+            blankTipVisible:false,
             userList:[],
             userListVisible:false,
             left:0,
@@ -215,25 +213,31 @@ export default {
             })
         },
 
-        onPopperShow:function(){
-            //点击表情时获取光标位置
+        onLeftBarHover:function(){
             // 返回插入符号当前位置的selection对象
             let selection = window.getSelection();
 
             // 获取包含当前节点的文档片段
             this.range = selection.getRangeAt(0);
-            this.userListVisible = false;
-        },
-        onPopShow () {
-            this.$refs.editor.focus();
+            // this.userListVisible = false;
         },
         choice_face: function(n) {
             // 创建需追加到光标处节点的文档片段
             const range = this.range.cloneRange();
-            let fragment = range.createContextualFragment('<img class="face" src="'+ n +'" width="20" paste="1">')
-            // 将创建的文档片段插入到光标处
-            this.range.insertNode(fragment.lastChild)
-      
+            var el = document.createElement('div'),frag;
+            el.innerHTML = '<img class="face" src="'+ n +'" width="20" paste="1">'
+            frag = document.createDocumentFragment()
+            var node,lastNode;
+            while ((node = el.firstChild)) {
+                lastNode = frag.appendChild(node)
+            }
+            range.insertNode(frag)
+            if (lastNode) {
+                range.setStartAfter(lastNode)
+                range.collapse(false)
+                window.getSelection().removeAllRanges()
+                window.getSelection().addRange(range)
+            }
             this.faceVisible = false;
         },
 
@@ -389,20 +393,14 @@ export default {
         },
 
         handleSend: function() {
-            let  imgs= this.uploadList.map(img=>{
-                    return {
-                        attachment:img.url,
-                        type:'image',
-                    }
-                }),files =  this.uploadFileList.map(img=>{
-                    return {
-                        attachment:img.url,
-                        type:'file',
-                    }
-                });
-
-            files = files.concat(imgs);
             let content =  this.$refs.editor.innerHTML;
+            if(!content || content==="<div><br></div>"){
+                this.blankTipVisible = true;
+                setTimeout(() => {
+                    this.blankTipVisible = false;
+                }, 3000);
+                return;
+            }
 
             let obj = {};
             //数组去重
@@ -411,7 +409,7 @@ export default {
                 return cur;
             }, []);
 
-            this.handlePublish(content,files,userIds,this.superComment,this.commentAndReply,this);
+            this.handlePublish(content,[],userIds,this.superComment,this.commentAndReply,this);
         },
         handleView (name) {
             if(window.top.viewInsCommentsImg){
@@ -421,33 +419,27 @@ export default {
                 this.visible = true;
             }
         },
-        handleRemove (file) {
-            const fileList = this.$refs.upload.fileList;
-            this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
-        },
+       
         handleSuccess (res, file) {
-            file.url ='/H_roleplay-si/ds/download?url=' +  res.data[0].attacthment;
-            file.name  =res.data[0].attacthment;
-             // 创建需追加到光标处节点的文档片段
+             file.url ='/H_roleplay-si/ds/download?url=' +  res.data[0].attacthment
+            // 创建需追加到光标处节点的文档片段
             const range = this.range.cloneRange();
-            let fragment = range.createContextualFragment('<img class="paste-img" src="'+  file.url +'"  paste="1">');
-            // 将创建的文档片段插入到光标处
-            this.range.insertNode(fragment.lastChild)
-      
-            this.faceVisible = false;
+            var el = document.createElement('div'),frag;
+            el.innerHTML = '<img class="paste-img" src="'+ file.url +'" paste="1">'
+            frag = document.createDocumentFragment()
+            var node,lastNode;
+            while ((node = el.firstChild)) {
+                lastNode = frag.appendChild(node)
+            }
+            range.insertNode(frag)
+            if (lastNode) {
+                range.setStartAfter(lastNode)
+                range.collapse(false)
+                window.getSelection().removeAllRanges()
+                window.getSelection().addRange(range)
+            }
         },
         handleFileSuccess(res, file){
-            var getFileSize = function(fileByte) {
-                var fileSizeByte = fileByte;
-                var fileSizeMsg = "";
-                if (fileSizeByte < 1048576) fileSizeMsg = (fileSizeByte / 1024).toFixed(2) + "KB";
-                else if (fileSizeByte == 1048576) fileSizeMsg = "1MB";
-                else if (fileSizeByte > 1048576 && fileSizeByte < 1073741824) fileSizeMsg = (fileSizeByte / (1024 * 1024)).toFixed(2) + "MB";
-                else if (fileSizeByte > 1048576 && fileSizeByte == 1073741824) fileSizeMsg = "1GB";
-                else if (fileSizeByte > 1073741824 && fileSizeByte < 1099511627776) fileSizeMsg = (fileSizeByte / (1024 * 1024 * 1024)).toFixed(2) + "GB";
-                else fileSizeMsg = "文件超过1TB";
-                return fileSizeMsg;
-            }
 
             file.url ='/H_roleplay-si/ds/download?url=' +  res.data[0].attacthment;
             file.name = res.data[0].attr1;
@@ -470,82 +462,47 @@ export default {
             if(!file.icon){
                 file.icon = 'word.png';
             }
-            //  创建需追加到光标处节点的文档片段
+
+            // 创建需追加到光标处节点的文档片段
             const range = this.range.cloneRange();
-            let fragment = range.createContextualFragment('<span contenteditable="false" class="file-content">'+
+            var el = document.createElement('div'),frag;
+            el.innerHTML = '<span contenteditable="false" class="file-content">'+
                 '<img class="flie-img" width="38" src="resources/images/file/'+ file.icon+'"  paste="1">'+
                 '<div class="file-content-info"><p><a href="'+file.url+'">'+file.name+'</a></p><p>'+getFileSize(file.size)+'</p>'+
                 '</div>'+
-            '</span>');
-
-            // 将创建的文档片段插入到光标处
-            this.range.insertNode(fragment.lastChild);
+            '</span>';
+            frag = document.createDocumentFragment()
+            var node,lastNode;
+            while ((node = el.firstChild)) {
+                lastNode = frag.appendChild(node)
+            }
+            range.insertNode(frag)
+            if (lastNode) {
+                range.setStartAfter(lastNode)
+                range.collapse(true)
+                window.getSelection().removeAllRanges()
+                window.getSelection().addRange(range)
+            }
 
         },
-        handleFormatError (file) {
-            window.top.limitNotice('系统提示','图片 ' + file.name + '格式不支持, 请选择格式为jpg或者png的图片');
-        },
+      
         handleMaxSize (file) {
             window.top.limitNotice('超过文件大小限制','文件  ' + file.name + '太大,最多支持2M.');
         },
-
         handleFileMaxSize (file) {
             window.top.limitNotice('超过文件大小限制','文件  ' + file.name + '太大,最多支持10M.');
         },
-
-        handleBeforeImgUpload () {
-            const check = this.uploadList.length < 9;
-            if (!check) {
-                this.$Notice.warning({
-                    title: '您最多可以上传九张图片。 '
-                });
-                window.top.limitNotice('提示','您最多可以上传九张图片。');
-            }
-            return check;
-        },
-        handleBeforeFileUpload () {
-            const check = this.uploadFileList.length < 9;
-            if (!check) {
-                window.top.limitNotice('提示','您最多可以上传九份文件。 ');
-            }
-            return check;
-        },
-        handleClearImg(){
-            this.$refs.upload.clearFiles();
-            this.uploadList = this.$refs.upload.fileList;
-        },
-        handleClearFile(){
-            this.$refs.uploadFile.clearFiles();
-            this.uploadFileList = this.$refs.uploadFile.fileList;
-        },
-
         uploadImageByBase64(referenceID,file){
-            let target = this.$refs.editor;
             uploadImage({
                      referenceId:referenceID,
                     file:file
             }).then(res=>{
                 
                 if(res.length>0){
-                    let imgArr = Array.from(target.getElementsByTagName('img'));
-                    let f = imgArr.filter(item=>{
-                        return !item.getAttribute('paste');
-                    });
-                    if(f.length>0){
-                         let img = document.createElement('img');  
-                        img.setAttribute('src',`/H_roleplay-si/ds/download?url=${res[0].attacthment}`);
-                        img.setAttribute('paste',1);
-                        img.setAttribute('class','paste-img');
-                        f[0].parentNode.replaceChild(img,f[0]);
-                        this.discContent.txt =  target.innerHTML;
-                    }else{
-                        debugger
-                         document.execCommand('insertImage', false, `/H_roleplay-si/ds/download?url=${res[0].attacthment}`) 
-                    }
+                    insertHtmlAtCaret(`<img paste=1  class="paste-img" src="/H_roleplay-si/ds/download?url=${res[0].attacthment}">`);
                 }
             });
         },
-
         initEvent(){
             const that = this;
             this.$refs.editor.addEventListener("paste",  (e)=> {
@@ -578,6 +535,14 @@ export default {
                     }
                 }
             }, false);
+
+            this.$refs.editor.addEventListener("keyup",  (e)=> {
+                if(!e.shiftKey && e.key ==='Enter'){
+                    var t = that.$refs.editor.innerHTML;
+                    that.$refs.editor.innerHTML = t.substring(0,t.length-15);
+                    that.handleSend();
+                }
+            },false);
         },
 
     },
@@ -594,8 +559,6 @@ export default {
         }
     },
     mounted () {
-        this.uploadList = this.$refs.upload.fileList;
-        this.uploadFileList = this.$refs.uploadFile.fileList;
       
         this.$nextTick(()=>{
             this.contentWrap = this.$refs.editor;

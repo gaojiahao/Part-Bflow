@@ -83,7 +83,6 @@ export default {
             //消息订阅
             deepstream.event.subscribe("roletaskIm/" + JSON.parse(localStorage.getItem('roleplay-token')).token, res => {
                 if(res.imType === '1' && this.groupId == res.groupId){
-                    debugger
                     this.messages.push(res);
                 }
             });

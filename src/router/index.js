@@ -18,17 +18,20 @@ router.beforeEach((to, from, next) => {
 
     if (cache) {
       init(cache)
+      next()
     } else {
       next({
         name: 'login'
       })
     }
+  }else{
+    next()
   }
-  next()
+  
 })
 
 async function init (cache) {
-  let dsUri = window.localStorage.getItem('r2-cached-properties');
+  let dsUri = window.sessionStorage.getItem('r2-cached-properties');
   let data = cache ? JSON.parse(cache) : {};
   let currentUser = data['currentUser'];
   currentUser.isAdmin = false;

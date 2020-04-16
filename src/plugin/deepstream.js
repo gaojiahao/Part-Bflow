@@ -12,14 +12,13 @@ function getDeepstream() {
 }
 
 export async function deepstream(currentUser,address) {
-    let deepstreamAddress = '';
     if(address){
-       deepstreamAddress =JSON.parse(address)['deepstream.uri2'];
+        address =JSON.parse(address)['deepstream.uri2'];
     }else{
-        deepstreamAddress = await getDeepstream();
+        address = await getDeepstream();
     }
     let protocol = window.top.location.protocol.indexOf('https') != -1 ? "wss" : 'ws';
-    let deeps = ds(`${protocol}://${deepstreamAddress}`),
+    let deeps = ds(`${protocol}://${address}`),
         token = getToken(),
         name = currentUser.name ? currentUser.name : currentUser.nickname;
 

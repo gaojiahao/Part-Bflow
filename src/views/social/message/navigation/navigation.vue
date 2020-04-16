@@ -108,7 +108,6 @@ export default {
         },
         //订阅消息
         subscribeMessage: function() {
-            debugger
             let deepstream = this.$deepstream,
                 userId = this.$currentUser.userId;
                 console.log('订阅');
@@ -122,9 +121,9 @@ export default {
             });
         },
         subscribeIm:function(){
-            let deepstream = this.$deepstream;
+            let ds = this.$deepstream;
             //消息订阅
-            deepstream.event.subscribe("roletaskIm/" + JSON.parse(localStorage.getItem('roleplay-token')).token, res => {
+            ds.event.subscribe("roletaskIm/" + JSON.parse(localStorage.getItem('roleplay-token')).token, res => {
                 switch (res.imType) {
                     case '1':
                         this.imGroups.map(g=>{

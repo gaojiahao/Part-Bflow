@@ -93,7 +93,10 @@ export default {
                                             };
                                             
                                             sessionStorage.setItem('r2-cached-properties',JSON.stringify(dsUri));
-                                            Vue.prototype.$deepstream = await deepstream(user,JSON.stringify(dsUri));
+                                            // Vue.prototype.$deepstream = await deepstream(user,JSON.stringify(dsUri));
+                                             Vue.prototype.$deepstream = await deepstream(user,null);
+                                            debugger
+                                            console.log('asdasdsaasda',Vue.prototype.$deepstream);
                                             this.$router.push({
                                                 name: 'home_index'
                                             });

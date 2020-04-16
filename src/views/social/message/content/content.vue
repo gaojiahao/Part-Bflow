@@ -38,7 +38,7 @@
                     <imContents :groupId="groupId"></imContents>
                 </div>
                 <div class="content-message-input" v-on:click="msgInputClick()">
-                    <commentPublish :handlePublish="handlePublish" >
+                    <commentPublish  ref='msgInput' :handlePublish="handlePublish" >
                         <div  slot="rightBars">
                             <Icon type="ios-list-box-outline" size=24 title="消息记录" style=" cursor: pointer;" v-on:click="onViewHistory" />
                         </div>
@@ -125,22 +125,27 @@ export default {
     },
     methods:{
         handlePublish(content,uploadList,userIds,superComment,commentAndReply,sendComponent){
-            var fileDoms = sendComponent.contentWrap.getElementsByClassName('file-content');
-            var groupId = this.groupId;
+            let fileDoms = sendComponent.contentWrap.getElementsByClassName('file-content'),
+                groupId = this.groupId,
+                textValue;
+
             Array.from(fileDoms).forEach(function(fileDom){
+                 fileDom.remove();
                 sendMessage({
                     groupId:groupId,
                     content:fileDom.outerHTML,
                     imType:2
                 }).then(res=>{
-                    fileDom.remove();
+                   
                 });
             });
 
-            if(sendComponent.contentWrap.innerHTML){
+            textValue = sendComponent.contentWrap.innerHTML;
+
+            if(textValue){
                 sendMessage({
                     groupId:this.groupId,
-                    content:sendComponent.contentWrap.innerHTML,
+                    content:textValue,
                     imType:1
                 }).then(res=>{
                      if(res.success && sendComponent){
@@ -148,10 +153,6 @@ export default {
                         sendComponent.discContent.txt = '';
                         sendComponent.$refs.editor && (sendComponent.$refs.editor.innerHTML = "");
                         sendComponent.atUsers = [];
-                        sendComponent.$refs.upload && (sendComponent.$refs.upload.clearFiles());
-                        sendComponent.$refs.uploadFile && (sendComponent.$refs.uploadFile.clearFiles());
-                        sendComponent.uploadList = sendComponent.$refs.upload && sendComponent.$refs.upload.fileList;
-                        sendComponent.uploadFileList = sendComponent.$refs.uploadFile && sendComponent.$refs.uploadFile.fileList;
                     }
                 });
             }
@@ -261,6 +262,7 @@ export default {
             if(this.$route.query.groupType == 'G' && to.name === 'group'){
                 this.$router.push({ name: 'member',query: to.query});
             }
+            this.$refs.msgInput.contentWrap.focus();
         }
     },
     mounted(){

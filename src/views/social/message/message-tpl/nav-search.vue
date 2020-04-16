@@ -23,7 +23,10 @@
     .demo-auto-complete-count{
         color: #999;
         font-weight: 200;
-        padding-top: 5px;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
     .demo-auto-complete-more{
         display: block;
@@ -58,6 +61,7 @@
             icon="ios-search"
             placeholder="搜索"
             filter-method
+            :clearable='true'
             @on-search="onSearch"
             @on-select="onSelect"
             style="width:205px">
@@ -66,8 +70,19 @@
                     <span>{{ item.title }}</span>
                 </div>
                 <Option v-for="option in item.children" :value="option.id" :key="option.id">
-                    <span class="demo-auto-complete-title">{{ option.name }}</span>
-                    <p class="demo-auto-complete-count" v-if="option.type==='群聊'">包括：{{option.users}}</p>
+                    <!-- <span class="demo-auto-complete-title">{{ option.name }}</span> -->
+                    <div>
+                      <img :src="option.avatar" onerror="src='https://lab.roletask.com/resource/common-icon/male.png'"  width="45"  >
+                      <div style="display: inline-table;
+                        vertical-align: top;
+                        padding-left: 5px;
+                        line-height: 24px;">
+                        <p>{{ option.name }}</p>
+                        <p class="demo-auto-complete-count" v-if="option.type==='通讯录'">运营中心</p>
+                        <p class="demo-auto-complete-count" v-if="option.type==='群聊'">包括：{{option.users}}</p>
+                      </div>
+                    </div>
+                    
                 </Option>
             </div>
         </AutoComplete>
@@ -138,12 +153,14 @@ export default {
                     name: item.groupName,
                     users: item.users,
                     type: item.type,
+                    avatar:item.groupIcon,
                     id: JSON.stringify({groupId: item.groupId,groupType: item.groupType,groupName: item.groupName,userId: item.userId})
                   })
                 }else{
                   this.data[0].children.push({
                     name: item.nickname,
                     type: item.type,
+                    avatar:item.groupIcon,
                     id: JSON.stringify({groupId: item.groupId,groupType: item.groupType,groupName: item.nickname,userId: item.userId})
                   })
                 }

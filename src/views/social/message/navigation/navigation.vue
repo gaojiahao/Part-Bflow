@@ -20,8 +20,8 @@
                     @contextmenu.prevent="onContextmenu(g)" >
                     <img 
                         width="45" 
-                        :src="g.groupIcon || 'resources/images/icon/defaultUserPhoto.png'" 
-                        onerror="src='resources/images/icon/defaultUserPhoto.png'" 
+                        :src="g.groupIcon" 
+                        onerror="src='https://lab.roletask.com/resource/common-icon/male.png'" 
                         style="border: 1px solid #ddd;">
                     <div class="navigation-list-item-appinfo">
                         <div class="font14 font12 navigation-list-item-appinfo-groupName">

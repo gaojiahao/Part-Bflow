@@ -10,7 +10,7 @@
             <Col :span="['member','all','files','images'].includes(this.$route.name)?'16':'24'" 
                 style="height:100%"
                 >
-                <div class="content-container-msglist messagescrollbar" id='msgList'>
+                <div class="content-container-msglist compactscrollbar" id='msgList'>
                     <!-- <div 
                         class="content-container-msglist-item"
                         v-bind:class="{'createbyme':n.creatorName===$currentUser.nickname}"

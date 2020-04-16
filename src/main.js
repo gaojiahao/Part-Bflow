@@ -18,6 +18,7 @@ import "./plugin/jqorg/css/style.css"
 require('@/directive/index')
 require('@/filter/index')
 require('./assets/App.css')
+require('./assets/common.css')
 
 Vue.config.productionTip = false
 Vue.use(Loading)

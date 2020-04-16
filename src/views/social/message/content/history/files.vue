@@ -47,7 +47,7 @@
 }
 </style>
 <template>
-    <ul class="files messagescrollbar" id="fileHistory">
+    <ul class="files compactscrollbar" id="fileHistory">
         <!-- <li v-for="(file,index) in files" :key="index" class="files-item">
             <img width="40" :src="'resources/images/file/'+ file.icon" >
 

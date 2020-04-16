@@ -2,7 +2,7 @@
 @import "./navigation.less";
 </style>
 <template>
-    <ul class="navigation-list messagescrollbar">
+    <ul class="navigation-list compactscrollbar">
         <!-- :to="{name:'detail',params:{name:1}}" -->
         <!-- :to="'/social/message/group/'+ g.groupId" -->
          <router-link 

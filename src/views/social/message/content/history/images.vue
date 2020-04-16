@@ -3,7 +3,7 @@
 </style>
 
 <template>
-    <div id="imgHistory" class="imgs messagescrollbar">
+    <div id="imgHistory" class="imgs compactscrollbar">
         <div v-for="(img,index) in images" :key="index" class="comimg" >
             <img 
             width="80"

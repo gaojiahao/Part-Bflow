@@ -42,7 +42,7 @@
 }
 </style>
 <template>
-    <div class="all-message messagescrollbar" ref="allMessage">
+    <div class="all-message compactscrollbar" ref="allMessage">
         <div class="all-message-item" v-for="(m,index) in msgs" :key="index">
             <div class="font12" v-bind:class="{isMySelf:m.isMySelf}">{{m.creatorName}} {{m.crtTime}}</div>
             <div class="all-mess-item-content">

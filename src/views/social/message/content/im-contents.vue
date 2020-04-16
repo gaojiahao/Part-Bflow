@@ -5,7 +5,7 @@
   }
 </style>
 <template>
-    <div class="message-list messagescrollbar" ref="messageList"  id='messageList'>
+    <div class="message-list compactscrollbar" ref="messageList"  id='messageList'>
         <div v-for="(m,index) in  messages" :key="index">
             <!-- 消息组件 -->
             <content-message @showDetailModal="showDetailModal" :textMessage="m"></content-message>

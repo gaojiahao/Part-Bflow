@@ -128,26 +128,28 @@ export default {
           this.searchValue = "";
         },
         getSearchName() {
-          this.data[1].children = [];
-          this.data[0].children = [];
-          getGroupsByName(this.searchValue).then(res => {
-            res.forEach(item => {
-              if(item.type === "群聊"){
-                this.data[1].children.push({
-                  name: item.groupName,
-                  users: item.users,
-                  type: item.type,
-                  id: JSON.stringify({groupId: item.groupId,groupType: item.groupType,groupName: item.groupName,userId: item.userId})
-                })
-              }else{
-                this.data[0].children.push({
-                  name: item.nickname,
-                  type: item.type,
-                  id: JSON.stringify({groupId: item.groupId,groupType: item.groupType,groupName: item.nickname,userId: item.userId})
-                })
-              }
+          if(this.searchValue){
+            this.data[1].children = [];
+            this.data[0].children = [];
+            getGroupsByName(this.searchValue).then(res => {
+              res.forEach(item => {
+                if(item.type === "群聊"){
+                  this.data[1].children.push({
+                    name: item.groupName,
+                    users: item.users,
+                    type: item.type,
+                    id: JSON.stringify({groupId: item.groupId,groupType: item.groupType,groupName: item.groupName,userId: item.userId})
+                  })
+                }else{
+                  this.data[0].children.push({
+                    name: item.nickname,
+                    type: item.type,
+                    id: JSON.stringify({groupId: item.groupId,groupType: item.groupType,groupName: item.nickname,userId: item.userId})
+                  })
+                }
+              })
             })
-          })
+          }
         }
     },
     mounted(){

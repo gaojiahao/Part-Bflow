@@ -90,7 +90,9 @@ export default {
         initEvents(){
             var that= this;
             this.$refs.messageList.addEventListener('scroll', function() {
+                console.log('是否全部加载',that.allLoad);
                 if(arguments[0].target.scrollTop===0 && !that.allLoad){
+                    debugger
                     that.pageParam.start++;
                     that.getMessages();
                 }

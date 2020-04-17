@@ -2,64 +2,54 @@
 @import "./navigation.less";
 </style>
 <template>
-    <ul class="navigation-list compactscrollbar">
-        <!-- :to="{name:'detail',params:{name:1}}" -->
-        <!-- :to="'/social/message/group/'+ g.groupId" -->
+    <ul class="navs compactscrollbar">
          <router-link 
-            :to="{name:'group',params:{groupId: g.groupId},query:{groupName:g.groupName,groupType:g.groupType}}" 
+            :to="{
+                name:'group',
+                params:{groupId: g.groupId},
+                query:{groupName:g.groupName,groupType:g.groupType}
+                }" 
             v-for="(g,index) in  imGroups" 
             :key="index">
-            <Poptip 
-                disabled
-                :ref="g.groupId"
-                width="100%"
-                placement="bottom">
                 <li 
-                    class="navigation-list-item" 
-                    :class="{ 'active':$route.params.groupId==g.groupId }"
+                    class="navs-item" 
+                    :class="{ 'active':$route.params.groupId==g.groupId,'istop':g.focus }"
                     @contextmenu.prevent="onContextmenu(g)" >
                     <img 
                         width="45" 
                         :src="g.groupIcon" 
                         onerror="src='https://lab.roletask.com/resource/common-icon/male.png'" 
                         style="border: 1px solid #ddd;">
-                    <div class="navigation-list-item-appinfo">
-                        <div class="font14 font12 navigation-list-item-appinfo-groupName">
+                    <div class="navs-item-appinfo">
+                        <div class="font14 font12 navs-item-appinfo-groupName">
                             <p>{{g.groupName}}</p>
                         </div>
-                        <div class="font12 navigation-list-item-appinfo-name" v-if="g.lastMsg">
-                            <div class="navigation-list-item-appinfo-name-lastcontent">
+                        <div class="font12 navs-item-appinfo-name" v-if="g.lastMsg">
+                            <div class="navs-item-appinfo-name-lastcontent">
                                 <span>{{g.lastMsg.creatorName}}:</span>
                                 <span v-html="g.lastMsg.content" v-if="g.lastMsg.imType==1"></span>
                                 <span  v-if="g.lastMsg.imType==2">文件</span>
                             </div>
-                            <div class="navigation-list-item-appinfo-name-lastTime">
+                            <div class="navs-item-appinfo-name-lastTime">
                                 <Time :time="g.lastMsg.crtTime" />
                             </div>
                         </div>
                     </div>
-
-                    <Badge class="navigation-list-item-msgcount" :count="g.msgCount" overflow-count="99" >
+                    <Badge class="navs-item-msgcount" :count="g.msgCount" overflow-count="99" >
                     </Badge>
                 </li>
-                <div slot="content" :style="{width:'100px'}" @click="hiddenPop(g)">
-                    <p class="menu-list" @click="setTop(g)">{{g.focus?'取消置顶':'置顶'}}</p>
-                </div>
-            </Poptip>
         </router-link>
-        <!-- <router-link  :to="'/social/message/list/'+ nav.listId" v-for="(nav,index) in  navs" :key="index" >
-            <li  class="navigation-list-item" @click="handleActiveNavigation(nav)"  v-bind:class="{ 'active':$route.params.listId==nav.listId }">
-                <img width="40" :src="handlerGetIcon(nav.icon)" >
-                <div class="navigation-list-item-appinfo">
-                    <div class="font14"> {{nav.listName}}</div>
-                </div>
-
-                <Badge class="navigation-list-item-msgcount" :count="nav.unreadNum" overflow-count="99" >
-                </Badge>
-            </li>
-            
-        </router-link> -->
-       
+           
+        <Dropdown 
+            @on-click="onDropItemClick"
+            ref="contextMenu"  
+            trigger="click"
+            placement="bottom-end">
+            <DropdownMenu slot="list">
+                <DropdownItem name="tp" v-if="!curContextGroup.focus">置顶</DropdownItem>
+                <DropdownItem name="unTp"  v-if="curContextGroup.focus">取消置顶</DropdownItem>
+            </DropdownMenu>
+        </Dropdown>
     </ul>
 </template>
 <script>
@@ -77,26 +67,34 @@ export default {
                 filter:''
             },
             navs:[],
-            imGroups:[]
+            imGroups:[],
+            curContextGroup:{}
         }
     },
     methods:{
         hiddenPop(g) {
           this.$refs[g.groupId][0].visible = false;
         },
-        setTop(g) {
-            let requestUrl = setFocus;
-            if(g.groupId){
-                g.focus && (requestUrl = deleteFocus);
-                requestUrl(g.groupId).then(res => {
-                    if(res.success){
-                        this.$Message.success(res.message);
-                        this.refreshNavListByMessage();
-                    }
-                })
+        onDropItemClick(itemName){
+             let requestUrl;
+            switch (itemName) {
+                case 'tp':
+                    requestUrl = setFocus;
+                    break;
+                case 'unTp':
+                    requestUrl = deleteFocus;
+                    break;
             }
+
+            requestUrl(this.curContextGroup.groupId).then(res => {
+                if(res.success){
+                    this.$Message.success(res.message);
+                    this.refreshNavs();
+                }
+            })
+            
         },
-        refreshNavListByMessage:function (params) {
+        refreshNavs:function (params) {
             //   getNavListByMessage(this.params).then(res=>{
             //     this.navs = res.tableContent;
             // });
@@ -113,7 +111,7 @@ export default {
                 console.log('订阅');
             //消息订阅
             deepstream.event.subscribe("commentMessage/" + userId, res => {
-                this.refreshNavListByMessage();
+                this.refreshNavs();
                 Bus.$emit("refreshNotice");
                 if(res.dataCount>0){
                     this.hanleWindowNotification('您有'+ res.dataCount + '未读消息');
@@ -124,6 +122,7 @@ export default {
             let ds = this.$deepstream;
             //消息订阅
             ds.event.subscribe("roletaskIm/" + JSON.parse(localStorage.getItem('roleplay-token')).token, res => {
+                debugger
                 switch (res.imType) {
                     case '1':
                         this.imGroups.map(g=>{
@@ -207,15 +206,17 @@ export default {
             return icon;
         },
         onContextmenu(g) {
-            this.$refs[g.groupId][0].visible = true;
+            this.curContextGroup = g;
+            this.$refs.contextMenu.$refs.reference = event.target;
+            this.$refs.contextMenu.currentVisible = !this.$refs.contextMenu.currentVisible;
         }
     },
     mounted(){
-        this.refreshNavListByMessage();
+        this.refreshNavs();
         // this.subscribeMessage();
         this.subscribeIm();
         Bus.$on('updateGroupName', () => {
-            this.refreshNavListByMessage();
+            this.refreshNavs();
         })
     }
 

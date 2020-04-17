@@ -46,7 +46,8 @@
                 </div>
             </Col>
             <Col span="8"
-                class="content-container-history" v-if="['member','all','files','images'].includes(this.$route.name)">
+                class="content-container-history" 
+                v-if="['member','all','files','images'].includes(this.$route.name)">
                 <router-view></router-view>
             </Col>
         </Row>
@@ -157,9 +158,6 @@ export default {
                 });
             }
 
-            
-           
-           
         },
         //滚动加载
         handleScroll () {

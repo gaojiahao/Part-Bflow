@@ -1,10 +1,15 @@
 <style lang="less" scoped>
   .group-member{
+        overflow: hidden;
+        height: 100%;
       .member-title{
         padding: 5px 10px;
         color: #999;
       }
       .member-content{
+        height: 100%;
+        background-color: #f6f6f6;
+        overflow-y: auto;
           &-list{
               padding: 5px;
               .img{
@@ -40,7 +45,7 @@
         <div class="member-title">
             <span>群成员 • {{members.length}}</span>
         </div>
-        <div class="member-content">
+        <div class="member-content compactscrollbar">
             <div 
                 v-for="(m,index) in members" 
                 :key="index" 

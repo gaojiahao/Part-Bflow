@@ -1,4 +1,4 @@
-.navigation-list{
+.navs{
     height: 100%;
     overflow-y: auto;
     .menu-list{
@@ -6,18 +6,16 @@
         cursor: pointer;
         color: #333;
     }
-    .menu-list:hover{
-        background-color: #ddd;
-    }
+    
     &-item:hover{
-        background-color: #ddd;
+        background-color: #dcdee2;
     }
     &-item{
         padding: 10px;
         list-style: none;
         color: #515a6e;
         position: relative;
-        background-color: #f6f6f6;
+        background-color: #f2f2f2;
         img{
             border-radius: 3px;
         }
@@ -63,7 +61,14 @@
 }
 
 .active{
-    background-color: #ddd;
+    background-color:#c5c8ce;
+}
+
+.router-link-active{
+    background-color:#c5c8ce;
+}
+.istop{
+    background-color:  #e3e5e8;
 }
 .nav-comment{
     height: 20px;
@@ -71,6 +76,6 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.navigation-list /deep/ .ivu-poptip-rel{
-    width: 260px;
+.navs /deep/ .ivu-dropdown{
+    // width: 100%;
 }

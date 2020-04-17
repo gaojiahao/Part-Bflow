@@ -8,19 +8,19 @@
 }
 .message-search{
   display: inline-block;
-   .demo-auto-complete-item{
+   .message-search-complete-item{
         padding: 4px 0;
         border-bottom: 1px solid #F6F6F6;
         text-align: left;
     }
-    .demo-auto-complete-group{
+    .message-search-complete-group{
         font-size: 12px;
         padding: 4px 6px;
     }
-    .demo-auto-complete-group span{
+    .message-search-complete-group span{
         color: #999;
     }
-    .demo-auto-complete-count{
+    .message-search-complete-count{
         color: #999;
         font-weight: 200;
         max-width: 200px;
@@ -28,7 +28,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
-    .demo-auto-complete-more{
+    .message-search-complete-more{
         display: block;
         margin: 0 auto;
         padding: 4px;
@@ -65,12 +65,11 @@
             @on-search="onSearch"
             @on-select="onSelect"
             style="width:205px">
-            <div class="demo-auto-complete-item" v-for="(item,index) in data" :key="index">
-                <div class="demo-auto-complete-group">
+            <div class="message-search-complete-item" v-for="(item,index) in data" :key="index">
+                <div class="message-search-complete-group" v-if="item.children.length">
                     <span>{{ item.title }}</span>
                 </div>
                 <Option v-for="option in item.children" :value="option.id" :key="option.id">
-                    <!-- <span class="demo-auto-complete-title">{{ option.name }}</span> -->
                     <div>
                       <img :src="option.avatar" onerror="src='https://lab.roletask.com/resource/common-icon/male.png'"  width="45"  >
                       <div style="display: inline-table;
@@ -78,8 +77,8 @@
                         padding-left: 5px;
                         line-height: 24px;">
                         <p>{{ option.name }}</p>
-                        <p class="demo-auto-complete-count" v-if="option.type==='通讯录'">运营中心</p>
-                        <p class="demo-auto-complete-count" v-if="option.type==='群聊'">包括：{{option.users}}</p>
+                        <p class="message-search-complete-count" v-if="option.type==='通讯录'">运营中心</p>
+                        <p class="message-search-complete-count" v-if="option.type==='群聊'">包括：{{option.users}}</p>
                       </div>
                     </div>
                     
@@ -96,23 +95,13 @@ export default {
     data(){
         return {
             searchValue: "",
-            data: [
-                {
-                    title: '联系人',
-                    children: []
-                },
-                {
-                    title: '群聊',
-                    children: []
-                }
-            ]
+            data: []
         }
     },
     watch:{
       searchValue: function(value) {
         if(!value) {
-          this.data[1].children = [];
-          this.data[0].children = [];
+          this.data = [];
           this.$refs["autoSearch"].$children[0].hideMenu()
         }
       } 
@@ -144,8 +133,14 @@ export default {
         },
         getSearchName() {
           if(this.searchValue){
-            this.data[1].children = [];
-            this.data[0].children = [];
+            this.data = [ {
+                    title: '联系人',
+                    children: []
+                },
+                {
+                    title: '群聊',
+                    children: []
+                }];
             getGroupsByName(this.searchValue).then(res => {
               res.forEach(item => {
                 if(item.type === "群聊"){

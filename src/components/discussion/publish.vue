@@ -65,7 +65,7 @@
     </Row>
     <Row class="publish-container">
         <div 
-            class="publish-container-content" 
+            class="publish-container-content compactscrollbar" 
             id = "contentWrap"
             contenteditable="true" 
             ref="editor"

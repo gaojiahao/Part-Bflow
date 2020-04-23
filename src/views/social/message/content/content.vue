@@ -38,7 +38,7 @@
                     <imContents :groupId="groupId"></imContents>
                 </div>
                 <div class="content-message-input" v-on:click="msgInputClick()">
-                    <commentPublish  ref='msgInput' :handlePublish="handlePublish" >
+                    <commentPublish  ref='msgInput' :handlePublish="handlePublish" :setAtUsers="setAtUsers">
                         <div  slot="rightBars">
                             <Icon type="ios-list-box-outline" size=24 title="消息记录" style=" cursor: pointer;" v-on:click="onViewHistory" />
                         </div>
@@ -73,7 +73,7 @@ import groupHeader from "@/views/social/message/content/groupHeader";
 import imContents from "@/views/social/message/content/im-contents";
 
 import {getAllnotifications} from "@/services/notificationsService";
-import {sendMessage,checkMessage} from "@/services/imService";
+import {sendMessage,checkMessage,getMembers} from "@/services/imService";
 
 
 import {getListData} from "@/services/appService";
@@ -125,38 +125,126 @@ export default {
         
     },
     methods:{
-        handlePublish(content,uploadList,userIds,superComment,commentAndReply,sendComponent){
-            let fileDoms = sendComponent.contentWrap.getElementsByClassName('file-content'),
-                groupId = this.groupId,
-                textValue;
-
-            Array.from(fileDoms).forEach(function(fileDom){
-                 fileDom.remove();
-                sendMessage({
-                    groupId:groupId,
-                    content:fileDom.outerHTML,
-                    imType:2
-                }).then(res=>{
-                   
-                });
-            });
-
-            textValue = sendComponent.contentWrap.innerHTML;
-
-            if(textValue){
-                sendMessage({
-                    groupId:this.groupId,
-                    content:textValue,
-                    imType:1
-                }).then(res=>{
-                     if(res.success && sendComponent){
-                        sendComponent.innerText = '';
-                        sendComponent.discContent.txt = '';
-                        sendComponent.$refs.editor && (sendComponent.$refs.editor.innerHTML = "");
-                        sendComponent.atUsers = [];
+        setAtUsers(){
+            return getMembers(this.$route.params.groupId).then(res=>{
+                let tempUsers =  res.map(r=>{
+                    return {
+                        nickname:r.nickname,
+                        userId:r.userId
                     }
                 });
+                tempUsers.unshift({
+                    nickname:'所有人',
+                    userId:'All'
+                });
+                return tempUsers;
+            });
+        },
+        handlePublish(content,uploadList,userIds,superComment,commentAndReply,sendComponent){
+
+            /**
+             * imType 
+             * 1、文本
+             * 2、图片
+             * 3、图文
+             * 4、文件
+             */
+
+            let contentHtmls = sendComponent.contentWrap.childNodes;
+            let msgTpl = {
+                groupId:this.groupId,
+                content:'',
+                imType:1
+            };
+            let hasTaxt = false,
+                hasImg = false,
+                hasFile = false;
+            
+            Array.from(contentHtmls).forEach((d)=>{
+                if(d.tagName === 'IMG' && d.className.includes('paste-img')){
+                    hasImg = true;
+                    msgTpl.content = [];
+                }
+
+                if(d.tagName === 'SPAN' && d.className.includes('file-content')){
+                    hasFile = true;
+                    msgTpl.content = [];
+                }
+            });
+
+            
+            Array.from(contentHtmls).forEach((d)=>{
+                if(d.tagName){
+                    if(d.tagName === 'IMG' && d.className.includes('paste-img')){
+                        msgTpl.content.push({
+                            id:d.getAttribute('attid'),
+                            content:d.getAttribute('name'),
+                            size:12,
+                            imType:2
+                        });
+                    }
+                    else if
+                    (d.tagName === 'SPAN' && d.className.includes('file-content')){
+                        msgTpl.content.push({
+                            id:d.getAttribute('attid'),
+                            content:d.getAttribute('name'),
+                             size:12,
+                            imType:4
+                        });
+                    }else if
+                    (d.tagName === 'IMG' && d.className.includes('face')){
+                        msgTpl.content = msgTpl.content+d.outerHTML;
+                        hasTaxt =true;
+                    }
+                }
+                else{
+                    if(d.textContent){
+                        hasTaxt=true;
+                        if(hasImg || hasFile){
+                            msgTpl.content.push({
+                                content:d.textContent,
+                                imType:1
+                            });
+                        }else{
+                            msgTpl.content = d.textContent;
+                        }
+                        
+                    }
+                }
+            })
+
+            if((hasTaxt && hasImg) || (hasTaxt && hasFile)){
+                msgTpl.imType = 3;
             }
+
+            if(!hasTaxt && !hasFile && hasImg){
+                msgTpl.imType = 2;
+            }
+
+            if(!hasTaxt && !hasImg && hasFile){
+                msgTpl.imType = 4;
+            }
+            console.log('asdas',msgTpl);
+            if(msgTpl.imType !=1){
+                msgTpl.content = JSON.stringify(msgTpl.content);
+            }
+            if(sendComponent.replayMsg){
+                msgTpl.replayId=sendComponent.replayMsg.id;
+                msgTpl.replayMsg = sendComponent.replayMsg;
+            }
+            sendMessage(msgTpl).then(res=>{
+                if(res.success && sendComponent){
+                    sendComponent.innerText = '';
+                    sendComponent.discContent.txt = '';
+                    sendComponent.$refs.editor && (sendComponent.$refs.editor.innerHTML = "");
+                    sendComponent.atUsers = [];
+                    if(msgTpl.replayId){
+                        sendComponent.$refs.replycontainer.innerHTML = '';
+                        sendComponent.$refs.editor.style.height='220px';
+                        delete sendComponent.replayMsg;
+                    }
+                }
+            });
 
         },
         //滚动加载
@@ -229,8 +317,8 @@ export default {
         },
         msgInputClick:function(){
             //to:签收消息
-            checkMessage(this.groupId).then(res=>{
-            });
+            // checkMessage(this.groupId).then(res=>{
+            // });
         },
         onViewHistory(){
             if(['all','files'].includes(this.$route.name)){

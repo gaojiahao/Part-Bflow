@@ -2,45 +2,92 @@
   @import "./content-message.less";
 </style>
 <template>
-    <div class="text-message" :style="{textAlign: textMessage.isMySelf?'right':'left'}">
+    <div class="text-message" :style="{textAlign: msg.isMySelf?'right':'left'}">
         <div class="text-creator">
-          <span v-if="!textMessage.isMySelf">{{ textMessage.creatorName }}</span>
+          <span v-if="!msg.isMySelf">{{ msg.creatorName }}</span>
           <span 
             :style="{visibility:showTime?'visible':'hidden'}" 
             class="text-crtTime">
-            {{ textMessage.crtTime }}
+            {{ msg.crtTime }}
           </span>
         </div>
-        <span class="read-message" v-if="textMessage.isMySelf">
-          <span v-if="textMessage.allRead" class="message-allread">✓</span>
-          <span v-else-if="textMessage.checked === 0" class="message-noread"></span>
+        <span class="read-message" v-if="msg.isMySelf">
+          <span v-if="msg.allRead" class="message-allread">✓</span>
+          <span v-else-if="msg.checked === 0" class="message-noread"></span>
           <span
             v-else
             class="message-read" 
             @click="openMessageDetail"
             :style="{color:'#8bc8da',cursor:'pointer',borderColor: '#8bc8da'}">
-            {{ textMessage.checked }}
+            {{ msg.checked }}
           </span>
         </span>
-        <Poptip 
-            disabled
-            :ref="textMessage.id"
-            width="100%"
-            placement="bottom-start" >
+       
             <span 
-              :class="{'text-content':true}"
+              :id="msg.id"
+              :class="{isMySelf:msg.isMySelf}"
+              class="text-content"
               @mouseenter="enter"
               @mouseleave="leave"
               v-click-outside="onClickOutside"
-              @contextmenu.prevent="showContextmenu(textMessage,$event)"
-              :style="{backgroundColor:textMessage.isMySelf?'rgb(191, 221, 255)':'#eee'}">
-              <span :ref="`content${textMessage.id}`" v-html="textMessage.content"></span>
-            </span>
-            <div slot="content" :style="{width:'100px'}" @click="hiddenPop(textMessage)">
-                <p class="menu-list" @click="copyMessage(textMessage,$event)">复制</p>
-                <p class="menu-list" @click="replyMessage(textMessage,$event)">回复</p>
+             >
+             <!--  :style="{backgroundColor:msg.isMySelf?'rgb(191, 221, 255)':'#eee'}" -->
+               
+                <div @click="goTop(msg.replayMsg.id)" v-if="msg.replayMsg" class="replayMsg" style="border-left: 3px solid #999;padding:0 8px;cursor: pointer;">
+                  <div>{{msg.replayMsg.creatorName}}:</div>
+                  <span v-if="msg.replayMsg.imType===1" v-html="msg.replayMsg.content"></span>
+
+                  <span v-if="[2,3,4].includes(msg.replayMsg.imType)" >
+                    <span v-for="(r,index) in msg.replayMsg.content" :key="index">
+                      <span v-if="r.imType===1" v-html="r.content"></span>
+                      <img class="paste-img" v-if="r.imType===2" :src="'/H_roleplay-si/ds/downloadById?id='+r.id" />
+                      <br v-if="r.imType===4">
+                      <span  contenteditable="false" class="file-content" v-if="r.imType===4" >
+                        <img class="flie-img" width="38" :src="r.content|filedTypeFilter">
+                        <div class="file-content-info">
+                          <p>
+                          <a :href="'/H_roleplay-si/ds/downloadById?id='+r.id">{{r.content}}</a>
+                          </p>{{r.size}}<p>
+                          </p>
+                        </div>
+                      </span>
+                      </span>
+                  </span>
+                </div>
+
+            
+                <span v-if="msg.imType===1" v-html="msg.content"></span>
+
+                <span v-if="[2,3,4].includes(msg.imType)" >
+                  <span v-for="(c,index) in msg.content" :key="index">
+                    <span v-if="c.imType===1" v-html="c.content"></span>
+                    <img class="paste-img" v-if="c.imType===2" :src="'/H_roleplay-si/ds/downloadById?id='+c.id" />
+                    <br v-if="c.imType===4">
+                    <span  contenteditable="false" class="file-content" v-if="c.imType===4" >
+                      <img class="flie-img" width="38" :src="c.content|filedTypeFilter">
+                      <div class="file-content-info">
+                        <p>
+                        <a :href="'/H_roleplay-si/ds/downloadById?id='+c.id">{{c.content}}</a>
+                        </p>{{c.size}}<p>
+                        </p>
+                      </div>
+                    </span>
+                    </span>
+                </span>
+              </span>
+              <!-- <span :ref="`content${msg.id}`" >
+            </span> -->
+             <!-- @contextmenu.prevent="showContextmenu(msg,$event)" -->
+            <!-- <Poptip 
+            disabled
+            :ref="msg.id"
+            width="100%"
+            placement="bottom-start" > -->
+            <!-- <div slot="content" :style="{width:'100px'}" @click="hiddenPop(msg)">
+                <p class="menu-list" @click="copyMessage(msg,$event)">复制</p>
+                <p class="menu-list" @click="replyMessage(msg,$event)">回复</p>
             </div>
-        </Poptip>
+        </Poptip> -->
     </div>
 </template>
 
@@ -58,7 +105,7 @@ export default {
         }
     },
     props:{
-        textMessage:{
+        msg:{
             type: Object,
             default:function(){
                 return {};
@@ -66,6 +113,21 @@ export default {
         }
     },
     methods:{
+      goTop(id){
+        var msgDiv = document.getElementById(id)
+        if(msgDiv){
+          msgDiv.style.backgroundColor = '#f9b24757';
+          setTimeout(() => {
+            msgDiv.style.backgroundColor = '';
+          }, 2000);
+          msgDiv.scrollIntoView(true);
+        }else{
+           Bus.$emit('toMessage',id)
+        }
+      },
+      onDropItemClick(){
+
+      },
         enter() {
           this.showTime = true;
         },
@@ -84,41 +146,18 @@ export default {
           }
         },
         openMessageDetail() {
-          this.$emit('showDetailModal', this.textMessage);
-        },
-        copyMessage(text,e) {
-          this.$refs[text.id].visible = false;
-          let input = document.createElement('input');
-            input.value = this.$refs[`content${text.id}`].innerText;
-            document.body.appendChild(input);
-            input.select();
-            if(document.execCommand("Copy")){
-                document.execCommand("Copy"); // 执行浏览器复制命令
-            }else{
-                this.$Message.error('无法复制！');
-            }
-            
-            input.remove()
-        },
-        replyMessage(text) {
-          Bus.$emit('setLinkMember',{
-            name:`@${text.creatorName}&nbsp;`,
-            value:`<div style="
-                    color:#999;
-                    font-size:12px;
-                    border-left:3px solid #ddd;
-                    padding:3px">
-                    <span>${text.creatorName}：</span>
-                    <p>${text.content}</p>
-                  </div>`
-          });
+          this.$emit('showDetailModal', this.msg);
         },
         showContextmenu(text,e) {
-          let me = this;
-          this.$refs[text.id].visible = true;
-          this.outClickText = text;
-          this.$refs[`content${text.id}`].style.backgroundColor = '#39f';
-          this.$refs[`content${text.id}`].style.color = '#fff';
+
+            this.$refs.contextMenu.$refs.reference = event.target;
+            this.$refs.contextMenu.currentVisible = !this.$refs.contextMenu.currentVisible;
+            
+          // let me = this;
+          // this.$refs[text.id].visible = true;
+          // this.outClickText = text;
+          // this.$refs[`content${text.id}`].style.backgroundColor = '#39f';
+          // this.$refs[`content${text.id}`].style.color = '#fff';
         }
     },
     mounted(){

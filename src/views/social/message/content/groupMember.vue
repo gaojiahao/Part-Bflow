@@ -28,7 +28,7 @@
           .member-detail{
               border-top: 1px solid #ddd;
               p{
-                  padding: 5px 0px;
+                  padding: 10px 0px;
                   .label{
                       color: #999;
                   }
@@ -38,6 +38,9 @@
   }
   .member-content-list:hover{
       background-color: #ddd;
+  }
+  .active{
+      background-color: #ccc !important;
   }
 </style>
 <template>
@@ -49,65 +52,23 @@
             <div 
                 v-for="(m,index) in members" 
                 :key="index" 
-                 @contextmenu.prevent="showContextmenu(m)"
+                @contextmenu.prevent="onContextmenu(m)"
+                :class="{'active':curContextMember.userId === m.userId}"
                 class="member-content-list">
-                <Tooltip placement="right" transfer :disabled="isDisabled">
-                    <Poptip 
-                        disabled
-                        :ref="m.userId" 
-                        placement="bottom-start" 
-                        @on-popper-show="onPopperShow"
-                        @on-popper-hide="onPopperHide">
-                        <div>
-                            <span class="img">
-                                <Icon type="ios-person" /> 
-                            </span>
-                            <span class="name">
-                                <span>{{m.nickname}}</span>
-                                <span 
-                                    v-if="m.isOwner" 
-                                    :style="{fontSize:'10px',color:'#999'}">
-                                    .群主
-                                </span>
-                            </span>
-                        </div>
-                        <div slot="content" :style="{width:'100px'}">
-                            <p 
-                                v-if="$currentUser.userId==groupOwner && !m.isOwner" 
-                                class="menu-list" 
-                                @click="removeMembers(m,index)">
-                                移除成员
-                            </p>
-                            <p 
-                                v-if="($currentUser.userId==groupOwner && m.isOwner) || $currentUser.userId==m.userId" 
-                                class="menu-list" 
-                                @click="removeMembers(m,index)">
-                                退出群聊
-                            </p>
-                            <p class="menu-list" @click="sentMemberMessage(m)">发送消息</p>
-                            <p class="menu-list" @click="linkMember(m)">@{{m.nickname}}</p>
-                            <p class="menu-list" @click="isDisabled=false">查看资料</p>
-                            <p class="menu-list" @click="copyEmail(m)">复制邮箱</p>
-                        </div>
-                    </Poptip>
+                <Poptip  placement="right" transfer trigger="hover"  >
                     <div slot="content" style="padding:10px">
                         <div class="member-header" :style="{display: 'flex'}">
                             <div class="member-header-left">
                                 <img 
-                                :src="m.photo || '/resources/images/icon/defaultUserPhoto.png'"
+                                onerror="src='https://lab.roletask.com/resource/common-icon/male.png'" 
+                                :src="m.photo "
                                 :style="{width:'70px',height:'70px',border:'1px solid #ddd'}" />
                             </div>
                             <div :style="{marginLeft:'10px',marginTop:'10px'}">
-                                <p>
-                                    <p
-                                        :style="{fontSize:'15px'}">
-                                        {{m.nickname}}
-                                    </p>
-                                    <span 
-                                        :style="{}">
-                                        {{m.role}}
-                                    </span>
-                                </p>
+                                <div style="font-size: 14px;">
+                                    {{m.nickname}}<Icon size=20 type="ios-person" /> 
+                                </div>
+                                <div>{{m.role}}</div>
                             </div>
                         </div>
                         <div class="member-detail">
@@ -125,12 +86,38 @@
                             </p>
                         </div>
                         <div :style="{marginTop:'10px'}" @click="sentMemberMessage(m)">
-                            <Button long>发消息</Button>
+                            <Button long type="primary">发消息</Button>
                         </div>
                     </div>
-                </Tooltip>
+                        <div>
+                            <span class="img">
+                                <Icon type="ios-person" /> 
+                            </span>
+                            <span class="name">
+                                <span>{{m.nickname}}</span>
+                                <span 
+                                    v-if="m.isOwner" 
+                                    :style="{fontSize:'10px',color:'#999'}">
+                                    .群主
+                                </span>
+                            </span>
+                        </div>
+                </Poptip >
             </div>
         </div>
+        <!--     <DropdownItem name="copyEmail" divided>复制邮箱地址</DropdownItem>
+                <DropdownItem name="copyMobile" >复制手机号</DropdownItem> -->
+        <Dropdown 
+            @on-click="onDropItemClick"
+            ref="contextMenu"  
+            trigger="click"
+            placement="bottom-start">
+            <DropdownMenu slot="list">
+                <DropdownItem name="senMessage" >发送消息</DropdownItem>
+                <DropdownItem name="atUser"  >@{{curContextMember.nickname}}</DropdownItem>
+                <DropdownItem name="removeMember" v-if="$currentUser.userId==groupOwner" divided>移除群聊</DropdownItem>
+            </DropdownMenu>
+        </Dropdown>
     </div>
 </template>
 
@@ -144,10 +131,30 @@ export default {
             groupOwner: "",
             members:[],
             showPop: false,
-            isDisabled: false
+            isDisabled: false,
+            curContextMember:{}
         }
     },
     methods:{
+        onDropItemClick(k){
+            switch (k) {
+                case 'senMessage':
+                    this.sentMemberMessage(this.curContextMember);
+                    break;
+                case 'atUser':
+                    this.linkMember(this.curContextMember);
+                    break;
+                case 'copyEmail':
+                    this.copyEmail(this.curContextMember);
+                    break;
+                 case 'copyMobile':
+                    this.copyMobile(this.curContextMember);
+                    break;
+                case 'removeMember':
+                    this.removeMember(this.curContextMember);
+                    break;
+            }
+        },
         init(){
             getMembers(this.$route.params.groupId).then(res=>{
                 this.members = res;
@@ -163,8 +170,14 @@ export default {
         onPopperHide() {
             this.isDisabled = false;
         },
-        showContextmenu(m) {
-            this.$refs[m.userId][0].visible = true;
+        // showContextmenu(m) {
+        //     this.$refs[m.userId][0].visible = true;
+        // },
+       
+        onContextmenu(member) {
+            this.curContextMember = member;
+            this.$refs.contextMenu.$refs.reference = event.target;
+            this.$refs.contextMenu.currentVisible = !this.$refs.contextMenu.currentVisible;
         },
         sentMemberMessage(m) {
             let params = {
@@ -184,6 +197,20 @@ export default {
         linkMember(m) {
             Bus.$emit('setLinkMember',{name:`@${m.nickname}&nbsp;`});
         },
+        copyMobile(m){
+            let input = document.createElement('input');
+            input.value = m.mobile;
+            document.body.appendChild(input);
+            input.select();
+            if(document.execCommand("Copy")){
+                document.execCommand("Copy"); // 执行浏览器复制命令
+                this.$Message.success('复制成功!');
+            }else{
+                this.$Message.error('无法复制！');
+            }
+            
+            input.remove()
+        },
         copyEmail(m) {
             let input = document.createElement('input');
             input.value = m.email;
@@ -198,7 +225,7 @@ export default {
             
             input.remove()
         },
-        removeMembers(m, index) {
+        removeMember(m) {
             let params = {
                 groupId: m.groupId,
 			    userId: m.userId
@@ -207,7 +234,11 @@ export default {
             removeMember(params).then(res => {
                 if(res.success){
                     this.$Message.success(res.message);
-                    this.members.splice(index,1);
+                    this.members.map((item,index)=>{
+                        if(item.userId === m.userId){
+                            this.members.splice(index,1);
+                        }
+                    });
                 }
             }).catch(err => {
                 this.$Message.error(res.data.message);

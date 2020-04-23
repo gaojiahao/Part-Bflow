@@ -31,7 +31,7 @@ export const getMembers = (groupId) => request('/H_roleplay-si/im/group/getMembe
  * @author snack.haugng
  * @description 签收消息
  */
-export const checkMessage = (groupId) => request('/H_roleplay-si/im/message/check?groupId='+groupId,{},'POST',{})
+export const checkMessage = (groupId) => request('/H_roleplay-si/im/message/check?groupId='+groupId,{},'POST')
 
 
 /**
@@ -94,10 +94,7 @@ export const getAddressBookName = (name) => request('/H_roleplay-si/im/group/get
  * @author snack.huang 
  * @description 通过类型获取消息
  */
-export const getMessagesByImType = (groupId,imType) => request('/H_roleplay-si/im/message/getMessageByImType',{
-  groupId: groupId,
-  imType:imType
-});
+export const getMessagesByImType = (params) => request('/H_roleplay-si/im/message/getMessageByImType',params);
 
 /**
  * @author XiaoYing
@@ -123,6 +120,16 @@ export const deleteFocus = (groupId) => request('/H_roleplay-si/im/group/delFocu
   groupId: groupId
 },'POST')
 
+
+/**
+ * @author snack.huang
+ * @description 通过消息ID获取消息所在分页信息
+ */
+export const getGroupMsgById = (groupId,msgId,limit)=>request('/H_roleplay-si/im/message/getGroupMsgById',{
+  groupId:groupId,
+  msgId:msgId,
+  limit:limit
+});
 
 
 

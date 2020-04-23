@@ -11,35 +11,6 @@
         /deep/ .paste-img{
             width: 100px;
         }
-
-         /deep/ .file-content{
-                display: inline-block;
-                cursor: pointer;
-                width: 200px;
-                border: 1px solid #ddd;
-                border-radius: 3px;
-                padding: 5px;
-                margin: 3px;
-                background-color: white;
-
-                &-info{
-                    display: inline-table;
-                    vertical-align: top;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    p{
-                    width: 145px;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    }
-                }
-            }   
-
-        &-content{
-            
-        }
     }
 }
 .isMySelf{
@@ -47,7 +18,7 @@
 }
 </style>
 <template>
-    <ul class="files compactscrollbar" id="fileHistory">
+    <div class="files compactscrollbar" id="fileHistory">
         <!-- <li v-for="(file,index) in files" :key="index" class="files-item">
             <img width="40" :src="'resources/images/file/'+ file.icon" >
 
@@ -59,13 +30,39 @@
                 <div >{{file.crtTime}}</div>
             </div>
         </li> -->
-        <div class="all-message-item" v-for="(m,index) in msgs" :key="index">
-            <div class="font12" v-bind:class="{isMySelf:m.isMySelf}">{{m.creatorName}} {{m.crtTime}}</div>
-            <div class="all-mess-item-content">
-                <p v-html="m.content"></p>
+        <div class="files-header">
+            <span>
+                类型
+                <Icon type="ios-arrow-down" />
+                <Icon type="ios-arrow-up" />
+            </span>
+            <span>
+                名称
+            </span>
+            <span>
+                大小
+            </span>
+            <span>
+                来源
+            </span>
+            <span>
+                时间
+            </span>
+        </div>
+        <div class="files-item" v-for="(m,index) in msgs" :key="index">
+            <div class="files-item-content">
+                 <img class="flie-img" width="38" :src="m.content|filedTypeFilter">
+                      <div class="file-content-info">
+                        <p>
+                        <a :href="'/H_roleplay-si/ds/downloadById?id='+m.id">{{m.content}}</a>
+                        </p>
+                        <p>
+                        {{m.size}}|{{m.creatorName}}
+                        </p>
+                      </div>
             </div>
         </div>
-    </ul>
+    </div>
 </template>
 
 <script>
@@ -80,6 +77,10 @@ export default {
             isRolling: false,
             files:[],
             listId:'',
+            pageParam:{
+                page:1,
+                limit:30
+            },
             wordParams: { 
                 page:1,
                 limit:20,
@@ -144,15 +145,19 @@ export default {
         },
 
         init(){
-            getMessagesByImType(this.$route.params.groupId,2).then(res=>{
+            getMessagesByImType({
+                 ...this.pageParam,
+                groupId:this.$route.params.groupId,
+                imType:4
+            }).then(res=>{
                 console.log(res);
                 this.msgs = res;
             });
         }
     },
     mounted(){
-        this.listId = this.$route.params.listId;
-        this.refreshFiles();
+        // this.listId = this.$route.params.listId;
+        // this.refreshFiles();
         this.handleScroll();
         this.init();
     }

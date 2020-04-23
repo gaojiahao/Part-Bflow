@@ -122,9 +122,11 @@ export default {
             let ds = this.$deepstream;
             //消息订阅
             ds.event.subscribe("roletaskIm/" + JSON.parse(localStorage.getItem('roleplay-token')).token, res => {
-                debugger
                 switch (res.imType) {
-                    case '1':
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
                         this.imGroups.map(g=>{
                             if(g.groupId === res.groupId){
 
@@ -135,7 +137,7 @@ export default {
                             }
                         });
                         break;
-                    case '103':
+                    case 103:
                         this.imGroups.map(g=>{
                             if(g.groupId === res.groupId){
                                 g.msgCount=0;

@@ -3,9 +3,44 @@
         background-color: #fff;
         margin-bottom: 10px;
         // border: 1px solid #ddd;
+
+        &-reply{
+            padding: 5px;
+            /deep/ &-content{
+                border-left: 3px solid #ddd;
+                background-color: #f7f7f7;
+                padding: 5px;
+                height: 80px;
+                &-message{
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    &-file{
+                        display: inline-block;
+                        cursor: pointer;
+                        width: 200px;
+                        border: 1px solid #ddd;
+                        border-radius: 3px;
+                        padding: 2px;
+                        margin: 3px;
+                        background-color: white; 
+    
+                        &-info{
+                            display: inline-block;
+                            vertical-align: top;
+                            p{
+                                width: 145px;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                white-space: nowrap;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         &-content{
-            min-height: 160px;
-            max-height: 160px;
+            height: 220px;
             overflow-y: auto;
             padding: 5px;
 

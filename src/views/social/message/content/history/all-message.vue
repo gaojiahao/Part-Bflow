@@ -2,7 +2,7 @@
 .all-message{
     height: 100%;
     overflow-y: auto;
-
+    border-top: 1px solid #ddd;
     &-item{
         margin: 18px 15px;
         word-wrap: break-word;
@@ -46,7 +46,25 @@
         <div class="all-message-item" v-for="(m,index) in msgs" :key="index">
             <div class="font12" v-bind:class="{isMySelf:m.isMySelf}">{{m.creatorName}} {{m.crtTime}}</div>
             <div class="all-mess-item-content">
-                <p v-html="m.content"></p>
+                <!-- <p v-html="m.content"></p> -->
+                <span v-if="m.imType===1" v-html="m.content"></span>
+                
+                <span v-if="[2,3,4].includes(m.imType)" >
+                  <span v-for="(c,index) in m.content" :key="index">
+                    <span v-if="c.imType===1" v-html="c.content"></span>
+                    <img class="paste-img" v-if="c.imType===2" :src="'/H_roleplay-si/ds/downloadById?id='+c.id" />
+                    <br>
+                    <span  contenteditable="false" class="file-content" v-if="c.imType===4" >
+                      <img class="flie-img" width="38" :src="c.content|filedTypeFilter">
+                      <div class="file-content-info">
+                        <p>
+                        <a :href="'/H_roleplay-si/ds/downloadById?id='+c.id">{{c.content}}</a>
+                        </p>{{c.size}}<p>
+                        </p>
+                      </div>
+                    </span>
+                    </span>
+                </span>
             </div>
         </div>
     </div>
@@ -62,7 +80,7 @@ export default {
         return {
             msgs:[],
             pageParam:{
-                start:1,
+                page:1,
                 limit:30
             },
             allLoad:false
@@ -82,7 +100,13 @@ export default {
                 if(res.length<this.pageParam.limit){
                     this.allLoad = true;
                 }
-                this.msgs.unshift(...res);
+
+                 res.msgs.map(m=>{
+                    if([2,3,4].includes(m.imType)){
+                        m.content = JSON.parse(m.content);
+                    }
+                });
+                this.msgs.unshift(...res.msgs);
             });
         },
         initEvents(){

@@ -49,8 +49,8 @@
                 :headers="httpHeaders"
                 :show-upload-list='false'
                 :on-success="handleFileSuccess"
-                accept=".xls,.xlsx"
-                :format="['xls','xlsx']"
+                accept=".xls,.xlsx,.docx,.txt,.vsd"
+                :format="['xls','xlsx','docx','txt','vsd']"
                 :on-exceeded-size="handleFileMaxSize"
                 :default-file-list="defaultFileList"
                 style="display: inline-block;position: relative;"
@@ -64,6 +64,7 @@
         </Col>
     </Row>
     <Row class="publish-container">
+        <div class="publish-container-reply" ref='replycontainer' contenteditable="false"></div>
         <div 
             class="publish-container-content compactscrollbar" 
             id = "contentWrap"
@@ -76,18 +77,20 @@
             >
         </div>
 
-        <div class="atwho-view" id="at-view-64" v-show="userListVisible" :style="{top:`${top}px`,left:`${left}px`}" >
-            <ul class="atwho-view-ul" @click="handleSelectUser" >
+        <div class="atwho-view compactscrollbar" id="at-view-64" v-show="userListVisible" :style="{top:`${top}px`,left:`${left}px`}" >
+            <ul class="atwho-view-ul" >
                <li 
                     v-for="(item,index) in userList" 
                     :key="item.userId" 
                     :userId="item.userId" 
+                    :id="`atuser-${item.userId}`"
                     :class="{'at-high-light': index === currentWho.index}"
+                    @click="handleSelectUser(item)"
                     @mousedown="OnMouseDown"
                     @mouseover="handleMouseover(index)"
-                 
                     >
                     {{item.nickname}}
+                    <span v-if="item.userId==='All'">({{userList.length}})</span>
                 </li>
             </ul>
         </div>    
@@ -144,6 +147,9 @@ export default {
             type:Boolean,
             default:false
         },
+        setAtUsers:{
+            type:Function
+        }
         
     },
     data() {
@@ -197,7 +203,7 @@ export default {
         },
 
         getAllUsers(filter=""){
-            getAllUsers(8,1,filter).then(res=>{
+            getAllUsers(10000,1,filter).then(res=>{
                 this.userList = res.tableContent;
                 if(res.tableContent.length === 0){
                     this.userListVisible = false;
@@ -250,7 +256,12 @@ export default {
             if(e.data === '@'){
                 this.at_focusOffset = end;   
                 this.isFilter = true;
-                this.userListVisible = true;
+                this.setAtUsers().then(res=>{
+                    this.userList = res;
+                    this.userListVisible = true;
+                    this.currentWho = this.userList[0];
+                    this.currentWho.index = 0;
+                });
             }
             if(this.isFilter) {
                 // 说明输入了@ 截取@到光标之间的字符串
@@ -266,9 +277,11 @@ export default {
             } 
         },
 
-        handleSelectUser(e){
-           const nickname = e && e.target.innerText || this.currentWho.nickname;
-           const userId = e && e.target.getAttribute('userId') || this.currentWho.userId;
+        handleSelectUser(user){
+        //    const nickname = e && e.target.innerText || this.currentWho.nickname;
+        //    const userId = e && e.target.getAttribute('userId') || this.currentWho.userId;
+
+            
 
              // 获取输入框中的值
             const fullText = this.contentWrap.innerText.replace(/\n/g, '')
@@ -284,13 +297,10 @@ export default {
             range.deleteContents();
           
             // 插入选中的user
-            let input = `<span contenteditable="false" style="color: #646b6b;font-style: italic;font-size:12px;cursor: pointer;">@${nickname}&nbsp;</span>`;
+            let input = `<span contenteditable="false" class="atUser" style="color: #646b6b;font-style: italic;font-size:12px;cursor: pointer;">@${user.nickname}&nbsp;</span>`;
             insertHtmlAtCaret(input);
             // 添加用户
-            this.atUsers.push({
-                userId:userId,
-                name:nickname
-            });
+            this.atUsers.push(...user);
             
             this.hidenUserPanel();
         },
@@ -322,6 +332,11 @@ export default {
                         }
                     }
                   
+                }
+    
+                if(!this.contentWrap.innerText){
+                    this.$refs.replycontainer.innerHTML = '';
+                    this.$refs.editor.style.height='220px';
                 }
 
                
@@ -356,6 +371,8 @@ export default {
             const nickname = this.userList[next].nickname;
             const userId = this.userList[next].userId;
 
+            document.getElementById('atuser-'+userId).scrollIntoView(true);
+
             this.currentWho = {
                 nickname:nickname,
                 userId:userId,
@@ -385,8 +402,9 @@ export default {
                     this.top = top;
                     let atView = document.getElementById('at-view-64');
                     atView.focus();
-                    const filter = JSON.stringify([{"operator":"like","value":targetText,"property":"nickname"}]);
-                    this.getAllUsers(filter);
+                    // const filter = JSON.stringify([{"operator":"like","value":targetText,"property":"nickname"}]);
+                    // this.getAllUsers(filter);
+                    this.setAtUsers();
                 }
             }
             func();
@@ -421,11 +439,14 @@ export default {
         },
        
         handleSuccess (res, file) {
-             file.url ='/H_roleplay-si/ds/download?url=' +  res.data[0].attacthment
+             file.url ='/H_roleplay-si/ds/download?url=' +  res.data[0].attacthment;
+             file.name = res.data[0].attr1;
+             file.byte = getFileSize(file.size);
+             file.id = res.data[0].id;
             // 创建需追加到光标处节点的文档片段
             const range = this.range.cloneRange();
             var el = document.createElement('div'),frag;
-            el.innerHTML = '<img class="paste-img" src="'+ file.url +'" paste="1">'
+            el.innerHTML = `<img class="paste-img" src="${file.url}" attId="${file.id}" name="${file.name}"  size="${file.byte}">`
             frag = document.createDocumentFragment()
             var node,lastNode;
             while ((node = el.firstChild)) {
@@ -443,11 +464,13 @@ export default {
 
             file.url ='/H_roleplay-si/ds/download?url=' +  res.data[0].attacthment;
             file.name = res.data[0].attr1;
+            file.byte = getFileSize(file.size);
+            file.id = res.data[0].id;
             if(/.jpg|.png|.PNG/.test(file.name)){
                 file.icon = 'image.png';
             }
 
-            if(/.xlsx/.test(file.name)){
+            if(/.xlsx|.xls/.test(file.name)){
                 file.icon = 'excel.png';
             }
 
@@ -466,7 +489,7 @@ export default {
             // 创建需追加到光标处节点的文档片段
             const range = this.range.cloneRange();
             var el = document.createElement('div'),frag;
-            el.innerHTML = '<span contenteditable="false" class="file-content">'+
+            el.innerHTML = '<span contenteditable="false" class="file-content" name="'+ file.name+'"  attid="'+ file.id+'" size="'+ file.byte+'"  >'+
                 '<img class="flie-img" width="38" src="resources/images/file/'+ file.icon+'"  paste="1">'+
                 '<div class="file-content-info"><p><a href="'+file.url+'">'+file.name+'</a></p><p>'+getFileSize(file.size)+'</p>'+
                 '</div>'+
@@ -499,7 +522,12 @@ export default {
             }).then(res=>{
                 
                 if(res.length>0){
-                    insertHtmlAtCaret(`<img paste=1  class="paste-img" src="/H_roleplay-si/ds/download?url=${res[0].attacthment}">`);
+                    let tepFile = {};
+                    tepFile.url ='/H_roleplay-si/ds/download?url=' +  res[0].attacthment;
+                    tepFile.name = res[0].attr1;
+                    tepFile.byte = getFileSize(10000);
+                    tepFile.attId = res[0].id;
+                    insertHtmlAtCaret(`<img  paste=1 class="paste-img" src="${tepFile.url}" name="${tepFile.name}" attId="${tepFile.attId}"  size="${tepFile.byte}">`);
                 }
             });
         },
@@ -566,14 +594,75 @@ export default {
         //初始化事件
         this.initEvent();
         let me = this;
-        Bus.$on('setLinkMember',text => {
-            let content;
-            if(text.value){
-                content = `${text.value}${this.$refs.editor.innerHTML}${text.name}`;
-            }else{
-                content = `${this.$refs.editor.innerHTML}${text.name}`;
+        // Bus.$on('setLinkMember',text => {
+        //     let content;
+        //     if(text.value){
+        //         content = `${text.value}${this.$refs.editor.innerHTML}${text.name}`;
+        //     }else{
+        //         content = `${this.$refs.editor.innerHTML}${text.name}`;
+        //     }
+        //     this.$refs.editor.innerHTML = content;
+        // });
+        // this.getAllUsers();
+
+         Bus.$on('replyMsg',replyInfo => {
+            console.log(replyInfo);
+            let {msg,group} = replyInfo;
+            let tempConent='';
+
+            switch (msg.imType) {
+                case 1:
+                    tempConent = msg.content;
+                    break;
+                case 2:
+                    msg.content.map(m=>{
+                        tempConent = tempConent+`<img height=50 src="/H_roleplay-si/ds/downloadById?id=${m.id}" >`
+                    });
+                    break;
+                case 3:
+                      msg.content.map(m=>{
+                        if(m.imType===2) tempConent = tempConent+`<img height=50 src="/H_roleplay-si/ds/downloadById?id=${m.id}" >`;
+
+                        if(m.imType ===1) tempConent=tempConent+m.content;
+
+                        if(m.imType===4) tempConent = tempConent+
+                        `<div class="publish-container-reply-content-message-file">
+                            <img height=38 src="resources/images/file/excel.png" >
+                            <div class="publish-container-reply-content-message-file-info">
+                                <p>${m.content}</p>
+                                <p>${m.size}</p>
+                            </div>
+                        </div>`;
+                        
+                    });
+                    break;
+                 case 4:
+                      msg.content.map(m=>{
+                        if(m.imType===2) tempConent = tempConent+`<img height=50 src="/H_roleplay-si/ds/downloadById?id=${m.id}" >`;
+
+                        if(m.imType ===1) tempConent=tempConent+m.content;
+
+                        if(m.imType===4) tempConent = tempConent+
+                        `<div class="publish-container-reply-content-message-file">
+                            <img height=38 src="resources/images/file/excel.png" >
+                            <div class="publish-container-reply-content-message-file-info">
+                                <p>${m.content}</p>
+                                <p>${m.size}</p>
+                            </div>
+                        </div>`;
+                        
+                    });
+                    break;
             }
-            this.$refs.editor.innerHTML = content;
+
+            console.log('///',tempConent);
+            let innerHTML = `<div  class="publish-container-reply-content" >
+                <div class="publish-container-reply-content-creator">${msg.creatorName}:</div>
+                <div class="publish-container-reply-content-message">${tempConent}</div>
+            </div>`;
+            this.$refs.editor.style.height='140px';
+            this.$refs.replycontainer.innerHTML = innerHTML;
+            this.replayMsg = msg;
         });
     },
 

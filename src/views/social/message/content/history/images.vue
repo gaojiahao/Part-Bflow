@@ -6,20 +6,20 @@
     <div id="imgHistory" class="imgs compactscrollbar">
         <div v-for="(img,index) in images" :key="index" class="comimg" >
             <img 
-            width="80"
-            :src="img.attachment" 
+            width="100"
+            :src="'/H_roleplay-si/ds/downloadById?id='+img.attrId" 
             >
             <div class="comimg-cover">
                 <Icon 
                 type="ios-eye-outline" 
-                @click.native="handleViewImg(img.attachment)">
+                @click.native="handleViewImg(img.attrId)">
                 </Icon>
             </div>
         </div>
-         <Modal title="查看图片" v-model="imgModalVisible" width="50%">
+         <Modal class="imgModal" v-model="imgModalVisible" width="50%" footer-hide>
             <img 
                 :src="imgName" 
-                v-if="imgModalVisible" style="width: 100%">
+                v-if="imgModalVisible" style="width: 100%;margin-top: 20px;">
         </Modal>
     </div>
 </template>
@@ -28,10 +28,15 @@
 import {
   getAttachmentByListId
 } from "@/services/notificationsService";
+import { getMessagesByImType } from "@/services/imService";
 export default {
     name:'Images',
     data(){
         return {
+            pageParam:{
+                page:1,
+                limit:30
+            },
             images:[],
             imgName:'',
             imgModalVisible:false,
@@ -74,14 +79,25 @@ export default {
         },
       
         handleViewImg:function (img) {
-            this.imgName = img;
+            this.imgName = '/H_roleplay-si/ds/downloadById?id='+img;
             this.imgModalVisible = true;
         },
+         init(){
+            getMessagesByImType({
+                 ...this.pageParam,
+                groupId:this.$route.params.groupId,
+                imType:2
+            }).then(res=>{
+                console.log(res);
+                this.images = res;
+            });
+        }
     },
     mounted(){
-        this.listId = this.$route.params.listId;
-        this.refreshImages();
-        this.handleScroll();
+        this.init();
+        // this.listId = this.$route.params.listId;
+        // this.refreshImages();
+        // this.handleScroll();
     }
 }
 </script>

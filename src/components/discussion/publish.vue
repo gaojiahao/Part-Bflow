@@ -52,7 +52,6 @@
                 accept=".xls,.xlsx,.docx,.txt,.vsd"
                 :format="['xls','xlsx','docx','txt','vsd']"
                 :on-exceeded-size="handleFileMaxSize"
-                :default-file-list="defaultFileList"
                 style="display: inline-block;position: relative;"
                 action="/H_roleplay-si/ds/upload">
                 <Icon type="ios-folder-open-outline" size=24 title="文件"  class="choice-file" />
@@ -73,7 +72,7 @@
             v-html="innerText"
             @input="changeTxt"
             @focus="lock=true" 
-            @keydown="handleDOMRemoved"
+            @keydown="handleDeydown"
             >
         </div>
 
@@ -160,9 +159,6 @@ export default {
                 Authorization: getToken()
             },
             faces:[],
-            defaultList: [
-            ],
-            defaultFileList:[],
             imgName: '',
             visible: false,
             commentAndReply:false,
@@ -170,6 +166,7 @@ export default {
             blankTipVisible:false,
             userList:[],
             userListVisible:false,
+            sourceUserList:[],
             left:0,
             top:0,
             isFilter:false,
@@ -204,6 +201,7 @@ export default {
 
         getAllUsers(filter=""){
             getAllUsers(10000,1,filter).then(res=>{
+                this.sourceUserList = res.tableContent;
                 this.userList = res.tableContent;
                 if(res.tableContent.length === 0){
                     this.userListVisible = false;
@@ -256,12 +254,21 @@ export default {
             if(e.data === '@'){
                 this.at_focusOffset = end;   
                 this.isFilter = true;
-                this.setAtUsers().then(res=>{
-                    this.userList = res;
-                    this.userListVisible = true;
-                    this.currentWho = this.userList[0];
-                    this.currentWho.index = 0;
-                });
+                if(this.userList.length===0){
+                    if(this.setAtUsers){
+                        this.setAtUsers().then(res=>{
+                            this.sourceUserList = res;
+                            this.userList = res;
+                            this.userListVisible = true;
+                            this.currentWho = this.userList[0];
+                            this.currentWho.index = 0;
+                        });
+                    }else{
+                        this.getAllUsers();
+                    }
+                }
+                
+               
             }
             if(this.isFilter) {
                 // 说明输入了@ 截取@到光标之间的字符串
@@ -277,12 +284,10 @@ export default {
             } 
         },
 
-        handleSelectUser(user){
-        //    const nickname = e && e.target.innerText || this.currentWho.nickname;
-        //    const userId = e && e.target.getAttribute('userId') || this.currentWho.userId;
+        handleSelectUser(u){
 
-            
 
+            const user = u || this.currentWho;
              // 获取输入框中的值
             const fullText = this.contentWrap.innerText.replace(/\n/g, '')
             // 获取光标位置
@@ -295,7 +300,7 @@ export default {
             let range =selection.getRangeAt(0);
             range.setStart(range.endContainer, range.endOffset - offset);
             range.deleteContents();
-          
+        
             // 插入选中的user
             let input = `<span contenteditable="false" class="atUser" style="color: #646b6b;font-style: italic;font-size:12px;cursor: pointer;">@${user.nickname}&nbsp;</span>`;
             insertHtmlAtCaret(input);
@@ -303,10 +308,12 @@ export default {
             this.atUsers.push(...user);
             
             this.hidenUserPanel();
+          
+           
         },
 
            // 处理节点的删除
-        handleDOMRemoved(e) {
+        handleDeydown(e) {
             //删除
             if (e.keyCode === 8 ) {
                 // 获取输入框中的值
@@ -342,22 +349,28 @@ export default {
                
             }
 
-            if(this.currentWho){
-                // ↑ ↓
-                if (e.keyCode === 38 || e.keyCode === 40) {
-                    if (!(e.metaKey || e.ctrlKey)) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        this.handleKeyBoardSelect(e);
-                    }
-                    return;
-                }
-                // 按下回车键
-                if (e.keyCode === 13) {
-                    this.handleSelectUser();
+            
+            // ↑ ↓
+            if (e.keyCode === 38 || e.keyCode === 40) {
+                if (!(e.metaKey || e.ctrlKey)) {
                     e.preventDefault();
                     e.stopPropagation();
+                    this.handleKeyBoardSelect(e);
                 }
+                return;
+            }
+
+            if(!e.shiftKey && e.key ==='Enter' && !this.userListVisible){
+                // var t = that.$refs.editor.innerHTML;
+                //     that.$refs.editor.innerHTML = t.substring(0,t.length-15);
+                    this.handleSend();
+            }
+            
+            // 按下回车键
+            if (e.keyCode === 13 && this.userListVisible) {
+                this.handleSelectUser();
+                e.preventDefault();
+                e.stopPropagation();
             }
         },
 
@@ -388,6 +401,7 @@ export default {
         },
         //隐藏用户列表
         showUserPanel(el,targetText=""){
+            console.log('过滤',targetText);
            const func = () => {
                 // top && left
                 var sel = window.getSelection();
@@ -402,9 +416,19 @@ export default {
                     this.top = top;
                     let atView = document.getElementById('at-view-64');
                     atView.focus();
-                    // const filter = JSON.stringify([{"operator":"like","value":targetText,"property":"nickname"}]);
-                    // this.getAllUsers(filter);
-                    this.setAtUsers();
+                    if(this.sourceUserList.length){
+                        this.userList = this.sourceUserList.filter(u=>{
+                            return u.nickname.includes(targetText);
+                        });
+
+                        if(this.userList.length){
+                            this.currentWho = {
+                                userId:this.userList[0].userId,
+                                nickname:this.userList[0].nickname,
+                                index:0
+                            }
+                        }
+                    }
                 }
             }
             func();
@@ -563,14 +587,6 @@ export default {
                     }
                 }
             }, false);
-
-            this.$refs.editor.addEventListener("keyup",  (e)=> {
-                if(!e.shiftKey && e.key ==='Enter'){
-                    var t = that.$refs.editor.innerHTML;
-                    that.$refs.editor.innerHTML = t.substring(0,t.length-15);
-                    that.handleSend();
-                }
-            },false);
         },
 
     },
@@ -594,15 +610,10 @@ export default {
         //初始化事件
         this.initEvent();
         let me = this;
-        // Bus.$on('setLinkMember',text => {
-        //     let content;
-        //     if(text.value){
-        //         content = `${text.value}${this.$refs.editor.innerHTML}${text.name}`;
-        //     }else{
-        //         content = `${this.$refs.editor.innerHTML}${text.name}`;
-        //     }
-        //     this.$refs.editor.innerHTML = content;
-        // });
+        Bus.$on('atUser',user => {
+            let atUserHtml = `<span contenteditable="false" class="atUser" style="color: #646b6b;font-style: italic;font-size:12px;cursor: pointer;">@${user.nickName}&nbsp;</span>`;
+            this.$refs.editor.innerHTML=this.$refs.editor.innerHTML+atUserHtml;
+        });
         // this.getAllUsers();
 
          Bus.$on('replyMsg',replyInfo => {

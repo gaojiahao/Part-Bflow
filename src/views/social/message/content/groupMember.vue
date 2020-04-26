@@ -142,7 +142,7 @@ export default {
                     this.sentMemberMessage(this.curContextMember);
                     break;
                 case 'atUser':
-                    this.linkMember(this.curContextMember);
+                    this.atMember(this.curContextMember);
                     break;
                 case 'copyEmail':
                     this.copyEmail(this.curContextMember);
@@ -194,8 +194,11 @@ export default {
                 this.$Message.error(err.data.message);
             })
         },
-        linkMember(m) {
-            Bus.$emit('setLinkMember',{name:`@${m.nickname}&nbsp;`});
+        atMember(m) {
+            Bus.$emit('atUser',{
+                userId:m.userId,
+                nickName:m.nickname
+            });
         },
         copyMobile(m){
             let input = document.createElement('input');

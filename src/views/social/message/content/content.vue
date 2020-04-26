@@ -126,12 +126,10 @@ export default {
     },
     methods:{
         setAtUsers(){
+            let that = this;
             return getMembers(this.$route.params.groupId).then(res=>{
-                let tempUsers =  res.map(r=>{
-                    return {
-                        nickname:r.nickname,
-                        userId:r.userId
-                    }
+                let tempUsers =  res.filter(r=>{
+                    return parseInt(r.userId)!=that.$currentUser.userId;
                 });
                 tempUsers.unshift({
                     nickname:'所有人',
@@ -196,6 +194,11 @@ export default {
                         msgTpl.content = msgTpl.content+d.outerHTML;
                         hasTaxt =true;
                     }
+                    else if
+                    (d.tagName === 'SPAN' && d.className.includes('atUser')){
+                        msgTpl.content = msgTpl.content+d.innerText;
+                        hasTaxt =true;
+                    }
                 }
                 else{
                     if(d.textContent){
@@ -206,7 +209,7 @@ export default {
                                 imType:1
                             });
                         }else{
-                            msgTpl.content = d.textContent;
+                            msgTpl.content = msgTpl.content  + d.textContent;
                         }
                         
                     }
@@ -316,9 +319,9 @@ export default {
             // }
         },
         msgInputClick:function(){
-            //to:签收消息
-            // checkMessage(this.groupId).then(res=>{
-            // });
+            // to:签收消息
+            checkMessage(this.groupId).then(res=>{
+            });
         },
         onViewHistory(){
             if(['all','files'].includes(this.$route.name)){

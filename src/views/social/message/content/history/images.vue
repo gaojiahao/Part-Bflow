@@ -15,6 +15,7 @@
                 @click.native="handleViewImg(img.attrId)">
                 </Icon>
             </div>
+            <a>查看源消息</a>
         </div>
          <Modal class="imgModal" v-model="imgModalVisible" width="50%" footer-hide>
             <img 

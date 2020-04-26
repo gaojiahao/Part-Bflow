@@ -89,7 +89,6 @@ import { getComments } from "@/services/appService.js";
 import commentPublish from "./knowledge-comment";
 import comments from "@/components/discussion/comments";
 import E from 'wangeditor';
-import { EMOTION } from "@/assets/const";
 import Bus from "@/assets/eventBus.js";
 import AddModal from '../detail/detail';
 
@@ -154,8 +153,6 @@ export default {
         }
     },
     refreshComments:function () {
-        let emotion = [...EMOTION];
-        let reg = /\[(.+?)\]/g;
         let params = {
             relationKey:this.knowledgeId,
             sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
@@ -163,17 +160,6 @@ export default {
         params = Object.assign(params,this.pageInfo);
 
         getComments(params).then(res=>{
-             res.tableContent.forEach(item=>{
-               item.content = item.content .replace(reg, (word) => {
-                    // 寻找表情索引
-                    let idx = emotion.findIndex(item => item === word.replace(/(\[|\])/g, ''));
-                    // 没有匹配项则返回原文字
-                    if (idx === -1) {
-                    return word
-                    }
-                    return `<span class="comments-content-item-content-img-emotion" style="background-position: -${24 * idx}px 0;"></span>`
-                });
-            })
             this.comments = res.tableContent;
           
             this.pageInfo.total = res.dataCount;

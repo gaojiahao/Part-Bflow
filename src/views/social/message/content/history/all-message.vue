@@ -47,7 +47,7 @@
             <div class="font12" v-bind:class="{isMySelf:m.isMySelf}">{{m.creatorName}} {{m.crtTime}}</div>
             <div class="all-mess-item-content">
                 <!-- <p v-html="m.content"></p> -->
-                <span v-if="m.imType===1" v-html="m.content"></span>
+                <span v-if="m.imType===1" v-html="formatToEmotion(m.content)"></span>
                 
                 <span v-if="[2,3,4].includes(m.imType)" >
                   <span v-for="(c,index) in m.content" :key="index">

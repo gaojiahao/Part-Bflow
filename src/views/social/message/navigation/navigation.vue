@@ -26,8 +26,9 @@
                         </div>
                         <div class="font12 navs-item-appinfo-name" v-if="g.lastMsg">
                             <div class="navs-item-appinfo-name-lastcontent">
+                                <span style="color: #b90c0c;" v-if="g.lastMsg.content.includes($currentUser.nickname)">[有人@我]</span>
                                 <span>{{g.lastMsg.creatorName}}:</span>
-                                <span v-html="g.lastMsg.content" v-if="g.lastMsg.imType==1"></span>
+                                <span v-html="formatToEmotion(g.lastMsg.content)" v-if="g.lastMsg.imType==1"></span>
                                 <span  v-if="g.lastMsg.imType==2">文件</span>
                             </div>
                             <div class="navs-item-appinfo-name-lastTime">

@@ -35,7 +35,7 @@
                
                 <div @click="goTop(msg.replayMsg.id)" v-if="msg.replayMsg" class="replayMsg" style="border-left: 3px solid #999;padding:0 8px;cursor: pointer;">
                   <div>{{msg.replayMsg.creatorName}}:</div>
-                  <span v-if="msg.replayMsg.imType===1" v-html="msg.replayMsg.content"></span>
+                  <span v-if="msg.replayMsg.imType===1" v-html="formatToEmotion(msg.replayMsg.content)"></span>
 
                   <span v-if="[2,3,4].includes(msg.replayMsg.imType)" >
                     <span v-for="(r,index) in msg.replayMsg.content" :key="index">
@@ -56,11 +56,11 @@
                 </div>
 
             
-                <span v-if="msg.imType===1" v-html="msg.content"></span>
+                <span v-if="msg.imType===1" v-html="formatToEmotion(msg.content)"></span>
 
                 <span v-if="[2,3,4].includes(msg.imType)" >
                   <span v-for="(c,index) in msg.content" :key="index">
-                    <span v-if="c.imType===1" v-html="c.content"></span>
+                    <span v-if="c.imType===1" v-html="formatToEmotion(c.content)"></span>
                     <img class="paste-img" v-if="c.imType===2" :src="'/H_roleplay-si/ds/downloadById?id='+c.id" />
                     <br v-if="c.imType===4">
                     <span  contenteditable="false" class="file-content" v-if="c.imType===4" >
@@ -114,16 +114,20 @@ export default {
     },
     methods:{
       goTop(id){
-        var msgDiv = document.getElementById(id)
-        if(msgDiv){
-          msgDiv.style.backgroundColor = '#f9b24757';
-          setTimeout(() => {
-            msgDiv.style.backgroundColor = '';
-          }, 2000);
-          msgDiv.scrollIntoView(true);
-        }else{
-           Bus.$emit('toMessage',id)
-        }
+        // var msgDiv = document.getElementById(id)
+
+        // if(msgDiv){
+
+        //   msgDiv.style.backgroundColor = '#f9b24757';
+        //   setTimeout(() => {
+        //     msgDiv.style.backgroundColor = '';
+        //   }, 2000);
+        //   msgDiv.scrollIntoView(true);
+
+        // }else{
+           Bus.$emit('toMessage',id);
+        // }
+
       },
       onDropItemClick(){
 

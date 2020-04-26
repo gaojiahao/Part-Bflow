@@ -15,10 +15,14 @@ import "./plugin/jqorg/css/font-awesome.min.css"
 import "./plugin/jqorg/css/jquery.orgchart.css"
 import "./plugin/jqorg/css/style.css"
 
+import { formatToEmotion } from "@/utils/emotion";
+
 require('@/directive/index')
 require('@/filter/index')
 require('./assets/App.css')
 require('./assets/common.css')
+
+Vue.prototype.formatToEmotion=formatToEmotion
 
 Vue.config.productionTip = false
 Vue.use(Loading)

@@ -38,7 +38,6 @@ import {getMessagesByGroupId,getGroupMsgById} from "@/services/imService";
 import ContentMessage from "../message-tpl/content-message";
 import FileMessage from "../message-tpl/file-message";
 import MessageReadDetail from "../message-tpl/message-read-detail";
-import { EMOTION } from "@/assets/const";
 import Bus from "@/assets/eventBus.js";
 export default {
     name:'imContents',
@@ -61,10 +60,12 @@ export default {
     },
     watch:{
         $route(to, from) {
-            this.pageParam.page = 1;
-            this.allLoad = false;
-            this.messages = [];
-            this.getMessages();
+            if(to.params.groupId != from.params.groupId){
+                this.pageParam.page = 1;
+                this.allLoad = false;
+                this.messages = [];
+                this.getMessages();
+            }
         }
     },
     props:{
@@ -107,17 +108,6 @@ export default {
                     ...this.$route.query
                 }
             })
-        //   Bus.$emit('setLinkMember',{
-        //     name:`@${text.creatorName}&nbsp;`,
-        //     value:`<div style="
-        //             color:#999;
-        //             font-size:12px;
-        //             border-left:3px solid #ddd;
-        //             padding:3px">
-        //             <span>${text.creatorName}：</span>
-        //             <p>${text.content}</p>
-        //           </div>`
-        //   });
         },
         getMessages(){
             let param = {
@@ -129,25 +119,12 @@ export default {
                 this.$Loading.finish();
                 if(res.length<this.pageParam.limit){
                     this.allLoad = true;
+                    console.log('全部加载完成');
                 }
                 res.msgs.map(m=>{
 
                     if([2,3,4].includes(m.imType)){
                         m.content = JSON.parse(m.content);
-                    }
-                    if(1===m.imType){
-                        let reg = /\[(.+?)\]/g;
-                        let emotion = [...EMOTION];
-                        m.content = m.content.replace(reg, (word) => {
-                            // 寻找表情索引
-                            let idx = emotion.findIndex(item => item === word.replace(/(\[|\])/g, ''));
-                            // 没有匹配项则返回原文字
-                            if (idx === -1) {
-                            return word
-                            }
-                             let path = idx>104 ? '/img' : 'https://res.wx.qq.com/mpres/htmledition/images/icon';
-                            return `<img class="static-emotion-gif" style="vertical-align: middle" src="${path}/emotion/${idx}.gif">`;
-                        });
                     }
 
                     if(m.replayMsg){
@@ -195,19 +172,61 @@ export default {
         initEvents(){
             var that= this;
             this.$refs.messageList.addEventListener('scroll', function() {
-                console.log('是否全部加载',that.allLoad);
-                if(arguments[0].target.scrollTop===0 && !that.allLoad){
+
+                if(arguments[0].target.scrollTop==0 && !that.allLoad){
                     that.pageParam.page++;
                     that.getMessages();
                 }
             });
+
+
+            Bus.$on('toMessage',msgId => {
+
+                var msgDiv = document.getElementById(msgId)
+
+                if(msgDiv){
+                    msgDiv.style.backgroundColor = '#f9b24757';
+                    setTimeout(() => {
+                        msgDiv.style.backgroundColor = '';
+                    }, 2000);
+                    msgDiv.scrollIntoView(true);
+                }else{
+                    getGroupMsgById(that.$route.params.groupId,msgId,that.pageParam.limit).then(res=>{
+                        res.msgs.map(m=>{
+
+                            if([2,3,4].includes(m.imType)){
+                                m.content = JSON.parse(m.content);
+                            }
+
+                            if(m.replayMsg){
+                                if([2,3,4].includes(m.replayMsg.imType)){
+                                    m.replayMsg.content = JSON.parse(m.replayMsg.content);
+                                }
+                                
+                            }
+                        });
+                        that.messages.unshift(...res.msgs);
+
+                        setTimeout(() => {
+                            var msgDiv = document.getElementById(msgId);
+                            msgDiv.scrollIntoView(true);
+                        }, 10000);
+                    });
+                }
+                            
+
+
+            })
+
+            
         },
         scrollToBottom(){
              this.$nextTick(() => {
-                 if(this.pageParam.page===1){
+                 if(this.pageParam.page<=2){
                     this.$refs.messageList.scrollTop  = this.$refs.messageList.scrollHeight;
+                   
                  }else{
-                    this.$refs.messageList.scrollTop  =  this.$refs.messageList.scrollHeight/3;
+                    this.$refs.messageList.scrollTop  =  (this.$refs.messageList.scrollHeight/this.pageParam.page)+1;
                  }
             });
         }
@@ -217,51 +236,9 @@ export default {
         this.getMessages();
         this.initEvents();
 
-        let that = this;
-
-        Bus.$on('toMessage',msgId => {
-            //groupId,msgId,limit
-            getGroupMsgById(that.$route.params.groupId,msgId,that.pageParam.limit).then(res=>{
-                 res.msgs.map(m=>{
-
-                    if([2,3,4].includes(m.imType)){
-                        m.content = JSON.parse(m.content);
-                    }
-                    if(1===m.imType){
-                        let reg = /\[(.+?)\]/g;
-                        let emotion = [...EMOTION];
-                        m.content = m.content.replace(reg, (word) => {
-                            // 寻找表情索引
-                            let idx = emotion.findIndex(item => item === word.replace(/(\[|\])/g, ''));
-                            // 没有匹配项则返回原文字
-                            if (idx === -1) {
-                            return word
-                            }
-                             let path = idx>104 ? '/img' : 'https://res.wx.qq.com/mpres/htmledition/images/icon';
-                            return `<img class="static-emotion-gif" style="vertical-align: middle" src="${path}/emotion/${idx}.gif">`;
-                        });
-                    }
-
-                    if(m.replayMsg){
-                        if([2,3,4].includes(m.replayMsg.imType)){
-                            m.replayMsg.content = JSON.parse(m.replayMsg.content);
-                        }
-                        
-                    }
-                });
-                that.messages.unshift(...res.msgs);
-
-                setTimeout(() => {
-                    var msgDiv = document.getElementById(msgId);
-                    msgDiv.scrollIntoView(true);
-                }, 10000);
-            });
-        })
-        
-       
     },
     updated(){
-        // this.scrollToBottom();
+        this.scrollToBottom();
     }
 }
 </script>

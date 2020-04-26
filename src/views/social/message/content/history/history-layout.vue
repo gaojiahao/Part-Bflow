@@ -17,7 +17,7 @@
             </Col>
             <Col span="6">
                 <router-link :to="{ name:'images' ,query:$route.query}">
-                    <Button size=small :type="$route.name=='images'?'primary':''">图片/视频</Button>
+                    <Button size=small :type="$route.name=='images'?'primary':''">图片</Button>
                 </router-link>
             </Col>
         </Row>

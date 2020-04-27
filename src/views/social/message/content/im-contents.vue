@@ -6,7 +6,7 @@
 </style>
 <template>
     <div class="message-list compactscrollbar" ref="messageList"  id='messageList'>
-        <div v-for="(m,index) in  messages" :key="index" @contextmenu.prevent="showContextmenu(m)">
+        <div v-for="(m,index) in  messages" :key="index" >
             <!-- 消息组件 -->
             <content-message @showDetailModal="showDetailModal" :msg="m"></content-message>
             <!-- 文件消息组件 -->
@@ -71,9 +71,9 @@ export default {
     props:{
     },
     methods:{
-        showContextmenu(m){
+        showContextmenu(m,e){
             this.curContextMessage = m;
-            this.$refs.contextMenu.$refs.reference = event.target;
+            this.$refs.contextMenu.$refs.reference = e.target;
             this.$refs.contextMenu.currentVisible = !this.$refs.contextMenu.currentVisible;
         },
         onDropItemClick(k){
@@ -216,7 +216,11 @@ export default {
                             
 
 
-            })
+            });
+
+             Bus.$on('showContextmenu',(param)=>{
+                this.showContextmenu(param.msg,param.e);
+             });
 
             
         },

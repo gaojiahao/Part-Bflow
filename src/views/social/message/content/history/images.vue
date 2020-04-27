@@ -9,13 +9,14 @@
             width="100"
             :src="'/H_roleplay-si/ds/downloadById?id='+img.attrId" 
             >
-            <div class="comimg-cover">
-                <Icon 
+             <Icon 
+                title="查看图片"
                 type="ios-eye-outline" 
                 @click.native="handleViewImg(img.attrId)">
                 </Icon>
+            <div class="comimg-cover" @click="goTop(img.id)">
+                <div class="comimg-cover-text">查看源消息</div>
             </div>
-            <a>查看源消息</a>
         </div>
          <Modal class="imgModal" v-model="imgModalVisible" width="50%" footer-hide>
             <img 
@@ -30,6 +31,7 @@ import {
   getAttachmentByListId
 } from "@/services/notificationsService";
 import { getMessagesByImType } from "@/services/imService";
+import Bus from "@/assets/eventBus.js";
 export default {
     name:'Images',
     data(){
@@ -53,6 +55,9 @@ export default {
         };
     },
     methods:{
+        goTop(id){
+        Bus.$emit('toMessage',id);
+        },
         //滚动加载
         handleScroll () {
             let scrollDiv = document.getElementById('imgHistory'),

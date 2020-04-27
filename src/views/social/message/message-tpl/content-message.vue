@@ -29,9 +29,9 @@
               class="text-content"
               @mouseenter="enter"
               @mouseleave="leave"
+              @contextmenu.prevent="showContextmenu(msg)"
               v-click-outside="onClickOutside"
              >
-             <!--  :style="{backgroundColor:msg.isMySelf?'rgb(191, 221, 255)':'#eee'}" -->
                
                 <div @click="goTop(msg.replayMsg.id)" v-if="msg.replayMsg" class="replayMsg" style="border-left: 3px solid #999;padding:0 8px;cursor: pointer;">
                   <div>{{msg.replayMsg.creatorName}}:</div>
@@ -55,7 +55,6 @@
                   </span>
                 </div>
 
-            
                 <span v-if="msg.imType===1" v-html="formatToEmotion(msg.content)"></span>
 
                 <span v-if="[2,3,4].includes(msg.imType)" >
@@ -75,19 +74,6 @@
                     </span>
                 </span>
               </span>
-              <!-- <span :ref="`content${msg.id}`" >
-            </span> -->
-             <!-- @contextmenu.prevent="showContextmenu(msg,$event)" -->
-            <!-- <Poptip 
-            disabled
-            :ref="msg.id"
-            width="100%"
-            placement="bottom-start" > -->
-            <!-- <div slot="content" :style="{width:'100px'}" @click="hiddenPop(msg)">
-                <p class="menu-list" @click="copyMessage(msg,$event)">复制</p>
-                <p class="menu-list" @click="replyMessage(msg,$event)">回复</p>
-            </div>
-        </Poptip> -->
     </div>
 </template>
 
@@ -114,23 +100,14 @@ export default {
     },
     methods:{
       goTop(id){
-        // var msgDiv = document.getElementById(id)
-
-        // if(msgDiv){
-
-        //   msgDiv.style.backgroundColor = '#f9b24757';
-        //   setTimeout(() => {
-        //     msgDiv.style.backgroundColor = '';
-        //   }, 2000);
-        //   msgDiv.scrollIntoView(true);
-
-        // }else{
-           Bus.$emit('toMessage',id);
-        // }
+        Bus.$emit('toMessage',id);
 
       },
-      onDropItemClick(){
-
+      showContextmenu(m){
+         Bus.$emit('showContextmenu',{
+           msg:m,
+           e:event
+         });
       },
         enter() {
           this.showTime = true;
@@ -151,17 +128,6 @@ export default {
         },
         openMessageDetail() {
           this.$emit('showDetailModal', this.msg);
-        },
-        showContextmenu(text,e) {
-
-            this.$refs.contextMenu.$refs.reference = event.target;
-            this.$refs.contextMenu.currentVisible = !this.$refs.contextMenu.currentVisible;
-            
-          // let me = this;
-          // this.$refs[text.id].visible = true;
-          // this.outClickText = text;
-          // this.$refs[`content${text.id}`].style.backgroundColor = '#39f';
-          // this.$refs[`content${text.id}`].style.color = '#fff';
         }
     },
     mounted(){

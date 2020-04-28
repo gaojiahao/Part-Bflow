@@ -1,8 +1,11 @@
 import Vue from 'vue'
 import App from './App'
 import {router} from './router'
-import iView from 'iview'
-import 'iview/dist/styles/iview.css'
+// import iView from 'iview'
+import ViewUI from 'view-design';
+
+// import 'iview/dist/styles/iview.css'
+import 'view-design/dist/styles/iview.css';
 
 import VueLazyload from 'vue-lazyload'
 import Loading from './components/loading/index.js'
@@ -27,7 +30,7 @@ Vue.prototype.formatToEmotion=formatToEmotion
 Vue.config.productionTip = false
 Vue.use(Loading)
 Vue.use(VueLazyload)
-Vue.use(iView)
+Vue.use(ViewUI)
 
 new Vue({
   el: '#app',

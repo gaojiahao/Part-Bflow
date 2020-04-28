@@ -5,11 +5,14 @@
     <div class="files" id="fileHistory">
         <div class="files-header">
             <span 
-                :class="{'files-header-sorting':p.key===sortProerty.key}" 
+                @mouseover="mouseoverSortItem(p);" 
+                @mouseout="mouseoutSortItem(p)"
+                @click="clickSortItem(p)"
+                :class="{'files-header-sorting':p.key===sortProerty.property}" 
                 v-for="(p,index) in fileProperty" :key="index">
                 {{p.name}}
-                <Icon type="ios-arrow-down" v-if="p.key===sortProerty.key && sortProerty.type==='Desc'"/>
-                <Icon type="ios-arrow-up" v-if="p.key===sortProerty.key && sortProerty.type==='Asc'" />
+                <Icon type="ios-arrow-down" v-show="(p.key===sortProerty.property && sortProerty.direction==='DESC') || (p.key!=sortProerty.property && p.show)"/>
+                <Icon type="ios-arrow-up" v-show="p.key===sortProerty.property && sortProerty.direction==='ASC'" />
             </span>
 
         </div>
@@ -23,10 +26,9 @@
                 @click="handlerSelectMsg(m)"
                 >
                 <div class="files-container-item-content">
-                    <img class="flie-img" width="38" :src="m.content|filedTypeFilter">
+                    <img class="flie-img" width="38" :src="m.content|fileTypeFilter">
                     <div class="files-container-item-content-info">
                         <div class="files-container-item-content-info-content">
-                        <!-- <a :href="'/H_roleplay-si/ds/downloadById?id='+m.id" >{{m.content}}</a> -->
                         {{m.content}}
                         <Time class="fr" :time="m.crtTime" />
                         </div>
@@ -60,21 +62,40 @@ export default {
             msgs:[],
             fileProperty:[
                 {name:'类型',key:'type'},
-                {name:'名称',key:'name'},
+                {name:'名称',key:'content'},
                 {name:'大小',key:'size'},
-                {name:'来源',key:'catraor'},
-                {name:'时间',key:'ctrTime'}
+                {name:'来源',key:'creator'},
+                {name:'时间',key:'crtTime'}
             ],
             sortProerty:{
-                key:'ctrTime',
-                type:'Desc'
+                property:'crtTime',
+                direction:'DESC'
             },
+            serchContent:'',
             selectdMsg:{}
         }
     },
      methods:{
+        mouseoverSortItem(p){
+            this.$set(p,'show',true);
+        },
+        mouseoutSortItem(p){
+            p.show = false;
+         },
+         clickSortItem(p){
+            if(p.key===this.sortProerty.property){
+                this.sortProerty.direction= this.sortProerty.direction==='DESC'?'ASC':'DESC';
+             }else{
+                this.sortProerty  = {
+                    property:p.key,
+                    direction:'DESC'
+                };
+             }
+           
+            this.getMessages();
+         },
          goTop(id){
-             Bus.$emit('toMessage',id);
+            Bus.$emit('toMessage',id);
          },
         mouseover(m){
             //一开始消息对象并没有showResourceBtn属性，所有执行$set函数
@@ -93,6 +114,8 @@ export default {
             getMessagesByImType({
                  ...this.pageParam,
                 groupId:this.$route.params.groupId,
+                content:this.serchContent,
+                sort:JSON.stringify([this.sortProerty]),
                 imType:4
             }).then(res=>{
                 this.msgs = res;
@@ -101,6 +124,12 @@ export default {
     },
     mounted(){
         this.getMessages();
+        Bus.$on('serchMessage',value=>{
+            if(this.$route.name === 'files'){
+                this.serchContent = value;
+                this.getMessages();
+            }
+        })
     }
 }
 </script>

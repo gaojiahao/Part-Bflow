@@ -43,8 +43,8 @@
               <b @click="deleteSelectMember(list,index)"><Icon type="md-close" /></b>
             </p>
             <div class="content-right-btn">
-              <Button size="small" @click="cancelModal">取消</Button>
               <Button size="small" @click="confirmModal" type="primary">确定</Button>
+              <Button size="small" @click="cancelModal">取消</Button>
             </div>
           </div>
         </div>

@@ -7,10 +7,9 @@
             <groupHeader v-if="!!groupId"></groupHeader>
         </div>
         <Row class="content-container" >
-            <Col :span="['member','all','files','images'].includes(this.$route.name)?'16':'24'" 
-                style="height:100%"
+            <Col class="content-container-messages" :span="['member','all','files','images'].includes(this.$route.name)?'16':'24'" 
                 >
-                <div class="content-container-msglist compactscrollbar" id='msgList'>
+                <div class="content-container-msglist compactscrollbar">
                     <!-- <div 
                         class="content-container-msglist-item"
                         v-bind:class="{'createbyme':n.creatorName===$currentUser.nickname}"
@@ -151,86 +150,102 @@ export default {
             let contentHtmls = sendComponent.contentWrap.childNodes;
             let msgTpl = {
                 groupId:this.groupId,
-                content:'',
+                content:[],
                 imType:1
             };
             let hasTaxt = false,
                 hasImg = false,
                 hasFile = false;
-            
-            Array.from(contentHtmls).forEach((d)=>{
-                if(d.tagName === 'IMG' && d.className.includes('paste-img')){
-                    hasImg = true;
-                    msgTpl.content = [];
-                }
-
-                if(d.tagName === 'SPAN' && d.className.includes('file-content')){
-                    hasFile = true;
-                    msgTpl.content = [];
-                }
-            });
-
-            
             Array.from(contentHtmls).forEach((d)=>{
                 if(d.tagName){
                     if(d.tagName === 'IMG' && d.className.includes('paste-img')){
+                        hasImg = true;
                         msgTpl.content.push({
                             id:d.getAttribute('attid'),
                             content:d.getAttribute('name'),
-                            size:12,
+                            size:d.getAttribute('size'),
                             imType:2
                         });
                     }
                     else if
                     (d.tagName === 'SPAN' && d.className.includes('file-content')){
+                        hasFile = true;
                         msgTpl.content.push({
                             id:d.getAttribute('attid'),
                             content:d.getAttribute('name'),
-                             size:12,
+                            size:d.getAttribute('size'),
                             imType:4
                         });
                     }else if
                     (d.tagName === 'IMG' && d.className.includes('face')){
-                        msgTpl.content = msgTpl.content+d.outerHTML;
+                         msgTpl.content.push({
+                            content:d.outerHTML,
+                            imType:1
+                        });
                         hasTaxt =true;
                     }
                     else if
                     (d.tagName === 'SPAN' && d.className.includes('atUser')){
-                        msgTpl.content = msgTpl.content+d.innerText;
+                         msgTpl.content.push({
+                            content:d.textContent,
+                            imType:1
+                        });
                         hasTaxt =true;
                     }
                 }
                 else{
                     if(d.textContent){
                         hasTaxt=true;
-                        if(hasImg || hasFile){
-                            msgTpl.content.push({
-                                content:d.textContent,
-                                imType:1
-                            });
-                        }else{
-                            msgTpl.content = msgTpl.content  + d.textContent;
-                        }
-                        
+                        msgTpl.content.push({
+                            content:d.textContent,
+                            imType:1
+                        });
                     }
                 }
-            })
+            });
 
-            if((hasTaxt && hasImg) || (hasTaxt && hasFile)){
-                msgTpl.imType = 3;
+            //文本消息
+            if(hasTaxt && !hasImg && !hasFile){
+                let t = '';
+                msgTpl.content.map(s=>{
+                    t =t+ s.content;
+                });
+                msgTpl.content = t;
             }
-
-            if(!hasTaxt && !hasFile && hasImg){
+            //图片消息
+            if(!hasTaxt && hasImg && msgTpl.content.length === 1){
+                msgTpl.content = msgTpl.content[0];
                 msgTpl.imType = 2;
             }
 
-            if(!hasTaxt && !hasImg && hasFile){
+             //文件消息
+            if(!hasTaxt && hasFile && msgTpl.content.length === 1){
+                msgTpl.content = msgTpl.content[0];
                 msgTpl.imType = 4;
             }
-            console.log('asdas',msgTpl);
+
+            //复合消息
+            if(Array.isArray(msgTpl.content)){
+                msgTpl.imType = 5;
+                let tempContent =[]
+                tempContent = msgTpl.content.map(m=>{
+                    if(m.imType==2 || m.imType==4){
+                        m = {
+                            content:{
+                                ...m
+                            },
+                            imType:m.imType
+                        };
+                    }
+                    return m;
+                });
+                msgTpl.content = tempContent;
+            }
+                
             if(msgTpl.imType !=1){
                 msgTpl.content = JSON.stringify(msgTpl.content);
             }
+           
             if(sendComponent.replayMsg){
                 msgTpl.replayId=sendComponent.replayMsg.id;
                 msgTpl.replayMsg = sendComponent.replayMsg;

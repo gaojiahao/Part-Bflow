@@ -465,7 +465,7 @@ export default {
         handleSuccess (res, file) {
              file.url ='/H_roleplay-si/ds/download?url=' +  res.data[0].attacthment;
              file.name = res.data[0].attr1;
-             file.byte = getFileSize(file.size);
+             file.byte = (file.size / 1024).toFixed(2);
              file.id = res.data[0].id;
             // 创建需追加到光标处节点的文档片段
             const range = this.range.cloneRange();
@@ -488,7 +488,7 @@ export default {
 
             file.url ='/H_roleplay-si/ds/download?url=' +  res.data[0].attacthment;
             file.name = res.data[0].attr1;
-            file.byte = getFileSize(file.size);
+            file.byte = (file.size / 1024).toFixed(2);
             file.id = res.data[0].id;
             if(/.jpg|.png|.PNG/.test(file.name)){
                 file.icon = 'image.png';
@@ -515,7 +515,7 @@ export default {
             var el = document.createElement('div'),frag;
             el.innerHTML = '<span contenteditable="false" class="file-content" name="'+ file.name+'"  attid="'+ file.id+'" size="'+ file.byte+'"  >'+
                 '<img class="flie-img" width="38" src="resources/images/file/'+ file.icon+'"  paste="1">'+
-                '<div class="file-content-info"><p><a href="'+file.url+'">'+file.name+'</a></p><p>'+getFileSize(file.size)+'</p>'+
+                '<div class="file-content-info"><p><a href="'+file.url+'">'+file.name+'</a></p><p>'+file.byte+'KB'+'</p>'+
                 '</div>'+
             '</span>';
             frag = document.createDocumentFragment()
@@ -626,9 +626,7 @@ export default {
                     tempConent = msg.content;
                     break;
                 case 2:
-                    msg.content.map(m=>{
-                        tempConent = tempConent+`<img height=50 src="/H_roleplay-si/ds/downloadById?id=${m.id}" >`
-                    });
+                    tempConent = tempConent+`<img height=50 src="/H_roleplay-si/ds/downloadById?id=${msg.content.id}" >`
                     break;
                 case 3:
                       msg.content.map(m=>{

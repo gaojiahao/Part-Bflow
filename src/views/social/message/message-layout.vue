@@ -81,7 +81,7 @@ export default {
             requestUrl(params).then(res => {
                 res.message && this.$Message.success(res.message);
                 this.$refs["addGroupMember"].showModal = false;
-                Bus.$emit('updateGroupName');
+                // Bus.$emit('updateGroupName');
             }).catch(err => {
                 this.$Message.error(err.data.message);
             })

@@ -3,7 +3,7 @@
  * @param fieldName 文件名称
  * @description 对应文件类型的图标地址
  */
-const filedTypeFilter  = (fieldName) => {
+const fileTypeFilter  = (fieldName) => {
     const baseUrl = 'resources/images/file/';
         let type = '';
          if(/.jpg|.png|.PNG/.test(fieldName)){
@@ -28,4 +28,4 @@ const filedTypeFilter  = (fieldName) => {
           return baseUrl+type;
 }
 
-export default filedTypeFilter
+export default fileTypeFilter

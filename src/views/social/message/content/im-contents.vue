@@ -3,12 +3,21 @@
       height: 100%;
       overflow-y: auto;
   }
+  .otherMessage{
+     text-align: center;
+     span{
+        background-color: #ddd;
+        padding: 2px 10px;
+        color: #515a6e;
+     }
+  }
 </style>
 <template>
     <div class="message-list compactscrollbar" ref="messageList"  id='messageList'>
         <div v-for="(m,index) in  messages" :key="index" >
             <!-- 消息组件 -->
-            <content-message @showDetailModal="showDetailModal" :msg="m"></content-message>
+            <content-message v-if="[1,2,3,4].includes(m.imType)" @showDetailModal="showDetailModal" :msg="m"></content-message>
+            <div v-if="[101,102].includes(m.imType)" class="otherMessage"><span>{{m.content}}</span></div>
             <!-- 文件消息组件 -->
             <!-- <file-message :fileMessage="m"></file-message> -->
         </div>
@@ -26,7 +35,7 @@
             placement="bottom-start">
             <DropdownMenu slot="list">
                 <DropdownItem name="replay" >回复</DropdownItem>
-                <DropdownItem name="codyMessage" >复制</DropdownItem>
+                <!-- <DropdownItem name="codyMessage" >复制</DropdownItem> -->
             </DropdownMenu>
         </Dropdown>
     </div>
@@ -35,7 +44,7 @@
 <script>
 
 import {getMessagesByGroupId,getGroupMsgById} from "@/services/imService";
-import ContentMessage from "../message-tpl/content-message";
+import ContentMessage from "../message-tpl/message-tpl-layout";
 import FileMessage from "../message-tpl/file-message";
 import MessageReadDetail from "../message-tpl/message-read-detail";
 import Bus from "@/assets/eventBus.js";
@@ -102,12 +111,17 @@ export default {
             input.remove()
         },
         replyMessage() {
+            console.log(this.curContextMessage);
             Bus.$emit('replyMsg',{
                 msg:this.curContextMessage,
                 group:{
                     ...this.$route.query
                 }
-            })
+            });
+            Bus.$emit('atUser',{
+                userId:this.curContextMessage.creator,
+                nickName:this.curContextMessage.creatorName
+            });
         },
         getMessages(){
             let param = {
@@ -117,7 +131,7 @@ export default {
             this.$Loading.start();
             getMessagesByGroupId(param).then(res=>{
                 this.$Loading.finish();
-                if(res.length<this.pageParam.limit){
+                if(res.msgs.length<this.pageParam.limit){
                     this.allLoad = true;
                     console.log('全部加载完成');
                 }
@@ -145,19 +159,21 @@ export default {
         subscribeIm(){
             let deepstream = this.$deepstream;
             //消息订阅
+            var that =this;
             deepstream.event.subscribe("roletaskIm/" + JSON.parse(localStorage.getItem('roleplay-token')).token, res => {
                 res.imType = parseInt(res.imType);
                 switch (res.imType) {
                     case 1:
-                        this.$route.params.groupId == res.groupId;
+                        if (this.$route.params.groupId == res.groupId)
                         this.messages.push(res);
                         break;
                     case 2:
                     case 3:
                     case 4:
-                        this.$route.params.groupId == res.groupId;
-                        res.content = JSON.parse(res.content);
-                        this.messages.push(res);
+                        if (this.$route.params.groupId == res.groupId){
+                            res.content = JSON.parse(res.content);
+                            this.messages.push(res);
+                        }
                         break;
                     case 103:
                         this.messages.map(m=>{
@@ -165,6 +181,14 @@ export default {
                                 m.checked++;
                            }
                         });
+                        break;
+                    case 101:
+                    case 102:
+                         if (that.$route.params.groupId == res.groupId){
+                            that.messages.push(res);
+                            Bus.$emit('addMembers');
+                         }
+                            
                         break;
                 }
             });

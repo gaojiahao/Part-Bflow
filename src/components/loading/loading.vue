@@ -6,7 +6,7 @@
 
 <script>
 
-  import { Spin } from 'iview';
+  import { Spin } from 'view-design';
 
   export default {
     name: "Loading",

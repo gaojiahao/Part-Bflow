@@ -55,7 +55,7 @@
                     <img class="paste-img" v-if="c.imType===2" :src="'/H_roleplay-si/ds/downloadById?id='+c.id" />
                     <br>
                     <span  contenteditable="false" class="file-content" v-if="c.imType===4" >
-                      <img class="flie-img" width="38" :src="c.content|filedTypeFilter">
+                      <img class="flie-img" width="38" :src="c.content|fileTypeFilter">
                       <div class="file-content-info">
                         <p>
                         <a :href="'/H_roleplay-si/ds/downloadById?id='+c.id">{{c.content}}</a>
@@ -74,6 +74,7 @@
 import {
   getMessagesByGroupId
 } from "@/services/imService";
+import Bus from "@/assets/eventBus.js";
 export default {
     name:'allMessage',
     data(){
@@ -83,7 +84,8 @@ export default {
                 page:1,
                 limit:30
             },
-            allLoad:false
+            allLoad:false,
+            serchContent:''
         }
     },
      watch: {
@@ -95,6 +97,7 @@ export default {
          getMessages(){
             getMessagesByGroupId({
                 ...this.pageParam,
+                content:this.serchContent,
                 groupId:this.$route.params.groupId
             }).then(res=>{
                 if(res.length<this.pageParam.limit){
@@ -106,17 +109,31 @@ export default {
                         m.content = JSON.parse(m.content);
                     }
                 });
-                this.msgs.unshift(...res.msgs);
+                if(this.serchContent){
+                    this.msgs= res.msgs;
+                }else{
+                    this.msgs.unshift(...res.msgs);
+                }
             });
         },
         initEvents(){
             var that= this;
             this.$refs.allMessage.addEventListener('scroll', function() {
-                if(arguments[0].target.scrollTop===0 && !that.allLoad){
-                    that.pageParam.start++;
+                if(arguments[0].target.scrollTop===0 && !that.allLoad && !that.serchContent){
+                    that.pageParam.page++;
                     that.getMessages();
                 }
             });
+
+            Bus.$on('serchMessage',value=>{
+                if(this.$route.name === 'all'){
+                    this.pageParam.page=1;
+                    this.serchContent = value;
+                    this.getMessages();
+                }
+            })
+
+
         },
         scrollToBottom(){
             this.$nextTick(() => {

@@ -49,7 +49,6 @@
           </div>
 
           <Text-Message v-if="msg.imType===1" :msg="msg"></Text-Message>
-          
           <Img-Message  v-if="msg.imType===2" :resourceId="msg.content.id"></Img-Message>
           <File-Message  v-if="msg.imType===4" :file="msg.content"></File-Message>
           <span v-if="msg.imType===3">

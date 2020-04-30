@@ -11,8 +11,11 @@
                 :class="{'files-header-sorting':p.key===sortProerty.property}" 
                 v-for="(p,index) in fileProperty" :key="index">
                 {{p.name}}
-                <Icon type="ios-arrow-down" v-show="(p.key===sortProerty.property && sortProerty.direction==='DESC') || (p.key!=sortProerty.property && p.show)"/>
-                <Icon type="ios-arrow-up" v-show="p.key===sortProerty.property && sortProerty.direction==='ASC'" />
+                <Icon type="ios-arrow-down" 
+                    v-show="(p.key===sortProerty.property && sortProerty.direction==='DESC') 
+                    || (p.key!=sortProerty.property && p.show)"/>
+                <Icon type="ios-arrow-up" 
+                    v-show="p.key===sortProerty.property && sortProerty.direction==='ASC'" />
             </span>
 
         </div>
@@ -26,14 +29,14 @@
                 @click="handlerSelectMsg(m)"
                 >
                 <div class="files-container-item-content">
-                    <img class="flie-img" width="38" :src="m.content|fileTypeFilter">
+                    <img class="flie-img" width="38" :src="m.content.content|fileTypeFilter">
                     <div class="files-container-item-content-info">
                         <div class="files-container-item-content-info-content">
-                        {{m.content}}
+                        {{m.content.content}}
                         <Time class="fr" :time="m.crtTime" />
                         </div>
                         <div class="files-container-item-content-info-other font12">
-                            {{m.size}}|{{m.creatorName}}
+                            {{m.size}}KB|{{m.creatorName}}
                             <a class="fr" @click=" goTop(m.id)" v-if="m.showResourceBtn">查看源消息</a>
                         </div>
                     </div>
@@ -118,6 +121,9 @@ export default {
                 sort:JSON.stringify([this.sortProerty]),
                 imType:4
             }).then(res=>{
+                res.map(r=>{
+                    r.content = JSON.parse(r.content);
+                });
                 this.msgs = res;
             });
         }

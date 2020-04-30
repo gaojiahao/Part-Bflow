@@ -191,7 +191,15 @@ export default {
                             imType:1
                         });
                         hasTaxt =true;
+                    }else
+                    {
+                         msgTpl.content.push({
+                            content:d.outerHTML,
+                            imType:1
+                        });
+                        hasTaxt =true;
                     }
+                    
                 }
                 else{
                     if(d.textContent){

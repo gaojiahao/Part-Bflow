@@ -18,7 +18,7 @@
                 <div class="comimg-cover-text">查看源消息</div>
             </div>
         </div>
-         <Modal class="imgModal" v-model="imgModalVisible" width="50%" footer-hide>
+         <Modal class="imgModal" v-model="imgModalVisible"  footer-hide>
             <img 
                 :src="imgName" 
                 v-if="imgModalVisible" style="width: 100%;margin-top: 20px;">
@@ -96,6 +96,13 @@ export default {
             }).then(res=>{
                 console.log(res);
                 this.images = res;
+                res.map(r=>{
+                    if(!r.attrId){
+                        var s = JSON.parse(r.content);
+                        r.attrId =s.id;
+                        r.content = s.content;
+                    }
+                });
             });
         }
     },

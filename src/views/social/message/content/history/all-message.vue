@@ -40,15 +40,21 @@
 .isMySelf{
     color: #2d8cf0;
 }
+
+.replayMsg{
+  border-left: 3px solid #999;
+  padding:0 8px;
+  cursor: pointer;
+}
 </style>
 <template>
-    <div class="all-message compactscrollbar" ref="allMessage">
-        <div class="all-message-item" v-for="(m,index) in msgs" :key="index">
-            <div class="font12" v-bind:class="{isMySelf:m.isMySelf}">{{m.creatorName}} {{m.crtTime}}</div>
+    <div class="all-message compactscrollbar font12 " ref="allMessage">
+        <div class="all-message-item" v-for="(msg,index) in msgs" :key="index">
+            <div class="font12" v-bind:class="{isMySelf:msg.isMySelf}">{{msg.creatorName}} {{msg.crtTime}}</div>
             <div class="all-mess-item-content">
                 <!-- <p v-html="m.content"></p> -->
-                <span v-if="m.imType===1" v-html="formatToEmotion(m.content)"></span>
-                
+                <!-- <span v-if="m.imType===1" v-html="formatToEmotion(m.content)"></span> -->
+<!--                 
                 <span v-if="[2,3,4].includes(m.imType)" >
                   <span v-for="(c,index) in m.content" :key="index">
                     <span v-if="c.imType===1" v-html="c.content"></span>
@@ -64,6 +70,31 @@
                       </div>
                     </span>
                     </span>
+                </span> -->
+                <div @click="goTop(msg.replayMsg.id)" v-if="msg.replayMsg" class="replayMsg">
+                    <div>{{msg.replayMsg.creatorName}}:</div>
+
+                    <Text-Message v-if="msg.replayMsg.imType===1" :msg="msg.replayMsg"></Text-Message>
+                    <Img-Message  v-if="msg.replayMsg.imType===2" :resourceId="msg.replayMsg.content.id"></Img-Message>
+                    <File-Message  v-if="msg.replayMsg.imType===4" :msg="msg.replayMsg"></File-Message>
+                    <span v-if="msg.replayMsg.imType===3">
+                    <span v-for="(r,index) in msg.replayMsg.content" :key="index">
+                        <Text-Message v-if="r.imType===1" :msg="r"></Text-Message>
+                        <Img-Message  v-if="r.imType===2" :resourceId="r.content.id"></Img-Message>
+                        <File-Message  v-if="r.imType===4" :msg="r"></File-Message>
+                    </span>
+                </span>
+                </div>
+
+                <Text-Message v-if="msg.imType===1" :msg="msg"></Text-Message>
+                <Img-Message  v-if="msg.imType===2" :resourceId="msg.content.id"></Img-Message>
+                <File-Message  v-if="msg.imType===4" :file="msg.content"></File-Message>
+                <span v-if="msg.imType===3">
+                    <span v-for="(r,index) in msg.content" :key="index">
+                    <Text-Message v-if="r.imType===1" :msg="r"></Text-Message>
+                    <Img-Message  v-if="r.imType===2" :resourceId="r.content.id"></Img-Message>
+                    <File-Message  v-if="r.imType===4" :msg="r"></File-Message>
+                    </span>
                 </span>
             </div>
         </div>
@@ -71,6 +102,9 @@
 </template>
 
 <script>
+import TextMessage from "../../message-tpl/text-message";
+import ImgMessage from "../../message-tpl/img-message";
+import FileMessage from "../../message-tpl/file-message";
 import {
   getMessagesByGroupId
 } from "@/services/imService";
@@ -88,12 +122,21 @@ export default {
             serchContent:''
         }
     },
+     components:{
+      TextMessage,
+      ImgMessage,
+      FileMessage
+    },
      watch: {
         $route(to, from) {
             this.getMessages();
         }
     },
     methods:{
+         goTop(id){
+            Bus.$emit('toMessage',id);
+
+        },
          getMessages(){
             getMessagesByGroupId({
                 ...this.pageParam,

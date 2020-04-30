@@ -26,10 +26,11 @@
                         </div>
                         <div class="font12 navs-item-appinfo-name" v-if="g.lastMsg">
                             <div class="navs-item-appinfo-name-lastcontent">
-                                <span style="color: #b90c0c;" v-if="g.lastMsg.content.includes($currentUser.nickname)">[有人@我]</span>
+                                <span style="color: #b90c0c;" v-if="g.lastMsg.content.includes(`@${$currentUser.nickname}`)">[有人@我]</span>
                                 <span>{{g.lastMsg.creatorName}}:</span>
                                 <span v-html="formatToEmotion(g.lastMsg.content)" v-if="g.lastMsg.imType==1"></span>
-                                <span  v-if="g.lastMsg.imType==2">文件</span>
+                                <span  v-if="g.lastMsg.imType==2">【图片】</span>
+                                <span  v-if="g.lastMsg.imType==4">【文件】</span>
                             </div>
                             <div class="navs-item-appinfo-name-lastTime">
                                 <Time :time="g.lastMsg.crtTime" />
@@ -220,6 +221,25 @@ export default {
         this.subscribeIm();
         Bus.$on('updateGroupName', () => {
             this.refreshNavs();
+        });
+        let that = this;
+        Bus.$on('addGroup', group => {
+            for(var i=0;i<this.imGroups.length;i++){
+                if(!this.imGroups[i].focus){
+                    this.imGroups.splice(i,0,group);
+                    break;
+                }
+            }
+             this.$router.push({ 
+                name:'group',
+                params:{
+                    groupId:group.groupId
+                },
+                query: {
+                    groupName:group.groupName,
+                    groupType:group.groupType
+                }
+            });
         })
     }
 

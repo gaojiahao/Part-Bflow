@@ -5,6 +5,7 @@
   }
   .otherMessage{
      text-align: center;
+     padding: 10px 0px;
      span{
         background-color: #ddd;
         padding: 2px 10px;
@@ -17,7 +18,10 @@
         <div v-for="(m,index) in  messages" :key="index" >
             <!-- 消息组件 -->
             <content-message v-if="[1,2,3,4].includes(m.imType)" @showDetailModal="showDetailModal" :msg="m"></content-message>
-            <div v-if="[101,102].includes(m.imType)" class="otherMessage"><span>{{m.content}}</span></div>
+            <div class="otherMessage" v-if="[101,102].includes(m.imType)">
+                <div>{{m.crtTime}}</div>
+                <div><span>{{m.content}}</span></div>
+            </div>
             <!-- 文件消息组件 -->
             <!-- <file-message :fileMessage="m"></file-message> -->
         </div>
@@ -162,6 +166,7 @@ export default {
             var that =this;
             deepstream.event.subscribe("roletaskIm/" + JSON.parse(localStorage.getItem('roleplay-token')).token, res => {
                 res.imType = parseInt(res.imType);
+                debugger
                 switch (res.imType) {
                     case 1:
                         if (this.$route.params.groupId == res.groupId)

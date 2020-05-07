@@ -229,7 +229,7 @@ export default {
             // 创建需追加到光标处节点的文档片段
             const range = this.range.cloneRange();
             var el = document.createElement('div'),frag;
-            el.innerHTML = '<img class="face" src="'+ n +'" width="20" paste="1">'
+            el.innerHTML = '<img class="face" src="'+ n +'" width="16" paste="1">'
             frag = document.createDocumentFragment()
             var node,lastNode;
             while ((node = el.firstChild)) {

@@ -166,7 +166,6 @@ export default {
             var that =this;
             deepstream.event.subscribe("roletaskIm/" + JSON.parse(localStorage.getItem('roleplay-token')).token, res => {
                 res.imType = parseInt(res.imType);
-                debugger
                 switch (res.imType) {
                     case 1:
                         if (this.$route.params.groupId == res.groupId)

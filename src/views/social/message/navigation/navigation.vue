@@ -122,6 +122,10 @@ export default {
         },
         subscribeIm:function(){
             let ds = this.$deepstream;
+            if( ds == null){
+                console.log('ds is null');
+                return;
+            }
             //消息订阅
             ds.event.subscribe("roletaskIm/" + JSON.parse(localStorage.getItem('roleplay-token')).token, res => {
                 switch (res.imType) {

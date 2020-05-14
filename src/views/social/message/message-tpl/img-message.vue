@@ -11,8 +11,6 @@
 <script>
 export default {
     name:'ImgMessage',
-    data:{
-    },
     props:{
         resourceId:{
             type:String,

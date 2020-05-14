@@ -12,9 +12,7 @@ function getDeepstream() {
 }
 
 export async function deepstream(currentUser,address) {
-    if(address){
-        address =JSON.parse(address)['deepstream.uri2'];
-    }else{
+    if(!address){
         address = await getDeepstream();
     }
     let protocol = window.top.location.protocol.indexOf('https') != -1 ? "wss" : 'ws';

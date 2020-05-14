@@ -81,18 +81,16 @@ export default {
                                     });
                                     Vue.prototype.$currentUser = user;
 
-                                    sessionStorage.setItem('roletask.com.r2.cache',JSON.stringify({
-                                        currentUser:user
-                                    }));
+                                    localStorage.setItem('userInfo',JSON.stringify(user));
 
                                     
                                     getDsUrl().then(async (r) =>{
                                         if(r.success){
                                             let dsUri = {
-                                                'deepstream.uri2':r.message
+                                                deepStreamUrl:r.message,
+                                                clientFlag:0
                                             };
-                                            
-                                            sessionStorage.setItem('r2-cached-properties',JSON.stringify(dsUri));
+                                            localStorage.setItem('r2-cached-properties',JSON.stringify(dsUri));
                                             this.$router.push({
                                                 name: 'home_index'
                                             });

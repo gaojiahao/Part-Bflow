@@ -14,10 +14,10 @@ export const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (!Vue.prototype.$currentUser && to.name !== 'login' && to.name !== 'userActivate') {
-    let cache = window.sessionStorage.getItem('roletask.com.r2.cache');
+    let userInfo = window.localStorage.getItem('userInfo');
 
-    if (cache) {
-      init(cache)
+    if (userInfo) {
+      init(userInfo)
       next()
     } else {
       next({
@@ -30,10 +30,11 @@ router.beforeEach((to, from, next) => {
   
 })
 
-async function init (cache) {
-  let dsUri = window.sessionStorage.getItem('r2-cached-properties');
-  let data = cache ? JSON.parse(cache) : {};
-  let currentUser = data['currentUser'];
+async function init (userInfo) {
+  // let dsUri = window.localStorage.getItem('r2-cached-properties');
+  let dsUri = JSON.parse(window.localStorage.getItem('r2-cached-properties')).deepStreamUrl;
+  let currentUser = userInfo ? JSON.parse(userInfo) : {};
+  // let currentUser = data['currentUser'];
   currentUser.isAdmin = false;
   currentUser.isBusinessAdmin = false;
   currentUser.isOperationAdmin = false;

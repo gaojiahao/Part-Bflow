@@ -26,7 +26,6 @@
                         </div>
             </Poptip>
                
-            <!--  :default-file-list="defaultList" -->
             <Upload
                 ref="upload"
                 :show-upload-list="false"
@@ -218,18 +217,20 @@ export default {
         },
 
         onLeftBarHover:function(){
-            // 返回插入符号当前位置的selection对象
+            this.$refs.editor.focus();
             let selection = window.getSelection();
-
-            // 获取包含当前节点的文档片段
             this.range = selection.getRangeAt(0);
-            // this.userListVisible = false;
+            let lastChild = this.$refs.editor.lastChild?this.$refs.editor.lastChild:this.$refs.editor;
+            this.range.setStartAfter(lastChild)
+            this.range.collapse(false)
+            window.getSelection().removeAllRanges()
+            window.getSelection().addRange(this.range)
         },
         choice_face: function(n) {
             // 创建需追加到光标处节点的文档片段
             const range = this.range.cloneRange();
             var el = document.createElement('div'),frag;
-            el.innerHTML = '<img class="face" src="'+ n +'" width="16" paste="1">'
+            el.innerHTML = '<img class="face" src="'+ n +'" paste="1">'
             frag = document.createDocumentFragment()
             var node,lastNode;
             while ((node = el.firstChild)) {

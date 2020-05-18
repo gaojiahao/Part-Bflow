@@ -17,9 +17,11 @@ router.beforeEach((to, from, next) => {
     let userInfo = window.localStorage.getItem('userInfo');
 
     if (userInfo) {
+      alert('获取到用户信息');
       init(userInfo)
       next()
     } else {
+      alert('没有获取到用户信息');
       next({
         name: 'login'
       })

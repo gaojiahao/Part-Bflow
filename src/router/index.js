@@ -13,15 +13,16 @@ export const router = new Router({
 
 
 router.beforeEach((to, from, next) => {
+  console.log('12321');
   if (!Vue.prototype.$currentUser && to.name !== 'login' && to.name !== 'userActivate') {
     let userInfo = window.localStorage.getItem('userInfo');
 
     if (userInfo) {
-      alert('获取到用户信息');
+      console.log('获取用户信息');
       init(userInfo)
       next()
     } else {
-      alert('没有获取到用户信息');
+      console.log('没有获取用户信息');
       next({
         name: 'login'
       })

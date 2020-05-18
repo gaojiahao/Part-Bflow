@@ -16,7 +16,7 @@ router.beforeEach((to, from, next) => {
   console.log('12321');
   if (!Vue.prototype.$currentUser && to.name !== 'login' && to.name !== 'userActivate') {
     let userInfo = window.localStorage.getItem('userInfo');
-
+    console.log('用户信息',userInfo);
     if (userInfo) {
       console.log('获取用户信息');
       init(userInfo)

@@ -16,7 +16,6 @@ router.beforeEach((to, from, next) => {
   console.log('12321');
   if (!Vue.prototype.$currentUser && to.name !== 'login' && to.name !== 'userActivate') {
     let userInfo = window.localStorage.getItem('userInfo');
-    console.log('用户信息',userInfo);
     if (userInfo) {
       console.log('获取用户信息');
       init(userInfo)
@@ -49,7 +48,8 @@ async function init (userInfo) {
     // 运营管理员
     if (role.id === -1) currentUser.isOperationAdmin = true;
   })
-
+  
   Vue.prototype.$currentUser = currentUser
+  console.log('用户信息', Vue.prototype.$currentUser);
   Vue.prototype.$deepstream = await deepstream(currentUser, dsUri)
 }

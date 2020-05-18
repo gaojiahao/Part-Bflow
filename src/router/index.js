@@ -33,9 +33,11 @@ router.beforeEach((to, from, next) => {
 })
 
 async function init (userInfo) {
+  console.log('用户信息', userInfo);
   // let dsUri = window.localStorage.getItem('r2-cached-properties');
   let dsUri = JSON.parse(window.localStorage.getItem('r2-cached-properties')).deepStreamUrl;
   let currentUser = userInfo ? JSON.parse(userInfo) : {};
+  console.log('当前用户', currentUser);
   // let currentUser = data['currentUser'];
   currentUser.isAdmin = false;
   currentUser.isBusinessAdmin = false;

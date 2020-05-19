@@ -111,6 +111,7 @@
             @on-click="onDropItemClick"
             ref="contextMenu"  
             trigger="click"
+            transfer
             placement="bottom-start">
             <DropdownMenu slot="list">
                 <DropdownItem name="senMessage" >发送消息</DropdownItem>

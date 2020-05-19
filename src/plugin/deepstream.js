@@ -29,6 +29,12 @@ export async function deepstream(currentUser,address) {
                 this.close();
             }   
         });
+
+        // deeps.on('connectionStateChanged', connectionState => {
+        //     debugger
+        // // will be called with 'CLOSED' once the connection is successfully closed.
+        // })
+
         //注册deepStream
         deeps.login(
             {

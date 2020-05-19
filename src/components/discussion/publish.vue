@@ -448,7 +448,7 @@ export default {
 
         handleSend: function() {
             let content =  this.$refs.editor.innerHTML;
-            if(!this.$refs.editor.innerText.trim()){
+            if(!this.$refs.editor.innerText.trim() && !this.$refs.editor.lastChild){
                 this.blankTipVisible = true;
                 setTimeout(() => {
                     this.blankTipVisible = false;

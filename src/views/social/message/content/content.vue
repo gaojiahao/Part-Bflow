@@ -344,6 +344,7 @@ export default {
         msgInputClick:function(){
             // to:签收消息
             checkMessage(this.groupId).then(res=>{
+                Bus.$emit("checkMessage",this.groupId)
             });
         },
         onViewHistory(){
@@ -364,11 +365,7 @@ export default {
         $route(to, from) {
             this.params.page=1;
             this.isRolling = false;
-            // this.listId = this.$route.params.listId;
             this.handleScroll();
-            // this.refreshAppInfo();
-            // this.refreshNotifics();
-            // localStorage.setItem('activeNavigatioIdOfNotice',this.listId);
             this.groupId = this.$route.params.groupId;
             
             if(this.$route.query.groupType == 'G' && to.name === 'group'){
@@ -378,16 +375,9 @@ export default {
         }
     },
     mounted(){
-        this.listId = this.$route.params.listId;
         this.groupId = this.$route.params.groupId;
 
-        if(this.listId){
-            this.refreshAppInfo();
-            this.refreshNotifics();
-            Bus.$on('refreshNotice',()=>{
-                this.refreshNotifics();
-            })
-        }
+        
         if(this.$route.query.groupType == 'G' && this.$route.name == 'group'){
             this.$router.push({ name: 'member',query: this.$route.query});
         }else{

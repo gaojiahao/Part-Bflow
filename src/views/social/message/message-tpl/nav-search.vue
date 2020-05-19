@@ -77,7 +77,7 @@
                         padding-left: 5px;
                         line-height: 24px;">
                         <p>{{ option.name }}</p>
-                        <p class="message-search-complete-count" v-if="option.type==='通讯录'">运营中心</p>
+                        <p class="message-search-complete-count" v-if="option.type==='通讯录'">通讯录</p>
                         <p class="message-search-complete-count" v-if="option.type==='群聊'">包括：{{option.users}}</p>
                       </div>
                     </div>

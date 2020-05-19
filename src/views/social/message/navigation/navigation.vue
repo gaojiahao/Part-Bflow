@@ -144,6 +144,8 @@ export default {
                             }
                         });
                         break;
+                    case 100:
+                        this.imGroups.unshift(res);
                     case 103:
                         this.imGroups.map(g=>{
                             if(g.groupId === res.groupId){
@@ -243,6 +245,14 @@ export default {
                 query: {
                     groupName:group.groupName,
                     groupType:group.groupType
+                }
+            });
+        });
+
+        Bus.$on("checkMessage",groupId=>{
+            this.imGroups.map(g=>{
+                if(g.groupId === groupId){
+                    g.msgCount = 0;
                 }
             });
         })

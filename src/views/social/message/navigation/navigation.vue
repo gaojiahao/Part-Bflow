@@ -28,9 +28,9 @@
                             <div class="navs-item-appinfo-name-lastcontent">
                                 <span style="color: #b90c0c;" v-if="g.lastMsg.content.includes(`@${$currentUser.nickname}`)">[有人@我]</span>
                                 <span>{{g.lastMsg.creatorName}}:</span>
-                                <span v-html="formatToEmotion(g.lastMsg.content)" v-if="g.lastMsg.imType==1"></span>
-                                <span  v-if="g.lastMsg.imType==2">【图片】</span>
-                                <span  v-if="g.lastMsg.imType==4">【文件】</span>
+                                <span v-html="formatToEmotion(g.lastMsg.content.trim())" v-if="g.lastMsg.imType==1"></span>
+                                <span  v-if="g.lastMsg.imType=='2'">【图片】</span>
+                                <span  v-if="g.lastMsg.imType=='4'">【文件】</span>
                             </div>
                             <div class="navs-item-appinfo-name-lastTime">
                                 <Time :time="g.lastMsg.crtTime" />
@@ -128,6 +128,7 @@ export default {
             }
             //消息订阅
             ds.event.subscribe("roletaskIm/" + JSON.parse(localStorage.getItem('roleplay-token')).token, res => {
+                res.imType = parseInt(res.imType);
                 switch (res.imType) {
                     case 1:
                     case 2:

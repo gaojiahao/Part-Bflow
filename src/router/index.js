@@ -13,11 +13,9 @@ export const router = new Router({
 
 
 router.beforeEach((to, from, next) => {
-  console.log('12321');
   if (!Vue.prototype.$currentUser && to.name !== 'login' && to.name !== 'userActivate') {
     let userInfo = window.localStorage.getItem('userInfo');
     if (userInfo) {
-      console.log('获取用户信息');
       init(userInfo)
       next()
     } else {
@@ -33,12 +31,8 @@ router.beforeEach((to, from, next) => {
 })
 
 async function init (userInfo) {
-  console.log('用户信息', userInfo);
-  // let dsUri = window.localStorage.getItem('r2-cached-properties');
   let dsUri = JSON.parse(window.localStorage.getItem('r2-cached-properties')).deepStreamUrl;
   let currentUser = userInfo ? JSON.parse(userInfo) : {};
-  console.log('当前用户', currentUser);
-  // let currentUser = data['currentUser'];
   currentUser.isAdmin = false;
   currentUser.isBusinessAdmin = false;
   currentUser.isOperationAdmin = false;
@@ -52,6 +46,5 @@ async function init (userInfo) {
   })
   
   Vue.prototype.$currentUser = currentUser
-  console.log('用户信息', Vue.prototype.$currentUser);
   Vue.prototype.$deepstream = await deepstream(currentUser, dsUri)
 }

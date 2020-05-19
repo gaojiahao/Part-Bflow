@@ -217,6 +217,11 @@ export default {
         },
 
         onLeftBarHover:function(){
+            if(!this.$refs.editor.lastChild){
+                this.$refs.editor.innerHTML= '&nbsp;';
+               
+            }
+
             this.$refs.editor.focus();
             let selection = window.getSelection();
             this.range = selection.getRangeAt(0);
@@ -225,6 +230,12 @@ export default {
             this.range.collapse(false)
             window.getSelection().removeAllRanges()
             window.getSelection().addRange(this.range)
+
+            // let selection = window.getSelection();
+            // // 获取包含当前节点的文档片段
+            // this.range = selection.getRangeAt(0);
+            
+           
         },
         choice_face: function(n) {
             // 创建需追加到光标处节点的文档片段
@@ -437,7 +448,7 @@ export default {
 
         handleSend: function() {
             let content =  this.$refs.editor.innerHTML;
-            if(!content || content==="<div><br></div>"){
+            if(!this.$refs.editor.innerText.trim()){
                 this.blankTipVisible = true;
                 setTimeout(() => {
                     this.blankTipVisible = false;

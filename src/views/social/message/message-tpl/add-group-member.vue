@@ -185,6 +185,9 @@ export default {
             treeItem.children = [];
             treeItem.render = this.renderFileContent;
           }else{
+            if(item.type === 'G'){
+              treeItem.disabled = true;
+            }
             this.selectMembers.forEach(sel => {
               if(sel.id == treeItem.id){
                 treeItem.checked = true;

@@ -105,7 +105,7 @@
             <span>{{ detailMessage.creatorName }}</span>
             <span class="text-crtTime">{{ detailMessage.crtTime }}</span>
             <p class="content-text compactscrollbar" > 
-               <span v-if="detailMessage.imType===1" v-html="detailMessage.content"></span>
+                <span v-if="detailMessage.imType===1" v-html="detailMessage.content"></span>
 
                 <span v-if="[2,3,4].includes(detailMessage.imType)" >
                   
@@ -113,8 +113,7 @@
 
                     <span v-if="c.imType==1" v-html="c.content"></span>
 
-                    <img class="paste-img" v-if="c.imType==2" :src="'/H_roleplay-si/ds/downloadById?id='+c.id" />
-                    <br>
+                    <img class="paste-img" v-if="c.imType==2" :src="'/H_roleplay-si/ds/downloadById?id='+c.content.id" />
                     <span  contenteditable="false" class="file-content" v-if="c.imType===4" >
                       <img class="flie-img" width="38" src="resources/images/file/word.png">
                       <div class="file-content-info">

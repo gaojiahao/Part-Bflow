@@ -146,6 +146,7 @@ export default {
                         break;
                     case 100:
                         this.imGroups.unshift(res);
+                        break;
                     case 103:
                         this.imGroups.map(g=>{
                             if(g.groupId === res.groupId){

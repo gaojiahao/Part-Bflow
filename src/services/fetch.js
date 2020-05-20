@@ -26,7 +26,11 @@ axios.interceptors.response.use(response => {
         err.message = err.response
         break;
       case 401:
-        router.push('/login');
+        if(location.hostname.includes('roletask.com')){
+          location.href = `${location.origin}?/Login/index.html?src=${location.href}`
+        }else{
+          router.push('/login');
+        }
         err.message = '未授权，请重新登录';
         break;
       case 403:

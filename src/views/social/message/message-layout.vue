@@ -88,11 +88,11 @@ export default {
         }
     },
     mounted(){
-        let activeNavigatioIdOfNotice = localStorage.getItem('activeNavigatioIdOfNotice');
+        // let activeNavigatioIdOfNotice = localStorage.getItem('activeNavigatioIdOfNotice');
 
-        if(activeNavigatioIdOfNotice){
-            this.$router.push('/social/message/list/' + activeNavigatioIdOfNotice);
-        }
+        // if(activeNavigatioIdOfNotice){
+        //     this.$router.push('/social/message/list/' + activeNavigatioIdOfNotice);
+        // }
     }
 }
 </script>

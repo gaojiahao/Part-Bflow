@@ -27,6 +27,7 @@ axios.interceptors.response.use(response => {
         break;
       case 401:
         if(location.hostname.includes('roletask.com')){
+          alert('线上环境');
           location.href = `${location.origin}?/Login/index.html?src=${location.href}`
         }else{
           router.push('/login');

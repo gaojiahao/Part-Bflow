@@ -3,6 +3,7 @@
 </style>
 <template>
     <ul class="navs compactscrollbar">
+        <div  v-if="networkError" class="network-error">当前网络不可用</div>
          <router-link 
             :to="{
                 name:'group',
@@ -68,6 +69,7 @@ export default {
                 limit:1000,
                 filter:''
             },
+            networkError:false,
             navs:[],
             imGroups:[],
             curContextGroup:{}
@@ -228,7 +230,7 @@ export default {
             this.curContextGroup = g;
             this.$refs.contextMenu.$refs.reference = event.target;
             this.$refs.contextMenu.currentVisible = !this.$refs.contextMenu.currentVisible;
-        }
+        },
     },
     mounted(){
         this.refreshNavs();
@@ -263,6 +265,27 @@ export default {
                     g.msgCount = 0;
                 }
             });
+        })
+
+        var EventUtil = {
+            addHandler: function(element, type, handler) {
+                if (element.addEventListener) {
+                    element.addEventListener(type, handler, false);
+                } else if (element.attachEvent) {
+                    element.attachEvent("on" + type, handler);
+                } else {
+                    element["on" + type] = handler;
+                }
+            }
+        };
+
+        EventUtil.addHandler(window, "online", function() {
+            console.log("Online");
+            that.networkError = false;
+        });
+        EventUtil.addHandler(window, "offline", function() {
+            console.log("Offline");
+            that.networkError = true;
         })
     }
 

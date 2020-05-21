@@ -145,7 +145,14 @@ export default {
                         });
                         break;
                     case 100:
-                        this.imGroups.unshift(res);
+                        if(!res.isMySelf){
+                            for(var i=0;i<this.imGroups.length;i++){
+                                if(!this.imGroups[i].focus){
+                                    this.imGroups.splice(i,0,res);
+                                    break;
+                                }
+                            }
+                        }
                         break;
                     case 103:
                         this.imGroups.map(g=>{

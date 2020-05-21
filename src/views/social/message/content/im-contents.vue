@@ -179,12 +179,13 @@ export default {
                             this.messages.push(res);
                         }
                         break;
-                    case 103:
-                        this.messages.map(m=>{
-                           if(res.messages.includes(m.id)){
-                                m.checked++;
-                           }
-                        });
+                    case 100:
+                        if(res.isMySelf && that.$route.params.groupId == res.groupId){
+                           that.messages.push({
+                               ...res.lastMsg,
+                               isMySelf:res.isMySelf
+                           });
+                        }
                         break;
                     case 101:
                     case 102:
@@ -193,6 +194,13 @@ export default {
                             Bus.$emit('addMembers');
                          }
                             
+                        break;
+                    case 103:
+                        this.messages.map(m=>{
+                           if(res.messages.includes(m.id)){
+                                m.checked++;
+                           }
+                        });
                         break;
                 }
             });

@@ -10,7 +10,7 @@
                 params:{groupId: g.groupId},
                 query:{groupName:g.groupName,groupType:g.groupType}
                 }" 
-            v-for="(g,index) in  imGroups" 
+            v-for="(g,index) in  sortedGroup" 
             :key="index">
                 <li 
                     class="navs-item" 
@@ -34,7 +34,7 @@
                                 <span  v-if="g.lastMsg.imType=='4'">【文件】</span>
                             </div>
                             <div class="navs-item-appinfo-name-lastTime">
-                                <Time :time="g.lastMsg.crtTime" />
+                                <span>{{g.modTime | timeChange}}</span>
                             </div>
                         </div>
                     </div>
@@ -75,7 +75,59 @@ export default {
             curContextGroup:{}
         }
     },
+    computed:{
+        sortedGroup:function(){
+            var a =  this.sortKey(this.imGroups,'modTime');
+            return a;
+        }
+    },
+    filters:{
+       timeChange:function(time){
+           var formatDateTime = function (timeValue) {
+                var date = new Date(timeValue);
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                m = m < 10 ? ('0' + m) : m;
+                var d = date.getDate();
+                d = d < 10 ? ('0' + d) : d;
+                var h = date.getHours();
+                h = h < 10 ? ('0' + h) : h;
+                var minute = date.getMinutes();
+                var second = date.getSeconds();
+                minute = minute < 10 ? ('0' + minute) : minute;
+                second = second < 10 ? ('0' + second) : second;
+                return  m + '/' + d;
+            };
+           var diffTime = (new Date().getTime() - new Date(time))/1000,
+               str = '';
+           
+           if(diffTime < 60){
+               str = '刚刚'
+           } else if(diffTime < 60*60){
+               str = Math.floor(diffTime/60) + '分钟前';
+           }else if (diffTime < 60 * 60 * 24)
+            {
+                str = Math.floor(diffTime/(60*60))+'小时前 ';
+            }
+            else if (diffTime < 60 * 60 * 24 * 2)
+            {
+                str = Math.floor(diffTime/(60*60*24)) == 1 ? '昨天 ' : '前天 ';
+            }
+            else
+            {
+                str = formatDateTime(time);
+            }
+            return str;
+       }
+    },
     methods:{
+        sortKey(array,key){
+            return array.sort(function(a,b){
+                var x = a[key];
+                var y = b[key];
+                return ((x<y)?1:(x>y)?-1:0)
+            })
+        },
         hiddenPop(g) {
           this.$refs[g.groupId][0].visible = false;
         },
@@ -99,10 +151,6 @@ export default {
             
         },
         refreshNavs:function (params) {
-            //   getNavListByMessage(this.params).then(res=>{
-            //     this.navs = res.tableContent;
-            // });
-
             getMyImGroups().then(res=>{
                 this.imGroups = res;
             });
@@ -140,7 +188,7 @@ export default {
                             if(g.groupId === res.groupId){
 
                                 (!res.isMySelf)&& g.msgCount++;
-
+                                g.modTime = res.crtTime;//修改时间
                                 g.lastMsg = res;
                                 return false;
                             }

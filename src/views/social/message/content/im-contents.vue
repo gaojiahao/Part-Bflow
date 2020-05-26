@@ -166,6 +166,7 @@ export default {
             var that =this;
             deepstream.event.subscribe("roletaskIm/" + JSON.parse(localStorage.getItem('roleplay-token')).token, res => {
                 res.imType = parseInt(res.imType);
+                
                 switch (res.imType) {
                     case 1:
                         if (this.$route.params.groupId == res.groupId)
@@ -193,15 +194,17 @@ export default {
                             that.messages.push(res);
                             Bus.$emit('addMembers');
                          }
-                            
                         break;
                     case 103:
-                        this.messages.map(m=>{
-                           if(res.messages.includes(m.id)){
-                                m.checked++;
-                           }
-                        });
+                        if(that.$route.params.groupId == res.groupId){
+                            this.messages.map(m=>{
+                                if(res.messages.includes(m.id)){
+                                        m.checked++;
+                                }
+                            });
+                        }
                         break;
+                       
                 }
             });
         },

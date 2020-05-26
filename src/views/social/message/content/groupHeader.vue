@@ -125,8 +125,6 @@ export default {
             }else{
                 requestUrl = createGroup;
                 userNames.push(this.$currentUser.nickname);
-                userIds.push(this.$currentUser.userId);
-                params.users = userIds.join(',');
                 params.name = userNames.join(',');
             }
 

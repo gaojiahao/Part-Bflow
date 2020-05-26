@@ -185,7 +185,7 @@ export default {
             treeItem.children = [];
             treeItem.render = this.renderFileContent;
           }else{
-            if(item.type === 'G'){
+            if(item.type === 'G' || this.$currentUser.userId == item.id){
               treeItem.disabled = true;
             }
             this.selectMembers.forEach(sel => {

@@ -122,10 +122,13 @@ export default {
     },
     methods:{
         sortKey(array,key){
-            return array.sort(function(a,b){
+            array =  array.sort(function(a,b){
                 var x = a[key];
                 var y = b[key];
                 return ((x<y)?1:(x>y)?-1:0)
+            });
+            return array.sort(function(a,b){
+                return a.focus?-1:0;
             })
         },
         hiddenPop(g) {
@@ -202,6 +205,12 @@ export default {
                                     break;
                                 }
                             }
+                        }else{
+                            this.imGroups.map(g=>{
+                                if(g.groupId === res.groupId){
+                                    g.lastMsg = res.lastMsg;
+                                }
+                            });
                         }
                         break;
                     case 103:

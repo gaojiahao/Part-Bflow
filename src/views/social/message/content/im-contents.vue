@@ -199,7 +199,12 @@ export default {
                         if(that.$route.params.groupId == res.groupId){
                             this.messages.map(m=>{
                                 if(res.messages.includes(m.id)){
+                                    if(this.$route.query.groupType==='G'){
                                         m.checked++;
+                                    }else{
+                                        m.allLoad = true;
+                                    }
+                                        
                                 }
                             });
                         }

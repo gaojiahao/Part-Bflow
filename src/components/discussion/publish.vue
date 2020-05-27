@@ -626,10 +626,7 @@ export default {
             let atUserHtml = `<span contenteditable="false" class="atUser" style="color: #646b6b;font-style: italic;font-size:12px;cursor: pointer;">@${user.nickName}&nbsp;</span>`;
             this.$refs.editor.innerHTML=this.$refs.editor.innerHTML+atUserHtml;
         });
-        // this.getAllUsers();
-
          Bus.$on('replyMsg',replyInfo => {
-            console.log(replyInfo);
             let {msg,group} = replyInfo;
             let tempConent='';
 
@@ -642,7 +639,7 @@ export default {
                     break;
                 case 3:
                       msg.content.map(m=>{
-                        if(m.imType===2) tempConent = tempConent+`<img height=50 src="/H_roleplay-si/ds/downloadById?id=${m.id}" >`;
+                        if(m.imType===2) tempConent = tempConent+`<img height=50 src="/H_roleplay-si/ds/downloadById?id=${m.content.id}" >`;
 
                         if(m.imType ===1) tempConent=tempConent+m.content;
 
@@ -659,7 +656,7 @@ export default {
                     break;
                  case 4:
                       msg.content.map(m=>{
-                        if(m.imType===2) tempConent = tempConent+`<img height=50 src="/H_roleplay-si/ds/downloadById?id=${m.id}" >`;
+                        if(m.imType===2) tempConent = tempConent+`<img height=50 src="/H_roleplay-si/ds/downloadById?id=${m.content.id}" >`;
 
                         if(m.imType ===1) tempConent=tempConent+m.content;
 
@@ -676,7 +673,6 @@ export default {
                     break;
             }
 
-            console.log('///',tempConent);
             let innerHTML = `<div  class="publish-container-reply-content" >
                 <div class="publish-container-reply-content-creator">${msg.creatorName}:</div>
                 <div class="publish-container-reply-content-message">${tempConent}</div>

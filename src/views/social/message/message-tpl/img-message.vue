@@ -1,7 +1,7 @@
 <template>
     <div>
         <img class="paste-img" 
-            @dblclick.native="handleViewImg" 
+            @dblclick="handleViewImg" 
             :src="'/H_roleplay-si/ds/downloadById?id='+resourceId" 
           />
     </div>
@@ -21,8 +21,7 @@ export default {
     },
     methods:{
         handleViewImg:function () {
-            this.imgName = '/H_roleplay-si/ds/downloadById?id='+this.resourceId;
-            this.imgModalVisible = true;
+            this.getApp().showImgModal(`/H_roleplay-si/ds/downloadById?id=${this.resourceId}`);
         }
     }
 }

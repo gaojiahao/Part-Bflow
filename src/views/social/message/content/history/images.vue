@@ -18,11 +18,6 @@
                 <div class="comimg-cover-text">查看源消息</div>
             </div>
         </div>
-         <Modal class="imgModal" v-model="imgModalVisible"  footer-hide>
-            <img 
-                :src="imgName" 
-                v-if="imgModalVisible" style="width: 100%;margin-top: 20px;">
-        </Modal>
     </div>
 </template>
 
@@ -42,7 +37,6 @@ export default {
             },
             images:[],
             imgName:'',
-            imgModalVisible:false,
             isRolling: false,
             listId:'',
             imgParams: { 
@@ -85,8 +79,7 @@ export default {
         },
       
         handleViewImg:function (img) {
-            this.imgName = '/H_roleplay-si/ds/downloadById?id='+img;
-            this.imgModalVisible = true;
+            this.getApp().showImgModal(`/H_roleplay-si/ds/downloadById?id=${img}`);
         },
          init(){
             getMessagesByImType({

@@ -50,27 +50,8 @@
 <template>
     <div class="all-message compactscrollbar font12 " ref="allMessage">
         <div class="all-message-item" v-for="(msg,index) in msgs" :key="index">
-            <div class="font12" v-bind:class="{isMySelf:msg.isMySelf}">{{msg.creatorName}} {{msg.crtTime}}</div>
-            <div class="all-mess-item-content">
-                <!-- <p v-html="m.content"></p> -->
-                <!-- <span v-if="m.imType===1" v-html="formatToEmotion(m.content)"></span> -->
-<!--                 
-                <span v-if="[2,3,4].includes(m.imType)" >
-                  <span v-for="(c,index) in m.content" :key="index">
-                    <span v-if="c.imType===1" v-html="c.content"></span>
-                    <img class="paste-img" v-if="c.imType===2" :src="'/H_roleplay-si/ds/downloadById?id='+c.id" />
-                    <br>
-                    <span  contenteditable="false" class="file-content" v-if="c.imType===4" >
-                      <img class="flie-img" width="38" :src="c.content|fileTypeFilter">
-                      <div class="file-content-info">
-                        <p>
-                        <a :href="'/H_roleplay-si/ds/downloadById?id='+c.id">{{c.content}}</a>
-                        </p>{{c.size}}<p>
-                        </p>
-                      </div>
-                    </span>
-                    </span>
-                </span> -->
+            <div class="font12" v-if="[1,2,3,4].includes(msg.imType)" v-bind:class="{isMySelf:msg.isMySelf}">{{msg.creatorName}} {{msg.crtTime}}</div>
+            <div class="all-mess-item-content" v-if="[1,2,3,4].includes(msg.imType)">
                 <div @click="goTop(msg.replayMsg.id)" v-if="msg.replayMsg" class="replayMsg">
                     <div>{{msg.replayMsg.creatorName}}:</div>
 
@@ -85,7 +66,6 @@
                     </span>
                 </span>
                 </div>
-
                 <Text-Message v-if="msg.imType===1" :msg="msg"></Text-Message>
                 <Img-Message  v-if="msg.imType===2" :resourceId="msg.content.id"></Img-Message>
                 <File-Message  v-if="msg.imType===4" :file="msg.content"></File-Message>

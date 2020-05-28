@@ -18,7 +18,7 @@
         <div v-for="(m,index) in  messages" :key="index" >
             <!-- 消息组件 -->
             <content-message v-if="[1,2,3,4].includes(m.imType)" @showDetailModal="showDetailModal" :msg="m"></content-message>
-            <div class="otherMessage" v-if="[101,102].includes(m.imType)">
+            <div class="otherMessage" v-if="[101,102,104].includes(m.imType)">
                 <div>{{m.crtTime}}</div>
                 <div><span>{{m.content}}</span></div>
             </div>
@@ -173,10 +173,15 @@ export default {
                         this.messages.push(res);
                         break;
                     case 2:
+                        if(typeof(res.content) === 'string'){
+                            res.content = JSON.parse(res.content);
+                        }
+                        if (this.$route.params.groupId == res.groupId)
+                            this.messages.push(res);
+                        break;
                     case 3:
                     case 4:
                         if (this.$route.params.groupId == res.groupId){
-                            res.content = JSON.parse(res.content);
                             this.messages.push(res);
                         }
                         break;
@@ -209,7 +214,12 @@ export default {
                             });
                         }
                         break;
-                       
+                    case 104:
+                        if(that.$route.params.groupId == res.groupId){
+                            that.messages.push(res);
+                            this.$route.query.groupName = res.content.split('【').pop().split('】')[0];
+                        }
+                        break;
                 }
             });
         },

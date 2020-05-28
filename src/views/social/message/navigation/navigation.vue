@@ -27,11 +27,11 @@
                         </div>
                         <div class="font12 navs-item-appinfo-name" v-if="g.lastMsg">
                             <div class="navs-item-appinfo-name-lastcontent">
-                                <span style="color: #b90c0c;" v-if="g.lastMsg.content.includes(`@${$currentUser.nickname}`)">[有人@我]</span>
+                                <span style="color: #b90c0c;" v-if="1 ===g.lastMsg.imType && g.lastMsg.content.includes(`@${$currentUser.nickname}`)">[有人@我]</span>
                                 <span>{{g.lastMsg.creatorName}}:</span>
-                                <span v-html="formatToEmotion(g.lastMsg.content.trim())" v-if="g.lastMsg.imType==1"></span>
-                                <span  v-if="g.lastMsg.imType=='2'">【图片】</span>
-                                <span  v-if="g.lastMsg.imType=='4'">【文件】</span>
+                                <span v-html="formatToEmotion(g.lastMsg.content.trim())" v-if="[1,101,102,104].includes(g.lastMsg.imType)" ></span>
+                                <span  v-if="g.lastMsg.imType==2">【图片】</span>
+                                <span  v-if="[3,4].includes(g.lastMsg.imType)">【文件】</span>
                             </div>
                             <div class="navs-item-appinfo-name-lastTime">
                                 <span>{{g.modTime | timeChange}}</span>
@@ -192,6 +192,10 @@ export default {
 
                                 (!res.isMySelf)&& g.msgCount++;
                                 g.modTime = res.crtTime;//修改时间
+                                
+                                if(res.imType==2){
+                                    res.content = JSON.parse(res.content);
+                                }
                                 g.lastMsg = res;
                                 return false;
                             }
@@ -221,6 +225,14 @@ export default {
                             }
                         });
                         break;
+                    case 104:
+                        this.imGroups.map(g=>{
+                            if(g.groupId === res.groupId){
+                                g.groupName = res.content.split('【').pop().split('】')[0];
+                                return false;
+                            }
+                        });
+                    break;
                 }
             });
         },

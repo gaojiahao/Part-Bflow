@@ -202,7 +202,7 @@ export default {
                     
                 }
                 else{
-                    if(d.textContent){
+                    if(d.textContent.trim()){
                         hasTaxt=true;
                         msgTpl.content.push({
                             content:d.textContent,
@@ -251,6 +251,7 @@ export default {
             }
                 
             if(msgTpl.imType !=1){
+                if(msgTpl.content.length ===0) return;
                 msgTpl.content = JSON.stringify(msgTpl.content);
             }
            

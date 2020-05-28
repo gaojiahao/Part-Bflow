@@ -95,9 +95,9 @@
     </Row>
     <Row class="publish-bar">
         <Col class="publish-bar-right" span="24">
-            <Tooltip content="不能发送空白消息!" placement="top-end" v-model="blankTipVisible">
-                <Button  @click.native="handleSend" >发送</Button>
-            </Tooltip>
+        <Tooltip placement="top" content="不能发送空白消息">
+            <Button  @click.native="handleSend" >发送</Button>
+        </Tooltip>
         </Col>
     </Row>
 </div>
@@ -373,9 +373,7 @@ export default {
             }
 
             if(!e.shiftKey && e.key ==='Enter' && !this.userListVisible){
-                // var t = that.$refs.editor.innerHTML;
-                //     that.$refs.editor.innerHTML = t.substring(0,t.length-15);
-                    this.handleSend();
+                this.handleSend();
             }
             
             // 按下回车键
@@ -413,7 +411,6 @@ export default {
         },
         //隐藏用户列表
         showUserPanel(el,targetText=""){
-            console.log('过滤',targetText);
            const func = () => {
                 // top && left
                 var sel = window.getSelection();
@@ -448,13 +445,15 @@ export default {
 
         handleSend: function() {
             let content =  this.$refs.editor.innerHTML;
-            if(!this.$refs.editor.innerText.trim() && !this.$refs.editor.lastChild){
+            if(!this.$refs.editor.innerText.trim() || !this.$refs.editor.lastChild){
                 this.blankTipVisible = true;
                 setTimeout(() => {
                     this.blankTipVisible = false;
                 }, 3000);
                 return;
             }
+
+            console.log('asdas',this.$refs.editor.innerText);
 
             let obj = {};
             //数组去重
@@ -561,7 +560,7 @@ export default {
                     let tepFile = {};
                     tepFile.url ='/H_roleplay-si/ds/download?url=' +  res[0].attacthment;
                     tepFile.name = res[0].attr1;
-                    tepFile.byte = getFileSize(10000);
+                    tepFile.byte =(600 / 1024).toFixed(2);
                     tepFile.attId = res[0].id;
                     insertHtmlAtCaret(`<img  paste=1 class="paste-img" src="${tepFile.url}" name="${tepFile.name}" attId="${tepFile.attId}"  size="${tepFile.byte}">`);
                 }
@@ -635,11 +634,11 @@ export default {
                     tempConent = msg.content;
                     break;
                 case 2:
-                    tempConent = tempConent+`<img height=50 src="/H_roleplay-si/ds/downloadById?id=${msg.content.id}" >`
+                    tempConent = tempConent+`<img height=50 width=100 src="/H_roleplay-si/ds/downloadById?id=${msg.content.id}" >`
                     break;
                 case 3:
                       msg.content.map(m=>{
-                        if(m.imType===2) tempConent = tempConent+`<img height=50 src="/H_roleplay-si/ds/downloadById?id=${m.content.id}" >`;
+                        if(m.imType===2) tempConent = tempConent+`<img height=50 width=100 src="/H_roleplay-si/ds/downloadById?id=${m.content.id}" >`;
 
                         if(m.imType ===1) tempConent=tempConent+m.content;
 
@@ -656,7 +655,7 @@ export default {
                     break;
                  case 4:
                       msg.content.map(m=>{
-                        if(m.imType===2) tempConent = tempConent+`<img height=50 src="/H_roleplay-si/ds/downloadById?id=${m.content.id}" >`;
+                        if(m.imType===2) tempConent = tempConent+`<img height=50 width=100 src="/H_roleplay-si/ds/downloadById?id=${m.content.id}" >`;
 
                         if(m.imType ===1) tempConent=tempConent+m.content;
 

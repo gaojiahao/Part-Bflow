@@ -116,7 +116,7 @@
             <DropdownMenu slot="list">
                 <DropdownItem name="senMessage" >发送消息</DropdownItem>
                 <DropdownItem name="atUser"  >@{{curContextMember.nickname}}</DropdownItem>
-                <DropdownItem name="removeMember" v-if="$currentUser.userId==groupOwner" divided>移除群聊</DropdownItem>
+                <DropdownItem name="removeMember" v-if="$currentUser.userId==groupOwner && curContextMember.userId!=groupOwner " divided>移除群聊</DropdownItem>
             </DropdownMenu>
         </Dropdown>
     </div>

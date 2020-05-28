@@ -180,12 +180,12 @@ export default {
               photo: item.photo,
               render: this.renderImgContent
           }
-
+          
           if(!item.leaf){
             treeItem.children = [];
             treeItem.render = this.renderFileContent;
           }else{
-            if(item.type === 'G' || this.$currentUser.userId == item.id){
+            if(["G","A","D","J","M","O"].indexOf(item.type) > -1 || this.$currentUser.userId == item.id){
               treeItem.disabled = true;
             }
             this.selectMembers.forEach(sel => {

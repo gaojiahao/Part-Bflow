@@ -95,7 +95,7 @@
     </Row>
     <Row class="publish-bar">
         <Col class="publish-bar-right" span="24">
-        <Tooltip placement="top" content="不能发送空白消息">
+        <Tooltip placement="top-end" content="不能发送空白消息">
             <Button  @click.native="handleSend" >发送</Button>
         </Tooltip>
         </Col>
@@ -445,15 +445,13 @@ export default {
 
         handleSend: function() {
             let content =  this.$refs.editor.innerHTML;
-            if(!this.$refs.editor.innerText.trim() || !this.$refs.editor.lastChild){
+            if(!this.$refs.editor.innerText.trim() && this.$refs.editor.lastChild.tagName === 'DIV'){
                 this.blankTipVisible = true;
                 setTimeout(() => {
                     this.blankTipVisible = false;
                 }, 3000);
                 return;
             }
-
-            console.log('asdas',this.$refs.editor.innerText);
 
             let obj = {};
             //数组去重

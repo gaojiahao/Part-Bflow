@@ -173,17 +173,14 @@ export default {
                         this.messages.push(res);
                         break;
                     case 2:
-                        if(typeof(res.content) === 'string'){
+                    case 3:
+                        
+                    case 4:
+                       if(typeof(res.content) === 'string'){
                             res.content = JSON.parse(res.content);
                         }
                         if (this.$route.params.groupId == res.groupId)
                             this.messages.push(res);
-                        break;
-                    case 3:
-                    case 4:
-                        if (this.$route.params.groupId == res.groupId){
-                            this.messages.push(res);
-                        }
                         break;
                     case 100:
                         if(res.isMySelf && that.$route.params.groupId == res.groupId){

@@ -89,6 +89,11 @@ export default {
         onBlur() {
             this.isEdit = false;
             if(this.initGroupName === this.group.groupName) return;
+            if(!this.group.groupName) {
+                this.$Message.error('群名称不可以为空！');
+                this.group.groupName = this.initGroupName;
+                return;
+            }
 
             setGroupName(this.group.groupId,this.group.groupName).then(res => {
                 if(res.success){

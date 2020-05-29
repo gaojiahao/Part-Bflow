@@ -128,7 +128,7 @@ export default {
                 return ((x<y)?1:(x>y)?-1:0)
             });
             return array.sort(function(a,b){
-                return a.focus?-1:0;
+                return (a.focus && !b.focus)?-1:0;
             })
         },
         hiddenPop(g) {
@@ -203,12 +203,7 @@ export default {
                         break;
                     case 100:
                         if(!res.isMySelf){
-                            for(var i=0;i<this.imGroups.length;i++){
-                                if(!this.imGroups[i].focus){
-                                    this.imGroups.splice(i,0,res);
-                                    break;
-                                }
-                            }
+                            this.imGroups.push(res);
                         }else{
                             this.imGroups.map(g=>{
                                 if(g.groupId === res.groupId){

@@ -4,7 +4,7 @@
  * @description 对应文件类型的图标地址
  */
 const fileTypeFilter  = (fieldName) => {
-    const baseUrl = 'resources/images/file/';
+    const baseUrl = 'https://lab.roletask.com/resource/file-icon/';
         let type = '';
          if(/.jpg|.png|.PNG/.test(fieldName)){
                 type = 'image.png';
@@ -23,7 +23,7 @@ const fileTypeFilter  = (fieldName) => {
             }
 
             if(!type){
-                type = 'word.png';
+                type = 'all.png';
             }
           return baseUrl+type;
 }

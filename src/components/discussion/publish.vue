@@ -48,8 +48,8 @@
                 :headers="httpHeaders"
                 :show-upload-list='false'
                 :on-success="handleFileSuccess"
-                accept=".xls,.xlsx,.docx,.txt,.vsd"
-                :format="['xls','xlsx','docx','txt','vsd']"
+                accept=".xls,.xlsx,.docx,.txt,.vsd,.pdf,.apk,.zip"
+                :format="['xls','xlsx','docx','txt','vsd','pdf','apk','zip']"
                 :on-exceeded-size="handleFileMaxSize"
                 style="display: inline-block;position: relative;"
                 action="/H_roleplay-si/ds/upload">

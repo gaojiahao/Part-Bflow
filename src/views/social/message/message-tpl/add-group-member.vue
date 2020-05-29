@@ -80,6 +80,13 @@ export default {
     watch: {
       showModal: function(value) {
         if(value) {
+          if(this.$route.query.groupType == "P"){
+            this.selectMembers = [];
+            this.selectMembers.push({
+              name: this.$route.query.groupName,
+              id: this.$route.params.userId
+            });
+          }
           this.searchValue = "";
           this.treeList = [];
           this.copyTreeData = [];

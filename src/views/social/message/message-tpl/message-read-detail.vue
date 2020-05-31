@@ -102,29 +102,19 @@
           footer-hide>
           <p class="title">消息详情</p>
           <div class="content">
-            <span>{{ detailMessage.creatorName }}</span>
-            <span class="text-crtTime">{{ detailMessage.crtTime }}</span>
+            <span>{{ msg.creatorName }}</span>
+            <span class="text-crtTime">{{ msg.crtTime }}</span>
             <p class="content-text compactscrollbar" > 
-                <span v-if="detailMessage.imType===1" v-html="detailMessage.content"></span>
-
-                <span v-if="[2,3,4].includes(detailMessage.imType)" >
-                  
-                  <span v-for="(c,index) in detailMessage.content" :key="index">
-
-                    <span v-if="c.imType==1" v-html="c.content"></span>
-
-                    <img class="paste-img" v-if="c.imType==2" :src="'/H_roleplay-si/ds/downloadById?id='+c.content.id" />
-                    <span  contenteditable="false" class="file-content" v-if="c.imType===4" >
-                      <img class="flie-img" width="38" src="resources/images/file/word.png">
-                      <div class="file-content-info">
-                        <p>
-                        <a :href="'/H_roleplay-si/ds/downloadById?id='+c.id">{{c.content}}</a>
-                        </p>{{c.size}}<p>
-                        </p>
-                      </div>
-                    </span>
-                    </span>
+              <Text-Message v-if="msg.imType===1" :msg="msg"></Text-Message>
+              <Img-Message  v-if="msg.imType===2" :resourceId="msg.content.id"></Img-Message>
+              <File-Message  v-if="msg.imType===4" :file="msg.content"></File-Message>
+              <span v-if="msg.imType===3">
+                <span v-for="(r,index) in msg.content" :key="index">
+                  <Text-Message v-if="r.imType===1" :msg="r"></Text-Message>
+                  <Img-Message  v-if="r.imType===2" :resourceId="r.content.id"></Img-Message>
+                  <File-Message  v-if="r.imType===4" :msg="r"></File-Message>
                 </span>
+              </span>
             </p>
 
           </div>
@@ -157,8 +147,16 @@
 
 <script>
 import { getMsgCheckStatus } from "@/services/imService";
+import TextMessage from "../message-tpl/text-message";
+import ImgMessage from "../message-tpl/img-message";
+import FileMessage from "../message-tpl/file-message";
 export default {
     name:'MessageReadDetail',
+    components:{
+      TextMessage,
+      ImgMessage,
+      FileMessage
+    },
     data(){
         return {
            showModal: false,
@@ -169,7 +167,7 @@ export default {
         }
     },
     props:{
-        detailMessage:{
+        msg:{
             type: Object,
             default:function(){
                 return {};
@@ -194,7 +192,7 @@ export default {
         this.members = this.noreadMembers;
       },
       getReadMembers() {
-        getMsgCheckStatus(this.detailMessage.id, 1).then(res => {
+        getMsgCheckStatus(this.msg.id, 1).then(res => {
           this.readMembers = res;
           this.members = this.readMembers;
         }).catch(err => {
@@ -202,7 +200,7 @@ export default {
         })
       },
       getNoreadMembers() {
-        getMsgCheckStatus(this.detailMessage.id, 0).then(res => {
+        getMsgCheckStatus(this.msg.id, 0).then(res => {
           this.noreadMembers = res;
         }).catch(err => {
             this.$Message.error(err.data.message);

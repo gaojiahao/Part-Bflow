@@ -29,7 +29,7 @@
         <!-- 未读消息详情 -->
         <message-read-detail 
             ref="messageReadDetail" 
-            :detailMessage="detailMessage">
+            :msg="detailMessage">
         </message-read-detail>
 
         <Dropdown 

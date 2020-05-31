@@ -652,21 +652,16 @@ export default {
                     });
                     break;
                  case 4:
-                      msg.content.map(m=>{
-                        if(m.imType===2) tempConent = tempConent+`<img height=50 width=100 src="/H_roleplay-si/ds/downloadById?id=${m.content.id}" >`;
+                    var src= this.$options.filters.fileTypeFilter(msg.content.content);
 
-                        if(m.imType ===1) tempConent=tempConent+m.content;
-
-                        if(m.imType===4) tempConent = tempConent+
-                        `<div class="publish-container-reply-content-message-file">
-                            <img height=38 src="resources/images/file/excel.png" >
-                            <div class="publish-container-reply-content-message-file-info">
-                                <p>${m.content}</p>
-                                <p>${m.size}</p>
-                            </div>
-                        </div>`;
-                        
-                    });
+                    tempConent = tempConent+
+                    `<div class="publish-container-reply-content-message-file">
+                        <img height=38 src="${src}" >
+                        <div class="publish-container-reply-content-message-file-info">
+                            <p>${msg.content.content}</p>
+                            <p>${msg.content.size}KB</p>
+                        </div>
+                    </div>`;
                     break;
             }
 

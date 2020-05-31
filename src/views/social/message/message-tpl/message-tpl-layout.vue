@@ -38,12 +38,12 @@
 
             <Text-Message v-if="msg.replayMsg.imType===1" :msg="msg.replayMsg"></Text-Message>
             <Img-Message  v-if="msg.replayMsg.imType===2" :resourceId="msg.replayMsg.content.id"></Img-Message>
-            <File-Message  v-if="msg.replayMsg.imType===4" :msg="msg.replayMsg"></File-Message>
+            <File-Message  v-if="msg.replayMsg.imType===4" :file="msg.replayMsg.content"></File-Message>
             <span v-if="msg.replayMsg.imType===3">
               <span v-for="(r,index) in msg.replayMsg.content" :key="index">
                 <Text-Message v-if="r.imType===1" :msg="r"></Text-Message>
                 <Img-Message  v-if="r.imType===2" :resourceId="r.content.id"></Img-Message>
-                <File-Message  v-if="r.imType===4" :msg="r"></File-Message>
+                <File-Message  v-if="r.imType===4" :file="r"></File-Message>
               </span>
            </span>
           </div>
@@ -55,7 +55,7 @@
             <span v-for="(r,index) in msg.content" :key="index">
               <Text-Message v-if="r.imType===1" :msg="r"></Text-Message>
               <Img-Message  v-if="r.imType===2" :resourceId="r.content.id"></Img-Message>
-              <File-Message  v-if="r.imType===4" :msg="r"></File-Message>
+              <File-Message  v-if="r.imType===4" :file="r"></File-Message>
             </span>
           </span>
       </span>

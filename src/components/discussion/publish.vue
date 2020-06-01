@@ -49,8 +49,8 @@
                 :headers="httpHeaders"
                 :show-upload-list='false'
                 :on-success="handleFileSuccess"
-                accept=".xls,.xlsx,.docx,.txt,.vsd,.pdf,.apk,.zip"
-                :format="['xls','xlsx','docx','txt','vsd','pdf','apk','zip']"
+                accept=".xls,.xlsx,.docx,.txt,.vsd,.pdf,.apk,.zip,.mp3,.mp4,.png"
+                :format="['xls','xlsx','docx','txt','vsd','pdf','apk','zip','mp3','mp4','png']"
                 :on-exceeded-size="handleFileMaxSize"
                 style="display: inline-block;position: relative;"
                 action="/H_roleplay-si/ds/upload">
@@ -547,11 +547,12 @@ export default {
             window.top.limitNotice('超过文件大小限制','文件  ' + file.name + '太大,最多支持10M.');
         },
         uploadImageByBase64(referenceID,file){
+
             uploadImage({
                      referenceId:referenceID,
                     file:file
             }).then(res=>{
-                
+                debugger
                 if(res.length>0){
                     let tepFile = {};
                     tepFile.url ='/H_roleplay-si/ds/download?url=' +  res[0].attacthment;
@@ -574,7 +575,6 @@ export default {
                     return;
                 }
 
-                console.log('内容',clipboardData.getData("Text"));
                 // Mac平台下Chrome49版本以下 复制Finder中的文件的Bug Hack掉
                 if(clipboardData.items && clipboardData.items.length === 2 && clipboardData.items[0].kind === "string" && clipboardData.items[1].kind === "file" &&
                     clipboardData.types && clipboardData.types.length === 2 && clipboardData.types[0] === "text/plain" && clipboardData.types[1] === "Files" &&

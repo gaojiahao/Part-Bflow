@@ -79,7 +79,8 @@
             padding: 8px 0px;
             img{
               vertical-align: middle;
-              height: 30px;
+              height: 45px;
+              width: 45px;
               border-radius: 2px;
               margin-right: 5px;
             }

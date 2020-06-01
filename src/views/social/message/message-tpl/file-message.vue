@@ -2,6 +2,7 @@
 
 </style>
 <template>
+
    <span  contenteditable="false" class="file-content" >
       <img class="flie-img" width="38" :src="file.content|fileTypeFilter">
       <div class="file-content-info">

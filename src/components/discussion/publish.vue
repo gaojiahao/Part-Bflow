@@ -18,11 +18,12 @@
                         
                         size=24 />
                         <div class="api-emotion" slot="content">
-                            <img 
+                            <!-- <img 
                                 :src="n" 
                                 width=24 v-for="n in faces" :key="n" 
                                 @click="choice_face(n)"
-                                style="float:left;margin: 2px;cursor: pointer;">
+                                style="float:left;margin: 2px;cursor: pointer;"> -->
+                                <rfd-emotion  @click.native="choice_face(item)" v-for="(item,index) in emotionList" :key="index">{{item}}</rfd-emotion>
                         </div>
             </Poptip>
                
@@ -104,8 +105,10 @@
 </template>
 
 <script>
+import { EMOTION } from "@/utils/emotion";
 import { getToken,getFileSize } from "@/utils/utils";
 import Bus from "@/assets/eventBus.js";
+import RfdEmotion from "@/components/emotion";
 import {
   getDomValue, insertHtmlAtCaret, getCursortPosition
 } from '@/utils/dom-utils'
@@ -150,8 +153,12 @@ export default {
         }
         
     },
+    components:{
+        RfdEmotion
+    },
     data() {
         return {
+            emotionList: [...EMOTION],
             innerText: this.discContent.txt,
             lock:false,
             httpHeaders: {
@@ -237,11 +244,14 @@ export default {
             
            
         },
-        choice_face: function(n) {
+        choice_face: function(v) {
+            
             // 创建需追加到光标处节点的文档片段
+            var index = this.emotionList.indexOf(v)
             const range = this.range.cloneRange();
             var el = document.createElement('div'),frag;
-            el.innerHTML = '<img class="face" src="'+ n +'" paste="1">'
+            // el.innerHTML = '<img class="face" src="'+ n +'" paste="1">'
+            el.innerHTML = `<img class='static-emotion-gif' index=${index} src="https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/${index}.gif">`
             frag = document.createDocumentFragment()
             var node,lastNode;
             while ((node = el.firstChild)) {
@@ -255,6 +265,13 @@ export default {
                 window.getSelection().addRange(range)
             }
             this.faceVisible = false;
+            // this.index = this.emotionList.indexOf(v)
+            // let imgHTML = `<img src="https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/${this.index}.gif">`
+            // this.$nextTick(() => {
+            //     this.emotionList.indexOf
+            //   this.$el.innerHTML = imgHTML
+            // })
+            // this.innerText = this.innerText + imgHTML;
         },
 
         changeTxt:function(e){
@@ -499,31 +516,12 @@ export default {
             file.name = res.data[0].attr1;
             file.byte = (file.size / 1024).toFixed(2);
             file.id = res.data[0].id;
-            if(/.jpg|.png|.PNG/.test(file.name)){
-                file.icon = 'image.png';
-            }
-
-            if(/.xlsx|.xls/.test(file.name)){
-                file.icon = 'excel.png';
-            }
-
-            if(/.docx/.test(file.name)){
-                file.icon = 'word.png';
-            }
-
-            if(/.txt/.test(file.name)){
-                file.icon = 'txt.png';
-            }
-
-            if(!file.icon){
-                file.icon = 'word.png';
-            }
-
+            file.icon = this.$options.filters.fileTypeFilter(file.name);
             // 创建需追加到光标处节点的文档片段
             const range = this.range.cloneRange();
             var el = document.createElement('div'),frag;
             el.innerHTML = '<span contenteditable="false" class="file-content" name="'+ file.name+'"  attid="'+ file.id+'" size="'+ file.byte+'"  >'+
-                '<img class="flie-img" width="38" src="resources/images/file/'+ file.icon+'"  paste="1">'+
+                '<img class="flie-img" width="38" src="'+file.icon+'"  paste="1">'+
                 '<div class="file-content-info"><p><a href="'+file.url+'">'+file.name+'</a></p><p>'+file.byte+'KB'+'</p>'+
                 '</div>'+
             '</span>';
@@ -575,6 +573,8 @@ export default {
                 if(clipboardData.items.length === 0){
                     return;
                 }
+
+                console.log('内容',clipboardData.getData("Text"));
                 // Mac平台下Chrome49版本以下 复制Finder中的文件的Bug Hack掉
                 if(clipboardData.items && clipboardData.items.length === 2 && clipboardData.items[0].kind === "string" && clipboardData.items[1].kind === "file" &&
                     clipboardData.types && clipboardData.types.length === 2 && clipboardData.types[0] === "text/plain" && clipboardData.types[1] === "Files" &&

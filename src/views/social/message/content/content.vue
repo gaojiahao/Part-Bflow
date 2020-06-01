@@ -78,6 +78,7 @@ import {sendMessage,checkMessage,getMembers} from "@/services/imService";
 import {getListData} from "@/services/appService";
 
 import Bus from "@/assets/eventBus.js";
+import {EMOTION}  from "@/utils/emotion";
 
 export default {
     name:'Content',
@@ -105,6 +106,7 @@ export default {
     },
     data(){
         return {
+            emotionList: [...EMOTION],
             groupId:'',
             params:{
                 page:1,
@@ -138,7 +140,6 @@ export default {
             });
         },
         handlePublish(content,uploadList,userIds,superComment,commentAndReply,sendComponent){
-
             /**
              * imType 
              * 1、文本
@@ -155,7 +156,8 @@ export default {
             };
             let hasTaxt = false,
                 hasImg = false,
-                hasFile = false;
+                hasFile = false,
+                that = this;
             Array.from(contentHtmls).forEach((d)=>{
                 if(d.tagName){
                     if(d.tagName === 'IMG' && d.className.includes('paste-img')){
@@ -177,9 +179,11 @@ export default {
                             imType:4
                         });
                     }else if
-                    (d.tagName === 'IMG' && d.className.includes('face')){
+                    (d.tagName === 'IMG' && d.className.includes('static-emotion-gif')){
+                        let index = d.getAttribute('index');
+                        
                          msgTpl.content.push({
-                            content:d.outerHTML,
+                            content:`[${this.emotionList[index]}]`,
                             imType:1
                         });
                         hasTaxt =true;
@@ -270,6 +274,12 @@ export default {
                         sendComponent.$refs.editor.style.height='220px';
                         delete sendComponent.replayMsg;
                     }
+                }
+            }).catch(error=>{
+                if([3,4].includes(msgTpl.imType) && msgTpl.content.length>5){
+                    this.$Message.error('一次最多发送5份文件哦，请修改消息内容！');
+                }else{
+                    this.$Message.error(error.data.message);
                 }
             });
 

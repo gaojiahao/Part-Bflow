@@ -12,7 +12,7 @@ export const formatToEmotion=(value)=>{
         return word
         }
           let path = idx>104 ? '/img' : 'https://res.wx.qq.com/mpres/htmledition/images/icon';
-        return `<img class="static-emotion-gif" style="vertical-align: middle" src="${path}/emotion/${idx}.gif">`;
+        return `<img class="static-emotion-gif" index=${idx} style="vertical-align: middle" src="${path}/emotion/${idx}.gif">`;
     });
     
     return value;

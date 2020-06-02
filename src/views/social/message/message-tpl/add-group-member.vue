@@ -80,11 +80,11 @@ export default {
     watch: {
       showModal: function(value) {
         if(value) {
-          if(this.$route.query.groupType == "P"){
+          if(this.$route.query.groupType == "P" && !this.displayAll){
             this.selectMembers = [];
             this.selectMembers.push({
               name: this.$route.query.groupName,
-              id: this.$route.params.userId
+              id: this.$route.query.userId
             });
           }
           this.searchValue = "";

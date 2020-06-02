@@ -49,6 +49,7 @@ export default {
     },
     methods: {
         showAddGroupModal() {
+            this.$refs["addGroupMember"].displayAll = true;
             this.$refs["addGroupMember"].showModal = true;
             this.$refs["addGroupMember"].selectMembers = [];
         },

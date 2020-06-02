@@ -106,6 +106,7 @@ export default {
             })
         },
         showAddGroupMemberModal() {
+            this.$refs["addGroupMember"].displayAll = false;
             this.$refs["addGroupMember"].showModal = true;
         },
         addMember(userList){

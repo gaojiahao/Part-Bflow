@@ -263,6 +263,12 @@ export default {
                 msgTpl.replayId=sendComponent.replayMsg.id;
                 msgTpl.replayMsg = sendComponent.replayMsg;
             }
+
+            if(msgTpl.content.length>4000){
+                this.$Message.error('发送消息内容超长，请分条发送!');
+                return;
+            }
+            
             sendMessage(msgTpl).then(res=>{
                 if(res.success && sendComponent){
                     sendComponent.innerText = '';

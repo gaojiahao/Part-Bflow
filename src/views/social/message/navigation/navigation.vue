@@ -7,8 +7,8 @@
          <router-link 
             :to="{
                 name:'group',
-                params:{groupId: g.groupId,userId:g.userId},
-                query:{groupName:g.groupName,groupType:g.groupType}
+                params:{groupId: g.groupId},
+                query:{groupName:g.groupName,groupType:g.groupType,userId:g.userId?g.userId:null}
                 }" 
             v-for="(g,index) in  sortedGroup" 
             :key="index">

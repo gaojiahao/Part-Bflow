@@ -304,12 +304,14 @@ export default {
             this.refreshNavs();
         });
         let that = this;
+        let isExist = false;
         Bus.$on('addGroup', group => {
-            for(var i=0;i<this.imGroups.length;i++){
-                if(!this.imGroups[i].focus){
-                    this.imGroups.splice(i,0,group);
-                    break;
-                }
+            this.imGroups.map(g=>{
+                if(g.groupId === group.groupId) isExist =true;
+            });
+
+            if(!isExist){
+                this.imGroups.push(group);
             }
              this.$router.push({ 
                 name:'group',

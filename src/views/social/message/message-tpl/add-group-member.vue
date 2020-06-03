@@ -37,7 +37,7 @@
               v-for="(list,index) of selectList" 
               :key="index">
               <img 
-                :src="list.photo || '/resources/images/icon/defaultUserPhoto.png'" 
+                :src="list.photo || 'https://lab.roletask.com/resource/common-icon/male.png'" 
                 @error="onError"/>
               <span>{{ list.name }}</span>
               <b @click="deleteSelectMember(list,index)"><Icon type="md-close" /></b>
@@ -246,7 +246,7 @@ export default {
                 h('span', [
                     h('img', {
                         attrs: {
-                            src: (data && data.photo) || '/resources/images/icon/defaultUserPhoto.png'
+                            src: (data && data.photo) || 'https://lab.roletask.com/resource/common-icon/male.png'
                         },
                         on:{
                           'error': (e) => {
@@ -286,7 +286,7 @@ export default {
             ]);
         },
         onError(e) {
-          e.target.src = '/resources/images/icon/defaultUserPhoto.png';
+          e.target.src = 'https://lab.roletask.com/resource/common-icon/male.png';
         },
         onCheckChange(currentArray, currentSelect) {
           if(!currentSelect.leaf){

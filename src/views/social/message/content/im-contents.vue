@@ -47,7 +47,7 @@
 
 <script>
 
-import {getMessagesByGroupId,getGroupMsgById} from "@/services/imService";
+import {getMessagesByGroupId,getGroupMsgById,checkMessage} from "@/services/imService";
 import ContentMessage from "../message-tpl/message-tpl-layout";
 import FileMessage from "../message-tpl/file-message";
 import MessageReadDetail from "../message-tpl/message-read-detail";
@@ -170,17 +170,25 @@ export default {
                 switch (res.imType) {
                     case 1:
                         if (this.$route.params.groupId == res.groupId)
-                        this.messages.push(res);
+                        {
+                            this.messages.push(res);
+                             checkMessage(res.groupId).then(res=>{
+                                Bus.$emit("checkMessage",res.groupId);
+                            });
+                        }
                         break;
                     case 2:
                     case 3:
-                        
                     case 4:
                        if(typeof(res.content) === 'string'){
                             res.content = JSON.parse(res.content);
                         }
-                        if (this.$route.params.groupId == res.groupId)
-                            this.messages.push(res);
+                        if (this.$route.params.groupId == res.groupId){
+                             this.messages.push(res);
+                             checkMessage(res.groupId).then(res=>{
+                                Bus.$emit("checkMessage",res.groupId);
+                            });
+                        }
                         break;
                     case 100:
                         if(res.isMySelf && that.$route.params.groupId == res.groupId){

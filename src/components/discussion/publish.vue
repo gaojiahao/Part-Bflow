@@ -96,9 +96,9 @@
     </Row>
     <Row class="publish-bar">
         <Col class="publish-bar-right" span="24">
-        <Tooltip placement="top-end" content="不能发送空白消息">
+        <!-- <Tooltip placement="top-end" content="不能发送空白消息"> -->
             <Button  @click.native="handleSend" >发送</Button>
-        </Tooltip>
+        <!-- </Tooltip> -->
         </Col>
     </Row>
 </div>

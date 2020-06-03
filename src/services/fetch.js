@@ -26,8 +26,8 @@ axios.interceptors.response.use(response => {
         err.message = err.response
         break;
       case 401:
-        if(location.hostname.includes('roletask.com')){
-          location.href = `${location.origin}?/Login/index.html?src=${location.href}`
+        if(window.location.hostname.includes('roletask.com')){
+          window.location.href = `${location.origin}?/Login/index.html?src=${window.location.href}`
         }else{
           router.push('/login');
         }

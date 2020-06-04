@@ -81,6 +81,9 @@ export default {
             requestUrl(params).then(res => {
                 res.message && this.$Message.success(res.message);
                 this.$refs["addGroupMember"].showModal = false;
+                if(res.groupType === 'P'){
+                    res.userId = params.userId;
+                }
                 Bus.$emit('addGroup',res);
             }).catch(err => {
                 this.$Message.error(err.data.message);

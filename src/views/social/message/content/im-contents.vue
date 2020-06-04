@@ -194,7 +194,8 @@ export default {
                         if(res.isMySelf && that.$route.params.groupId == res.groupId){
                            that.messages.push({
                                ...res.lastMsg,
-                               isMySelf:res.isMySelf
+                               isMySelf:res.isMySelf,
+                               checked:0
                            });
                         }
                         break;

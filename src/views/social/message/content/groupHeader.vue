@@ -120,24 +120,27 @@ export default {
                 userNames.push(user.name);
             })
 
-            
             params = {
                 groupId: this.group.groupId || null,
                 users: userIds.join(','),
                 name: userNames.join(',')
             };
+
             if(this.group.groupType === 'G'){
                 delete params.name;
             }else{
                 requestUrl = createGroup;
+                userIds.push(this.$route.query.userId);
+                userNames.push(this.$route.query.groupName);
                 userNames.push(this.$currentUser.nickname);
                 params.name = userNames.join(',');
+                params.users = userIds.join(',');
             }
 
             requestUrl(params).then(res => {
                 res.message && this.$Message.success(res.message);
                 this.$refs["addGroupMember"].showModal = false;
-                this.group.groupType === 'G' ? Bus.$emit('addMembers') : Bus.$emit('updateGroupName');
+                this.group.groupType === 'G' ? Bus.$emit('addMembers') : Bus.$emit('addGroup',res);
             }).catch(err => {
                 this.$Message.error(err.data.message);
             })

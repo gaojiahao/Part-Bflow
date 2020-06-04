@@ -320,7 +320,8 @@ export default {
                 },
                 query: {
                     groupName:group.groupName,
-                    groupType:group.groupType
+                    groupType:group.groupType,
+                    userId:group.userId
                 }
             });
         });

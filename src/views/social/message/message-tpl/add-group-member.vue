@@ -123,13 +123,13 @@ export default {
               treeArr = arr || this.copyTreeData;
           treeArr.forEach(child => {
             if(!child.leaf){
-              if(child.name.indexOf(this.searchValue) > -1){
+              if(child.name.toUpperCase().indexOf(this.searchValue.toUpperCase()) > -1){
                 this.treeList.push(child);
               }else{
                 this.getDataBySearchValue(child.children);
               }
             }else{
-              if(child.name.indexOf(this.searchValue) > -1){
+              if(child.name.toUpperCase().indexOf(this.searchValue.toUpperCase()) > -1){
                 this.treeList.push(child);
               }
             }

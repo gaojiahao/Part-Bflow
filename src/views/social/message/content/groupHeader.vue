@@ -30,6 +30,7 @@
                 v-model="group.groupName" 
                 placeholder="未知"
                 @on-blur="onBlur"
+                @keyup.native="onKeyUp"
                 :style="{maxWidth:inputWidth}" />
                 <b
                     v-else 
@@ -104,6 +105,12 @@ export default {
             }).catch(err => {
                 this.$Message.error(err.data.message);
             })
+        },
+        onKeyUp() {
+          const patrn = /[`~!@#$%^&*()_\-+=<>?:"{}|.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'。、]/ig; 
+          if (patrn.test(this.group.groupName)) {
+            this.group.groupName = this.group.groupName.replace(patrn,'');
+          }
         },
         showAddGroupMemberModal() {
             this.$refs["addGroupMember"].displayAll = false;

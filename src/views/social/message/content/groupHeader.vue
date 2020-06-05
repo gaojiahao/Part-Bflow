@@ -109,6 +109,7 @@ export default {
         onKeyUp() {
           const patrn = /[`~!@#$%^&*()_\-+=<>?:"{}|.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'。、]/ig; 
           if (patrn.test(this.group.groupName)) {
+            this.$Message.error('不可输入特殊字符！');
             this.group.groupName = this.group.groupName.replace(patrn,'');
           }
         },

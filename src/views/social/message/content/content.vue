@@ -128,16 +128,22 @@ export default {
     methods:{
         setAtUsers(){
             let that = this;
-            return getMembers(this.$route.params.groupId).then(res=>{
-                let tempUsers =  res.filter(r=>{
-                    return parseInt(r.userId)!=that.$currentUser.userId;
+            if(this.$route.params.groupType==='G'){
+                return getMembers(this.$route.params.groupId).then(res=>{
+                    
+                    let tempUsers =  res.filter(r=>{
+                        return parseInt(r.userId)!=that.$currentUser.userId;
+                    });
+                    tempUsers.unshift({
+                        nickname:'所有人',
+                        userId:'All'
+                    });
+                    return tempUsers;
                 });
-                tempUsers.unshift({
-                    nickname:'所有人',
-                    userId:'All'
-                });
-                return tempUsers;
-            });
+            }else{
+                return [];
+            }
+           
         },
         handlePublish(content,uploadList,userIds,superComment,commentAndReply,sendComponent){
             /**

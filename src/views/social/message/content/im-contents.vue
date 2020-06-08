@@ -164,7 +164,7 @@ export default {
             let deepstream = this.$deepstream;
             //消息订阅
             var that =this;
-            deepstream.event.subscribe("roletaskIm/" + JSON.parse(localStorage.getItem('roleplay-token')).token, res => {
+            deepstream.event.subscribe("roletaskIm/" + this.$md5(String(this.$currentUser.userId)), res => {
                 res.imType = parseInt(res.imType);
                 
                 switch (res.imType) {

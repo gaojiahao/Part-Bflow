@@ -17,6 +17,7 @@ import './plugin/jqorg/js/jquery.orgchart.js'
 import "./plugin/jqorg/css/font-awesome.min.css"
 import "./plugin/jqorg/css/jquery.orgchart.css"
 import "./plugin/jqorg/css/style.css"
+import md5 from 'js-md5';
 
 import { formatToEmotion } from "@/utils/emotion";
 
@@ -26,6 +27,7 @@ require('./assets/App.css')
 require('./assets/common.css')
 
 Vue.prototype.formatToEmotion=formatToEmotion
+Vue.prototype.$md5 = md5;
 
 Vue.config.productionTip = false
 Vue.use(Loading)

@@ -169,7 +169,6 @@ export default {
             visible: false,
             commentAndReply:false,
             faceVisible:false,
-            blankTipVisible:false,
             userList:[],
             userListVisible:false,
             sourceUserList:[],
@@ -463,10 +462,6 @@ export default {
         handleSend: function() {
             let content =  this.$refs.editor.innerHTML;
             if(!this.$refs.editor.innerText.trim() && this.$refs.editor.lastChild.tagName === 'DIV'){
-                this.blankTipVisible = true;
-                setTimeout(() => {
-                    this.blankTipVisible = false;
-                }, 3000);
                 return;
             }
 

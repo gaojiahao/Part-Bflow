@@ -128,7 +128,7 @@ export default {
     methods:{
         setAtUsers(){
             let that = this;
-            if(this.$route.params.groupType==='G'){
+            if(this.$route.query.groupType==='G'){
                 return getMembers(this.$route.params.groupId).then(res=>{
                     
                     let tempUsers =  res.filter(r=>{
@@ -141,7 +141,9 @@ export default {
                     return tempUsers;
                 });
             }else{
-                return [];
+                return  new Promise.resolve((resolve, reject) => {
+                    return resolve([]);
+                })
             }
            
         },

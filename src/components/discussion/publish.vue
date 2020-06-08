@@ -249,7 +249,6 @@ export default {
             var index = this.emotionList.indexOf(v)
             const range = this.range.cloneRange();
             var el = document.createElement('div'),frag;
-            // el.innerHTML = '<img class="face" src="'+ n +'" paste="1">'
             el.innerHTML = `<img class='static-emotion-gif' index=${index} src="https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/${index}.gif">`
             frag = document.createDocumentFragment()
             var node,lastNode;
@@ -264,13 +263,6 @@ export default {
                 window.getSelection().addRange(range)
             }
             this.faceVisible = false;
-            // this.index = this.emotionList.indexOf(v)
-            // let imgHTML = `<img src="https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/${this.index}.gif">`
-            // this.$nextTick(() => {
-            //     this.emotionList.indexOf
-            //   this.$el.innerHTML = imgHTML
-            // })
-            // this.innerText = this.innerText + imgHTML;
         },
 
         changeTxt:function(e){
@@ -542,13 +534,18 @@ export default {
             window.top.limitNotice('超过文件大小限制','文件  ' + file.name + '太大,最多支持10M.');
         },
         uploadImageByBase64(referenceID,file){
-
+            let target = this.$refs.editor;
             uploadImage({
                      referenceId:referenceID,
                     file:file
             }).then(res=>{
-                debugger
                 if(res.length>0){
+                    let imgArr = Array.from(target.getElementsByTagName('img'));
+                    let f = imgArr.filter(item=>{
+                        return !item.getAttribute('paste');
+                    });
+                    f[0].remove();
+
                     let tepFile = {};
                     tepFile.url ='/H_roleplay-si/ds/download?url=' +  res[0].attacthment;
                     tepFile.name = res[0].attr1;

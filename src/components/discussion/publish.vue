@@ -509,7 +509,7 @@ export default {
             var el = document.createElement('div'),frag;
             el.innerHTML = '<span contenteditable="false" class="file-content" name="'+ file.name+'"  attid="'+ file.id+'" size="'+ file.byte+'"  >'+
                 '<img class="flie-img" width="38" src="'+file.icon+'"  paste="1">'+
-                '<div class="file-content-info"><p><a href="'+file.url+'">'+file.name+'</a></p><p>'+file.byte+'KB'+'</p>'+
+                '<div class="file-content-info"><p><a target="_blank" href="'+file.url+'">'+file.name+'</a></p><p>'+file.byte+'KB'+'</p>'+
                 '</div>'+
             '</span>';
             frag = document.createDocumentFragment()

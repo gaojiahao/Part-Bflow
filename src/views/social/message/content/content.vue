@@ -62,23 +62,18 @@ import ProjectTaskNotice from "@/views/social/message/notice-tpl/project-task-no
 import CancelProjectTaskNotice from "@/views/social/message/notice-tpl/cancel-project-task-notice";
 import TaskLogNotice from "@/views/social/message/notice-tpl/task-log-notice";
 import MessageConfig from '@/views/social/message/notice-tpl/message-config'
-
 import Messageistory from "@/views/social/message/content/messageistory";
-
 import commentPublish from "@/components/discussion/publish";
-
 import groupHeader from "@/views/social/message/content/groupHeader";
-
 import imContents from "@/views/social/message/content/im-contents";
 
 import {getAllnotifications} from "@/services/notificationsService";
 import {sendMessage,checkMessage,getMembers} from "@/services/imService";
-
-
 import {getListData} from "@/services/appService";
-
+import { deepstream } from '@/plugin/deepstream'
 import Bus from "@/assets/eventBus.js";
 import {EMOTION}  from "@/utils/emotion";
+import Vue from 'vue'
 
 export default {
     name:'Content',
@@ -367,6 +362,20 @@ export default {
             // }
         },
         msgInputClick:function(){
+
+             var dsClient = this.$deepstream,
+                currentUser = this.$currentUser,
+                status = dsClient && dsClient.getConnectionState(),
+                dsUri = JSON.parse(window.localStorage.getItem('r2-cached-properties')).deepStreamUrl;
+
+            if(status == 'CLOSED' || dsClient == null){
+                async function init (){
+                    Vue.prototype.$deepstream  = await deepstream(currentUser, dsUri)
+                }
+                init();
+                Bus.$emit("dsOpen");
+            }
+                
             // to:签收消息
             checkMessage(this.groupId).then(res=>{
                 Bus.$emit("checkMessage",this.groupId)

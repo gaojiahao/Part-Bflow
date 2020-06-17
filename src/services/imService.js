@@ -80,7 +80,7 @@ export const getGroupByUserId = (params) => request('/H_roleplay-si/im/group/get
  * @author XiaoYing
  * @description 获取通讯录信息
  */
-export const getAddressBook = () => request('/H_roleplay-si/im/group/getAllAddressBook')
+export const getAddressBook = () => request('/H_roleplay-si/im/group/getAllAddressBook?refresh=true')
 
 /**
  * @author XiaoYing

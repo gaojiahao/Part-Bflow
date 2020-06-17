@@ -179,8 +179,6 @@ export default {
                 console.log('ds is null');
                 return;
             }
-            // debugger
-            // JSON.parse(localStorage.getItem('roleplay-token')).token
             //消息订阅
             ds.event.subscribe("roletaskIm/" + this.$md5(String(this.$currentUser.userId)), res => {
                 res.imType = parseInt(res.imType);
@@ -335,6 +333,10 @@ export default {
                 }
             });
         })
+
+        Bus.$on('dsOpen',()=>{
+            this.subscribeIm();
+        });
 
         var EventUtil = {
             addHandler: function(element, type, handler) {

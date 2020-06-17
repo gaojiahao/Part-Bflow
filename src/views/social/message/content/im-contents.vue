@@ -300,6 +300,10 @@ export default {
         this.getMessages();
         this.initEvents();
 
+        Bus.$on('dsOpen',()=>{
+            this.subscribeIm();
+        });
+
     },
     updated(){
         this.scrollToBottom();

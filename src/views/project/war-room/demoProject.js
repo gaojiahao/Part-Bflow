@@ -4808,5 +4808,91 @@ export const demoProjectA = {
 	}
 }
 
+export const demoProjectB  = {
+    "attachment":[
+    ],
+    "formData":{
+        "baseinfo":{
+            "id":"d19aa3ea-b94e-45bf-a1dd-13e4a78e7489",
+            "referenceId":"3062bead-4962-43ee-aba0-e869ad6e5148",
+            "listId":"8884d05f-f383-48e6-96de-6337e924c650",
+            "transType":"YW159",
+            "transCode":"PINO1907310010",
+            "handler":"706",
+            "handlerName":"徐泽",
+            "handlerArea":null,
+            "handlerAreaName":null,
+            "handlerUnit":"109",
+            "handlerUnitName":"销售部",
+            "handlerRole":"1",
+            "handlerRoleName":"企业管理员",
+            "effectiveTime":"2019-07-31 11:29:47",
+            "creatorName":"徐泽",
+            "creator":"706",
+            "crtTime":"2019-07-31 11:29:47",
+            "modifer":"1",
+            "modiferName":"管理员",
+            "modTime":"2020-06-28 14:30:33",
+            "comment":"",
+            "status":1,
+            "activeTime":null,
+            "handlerEntity":"a3034317-0706-01ef-3b08-eb399895a648",
+            "handlerEntityName":"RFD测试",
+            "biProcessStatus":"立项"
+        },
+        "biReferenceId":"3062bead-4962-43ee-aba0-e869ad6e5148",
+        "comment":{
+            "biComment":""
+        },
+        "projectApproval":{
+            "projectApprovalId":"340adc8e-ef53-45b5-8a76-603e874d064c",
+            "referenceId":"3062bead-4962-43ee-aba0-e869ad6e5148",
+            "projectName":"得不得",
+            "projectType":"研发类",
+            "projectBotTaskId":null,
+            "projectSubclass":"产品",
+            "projectManager":"rfd117",
+            "budgetIncome":1234.00,
+            "address":"",
+            "projectManagerName":"徐泽",
+            "phoneNumber":"13713777066",
+            "projectDescribe":null,
+            "expectStartDate":"2019-07-31",
+            "expectEndDate":"2019-07-31",
+            "projectStatus":1,
+            "comment":"",
+            "actualStartTimes":null,
+            "actualCompleteTimes":null,
+            "handlerNames":null,
+            "handlerUnitNames":null,
+            "handlerRoleNames":null,
+            "biProcessStatus":null,
+            "comments":null,
+            "transCode":null,
+            "projectBotTaskTitle":null
+        },
+        "order":[
+            {
+                "projectPartnerName":"黄丹潮",
+                "shareOfProfits":"1.230000",
+                "comment":"",
+                "projectPartnerCode":"0000002",
+                "id":234234415,
+                "divisionOfResponsibilities":"客户经理",
+                "projectId":"340adc8e-ef53-45b5-8a76-603e874d064c"
+            },
+            {
+                "projectPartnerName":"黄孝辉",
+                "shareOfProfits":"0.120000",
+                "comment":"",
+                "projectPartnerCode":"HuangXiaoHui",
+                "id":234234416,
+                "divisionOfResponsibilities":"方案经理",
+                "projectId":"340adc8e-ef53-45b5-8a76-603e874d064c"
+            }]
+    }
+}
+
+
 
 

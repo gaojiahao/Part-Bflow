@@ -160,6 +160,10 @@ import { wrokGuideRouter } from '@/views/work-guide/router';
 //文件柜
 import { fileCabinetRouter } from '@/views/file-cabinet/router';
 
+//项目模块
+import { projectRouter } from '@/views/project/router';
+
+
 export const routers = [
   loginRouter,
   entryRouter,
@@ -182,5 +186,6 @@ export const routers = [
   wrokGuideRouter,
   fileCabinetRouter,
   userActivation,
+  projectRouter,
   ...appRouter
 ];

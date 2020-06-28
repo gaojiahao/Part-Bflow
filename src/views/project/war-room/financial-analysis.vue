@@ -79,104 +79,14 @@
 </template>
 
 <script>
+import { getProjectDistributiveProfit, getInsideProjectProfitStatement, getOutsideProjectProfitStatement } from "@/services/projectService.js";
 const echarts = require("echarts");
 export default {
     name:'financialAnalysis',
     data(){
         return{
-               profit: [
-                {
-                    item: '收入',
-                    amount: 18,
-                    title:true
-                },
-                {
-                    item: '预算收入',
-                    amount: 24,
-                },
-                {
-                    item: '成本',
-                    amount: 30,
-                    title:true
-                },
-                {
-                    item: '内部服务采购',
-                    amount: 26,
-                },
-                {
-                    item: '外部服务采购',
-                    amount: 26,
-                },
-                {
-                    item: '费用',
-                    amount: 26,
-                    title:true
-                },
-                {
-                    item: '租车费',
-                    amount: 26,
-                },
-                {
-                    item: '内部服务采购',
-                    amount: 26,
-                },
-                {
-                    item: '盈余',
-                    amount: 26,
-                    title:true
-                },{
-                    item: '盈余率',
-                    amount: 26,
-                    title:true
-                },
-            ],
-            balance: [
-                {
-                    item: '利润',
-                    amount: 18,
-                    title:true
-                },
-                {
-                    item: '已分配利润',
-                    amount: 24,
-                    title:true
-                },
-                {
-                    item: '资产',
-                    amount: 30,
-                    title:true
-                },
-                {
-                    item: '存货',
-                    amount: 26,
-                },
-                {
-                    item: '发出商品',
-                    amount: 26,
-                },
-                {
-                    item: '应收账款',
-                    amount: 26,
-                },
-                {
-                    item: '负债',
-                    amount: 26,
-                    title:true
-                },
-                {
-                    item: '估价入库',
-                    amount: 26,
-                },
-                {
-                    item: '应付账款',
-                    amount: 26,
-                },
-                {
-                    item: '可分配利润',
-                    amount: 26,
-                    title:true
-                },
-            ]
+               profit: [],
+            balance: []
         }
     },
     methods:{
@@ -477,11 +387,89 @@ export default {
                 ]
             });
 
+        },
+        getProjectDistributiveProfitData(){
+            getProjectDistributiveProfit(this.$route.params.transCode).then(res => {
+                this.balance = [
+                    {item:'利润',amount:res.tableContent[0].profit,title:true},
+                    {item:'已分配利润',amount:res.tableContent[0].distributedProfit,title:true},
+                    {item:'资产',amount:res.tableContent[0].assetsSum,title:true},
+                    {item:'存货',amount:res.tableContent[0].inventory},
+                    {item:'发出商品',amount:res.tableContent[0].salesInventory},
+                    {item:'应收账款',amount:res.tableContent[0].accountsReceivable},
+                    {item:'负债',amount:res.tableContent[0].debtSum,title:true},
+                    {item:'估价入库',amount:res.tableContent[0].valuationAndStorage},
+                    {item:'应付账款',amount:res.tableContent[0].accountsPayable},
+                    {item:'可分配利润',amount:res.tableContent[0].distributiveProfit,title:true}
+                ];
+            }).catch(err => {
+                this.$Message.error(err.data.message);
+            })
+        },
+        getProjectProfitStatementData(){
+            let request = getOutsideProjectProfitStatement;
+            // if(this.projectType === 'inside') request = getInsideProjectProfitStatement;
+            request(this.$route.params.transCode).then(res => {
+                this.createInsideData(res.obj)
+                // this.projectType === 'inside' ? this.createInsideData(res.obj) : this.createOutsideData(res.obj);
+            })
+        },
+        createInsideData(obj){
+            this.profit = [
+                {item:'收入',amount:obj.income.incomeSum,title:true},
+                {item:'预算收入',amount:obj.income.budgetReceipts || '-'},
+                {item:'成本',amount:obj.productsCost.productsCostSum,title:true},
+                {item:'内部服务采购',amount:obj.productsCost.insideServerPurchase},
+                {item:'外部服务采购',amount:obj.productsCost.outsideServerPurchase},
+                {item:'其他成本',amount:obj.productsCost.otherCost || '-'},
+                {item:'费用',amount:obj.cost.costSum,title:true}
+            ];
+            this.setCostListData(obj);
+            this.profit.push({
+                item: '盈余',
+                amount: obj.profit
+            });
+            this.profit.push({
+                item: '盈余率',
+                amount: obj.profitRate
+            });
+        },
+        createOutsideData(obj){
+            this.profit = [
+                {item:'收入',amount:obj.income.incomeSum,title:true},
+                {item:'销售收入',amount:obj.income.saleIncome},
+                {item:'成本',amount:obj.productsCost.productsCostSum,title:true},
+                {item:'标准用料',amount:obj.productsCost.material},
+                {item:'直接人工',amount:obj.productsCost.artificial},
+                {item:'制造费用',amount:obj.productsCost.madeCost},
+                {item:'外部服务采购',amount:obj.productsCost.outsideServerPurchase},
+                {item:'内部服务采购',amount:obj.productsCost.insideServerPurchase},
+                {item:'费用',amount:obj.cost.costSum,title:true}
+            ];
+            this.setCostListData(obj);
+            this.profit.push({
+                item: '利润额',
+                amount: obj.profit
+            });
+            this.profit.push({
+                item: '利润率',
+                amount: obj.profitRate
+            });
+        },
+        setCostListData(obj){
+            obj.cost.costList.forEach(it => {
+                this.profit.push({
+                    item: it.costName,
+                    projectCode: it.costCode,
+                    amount: it.amount
+                });
+            });
         }
-
     },
     mounted(){
         this.init();
+        this.getProjectDistributiveProfitData();
+        this.getProjectProfitStatementData();
     }
 }
 </script>

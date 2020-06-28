@@ -32,10 +32,10 @@
 
         
 
-        <!-- 财务分析 -->
-       	<Drawer :mask="true"  class="project-drawer"  width="600" :closable="false" v-model="financialAnalysisModel">
-			<financialAnalysis></financialAnalysis>
-		</Drawer>
+			<!-- 财务分析 -->
+			<Drawer :mask="true"  class="project-drawer"  width="600" :closable="false" v-model="financialAnalysisModel">
+				<financialAnalysis></financialAnalysis>
+			</Drawer>
 
         <!-- 报表分析 -->
 		 <Drawer  :mask="true"  class="project-drawer"  width="600" :closable="false" :scrollable='true' v-model="timeAnalysisModel">

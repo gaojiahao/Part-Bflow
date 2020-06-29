@@ -16,9 +16,6 @@
 			</Row>
 		</div>
 		<div  class="war-room-toolbar-actions" >
-             <Tooltip content="显示或左侧表格" placement="top">
-            	<Button :size="buttonSize" icon="ios-download-outline" type="primary" shape="circle" @click="setScale_unit()"></Button>
-             </Tooltip>
             <Tooltip content="评论" placement="top">
                     <Button :size="buttonSize" icon="ios-chatbubbles-outline" type="primary" shape="circle" @click="projectCommentModel=true;"></Button>
             </Tooltip>
@@ -28,9 +25,9 @@
             <Tooltip content="财务分析" placement="top">
                     <Button :size="buttonSize" icon="ios-pie-outline" type="primary" shape="circle" @click="financialAnalysisModel=true;"></Button>
             </Tooltip>
-            <Tooltip content="数据分析" placement="top">
+            <!-- <Tooltip content="数据分析" placement="top">
                 <Button :size="buttonSize" icon="md-analytics" type="primary" shape="circle" @click="timeAnalysisModel=true;"></Button>
-            </Tooltip>
+            </Tooltip> -->
 		</div>
       	</div>
 
@@ -40,10 +37,10 @@
 
         
 
-			<!-- 财务分析 -->
-			<Drawer :mask="true"  class="project-drawer"  width="600" :closable="false" v-model="financialAnalysisModel">
-				<financialAnalysis></financialAnalysis>
-			</Drawer>
+        <!-- 财务分析 -->
+       	<Drawer :mask="true"  class="project-drawer"  width="600" :closable="false" v-model="financialAnalysisModel">
+			<financialAnalysis></financialAnalysis>
+		</Drawer>
 
         <!-- 报表分析 -->
 		 <Drawer  :mask="true"  class="project-drawer"  width="600" :closable="false" :scrollable='true' v-model="timeAnalysisModel">
@@ -71,7 +68,9 @@ import timeAnalysis from './time-analysis'
 import userComments from '@/views/form/instance-comments'
 import taskLog from '@/views/form/modules/task-log'
 
-import {demoProjectA,demoProjectB} from './demoProject';
+import {saveProjectPlan,getProjectPlan,saveProjectTask } from '@/services/projectService'
+
+import {demoProject,demoProjectA,demoProjectB} from './demoProject';
 export default {
     name:'warRoom',
     components:{
@@ -88,49 +87,45 @@ export default {
             projectCommentModel:false,
             projectTaskLogModel:false,
             ganttLocale:ganttLocale,
-			demoProject:demoProjectA,
+			demoProject:demoProject,
 			demoProjectB:demoProjectB,
 			projectDuration:[],
-			projectMember:[]
+			projectMember:[],
+			planData:{}
         }
 	},
 	computed: {
 		
   	},
     methods:{
-        setScale_unit(){
-            // gantt.config.show_grid = !gantt.config.show_grid;
-            // gantt.config.show_chart = !gantt.config.show_chart;
-            gantt.render();
-        },
         formatProjectData(formData){
 			var projectPlanTask = formData.projectPlanTask;
 			var tasks = [];
 			var projectApproval = formData.projectApproval;
 
-            // var spltTask  = function(task){
-            //     var a = task;
-            //         tasks.push(task);
-            //     if(task.children.length){
-            //         task.children.map(t=>{
-            //             spltTask(t);
-            //         });
-            //     }
-            // };
-            // projectPlanTask.map(t=>{
-            //     spltTask(t);
-            // });
+            var spltTask  = function(task){
+                var a = task;
+                    tasks.push(task);
+                if(task.children.length){
+                    task.children.map(t=>{
+                        spltTask(t);
+                    });
+                }
+            };
+            projectPlanTask.map(t=>{
+                spltTask(t);
+			});
+			
 
-            // tasks.map(t=>{
-            //     delete t.children;
-            //     t.id = t.projectPlanTaskId;
-            //     t.parent = t.parentId;
-            //     t.start_date = t.startTime;
-            //     t.end_date = t.deadline;
-            //     t.text = t.taskName;
-			// });
 
-			this.projectDuration = [projectApproval.expectStartDate,projectApproval.expectEndDate];
+            tasks.map(t=>{
+                // delete t.children;
+                t.id = t.projectPlanTaskId;
+                t.parent = t.parentId;
+                t.start_date = t.startTime;
+                t.end_date = t.deadline;
+                t.text = t.taskName;
+			});
 
 			tasks.push({
 				parent:'root',
@@ -138,14 +133,21 @@ export default {
 				dealerName:projectApproval.projectManagerName,
 				start_date:new Date(projectApproval.expectStartDate),
 				end_date:new Date(projectApproval.expectEndDate),
-				duration:100,
 				type:'project',
 				transCode:'PPLN2006270001',
 				id:'0'
 			});
 
+			// console.log(tasks);
+			tasks.map(t=>{
+				console.log(`${t.text}-----${t.id}-----${t.parent}`);
+			});
+
             return tasks;
-        },
+		},
+		/**
+		 * 添加标记
+		 */
         addMarker(){
             var today = new Date();
             gantt.addMarker({
@@ -164,7 +166,10 @@ export default {
                 title: "开始日期: " + start
             });
 
-        },
+		},
+		/**
+		 * 初始配置各类模板
+		 */
         initTemplates(){
             gantt.templates.tooltip_text = function(start, end, task) {
                 var tooltip = "";
@@ -197,6 +202,9 @@ export default {
                 (gantt.templates.task_text(task.start_date, task.end_date, task) || "").substr(0, 70);
             };
 		},
+		/**
+		 * 初始化事件
+		 */
 		initEvents(){
 			let vm = this;
 			gantt.attachEvent("onParse", function(){
@@ -208,12 +216,33 @@ export default {
 				console.log(id,item);
 
 				
-				let projectPlanFormData = vm.initProjetPlanFormData();
+				let projectPlanData = vm.buildProjetPlanData();
+				let projectPlanTaskData = vm.initProjetPlanTaskFormData();
+
+				vm.projectMember.map(m=>{
+					if(item.executor === m.key){
+						item.dealerName = m.label;
+					}
+				});
 				//如果层级为1，和索引唯一，则需要创建项目计划，否则只是单纯的增加任务
 				if(item.$index===1 && item.$level===1){
-					projectPlanFormData.projectPlanTask.push(vm.transformTask(item));
+					projectPlanData.formData.projectPlanTask.push(vm.transformTask(item));
 
-					console.log('projectPlanFormData',projectPlanFormData);
+					saveProjectPlan(projectPlanData).then(res=>{
+						vm.ganttLoadData();
+					})
+				}else{
+					projectPlanTaskData.formData.rootProjectPlanTaskId = item.parent;
+					projectPlanTaskData.formData.projectPlanTask.push(vm.transformTask(item));
+					projectPlanTaskData.formData.transCode="PTSK2006280003";
+					projectPlanTaskData.wfParam = null;
+					projectPlanTaskData.formData.comment={
+						biComment:''
+					}
+					
+					saveProjectTask(projectPlanTaskData).then(res=>{
+						vm.ganttLoadData();
+					});
 				}
 			});
 
@@ -221,13 +250,6 @@ export default {
 			gantt.attachEvent("onAfterTaskDelete", function(id,item){
 				//any custom logic here
 			});
-			
-			// //修改任务
-			// gantt.attachEvent("onBeforeTaskChanged", function(id,mode,task){
-			// 	//any custom logic here
-			// 	console.log('拖拽',task);
-			// 	return true;
-			// });
 
 			//修改任务
 			gantt.attachEvent("onBeforeTaskUpdate", function(id,task){
@@ -243,6 +265,7 @@ export default {
 
 			//选择任务
 			gantt.attachEvent("onTaskClick", function(id){
+				debugger
 				let task = gantt.getTaskBy('id',id);
 				if(task.length===1)vm.$router.replace(`/project/warRoom/${task[0].transCode}`);
 
@@ -250,6 +273,9 @@ export default {
 			});
 			
 		},
+		/**
+		 * 构建表单基本信息
+		 */
 		buildBaseInfo(){
 			let currentUser = this.$currentUser;
 			return {
@@ -265,23 +291,46 @@ export default {
 				};
 			
 		},
+		/**
+		 * 设置项目周期
+		 */
 		setProjectDuration(duration){
 			gantt.config.start_date = new Date(duration[0]);
 			gantt.config.end_date = new Date(duration[1]);
 			gantt.render();
 		},
-		initProjetPlanFormData(){
-			let formData = {
+		/**
+		 * 构建项目计划主体结构数据
+		 */
+		buildProjetPlanData(){
+			let data = {
 				listId:"0281f8eb-f1d2-415c-b566-756fc749ccb3",
 				formData:{
-					baseinfo:this.buildBaseInfo()
+					baseinfo:this.buildBaseInfo(),
+					projectApproval:this.demoProjectB.formData.projectApproval,
+					projectPlanTask:[]
 				},
-				projectApproval:this.demoProjectB.formData.projectApproval,
-				projectPlanTask:[]
+				
 			};
-
-			return formData;
+			return data;
 		},
+		/**
+		 * 构建项目任务主体结构数据
+		 */
+		initProjetPlanTaskFormData(){
+			let data = {
+				formData:{
+					baseinfo:this.buildBaseInfo(),
+					rootProjectPlanTaskId:'',
+					projectPlanTask:[]
+				},
+				
+			};
+			return data;
+		},
+		/**
+		 * 数据转换，将gantt的task对象转换撑RT需要的格式
+		 */
 		transformTask(item){
 			return {
 				taskName:item.text,
@@ -294,7 +343,106 @@ export default {
 				seq:item.$index
 			}
 		},
-		initGanttConfig(){}
+		/**
+		 * 初始化甘特图配置
+		 */
+		initGanttConfig(){
+			gantt.config.root_id = "root"; 
+			gantt.config.xml_date = "%Y-%m-%d";
+			gantt.config.row_height = 18; //甘特图的行高
+			gantt.config.min_column_width = 60;
+			gantt.config.scale_height = 18 * 3;
+			gantt.config.row_height = 28;
+			gantt.config.open_tree_initially = true;
+			gantt.config.auto_scheduling = true;
+			gantt.config.scale_unit = "day";  //时间坐标轴单位“minute”, “hour”, “day”, “week”, “quarter”, “month”, “year”
+			gantt.config.date_scale = "%d,%D";//日期格式 先数字后文字 
+			gantt.config.subscales = [{ 
+				unit: "month",
+				step: 1,
+				date: "%Y年,%M"
+			}];
+			//允许用户推拽条形图上用来调整进度百分比的小按钮
+			gantt.config.drag_progress = false;
+			//合并父节点是，分割下级任务
+			gantt.config.open_split_tasks = true;
+				
+			let taskType = [
+				{
+					key:'设计类',
+					label:'设计类'
+				},
+				{
+					key:'协调类',
+					label:'协调类',
+				},
+				{
+					key:'执行类',
+					label:'执行类'
+				}
+			];
+			
+			gantt.config.lightbox.sections = [
+				{name:"description", height:38, map_to:"text", type:"textarea",focus:true},
+				{name:"taskType", height:30, map_to:"taskType",type:"select",options:taskType},                                                                        
+				{name:"executor", height:30, type:"select", map_to:"executor",options:this.projectMember},
+				{name:"time", height:30, type:"duration",time_format:["%Y","%m","%d"] , map_to:"auto"},
+			];
+
+			gantt.locale.labels.section_taskType = "任务类型";
+			gantt.locale.labels.section_executor = "执行者";
+
+			gantt.config.columns = [
+				{name: "text", tree: true, width: 220, resize: true,label:"任务名称",align: "left"},
+				{name: "dealerName", width: 60, align: "center",label:'执行者'},
+				{name: "start_date", align: "center", width: 80, resize: true,label:'开始日期'},
+				{name: "add", width: 44},
+				{name: "end_date", align: "center", width: 80, resize: true,label:'结束日期'},
+				{name: "duration", width: 60, align: "right", resize: true,label:'计划工时'},
+			];
+			
+			gantt.config.layout = {
+				css: "gantt_container",
+				cols: [
+					{
+						width:400,
+						min_width: 300,
+						rows:[
+							{view: "grid", scrollX: "gridScroll", scrollable: true, scrollY: "scrollVer"},
+							{view: "scrollbar", id: "gridScroll", group:"horizontal"}
+						]
+					},
+					{resizer: true, width: 1},
+					{
+						rows:[
+							{view: "timeline", scrollX: "scrollHor", scrollY: "scrollVer"},
+							{view: "scrollbar", id: "scrollHor", group:"horizontal"}
+						]
+					},
+					{view: "scrollbar", id: "scrollVer"}
+				]
+			};
+
+			gantt.config.duration_unit = "hour";
+		},
+		/**
+		 * 加载甘特图数据
+		 */
+		ganttLoadData(){
+			getProjectPlan('PPLN2006290001').then(res=>{
+				let data = this.formatProjectData(res.formData);
+				this.planData = res;
+				gantt.parse({
+					data:data
+				});
+			});
+
+			// gantt.parse({
+			// 	data:this.formatProjectData(this.demoProject.formData)
+			// });
+		}
+
+			
 	},
 	mounted: function () {
 		this.demoProjectB.formData.order.map(m=>{
@@ -304,10 +452,6 @@ export default {
 			},);
 		});
 	
-		
-
-		this.addMarker();
-		this.initTemplates();
 		gantt.i18n.setLocale(this.ganttLocale);
 		gantt.config.date_format = "%Y-%m-%d";
 		//暂时快捷信息
@@ -317,96 +461,15 @@ export default {
 			fullscreen: true,
 			marker: true
 		});
-		gantt.config.root_id = "root"; 
-		gantt.config.xml_date = "%Y-%m-%d";
-		gantt.config.row_height = 18; //甘特图的行高
-		gantt.config.min_column_width = 60;
-		gantt.config.scale_height = 18 * 3;
-		gantt.config.row_height = 28;
-		gantt.config.open_tree_initially = true;
-		gantt.config.auto_scheduling = true;
-		gantt.config.scale_unit = "day";  //时间坐标轴单位“minute”, “hour”, “day”, “week”, “quarter”, “month”, “year”
-		gantt.config.date_scale = "%d,%D";//日期格式 先数字后文字 
-		gantt.config.subscales = [{ 
-			unit: "month",
-			step: 1,
-			date: "%Y年,%M"
-		}];
+		this.addMarker();
+		this.initTemplates();
+		this.initGanttConfig();
+		gantt.init(this.$refs.gantt);
+		this.projectDuration = [this.demoProjectB.formData.projectApproval.expectStartDate,this.demoProjectB.formData.projectApproval.expectEndDate];
+		// gantt.config.start_date = new Date(this.projectDuration[0]);
+		// gantt.config.end_date = new Date(this.projectDuration[1]);
 
-		//允许用户推拽条形图上用来调整进度百分比的小按钮
-		gantt.config.drag_progress = false;
-		//合并父节点是，分割下级任务
-		gantt.config.open_split_tasks = true;
-		
-		let taskType = [
-			{
-				key:'设计类',
-				label:'设计类'
-			},
-			{
-				key:'协调类',
-				label:'协调类',
-			},
-			{
-				key:'执行类',
-				label:'执行类'
-			}
-		];
-		
-		gantt.config.lightbox.sections = [
-			{name:"description", height:38, map_to:"text", type:"textarea",focus:true},
-			{name:"taskType", height:30, map_to:"taskType",type:"select",options:taskType},                                                                        
-			{name:"executor", height:30, type:"select", map_to:"executor",options:this.projectMember},
-			{name:"time", height:30, type:"duration",time_format:["%Y","%m","%d"] , map_to:"auto"},
-		];
-
-		gantt.locale.labels.section_taskType = "任务类型";
-		gantt.locale.labels.section_executor = "执行者";
-
-		gantt.config.columns = [
-			{name: "text", tree: true, width: 220, resize: true,label:"任务名称",align: "left"},
-			{name: "dealerName", width: 60, align: "center",label:'执行者'},
-			{name: "start_date", align: "center", width: 80, resize: true,label:'开始日期'},
-			{name: "add", width: 44},
-			{name: "end_date", align: "center", width: 80, resize: true,label:'结束日期'},
-			{name: "duration", width: 60, align: "right", resize: true,label:'计划工时'},
-		];
-		
-		gantt.config.layout = {
-			css: "gantt_container",
-			cols: [
-				{
-					width:400,
-					min_width: 300,
-					rows:[
-						{view: "grid", scrollX: "gridScroll", scrollable: true, scrollY: "scrollVer"},
-						{view: "scrollbar", id: "gridScroll", group:"horizontal"}
-					]
-				},
-				{resizer: true, width: 1},
-				{
-					rows:[
-						{view: "timeline", scrollX: "scrollHor", scrollY: "scrollVer"},
-						{view: "scrollbar", id: "scrollHor", group:"horizontal"}
-					]
-				},
-				{view: "scrollbar", id: "scrollVer"}
-			]
-		};
-
-			gantt.config.duration_unit = "hour";
-			// gantt.config.duration_step = 8;
-			gantt.init(this.$refs.gantt);
-			
-		let data = this.formatProjectData(this.demoProject.formData)
-		
-		gantt.config.start_date = new Date(this.projectDuration[0]);
-		gantt.config.end_date = new Date(this.projectDuration[1]);
-
-		gantt.parse({
-			data:data
-		});
-		
+		this.ganttLoadData();
 		this.initEvents();
   }
 }
@@ -420,43 +483,18 @@ export default {
 
 
 .baseline {
-			position: absolute;
-			border-radius: 2px;
-			opacity: 0.6;
-			margin-top: -7px;
-			height: 12px;
-			background: #ffd180;
-			border: 1px solid rgb(255, 153, 0);
-		}
+	position: absolute;
+	border-radius: 2px;
+	opacity: 0.6;
+	margin-top: -7px;
+	height: 12px;
+	background: #ffd180;
+	border: 1px solid rgb(255, 153, 0);
+}
 
 .status_line {
-		background-color: #0ca30a;
-	}
-
-	.fa {
-			cursor: pointer;
-			font-size: 14px;
-			text-align: center;
-			opacity: 0.2;
-			padding: 5px;
-		}
-
-		.fa:hover {
-			opacity: 1;
-		}
-
-		.fa-pencil {
-			color: #ffa011;
-		}
-
-		.fa-plus {
-			color: #328EA0;
-		}
-
-		.fa-times {
-			color: red;
-        }
-        
+	background-color: #0ca30a;
+} 
 
 .gantt_task_cell.week_end {
     background-color: #e8e8e87d;

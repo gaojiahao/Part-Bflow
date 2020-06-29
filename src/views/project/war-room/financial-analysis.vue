@@ -141,7 +141,6 @@ export default {
                     itemStyle: {
                         borderColor: '#777',
                         borderWidth: 0,
-                        gapWidth: 5,
                     },
                     upperLabel: {
                         show: false
@@ -567,51 +566,58 @@ export default {
             let newDebtSumArray = this.getAmountMapping([obj.debtSum,obj.profit]);
             let newDebtSumChildArray = this.getAmountMapping([obj.valuationAndStorage,obj.accountsPayable]);
             let newProfitChildArray = this.getAmountMapping([obj.distributedProfit,obj.distributiveProfit]);
-            console.log('newDebtSumChildArray:'+newDebtSumChildArray)
+            
             this.LbAndPf = [
-                {
-                    name: "负债",
-                    path: "负债",
-                    value: [newDebtSumArray[0],obj.debtSum],
-                    children:[
+                // {
+                    // name: "负债与利润",
+                    // path: "负债与利润",
+                    // value: [newAssetsSumArray[0],obj.assetsSum], 
+                    // children:[
                         {
-                            name: "估价入库",
-                            path: "估价入库",
-                            value: [newDebtSumChildArray[0],obj.valuationAndStorage]
+                            name: "负债",
+                            path: "负债",
+                            value: [newDebtSumArray[0],obj.debtSum],
+                            children:[
+                                {
+                                    name: "估价入库",
+                                    path: "估价入库",
+                                    value: [newDebtSumChildArray[0],obj.valuationAndStorage]
+                                },
+                                {
+                                    name: "应付账款",
+                                    path: "应付账款",
+                                    value: [newDebtSumChildArray[1],obj.accountsPayable]
+                                }
+                            ]
                         },
                         {
-                            name: "应付账款",
-                            path: "应付账款",
-                            value: [newDebtSumChildArray[1],obj.accountsPayable]
+                            name: "利润",
+                            path: "利润",
+                            value: [newDebtSumArray[1],obj.profit],
+                            children:[
+                                {
+                                    name: "已分配利润",
+                                    path: "已分配利润",
+                                    value: [newProfitChildArray[0],obj.distributedProfit]
+                                },
+                                {
+                                    name: "可分配利润",
+                                    path: "可分配利润",
+                                    value: [newProfitChildArray[1],obj.distributiveProfit]
+                                }
+                            ]
                         }
-                    ],
-                },
-                {
-                    name: "利润",
-                    path: "利润",
-                    value: [newDebtSumArray[1],obj.profit],
-                    children:[
-                        {
-                            name: "已分配利润",
-                            path: "已分配利润",
-                            value: [newProfitChildArray[0],obj.distributedProfit]
-                        },
-                        {
-                            name: "可分配利润",
-                            path: "可分配利润",
-                            value: [newProfitChildArray[1],obj.distributiveProfit]
-                        }
-                    ],
-                }
+                    // ]
+                // }
             ]
         },
         getAmountMapping(amountArray){
             let oldAmountArray = [];
             const rangeMin = 30;
-            const rangeMax = 100;
+            const rangeMax = 300;
             Object.assign(oldAmountArray,amountArray);
             amountArray.sort(sortNumber);
-            console.log(amountArray);
+            
             function sortNumber(a,b)
             {
                 return a - b
@@ -620,7 +626,7 @@ export default {
             const sumValue = Math.abs(this.sumArray(amountArray));
             let newAmountArray = [];
             if(oldAmountArray.length === 1){
-                newAmountArray.push(rangeMax);
+                newAmountArray.push(rangeMax + rangeMin);
                 return newAmountArray;
             }
             oldAmountArray.forEach(v => {
@@ -630,6 +636,7 @@ export default {
                     newAmountArray.push(((v - amountArray[0]) / sumValue) * (rangeMax - rangeMin) + rangeMin);
                 }
             })
+            console.log(newAmountArray);
             return newAmountArray;
         },
         sumArray(arr){

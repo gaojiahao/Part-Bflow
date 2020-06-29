@@ -25,3 +25,21 @@ export const getOutsideProjectProfitStatement = (transCode) => request('/H_rolep
   transCode: transCode
 })
 
+/**
+ * @author XiaoYing
+ * @description 获取项目利润表流水数据
+ */
+export const getProjectProfitWater = (data) => request('/H_roleplay-si/account/getProjectProfitWater', data)
+
+/**
+ * @author XiaoYing
+ * @description 获取项目资产负债表流水数据
+ */
+export const getProjectDistributiveProfitWater = (data) => request('/H_roleplay-si/ds/getProjectDistributiveProfitWater', data)
+
+/**
+ * @author XiaoYing
+ * @description 获取项目资产负债表对象流水数据
+ */
+export const getProjectDistributiveProfitObjBalance = (data) => request('/H_roleplay-si/ds/getProjectDistributiveProfitObjBalance', data)
+

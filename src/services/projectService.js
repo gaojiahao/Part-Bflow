@@ -47,4 +47,29 @@ export const getProjectPlan = (transCode) => request('/H_roleplay-si/projectPlan
  */
 export const saveProjectTask = (data) => request('/H_roleplay-si/projectPlan/saveProjectTask/save',  {}, "POST", data)
 
+/**
+ * @author snack.huang
+ * @description 通过项目交易号获取项目计化号
+ */
+export const getProjectPlanTransCode = (transCode) => request('/H_roleplay-si/ds/list/getProjectPlanTransCode',  {
+  projectTransCode:transCode
+})
+
+/**
+ * @author XiaoYing
+ * @description 获取项目利润表流水数据
+ */
+export const getProjectProfitWater = (data) => request('/H_roleplay-si/account/getProjectProfitWater', data)
+
+/**
+ * @author XiaoYing
+ * @description 获取项目资产负债表流水数据
+ */
+export const getProjectDistributiveProfitWater = (data) => request('/H_roleplay-si/ds/getProjectDistributiveProfitWater', data)
+
+/**
+ * @author XiaoYing
+ * @description 获取项目资产负债表对象流水数据
+ */
+export const getProjectDistributiveProfitObjBalance = (data) => request('/H_roleplay-si/ds/getProjectDistributiveProfitObjBalance', data)
 

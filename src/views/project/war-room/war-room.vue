@@ -7,12 +7,12 @@
 		<div class="war-room-toolbar-title"  >
 			<Row>
 				<Col span="8">
-				消息-第二期（即时通讯）
+				{{project.projectName}}
 				</Col>
-				<Col span="16">
+				<!-- <Col span="16">
 				项目周期:
 					<DatePicker type="daterange" @on-change="setProjectDuration"  v-model="projectDuration"  split-panels   placement="bottom-end"  style="width: 200px"></DatePicker>
-				</Col>
+				</Col> -->
 			</Row>
 		</div>
 		<div  class="war-room-toolbar-actions" >
@@ -68,7 +68,7 @@ import timeAnalysis from './time-analysis'
 import userComments from '@/views/form/instance-comments'
 import taskLog from '@/views/form/modules/task-log'
 
-import {saveProjectPlan,getProjectPlan,saveProjectTask } from '@/services/projectService'
+import {saveProjectPlan,getProjectPlan,saveProjectTask,getProjectPlanTransCode } from '@/services/projectService'
 
 import {demoProject,demoProjectA,demoProjectB} from './demoProject';
 export default {
@@ -91,7 +91,8 @@ export default {
 			demoProjectB:demoProjectB,
 			projectDuration:[],
 			projectMember:[],
-			planData:{}
+			planData:{},
+			project:{}
         }
 	},
 	computed: {
@@ -265,9 +266,8 @@ export default {
 
 			//选择任务
 			gantt.attachEvent("onTaskClick", function(id){
-				debugger
 				let task = gantt.getTaskBy('id',id);
-				if(task.length===1)vm.$router.replace(`/project/warRoom/${task[0].transCode}`);
+				if(task.length===1)vm.$router.replace(`/project/warRoom/${task[0].transCode}?type=task`);
 
 				return true;
 			});
@@ -429,13 +429,23 @@ export default {
 		 * 加载甘特图数据
 		 */
 		ganttLoadData(){
-			getProjectPlan('PPLN2006290001').then(res=>{
-				let data = this.formatProjectData(res.formData);
-				this.planData = res;
-				gantt.parse({
-					data:data
-				});
+
+			let planTransCode,
+				projectTransCode = this.$route.params.transCode;
+			getProjectPlanTransCode(projectTransCode).then(res=>{
+				if(res.length){
+					planTransCode = res[0].transCode;
+					getProjectPlan(planTransCode).then(res=>{
+						let data = this.formatProjectData(res.formData);
+						this.project = res.formData.projectApproval;
+						this.planData = res;
+						gantt.parse({
+							data:data
+						});
+					});
+				}
 			});
+			
 
 			// gantt.parse({
 			// 	data:this.formatProjectData(this.demoProject.formData)
@@ -465,7 +475,7 @@ export default {
 		this.initTemplates();
 		this.initGanttConfig();
 		gantt.init(this.$refs.gantt);
-		this.projectDuration = [this.demoProjectB.formData.projectApproval.expectStartDate,this.demoProjectB.formData.projectApproval.expectEndDate];
+		// this.projectDuration = [this.demoProjectB.formData.projectApproval.expectStartDate,this.demoProjectB.formData.projectApproval.expectEndDate];
 		// gantt.config.start_date = new Date(this.projectDuration[0]);
 		// gantt.config.end_date = new Date(this.projectDuration[1]);
 

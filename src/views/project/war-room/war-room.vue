@@ -347,6 +347,7 @@ export default {
 		 * 初始化甘特图配置
 		 */
 		initGanttConfig(){
+			gantt.config.readonly = true;
 			gantt.config.root_id = "root"; 
 			gantt.config.xml_date = "%Y-%m-%d";
 			gantt.config.row_height = 18; //甘特图的行高

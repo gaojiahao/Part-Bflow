@@ -140,7 +140,7 @@ export default {
                 {
                     itemStyle: {
                         borderColor: '#777',
-                        borderWidth: 0,
+                        borderWidth: 0
                     },
                     upperLabel: {
                         show: false
@@ -401,24 +401,22 @@ export default {
             return costChildren;
         },
         outsideChartsProfitData(obj){
-            let incomeSumValue = [];
-            incomeSumValue.push(obj.income.incomeSum)
-            let newIncomeSumArray = this.getAmountMapping(incomeSumValue);
+            let newIncomeSumArray = this.getAmountMapping([obj.income.incomeSum]);
 
-            let incomeSumChildArray = [];
-            incomeSumChildArray.push(obj.income.saleIncome)
-            incomeSumChildArray.push(obj.productsCost.productsCostSum)
-            incomeSumChildArray.push(obj.cost.costSum)
-            incomeSumChildArray.push(obj.profit)
-            let newIncomeSumChildArray = this.getAmountMapping(incomeSumChildArray);
+            let newIncomeSumChildArray = this.getAmountMapping([
+                obj.income.saleIncome,
+                obj.productsCost.productsCostSum,
+                obj.cost.costSum,
+                obj.profit
+            ]);
 
-            let productsCostSumChildArray = [];
-            productsCostSumChildArray.push(obj.productsCost.material)
-            productsCostSumChildArray.push(obj.productsCost.artificial)
-            productsCostSumChildArray.push(obj.productsCost.madeCost)
-            productsCostSumChildArray.push(obj.productsCost.insideServerPurchase)
-            productsCostSumChildArray.push(obj.productsCost.outsideServerPurchase)
-            let newProductsCostSumChildArray = this.getAmountMapping(productsCostSumChildArray);
+            let newProductsCostSumChildArray = this.getAmountMapping([
+                obj.productsCost.material,
+                obj.productsCost.artificial,
+                obj.productsCost.madeCost,
+                obj.productsCost.insideServerPurchase,
+                obj.productsCost.outsideServerPurchase
+            ]);
 
             this.profitData = [
                 {
@@ -568,47 +566,40 @@ export default {
             let newProfitChildArray = this.getAmountMapping([obj.distributedProfit,obj.distributiveProfit]);
             
             this.LbAndPf = [
-                // {
-                    // name: "负债与利润",
-                    // path: "负债与利润",
-                    // value: [newAssetsSumArray[0],obj.assetsSum], 
-                    // children:[
+                {
+                    name: "负债",
+                    path: "负债",
+                    value: [newDebtSumArray[0],obj.debtSum],
+                    children:[
                         {
-                            name: "负债",
-                            path: "负债",
-                            value: [newDebtSumArray[0],obj.debtSum],
-                            children:[
-                                {
-                                    name: "估价入库",
-                                    path: "估价入库",
-                                    value: [newDebtSumChildArray[0],obj.valuationAndStorage]
-                                },
-                                {
-                                    name: "应付账款",
-                                    path: "应付账款",
-                                    value: [newDebtSumChildArray[1],obj.accountsPayable]
-                                }
-                            ]
+                            name: "估价入库",
+                            path: "估价入库",
+                            value: [newDebtSumChildArray[0],obj.valuationAndStorage]
                         },
                         {
-                            name: "利润",
-                            path: "利润",
-                            value: [newDebtSumArray[1],obj.profit],
-                            children:[
-                                {
-                                    name: "已分配利润",
-                                    path: "已分配利润",
-                                    value: [newProfitChildArray[0],obj.distributedProfit]
-                                },
-                                {
-                                    name: "可分配利润",
-                                    path: "可分配利润",
-                                    value: [newProfitChildArray[1],obj.distributiveProfit]
-                                }
-                            ]
+                            name: "应付账款",
+                            path: "应付账款",
+                            value: [newDebtSumChildArray[1],obj.accountsPayable]
                         }
-                    // ]
-                // }
+                    ]
+                },
+                {
+                    name: "利润",
+                    path: "利润",
+                    value: [newDebtSumArray[1],obj.profit],
+                    children:[
+                        {
+                            name: "已分配利润",
+                            path: "已分配利润",
+                            value: [newProfitChildArray[0],obj.distributedProfit]
+                        },
+                        {
+                            name: "可分配利润",
+                            path: "可分配利润",
+                            value: [newProfitChildArray[1],obj.distributiveProfit]
+                        }
+                    ]
+                }
             ]
         },
         getAmountMapping(amountArray){
@@ -618,10 +609,7 @@ export default {
             Object.assign(oldAmountArray,amountArray);
             amountArray.sort(sortNumber);
             
-            function sortNumber(a,b)
-            {
-                return a - b
-            }
+            function sortNumber(a,b){ return a - b };
             if(amountArray[0] === amountArray[amountArray.length - 1] && !amountArray[0]) return amountArray;
             const sumValue = Math.abs(this.sumArray(amountArray));
             let newAmountArray = [];
@@ -636,7 +624,6 @@ export default {
                     newAmountArray.push(((v - amountArray[0]) / sumValue) * (rangeMax - rangeMin) + rangeMin);
                 }
             })
-            console.log(newAmountArray);
             return newAmountArray;
         },
         sumArray(arr){

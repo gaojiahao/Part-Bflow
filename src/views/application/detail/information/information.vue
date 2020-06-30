@@ -186,7 +186,7 @@ export default {
             return h('div',[
               h('img',{
                  attrs: {
-                  src: params.row.photo?params.row.photo:'/resources/images/icon/defaultUserPhoto.png'
+                  src: params.row.photo?params.row.photo:'https://lab.roletask.com/resource/common-icon/male.png'
                 },
                 style: {
                   borderRadius:'50%',
@@ -195,7 +195,7 @@ export default {
                 },
                 on:{
                   'error': (e) => {
-                    e.target.src = '/resources/images/icon/defaultUserPhoto.png';
+                    e.target.src = 'https://lab.roletask.com/resource/common-icon/male.png';
                   }
                 }
               })

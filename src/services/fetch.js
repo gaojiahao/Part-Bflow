@@ -26,8 +26,12 @@ axios.interceptors.response.use(response => {
         err.message = err.response
         break;
       case 401:
-        router.push('/login');
-        err.message = '未授权，请重新登录';
+        if(window.location.hostname.includes('roletask.com')){
+          window.top.location.href = `${window.top.location.origin}/Login/index.html?src=${window.top.location.href}`
+        }else{
+          router.push('/login');
+        }
+        err.message = '未授权，请重新登录11';
         break;
       case 403:
         err.message = '拒绝访问'

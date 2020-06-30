@@ -137,11 +137,11 @@ export default {
             return h('div',[
               h('Avatar',{
                 props: {
-                  src: params.row.photo?params.row.photo:'/resources/images/icon/defaultUserPhoto.png'
+                  src: params.row.photo?params.row.photo:'https://lab.roletask.com/resource/common-icon/male.png'
                 },
                 on:{
                   'on-error': (e) => {
-                    e.target.src = '/resources/images/icon/defaultUserPhoto.png';
+                    e.target.src = 'https://lab.roletask.com/resource/common-icon/male.png';
                   }
                 }
               })
@@ -216,11 +216,11 @@ export default {
             return h('div',[
               h('Avatar',{
                 props: {
-                  src: params.row.photo?params.row.photo:'/resources/images/icon/defaultUserPhoto.png'
+                  src: params.row.photo?params.row.photo:'https://lab.roletask.com/resource/common-icon/male.png'
                 },
                 on:{
                   'on-error': (e) => {
-                    e.target.src = '/resources/images/icon/defaultUserPhoto.png';
+                    e.target.src = 'https://lab.roletask.com/resource/common-icon/male.png';
                   }
                 }
               })

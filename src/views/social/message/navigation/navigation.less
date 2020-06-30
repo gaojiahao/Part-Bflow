@@ -1,23 +1,56 @@
-.navigation-list{
+.navs{
     height: 100%;
     overflow-y: auto;
+    .menu-list{
+        padding: 3px;
+        cursor: pointer;
+        color: #333;
+    }
+    
     &-item:hover{
-        background-color: #ddd;
+        background-color: #dcdee2;
     }
     &-item{
         padding: 10px;
         list-style: none;
         color: #515a6e;
-        border-bottom: 1px solid #ddd;
         position: relative;
-        background-color: #f6f6f6;
+        background-color: #f2f2f2;
         img{
             border-radius: 3px;
         }
         &-appinfo{
             display: inline-table;
             vertical-align: top;
-            line-height: 40px;
+            padding-left: 5px;
+            line-height: 24px;
+
+            &-groupName{
+                p{
+                    width: 180px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+            }
+
+            &-name{
+                &-lastcontent{
+                    float: left;
+                    width: 130px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    height: 20px;
+                    /deep/ img{
+                        height: 20px;
+                    }
+                }
+
+                &-lastTime{
+                    float: right;
+                }
+            }
         }
 
         &-msgcount{
@@ -30,11 +63,28 @@
 }
 
 .active{
-    background-color: #ddd;
+    background-color:#c5c8ce !important;
+}
+
+.router-link-active{
+    background-color:#c5c8ce;
+}
+.istop{
+    background-color:  #e3e5e8;
 }
 .nav-comment{
     height: 20px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+.navs /deep/ .ivu-dropdown{
+    // width: 100%;
+}
+
+.network-error{
+    text-align: center;
+    background-color: #f9ce8e;
+    line-height: 30px;
+    color: #e19421;
 }

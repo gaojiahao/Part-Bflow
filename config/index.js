@@ -12,19 +12,19 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/H_roleplay-si':{
-        target:'http://175.roletask.com',
+        target:'http://172.roletask.com',
         changeOrigin: true
       },
       '/corebiz-api': {
-        target: 'http://175.roletask.com',
+        target: 'http://172.roletask.com',
         changeOrigin: true
       },
       '/account-api': {
-        target: 'http://175.roletask.com',
+        target: 'http://172.roletask.com',
         changeOrigin: true
       },
       '/gimgs': {
-        target: 'http://175.roletask.com',
+        target: 'http://172.roletask.com',
         changeOrigin: true
       }
 

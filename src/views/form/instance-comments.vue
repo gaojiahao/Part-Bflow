@@ -136,10 +136,14 @@ export default {
     };
   },
   watch: {
-      selectusers: function(data) {
-          console.log(JSON.parse(data))
-          this.addUserData(JSON.parse(data));
-      }
+    selectusers: function(data) {
+        console.log(JSON.parse(data))
+        this.addUserData(JSON.parse(data));
+    },
+    $route(to, from) {
+        this.transCode = to.params.transCode;
+        this.refreshComments();
+    }
   },
  
   methods: {

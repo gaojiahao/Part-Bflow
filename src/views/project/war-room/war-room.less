@@ -1,0 +1,29 @@
+.war-room{
+    background-color: #ffffff;
+    width:100%; 
+    height:100%;
+    &-toolbar{
+        height: 40px;
+        display: flex;
+        padding: 10px;
+
+        &-title{
+            flex:1;
+            font-size: 14px;
+            line-height: 20px;
+            color: #262626;
+            font-weight: 500;
+        }
+
+        &-actions{
+            flex:1;
+        }
+    }
+}
+
+.project-drawer{
+    /deep/ .ivu-drawer-body{
+        padding: 0px;
+    }
+}
+

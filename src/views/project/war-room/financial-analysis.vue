@@ -140,8 +140,7 @@ export default {
                 {
                     itemStyle: {
                         borderColor: '#777',
-                        borderWidth: 0,
-                        gapWidth: 5,
+                        borderWidth: 0
                     },
                     upperLabel: {
                         show: false
@@ -402,24 +401,22 @@ export default {
             return costChildren;
         },
         outsideChartsProfitData(obj){
-            let incomeSumValue = [];
-            incomeSumValue.push(obj.income.incomeSum)
-            let newIncomeSumArray = this.getAmountMapping(incomeSumValue);
+            let newIncomeSumArray = this.getAmountMapping([obj.income.incomeSum]);
 
-            let incomeSumChildArray = [];
-            incomeSumChildArray.push(obj.income.saleIncome)
-            incomeSumChildArray.push(obj.productsCost.productsCostSum)
-            incomeSumChildArray.push(obj.cost.costSum)
-            incomeSumChildArray.push(obj.profit)
-            let newIncomeSumChildArray = this.getAmountMapping(incomeSumChildArray);
+            let newIncomeSumChildArray = this.getAmountMapping([
+                obj.income.saleIncome,
+                obj.productsCost.productsCostSum,
+                obj.cost.costSum,
+                obj.profit
+            ]);
 
-            let productsCostSumChildArray = [];
-            productsCostSumChildArray.push(obj.productsCost.material)
-            productsCostSumChildArray.push(obj.productsCost.artificial)
-            productsCostSumChildArray.push(obj.productsCost.madeCost)
-            productsCostSumChildArray.push(obj.productsCost.insideServerPurchase)
-            productsCostSumChildArray.push(obj.productsCost.outsideServerPurchase)
-            let newProductsCostSumChildArray = this.getAmountMapping(productsCostSumChildArray);
+            let newProductsCostSumChildArray = this.getAmountMapping([
+                obj.productsCost.material,
+                obj.productsCost.artificial,
+                obj.productsCost.madeCost,
+                obj.productsCost.insideServerPurchase,
+                obj.productsCost.outsideServerPurchase
+            ]);
 
             this.profitData = [
                 {
@@ -567,7 +564,7 @@ export default {
             let newDebtSumArray = this.getAmountMapping([obj.debtSum,obj.profit]);
             let newDebtSumChildArray = this.getAmountMapping([obj.valuationAndStorage,obj.accountsPayable]);
             let newProfitChildArray = this.getAmountMapping([obj.distributedProfit,obj.distributiveProfit]);
-            console.log('newDebtSumChildArray:'+newDebtSumChildArray)
+            
             this.LbAndPf = [
                 {
                     name: "负债",
@@ -584,7 +581,7 @@ export default {
                             path: "应付账款",
                             value: [newDebtSumChildArray[1],obj.accountsPayable]
                         }
-                    ],
+                    ]
                 },
                 {
                     name: "利润",
@@ -601,26 +598,23 @@ export default {
                             path: "可分配利润",
                             value: [newProfitChildArray[1],obj.distributiveProfit]
                         }
-                    ],
+                    ]
                 }
             ]
         },
         getAmountMapping(amountArray){
             let oldAmountArray = [];
             const rangeMin = 30;
-            const rangeMax = 100;
+            const rangeMax = 300;
             Object.assign(oldAmountArray,amountArray);
             amountArray.sort(sortNumber);
-            console.log(amountArray);
-            function sortNumber(a,b)
-            {
-                return a - b
-            }
+            
+            function sortNumber(a,b){ return a - b };
             if(amountArray[0] === amountArray[amountArray.length - 1] && !amountArray[0]) return amountArray;
             const sumValue = Math.abs(this.sumArray(amountArray));
             let newAmountArray = [];
             if(oldAmountArray.length === 1){
-                newAmountArray.push(rangeMax);
+                newAmountArray.push(rangeMax + rangeMin);
                 return newAmountArray;
             }
             oldAmountArray.forEach(v => {

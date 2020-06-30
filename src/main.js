@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import App from './App'
 import {router} from './router'
-import iView from 'iview'
-import 'iview/dist/styles/iview.css'
+import ViewUI from 'view-design';
+import 'view-design/dist/styles/iview.css';
 
 import VueLazyload from 'vue-lazyload'
-import Loading from './components/loading/index.js'
+// import Loading from './components/loading/index.js'
 
 import './plugin/jquery-vender.js'
 import './plugin/jqorg/js/jquery.min.js'
@@ -20,9 +20,9 @@ require('@/filter/index')
 require('./assets/App.css')
 
 Vue.config.productionTip = false
-Vue.use(Loading)
+// Vue.use(Loading)
 Vue.use(VueLazyload)
-Vue.use(iView)
+Vue.use(ViewUI)
 
 new Vue({
   el: '#app',

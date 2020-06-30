@@ -48,11 +48,14 @@
         <div class="financial-analysis-projectAssets">
             <p class="financial-analysis-title">
                 资产负债表
-                <Icon type="md-refresh" class="fr" />
+                <Icon 
+                    type="md-refresh" 
+                    @click="refreshZCFZ"
+                    :style="{cursor:'pointer'}" 
+                    class="fr" />
             </p>
             <div class="financial-analysis-charts" >
-                <div id='projectAssets' style="height:360px;width:260px;display: inline-block;"></div>
-                <div id='LbAndPf' style="height:360px;width:260px;display: inline-block;"></div>
+                <div id='projectAssets' style="height:360px;width:560px;display: inline-block;"></div>
             </div>
             <ul >
                 <li  v-for="(item,index) in balance" :key="index">
@@ -67,7 +70,11 @@
          <div class="financial-analysis-profit">
             <p class="financial-analysis-title">
                 利润表
-                <Icon type="md-refresh" class="fr" />
+                <Icon 
+                type="md-refresh" 
+                @click="refreshLR"
+                :style="{cursor:'pointer'}"
+                class="fr" />
             </p>
            
             <div class="financial-analysis-charts">
@@ -111,6 +118,12 @@ export default {
         }
     },
     methods:{
+        refreshZCFZ(){
+            this.getProjectDistributiveProfitData();
+        },
+        refreshLR(){
+            this.getProjectProfitStatementData();
+        },
         goDebtWater(item){
             if((item.title && !item.isDeep)) return;
             this.waterType = 'Z';
@@ -148,17 +161,23 @@ export default {
                 },
                 {
                     itemStyle: {
-                        borderColor: '#555',
+                        borderColor: '#999',
                         borderWidth: 5,
                         gapWidth: 5
                     },
-                    color: ['#942e38', '#aaa', '#269f3c'],
-                    colorMappingBy: 'value',
+                    color: ['#46ad51', '#2898b0', '#f2b373','#eee'],
                     emphasis: {
                         itemStyle: {
                             borderColor: '#ddd'
                         }
                     }
+                },
+                {
+                    itemStyle: {
+                        borderWidth: 1,
+                        gapWidth: 5
+                    },
+                    colorSaturation: [0.35, 0.5],
                 },
                 {
                     itemStyle: {
@@ -215,7 +234,6 @@ export default {
         },
         initDept(){
             let  projectAssetsChart = echarts.init(document.getElementById('projectAssets'));
-            let  LbAndPfChart = echarts.init(document.getElementById('LbAndPf'));
             let formatUtil = echarts.format;
             let option;
             projectAssetsChart.setOption(option = {
@@ -238,7 +256,7 @@ export default {
 
                 series: [
                     {
-                        name: '项目资产',
+                        name: '项目资产负债表',
                         type: 'treemap',
                         label: {
                             show: true,
@@ -253,45 +271,6 @@ export default {
                         },
                         levels: this.getLevelOption(),
                         data: this.projectAssets
-                    }
-                ]
-            });
-
-            LbAndPfChart.setOption(option = {
-                tooltip: {
-                    formatter: function (info) {
-                        var value = info.value[1] || info.value;
-                        var treePathInfo = info.treePathInfo;
-                        var treePath = [];
-
-                        for (var i = 1; i < treePathInfo.length; i++) {
-                            treePath.push(treePathInfo[i].name);
-                        }
-
-                        return [
-                            '<div class="tooltip-title">' + formatUtil.encodeHTML(treePath.join('/')) + '</div>',
-                            '金额: ' + formatUtil.addCommas(value) + '',
-                        ].join('');
-                    }
-                },
-
-                series: [
-                    {
-                        name: '负债与利润',
-                        type: 'treemap',
-                        label: {
-                            show: true,
-                            formatter: '{b}'
-                        },
-                        upperLabel: {
-                            show: true,
-                            height: 30
-                        },
-                        itemStyle: {
-                            borderColor: '#fff'
-                        },
-                        levels: this.getLevelOption(),
-                        data: this.LbAndPf
                     }
                 ]
             });
@@ -535,8 +514,11 @@ export default {
             ]
         },
         chartsDistributiveData(obj){
-            let newAssetsSumArray = this.getAmountMapping([obj.assetsSum]);
+            let newAssetsSumArray = this.getAmountMapping([obj.assetsSum,obj.debtSum,obj.profit]);
             let newAssetsSumChildArray = this.getAmountMapping([obj.inventory,obj.salesInventory,obj.accountsReceivable]);
+            let newDebtSumChildArray = this.getAmountMapping([obj.valuationAndStorage,obj.accountsPayable]);
+            let newProfitChildArray = this.getAmountMapping([obj.distributedProfit,obj.distributiveProfit]);
+
             this.projectAssets = [
                 {
                     name: "资产",
@@ -557,19 +539,12 @@ export default {
                             path: "应收账款",
                             value: [newAssetsSumChildArray[2],obj.accountsReceivable]
                         }
-                    ],
-                    
-                }
-            ];
-            let newDebtSumArray = this.getAmountMapping([obj.debtSum,obj.profit]);
-            let newDebtSumChildArray = this.getAmountMapping([obj.valuationAndStorage,obj.accountsPayable]);
-            let newProfitChildArray = this.getAmountMapping([obj.distributedProfit,obj.distributiveProfit]);
-            
-            this.LbAndPf = [
+                    ]
+                },
                 {
                     name: "负债",
                     path: "负债",
-                    value: [newDebtSumArray[0],obj.debtSum],
+                    value: [newAssetsSumArray[1],obj.debtSum],
                     children:[
                         {
                             name: "估价入库",
@@ -586,7 +561,7 @@ export default {
                 {
                     name: "利润",
                     path: "利润",
-                    value: [newDebtSumArray[1],obj.profit],
+                    value: [newAssetsSumArray[2],obj.profit],
                     children:[
                         {
                             name: "已分配利润",
@@ -600,7 +575,7 @@ export default {
                         }
                     ]
                 }
-            ]
+            ];
         },
         getAmountMapping(amountArray){
             let oldAmountArray = [];

@@ -1,0 +1,61 @@
+{
+    "formData":{
+        "transCode":"PTSK2006280002",
+        "baseinfo":{
+            "handlerEntityName":"RFD测试",
+            "handlerName":"管理员",
+            "handlerUnitName":"组织1",
+            "handlerRoleName":"企业管理员",
+            "effectiveTime":"2020-06-28 16:13:39",
+            "creatorName":"管理员",
+            "modiferName":"管理员",
+            "crtTime":"2020-06-28 16:13:39",
+            "modTime":"2020-06-28 16:13:39",
+            "biProcessStatus":"",
+            "handlerEntity":"a3034317-0706-01ef-3b08-eb399895a648"
+        },
+        "projectPlanTask":[
+            {
+                "leaf":true,
+                "seq":0,
+                "index":0,
+                "depth":1,
+                "expanded":false,
+                "expandable":true,
+                "checked":null,
+                "cls":"",
+                "iconCls":"",
+                "icon":"",
+                "glyph":"",
+                "root":false,
+                "isLast":true,
+                "isFirst":true,
+                "allowDrop":true,
+                "allowDrag":true,
+                "loaded":false,
+                "loading":false,
+                "href":"",
+                "hrefTarget":"",
+                "qtip":"",
+                "qtitle":"",
+                "qshowDelay":0,
+                "children":[
+                ],
+                "visible":true,
+                "text":"",
+                "nodeId":"9899d402-7024-4630-9f57-132532ca2363",
+                "parentId":"235da70cf55e4a299aa67560ecbc7ee6",
+                "taskName":"123123",
+                "taskType":"协调类",
+                "dealerName":"管理员1",
+                "executor":"rfd001",
+                "cycleDays":1,
+                "standardWorkingHours":1
+            }],
+        "rootProjectPlanTaskId":"235da70cf55e4a299aa67560ecbc7ee6",
+        "comment":{
+            "biComment":""
+        }
+    },
+    "wfParam":null
+}

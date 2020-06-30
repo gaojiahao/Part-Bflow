@@ -237,7 +237,12 @@ export default {
         pageSize:10
         };
   },
-
+  watch: {
+    $route(to, from) {
+        this.transCode = to.params.transCode;
+        this.getTaskLog();
+    }
+  },
 
   methods: {
     onSelectChange() {
@@ -324,11 +329,19 @@ export default {
                this.modalFormData.logType = this.logTypeList[0].name;
               });
               this.getTaskLog(this.transCode);
+            }else{
+               if(window.top.Ext){
+                  window.top.Ext.toast(res.message);
+                }else{
+                  this.$Notice.error({
+                          title: '系统提示',
+                          desc: res.message
+                      });
+                }
             }
-
-            window.top.Ext.toast(res.message);
-
-            this.showTaskModal = false;
+         
+          this.showTaskModal = false;
+            
         });
         
     }, 

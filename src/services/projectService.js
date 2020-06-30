@@ -25,6 +25,36 @@ export const getOutsideProjectProfitStatement = (transCode) => request('/H_rolep
   transCode: transCode
 })
 
+
+/**
+ * @author snack.huang
+ * @description 创建项目计划 
+ */
+export const saveProjectPlan = (data) => request('/H_roleplay-si/projectPlan/save', {}, "POST", data)
+
+/**
+ * @author snack.huang
+ * @description 获取项目计划信息 
+ */
+export const getProjectPlan = (transCode) => request('/H_roleplay-si/projectPlan/findData', {
+  transCode:transCode
+})
+
+
+/**
+ * @author snack.huang
+ * @description 新增项目任务 
+ */
+export const saveProjectTask = (data) => request('/H_roleplay-si/projectPlan/saveProjectTask/save',  {}, "POST", data)
+
+/**
+ * @author snack.huang
+ * @description 通过项目交易号获取项目计化号
+ */
+export const getProjectPlanTransCode = (transCode) => request('/H_roleplay-si/ds/list/getProjectPlanTransCode',  {
+  projectTransCode:transCode
+})
+
 /**
  * @author XiaoYing
  * @description 获取项目利润表流水数据

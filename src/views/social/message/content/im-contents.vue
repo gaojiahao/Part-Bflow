@@ -223,7 +223,15 @@ export default {
                     case 104:
                         if(that.$route.params.groupId == res.groupId){
                             that.messages.push(res);
-                            this.$route.query.groupName = res.content.split('【').pop().split('】')[0];
+                            let query = this.$route.query;
+                            query.groupName = res.content.split('【').pop().split('】')[0];
+                            this.$router.push({
+                                name:'group',
+                                params:{
+                                    groupId:res.groupId
+                                },
+                                query:query
+                            });
                         }
                         break;
                 }

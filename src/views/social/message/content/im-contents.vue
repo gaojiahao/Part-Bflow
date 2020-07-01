@@ -172,7 +172,7 @@ export default {
                         if (this.$route.params.groupId == res.groupId)
                         {
                             this.messages.push(res);
-                             checkMessage(res.groupId).then(res=>{
+                             checkMessage(res.groupId).then(r=>{
                                 Bus.$emit("checkMessage",res.groupId);
                             });
                         }
@@ -185,7 +185,7 @@ export default {
                         }
                         if (this.$route.params.groupId == res.groupId){
                              this.messages.push(res);
-                             checkMessage(res.groupId).then(res=>{
+                             checkMessage(res.groupId).then(r=>{
                                 Bus.$emit("checkMessage",res.groupId);
                             });
                         }
@@ -223,7 +223,15 @@ export default {
                     case 104:
                         if(that.$route.params.groupId == res.groupId){
                             that.messages.push(res);
-                            this.$route.query.groupName = res.content.split('【').pop().split('】')[0];
+                            let query = this.$route.query;
+                            query.groupName = res.content.split('【').pop().split('】')[0];
+                            this.$router.push({
+                                name:'group',
+                                params:{
+                                    groupId:res.groupId
+                                },
+                                query:query
+                            });
                         }
                         break;
                 }

@@ -123,6 +123,13 @@ export default {
             default: ""
         }
     },
+    watch: {
+        transType: function(value){
+            if(value){
+                this.getProjectProfitStatementData();
+            }
+        }
+    },
     methods:{
         refreshZCFZ(){
             this.getProjectDistributiveProfitData();
@@ -297,10 +304,10 @@ export default {
         },
         getProjectProfitStatementData(){
             let request = getOutsideProjectProfitStatement;
-            if(this.transType === 'inside') request = getInsideProjectProfitStatement;
+            if(this.transType === 'YW159') request = getInsideProjectProfitStatement;
             request(this.$route.params.transCode).then(res => {
                 // this.initProfit();
-                this.transType == 'YW159' ? this.createInsideData(res.obj) : this.createOutsideData(res.obj);
+                this.transType === 'YW159' ? this.createInsideData(res.obj) : this.createOutsideData(res.obj);
             })
         },
         createInsideData(obj){
@@ -625,7 +632,6 @@ export default {
     },
     mounted(){
         this.getProjectDistributiveProfitData();
-        this.getProjectProfitStatementData();
     }
 }
 </script>

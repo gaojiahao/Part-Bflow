@@ -23,6 +23,7 @@ require('@/filter/index')
 require('./assets/App.css')
 require('./assets/common.css')
 
+
 Vue.prototype.formatToEmotion=formatToEmotion
 Vue.prototype.$md5 = md5;
 

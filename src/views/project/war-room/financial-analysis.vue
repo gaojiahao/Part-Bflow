@@ -117,6 +117,12 @@ export default {
             waterType: "L"
         }
     },
+    props: {
+        transType: {
+            type: String,
+            default: ""
+        }
+    },
     methods:{
         refreshZCFZ(){
             this.getProjectDistributiveProfitData();
@@ -283,7 +289,7 @@ export default {
                     {item:'应付账款',amount:toThousandFilter(res.tableContent[0].accountsPayable)},
                     {item:'可分配利润',amount:toThousandFilter(res.tableContent[0].distributiveProfit),title:true}
                 ];
-                this.chartsDistributiveData(res.tableContent[0]);
+                // this.chartsDistributiveData(res.tableContent[0]);
                 // this.initDept();
             }).catch(err => {
                 this.$Message.error(err.data.message);
@@ -291,11 +297,10 @@ export default {
         },
         getProjectProfitStatementData(){
             let request = getOutsideProjectProfitStatement;
-            // if(this.projectType === 'inside') request = getInsideProjectProfitStatement;
+            if(this.transType === 'inside') request = getInsideProjectProfitStatement;
             request(this.$route.params.transCode).then(res => {
-                this.createInsideData(res.obj)
                 // this.initProfit();
-                // this.projectType === 'inside' ? this.createInsideData(res.obj) : this.createOutsideData(res.obj);
+                this.transType == 'YW159' ? this.createInsideData(res.obj) : this.createOutsideData(res.obj);
             })
         },
         createInsideData(obj){
@@ -319,7 +324,7 @@ export default {
                 amount: obj.profitRate,
                 title:true
             });
-            this.insideChartsProfitData(obj);
+            // this.insideChartsProfitData(obj);
         },
         createOutsideData(obj){
             this.profit = [
@@ -344,7 +349,7 @@ export default {
                 amount: obj.profitRate,
                 title:true
             });
-            this.outsideChartsProfitData(obj);
+            // this.outsideChartsProfitData(obj);
         },
         setCostListData(obj){
             obj.cost.costList.forEach(it => {

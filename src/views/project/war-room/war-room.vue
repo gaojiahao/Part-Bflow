@@ -39,7 +39,7 @@
 
         <!-- 财务分析 -->
      <Drawer :mask="true"  class="project-drawer"  width="350" :closable="false" v-model="financialAnalysisModel">
-			<financialAnalysis></financialAnalysis>
+			<financialAnalysis :transType="transType"></financialAnalysis>
 		 </Drawer>
 
         <!-- 报表分析 -->
@@ -81,18 +81,19 @@ export default {
     },
     data(){
         return {
+						transType: "",
             buttonSize: 'small',
             financialAnalysisModel: false,
             timeAnalysisModel:false,
             projectCommentModel:false,
             projectTaskLogModel:false,
             ganttLocale:ganttLocale,
-			demoProject:demoProject,
-			demoProjectB:demoProjectB,
-			projectDuration:[],
-			projectMember:[],
-			planData:{},
-			project:{}
+						demoProject:demoProject,
+						demoProjectB:demoProjectB,
+						projectDuration:[],
+						projectMember:[],
+						planData:{},
+						project:{}
         }
 	},
 	computed: {
@@ -430,6 +431,7 @@ export default {
 				projectTransCode = this.$route.params.transCode;
 			getProjectPlanTransCode(projectTransCode).then(res=>{
 				if(res.length){
+					this.transType = res[0].transType;
 					planTransCode = res[0].transCode;
 					getProjectPlan(planTransCode).then(res=>{
 						let data = this.formatProjectData(res.formData);

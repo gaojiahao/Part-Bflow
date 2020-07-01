@@ -327,6 +327,7 @@ export default {
         });
 
         Bus.$on("checkMessage",groupId=>{
+            debugger
             this.imGroups.map(g=>{
                 if(g.groupId === groupId){
                     g.msgCount = 0;

@@ -172,7 +172,7 @@ export default {
                         if (this.$route.params.groupId == res.groupId)
                         {
                             this.messages.push(res);
-                             checkMessage(res.groupId).then(res=>{
+                             checkMessage(res.groupId).then(r=>{
                                 Bus.$emit("checkMessage",res.groupId);
                             });
                         }
@@ -185,7 +185,7 @@ export default {
                         }
                         if (this.$route.params.groupId == res.groupId){
                              this.messages.push(res);
-                             checkMessage(res.groupId).then(res=>{
+                             checkMessage(res.groupId).then(r=>{
                                 Bus.$emit("checkMessage",res.groupId);
                             });
                         }

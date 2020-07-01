@@ -9,7 +9,7 @@
             width="800" 
             footer-hide
             :styles="{top: '15px'}" 
-            :title="modalTitle">
+            :title="itemData.item">
             <Table 
               border
               size="small"
@@ -30,7 +30,7 @@
         </Modal>
         <project-water-modal 
           ref="projectWaterModal" 
-          :modalTitle="modalTitle" 
+          :itemData="itemData" 
           :waterType="waterType"
           :objCode="objCode">
         </project-water-modal>
@@ -90,9 +90,9 @@ export default {
     };
   },
   props: {
-    modalTitle: {
-      type: String,
-      default: "流水"
+    itemData: {
+      type: Object,
+      default: {}
     }
   },
   watch: {
@@ -113,7 +113,7 @@ export default {
       getProjectObjWaterData(){
         let params = {
           transCode: this.$route.params.transCode,
-          classify: this.modalTitle,
+          classify: this.itemData.item,
           start: this.start,
           page: this.currentPage,
           limit: this.pageSize

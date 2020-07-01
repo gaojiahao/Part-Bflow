@@ -38,9 +38,9 @@
         
 
         <!-- 财务分析 -->
-       	<Drawer :mask="true"  class="project-drawer"  width="600" :closable="false" v-model="financialAnalysisModel">
+     <Drawer :mask="true"  class="project-drawer"  width="350" :closable="false" v-model="financialAnalysisModel">
 			<financialAnalysis></financialAnalysis>
-		</Drawer>
+		 </Drawer>
 
         <!-- 报表分析 -->
 		 <Drawer  :mask="true"  class="project-drawer"  width="600" :closable="false" :scrollable='true' v-model="timeAnalysisModel">

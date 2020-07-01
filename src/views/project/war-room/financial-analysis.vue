@@ -54,9 +54,9 @@
                     :style="{cursor:'pointer'}" 
                     class="fr" />
             </p>
-            <div class="financial-analysis-charts" >
+            <!-- <div class="financial-analysis-charts" >
                 <div id='projectAssets' style="height:360px;width:560px;display: inline-block;"></div>
-            </div>
+            </div> -->
             <ul >
                 <li  v-for="(item,index) in balance" :key="index">
                     <div style="flex: 1;" :class="{'textIndent':!item.title,'item-title':item.title}">{{item.item}}</div>
@@ -77,9 +77,9 @@
                 class="fr" />
             </p>
            
-            <div class="financial-analysis-charts">
+            <!-- <div class="financial-analysis-charts">
                 <div id='profit' style="height:360px;width:560px;"></div>
-            </div>
+            </div> -->
             <ul >
                 <li  v-for="(item,index) in profit" :key="index">
                     <div style="flex: 1;" :class="{'textIndent':!item.title,'item-title':item.title}">{{item.item}}</div>
@@ -89,8 +89,8 @@
                 </li>
             </ul>
         </div >
-        <project-water-modal ref="projectWaterModal" :modalTitle="modalTitle" :waterType="waterType"></project-water-modal>
-        <project-obj-water-modal ref="projectObjWaterModal" :modalTitle="modalTitle"></project-obj-water-modal>
+        <project-water-modal ref="projectWaterModal" :itemData="itemData" :waterType="waterType"></project-water-modal>
+        <project-obj-water-modal ref="projectObjWaterModal" :itemData="itemData"></project-obj-water-modal>
     </div>
 </template>
 
@@ -113,7 +113,7 @@ export default {
         return{
             profit: [],
             balance: [],
-            modalTitle: "",
+            itemData: {},
             waterType: "L"
         }
     },
@@ -127,7 +127,7 @@ export default {
         goDebtWater(item){
             if((item.title && !item.isDeep)) return;
             this.waterType = 'Z';
-            this.modalTitle = item.item;
+            this.itemData = item;
             if(item.isDeep){
                 this.$refs['projectWaterModal'].showProjectWater = true;
             }else{
@@ -137,7 +137,7 @@ export default {
         goProfitWater(item){
             if(item.title) return;
             this.waterType = 'L';
-            this.modalTitle = item.item;
+            this.itemData =  item;
             this.$refs['projectWaterModal'].showProjectWater = true;
         },
         colorMappingChange(){
@@ -284,7 +284,7 @@ export default {
                     {item:'可分配利润',amount:toThousandFilter(res.tableContent[0].distributiveProfit),title:true}
                 ];
                 this.chartsDistributiveData(res.tableContent[0]);
-                this.initDept();
+                // this.initDept();
             }).catch(err => {
                 this.$Message.error(err.data.message);
             })
@@ -294,7 +294,7 @@ export default {
             // if(this.projectType === 'inside') request = getInsideProjectProfitStatement;
             request(this.$route.params.transCode).then(res => {
                 this.createInsideData(res.obj)
-                this.initProfit();
+                // this.initProfit();
                 // this.projectType === 'inside' ? this.createInsideData(res.obj) : this.createOutsideData(res.obj);
             })
         },

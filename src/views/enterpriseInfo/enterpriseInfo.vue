@@ -77,6 +77,28 @@
             </Checkbox>
           </span>
         </div>
+        <div class="select-explain">
+          <label class="left-leble">上班时间</label>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.starWorkTime}}</span>
+          <TimePicker 
+            v-else
+            type="time"
+            v-model="enterpriseInfo.starWorkTime"
+            placeholder="请选择" 
+            style="width: 168px">
+          </TimePicker>
+        </div>
+        <div class="select-explain">
+          <label class="left-leble">下班时间</label>
+          <span v-if="!editEnterpriseName">{{enterpriseInfo.offWorkTime}}</span>
+          <TimePicker 
+            v-else
+            type="time"
+            v-model="enterpriseInfo.offWorkTime"
+            placeholder="请选择" 
+            style="width: 168px">
+          </TimePicker>
+        </div>
       </section>
 
       <section class="info-warp-main-section">
@@ -300,7 +322,9 @@ export default {
         rtRedirectUrl:"", //
         admins: [],   //企业管理员
         backgroundImg: "",
-        backgroundName: ""
+        backgroundName: "",
+        starWorkTime: "",
+        offWorkTime: ""
       },
       exchangeRateInfo: {
         currency: "",
@@ -761,7 +785,9 @@ export default {
           ddAppKey: this.enterpriseInfo.ddAppKey,
           ddAppsecret: this.enterpriseInfo.ddAppsecret,
           ddOauth2AppId:this.enterpriseInfo.ddOauth2AppId,
-          rtRedirectUrl:this.enterpriseInfo.rtRedirectUrl
+          rtRedirectUrl:this.enterpriseInfo.rtRedirectUrl,
+          starWorkTime:this.enterpriseInfo.starWorkTime,
+          offWorkTime:this.enterpriseInfo.offWorkTime
         };
         let data = [];
         for(let key in values){

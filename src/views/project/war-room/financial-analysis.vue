@@ -10,6 +10,11 @@
     &-projectAssets{
         margin-bottom: 10px;
     }
+    .refresh{
+        position: absolute;
+        top: 45%;
+        left: 45%;
+    }
 
     &-profit{
         margin-bottom: 10px;
@@ -24,6 +29,7 @@
 
     ul{
         padding: 5px 25px;
+        position: relative;
         li{
             list-style: none;
             display: flex;
@@ -54,10 +60,11 @@
                     :style="{cursor:'pointer'}" 
                     class="fr" />
             </p>
-            <div class="financial-analysis-charts" >
+            <!-- <div class="financial-analysis-charts" >
                 <div id='projectAssets' style="height:360px;width:560px;display: inline-block;"></div>
-            </div>
+            </div> -->
             <ul >
+                <div class="refresh" v-if="showZCFZRefresh"><Spin></Spin></div>
                 <li  v-for="(item,index) in balance" :key="index">
                     <div style="flex: 1;" :class="{'textIndent':!item.title,'item-title':item.title}">{{item.item}}</div>
                     <div style="flex: 1 1 0%;text-align: right;">
@@ -77,10 +84,11 @@
                 class="fr" />
             </p>
            
-            <div class="financial-analysis-charts">
+            <!-- <div class="financial-analysis-charts">
                 <div id='profit' style="height:360px;width:560px;"></div>
-            </div>
+            </div> -->
             <ul >
+                <div class="refresh" v-if="showLRRefresh"><Spin></Spin></div>
                 <li  v-for="(item,index) in profit" :key="index">
                     <div style="flex: 1;" :class="{'textIndent':!item.title,'item-title':item.title}">{{item.item}}</div>
                     <div style="flex: 1 1 0%;text-align: right;">
@@ -89,8 +97,8 @@
                 </li>
             </ul>
         </div >
-        <project-water-modal ref="projectWaterModal" :modalTitle="modalTitle" :waterType="waterType"></project-water-modal>
-        <project-obj-water-modal ref="projectObjWaterModal" :modalTitle="modalTitle"></project-obj-water-modal>
+        <project-water-modal ref="projectWaterModal" :itemData="itemData" :waterType="waterType"></project-water-modal>
+        <project-obj-water-modal ref="projectObjWaterModal" :itemData="itemData"></project-obj-water-modal>
     </div>
 </template>
 
@@ -113,8 +121,23 @@ export default {
         return{
             profit: [],
             balance: [],
-            modalTitle: "",
-            waterType: "L"
+            itemData: {},
+            waterType: "L",
+            showZCFZRefresh: true,
+            showLRRefresh: true
+        }
+    },
+    props: {
+        transType: {
+            type: String,
+            default: ""
+        }
+    },
+    watch: {
+        transType: function(value){
+            if(value){
+                this.getProjectProfitStatementData();
+            }
         }
     },
     methods:{
@@ -127,7 +150,7 @@ export default {
         goDebtWater(item){
             if((item.title && !item.isDeep)) return;
             this.waterType = 'Z';
-            this.modalTitle = item.item;
+            this.itemData = item;
             if(item.isDeep){
                 this.$refs['projectWaterModal'].showProjectWater = true;
             }else{
@@ -137,7 +160,7 @@ export default {
         goProfitWater(item){
             if(item.title) return;
             this.waterType = 'L';
-            this.modalTitle = item.item;
+            this.itemData =  item;
             this.$refs['projectWaterModal'].showProjectWater = true;
         },
         colorMappingChange(){
@@ -270,6 +293,7 @@ export default {
             });
         },
         getProjectDistributiveProfitData(){
+            this.showZCFZRefresh = true;
             getProjectDistributiveProfit(this.$route.params.transCode).then(res => {
                 this.balance = [
                     {item:'利润',amount:toThousandFilter(res.tableContent[0].profit),title:true,isDeep: true},
@@ -283,19 +307,21 @@ export default {
                     {item:'应付账款',amount:toThousandFilter(res.tableContent[0].accountsPayable)},
                     {item:'可分配利润',amount:toThousandFilter(res.tableContent[0].distributiveProfit),title:true}
                 ];
-                this.chartsDistributiveData(res.tableContent[0]);
-                this.initDept();
+                this.showZCFZRefresh = false;
+                // this.chartsDistributiveData(res.tableContent[0]);
+                // this.initDept();
             }).catch(err => {
                 this.$Message.error(err.data.message);
             })
         },
         getProjectProfitStatementData(){
             let request = getOutsideProjectProfitStatement;
-            // if(this.projectType === 'inside') request = getInsideProjectProfitStatement;
+            this.showLRRefresh = true;
+            if(this.transType === 'YW159') request = getInsideProjectProfitStatement;
             request(this.$route.params.transCode).then(res => {
-                this.createInsideData(res.obj)
-                this.initProfit();
-                // this.projectType === 'inside' ? this.createInsideData(res.obj) : this.createOutsideData(res.obj);
+                // this.initProfit();
+                this.transType === 'YW159' ? this.createInsideData(res.obj) : this.createOutsideData(res.obj);
+                this.showLRRefresh = false;
             })
         },
         createInsideData(obj){
@@ -319,7 +345,7 @@ export default {
                 amount: obj.profitRate,
                 title:true
             });
-            this.insideChartsProfitData(obj);
+            // this.insideChartsProfitData(obj);
         },
         createOutsideData(obj){
             this.profit = [
@@ -344,7 +370,7 @@ export default {
                 amount: obj.profitRate,
                 title:true
             });
-            this.outsideChartsProfitData(obj);
+            // this.outsideChartsProfitData(obj);
         },
         setCostListData(obj){
             obj.cost.costList.forEach(it => {
@@ -620,7 +646,6 @@ export default {
     },
     mounted(){
         this.getProjectDistributiveProfitData();
-        this.getProjectProfitStatementData();
     }
 }
 </script>

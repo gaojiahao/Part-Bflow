@@ -9,7 +9,7 @@
             width="800" 
             footer-hide
             :styles="{top: '15px'}" 
-            :title="modalTitle">
+            :title="itemData.item">
             <Table 
               border
               size="small"
@@ -93,9 +93,9 @@ export default {
     };
   },
   props: {
-    modalTitle: {
-      type: String,
-      default: "流水"
+    itemData: {
+      type: Object,
+      default: {}
     },
     waterType: {
       type: String,
@@ -125,7 +125,7 @@ export default {
         let request = getProjectProfitWater,
             params = {
               transCode: this.$route.params.transCode,
-              classify: this.modalTitle,
+              classify: this.itemData.projectCode ? this.itemData.projectCode : this.itemData.item,
               start: this.start,
               page: this.currentPage,
               limit: this.pageSize

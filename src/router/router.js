@@ -83,6 +83,17 @@ export const instanceCommetns = {
     import('@/views/form/instance-comments.vue')
 }
 
+
+export const customerCommetns = {
+  path: '/customer/:commmentType/:relationkey',
+  name: 'customerCommetns',
+  meta: {
+    title: 'RoleTask - 自定义评论'
+  },
+  component: () =>
+    import('@/views/form/customer-comments.vue')
+}
+
 export const taskLog = {
   path: '/taskLog/:transCode',
   name: 'taskLog',
@@ -176,6 +187,7 @@ export const routers = [
   fieldChangeHistoryRouter,
   taskLog,
   instanceCommetns,
+  customerCommetns,
   enterpriseInfo,
   activation,
   dictionaryManage,

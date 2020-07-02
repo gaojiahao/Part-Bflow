@@ -10,7 +10,6 @@
             footer-hide
             :styles="{top: '15px'}" 
             :title="itemData.item">
-            {{itemData.item}}
             <Table 
               border
               size="small"

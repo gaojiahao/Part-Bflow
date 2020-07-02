@@ -10,6 +10,11 @@
     &-projectAssets{
         margin-bottom: 10px;
     }
+    .refresh{
+        position: absolute;
+        top: 45%;
+        left: 45%;
+    }
 
     &-profit{
         margin-bottom: 10px;
@@ -24,6 +29,7 @@
 
     ul{
         padding: 5px 25px;
+        position: relative;
         li{
             list-style: none;
             display: flex;
@@ -58,6 +64,7 @@
                 <div id='projectAssets' style="height:360px;width:560px;display: inline-block;"></div>
             </div> -->
             <ul >
+                <div class="refresh" v-if="showZCFZRefresh"><Spin></Spin></div>
                 <li  v-for="(item,index) in balance" :key="index">
                     <div style="flex: 1;" :class="{'textIndent':!item.title,'item-title':item.title}">{{item.item}}</div>
                     <div style="flex: 1 1 0%;text-align: right;">
@@ -81,6 +88,7 @@
                 <div id='profit' style="height:360px;width:560px;"></div>
             </div> -->
             <ul >
+                <div class="refresh" v-if="showLRRefresh"><Spin></Spin></div>
                 <li  v-for="(item,index) in profit" :key="index">
                     <div style="flex: 1;" :class="{'textIndent':!item.title,'item-title':item.title}">{{item.item}}</div>
                     <div style="flex: 1 1 0%;text-align: right;">
@@ -114,7 +122,9 @@ export default {
             profit: [],
             balance: [],
             itemData: {},
-            waterType: "L"
+            waterType: "L",
+            showZCFZRefresh: true,
+            showLRRefresh: true
         }
     },
     props: {
@@ -283,6 +293,7 @@ export default {
             });
         },
         getProjectDistributiveProfitData(){
+            this.showZCFZRefresh = true;
             getProjectDistributiveProfit(this.$route.params.transCode).then(res => {
                 this.balance = [
                     {item:'利润',amount:toThousandFilter(res.tableContent[0].profit),title:true,isDeep: true},
@@ -296,6 +307,7 @@ export default {
                     {item:'应付账款',amount:toThousandFilter(res.tableContent[0].accountsPayable)},
                     {item:'可分配利润',amount:toThousandFilter(res.tableContent[0].distributiveProfit),title:true}
                 ];
+                this.showZCFZRefresh = false;
                 // this.chartsDistributiveData(res.tableContent[0]);
                 // this.initDept();
             }).catch(err => {
@@ -304,10 +316,12 @@ export default {
         },
         getProjectProfitStatementData(){
             let request = getOutsideProjectProfitStatement;
+            this.showLRRefresh = true;
             if(this.transType === 'YW159') request = getInsideProjectProfitStatement;
             request(this.$route.params.transCode).then(res => {
                 // this.initProfit();
                 this.transType === 'YW159' ? this.createInsideData(res.obj) : this.createOutsideData(res.obj);
+                this.showLRRefresh = false;
             })
         },
         createInsideData(obj){

@@ -85,7 +85,7 @@ export const instanceCommetns = {
 
 
 export const customerCommetns = {
-  path: '/customer/:commmentType/:relationkey',
+  path: '/comment/customer/:commmentType/:relationkey',
   name: 'customerCommetns',
   meta: {
     title: 'RoleTask - 自定义评论'

@@ -10,6 +10,11 @@
     &-projectAssets{
         margin-bottom: 10px;
     }
+    .refresh{
+        position: absolute;
+        top: 45%;
+        left: 45%;
+    }
 
     &-profit{
         margin-bottom: 10px;
@@ -24,6 +29,7 @@
 
     ul{
         padding: 5px 25px;
+        position: relative;
         li{
             list-style: none;
             display: flex;
@@ -54,10 +60,11 @@
                     :style="{cursor:'pointer'}" 
                     class="fr" />
             </p>
-            <div class="financial-analysis-charts" >
+            <!-- <div class="financial-analysis-charts" >
                 <div id='projectAssets' style="height:360px;width:560px;display: inline-block;"></div>
-            </div>
+            </div> -->
             <ul >
+                <div class="refresh" v-if="showZCFZRefresh"><Spin></Spin></div>
                 <li  v-for="(item,index) in balance" :key="index">
                     <div style="flex: 1;" :class="{'textIndent':!item.title,'item-title':item.title}">{{item.item}}</div>
                     <div style="flex: 1 1 0%;text-align: right;">
@@ -77,10 +84,11 @@
                 class="fr" />
             </p>
            
-            <div class="financial-analysis-charts">
+            <!-- <div class="financial-analysis-charts">
                 <div id='profit' style="height:360px;width:560px;"></div>
-            </div>
+            </div> -->
             <ul >
+                <div class="refresh" v-if="showLRRefresh"><Spin></Spin></div>
                 <li  v-for="(item,index) in profit" :key="index">
                     <div style="flex: 1;" :class="{'textIndent':!item.title,'item-title':item.title}">{{item.item}}</div>
                     <div style="flex: 1 1 0%;text-align: right;">
@@ -89,8 +97,8 @@
                 </li>
             </ul>
         </div >
-        <project-water-modal ref="projectWaterModal" :modalTitle="modalTitle" :waterType="waterType"></project-water-modal>
-        <project-obj-water-modal ref="projectObjWaterModal" :modalTitle="modalTitle"></project-obj-water-modal>
+        <project-water-modal ref="projectWaterModal" :itemData="itemData" :waterType="waterType"></project-water-modal>
+        <project-obj-water-modal ref="projectObjWaterModal" :itemData="itemData"></project-obj-water-modal>
     </div>
 </template>
 
@@ -113,8 +121,23 @@ export default {
         return{
             profit: [],
             balance: [],
-            modalTitle: "",
-            waterType: "L"
+            itemData: {},
+            waterType: "L",
+            showZCFZRefresh: true,
+            showLRRefresh: true
+        }
+    },
+    props: {
+        transType: {
+            type: String,
+            default: ""
+        }
+    },
+    watch: {
+        transType: function(value){
+            if(value){
+                this.getProjectProfitStatementData();
+            }
         }
     },
     methods:{
@@ -127,7 +150,7 @@ export default {
         goDebtWater(item){
             if((item.title && !item.isDeep)) return;
             this.waterType = 'Z';
-            this.modalTitle = item.item;
+            this.itemData = item;
             if(item.isDeep){
                 this.$refs['projectWaterModal'].showProjectWater = true;
             }else{
@@ -137,7 +160,7 @@ export default {
         goProfitWater(item){
             if(item.title) return;
             this.waterType = 'L';
-            this.modalTitle = item.item;
+            this.itemData =  item;
             this.$refs['projectWaterModal'].showProjectWater = true;
         },
         colorMappingChange(){
@@ -152,8 +175,9 @@ export default {
             return [
                 {
                     itemStyle: {
-                        borderColor: '#777',
-                        borderWidth: 0
+                        borderColor: '#fff',
+                        borderWidth: 0,
+                        gapWidth: 5
                     },
                     upperLabel: {
                         show: false
@@ -165,19 +189,12 @@ export default {
                         borderWidth: 5,
                         gapWidth: 5
                     },
-                    color: ['#46ad51', '#2898b0', '#f2b373','#eee'],
+                    color: ['#f2b373'],
                     emphasis: {
                         itemStyle: {
                             borderColor: '#ddd'
                         }
                     }
-                },
-                {
-                    itemStyle: {
-                        borderWidth: 1,
-                        gapWidth: 5
-                    },
-                    colorSaturation: [0.35, 0.5],
                 },
                 {
                     itemStyle: {
@@ -276,6 +293,7 @@ export default {
             });
         },
         getProjectDistributiveProfitData(){
+            this.showZCFZRefresh = true;
             getProjectDistributiveProfit(this.$route.params.transCode).then(res => {
                 this.balance = [
                     {item:'利润',amount:toThousandFilter(res.tableContent[0].profit),title:true,isDeep: true},
@@ -289,19 +307,21 @@ export default {
                     {item:'应付账款',amount:toThousandFilter(res.tableContent[0].accountsPayable)},
                     {item:'可分配利润',amount:toThousandFilter(res.tableContent[0].distributiveProfit),title:true}
                 ];
-                this.chartsDistributiveData(res.tableContent[0]);
-                this.initDept();
+                this.showZCFZRefresh = false;
+                // this.chartsDistributiveData(res.tableContent[0]);
+                // this.initDept();
             }).catch(err => {
                 this.$Message.error(err.data.message);
             })
         },
         getProjectProfitStatementData(){
             let request = getOutsideProjectProfitStatement;
-            // if(this.projectType === 'inside') request = getInsideProjectProfitStatement;
+            this.showLRRefresh = true;
+            if(this.transType === 'YW159') request = getInsideProjectProfitStatement;
             request(this.$route.params.transCode).then(res => {
-                this.createInsideData(res.obj)
-                this.initProfit();
-                // this.projectType === 'inside' ? this.createInsideData(res.obj) : this.createOutsideData(res.obj);
+                // this.initProfit();
+                this.transType === 'YW159' ? this.createInsideData(res.obj) : this.createOutsideData(res.obj);
+                this.showLRRefresh = false;
             })
         },
         createInsideData(obj){
@@ -325,7 +345,7 @@ export default {
                 amount: obj.profitRate,
                 title:true
             });
-            this.insideChartsProfitData(obj);
+            // this.insideChartsProfitData(obj);
         },
         createOutsideData(obj){
             this.profit = [
@@ -350,7 +370,7 @@ export default {
                 amount: obj.profitRate,
                 title:true
             });
-            this.outsideChartsProfitData(obj);
+            // this.outsideChartsProfitData(obj);
         },
         setCostListData(obj){
             obj.cost.costList.forEach(it => {
@@ -374,21 +394,21 @@ export default {
                     name: it.costName,
                     path: it.costName,
                     projectCode: it.costCode,
-                    value: [newCostChildArray[index],it.amount]
+                    value: [newCostChildArray[index],it.amount],
+                    color: ['#2898b0']
                 });
             });
             return costChildren;
         },
         outsideChartsProfitData(obj){
-            let newIncomeSumArray = this.getAmountMapping([obj.income.incomeSum]);
-
-            let newIncomeSumChildArray = this.getAmountMapping([
+            let newIncomeSumArray = this.getAmountMapping([
+                obj.income.incomeSum,
                 obj.income.saleIncome,
                 obj.productsCost.productsCostSum,
                 obj.cost.costSum,
                 obj.profit
             ]);
-
+            let newIncomeChildrenArray = this.getAmountMapping([obj.income.saleIncome]);
             let newProductsCostSumChildArray = this.getAmountMapping([
                 obj.productsCost.material,
                 obj.productsCost.artificial,
@@ -406,61 +426,61 @@ export default {
                         {
                             name: "销售收入",
                             path: "销售收入",
-                            value: [newIncomeSumChildArray[0],obj.income.saleIncome]
-                        },
-                        {
-                            name: "成本",
-                            path: "成本",
-                            value: [newIncomeSumChildArray[1],obj.productsCost.productsCostSum],
-                            children:[
-                                {
-                                    name: "标准用料",
-                                    path: "标准用料",
-                                    value: [productsCostSumChildArray[0],obj.productsCost.material]
-                                },
-                                {
-                                    name: "直接人工",
-                                    path: "直接人工",
-                                    value: [productsCostSumChildArray[1],obj.productsCost.artificial]
-                                },
-                                {
-                                    name: "制造费用",
-                                    path: "制造费用",
-                                    value: [productsCostSumChildArray[2],obj.productsCost.madeCost]
-                                },
-                                {
-                                    name: "内部服务采购",
-                                    path: "内部服务采购",
-                                    value: [productsCostSumChildArray[3],obj.productsCost.insideServerPurchase]
-                                },
-                                {
-                                    name: "外部服务采购",
-                                    path: "外部服务采购",
-                                    value: [productsCostSumChildArray[4],obj.productsCost.outsideServerPurchase]
-                                }
-                            ]
-                        },
-                        {
-                            name: "费用",
-                            path: "费用",
-                            value: [newIncomeSumChildArray[2],obj.cost.costSum],
-                            children:this.createCostChildrenData(obj)
-                        },{
-                            name: "利润额",
-                            path: "利润额",
-                            value: [newIncomeSumChildArray[3],obj.profit],
+                            value: [newIncomeChildrenArray[0],obj.income.saleIncome]
                         }
                     ]
+                },
+                {
+                    name: "成本",
+                    path: "成本",
+                    value: [newIncomeSumArray[1],obj.productsCost.productsCostSum],
+                    children:[
+                        {
+                            name: "标准用料",
+                            path: "标准用料",
+                            value: [productsCostSumChildArray[0],obj.productsCost.material]
+                        },
+                        {
+                            name: "直接人工",
+                            path: "直接人工",
+                            value: [productsCostSumChildArray[1],obj.productsCost.artificial]
+                        },
+                        {
+                            name: "制造费用",
+                            path: "制造费用",
+                            value: [productsCostSumChildArray[2],obj.productsCost.madeCost]
+                        },
+                        {
+                            name: "内部服务采购",
+                            path: "内部服务采购",
+                            value: [productsCostSumChildArray[3],obj.productsCost.insideServerPurchase]
+                        },
+                        {
+                            name: "外部服务采购",
+                            path: "外部服务采购",
+                            value: [productsCostSumChildArray[4],obj.productsCost.outsideServerPurchase]
+                        }
+                    ]
+                },
+                {
+                    name: "费用",
+                    path: "费用",
+                    value: [newIncomeSumArray[2],obj.cost.costSum],
+                    children:this.createCostChildrenData(obj)
+                },{
+                    name: "利润额",
+                    path: "利润额",
+                    value: [newIncomeSumArray[3],obj.profit],
                 }
             ]
         },
         insideChartsProfitData(obj){
-            let newIncomeSumArray = this.getAmountMapping([obj.income.incomeSum]);
-
-            let newIncomeSumChildArray = this.getAmountMapping(
-                [obj.income.budgetReceipts || 0,obj.productsCost.productsCostSum,obj.profit,obj.cost.costSum]
-            );
-
+            let newIncomeSumArray = this.getAmountMapping([
+                obj.income.incomeSum,
+                obj.productsCost.productsCostSum,
+                obj.profit,obj.cost.costSum
+            ]);
+            let newIncomeChildrenArray = this.getAmountMapping([obj.income.budgetReceipts || 0,]);
             let newProductsCostSumChildArray = this.getAmountMapping(
                 [obj.productsCost.insideServerPurchase,obj.productsCost.outsideServerPurchase,obj.productsCost.otherCost || 0]
             );
@@ -470,46 +490,53 @@ export default {
                     name: "收入",
                     path: "收入",
                     value: [newIncomeSumArray[0],obj.income.incomeSum],
+                    color: ['#46ad51'],
                     children:[
                         {
                             name: "预算收入",
                             path: "预算收入",
-                            value: [newIncomeSumChildArray[0],obj.income.budgetReceipts || 0]
-                        },
-                        {
-                            name: "成本",
-                            path: "成本",
-                            value: [newIncomeSumChildArray[1],obj.productsCost.productsCostSum],
-                            children:[
-                                {
-                                    name: "内部服务采购",
-                                    path: "内部服务采购",
-                                    value: [newProductsCostSumChildArray[0],obj.productsCost.insideServerPurchase],
-                                    
-                                },
-                                {
-                                    name: "外部服务采购",
-                                    path: "外部服务采购",
-                                    value: [newProductsCostSumChildArray[1],obj.productsCost.outsideServerPurchase]
-                                },
-                                {
-                                    name: "其他成本",
-                                    path: "其他成本",
-                                    value: [newProductsCostSumChildArray[2],obj.productsCost.otherCost || 0]
-                                },
-                            ]
-                        },{
-                            name: "盈余",
-                            path: "盈余",
-                            value: [newIncomeSumChildArray[2],obj.profit],
-                        },
-                        {
-                            name: "费用",
-                            path: "费用",
-                            value: [newIncomeSumChildArray[3],obj.cost.costSum],
-                            children:this.createCostChildrenData(obj)
+                            value: [newIncomeChildrenArray[0],obj.income.budgetReceipts || 0],
+                            color: ['#2898b0']
                         }
                     ]
+                },
+                {
+                    name: "成本",
+                    path: "成本",
+                    value: [newIncomeSumArray[1],obj.productsCost.productsCostSum],
+                    color: ['#46ad51'],
+                    children:[
+                        {
+                            name: "内部服务采购",
+                            path: "内部服务采购",
+                            value: [newProductsCostSumChildArray[0],obj.productsCost.insideServerPurchase],
+                            color: ['#2898b0']
+                        },
+                        {
+                            name: "外部服务采购",
+                            path: "外部服务采购",
+                            value: [newProductsCostSumChildArray[1],obj.productsCost.outsideServerPurchase],
+                            color: ['#2898b0']
+                        },
+                        {
+                            name: "其他成本",
+                            path: "其他成本",
+                            value: [newProductsCostSumChildArray[2],obj.productsCost.otherCost || 0],
+                            color: ['#2898b0']
+                        },
+                    ]
+                },{
+                    name: "盈余",
+                    path: "盈余",
+                    value: [newIncomeSumArray[2],obj.profit],
+                    color: ['#46ad51']
+                },
+                {
+                    name: "费用",
+                    path: "费用",
+                    value: [newIncomeSumArray[3],obj.cost.costSum],
+                    color: ['#46ad51'],
+                    children:this.createCostChildrenData(obj)
                 }
             ]
         },
@@ -524,20 +551,24 @@ export default {
                     name: "资产",
                     path: "资产",
                     value: [newAssetsSumArray[0],obj.assetsSum],
+                    color: ['#46ad51'],
                     children:[
                         {
                             name: "存货",
                             path: "存货",
                             value: [newAssetsSumChildArray[0],obj.inventory],
+                            color: ['#2898b0']
                         },
                         {
                             name: "发出商品",
                             path: "发出商品",
                             value: [newAssetsSumChildArray[1],obj.salesInventory],
+                            color: ['#2898b0']
                         },{
                             name: "应收账款",
                             path: "应收账款",
-                            value: [newAssetsSumChildArray[2],obj.accountsReceivable]
+                            value: [newAssetsSumChildArray[2],obj.accountsReceivable],
+                            color: ['#2898b0']
                         }
                     ]
                 },
@@ -545,16 +576,19 @@ export default {
                     name: "负债",
                     path: "负债",
                     value: [newAssetsSumArray[1],obj.debtSum],
+                    color: ['#46ad51'],
                     children:[
                         {
                             name: "估价入库",
                             path: "估价入库",
-                            value: [newDebtSumChildArray[0],obj.valuationAndStorage]
+                            value: [newDebtSumChildArray[0],obj.valuationAndStorage],
+                            color: ['#2898b0']
                         },
                         {
                             name: "应付账款",
                             path: "应付账款",
-                            value: [newDebtSumChildArray[1],obj.accountsPayable]
+                            value: [newDebtSumChildArray[1],obj.accountsPayable],
+                            color: ['#2898b0']
                         }
                     ]
                 },
@@ -562,16 +596,19 @@ export default {
                     name: "利润",
                     path: "利润",
                     value: [newAssetsSumArray[2],obj.profit],
+                    color: ['#46ad51'],
                     children:[
                         {
                             name: "已分配利润",
                             path: "已分配利润",
-                            value: [newProfitChildArray[0],obj.distributedProfit]
+                            value: [newProfitChildArray[0],obj.distributedProfit],
+                            color: ['#2898b0']
                         },
                         {
                             name: "可分配利润",
                             path: "可分配利润",
-                            value: [newProfitChildArray[1],obj.distributiveProfit]
+                            value: [newProfitChildArray[1],obj.distributiveProfit],
+                            color: ['#2898b0']
                         }
                     ]
                 }
@@ -609,7 +646,6 @@ export default {
     },
     mounted(){
         this.getProjectDistributiveProfitData();
-        this.getProjectProfitStatementData();
     }
 }
 </script>

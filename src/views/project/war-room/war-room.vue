@@ -38,9 +38,9 @@
         
 
         <!-- 财务分析 -->
-       	<Drawer :mask="true"  class="project-drawer"  width="600" :closable="false" v-model="financialAnalysisModel">
-			<financialAnalysis></financialAnalysis>
-		</Drawer>
+     <Drawer :mask="true"  class="project-drawer"  width="350" :closable="false" v-model="financialAnalysisModel">
+			<financialAnalysis :transType="transType"></financialAnalysis>
+		 </Drawer>
 
         <!-- 报表分析 -->
 		 <Drawer  :mask="true"  class="project-drawer"  width="600" :closable="false" :scrollable='true' v-model="timeAnalysisModel">
@@ -81,18 +81,19 @@ export default {
     },
     data(){
         return {
+						transType: "",
             buttonSize: 'small',
             financialAnalysisModel: false,
             timeAnalysisModel:false,
             projectCommentModel:false,
             projectTaskLogModel:false,
             ganttLocale:ganttLocale,
-			demoProject:demoProject,
-			demoProjectB:demoProjectB,
-			projectDuration:[],
-			projectMember:[],
-			planData:{},
-			project:{}
+						demoProject:demoProject,
+						demoProjectB:demoProjectB,
+						projectDuration:[],
+						projectMember:[],
+						planData:{},
+						project:{}
         }
 	},
 	computed: {
@@ -124,7 +125,8 @@ export default {
                 t.id = t.projectPlanTaskId;
                 t.parent = t.parentId;
                 t.start_date = t.startTime;
-                t.end_date = t.deadline;
+				t.end_date = t.deadline;
+				// t.duration = t.standardWorkingHours;
                 t.text = t.taskName;
 			});
 
@@ -138,12 +140,6 @@ export default {
 				transCode:'PPLN2006270001',
 				id:'0'
 			});
-
-			// console.log(tasks);
-			tasks.map(t=>{
-				console.log(`${t.text}-----${t.id}-----${t.parent}`);
-			});
-
             return tasks;
 		},
 		/**
@@ -267,7 +263,7 @@ export default {
 			//选择任务
 			gantt.attachEvent("onTaskClick", function(id){
 				let task = gantt.getTaskBy('id',id);
-				if(task.length===1)vm.$router.replace(`/project/warRoom/${task[0].transCode}?type=task`);
+				if(task.length===1)vm.$router.replace(`/project/warRoom/${task[0].transCode}`);
 
 				return true;
 			});
@@ -397,7 +393,7 @@ export default {
 				{name: "text", tree: true, width: 220, resize: true,label:"任务名称",align: "left"},
 				{name: "dealerName", width: 60, align: "center",label:'执行者'},
 				{name: "start_date", align: "center", width: 80, resize: true,label:'开始日期'},
-				{name: "add", width: 44},
+				// {name: "add", width: 44},
 				{name: "end_date", align: "center", width: 80, resize: true,label:'结束日期'},
 				{name: "duration", width: 60, align: "right", resize: true,label:'计划工时'},
 			];
@@ -435,6 +431,7 @@ export default {
 				projectTransCode = this.$route.params.transCode;
 			getProjectPlanTransCode(projectTransCode).then(res=>{
 				if(res.length){
+					this.transType = res[0].transType;
 					planTransCode = res[0].transCode;
 					getProjectPlan(planTransCode).then(res=>{
 						let data = this.formatProjectData(res.formData);
@@ -443,6 +440,8 @@ export default {
 						gantt.parse({
 							data:data
 						});
+
+						this.setProjectDuration([this.project.expectStartDate,this.project.expectEndDate]);
 					});
 				}
 			});

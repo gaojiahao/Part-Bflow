@@ -300,9 +300,9 @@ export default {
         this.refreshNavs();
         // this.subscribeMessage();
         this.subscribeIm();
-        Bus.$on('updateGroupName', () => {
-            this.refreshNavs();
-        });
+        // Bus.$on('updateGroupName', () => {
+        //     this.refreshNavs();
+        // });
         let that = this;
         let isExist = false;
         Bus.$on('addGroup', group => {
@@ -327,6 +327,7 @@ export default {
         });
 
         Bus.$on("checkMessage",groupId=>{
+            debugger
             this.imGroups.map(g=>{
                 if(g.groupId === groupId){
                     g.msgCount = 0;

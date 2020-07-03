@@ -28,18 +28,13 @@
             <!-- <Tooltip content="数据分析" placement="top">
                 <Button :size="buttonSize" icon="md-analytics" type="primary" shape="circle" @click="timeAnalysisModel=true;"></Button>
             </Tooltip> -->
-
 		</div>
       	</div>
-
 		<div style='width: 100%;height: calc(100% - 40px);display: flex;'>
 			<div style='flex:24' ref="gantt"></div>
 		</div>
-
-        
-
         <!-- 财务分析 -->
-     <Drawer :mask="true"  class="project-drawer"  width="350" :closable="false" v-model="financialAnalysisModel">
+    	 <Drawer :mask="true"  class="project-drawer"  width="350" :closable="false" v-model="financialAnalysisModel">
 			<financialAnalysis :projectTransCode="projectTransCode" :transType="transType"></financialAnalysis>
 		 </Drawer>
 
@@ -47,10 +42,12 @@
 		 <Drawer  :mask="true"  class="project-drawer"  width="600" :closable="false" :scrollable='true' v-model="timeAnalysisModel">
 			<timeAnalysis></timeAnalysis>
 		 </Drawer>
+
          <!-- 评论 -->
          <Drawer  :mask="true"  class="project-drawer"   width="600" :closable="false" :scrollable='true' v-model="projectCommentModel">
 			<userComments ref='taskComments'></userComments>
 		 </Drawer>
+		 
          <!-- 日志任务 -->
           <Drawer :mask="true"  class="project-drawer"   width="680" :closable="false" :scrollable='true' v-model="projectTaskLogModel">
 			<taskLog></taskLog>
@@ -71,7 +68,6 @@ import taskLog from '@/views/form/modules/task-log'
 
 import {saveProjectPlan,getProjectPlan,saveProjectTask,getProjectPlanTransCode } from '@/services/projectService'
 
-import {demoProject,demoProjectA,demoProjectB} from './demoProject';
 export default {
     name:'warRoom',
     components:{
@@ -89,11 +85,8 @@ export default {
             projectCommentModel:false,
             projectTaskLogModel:false,
             ganttLocale:ganttLocale,
-			demoProject:demoProject,
-			demoProjectB:demoProjectB,
 			projectDuration:[],
 			projectMember:[],
-			planData:{},
 			project:{},
 			projectTransCode:undefined
         }
@@ -103,19 +96,19 @@ export default {
   	},
     methods:{
         formatProjectData(formData){
-			var projectPlanTask = formData.projectPlanTask;
-			var tasks = [];
-			var projectApproval = formData.projectApproval;
+			var tasks = [],
+				links = [],
+				projectPlanTask = formData.projectPlanTask,
+				projectApproval = formData.projectApproval,
+            	spltTask  = function(task){
+					tasks.push(task);
+					if(task.children.length){
+						task.children.map(t=>{
+							spltTask(t);
+						});
+					}
+				};
 
-            var spltTask  = function(task){
-                var a = task;
-                    tasks.push(task);
-                if(task.children.length){
-                    task.children.map(t=>{
-                        spltTask(t);
-                    });
-                }
-            };
             projectPlanTask.map(t=>{
                 spltTask(t);
 			});
@@ -143,7 +136,19 @@ export default {
 				transCode:'',
 				id:'0'
 			});
-            return tasks;
+
+			tasks.map((t,index)=>{
+				links.push({
+					id:index,
+					source:t.parent,
+					target:t.id,
+					type:"1"
+				})
+			});
+            return {
+				data:tasks,
+				// links:links 
+			};
 		},
 		/**
 		 * 添加标记
@@ -250,8 +255,6 @@ export default {
 
 			//修改任务
 			gantt.attachEvent("onBeforeTaskUpdate", function(id,task){
-				//any custom logic here
-				console.log('修改',task);
 				vm.projectMember.map(m=>{
 					if(task.executor === m.key){
 						task.dealerName = m.label;
@@ -260,14 +263,17 @@ export default {
 				return true;
 			});
 
-			//选择任务
+			// 选择任务
 			gantt.attachEvent("onTaskClick", function(id){
 				let task = gantt.getTaskBy('id',id);
-				if(task.length===1)vm.$router.replace(`/project/warRoom/${task[0].transCode}`);
-
+				if(task.length===1){
+					vm.$router.replace(`/project/warRoom/${task[0].transCode}`);
+				}else{
+					vm.$router.replace(`/project/warRoom/${vm.projectTransCode}`);
+				}
 				return true;
 			});
-			
+
 		},
 		/**
 		 * 构建表单基本信息
@@ -303,7 +309,7 @@ export default {
 				listId:"0281f8eb-f1d2-415c-b566-756fc749ccb3",
 				formData:{
 					baseinfo:this.buildBaseInfo(),
-					projectApproval:this.demoProjectB.formData.projectApproval,
+					projectApproval:this.project,
 					projectPlanTask:[]
 				},
 				
@@ -343,7 +349,7 @@ export default {
 		 * 初始化甘特图配置
 		 */
 		initGanttConfig(){
-			// gantt.config.readonly = true;
+			gantt.config.readonly = true;
 			gantt.config.root_id = "root"; 
 			gantt.config.xml_date = "%Y-%m-%d";
 			gantt.config.row_height = 18; //甘特图的行高
@@ -395,7 +401,7 @@ export default {
 				{name: "start_date", align: "center", width: 80, resize: true,label:'开始日期'},
 				// {name: "add", width: 44},
 				{name: "end_date", align: "center", width: 80, resize: true,label:'结束日期'},
-				{name: "duration", width: 60, align: "right", resize: true,label:'计划工时'},
+				// {name: "duration", width: 60, align: "right", resize: true,label:'计划工时'},
 			];
 			
 			gantt.config.layout = {
@@ -426,7 +432,6 @@ export default {
 		 * 加载甘特图数据
 		 */
 		ganttLoadData(){
-
 			let planTransCode;
 			getProjectPlanTransCode(this.projectTransCode).then(res=>{
 				if(res.length){
@@ -435,31 +440,20 @@ export default {
 					getProjectPlan(planTransCode).then(res=>{
 						let data = this.formatProjectData(res.formData);
 						this.project = res.formData.projectApproval;
-						this.planData = res;
-						gantt.parse({
-							data:data
-						});
-
-						this.setProjectDuration([this.project.expectStartDate,this.project.expectEndDate]);
+						gantt.parse(data);
+						// this.setProjectDuration([this.project.expectStartDate,this.project.expectEndDate]);
 					});
 				}
 			});
-			
-
-			// gantt.parse({
-			// 	data:this.formatProjectData(this.demoProject.formData)
-			// });
 		}
-
-			
 	},
 	mounted: function () {
-		this.demoProjectB.formData.order.map(m=>{
-			this.projectMember.push({
-				key:m.projectPartnerCode,
-				label:m.projectPartnerName
-			},);
-		});
+		// this.demoProjectB.formData.order.map(m=>{
+		// 	this.projectMember.push({
+		// 		key:m.projectPartnerCode,
+		// 		label:m.projectPartnerName
+		// 	},);
+		// });
 	
 		gantt.i18n.setLocale(this.ganttLocale);
 		gantt.config.date_format = "%Y-%m-%d";

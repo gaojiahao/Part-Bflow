@@ -25,6 +25,11 @@
             <Tooltip content="财务分析" placement="top">
                     <Button :size="buttonSize" icon="ios-pie-outline" type="primary" shape="circle" @click="financialAnalysisModel=true;"></Button>
             </Tooltip>
+
+			 <Tooltip content="刷新数据" placement="top">
+                    <Button :size="buttonSize" icon="md-refresh" type="primary" shape="circle" @click="ganttLoadData"></Button>
+            </Tooltip>
+			
             <!-- <Tooltip content="数据分析" placement="top">
                 <Button :size="buttonSize" icon="md-analytics" type="primary" shape="circle" @click="timeAnalysisModel=true;"></Button>
             </Tooltip> -->

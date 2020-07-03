@@ -17,7 +17,7 @@
     />
     <div class="menu-section-list-item-info">
       <div class="menu-section-list-item-info-base">
-        <div class="menu-section-list-item-info-base-name" @click="redirectTo(menu)">{{menu.text}}</div>
+        <div class="menu-section-list-item-info-base-name" @click="redirectTo(menu)"  :title="menu.text">{{menu.text}}</div>
         <a
           class="menu-section-list-item-info-base-detail"
           v-if="menu.type !== 'system'"

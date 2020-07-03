@@ -97,8 +97,8 @@
                 </li>
             </ul>
         </div >
-        <project-water-modal ref="projectWaterModal" :itemData="itemData" :waterType="waterType"></project-water-modal>
-        <project-obj-water-modal ref="projectObjWaterModal" :itemData="itemData"></project-obj-water-modal>
+        <project-water-modal ref="projectWaterModal" :projectTransCode="projectTransCode" :itemData="itemData" :waterType="waterType"></project-water-modal>
+        <project-obj-water-modal ref="projectObjWaterModal"  :projectTransCode="projectTransCode"  :itemData="itemData"></project-obj-water-modal>
     </div>
 </template>
 
@@ -129,6 +129,10 @@ export default {
     },
     props: {
         transType: {
+            type: String,
+            default: ""
+        },
+        projectTransCode: {
             type: String,
             default: ""
         }

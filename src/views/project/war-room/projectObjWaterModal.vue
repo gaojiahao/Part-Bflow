@@ -93,7 +93,11 @@ export default {
     itemData: {
       type: Object,
       default: {}
-    }
+    },
+     projectTransCode: {
+          type: String,
+          default: ""
+      }
   },
   watch: {
     showObjWater: function(value){
@@ -112,7 +116,7 @@ export default {
       },
       getProjectObjWaterData(){
         let params = {
-          transCode: this.$route.params.transCode,
+          transCode: this.projectTransCode,
           classify: this.itemData.item,
           start: this.start,
           page: this.currentPage,

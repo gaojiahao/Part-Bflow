@@ -144,6 +144,7 @@ export default {
     refreshComments:function () {
         let params = {
                 relationKey:this.relationKey,
+                type:this.type,
                 sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
         }
         params = Object.assign(params,this.pageInfo)

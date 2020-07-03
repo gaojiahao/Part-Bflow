@@ -104,6 +104,10 @@ export default {
     objCode: {
       type: String,
       default: ""
+    },
+    projectTransCode: {
+        type: String,
+        default: ""
     }
   },
   watch: {
@@ -124,7 +128,7 @@ export default {
       getProjectWaterData(){
         let request = getProjectProfitWater,
             params = {
-              transCode: this.$route.params.transCode,
+              transCode:this.projectTransCode,
               classify: this.itemData.projectCode ? this.itemData.projectCode : this.itemData.item,
               start: this.start,
               page: this.currentPage,

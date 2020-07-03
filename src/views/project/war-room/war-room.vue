@@ -28,6 +28,7 @@
             <!-- <Tooltip content="数据分析" placement="top">
                 <Button :size="buttonSize" icon="md-analytics" type="primary" shape="circle" @click="timeAnalysisModel=true;"></Button>
             </Tooltip> -->
+
 		</div>
       	</div>
 
@@ -39,7 +40,7 @@
 
         <!-- 财务分析 -->
      <Drawer :mask="true"  class="project-drawer"  width="350" :closable="false" v-model="financialAnalysisModel">
-			<financialAnalysis :transType="transType"></financialAnalysis>
+			<financialAnalysis :projectTransCode="projectTransCode" :transType="transType"></financialAnalysis>
 		 </Drawer>
 
         <!-- 报表分析 -->
@@ -81,19 +82,20 @@ export default {
     },
     data(){
         return {
-						transType: "",
+			transType: "",
             buttonSize: 'small',
             financialAnalysisModel: false,
             timeAnalysisModel:false,
             projectCommentModel:false,
             projectTaskLogModel:false,
             ganttLocale:ganttLocale,
-						demoProject:demoProject,
-						demoProjectB:demoProjectB,
-						projectDuration:[],
-						projectMember:[],
-						planData:{},
-						project:{}
+			demoProject:demoProject,
+			demoProjectB:demoProjectB,
+			projectDuration:[],
+			projectMember:[],
+			planData:{},
+			project:{},
+			projectTransCode:undefined
         }
 	},
 	computed: {
@@ -118,16 +120,17 @@ export default {
                 spltTask(t);
 			});
 			
-
-
-            tasks.map(t=>{
+            tasks.map((t,index)=>{
                 // delete t.children;
                 t.id = t.projectPlanTaskId;
                 t.parent = t.parentId;
                 t.start_date = t.startTime;
 				t.end_date = t.deadline;
+				// t.type = index%2 ==0?gantt.config.types.milestone:'task'
 				// t.duration = t.standardWorkingHours;
-                t.text = t.taskName;
+				t.text = t.taskName;
+				t.progress = (t.declarePrimeCostSubtotal/t.planPrimeCostSubtotal)>1?1:t.declarePrimeCostSubtotal/t.planPrimeCostSubtotal;
+				console.log(t.text,t.progress);
 			});
 
 			tasks.push({
@@ -137,7 +140,7 @@ export default {
 				start_date:new Date(projectApproval.expectStartDate),
 				end_date:new Date(projectApproval.expectEndDate),
 				type:'project',
-				transCode:'PPLN2006270001',
+				transCode:'',
 				id:'0'
 			});
             return tasks;
@@ -188,10 +191,10 @@ export default {
             return "";
             };
 
-            //显示进度文字
-            // gantt.templates.progress_text = function (start, end, task) {
-            // 	return "<span style='text-align:left;'>" + Math.round(task.progress * 100) + "% </span>";
-            // };
+            // 显示进度文字
+            gantt.templates.progress_text = function (start, end, task) {
+            	return "<span style='text-align:left;'>" + Math.round(task.progress * 100) + "% </span>";
+            };
 
             //弹出框标题
             gantt.templates.lightbox_header = function(start_date,end_date,task){
@@ -210,9 +213,6 @@ export default {
 			//新增任务
 			gantt.attachEvent("onAfterTaskAdd", function(id,item){
 				//any custom logic here
-				console.log(id,item);
-
-				
 				let projectPlanData = vm.buildProjetPlanData();
 				let projectPlanTaskData = vm.initProjetPlanTaskFormData();
 
@@ -343,7 +343,7 @@ export default {
 		 * 初始化甘特图配置
 		 */
 		initGanttConfig(){
-			gantt.config.readonly = true;
+			// gantt.config.readonly = true;
 			gantt.config.root_id = "root"; 
 			gantt.config.xml_date = "%Y-%m-%d";
 			gantt.config.row_height = 18; //甘特图的行高
@@ -427,9 +427,8 @@ export default {
 		 */
 		ganttLoadData(){
 
-			let planTransCode,
-				projectTransCode = this.$route.params.transCode;
-			getProjectPlanTransCode(projectTransCode).then(res=>{
+			let planTransCode;
+			getProjectPlanTransCode(this.projectTransCode).then(res=>{
 				if(res.length){
 					this.transType = res[0].transType;
 					planTransCode = res[0].transCode;
@@ -475,13 +474,13 @@ export default {
 		this.initTemplates();
 		this.initGanttConfig();
 		gantt.init(this.$refs.gantt);
-		// this.projectDuration = [this.demoProjectB.formData.projectApproval.expectStartDate,this.demoProjectB.formData.projectApproval.expectEndDate];
-		// gantt.config.start_date = new Date(this.projectDuration[0]);
-		// gantt.config.end_date = new Date(this.projectDuration[1]);
-
 		this.ganttLoadData();
 		this.initEvents();
-  }
+	},
+	created:function(){
+		this.projectTransCode =  this.$route.params.transCode;
+	}
+	  
 }
 </script>
 
@@ -512,6 +511,14 @@ export default {
 
 .gantt_task_row.gantt_selected .gantt_task_cell.week_end {
     background-color: #e8e8e87d !important;
+}
+
+.gantt_task_progress {
+    text-align: left;
+    padding-left: 10px;
+    box-sizing: border-box;
+    color: white;
+    font-weight: bold;
 }
 
 </style>

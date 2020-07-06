@@ -110,6 +110,7 @@ import {
 import { toThousandFilter } from "@/utils/utils";
 import ProjectWaterModal from "./projectWaterModal";
 import ProjectObjWaterModal from "./projectObjWaterModal";
+import Bus from "@/assets/eventBus.js";
 const echarts = require("echarts");
 export default {
     name:'financialAnalysis',
@@ -298,7 +299,7 @@ export default {
         },
         getProjectDistributiveProfitData(){
             this.showZCFZRefresh = true;
-            getProjectDistributiveProfit(this.$route.params.transCode).then(res => {
+            getProjectDistributiveProfit(this.projectTransCode).then(res => {
                 this.balance = [
                     {item:'利润',amount:toThousandFilter(res.tableContent[0].profit),title:true,isDeep: true},
                     {item:'已分配利润',amount:toThousandFilter(res.tableContent[0].distributedProfit),title:true,isDeep: true},
@@ -322,7 +323,7 @@ export default {
             let request = getOutsideProjectProfitStatement;
             this.showLRRefresh = true;
             if(this.transType === 'YW159') request = getInsideProjectProfitStatement;
-            request(this.$route.params.transCode).then(res => {
+            request(this.projectTransCode).then(res => {
                 // this.initProfit();
                 this.transType === 'YW159' ? this.createInsideData(res.obj) : this.createOutsideData(res.obj);
                 this.showLRRefresh = false;
@@ -650,6 +651,10 @@ export default {
     },
     mounted(){
         this.getProjectDistributiveProfitData();
+        Bus.$on("refreshProjectInfo",()=>{
+            this.refreshZCFZ();
+            this.refreshLR();
+        });
     }
 }
 </script>

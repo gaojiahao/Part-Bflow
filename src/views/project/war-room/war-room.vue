@@ -45,7 +45,7 @@
 
         <!-- 报表分析 -->
 		 <Drawer  :mask="true"  class="project-drawer"  width="600" :closable="false" :scrollable='true' v-model="timeAnalysisModel">
-			<timeAnalysis></timeAnalysis>
+			<timeAnalysis ref='timeAnalysis'></timeAnalysis>
 		 </Drawer>
 
          <!-- 评论 -->
@@ -72,6 +72,7 @@ import userComments from '@/views/form/instance-comments'
 import taskLog from '@/views/form/modules/task-log'
 
 import {saveProjectPlan,getProjectPlan,saveProjectTask,getProjectPlanTransCode } from '@/services/projectService'
+import Bus from "@/assets/eventBus.js";
 
 export default {
     name:'warRoom',
@@ -438,7 +439,10 @@ export default {
 		 */
 		ganttLoadData(){
 			let planTransCode;
+			Bus.$emit("refreshProjectInfo");
+			this.$Loading.start();
 			getProjectPlanTransCode(this.projectTransCode).then(res=>{
+				this.$Loading.finish();
 				if(res.length){
 					this.transType = res[0].transType;
 					planTransCode = res[0].transCode;

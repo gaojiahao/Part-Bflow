@@ -438,7 +438,9 @@ export default {
 		 */
 		ganttLoadData(){
 			let planTransCode;
+			this.$Loading.start();
 			getProjectPlanTransCode(this.projectTransCode).then(res=>{
+				this.$Loading.finish();
 				if(res.length){
 					this.transType = res[0].transType;
 					planTransCode = res[0].transCode;

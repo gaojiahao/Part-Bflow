@@ -110,6 +110,7 @@ import {
 import { toThousandFilter } from "@/utils/utils";
 import ProjectWaterModal from "./projectWaterModal";
 import ProjectObjWaterModal from "./projectObjWaterModal";
+import Bus from "@/assets/eventBus.js";
 const echarts = require("echarts");
 export default {
     name:'financialAnalysis',
@@ -650,6 +651,10 @@ export default {
     },
     mounted(){
         this.getProjectDistributiveProfitData();
+        Bus.$on("refreshProjectInfo",()=>{
+            this.refreshZCFZ();
+            this.refreshLR();
+        });
     }
 }
 </script>

@@ -14,6 +14,7 @@
             :key="index">
                 <li 
                     class="navs-item" 
+                    v-if="g.groupType!='N'"
                     :class="{ 'active':$route.params.groupId==g.groupId,'istop':g.focus }"
                     @contextmenu.prevent="onContextmenu(g)" >
                     <img 

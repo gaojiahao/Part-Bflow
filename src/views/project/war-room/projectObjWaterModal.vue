@@ -32,6 +32,7 @@
           ref="projectWaterModal" 
           :itemData="itemData" 
           :waterType="waterType"
+          :projectTransCode="projectTransCode"
           :objCode="objCode">
         </project-water-modal>
     </div>

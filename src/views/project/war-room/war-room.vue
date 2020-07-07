@@ -169,7 +169,7 @@ export default {
             });
 
 
-            var start = new Date('2020-06-08');
+            var start = new Date(this.project.expectStartDate);
             gantt.addMarker({
                 start_date: start,
                 css: "status_line",
@@ -355,7 +355,7 @@ export default {
 		 * 初始化甘特图配置
 		 */
 		initGanttConfig(){
-			gantt.config.readonly = true;
+			// gantt.config.readonly = true;
 			gantt.config.root_id = "root"; 
 			gantt.config.xml_date = "%Y-%m-%d";
 			gantt.config.row_height = 18; //甘特图的行高
@@ -451,6 +451,7 @@ export default {
 						this.project = res.formData.projectApproval;
 						gantt.parse(data);
 						// this.setProjectDuration([this.project.expectStartDate,this.project.expectEndDate]);
+						this.addMarker();
 					});
 				}
 			});
@@ -473,7 +474,6 @@ export default {
 			fullscreen: true,
 			marker: true
 		});
-		this.addMarker();
 		this.initTemplates();
 		this.initGanttConfig();
 		gantt.init(this.$refs.gantt);

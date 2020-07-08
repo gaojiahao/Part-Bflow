@@ -124,9 +124,9 @@ export default {
                 t.id = t.projectPlanTaskId;
                 t.parent = t.parentId;
                 t.start_date = t.startTime;
-				t.end_date = t.deadline;
-				// t.type = index%2 ==0?gantt.config.types.milestone:'task'
-				// t.duration = t.standardWorkingHours;
+				// t.end_date = t.deadline;
+				// t.type = index%5 ==0?gantt.config.types.milestone:'task'
+				t.duration = 3;
 				t.text = t.taskName;
 				t.progress = (t.declarePrimeCostSubtotal/t.planPrimeCostSubtotal)>1?1:t.declarePrimeCostSubtotal/t.planPrimeCostSubtotal;
 				console.log(t.text,t.progress);
@@ -186,8 +186,9 @@ export default {
                 var tooltip = "";
                 tooltip += "<b>任务:</b> "+task.text+"<br/>";
                 tooltip += "<b>开始日期:</b> " +  gantt.templates.format_date(new Date(start)) + "<br/>";
-                tooltip += "<b>结束日期:</b> " + gantt.templates.format_date(new Date(end))  + "<br/>";
-                tooltip += "<b>计划工时:</b> " + task.duration + "<br/>";
+				tooltip += "<b>结束日期:</b> " + gantt.templates.format_date(new Date(end))  + "<br/>";
+				tooltip += "<b>周期天数:</b> " + task.duration  + "<br/>";
+                tooltip += "<b>计划工时:</b> " + task.standardWorkingHours + "<br/>";
                 tooltip += "<b>执行者:</b> " + task.dealerName + "<br/>";
                 
                 return tooltip;
@@ -223,7 +224,6 @@ export default {
 			});
 			//新增任务
 			gantt.attachEvent("onAfterTaskAdd", function(id,item){
-				//any custom logic here
 				let projectPlanData = vm.buildProjetPlanData();
 				let projectPlanTaskData = vm.initProjetPlanTaskFormData();
 
@@ -240,27 +240,18 @@ export default {
 						vm.ganttLoadData();
 					})
 				}else{
-					projectPlanTaskData.formData.rootProjectPlanTaskId = item.parent;
-					projectPlanTaskData.formData.projectPlanTask.push(vm.transformTask(item));
-					projectPlanTaskData.formData.transCode="PTSK2006280003";
-					projectPlanTaskData.wfParam = null;
-					projectPlanTaskData.formData.comment={
-						biComment:''
-					}
-					
-					saveProjectTask(projectPlanTaskData).then(res=>{
-						vm.ganttLoadData();
-					});
+					// todo:修改项目任务
 				}
 			});
 
 			//删除任务
 			gantt.attachEvent("onAfterTaskDelete", function(id,item){
-				//any custom logic here
+				//todo:删除项目
 			});
 
 			//修改任务
 			gantt.attachEvent("onBeforeTaskUpdate", function(id,task){
+				console.log(task);
 				vm.projectMember.map(m=>{
 					if(task.executor === m.key){
 						task.dealerName = m.label;
@@ -390,24 +381,53 @@ export default {
 					label:'执行类'
 				}
 			];
+
+			gantt.form_blocks["num_editor"]={
+				render:function(sns){ //sns - the section's configuration object
+					return "<div class='gantt_cal_ltext' >"+
+							"&nbsp;<input class='editor_description' type='number'>"+
+							"</div>";
+				},
+				set_value:function(node,value,task,section){
+					node.querySelector('.editor_description').value = value
+					//node - an html object related to the html defined above
+					//value - a value defined by the map_to property
+					//task - the task object
+					//section- the section's configuration object
+				},
+				get_value:function(node,task,section){
+					//node - an html object related to the html defined above
+					//task - the task object
+					//section - the section's configuration object
+					let value = node.querySelector(".editor_description").value;;
+					task[section.map_to]  = value;
+					return value;''
+				},
+				focus:function(node){
+					//node - an html object related to the html defined above
+				}
+			}
 			
 			gantt.config.lightbox.sections = [
 				{name:"description", height:38, map_to:"text", type:"textarea",focus:true},
-				{name:"taskType", height:30, map_to:"taskType",type:"select",options:taskType},                                                                        
-				{name:"executor", height:30, type:"select", map_to:"executor",options:this.projectMember},
+				{name:"taskType", height:30, width: '50%', map_to:"taskType",type:"select",options:taskType},                                                                        
+				{name:"executor", height:30, width: '50%', type:"select", map_to:"executor",options:this.projectMember},
+				{name:"standardWorkingHours", height:38, map_to:"standardWorkingHours", type:"num_editor"},
 				{name:"time", height:30, type:"duration",time_format:["%Y","%m","%d"] , map_to:"auto"},
 			];
 
 			gantt.locale.labels.section_taskType = "任务类型";
 			gantt.locale.labels.section_executor = "执行者";
+			gantt.locale.labels.section_standardWorkingHours = "计划工时";
 
 			gantt.config.columns = [
-				{name: "text", tree: true, width: 220, resize: true,label:"任务名称",align: "left"},
+				{name: "text", tree: true, width: 180, resize: true,label:"任务名称",align: "left"},
 				{name: "dealerName", width: 60, align: "center",label:'执行者'},
 				{name: "start_date", align: "center", width: 80, resize: true,label:'开始日期'},
-				// {name: "add", width: 44},
-				{name: "end_date", align: "center", width: 80, resize: true,label:'结束日期'},
-				// {name: "duration", width: 60, align: "right", resize: true,label:'计划工时'},
+				{name: "add", width: 44},
+				// {name: "end_date", align: "center", width: 80, resize: true,label:'结束日期'},
+				{name: "duration", width: 60, align: "right", resize: true,label:'周期天数'},
+				{name: "standardWorkingHours", width: 60, align: "right", resize: true,label:'计划工时'},
 			];
 			
 			gantt.config.layout = {
@@ -432,7 +452,11 @@ export default {
 				]
 			};
 
-			gantt.config.duration_unit = "hour";
+			gantt.config.duration_unit = "day";
+			gantt.config.order_branch = true;
+			gantt.config.order_branch_free = true;
+			// gantt.config.placeholder_task = true;
+
 		},
 		/**
 		 * 加载甘特图数据
@@ -458,6 +482,7 @@ export default {
 		}
 	},
 	mounted: function () {
+		//执行者数据源，要从项目实例拿
 		// this.demoProjectB.formData.order.map(m=>{
 		// 	this.projectMember.push({
 		// 		key:m.projectPartnerCode,

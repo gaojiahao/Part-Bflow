@@ -124,7 +124,7 @@ export default {
                 t.id = t.projectPlanTaskId;
                 t.parent = t.parentId;
                 t.start_date = t.startTime;
-				// t.end_date = t.deadline;
+				t.end_date = t.deadline;
 				// t.type = index%5 ==0?gantt.config.types.milestone:'task'
 				// t.duration = 3;
 				t.text = t.taskName;

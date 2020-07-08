@@ -9,6 +9,7 @@
 
     &-projectAssets{
         margin-bottom: 10px;
+        border-top: 1px solid #ddd;
     }
     .refresh{
         position: absolute;
@@ -18,8 +19,6 @@
 
     &-profit{
         margin-bottom: 10px;
-        border-top: 1px solid #ddd;
-        
     }
 
     &-charts{
@@ -51,29 +50,7 @@
 </style>
 <template>
     <div class="financial-analysis">
-        <div class="financial-analysis-projectAssets">
-            <p class="financial-analysis-title">
-                资产负债表
-                <Icon 
-                    type="md-refresh" 
-                    @click="refreshZCFZ"
-                    :style="{cursor:'pointer'}" 
-                    class="fr" />
-            </p>
-            <!-- <div class="financial-analysis-charts" >
-                <div id='projectAssets' style="height:360px;width:560px;display: inline-block;"></div>
-            </div> -->
-            <ul >
-                <div class="refresh" v-if="showZCFZRefresh"><Spin></Spin></div>
-                <li  v-for="(item,index) in balance" :key="index">
-                    <div style="flex: 1;" :class="{'textIndent':!item.title,'item-title':item.title}">{{item.item}}</div>
-                    <div style="flex: 1 1 0%;text-align: right;">
-                        <a @click="goDebtWater(item)" :class="{'item-amount':item.title && !item.isDeep}">{{item.amount}}</a>
-                    </div>
-                </li>
-            </ul>
-        </div >
-
+        
          <div class="financial-analysis-profit">
             <p class="financial-analysis-title">
                 利润表
@@ -97,6 +74,31 @@
                 </li>
             </ul>
         </div >
+
+        <div class="financial-analysis-projectAssets">
+            <p class="financial-analysis-title">
+                资产负债表
+                <Icon 
+                    type="md-refresh" 
+                    @click="refreshZCFZ"
+                    :style="{cursor:'pointer'}" 
+                    class="fr" />
+            </p>
+            <!-- <div class="financial-analysis-charts" >
+                <div id='projectAssets' style="height:360px;width:560px;display: inline-block;"></div>
+            </div> -->
+            <ul >
+                <div class="refresh" v-if="showZCFZRefresh"><Spin></Spin></div>
+                <li  v-for="(item,index) in balance" :key="index">
+                    <div style="flex: 1;" :class="{'textIndent':!item.title,'item-title':item.title}">{{item.item}}</div>
+                    <div style="flex: 1 1 0%;text-align: right;">
+                        <a @click="goDebtWater(item)" :class="{'item-amount':item.title && !item.isDeep}">{{item.amount}}</a>
+                    </div>
+                </li>
+            </ul>
+        </div >
+
+
         <project-water-modal ref="projectWaterModal" :projectTransCode="projectTransCode" :itemData="itemData" :waterType="waterType"></project-water-modal>
         <project-obj-water-modal ref="projectObjWaterModal"  :projectTransCode="projectTransCode"  :itemData="itemData"></project-obj-water-modal>
     </div>

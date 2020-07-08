@@ -126,7 +126,7 @@ export default {
                 t.start_date = t.startTime;
 				// t.end_date = t.deadline;
 				// t.type = index%5 ==0?gantt.config.types.milestone:'task'
-				t.duration = 3;
+				// t.duration = 3;
 				t.text = t.taskName;
 				t.progress = (t.declarePrimeCostSubtotal/t.planPrimeCostSubtotal)>1?1:t.declarePrimeCostSubtotal/t.planPrimeCostSubtotal;
 				console.log(t.text,t.progress);

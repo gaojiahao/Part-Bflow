@@ -22,6 +22,18 @@
                 <div>{{m.crtTime}}</div>
                 <div><span>{{m.content}}</span></div>
             </div>
+            <div class="otherMessage" v-if="[202,203,204].includes(m.imType)">
+                <div>{{m.crtTime}}</div>
+                <message-tpl-taskoverdue :msg="m"></message-tpl-taskoverdue>
+            </div>
+            <div class="otherMessage" v-if="[201].includes(m.imType)">
+                <div>{{m.crtTime}}</div>
+                <message-tpl-tasklog :msg="m"></message-tpl-tasklog>
+            </div>
+            <div class="otherMessage" v-if="[205].includes(m.imType)">
+                <div>{{m.crtTime}}</div>
+                <message-tpl-weeksummary :msg="m"></message-tpl-weeksummary>
+            </div>
             <!-- 文件消息组件 -->
             <!-- <file-message :fileMessage="m"></file-message> -->
         </div>
@@ -51,13 +63,19 @@ import {getMessagesByGroupId,getGroupMsgById,checkMessage} from "@/services/imSe
 import ContentMessage from "../message-tpl/message-tpl-layout";
 import FileMessage from "../message-tpl/file-message";
 import MessageReadDetail from "../message-tpl/message-read-detail";
+import MessageTplTaskoverdue from "../message-tpl/message-tpl-taskoverdue";
+import MessageTplTasklog from "../message-tpl/message-tpl-tasklog";
+import MessageTplWeeksummary from "../message-tpl/message-tpl-weeksummary";
 import Bus from "@/assets/eventBus.js";
 export default {
     name:'imContents',
     components:{
         ContentMessage,
         FileMessage,
-        MessageReadDetail
+        MessageReadDetail,
+        MessageTplTaskoverdue,
+        MessageTplTasklog,
+        MessageTplWeeksummary
     },
     data(){
         return {

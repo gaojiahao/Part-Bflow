@@ -9,7 +9,9 @@
         <Row class="content-container" >
             <Col class="content-container-messages" :span="['member','all','files','images'].includes(this.$route.name)?'16':'24'" 
                 >
-                <div class="content-container-msglist compactscrollbar">
+                <div 
+                class="content-container-msglist compactscrollbar" 
+                :class="{'notice-msg':$route.query.groupType === 'N'}">
                     <!-- <div 
                         class="content-container-msglist-item"
                         v-bind:class="{'createbyme':n.creatorName===$currentUser.nickname}"
@@ -36,7 +38,7 @@
                     </div> -->
                     <imContents :groupId="groupId"></imContents>
                 </div>
-                <div class="content-message-input" v-on:click="msgInputClick()">
+                <div v-if="$route.query.groupType !== 'N'" class="content-message-input" v-on:click="msgInputClick()">
                     <commentPublish  ref='msgInput' :handlePublish="handlePublish" :setAtUsers="setAtUsers">
                         <div  slot="rightBars">
                             <Icon type="ios-list-box-outline" size=24 title="消息记录" style=" cursor: pointer;" v-on:click="onViewHistory" />
@@ -405,7 +407,7 @@ export default {
             if(this.$route.query.groupType == 'G' && to.name === 'group'){
                 this.$router.push({ name: 'member',query: to.query});
             }
-            this.$refs.msgInput.contentWrap.focus();
+            this.$refs.msgInput && this.$refs.msgInput.contentWrap.focus();
         }
     },
     mounted(){

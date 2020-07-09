@@ -23,16 +23,17 @@
                 <Button :size="buttonSize" icon="md-clipboard" type="primary" shape="circle" @click="projectTaskLogModel=true;"></Button>
             </Tooltip>
             <Tooltip content="财务分析" placement="top">
-                    <Button :size="buttonSize" icon="ios-pie-outline" type="primary" shape="circle" @click="financialAnalysisModel=true;"></Button>
+				<Button :size="buttonSize" icon="ios-pie-outline" type="primary" shape="circle" @click="financialAnalysisModel=true;"></Button>
             </Tooltip>
 
-			 <Tooltip content="刷新数据" placement="top">
-                    <Button :size="buttonSize" icon="md-refresh" type="primary" shape="circle" @click="ganttLoadData"></Button>
+			<Tooltip content="项目信息" placement="top">
+				<Button :size="buttonSize" icon="md-list-box" type="primary" shape="circle" @click="projectBaseInfoModel=true;"></Button>
+            </Tooltip>
+
+			<Tooltip content="刷新数据" placement="top">
+				<Button :size="buttonSize" icon="md-refresh" type="primary" shape="circle" @click="ganttLoadData"></Button>
             </Tooltip>
 			
-            <!-- <Tooltip content="数据分析" placement="top">
-                <Button :size="buttonSize" icon="md-analytics" type="primary" shape="circle" @click="timeAnalysisModel=true;"></Button>
-            </Tooltip> -->
 		</div>
       	</div>
 		<div style='width: 100%;height: calc(100% - 40px);display: flex;'>
@@ -44,19 +45,68 @@
 		 </Drawer>
 
         <!-- 报表分析 -->
-		 <Drawer  :mask="true"  class="project-drawer"  width="600" :closable="false" :scrollable='true' v-model="timeAnalysisModel">
+		<Drawer  :mask="true"  class="project-drawer"  width="600" :closable="false" :scrollable='true' v-model="timeAnalysisModel">
 			<timeAnalysis ref='timeAnalysis'></timeAnalysis>
-		 </Drawer>
+		</Drawer>
 
          <!-- 评论 -->
-         <Drawer  :mask="true"  class="project-drawer"   width="600" :closable="false" :scrollable='true' v-model="projectCommentModel">
-			<userComments ref='taskComments'></userComments>
+		<Drawer  :mask="true"  class="project-drawer"   width="600" :closable="false" :scrollable='true' v-model="projectCommentModel">
+		<userComments ref='taskComments'></userComments>
 		 </Drawer>
 		 
          <!-- 日志任务 -->
-          <Drawer :mask="true"  class="project-drawer"   width="680" :closable="false" :scrollable='true' v-model="projectTaskLogModel">
+		<Drawer :mask="true"  class="project-drawer"   width="680" :closable="false" :scrollable='true' v-model="projectTaskLogModel">
 			<taskLog></taskLog>
-		 </Drawer>
+		</Drawer>
+
+		<!-- 项目信息 -->
+		<Drawer :closable="false" width="640" v-model="projectBaseInfoModel">
+			<p class="base-info-p">{{project.projectName}}</p>
+            <div>
+				 <Row>
+                    <Col span="12">
+                        项目经理：{{project.projectManagerName}}
+                    </Col>
+                    <Col span="12">
+                        联系方式: {{project.projectSubclass}}
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span="12">
+                        项目大类: {{project.projectType}}
+                    </Col>
+                    <Col span="12">
+                        项目字类: {{project.projectSubclass}}
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span="12">
+                        预期开始日期:{{project.expectStartDate}}
+                    </Col>
+                    <Col span="12">
+                        预期截至日期: {{project.expectEndDate}}
+                    </Col>
+                </Row>
+				
+            </div>
+			<Divider />
+			<p class="base-info-p" v-if="project.comment">描述</p>
+			<pre class="project-comment" v-if="project.comment">{{project.comment}}</pre>
+            <Divider />
+            <div>
+              <Table :columns="memberColumns" :data="projectMember">
+				<template slot-scope="{ row }" slot="percent">
+                    <span>{{  Math.floor(row.shareOfProfits * 100) + '%' }}</span>
+              	</template>
+				<template slot-scope="{ row }" slot="divisionOfResponsibilities">
+					<Button type="error" size="small" v-if="row.divisionOfResponsibilities==='交付经理'">{{row.divisionOfResponsibilities}}</Button>
+					<Button type="success" size="small" v-if="row.divisionOfResponsibilities==='方案经理'" >{{row.divisionOfResponsibilities}}</Button>
+					<Button type="info" size="small" v-if="row.divisionOfResponsibilities==='客户经理'">{{row.divisionOfResponsibilities}}</Button>
+					<span v-if="row.divisionOfResponsibilities==='项目成员'">{{row.divisionOfResponsibilities}}</span>
+				</template>
+			  </Table>
+            </div>
+		</Drawer>
     </div>
 </template>
 
@@ -71,7 +121,8 @@ import timeAnalysis from './time-analysis'
 import userComments from '@/views/form/instance-comments'
 import taskLog from '@/views/form/modules/task-log'
 
-import {saveProjectPlan,getProjectPlan,saveProjectTask,getProjectPlanTransCode } from '@/services/projectService'
+import {saveProjectPlan,getProjectPlan,saveProjectTask,getProjectPlanTransCode,getProject } from '@/services/projectService'
+import {getProcessStatusByListId } from '@/services/appService'
 import Bus from "@/assets/eventBus.js";
 
 export default {
@@ -89,12 +140,34 @@ export default {
             financialAnalysisModel: false,
             timeAnalysisModel:false,
             projectCommentModel:false,
-            projectTaskLogModel:false,
+			projectTaskLogModel:false,
+			projectBaseInfoModel:false,
             ganttLocale:ganttLocale,
 			projectDuration:[],
 			projectMember:[],
 			project:{},
-			projectTransCode:undefined
+			projectTransCode:undefined,
+			memberColumns: [
+                    {
+                        title: '项目合伙人与成员',
+                        key: 'projectPartnerName'
+                    },
+                    {
+                        title: '责任分工',
+						key: 'divisionOfResponsibilities',
+						slot:'divisionOfResponsibilities'
+                    },
+                    {
+                        title: '分成比例',
+						key: 'shareOfProfits',
+						slot: "percent",
+            			align: 'right'
+					},
+					{
+						title:'说明',
+						key:'comment'
+					}
+                ],
         }
 	},
 	computed: {
@@ -128,8 +201,7 @@ export default {
 				// t.type = index%5 ==0?gantt.config.types.milestone:'task'
 				// t.duration = 3;
 				t.text = t.taskName;
-				t.progress = (t.declarePrimeCostSubtotal/t.planPrimeCostSubtotal)>1?1:t.declarePrimeCostSubtotal/t.planPrimeCostSubtotal;
-				console.log(t.text,t.progress);
+				t.progress = t.declarePrimeCostSubtotal/t.planPrimeCostSubtotal;
 			});
 
 			tasks.push({
@@ -189,7 +261,9 @@ export default {
 				tooltip += "<b>结束日期:</b> " + gantt.templates.format_date(new Date(end))  + "<br/>";
 				tooltip += "<b>周期天数:</b> " + task.duration  + "<br/>";
                 tooltip += "<b>计划工时:</b> " + task.standardWorkingHours + "<br/>";
-                tooltip += "<b>执行者:</b> " + task.dealerName + "<br/>";
+				tooltip += "<b>执行者:</b> " + task.dealerName + "<br/>";
+				tooltip += "<b>流程状态:</b> " + task.processStatus + "<br/>";
+				
                 
                 return tooltip;
             };
@@ -204,15 +278,51 @@ export default {
             };
 
             // 显示进度文字
-            gantt.templates.progress_text = function (start, end, task) {
-            	return "<span style='text-align:left;'>" + Math.round(task.progress * 100) + "% </span>";
-            };
+            // gantt.templates.progress_text = function (start, end, task) {
+            // 	return "<span style='text-align:left;'>" + Math.round(task.progress * 100) + "% </span>";
+            // };
 
             //弹出框标题
             gantt.templates.lightbox_header = function(start_date,end_date,task){
-                return gantt.templates.format_date(new Date(start_date)) + '~' +  gantt.templates.format_date(new Date(end_date)) +  "&nbsp;" +
-                (gantt.templates.task_text(task.start_date, task.end_date, task) || "").substr(0, 70);
-            };
+				return '任务详情';
+			};
+
+			function percenToString(num) {
+				return Math.floor(num * 100) + '%';
+			}
+
+			function ColorLuminance(hex, lum) {
+
+				// validate hex string
+				hex = String(hex).replace(/[^0-9a-f]/gi, '');
+				if (hex.length < 6) {
+					hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+				}
+				lum = lum || 0;
+			
+				// convert to decimal and change luminosity
+				var rgb = "#", c, i;
+				for (i = 0; i < 3; i++) {
+					c = parseInt(hex.substr(i*2,2), 16);
+					c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+					rgb += ("00"+c).substr(c.length);
+				}
+			
+				return rgb;
+			}
+			let vm = this;
+
+
+			gantt.templates.task_text = function (start, end, task) {
+				let color,
+					progress =task.progress;
+
+				vm.taskProcess.map(c=>{
+					if(c.fieldValue === task.processStatus) color = c.color;
+				});
+				return `<div style='width:100%;position: absolute;background-color:${color}' >${task.text}</div>
+						<div  style='text-align: left;opacity: 0.5;color: black;font-weight: 600;width:${(progress * 100)}%;background-color:${ColorLuminance(color,0.5)}' >${percenToString(progress)}</div>`
+			}
 		},
 		/**
 		 * 初始化事件
@@ -346,7 +456,17 @@ export default {
 		 * 初始化甘特图配置
 		 */
 		initGanttConfig(){
+			gantt.config.show_progress = false;
 			// gantt.config.readonly = true;
+			gantt.i18n.setLocale(this.ganttLocale);
+			gantt.config.date_format = "%Y-%m-%d";
+			//暂时快捷信息
+			gantt.plugins({
+				// quick_info: true,
+				tooltip: true,
+				fullscreen: true,
+				marker: true
+			});
 			gantt.config.root_id = "root"; 
 			gantt.config.xml_date = "%Y-%m-%d";
 			gantt.config.row_height = 18; //甘特图的行高
@@ -407,6 +527,7 @@ export default {
 					//node - an html object related to the html defined above
 				}
 			}
+
 			
 			gantt.config.lightbox.sections = [
 				{name:"description", height:38, map_to:"text", type:"textarea",focus:true},
@@ -473,12 +594,42 @@ export default {
 					getProjectPlan(planTransCode).then(res=>{
 						let data = this.formatProjectData(res.formData);
 						this.project = res.formData.projectApproval;
+						this.addMarker();
 						gantt.parse(data);
 						// this.setProjectDuration([this.project.expectStartDate,this.project.expectEndDate]);
-						this.addMarker();
+						
 					});
 				}
 			});
+		},
+		
+		/**
+		 * 获取项目任务流程状态
+		 */
+		getTaskProcess(){
+			getProcessStatusByListId('ee4ff0a1-c612-419d-afd7-471913d57a2a', 1,20,{}
+			).then(res=>{
+				this.taskProcess = res.tableContent;
+			})
+		},
+
+		/**
+		 * 获取项目信息
+		 */
+		getProjectInfo(){
+			getProject(this.projectTransCode).then(res=>{
+				this.projectMember = res.formData.order;
+				this.projectMember.map(m=>{
+					m.key = m.projectPartnerName;
+					m.label = m.projectPartnerCode;
+				});
+				console.log('======',this.projectMember);
+			});
+		},
+
+		async loadPage(){
+			await this.getTaskProcess();
+			await this.getProjectInfo();
 		}
 	},
 	mounted: function () {
@@ -489,16 +640,10 @@ export default {
 		// 		label:m.projectPartnerName
 		// 	},);
 		// });
-	
-		gantt.i18n.setLocale(this.ganttLocale);
-		gantt.config.date_format = "%Y-%m-%d";
-		//暂时快捷信息
-		gantt.plugins({
-			// quick_info: true,
-			tooltip: true,
-			fullscreen: true,
-			marker: true
-		});
+
+		
+		this.loadPage();
+		
 		this.initTemplates();
 		this.initGanttConfig();
 		gantt.init(this.$refs.gantt);
@@ -517,8 +662,6 @@ export default {
 </style>
 
 <style >
-
-
 .baseline {
 	position: absolute;
 	border-radius: 2px;
@@ -547,6 +690,21 @@ export default {
     box-sizing: border-box;
     color: white;
     font-weight: bold;
+}
+
+.project-comment{
+	font-family: Arial;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #333333;
+}
+
+.base-info-p{
+	font-size: 16px;
+	color: rgba(0,0,0,0.85);
+	line-height: 24px;
+	display: block;
+	margin-bottom: 16px;
 }
 
 </style>

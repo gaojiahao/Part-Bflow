@@ -17,10 +17,16 @@
                     :class="{ 'active':$route.params.groupId==g.groupId,'istop':g.focus }"
                     @contextmenu.prevent="onContextmenu(g)" >
                     <img 
-                        width="45" 
+                        width="45"
+                        v-if="g.groupType !=='N'" 
                         :src="g.groupIcon" 
                         onerror="src='https://lab.roletask.com/resource/common-icon/male.png'" 
                         style="border: 1px solid #ddd;">
+                    <div v-else class="notice-icon">
+                        <span>
+                            <Icon type="md-notifications" />
+                        </span>
+                    </div>
                     <div class="navs-item-appinfo">
                         <div class="font14 font12 navs-item-appinfo-groupName">
                             <p>{{g.groupName}}</p>

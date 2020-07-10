@@ -40,6 +40,13 @@ export const getProjectPlan = (transCode) => request('/H_roleplay-si/projectPlan
   transCode:transCode
 })
 
+/**
+ * @author snack.huang
+ * @description 获取项目信息 
+ */
+export const getProject = (transCode) => request('/H_roleplay-si/projectApproval/findData', {
+  transCode:transCode
+})
 
 /**
  * @author snack.huang

@@ -81,10 +81,10 @@
                 </Row>
                 <Row>
                     <Col span="12">
-                        预期开始日期:{{project.expectStartDate}}
+                        预期开始日期:{{project.expectStartDate | dateFormatFilter('YYYY-mm-dd')}}
                     </Col>
                     <Col span="12">
-                        预期截至日期: {{project.expectEndDate}}
+                        预期截至日期: {{project.expectEndDate | dateFormatFilter('YYYY-mm-dd')}}
                     </Col>
                 </Row>
 				

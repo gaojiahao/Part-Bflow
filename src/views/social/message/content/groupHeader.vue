@@ -38,7 +38,7 @@
                     {{group.groupName}}
                 </b>
         </div>
-        <div class="group-add" @click="showAddGroupMemberModal">
+        <div v-if="group.groupType !== 'N'" class="group-add" @click="showAddGroupMemberModal">
             <Icon type="md-person-add" />
         </div>
         <add-group-member ref="addGroupMember" :confirmCallback="addMember"></add-group-member>

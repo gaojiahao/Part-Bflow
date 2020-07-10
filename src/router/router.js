@@ -94,6 +94,17 @@ export const customerCommetns = {
     import('@/views/form/customer-comments.vue')
 }
 
+
+export const userPerformance = {
+  path: '/user/performance/:userId',
+  name: 'performance',
+  meta: {
+    title: 'RoleTask - 用户绩效'
+  },
+  component: () =>
+    import('@/views/addressBook/user/detail/instance/performance-analysis.vue')
+}
+
 export const taskLog = {
   path: '/taskLog/:transCode',
   name: 'taskLog',
@@ -188,6 +199,7 @@ export const routers = [
   taskLog,
   instanceCommetns,
   customerCommetns,
+  userPerformance,
   enterpriseInfo,
   activation,
   dictionaryManage,

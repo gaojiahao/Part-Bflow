@@ -675,11 +675,6 @@ export default {
 				});
 				console.log('======',this.projectMember);
 			});
-		},
-
-		async loadPage(){
-			await this.getTaskProcess();
-			await this.getProjectInfo();
 		}
 	},
 	async mounted() {
@@ -692,8 +687,6 @@ export default {
 		// });
 		await this.getTaskProcess();
 		await this.getProjectInfo();
-		
-		// this.loadPage();
 
 		this.initTemplates();
 		this.initGanttConfig();

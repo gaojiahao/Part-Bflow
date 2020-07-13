@@ -33,6 +33,12 @@
 			<Tooltip content="刷新数据" placement="top">
 				<Button :size="buttonSize" icon="md-refresh" type="primary" shape="circle" @click="ganttLoadData"></Button>
             </Tooltip>
+
+			<div class="war-room-toolbar-actions-process">
+				<div v-for="(p,index) in taskProcess" :key="index" :style="{'background-color':p.color}">
+					{{p.fieldValue}}
+				</div>
+			</div>
 			
 		</div>
       	</div>
@@ -143,6 +149,7 @@ export default {
     },
     data(){
         return {
+			taskProcess:[],
 			transType: "",
             buttonSize: 'small',
             financialAnalysisModel: false,
@@ -507,6 +514,7 @@ export default {
 		 * 初始化甘特图配置
 		 */
 		initGanttConfig(){
+			
 			gantt.config.show_progress = false;
 			// gantt.config.readonly = true;
 			gantt.i18n.setLocale(this.ganttLocale);
@@ -591,21 +599,23 @@ export default {
 			gantt.locale.labels.section_executor = "执行者";
 			gantt.locale.labels.section_standardWorkingHours = "计划工时";
 
+			var  standardWorkingHoursEditor = {type: "number", map_to: "standardWorkingHours", min:0, max: 24};
+
 			gantt.config.columns = [
-				{name: "text", tree: true, width: 180, resize: true,label:"任务名称",align: "left"},
+				{name: "text", tree: true, width: 200, resize: true,label:"任务名称",align: "left"},
 				{name: "dealerName", width: 60, align: "center",label:'执行者'},
 				{name: "start_date", align: "center", width: 80, resize: true,label:'开始日期'},
-				{name: "add", width: 44},
 				// {name: "end_date", align: "center", width: 80, resize: true,label:'结束日期'},
 				{name: "duration", width: 60, align: "right", resize: true,label:'周期天数'},
-				{name: "standardWorkingHours", width: 60, align: "right", resize: true,label:'计划工时'},
+				{name: "standardWorkingHours", width: 60, align: "right", resize: true,label:'计划工时', editor: standardWorkingHoursEditor},
+				{name: "add", width: 44}
 			];
 			
 			gantt.config.layout = {
 				css: "gantt_container",
 				cols: [
 					{
-						width:400,
+						width:500,
 						min_width: 300,
 						rows:[
 							{view: "grid", scrollX: "gridScroll", scrollable: true, scrollY: "scrollVer"},
@@ -624,8 +634,8 @@ export default {
 			};
 
 			gantt.config.duration_unit = "day";
-			gantt.config.order_branch = true;
-			gantt.config.order_branch_free = true;
+			// gantt.config.order_branch = true;
+			// gantt.config.order_branch_free = true;
 			// gantt.config.placeholder_task = true;
 
 		},
@@ -741,6 +751,11 @@ export default {
 	line-height: 24px;
 	display: block;
 	margin-bottom: 16px;
+}
+
+.gantt_task_line{
+	border:none;
+	background-color: snow;
 }
 
 </style>

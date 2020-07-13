@@ -357,11 +357,9 @@ export default {
         createOutsideData(obj){
             this.profit = [
                 {item:'收入',amount:toThousandFilter(obj.income.incomeSum),title:true},
-                {item:'销售收入',amount:toThousandFilter(obj.income.saleIncome)},
+                {item:'营业收入',amount:toThousandFilter(obj.income.saleIncome)},
                 {item:'成本',amount:toThousandFilter(obj.productsCost.productsCostSum),title:true},
-                {item:'标准用料',amount:toThousandFilter(obj.productsCost.material)},
-                {item:'直接人工',amount:toThousandFilter(obj.productsCost.artificial)},
-                {item:'制造费用',amount:toThousandFilter(obj.productsCost.madeCost)},
+                {item:'营业成本',amount:toThousandFilter(obj.productsCost.material)},
                 {item:'外部服务采购',amount:toThousandFilter(obj.productsCost.outsideServerPurchase)},
                 {item:'内部服务采购',amount:toThousandFilter(obj.productsCost.insideServerPurchase)},
                 {item:'费用',amount:toThousandFilter(obj.cost.costSum),title:true}

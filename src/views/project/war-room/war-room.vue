@@ -673,18 +673,10 @@ export default {
 					m.key = m.projectPartnerCode;
 					m.label = m.projectPartnerName;
 				});
-				console.log('======',this.projectMember);
 			});
 		}
 	},
 	async mounted() {
-		//执行者数据源，要从项目实例拿
-		// this.demoProjectB.formData.order.map(m=>{
-		// 	this.projectMember.push({
-		// 		key:m.projectPartnerCode,
-		// 		label:m.projectPartnerName
-		// 	},);
-		// });
 		await this.getTaskProcess();
 		await this.getProjectInfo();
 
@@ -693,7 +685,6 @@ export default {
 		gantt.init(this.$refs.gantt);
 		this.ganttLoadData();
 		this.initEvents();
-		
 	},
 	created:function(){
 		this.projectTransCode =  this.$route.params.transCode;

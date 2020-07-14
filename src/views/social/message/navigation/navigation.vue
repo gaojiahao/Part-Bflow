@@ -66,6 +66,7 @@
 
 import {getNavListByMessage,readNotice} from "@/services/notificationsService";
 import { getMyImGroups,setFocus,deleteFocus ,checkMessage} from "@/services/imService";
+import msgVoice from '@/plugin/msg-voice'
 import Bus from "@/assets/eventBus.js";
 export default {
     name:'Navigation',
@@ -197,7 +198,10 @@ export default {
                         this.imGroups.map(g=>{
                             if(g.groupId === res.groupId){
 
-                                (!res.isMySelf)&& g.msgCount++;
+                                if(res.isMySelf === 0){
+                                    msgVoice.success();
+                                    g.msgCount++;
+                                }
                                 g.modTime = res.crtTime;//修改时间
                                 
                                 if(res.imType==2){
@@ -236,6 +240,7 @@ export default {
                         });
                     break;
                 }
+
             });
         },
         //桌面消息通知

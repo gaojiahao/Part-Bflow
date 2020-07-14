@@ -364,6 +364,7 @@ export default {
                 if(!this.contentWrap.innerText){
                     this.$refs.replycontainer.innerHTML = '';
                     this.$refs.editor.style.height='220px';
+                    this.replayMsg = '';
                 }
 
                

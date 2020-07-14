@@ -14,6 +14,8 @@ export const formatToEmotion=(value)=>{
           let path = idx>104 ? '/img' : 'https://res.wx.qq.com/mpres/htmledition/images/icon';
         return `<img class="static-emotion-gif" index=${idx} style="vertical-align: middle" src="${path}/emotion/${idx}.gif">`;
     });
+
+    value = value.replace('<a','<a target="blank"');
     
     return value;
 }

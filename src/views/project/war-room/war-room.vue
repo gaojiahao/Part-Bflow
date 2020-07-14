@@ -74,7 +74,7 @@
                         项目经理：{{project.projectManagerName}}
                     </Col>
                     <Col span="12">
-                        联系方式: {{project.projectSubclass}}
+                        联系方式: {{project.phoneNumber}}
                     </Col>
                 </Row>
                 <Row>
@@ -82,15 +82,15 @@
                         项目大类: {{project.projectType}}
                     </Col>
                     <Col span="12">
-                        项目字类: {{project.projectSubclass}}
+                        项目子类: {{project.projectSubclass}}
                     </Col>
                 </Row>
                 <Row>
                     <Col span="12">
-                        预期开始日期:{{project.expectStartDate | dateFormatFilter('YYYY-mm-dd')}}
+                        开始日期:{{project.expectStartDate | dateFormatFilter('YYYY-mm-dd')}}
                     </Col>
                     <Col span="12">
-                        预期截至日期: {{project.expectEndDate | dateFormatFilter('YYYY-mm-dd')}}
+                        结束日期: {{project.expectEndDate | dateFormatFilter('YYYY-mm-dd')}}
                     </Col>
                 </Row>
 				
@@ -274,7 +274,6 @@ export default {
                 var tooltip = "";
                 tooltip += "<b>任务:</b> "+task.text+"<br/>";
                 tooltip += "<b>开始日期:</b> " +  gantt.templates.format_date(new Date(start)) + "<br/>";
-				tooltip += "<b>结束日期:</b> " + gantt.templates.format_date(new Date(end))  + "<br/>";
 				tooltip += "<b>周期天数:</b> " + task.duration  + "<br/>";
                 tooltip += "<b>计划工时:</b> " + task.standardWorkingHours + "<br/>";
 				tooltip += "<b>执行者:</b> " + task.dealerName + "<br/>";

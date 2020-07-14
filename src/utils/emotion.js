@@ -15,7 +15,7 @@ export const formatToEmotion=(value)=>{
         return `<img class="static-emotion-gif" index=${idx} style="vertical-align: middle" src="${path}/emotion/${idx}.gif">`;
     });
 
-    value = value.replace('<a','<a target="blank"');
+    value = value.replace('<a','<a target="_blank"');
     
     return value;
 }

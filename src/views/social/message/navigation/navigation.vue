@@ -15,6 +15,7 @@
                 <li 
                     class="navs-item" 
                     :class="{ 'active':$route.params.groupId==g.groupId,'istop':g.focus }"
+                    @click="onClickGroup(g)"
                     @contextmenu.prevent="onContextmenu(g)" >
                     <img 
                         width="45"
@@ -64,7 +65,7 @@
 <script>
 
 import {getNavListByMessage,readNotice} from "@/services/notificationsService";
-import { getMyImGroups,setFocus,deleteFocus } from "@/services/imService";
+import { getMyImGroups,setFocus,deleteFocus ,checkMessage} from "@/services/imService";
 import Bus from "@/assets/eventBus.js";
 export default {
     name:'Navigation',
@@ -301,6 +302,13 @@ export default {
             this.$refs.contextMenu.$refs.reference = event.target;
             this.$refs.contextMenu.currentVisible = !this.$refs.contextMenu.currentVisible;
         },
+        onClickGroup(group){
+            if(group.msgCount){
+               checkMessage(group.groupId).then(res=>{
+                   group.msgCount = 0;
+                });
+            }
+        }
     },
     mounted(){
         this.refreshNavs();
@@ -312,9 +320,12 @@ export default {
         let that = this;
         let isExist = false;
         Bus.$on('addGroup', group => {
+            
             this.imGroups.map(g=>{
                 if(g.groupId === group.groupId) isExist =true;
             });
+
+            console.log('isExist',isExist)
 
             if(!isExist){
                 this.imGroups.push(group);
@@ -333,7 +344,6 @@ export default {
         });
 
         Bus.$on("checkMessage",groupId=>{
-            debugger
             this.imGroups.map(g=>{
                 if(g.groupId === groupId){
                     g.msgCount = 0;

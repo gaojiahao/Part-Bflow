@@ -25,6 +25,25 @@ export const getOutsideProjectProfitStatement = (transCode) => request('/H_rolep
   transCode: transCode
 })
 
+/**
+ * @author XiaoYing
+ * @description 新增项目任务
+ */
+export const addProjectTask = (data) => request('/H_roleplay-si/projectTask/warRoom/save', {}, "POST", data)
+
+/**
+ * @author XiaoYing
+ * @description 更新项目任务
+ */
+export const updateProjectTask = (data) => request('/H_roleplay-si/projectTask/warRoom/update', {}, "POST", data)
+
+/**
+ * @author XiaoYing
+ * @description 删除项目任务
+ */
+export const deleteProjectTask = (projectPlanTaskId) => request('/H_roleplay-si/projectTask/warRoom/delete', {
+  projectPlanTaskId: projectPlanTaskId
+}, "POST")
 
 /**
  * @author snack.huang

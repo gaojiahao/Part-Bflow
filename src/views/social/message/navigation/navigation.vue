@@ -19,6 +19,7 @@
                     @contextmenu.prevent="onContextmenu(g)" >
                     <img 
                         width="45"
+                        height="45"
                         v-if="g.groupType !=='N'" 
                         :src="g.groupIcon" 
                         onerror="src='https://lab.roletask.com/resource/common-icon/male.png'" 

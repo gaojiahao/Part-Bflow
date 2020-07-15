@@ -295,11 +295,6 @@ export default {
             return "";
             };
 
-            // 显示进度文字
-            // gantt.templates.progress_text = function (start, end, task) {
-            // 	return "<span style='text-align:left;'>" + Math.round(task.progress * 100) + "% </span>";
-            // };
-
             //弹出框标题
             gantt.templates.lightbox_header = function(start_date,end_date,task){
 				return '任务详情';

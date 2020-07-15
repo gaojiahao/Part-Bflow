@@ -217,7 +217,11 @@ export default {
 				// t.type = index%5 ==0?gantt.config.types.milestone:'task'
 				// t.duration = 3;
 				t.text = t.taskName;
-				t.progress = t.declarePrimeCostSubtotal/t.planPrimeCostSubtotal;
+				if(t.planPrimeCostSubtotal === 0){
+					t.progress =0;
+				}else{
+					t.progress = t.declarePrimeCostSubtotal/t.planPrimeCostSubtotal;
+				}
 			});
 
 			tasks.push({
@@ -278,7 +282,6 @@ export default {
                 tooltip += "<b>计划工时:</b> " + task.standardWorkingHours + "<br/>";
 				tooltip += "<b>执行者:</b> " + task.dealerName + "<br/>";
 				tooltip += "<b>流程状态:</b> " + task.processStatus + "<br/>";
-				
                 
                 return tooltip;
             };

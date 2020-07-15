@@ -56,6 +56,7 @@
                 action="/H_roleplay-si/ds/upload">
                 <Icon type="ios-folder-open-outline" size=24 title="文件"  class="choice-file" />
             </Upload>
+            Shift+Enter换行
             </div>
         </Col>
         <Col class="publish-bar-right" span="12">

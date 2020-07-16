@@ -117,6 +117,10 @@ import {
     uploadImage,
     getAllUsers
 } from "@/services/subscribeService";
+
+const storage = window['sessionStorage'];
+const MessionStore = 'MessionStore';
+
 export default {
     name:"coment-publish",
     props:{
@@ -127,6 +131,9 @@ export default {
             }
         },
         handlePublish:{
+            type:Function
+        },
+        sessionHandlePublish:{
             type:Function
         },
         comments:{
@@ -151,6 +158,10 @@ export default {
         },
         setAtUsers:{
             type:Function
+        },
+        groupId:{
+            type:String,
+            default:'',
         }
         
     },
@@ -195,6 +206,25 @@ export default {
         　　　},
         　　　deep:true
         },
+        //聊天窗口的监听
+        $route: {
+            handler: function(newVal, oldVal){
+                if(newVal.params.groupId!=oldVal.params.groupId){
+                    this.sessionHandleSend(oldVal.params.groupId);
+                }
+            },
+            deep: true
+        },
+        groupId:{
+            handler(newVal, oldVal){
+                this.messionArr = JSON.parse(storage.getItem(MessionStore));
+                if(this.messionArr){
+                    this.$nextTick(() => {
+                        this.$refs.editor.innerHTML = this.messionArr&&this.messionArr[newVal]&&JSON.parse(this.messionArr[newVal])&&JSON.parse(this.messionArr[newVal])['contentHtmls']||'';
+                    });
+                }
+            }
+        }
     },
     methods: {
         OnMouseDown(e) {
@@ -302,7 +332,7 @@ export default {
                     // 合法的用户输入
                     this.showUserPanel(this.contentWrap,targetText);
                 }
-            } 
+            }
         },
 
         handleSelectUser(u){
@@ -467,6 +497,11 @@ export default {
             }, []);
 
             this.handlePublish(content,[],userIds,this.superComment,this.commentAndReply,this);
+        },
+        
+        sessionHandleSend(groupId) {
+            let content =  this.$refs.editor.innerHTML;
+            this.sessionHandlePublish(content,groupId);
         },
         handleView (name) {
             if(window.top.viewInsCommentsImg){

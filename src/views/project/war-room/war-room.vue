@@ -480,10 +480,10 @@ export default {
 		let parent;
 		//parent为0，则为项目
 		//如果直接拿id,会拿gantt的默认自动生成的id,所有再添加子任务时，添加的parentId是错的
-		if(item.parent === 'root' || item.parent === '0'){
+		if(item.parent === 'root' ){
 			parent = '0';
 		}else{
-			parent = gantt.getTaskBy("id", item.parent)[0].projectPlanTaskId;
+			parent = item.parent;
 		}
 
 		let data = {
@@ -538,15 +538,9 @@ export default {
           saveTaskData = vm.createTaskSaveData(item, "save");
           addProjectTask(saveTaskData).then(res => {
             if (res.success) {
-              vm.$Message.success(res.message);
-<<<<<<< HEAD
-			  Object.assign(item, res.task);
-			//   item.id  = res.task.projectPlanTaskId;
-              gantt.render();
-=======
-							item = Object.assign(item, res.task);
-							gantt.changeTaskId(id, res.task.projectPlanTaskId);
->>>>>>> 3d47648384b119a59786d90efabaab2bc1e8850d
+				vm.$Message.success(res.message);
+				item = Object.assign(item, res.task);
+				gantt.changeTaskId(id, res.task.projectPlanTaskId);
             }
           });
         }
@@ -691,7 +685,6 @@ export default {
      * 初始化甘特图配置
      */
     initGanttConfig() {
-		gantt.config.task_attribute = "projectPlanTaskId";
       gantt.config.show_progress = false;
       // gantt.config.readonly = true;
       gantt.i18n.setLocale(this.ganttLocale);

@@ -477,26 +477,36 @@ export default {
       };
     },
     createTaskSaveData(item, type) {
-      let data = {
-        parentId: item.parent,
-        projectPlanReferenceId: this.projectPlanReferenceId,
-        projectId: this.project.projectApprovalId,
-        taskName: item.text,
-        taskType: item.taskType,
-        executor: item.executor,
-        dealerName: item.dealerName,
-        processStatus: item.processStatus,
-        standardWorkingHours: item.standardWorkingHours,
-        cycleDays: item.duration,
-        startTime: gantt.templates.format_date(item.start_date),
-        deadline: gantt.templates.format_date(item.end_date),
-        comment: item.comments || "",
-        seq: item.$index
-      };
-      if (type === "update") {
-        data["projectPlanTaskId"] = item.projectPlanTaskId;
-      }
-      return data;
+		let parent;
+		//parent为0，则为项目
+		//如果直接拿id,会拿gantt的默认自动生成的id,所有再添加子任务时，添加的parentId是错的
+		if(item.parent === 'root' || item.parent === '0'){
+			parent = '0';
+		}else{
+			parent = gantt.getTaskBy("id", item.parent)[0].projectPlanTaskId;
+		}
+
+		let data = {
+			parentId: parent,
+			projectPlanReferenceId: this.projectPlanReferenceId,
+			projectId: this.project.projectApprovalId,
+			taskName: item.text,
+			taskType: item.taskType,
+			executor: item.executor,
+			dealerName: item.dealerName,
+			processStatus: item.processStatus,
+			standardWorkingHours: item.standardWorkingHours,
+			cycleDays: item.duration,
+			startTime: gantt.templates.format_date(item.start_date),
+			deadline: gantt.templates.format_date(item.end_date),
+			comment: item.comments || "",
+			seq: item.$index
+		};
+
+		if (type === "update") {
+			data["projectPlanTaskId"] = item.projectPlanTaskId;
+		}
+		return data;
     },
     /**
      * 初始化事件
@@ -529,7 +539,8 @@ export default {
           addProjectTask(saveTaskData).then(res => {
             if (res.success) {
               vm.$Message.success(res.message);
-              Object.assign(item, res.task);
+			  Object.assign(item, res.task);
+			//   item.id  = res.task.projectPlanTaskId;
               gantt.render();
             }
           });
@@ -675,6 +686,7 @@ export default {
      * 初始化甘特图配置
      */
     initGanttConfig() {
+		gantt.config.task_attribute = "projectPlanTaskId";
       gantt.config.show_progress = false;
       // gantt.config.readonly = true;
       gantt.i18n.setLocale(this.ganttLocale);

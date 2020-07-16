@@ -529,8 +529,8 @@ export default {
           addProjectTask(saveTaskData).then(res => {
             if (res.success) {
               vm.$Message.success(res.message);
-              Object.assign(item, res.task);
-              gantt.render();
+							item = Object.assign(item, res.task);
+							gantt.changeTaskId(id, res.task.projectPlanTaskId);
             }
           });
         }

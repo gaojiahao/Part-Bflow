@@ -189,8 +189,21 @@ export default {
 		
   	},
     methods:{
+		getRootTask(){
+			return {
+				parent:'root',
+				text:this.project.projectName,
+				dealerName:this.project.projectManagerName,
+				start_date:new Date(this.project.expectStartDate),
+				end_date:new Date(this.project.expectEndDate),
+				duration:10,
+				type:'project',
+				transCode:'',
+				id:'0'
+			}
+		},
         formatProjectData(formData){
-					this.projectPlanReferenceId = formData.biReferenceId;
+			this.projectPlanReferenceId = formData.biReferenceId;
 			var tasks = [],
 				links = [],
 				projectPlanTask = formData.projectPlanTask,
@@ -220,16 +233,7 @@ export default {
 				t.progress = t.declarePrimeCostSubtotal/t.planPrimeCostSubtotal;
 			});
 
-			tasks.push({
-				parent:'root',
-				text:projectApproval.projectName,
-				dealerName:projectApproval.projectManagerName,
-				start_date:new Date(projectApproval.expectStartDate),
-				end_date:new Date(projectApproval.expectEndDate),
-				type:'project',
-				transCode:'',
-				id:'0'
-			});
+			tasks.push(this.getRootTask());
 
 			tasks.map((t,index)=>{
 				links.push({
@@ -273,7 +277,8 @@ export default {
             gantt.templates.tooltip_text = function(start, end, task) {
                 var tooltip = "";
                 tooltip += "<b>任务:</b> "+task.text+"<br/>";
-                tooltip += "<b>开始日期:</b> " +  gantt.templates.format_date(new Date(start)) + "<br/>";
+				tooltip += "<b>开始日期:</b> " +  gantt.templates.format_date(new Date(start)) + "<br/>";
+				tooltip += "<b>结束日期:</b> " +  gantt.templates.format_date(new Date(end)) + "<br/>";
 				tooltip += "<b>周期天数:</b> " + task.duration  + "<br/>";
                 tooltip += "<b>计划工时:</b> " + task.standardWorkingHours + "<br/>";
 				tooltip += "<b>执行者:</b> " + task.dealerName + "<br/>";
@@ -390,7 +395,7 @@ export default {
 					addProjectTask(saveTaskData).then(res => {
 						if(res.success){
 							vm.$Message.success(res.message);
-							vm.ganttLoadData();
+							// vm.ganttLoadData();
 						}
 					})
 				}
@@ -426,6 +431,7 @@ export default {
 					})
 				return true;
 			});
+
 
 			// 选择任务
 			gantt.attachEvent("onTaskClick", function(id){
@@ -654,9 +660,17 @@ export default {
 						let data = this.formatProjectData(res.formData);
 						this.project = res.formData.projectApproval;
 						this.addMarker();
+						gantt.clearAll(); 
 						gantt.parse(data);
 						// this.setProjectDuration([this.project.expectStartDate,this.project.expectEndDate]);
 						
+					});
+				}else{
+					this.addMarker();
+					let rootTask = this.getRootTask();
+					 this.setProjectDuration([this.project.expectStartDate,this.project.expectEndDate]);
+					gantt.parse({
+						data:[rootTask]
 					});
 				}
 			});
@@ -682,6 +696,7 @@ export default {
 					m.key = m.projectPartnerCode;
 					m.label = m.projectPartnerName;
 				});
+				this.project = res.formData.projectApproval;
 			});
 		}
 	},

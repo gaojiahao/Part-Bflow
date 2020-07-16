@@ -61,11 +61,11 @@ export default {
     computed: {
       startDate: function(){
         let startDate = new Date(this.content && this.content.startDate);
-        return `${startDate.getMonth()}-${startDate.getDate()}`;
+        return `${startDate.getMonth()+1}-${startDate.getDate()}`;
       },
       endDate: function(){
         let endDate = new Date(this.content && this.content.endDate);
-        return `${endDate.getMonth()}-${endDate.getDate()}`;
+        return `${endDate.getMonth()+1}-${endDate.getDate()}`;
       }
     },
     created:function(){
@@ -94,7 +94,7 @@ export default {
   margin: 0 auto;
   .week-list{
     border: 1px solid #ddd;
-    padding: 0px 10px;
+    padding: 5px 10px;
     background-color: #fff;
     border-radius: 2px;
     text-align: left;

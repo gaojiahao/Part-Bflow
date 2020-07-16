@@ -15,9 +15,11 @@
                 <li 
                     class="navs-item" 
                     :class="{ 'active':$route.params.groupId==g.groupId,'istop':g.focus }"
+                    @click="onClickGroup(g)"
                     @contextmenu.prevent="onContextmenu(g)" >
                     <img 
                         width="45"
+                        height="45"
                         v-if="g.groupType !=='N'" 
                         :src="g.groupIcon" 
                         onerror="src='https://lab.roletask.com/resource/common-icon/male.png'" 
@@ -64,7 +66,8 @@
 <script>
 
 import {getNavListByMessage,readNotice} from "@/services/notificationsService";
-import { getMyImGroups,setFocus,deleteFocus } from "@/services/imService";
+import { getMyImGroups,setFocus,deleteFocus ,checkMessage} from "@/services/imService";
+import msgVoice from '@/plugin/msg-voice'
 import Bus from "@/assets/eventBus.js";
 export default {
     name:'Navigation',
@@ -196,7 +199,10 @@ export default {
                         this.imGroups.map(g=>{
                             if(g.groupId === res.groupId){
 
-                                (!res.isMySelf)&& g.msgCount++;
+                                if(res.isMySelf === 0){
+                                    msgVoice.success();
+                                    g.msgCount++;
+                                }
                                 g.modTime = res.crtTime;//修改时间
                                 
                                 if(res.imType==2){
@@ -235,6 +241,7 @@ export default {
                         });
                     break;
                 }
+
             });
         },
         //桌面消息通知
@@ -301,6 +308,13 @@ export default {
             this.$refs.contextMenu.$refs.reference = event.target;
             this.$refs.contextMenu.currentVisible = !this.$refs.contextMenu.currentVisible;
         },
+        onClickGroup(group){
+            if(group.msgCount){
+               checkMessage(group.groupId).then(res=>{
+                   group.msgCount = 0;
+                });
+            }
+        }
     },
     mounted(){
         this.refreshNavs();
@@ -312,9 +326,12 @@ export default {
         let that = this;
         let isExist = false;
         Bus.$on('addGroup', group => {
+            
             this.imGroups.map(g=>{
                 if(g.groupId === group.groupId) isExist =true;
             });
+
+            console.log('isExist',isExist)
 
             if(!isExist){
                 this.imGroups.push(group);
@@ -333,7 +350,6 @@ export default {
         });
 
         Bus.$on("checkMessage",groupId=>{
-            debugger
             this.imGroups.map(g=>{
                 if(g.groupId === groupId){
                     g.msgCount = 0;

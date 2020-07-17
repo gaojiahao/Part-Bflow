@@ -16,24 +16,27 @@
 <template>
     <div class="message-list compactscrollbar" ref="messageList"  id='messageList'>
         <div v-for="(m,index) in  messages" :key="index" >
-            <!-- 消息组件 -->
-            <content-message v-if="[1,2,3,4].includes(m.imType)" @showDetailModal="showDetailModal" :msg="m"></content-message>
-            <div class="otherMessage" v-if="[101,102,104].includes(m.imType)">
-                <div>{{m.crtTime}}</div>
-                <div><span>{{m.content}}</span></div>
-            </div>
-            <div class="otherMessage" v-if="[202,203,204].includes(m.imType)">
-                <div>{{m.crtTime}}</div>
-                <message-tpl-taskoverdue :msg="m"></message-tpl-taskoverdue>
-            </div>
-            <div class="otherMessage" v-if="[201].includes(m.imType)">
-                <div>{{m.crtTime}}</div>
-                <message-tpl-tasklog :msg="m"></message-tpl-tasklog>
-            </div>
-            <div class="otherMessage" v-if="[205].includes(m.imType)">
-                <div>{{m.crtTime}}</div>
-                <message-tpl-weeksummary :msg="m"></message-tpl-weeksummary>
-            </div>
+            <template v-if="m.groupId===$route.params.groupId">
+                <!-- 消息组件 -->
+                <content-message v-if="[1,2,3,4].includes(m.imType)" @showDetailModal="showDetailModal" :msg="m">
+                </content-message>
+                <div class="otherMessage" v-if="[101,102,104].includes(m.imType)">
+                    <div>{{m.crtTime}}</div>
+                    <div><span>{{m.content}}</span></div>
+                </div>
+                <div class="otherMessage" v-if="[202,203,204].includes(m.imType)">
+                    <div>{{m.crtTime}}</div>
+                    <message-tpl-taskoverdue :msg="m"></message-tpl-taskoverdue>
+                </div>
+                <div class="otherMessage" v-if="[201].includes(m.imType)">
+                    <div>{{m.crtTime}}</div>
+                    <message-tpl-tasklog :msg="m"></message-tpl-tasklog>
+                </div>
+                <div class="otherMessage" v-if="[205].includes(m.imType)">
+                    <div>{{m.crtTime}}</div>
+                    <message-tpl-weeksummary :msg="m"></message-tpl-weeksummary>
+                </div>
+            </template>
             <!-- 文件消息组件 -->
             <!-- <file-message :fileMessage="m"></file-message> -->
         </div>
@@ -151,8 +154,10 @@ export default {
                 groupId:this.$route.params.groupId
             };
             this.$Loading.start();
+            // this.getApp().spinShow = true;
             getMessagesByGroupId(param).then(res=>{
                 this.$Loading.finish();
+                // this.getApp().spinShow = false;
                 if(res.msgs.length<this.pageParam.limit){
                     this.allLoad = true;
                     console.log('全部加载完成');

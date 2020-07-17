@@ -350,15 +350,16 @@ export default {
       });
 
       tasks.map((t, index) => {
-        // delete t.children;
         t.id = t.projectPlanTaskId;
         t.parent = t.parentId;
         t.start_date = t.startTime;
         t.end_date = t.deadline;
-        // t.type = index%5 ==0?gantt.config.types.milestone:'task'
-        // t.duration = 3;
         t.text = t.taskName;
-        t.progress = t.declarePrimeCostSubtotal / t.planPrimeCostSubtotal;
+        if(t.planPrimeCostSubtotal === 0){
+          t.progress = 0;
+        }else{
+          t.progress = t.declarePrimeCostSubtotal / t.planPrimeCostSubtotal;
+        }
       });
 
       tasks.push(this.getRootTask());

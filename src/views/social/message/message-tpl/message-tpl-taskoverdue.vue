@@ -16,7 +16,7 @@
               <span>项目</span>
               <span>计划/申报工时</span>
             </div>
-            <div class="content" v-for="(list,index) of content" :key="index">
+            <div class="content" v-for="(list,index) of content" :key="index"  @click="goDetail(list)">
               <ul>
                 <li>{{list.projectName}}</li>
                 <li>{{list.projectManager}}</li>
@@ -55,6 +55,10 @@ export default {
         }
     },
      methods:{
+       goDetail(list){
+         let href = `/Form/index.html?data=${list.transCode}`;
+         window.open(href);
+       }
      }
 }
 </script>
@@ -101,19 +105,24 @@ export default {
       }
       .list-content{
         color: #333;
+        margin: 0px -5px;
         .header{
           display: flex;
           font-size: 12px;
           justify-content: space-between;
           border-bottom: 1px dashed #eee;
-          padding: 10px 0px 2px 0px;
+          padding: 10px 5px 2px 5px;
         }
         .content{
-            padding: 2px 0px;
+            padding: 2px 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px dashed #eee;
+        }
+        .content:hover{
+          background-color: #eee;
+          cursor: pointer;
         }
         .content:last-child{
           border: none;

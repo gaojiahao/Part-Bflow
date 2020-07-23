@@ -200,7 +200,6 @@ export default {
             var that =this;
             deepstream.event.subscribe("roletaskIm/" + this.$md5(String(this.$currentUser.userId)), res => {
                 res.imType = parseInt(res.imType);
-                window.top.msgHandler && window.top.msgHandler(JSON.stringify(res));
                 switch (res.imType) {
                     case 1:
                         if (this.$route.params.groupId == res.groupId)

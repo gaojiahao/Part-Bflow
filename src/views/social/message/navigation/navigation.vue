@@ -190,6 +190,7 @@ export default {
             }
             //消息订阅
             ds.event.subscribe("roletaskIm/" + this.$md5(String(this.$currentUser.userId)), res => {
+                window.top.msgHandler && window.top.msgHandler(JSON.stringify(res));
                 res.imType = parseInt(res.imType);
                 switch (res.imType) {
                     case 1:

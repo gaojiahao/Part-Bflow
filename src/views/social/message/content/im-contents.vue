@@ -85,7 +85,7 @@ export default {
             messages:[],
             detailMessage: {},
             pageParam:{
-                page:1,
+                page:0,
                 limit:20
             },
             allLoad:false,
@@ -95,7 +95,8 @@ export default {
     watch:{
         $route(to, from) {
             if(to.params.groupId != from.params.groupId){
-                this.pageParam.page = 1;
+                this.pageParam.page = 0;
+                //this.$set(this.pageParam,'page',0)
                 this.allLoad = false;
                 this.messages = [];
                 this.getMessages();
@@ -148,11 +149,22 @@ export default {
                 nickName:this.curContextMessage.creatorName
             });
         },
-        getMessages(){
-            let param = {
-                ...this.pageParam,
-                groupId:this.$route.params.groupId
-            };
+        getMessages(obj,val){
+            let param = {};
+            if(obj&&obj.flag){
+                param = {
+                    page:1,
+                    limit:20,
+                    groupId:this.$route.params.groupId
+                };
+            } else {
+                param = {
+                    page:val,
+                    limit:20,
+                    groupId:this.$route.params.groupId
+                };    
+            }
+            var me = this;
             this.$Loading.start();
             // this.getApp().spinShow = true;
             getMessagesByGroupId(param).then(res=>{
@@ -174,9 +186,8 @@ export default {
                         }
                         
                     }
-                });
-                
-                this.messages.unshift(...res.msgs);
+                }); 
+                me.messages.unshift(...res.msgs);
             });
         },
         showDetailModal(message) {
@@ -266,7 +277,7 @@ export default {
 
                 if(arguments[0].target.scrollTop==0 && !that.allLoad){
                     that.pageParam.page++;
-                    that.getMessages();
+                    that.getMessages({falg:0},that.pageParam.page++);
                 }
             });
 
@@ -328,7 +339,7 @@ export default {
     },
     mounted(){
         this.subscribeIm();
-        this.getMessages();
+        this.getMessages({flag:1});
         this.initEvents();
 
         Bus.$on('dsOpen',()=>{

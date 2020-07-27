@@ -190,7 +190,6 @@ export default {
             }
             //消息订阅
             ds.event.subscribe("roletaskIm/" + this.$md5(String(this.$currentUser.userId)), res => {
-                window.top.msgHandler && window.top.msgHandler(JSON.stringify(res));
                 res.imType = parseInt(res.imType);
                 switch (res.imType) {
                     case 1:
@@ -203,6 +202,7 @@ export default {
                                 if(res.isMySelf === 0){
                                     msgVoice.success();
                                     g.msgCount++;
+                                    window.top.msgHandler && window.top.msgHandler(JSON.stringify(res));
                                 }
                                 g.modTime = res.crtTime;//修改时间
                                 

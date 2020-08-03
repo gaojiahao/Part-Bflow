@@ -85,7 +85,7 @@ export default {
             messages:[],
             detailMessage: {},
             pageParam:{
-                page:0,
+                page:1,//默认是第一页，滚动时加载第二页面。
                 limit:20
             },
             allLoad:false,
@@ -95,7 +95,7 @@ export default {
     watch:{
         $route(to, from) {
             if(to.params.groupId != from.params.groupId){
-                this.pageParam.page = 0;
+                this.pageParam.page = 1;
                 //this.$set(this.pageParam,'page',0)
                 this.allLoad = false;
                 this.messages = [];
@@ -149,26 +149,21 @@ export default {
                 nickName:this.curContextMessage.creatorName
             });
         },
-        getMessages(obj,val){
-            let param = {};
-            if(obj&&obj.flag){
-                param = {
-                    page:1,
-                    limit:20,
-                    groupId:this.$route.params.groupId
-                };
-            } else {
-                param = {
-                    page:val,
-                    limit:20,
-                    groupId:this.$route.params.groupId
-                };    
-            }
-            var me = this;
+        getMessages(page){
+            let param = {
+                page: page == null ? 1 : page,
+                limit:20,
+                groupId:this.$route.params.groupId
+            },me = this,
+            length;
+
             this.$Loading.start();
+            if(this.loading == true) return false;
+            this.loading = true;
             // this.getApp().spinShow = true;
             getMessagesByGroupId(param).then(res=>{
                 this.$Loading.finish();
+                this.loading = false;
                 // this.getApp().spinShow = false;
                 if(res.msgs.length<this.pageParam.limit){
                     this.allLoad = true;
@@ -188,6 +183,13 @@ export default {
                     }
                 }); 
                 me.messages.unshift(...res.msgs);
+                if (res.page != 1){
+                    this.isMsgAppend = true;
+                    length = res.msgs.length;
+                     if(length)me.lastMsgId = res.msgs[length-1].id;//方便定位到最新的第一条，默认会定在最后一条。
+                }
+            }).finally(()=>{
+                this.loading = false;
             });
         },
         showDetailModal(message) {
@@ -277,7 +279,7 @@ export default {
 
                 if(arguments[0].target.scrollTop==0 && !that.allLoad){
                     that.pageParam.page++;
-                    that.getMessages({falg:0},that.pageParam.page++);
+                    that.getMessages(that.pageParam.page);
                 }
             });
 
@@ -339,7 +341,7 @@ export default {
     },
     mounted(){
         this.subscribeIm();
-        this.getMessages({flag:1});
+        this.getMessages();
         this.initEvents();
 
         Bus.$on('dsOpen',()=>{
@@ -348,7 +350,15 @@ export default {
 
     },
     updated(){
-        this.scrollToBottom();
+        var msgDiv;
+        if (this.isMsgAppend == true){
+            this.isMsgAppend = false;
+            msgDiv = document.getElementById(this.lastMsgId);
+            msgDiv.scrollIntoView(true);
+        } else {
+            this.scrollToBottom();
+        }
+       
     }
 }
 </script>

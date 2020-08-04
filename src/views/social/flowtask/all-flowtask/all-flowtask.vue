@@ -243,10 +243,15 @@ export default {
         //订阅消息
         subscribeMessage: function() {
             let deepstream = this.$deepstream;
-            //消息订阅
-            deepstream.event.subscribe("taskChange/" + this.$currentUser.userId, msg => {
-                this.getFlowAllTasks();
-            });
+            try {
+                //消息订阅
+                deepstream.event.subscribe("taskChange/" + this.$currentUser.userId, msg => {
+                    this.getFlowAllTasks();
+                });
+            } catch (error) {
+                console.log('订阅失败');
+            }
+            
         }
     },
    

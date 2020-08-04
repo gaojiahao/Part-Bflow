@@ -53,7 +53,7 @@ module.exports = {
         use: ['happypack/loader?id=vue'],
       },
       {
-        test: /iview\/.*?js$/,
+        test: /view-design\/.*?js$/,
         loader: 'babel-loader',
         exclude: /node_modules/
       },

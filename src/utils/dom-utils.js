@@ -29,8 +29,7 @@ function insertHtmlAtCaret (html) {
       var el = document.createElement('div')
       el.innerHTML = html
       frag = document.createDocumentFragment()
-      var node
-      var lastNode
+      var node,lastNode;
       while ((node = el.firstChild)) {
         lastNode = frag.appendChild(node)
       }
@@ -38,7 +37,7 @@ function insertHtmlAtCaret (html) {
       if (lastNode) {
         range = range.cloneRange()
         range.setStartAfter(lastNode)
-        range.collapse(true)
+        range.collapse(false)
         sel.removeAllRanges()
         sel.addRange(range)
       }

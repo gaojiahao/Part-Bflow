@@ -14,23 +14,25 @@ export const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (!Vue.prototype.$currentUser && to.name !== 'login' && to.name !== 'userActivate') {
-    let cache = window.sessionStorage.getItem('roletask.com.r2.cache');
-
-    if (cache) {
-      init(cache)
+    let userInfo = window.localStorage.getItem('userInfo');
+    if (userInfo) {
+      init(userInfo)
+      next()
     } else {
+      console.log('没有获取用户信息');
       next({
         name: 'login'
       })
     }
+  }else{
+    next()
   }
-  next()
+  
 })
 
-async function init (cache) {
-  let dsUri = window.localStorage.getItem('r2-cached-properties');
-  let data = cache ? JSON.parse(cache) : {};
-  let currentUser = data['currentUser'];
+async function init (userInfo) {
+  let dsUri = JSON.parse(window.localStorage.getItem('r2-cached-properties')).deepStreamUrl;
+  let currentUser = userInfo ? JSON.parse(userInfo) : {};
   currentUser.isAdmin = false;
   currentUser.isBusinessAdmin = false;
   currentUser.isOperationAdmin = false;
@@ -42,7 +44,7 @@ async function init (cache) {
     // 运营管理员
     if (role.id === -1) currentUser.isOperationAdmin = true;
   })
-
+  
   Vue.prototype.$currentUser = currentUser
   Vue.prototype.$deepstream = await deepstream(currentUser, dsUri)
 }

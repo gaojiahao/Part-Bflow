@@ -12,14 +12,11 @@ function getDeepstream() {
 }
 
 export async function deepstream(currentUser,address) {
-    let deepstreamAddress = '';
-    if(address){
-       deepstreamAddress =JSON.parse(address)['deepStreamUrl'];
-    }else{
-        deepstreamAddress = await getDeepstream();
+    if(!address){
+        address = await getDeepstream();
     }
     let protocol = window.top.location.protocol.indexOf('https') != -1 ? "wss" : 'ws';
-    let deeps = ds(`${protocol}://${deepstreamAddress}`),
+    let deeps = ds(`${protocol}://${address}`),
         token = getToken(),
         name = currentUser.name ? currentUser.name : currentUser.nickname;
 
@@ -32,6 +29,7 @@ export async function deepstream(currentUser,address) {
                 this.close();
             }   
         });
+
         //注册deepStream
         deeps.login(
             {

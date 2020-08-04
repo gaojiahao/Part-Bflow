@@ -83,6 +83,28 @@ export const instanceCommetns = {
     import('@/views/form/instance-comments.vue')
 }
 
+
+export const customerCommetns = {
+  path: '/comment/customer/:commmentType/:relationkey',
+  name: 'customerCommetns',
+  meta: {
+    title: 'RoleTask - 自定义评论'
+  },
+  component: () =>
+    import('@/views/form/customer-comments.vue')
+}
+
+
+export const userPerformance = {
+  path: '/user/performance/:userId',
+  name: 'performance',
+  meta: {
+    title: 'RoleTask - 用户绩效'
+  },
+  component: () =>
+    import('@/views/addressBook/user/detail/instance/performance-analysis.vue')
+}
+
 export const taskLog = {
   path: '/taskLog/:transCode',
   name: 'taskLog',
@@ -160,6 +182,10 @@ import { wrokGuideRouter } from '@/views/work-guide/router';
 //文件柜
 import { fileCabinetRouter } from '@/views/file-cabinet/router';
 
+//项目模块
+import { projectRouter } from '@/views/project/router';
+
+
 export const routers = [
   loginRouter,
   entryRouter,
@@ -172,6 +198,8 @@ export const routers = [
   fieldChangeHistoryRouter,
   taskLog,
   instanceCommetns,
+  customerCommetns,
+  userPerformance,
   enterpriseInfo,
   activation,
   dictionaryManage,
@@ -182,5 +210,6 @@ export const routers = [
   wrokGuideRouter,
   fileCabinetRouter,
   userActivation,
+  projectRouter,
   ...appRouter
 ];

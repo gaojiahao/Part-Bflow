@@ -1,9 +1,8 @@
 <style lang="less" scoped>
     .performance{
-      width: 80%;
+     
       margin: 0 auto;
       padding: 0px 50px;
-      box-shadow: 0px 1px 10px #ddd;
       position: relative;
       background-color: #fff;
       &-detail{
@@ -16,7 +15,7 @@
 </style>
 
 <template>
-    <div class="performance" ref="performance">
+    <div class="performance" :style="performanceStyle" ref="performance">
         <div class="performance-detail">
             <div class="profit-date">
               开始：<DatePicker 
@@ -122,7 +121,10 @@ export default {
             align: 'right'
           }
       ],
-      modalData: []
+      modalData: [],
+      performanceStyle:{
+         width: this.$route.name==='performance'?'100%':'80%'
+      }
     };
   },
   methods: {

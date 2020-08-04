@@ -463,10 +463,10 @@ export default {
   height: 100%;
   position: relative;
   background-color: #dcddde;
+  overflow: auto;
 
   &-body {
     width: 80%;
-    height: 100%;
     margin: 0px auto;
     background-color: #fff;
     padding: 10px 20px;

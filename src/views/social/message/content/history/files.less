@@ -1,11 +1,54 @@
 .files{
     height: 100%;
-    overflow-y: auto;
+    &-header{
+        display: flex;
+        justify-content: space-around;
+        font-size: 12px;
+        border-bottom: 1px solid #ddd;
+        height: 30px;
+        line-height: 30px;
+        span{
+            cursor: pointer;
+            width: 40px;
+        }
 
-    &-item{
-        padding: 5px;
+        &-sorting{
+            color: #57a3f3;
+        }
     }
-    &-item:hover{
-        background-color: #ddd;
+
+    &-container{
+        height: calc(100% - 30px);
+        overflow-y: auto;
+        &-item{
+            padding: 5px 10px;
+            &-content{
+                &-info{
+                    display: inline-block;
+                    vertical-align: top;
+                    line-height: 20px;
+                    width: calc(100% - 50px);
+                    &-content{
+                        // max-width: 210px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        width: 100%;
+                    }
+                    &-other{
+                        color: #999;
+                        width: 100%;
+                    }
+                }
+            }   
+        }
+        &-item:hover{
+            background-color: #ddd;
+        }
+
     }
+}
+
+.active{
+    background-color: #c5c8ce !important;
 }

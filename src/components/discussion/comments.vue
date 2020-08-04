@@ -29,7 +29,7 @@
 
                 <p><b>{{comment.creatorName}}</b></p>
 
-                <div class="comments-content-item-content-text "  @click="handleViewTextImg($event)" v-html="comment.content">
+                <div class="comments-content-item-content-text "  @click="handleViewTextImg($event)" v-html="formatToEmotion(comment.content)">
                 </div>
 
                 <div class="comments-content-item-img" v-if="comment.commentAttachments.length>0">

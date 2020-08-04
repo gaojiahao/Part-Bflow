@@ -3,24 +3,21 @@
 </style>
 
 <template>
-    <div id="imgHistory" class="imgs messagescrollbar">
+    <div id="imgHistory" class="imgs compactscrollbar">
         <div v-for="(img,index) in images" :key="index" class="comimg" >
             <img 
-            width="80"
-            :src="img.attachment" 
+            width="100"
+            :src="'/H_roleplay-si/ds/downloadById?id='+img.attrId" 
             >
-            <div class="comimg-cover">
-                <Icon 
+             <Icon 
+                title="查看图片"
                 type="ios-eye-outline" 
-                @click.native="handleViewImg(img.attachment)">
+                @click.native="handleViewImg(img.attrId)">
                 </Icon>
+            <div class="comimg-cover" @click="goTop(img.id)">
+                <div class="comimg-cover-text">查看源消息</div>
             </div>
         </div>
-         <Modal title="查看图片" v-model="imgModalVisible" width="50%">
-            <img 
-                :src="imgName" 
-                v-if="imgModalVisible" style="width: 100%">
-        </Modal>
     </div>
 </template>
 
@@ -28,13 +25,18 @@
 import {
   getAttachmentByListId
 } from "@/services/notificationsService";
+import { getMessagesByImType } from "@/services/imService";
+import Bus from "@/assets/eventBus.js";
 export default {
     name:'Images',
     data(){
         return {
+            pageParam:{
+                page:1,
+                limit:30
+            },
             images:[],
             imgName:'',
-            imgModalVisible:false,
             isRolling: false,
             listId:'',
             imgParams: { 
@@ -47,6 +49,9 @@ export default {
         };
     },
     methods:{
+        goTop(id){
+        Bus.$emit('toMessage',id);
+        },
         //滚动加载
         handleScroll () {
             let scrollDiv = document.getElementById('imgHistory'),
@@ -74,14 +79,31 @@ export default {
         },
       
         handleViewImg:function (img) {
-            this.imgName = img;
-            this.imgModalVisible = true;
+            this.getApp().showImgModal(`/H_roleplay-si/ds/downloadById?id=${img}`);
         },
+         init(){
+            getMessagesByImType({
+                 ...this.pageParam,
+                groupId:this.$route.params.groupId,
+                imType:2
+            }).then(res=>{
+                console.log(res);
+                this.images = res;
+                res.map(r=>{
+                    if(!r.attrId){
+                        var s = JSON.parse(r.content);
+                        r.attrId =s.id;
+                        r.content = s.content;
+                    }
+                });
+            });
+        }
     },
     mounted(){
-        this.listId = this.$route.params.listId;
-        this.refreshImages();
-        this.handleScroll();
+        this.init();
+        // this.listId = this.$route.params.listId;
+        // this.refreshImages();
+        // this.handleScroll();
     }
 }
 </script>

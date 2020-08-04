@@ -5,7 +5,12 @@
     <div class="message">
         <div class="message-sider">
             <div class="message-sider-header">
-                消息通知
+                <span class="message-search">
+                    <nav-search></nav-search>
+                </span>
+                <span class="add-group" @click="showAddGroupModal">
+                    <Icon type="md-add" />
+                </span>
             </div>
             <div class="message-sider-list ">
                 <navigation></navigation>
@@ -14,28 +19,83 @@
         <div class="message-content">
             <router-view></router-view>
         </div>
+        <add-group-member 
+            :groupTitle="groupTitle"
+            ref="addGroupMember" 
+            :confirmCallback="addGroup">
+        </add-group-member>
     </div>
 </template>
 <script>
+import { createGroup, getGroupByUserId } from "@/services/imService";
 import Navigation from './navigation/navigation';
+import Bus from "@/assets/eventBus.js";
+import AddGroupMember from "./message-tpl/add-group-member";
+import NavSearch from "./message-tpl/nav-search";
 export default {
     name:'MessageLayout',
     components:{
-        Navigation
+        Navigation,
+        AddGroupMember,
+        NavSearch
     },
     data(){
         return {
+            groupTitle: "发起群聊"
         }
     },
     watch:{
        
     },
-    mounted(){
-        let activeNavigatioIdOfNotice = localStorage.getItem('activeNavigatioIdOfNotice');
+    methods: {
+        showAddGroupModal() {
+            this.$refs["addGroupMember"].displayAll = true;
+            this.$refs["addGroupMember"].showModal = true;
+            this.$refs["addGroupMember"].selectMembers = [];
+        },
+        addGroup(userList) {
+            let userIds = [],
+                userNames = [],
+                params = {},
+                requestUrl = createGroup;
 
-        if(activeNavigatioIdOfNotice){
-            this.$router.push('/social/message/list/' + activeNavigatioIdOfNotice);
+            userList.forEach(user =>{
+                userIds.push(user.id);
+                userNames.push(user.name);
+            })
+
+            if(userList.length === 1){
+                params = {
+                    userId: userIds.join(',')
+                };
+                requestUrl = getGroupByUserId;
+            }else{
+                userNames.push(this.$currentUser.nickname);
+                params = {
+                    groupId: null,
+                    users: userIds.join(','),
+                    name: userNames.join(',')
+                };
+            }
+            
+            requestUrl(params).then(res => {
+                res.message && this.$Message.success(res.message);
+                this.$refs["addGroupMember"].showModal = false;
+                if(res.groupType === 'P'){
+                    res.userId = params.userId;
+                }
+                Bus.$emit('addGroup',res);
+            }).catch(err => {
+                this.$Message.error(err.data.message);
+            })
         }
+    },
+    mounted(){
+        // let activeNavigatioIdOfNotice = localStorage.getItem('activeNavigatioIdOfNotice');
+
+        // if(activeNavigatioIdOfNotice){
+        //     this.$router.push('/social/message/list/' + activeNavigatioIdOfNotice);
+        // }
     }
 }
 </script>

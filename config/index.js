@@ -16,11 +16,15 @@ module.exports = {
         changeOrigin: true
       },
       '/corebiz-api': {
-        target: 'http://192.168.3.172:8888',
+        target: 'http://172.roletask.com',
         changeOrigin: true
       },
       '/account-api': {
-        target: 'http://192.168.3.172:8888',
+        target: 'http://172.roletask.com',
+        changeOrigin: true
+      },
+      '/gimgs': {
+        target: 'http://172.roletask.com',
         changeOrigin: true
       }
 

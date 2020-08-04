@@ -3,165 +3,113 @@
 </style>
 
 <template>
- <div class="publish">
+ <div class="publish" >
+    <Row class="publish-bar" >
+        <Col class="publish-bar-left" span="12" >
+            <div @mouseenter="onLeftBarHover">
+            <Poptip 
+                placement="bottom-start" 
+                v-model="faceVisible"
+                width="300">
+                    <Icon 
+                        class="choice-face" 
+                        type="ios-happy-outline"  
+                        title="表情"
+                        
+                        size=24 />
+                        <div class="api-emotion" slot="content">
+                            <!-- <img 
+                                :src="n" 
+                                width=24 v-for="n in faces" :key="n" 
+                                @click="choice_face(n)"
+                                style="float:left;margin: 2px;cursor: pointer;"> -->
+                                <rfd-emotion  @click.native="choice_face(item)" v-for="(item,index) in emotionList" :key="index">{{item}}</rfd-emotion>
+                        </div>
+            </Poptip>
+               
+            <Upload
+                ref="upload"
+                :show-upload-list="false"
+                :on-success="handleSuccess"
+                :format="['jpg','jpeg','png']"
+                :max-size="2048"
+                :headers="httpHeaders"
+                :on-exceeded-size="handleMaxSize"
+                multiple
+                accept=".jpg,.png"
+                action="/H_roleplay-si/ds/upload"
+                style="display: inline-block;position: relative;">
+                <Icon type="md-images" class="choice-img"  title="图片" size=24 />
+            </Upload>
+        
+            <Upload
+                multiple
+                ref="uploadFile"
+                :max-size="10240"
+                :headers="httpHeaders"
+                :show-upload-list='false'
+                :on-success="handleFileSuccess"
+                accept=".xls,.xlsx,.docx,.txt,.vsd,.pdf,.apk,.zip,.mp3,.mp4,.png"
+                :format="['xls','xlsx','docx','txt','vsd','pdf','apk','zip','mp3','mp4','png']"
+                :on-exceeded-size="handleFileMaxSize"
+                style="display: inline-block;position: relative;"
+                action="/H_roleplay-si/ds/upload">
+                <Icon type="ios-folder-open-outline" size=24 title="文件"  class="choice-file" />
+            </Upload>
+            Shift+Enter换行
+            </div>
+        </Col>
+        <Col class="publish-bar-right" span="12">
+            <slot name="rightBars"></slot>
+        </Col>
+    </Row>
     <Row class="publish-container">
+        <div class="publish-container-reply" ref='replycontainer' contenteditable="false"></div>
         <div 
-            class="publish-container-content" 
+            class="publish-container-content compactscrollbar" 
             id = "contentWrap"
             contenteditable="true" 
             ref="editor"
             v-html="innerText"
             @input="changeTxt"
-            @blur="onPopperShow"
             @focus="lock=true" 
-            @keydown="handleDOMRemoved"
-            ></div>
+            @keydown="handleDeydown"
+            >
+        </div>
 
-        <div class="atwho-view" id="at-view-64" v-show="userListVisible" :style="{top:`${top}px`,left:`${left}px`}" >
-            <ul class="atwho-view-ul" @click="handleSelectUser" >
+        <div class="atwho-view compactscrollbar" id="at-view-64" v-show="userListVisible" :style="{top:`${top}px`,left:`${left}px`}" >
+            <ul class="atwho-view-ul" >
                <li 
                     v-for="(item,index) in userList" 
                     :key="item.userId" 
                     :userId="item.userId" 
+                    :id="`atuser-${item.userId}`"
                     :class="{'at-high-light': index === currentWho.index}"
+                    @click="handleSelectUser(item)"
                     @mousedown="OnMouseDown"
                     @mouseover="handleMouseover(index)"
-                 
                     >
                     {{item.nickname}}
+                    <span v-if="item.userId==='All'">({{userList.length}})</span>
                 </li>
             </ul>
         </div>    
     </Row>
-    <br>
     <Row class="publish-bar">
-        <Col class="publish-bar-left" span="12">
-            <Poptip 
-                placement="bottom-start" 
-                v-model="faceVisible"
-                @on-popper-show="onPopShow"
-                width="300">
-                    <Icon 
-                        class="choice-face" 
-                        type="ios-happy-outline"  
-                        size=24 />表情
-                        <div class="api-emotion" slot="content">
-                            <img 
-                                :src="n" 
-                                width=24 v-for="n in faces" :key="n" 
-                                @click="choice_face(n)"
-                                style="float:left;margin: 2px;cursor: pointer;">
-                        </div>
-            </Poptip>
-
-            <Poptip 
-                v-show="allowFile"
-                placement="bottom-start" 
-                width="235">
-                    <Icon 
-                    type="md-images" 
-                    class="choice-img"  
-                    size=24 />图片
-                    <span v-if="uploadList.length>0">({{uploadList.length}})</span>
-                    <div class="api" slot="content" >
-                        <p class="lh25 marbottom10">
-                            <span>共{{uploadList.length}}张,您还能上传<span style="color:#e4393c;">{{9-uploadList.length}}</span>张</span>
-                            <Button class="fr" type="warning" v-if="uploadList.length>0" @click="handleClearImg">清空全部</Button>
-                        </p>
-                        <div 
-                            class="comment-upload-list" 
-                            v-for="(item,index) in uploadList" 
-                            :key="index" >
-                                <template v-if="item.status === 'finished'">
-                                    <img :src="item.url">
-                                    <div class="comment-upload-list-cover">
-                                        <Icon 
-                                        type="ios-eye-outline" 
-                                        @click.native="handleView(item.name)">
-                                        </Icon>
-                                        <Icon 
-                                        type="ios-trash-outline" 
-                                        @click.native="handleRemove(item)"></Icon>
-                                    </div>
-                                </template>
-                                <template v-else>
-                                    <Progress 
-                                    v-if="item.showProgress" 
-                                    :percent="item.percentage" 
-                                    hide-info></Progress>
-                                </template>
-                        </div>
-                        <Upload
-                            v-show="uploadList.length<9"
-                            ref="upload"
-                            :show-upload-list="false"
-                            :default-file-list="defaultList"
-                            :on-success="handleSuccess"
-                            :format="['jpg','jpeg','png']"
-                            :max-size="2048"
-                            :headers="httpHeaders"
-                            :on-format-error="handleFormatError"
-                            :on-exceeded-size="handleMaxSize"
-                            :before-upload="handleBeforeImgUpload"
-                            multiple
-                            type="drag"
-                            action="/H_roleplay-si/ds/upload"
-                            style="display: table;width:58px;">
-                            <div style="width: 58px;height:58px;line-height: 58px;">
-                                <Icon type="ios-camera" size="20"></Icon>
-                            </div>
-                        </Upload>
-                        <Modal title="查看图片" v-model="visible">
-                            <img 
-                                :src="'/H_roleplay-si/ds/download?url=' + imgName + ''" 
-                                v-if="visible" style="width: 100%">
-                        </Modal>
-                    </div>
-            </Poptip>
-
-            <Poptip 
-                
-                v-show="allowFile"
-                placement="bottom-start" >
-                <Icon type="md-attach" size=24  class="choice-file" />文件
-                 <span v-if="uploadFileList.length>0">({{uploadFileList.length}})</span>
-                <div slot="content" style="max-height:200px;max-width:280px;">
-                    <p class="lh25 marbottom10" style="min-width:230px;">
-                        <span>共{{uploadFileList.length}}份,您还能上传<span style="color:#e4393c;">{{9-uploadFileList.length}}</span>份</span>
-                        <Button 
-                            class="fr" 
-                            v-if="uploadFileList.length>0"
-                            type="warning" 
-                            @click="handleClearFile">清空全部</Button>
-                    </p>
-                    <Upload
-                    multiple
-                    ref="uploadFile"
-                    :max-size="10240"
-                    :headers="httpHeaders"
-                    :on-success="handleFileSuccess"
-                    :on-exceeded-size="handleFileMaxSize"
-                    :default-file-list="defaultFileList"
-                    :before-upload="handleBeforeFileUpload"
-                    action="/H_roleplay-si/ds/upload">
-                    <Button icon="ios-cloud-upload-outline">上传文件</Button>
-                    </Upload>
-                   
-                </div>
-            </Poptip>
-            <!-- <span v-if="ischild">
-                <Checkbox v-model="commentAndReply">同时评论到此应用</Checkbox>
-            </span> -->
-        </Col>
-        <Col class="publish-bar-right" span="12">
+        <Col class="publish-bar-right" span="24">
+        <!-- <Tooltip placement="top-end" content="不能发送空白消息"> -->
             <Button  @click.native="handleSend" >发送</Button>
+        <!-- </Tooltip> -->
         </Col>
     </Row>
 </div>
 </template>
 
 <script>
-import { getToken } from "@/utils/utils";
+import { EMOTION } from "@/utils/emotion";
+import { getToken,getFileSize } from "@/utils/utils";
+import Bus from "@/assets/eventBus.js";
+import RfdEmotion from "@/components/emotion";
 import {
   getDomValue, insertHtmlAtCaret, getCursortPosition
 } from '@/utils/dom-utils'
@@ -169,6 +117,10 @@ import {
     uploadImage,
     getAllUsers
 } from "@/services/subscribeService";
+
+const storage = window['sessionStorage'];
+const MessionStore = 'MessionStore';
+
 export default {
     name:"coment-publish",
     props:{
@@ -179,6 +131,9 @@ export default {
             }
         },
         handlePublish:{
+            type:Function
+        },
+        sessionHandlePublish:{
             type:Function
         },
         comments:{
@@ -201,27 +156,34 @@ export default {
             type:Boolean,
             default:false
         },
+        setAtUsers:{
+            type:Function
+        },
+        groupId:{
+            type:String,
+            default:'',
+        }
         
+    },
+    components:{
+        RfdEmotion
     },
     data() {
         return {
+            emotionList: [...EMOTION],
             innerText: this.discContent.txt,
             lock:false,
             httpHeaders: {
                 Authorization: getToken()
             },
             faces:[],
-            defaultList: [
-            ],
-            defaultFileList:[],
             imgName: '',
             visible: false,
-            uploadList: [],
-            uploadFileList:[],
             commentAndReply:false,
             faceVisible:false,
             userList:[],
             userListVisible:false,
+            sourceUserList:[],
             left:0,
             top:0,
             isFilter:false,
@@ -244,6 +206,27 @@ export default {
         　　　},
         　　　deep:true
         },
+        //聊天窗口的监听
+        $route: {
+            handler: function(newVal, oldVal){
+                if(newVal.params.groupId!=oldVal.params.groupId){
+                    this.sessionHandleSend(oldVal.params.groupId);
+                    this.userList = [];
+                    this.sourceUserList = [];
+                }
+            },
+            deep: true
+        },
+        groupId:{
+            handler(newVal, oldVal){
+                this.messionArr = JSON.parse(storage.getItem(MessionStore));
+                if(this.messionArr){
+                    this.$nextTick(() => {
+                        this.$refs.editor.innerHTML = this.messionArr&&this.messionArr[newVal]&&JSON.parse(this.messionArr[newVal])&&JSON.parse(this.messionArr[newVal])['contentHtmls']||'';
+                    });
+                }
+            }
+        }
     },
     methods: {
         OnMouseDown(e) {
@@ -255,7 +238,8 @@ export default {
         },
 
         getAllUsers(filter=""){
-            getAllUsers(8,1,filter).then(res=>{
+            getAllUsers(10000,1,filter).then(res=>{
+                this.sourceUserList = res.tableContent;
                 this.userList = res.tableContent;
                 if(res.tableContent.length === 0){
                     this.userListVisible = false;
@@ -271,25 +255,46 @@ export default {
             })
         },
 
-        onPopperShow:function(){
-            //点击表情时获取光标位置
-            // 返回插入符号当前位置的selection对象
-            let selection = window.getSelection();
+        onLeftBarHover:function(){
+            if(!this.$refs.editor.lastChild){
+                this.$refs.editor.innerHTML= '&nbsp;';
+               
+            }
 
-            // 获取包含当前节点的文档片段
-            this.range = selection.getRangeAt(0);
-            this.userListVisible = false;
-        },
-        onPopShow () {
             this.$refs.editor.focus();
+            let selection = window.getSelection();
+            this.range = selection.getRangeAt(0);
+            let lastChild = this.$refs.editor.lastChild?this.$refs.editor.lastChild:this.$refs.editor;
+            this.range.setStartAfter(lastChild)
+            this.range.collapse(false)
+            window.getSelection().removeAllRanges()
+            window.getSelection().addRange(this.range)
+
+            // let selection = window.getSelection();
+            // // 获取包含当前节点的文档片段
+            // this.range = selection.getRangeAt(0);
+            
+           
         },
-        choice_face: function(n) {
+        choice_face: function(v) {
+            
             // 创建需追加到光标处节点的文档片段
+            var index = this.emotionList.indexOf(v)
             const range = this.range.cloneRange();
-            let fragment = range.createContextualFragment('<img src="'+ n +'" width="20" paste="1">')
-            // 将创建的文档片段插入到光标处
-            this.range.insertNode(fragment.lastChild)
-      
+            var el = document.createElement('div'),frag;
+            el.innerHTML = `<img class='static-emotion-gif' index=${index} src="https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/${index}.gif">`
+            frag = document.createDocumentFragment()
+            var node,lastNode;
+            while ((node = el.firstChild)) {
+                lastNode = frag.appendChild(node)
+            }
+            range.insertNode(frag)
+            if (lastNode) {
+                range.setStartAfter(lastNode)
+                range.collapse(false)
+                window.getSelection().removeAllRanges()
+                window.getSelection().addRange(range)
+            }
             this.faceVisible = false;
         },
 
@@ -302,7 +307,21 @@ export default {
             if(e.data === '@'){
                 this.at_focusOffset = end;   
                 this.isFilter = true;
-                this.userListVisible = true;
+                if(this.userList.length===0){
+                    if(this.setAtUsers){
+                        this.setAtUsers(this.groupId).then(res=>{
+                            this.sourceUserList = res;
+                            this.userList = res;
+                            this.userListVisible = true;
+                            this.currentWho = this.userList[0];
+                            this.currentWho.index = 0;
+                        });
+                    }else{
+                        this.getAllUsers();
+                    }
+                }
+                
+               
             }
             if(this.isFilter) {
                 // 说明输入了@ 截取@到光标之间的字符串
@@ -315,13 +334,13 @@ export default {
                     // 合法的用户输入
                     this.showUserPanel(this.contentWrap,targetText);
                 }
-            } 
+            }
         },
 
-        handleSelectUser(e){
-           const nickname = e && e.target.innerText || this.currentWho.nickname;
-           const userId = e && e.target.getAttribute('userId') || this.currentWho.userId;
+        handleSelectUser(u){
 
+
+            const user = u || this.currentWho;
              // 获取输入框中的值
             const fullText = this.contentWrap.innerText.replace(/\n/g, '')
             // 获取光标位置
@@ -334,21 +353,20 @@ export default {
             let range =selection.getRangeAt(0);
             range.setStart(range.endContainer, range.endOffset - offset);
             range.deleteContents();
-          
+        
             // 插入选中的user
-            let input = `<span contenteditable="false" style="color: #646b6b;font-style: italic;font-size:12px;cursor: pointer;">@${nickname}&nbsp;</span>`;
+            let input = `<span contenteditable="false" class="atUser" style="color: #646b6b;font-style: italic;font-size:12px;cursor: pointer;">@${user.nickname}&nbsp;</span>`;
             insertHtmlAtCaret(input);
             // 添加用户
-            this.atUsers.push({
-                userId:userId,
-                name:nickname
-            });
+            this.atUsers.push(...user);
             
             this.hidenUserPanel();
+          
+           
         },
 
            // 处理节点的删除
-        handleDOMRemoved(e) {
+        handleDeydown(e) {
             //删除
             if (e.keyCode === 8 ) {
                 // 获取输入框中的值
@@ -375,26 +393,36 @@ export default {
                     }
                   
                 }
+    
+                if(!this.contentWrap.innerText){
+                    this.$refs.replycontainer.innerHTML = '';
+                    this.$refs.editor.style.height='220px';
+                    this.replayMsg = '';
+                }
 
                
             }
 
-            if(this.currentWho){
-                // ↑ ↓
-                if (e.keyCode === 38 || e.keyCode === 40) {
-                    if (!(e.metaKey || e.ctrlKey)) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        this.handleKeyBoardSelect(e);
-                    }
-                    return;
-                }
-                // 按下回车键
-                if (e.keyCode === 13) {
-                    this.handleSelectUser();
+            
+            // ↑ ↓
+            if (e.keyCode === 38 || e.keyCode === 40) {
+                if (!(e.metaKey || e.ctrlKey)) {
                     e.preventDefault();
                     e.stopPropagation();
+                    this.handleKeyBoardSelect(e);
                 }
+                return;
+            }
+
+            if(!e.shiftKey && e.key ==='Enter' && !this.userListVisible){
+                this.handleSend();
+            }
+            
+            // 按下回车键
+            if (e.keyCode === 13 && this.userListVisible) {
+                this.handleSelectUser();
+                e.preventDefault();
+                e.stopPropagation();
             }
         },
 
@@ -407,6 +435,8 @@ export default {
             
             const nickname = this.userList[next].nickname;
             const userId = this.userList[next].userId;
+
+            document.getElementById('atuser-'+userId).scrollIntoView(true);
 
             this.currentWho = {
                 nickname:nickname,
@@ -437,28 +467,29 @@ export default {
                     this.top = top;
                     let atView = document.getElementById('at-view-64');
                     atView.focus();
-                    const filter = JSON.stringify([{"operator":"like","value":targetText,"property":"nickname"}]);
-                    this.getAllUsers(filter);
+                    if(this.sourceUserList.length){
+                        this.userList = this.sourceUserList.filter(u=>{
+                            return u.nickname.includes(targetText);
+                        });
+
+                        if(this.userList.length){
+                            this.currentWho = {
+                                userId:this.userList[0].userId,
+                                nickname:this.userList[0].nickname,
+                                index:0
+                            }
+                        }
+                    }
                 }
             }
             func();
         },
 
         handleSend: function() {
-            let  imgs= this.uploadList.map(img=>{
-                    return {
-                        attachment:img.url,
-                        type:'image',
-                    }
-                }),files =  this.uploadFileList.map(img=>{
-                    return {
-                        attachment:img.url,
-                        type:'file',
-                    }
-                });
-
-            files = files.concat(imgs);
             let content =  this.$refs.editor.innerHTML;
+            if(!this.$refs.editor.innerText.trim() && this.$refs.editor.lastChild.tagName === 'DIV'){
+                return;
+            }
 
             let obj = {};
             //数组去重
@@ -467,7 +498,12 @@ export default {
                 return cur;
             }, []);
 
-            this.handlePublish(content,files,userIds,this.superComment,this.commentAndReply,this);
+            this.handlePublish(content,[],userIds,this.superComment,this.commentAndReply,this);
+        },
+        
+        sessionHandleSend(groupId) {
+            let content =  this.$refs.editor.innerHTML;
+            this.sessionHandlePublish(content,groupId);
         },
         handleView (name) {
             if(window.top.viewInsCommentsImg){
@@ -477,58 +513,69 @@ export default {
                 this.visible = true;
             }
         },
-        handleRemove (file) {
-            const fileList = this.$refs.upload.fileList;
-            this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
-        },
+       
         handleSuccess (res, file) {
-            file.url ='/H_roleplay-si/ds/download?url=' +  res.data[0].attacthment;
-            file.name  =res.data[0].attacthment;
+             file.url ='/H_roleplay-si/ds/download?url=' +  res.data[0].attacthment;
+             file.name = res.data[0].attr1;
+             file.byte = (file.size / 1024).toFixed(2);
+             file.id = res.data[0].id;
+            // 创建需追加到光标处节点的文档片段
+            const range = this.range.cloneRange();
+            var el = document.createElement('div'),frag;
+            el.innerHTML = `<img class="paste-img" src="${file.url}" attId="${file.id}" name="${file.name}"  size="${file.byte}">`
+            frag = document.createDocumentFragment()
+            var node,lastNode;
+            while ((node = el.firstChild)) {
+                lastNode = frag.appendChild(node)
+            }
+            range.insertNode(frag)
+            if (lastNode) {
+                range.setStartAfter(lastNode)
+                range.collapse(false)
+                window.getSelection().removeAllRanges()
+                window.getSelection().addRange(range)
+            }
         },
         handleFileSuccess(res, file){
+
             file.url ='/H_roleplay-si/ds/download?url=' +  res.data[0].attacthment;
+            file.name = res.data[0].attr1;
+            file.byte = (file.size / 1024).toFixed(2);
+            file.id = res.data[0].id;
+            file.icon = this.$options.filters.fileTypeFilter(file.name);
+            // 创建需追加到光标处节点的文档片段
+            const range = this.range.cloneRange();
+            var el = document.createElement('div'),frag;
+            el.innerHTML = '<span contenteditable="false" class="file-content" name="'+ file.name+'"  attid="'+ file.id+'" size="'+ file.byte+'"  >'+
+                '<img class="flie-img" width="38" src="'+file.icon+'"  paste="1">'+
+                '<div class="file-content-info"><p><a target="_blank" href="'+file.url+'">'+file.name+'</a></p><p>'+file.byte+'KB'+'</p>'+
+                '</div>'+
+            '</span>';
+            frag = document.createDocumentFragment()
+            var node,lastNode;
+            while ((node = el.firstChild)) {
+                lastNode = frag.appendChild(node)
+            }
+            range.insertNode(frag)
+            if (lastNode) {
+                range.setStartAfter(lastNode)
+                range.collapse(true)
+                window.getSelection().removeAllRanges()
+                window.getSelection().addRange(range)
+            }
+
         },
-        handleFormatError (file) {
-            window.top.limitNotice('系统提示','图片 ' + file.name + '格式不支持, 请选择格式为jpg或者png的图片');
-        },
+      
         handleMaxSize (file) {
             window.top.limitNotice('超过文件大小限制','文件  ' + file.name + '太大,最多支持2M.');
         },
-
         handleFileMaxSize (file) {
             window.top.limitNotice('超过文件大小限制','文件  ' + file.name + '太大,最多支持10M.');
         },
-
-        handleBeforeImgUpload () {
-            const check = this.uploadList.length < 9;
-            if (!check) {
-                this.$Notice.warning({
-                    title: '您最多可以上传九张图片。 '
-                });
-                window.top.limitNotice('提示','您最多可以上传九张图片。');
-            }
-            return check;
-        },
-        handleBeforeFileUpload () {
-            const check = this.uploadFileList.length < 9;
-            if (!check) {
-                window.top.limitNotice('提示','您最多可以上传九份文件。 ');
-            }
-            return check;
-        },
-        handleClearImg(){
-            this.$refs.upload.clearFiles();
-            this.uploadList = this.$refs.upload.fileList;
-        },
-        handleClearFile(){
-            this.$refs.uploadFile.clearFiles();
-            this.uploadFileList = this.$refs.uploadFile.fileList;
-        },
-
         uploadImageByBase64(referenceID,file){
             let target = this.$refs.editor;
             uploadImage({
-                  referenceId:referenceID,
+                     referenceId:referenceID,
                     file:file
             }).then(res=>{
                 if(res.length>0){
@@ -536,37 +583,18 @@ export default {
                     let f = imgArr.filter(item=>{
                         return !item.getAttribute('paste');
                     });
-                    if(f.length>0){
-                         let img = document.createElement('img');  
-                        img.setAttribute('src',`/H_roleplay-si/ds/download?url=${res[0].attacthment}`);
-                        img.setAttribute('paste',1);
-                        img.setAttribute('class','paste-img');
-                        f[0].parentNode.replaceChild(img,f[0]);
-                        this.discContent.txt =  target.innerHTML;
-                    }else{
-                         document.execCommand('insertImage', false, `/H_roleplay-si/ds/download?url=${res[0].attacthment}`) 
-                    }
+                    f[0].remove();
+
+                    let tepFile = {};
+                    tepFile.url ='/H_roleplay-si/ds/download?url=' +  res[0].attacthment;
+                    tepFile.name = res[0].attr1;
+                    tepFile.byte =(600 / 1024).toFixed(2);
+                    tepFile.attId = res[0].id;
+                    insertHtmlAtCaret(`<img  paste=1 class="paste-img" src="${tepFile.url}" name="${tepFile.name}" attId="${tepFile.attId}"  size="${tepFile.byte}">`);
                 }
             });
         },
-
         initEvent(){
-            // // demo 程序将粘贴事件绑定到 document 上
-            // this.$refs.editor.addEventListener('compositionstart',(e)=>{
-            //     this.isCN = true;
-            // });
-
-            // //中文输入完成触发事件
-            // this.$refs.editor.addEventListener('compositionend',(e)=>{
-            //     if(this.isFilter){
-            //         this.filterContent = this.filterContent+e.data;
-            //         let filter = JSON.stringify([{"operator":"like","value":this.filterContent,"property":"nickname"}]);
-            //         this.getAllUsers(filter);
-            //         this.isCN = false;
-            //     }  
-            // });
-
-
             const that = this;
             this.$refs.editor.addEventListener("paste",  (e)=> {
                 let clipboardData = e.clipboardData;
@@ -577,6 +605,7 @@ export default {
                 if(clipboardData.items.length === 0){
                     return;
                 }
+
                 // Mac平台下Chrome49版本以下 复制Finder中的文件的Bug Hack掉
                 if(clipboardData.items && clipboardData.items.length === 2 && clipboardData.items[0].kind === "string" && clipboardData.items[1].kind === "file" &&
                     clipboardData.types && clipboardData.types.length === 2 && clipboardData.types[0] === "text/plain" && clipboardData.types[1] === "Files" &&
@@ -614,14 +643,67 @@ export default {
         }
     },
     mounted () {
-        this.uploadList = this.$refs.upload.fileList;
-        this.uploadFileList = this.$refs.uploadFile.fileList;
       
         this.$nextTick(()=>{
             this.contentWrap = this.$refs.editor;
         })
         //初始化事件
         this.initEvent();
+        let me = this;
+        Bus.$on('atUser',user => {
+            let atUserHtml = `<span contenteditable="false" class="atUser" style="color: #646b6b;font-style: italic;font-size:12px;cursor: pointer;">@${user.nickName}&nbsp;</span>`;
+            this.$refs.editor.innerHTML=this.$refs.editor.innerHTML+atUserHtml;
+        });
+         Bus.$on('replyMsg',replyInfo => {
+            let {msg,group} = replyInfo;
+            let tempConent='';
+
+            switch (msg.imType) {
+                case 1:
+                    tempConent = msg.content;
+                    break;
+                case 2:
+                    tempConent = tempConent+`<img height=50 width=100 src="/H_roleplay-si/ds/downloadById?id=${msg.content.id}" >`
+                    break;
+                case 3:
+                      msg.content.map(m=>{
+                        if(m.imType===2) tempConent = tempConent+`<img height=50 width=100 src="/H_roleplay-si/ds/downloadById?id=${m.content.id}" >`;
+
+                        if(m.imType ===1) tempConent=tempConent+m.content;
+
+                        if(m.imType===4) tempConent = tempConent+
+                        `<div class="publish-container-reply-content-message-file">
+                            <img height=38 src="resources/images/file/excel.png" >
+                            <div class="publish-container-reply-content-message-file-info">
+                                <p>${m.content}</p>
+                                <p>${m.size}</p>
+                            </div>
+                        </div>`;
+                        
+                    });
+                    break;
+                 case 4:
+                    var src= this.$options.filters.fileTypeFilter(msg.content.content);
+
+                    tempConent = tempConent+
+                    `<div class="publish-container-reply-content-message-file">
+                        <img height=38 src="${src}" >
+                        <div class="publish-container-reply-content-message-file-info">
+                            <p>${msg.content.content}</p>
+                            <p>${msg.content.size}KB</p>
+                        </div>
+                    </div>`;
+                    break;
+            }
+
+            let innerHTML = `<div  class="publish-container-reply-content" >
+                <div class="publish-container-reply-content-creator">${msg.creatorName}:</div>
+                <div class="publish-container-reply-content-message">${tempConent}</div>
+            </div>`;
+            this.$refs.editor.style.height='140px';
+            this.$refs.replycontainer.innerHTML = innerHTML;
+            this.replayMsg = msg;
+        });
     },
 
 };

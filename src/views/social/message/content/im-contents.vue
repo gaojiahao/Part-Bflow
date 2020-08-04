@@ -186,7 +186,11 @@ export default {
                 if (res.page != 1){
                     this.isMsgAppend = true;
                     length = res.msgs.length;
-                     if(length)me.lastMsgId = res.msgs[length-1].id;//方便定位到最新的第一条，默认会定在最后一条。
+                    if(length){
+                        me.lastMsgId = res.msgs[length-1].id;//方便定位到最新的第一条，默认会定在最后一条。
+                    } else {
+                        me.lastMsgId = null;
+                    }                
                 }
             }).finally(()=>{
                 this.loading = false;
@@ -352,8 +356,11 @@ export default {
         var msgDiv;
         if (this.isMsgAppend == true){
             this.isMsgAppend = false;
-            msgDiv = document.getElementById(this.lastMsgId);
-            msgDiv.scrollIntoView(true);
+            if(this.lastMsgId != null){
+                msgDiv = document.getElementById(this.lastMsgId);
+                msgDiv && msgDiv.scrollIntoView(true);
+                this.lastMsgId = null;
+            }
         } else {
             this.scrollToBottom();
         }

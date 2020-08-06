@@ -127,7 +127,7 @@ export default {
         
     },
     methods:{
-        setAtUsers(){
+        setAtUsers(groupId){
             let that = this;
             if(this.$route.query.groupType==='G'){
                 return getMembers(this.$route.params.groupId).then(res=>{

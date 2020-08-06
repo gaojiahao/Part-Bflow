@@ -85,7 +85,7 @@ export default {
             messages:[],
             detailMessage: {},
             pageParam:{
-                page:1,
+                page:1,//默认是第一页，滚动时加载第二页面。
                 limit:20
             },
             allLoad:false,
@@ -96,6 +96,7 @@ export default {
         $route(to, from) {
             if(to.params.groupId != from.params.groupId){
                 this.pageParam.page = 1;
+                //this.$set(this.pageParam,'page',0)
                 this.allLoad = false;
                 this.messages = [];
                 this.getMessages();
@@ -148,15 +149,21 @@ export default {
                 nickName:this.curContextMessage.creatorName
             });
         },
-        getMessages(){
+        getMessages(page){
             let param = {
-                ...this.pageParam,
+                page: page == null ? 1 : page,
+                limit:20,
                 groupId:this.$route.params.groupId
-            };
+            },me = this,
+            length;
+
             this.$Loading.start();
+            if(this.loading == true) return false;
+            this.loading = true;
             // this.getApp().spinShow = true;
             getMessagesByGroupId(param).then(res=>{
                 this.$Loading.finish();
+                this.loading = false;
                 // this.getApp().spinShow = false;
                 if(res.msgs.length<this.pageParam.limit){
                     this.allLoad = true;
@@ -174,9 +181,19 @@ export default {
                         }
                         
                     }
-                });
-                
-                this.messages.unshift(...res.msgs);
+                }); 
+                me.messages.unshift(...res.msgs);
+                if (res.page != 1){
+                    this.isMsgAppend = true;
+                    length = res.msgs.length;
+                    if(length){
+                        me.lastMsgId = res.msgs[length-1].id;//方便定位到最新的第一条，默认会定在最后一条。
+                    } else {
+                        me.lastMsgId = null;
+                    }                
+                }
+            }).finally(()=>{
+                this.loading = false;
             });
         },
         showDetailModal(message) {
@@ -189,7 +206,6 @@ export default {
             var that =this;
             deepstream.event.subscribe("roletaskIm/" + this.$md5(String(this.$currentUser.userId)), res => {
                 res.imType = parseInt(res.imType);
-                window.top.msgHandler && window.top.msgHandler(JSON.stringify(res));
                 switch (res.imType) {
                     case 1:
                         if (this.$route.params.groupId == res.groupId)
@@ -266,7 +282,7 @@ export default {
 
                 if(arguments[0].target.scrollTop==0 && !that.allLoad){
                     that.pageParam.page++;
-                    that.getMessages();
+                    that.getMessages(that.pageParam.page);
                 }
             });
 
@@ -337,7 +353,18 @@ export default {
 
     },
     updated(){
-        this.scrollToBottom();
+        var msgDiv;
+        if (this.isMsgAppend == true){
+            this.isMsgAppend = false;
+            if(this.lastMsgId != null){
+                msgDiv = document.getElementById(this.lastMsgId);
+                msgDiv && msgDiv.scrollIntoView(true);
+                this.lastMsgId = null;
+            }
+        } else {
+            this.scrollToBottom();
+        }
+       
     }
 }
 </script>

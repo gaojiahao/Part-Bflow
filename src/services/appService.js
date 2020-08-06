@@ -1,9 +1,19 @@
 import {
-  request
+  request, postForm
 } from './fetch'
 import {
   connect
 } from 'net';
+
+/**
+ * @author Xing
+ * @description 保存应用详情
+ */
+export const saveAppComment = (uniqueId, comment) => postForm('/H_roleplay-si/ds/saveData', {
+  list: 'list',
+  uniqueId: uniqueId,
+  comment: comment
+});
 
 /**
  * @author XiaoYing
@@ -224,7 +234,7 @@ export const addTemplateApp = (params) => request('/H_roleplay-si/app/saveList',
  * @author XiaoYing
  * @description 获取关系管理数据
  */
-export const findCashFlowRelByType = (type,currentPage,pageSize,value) => request('/H_roleplay-si/cashFlow/findCashFlowRelByType', {
+export const findCashFlowRelByType = (type, currentPage, pageSize, value) => request('/H_roleplay-si/cashFlow/findCashFlowRelByType', {
   type: type,
   pageIndex: currentPage,
   pageSize: pageSize,
@@ -241,13 +251,13 @@ export const getAllListInfo = (type) => request('/H_roleplay-si/ds/getAllListInf
  * @author XiaoYing
  * @description 保存关系管理
  */
-export const saveCashFlowRel = (param) => request('/H_roleplay-si/cashFlow/saveCashFlowRel', {},'POST',param);
+export const saveCashFlowRel = (param) => request('/H_roleplay-si/cashFlow/saveCashFlowRel', {}, 'POST', param);
 
 /**
  * @author XiaoYing
  * @description 更新关系管理
  */
-export const updateCashFlowRel = (param) => request('/H_roleplay-si/cashFlow/updateCashFlowRel', {},'POST',param);
+export const updateCashFlowRel = (param) => request('/H_roleplay-si/cashFlow/updateCashFlowRel', {}, 'POST', param);
 
 /**
  * @author XiaoYing

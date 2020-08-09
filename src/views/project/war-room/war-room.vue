@@ -363,10 +363,10 @@ export default {
         t.start_date = t.startTime;
         t.end_date = t.deadline;
         t.text = t.taskName;
-        if(t.planPrimeCostSubtotal === 0){
+        if(t.declareWorkingHoursSubtotal === 0){
           t.progress = 0;
         }else{
-          t.progress = t.declarePrimeCostSubtotal / t.planPrimeCostSubtotal;
+          t.progress = t.standardWorkingHoursSubtotal / t.declareWorkingHoursSubtotal;
         }
       });
 

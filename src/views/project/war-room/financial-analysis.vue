@@ -371,7 +371,7 @@ export default {
                 {item:'成本',amount:toThousandFilter(obj.productsCost.productsCostSum),title:true},
                 {item:'营业成本',amount:toThousandFilter(obj.productsCost.saleCost)},
                 {item:'外部服务采购',amount:toThousandFilter(obj.productsCost.outsideServerPurchase)},
-                {item:'内部服务采购',amount:toThousandFilter(obj.productsCost.insideServerPurchase)},
+                // {item:'内部服务采购',amount:toThousandFilter(obj.productsCost.insideServerPurchase)},
                 {item:'费用',amount:toThousandFilter(obj.cost.costSum),title:true}
             ];
             this.setCostListData(obj);

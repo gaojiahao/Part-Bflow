@@ -366,7 +366,7 @@ export default {
         if(t.declareWorkingHoursSubtotal === 0){
           t.progress = 0;
         }else{
-          t.progress = t.standardWorkingHoursSubtotal / t.declareWorkingHoursSubtotal;
+          t.progress = t.declareWorkingHoursSubtotal / t.standardWorkingHoursSubtotal;
         }
       });
 

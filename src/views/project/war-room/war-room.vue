@@ -262,7 +262,9 @@ import {
   getProject,
   addProjectTask,
   updateProjectTask,
-  deleteProjectTask
+  deleteProjectTask,
+  addProjectTaskLink,
+  deleteProjectTaskLink
 } from "@/services/projectService";
 import { getProcessStatusByListId } from "@/services/appService";
 import Bus from "@/assets/eventBus.js";
@@ -333,7 +335,7 @@ export default {
     formatProjectData(formData) {
       this.projectPlanReferenceId = formData.biReferenceId;
       var tasks = [],
-        links = [],
+        links = formData.link || [],
         projectPlanTask = formData.projectPlanTask,
         projectApproval = formData.projectApproval,
         spltTask = function(task) {
@@ -363,18 +365,9 @@ export default {
       });
 
       tasks.push(this.getRootTask());
-
-      tasks.map((t, index) => {
-        links.push({
-          id: index,
-          source: t.parent,
-          target: t.id,
-          type: "1"
-        });
-      });
       return {
-        data: tasks
-        // links:links
+        data: tasks,
+        links:links
       };
     },
     /**
@@ -478,36 +471,36 @@ export default {
       };
     },
     createTaskSaveData(item, type) {
-		let parent;
-		//parent为0，则为项目
-		//如果直接拿id,会拿gantt的默认自动生成的id,所有再添加子任务时，添加的parentId是错的
-		if(item.parent === 'root' ){
-			parent = '0';
-		}else{
-			parent = item.parent;
-		}
+      let parent;
+      //parent为0，则为项目
+      //如果直接拿id,会拿gantt的默认自动生成的id,所有再添加子任务时，添加的parentId是错的
+      if(item.parent === 'root' ){
+        parent = '0';
+      }else{
+        parent = item.parent;
+      }
 
-		let data = {
-			parentId: parent,
-			projectPlanReferenceId: this.projectPlanReferenceId,
-			projectId: this.project.projectApprovalId,
-			taskName: item.text,
-			taskType: item.taskType,
-			executor: item.executor,
-			dealerName: item.dealerName,
-			processStatus: item.processStatus,
-			standardWorkingHours: item.standardWorkingHours,
-			cycleDays: item.duration,
-			startTime: gantt.templates.format_date(item.start_date),
-			deadline: gantt.templates.format_date(item.end_date),
-			comment: item.comments || "",
-			seq: item.$index
-		};
+      let data = {
+        parentId: parent,
+        projectPlanReferenceId: this.projectPlanReferenceId,
+        projectId: this.project.projectApprovalId,
+        taskName: item.text,
+        taskType: item.taskType,
+        executor: item.executor,
+        dealerName: item.dealerName,
+        processStatus: item.processStatus,
+        standardWorkingHours: item.standardWorkingHours,
+        cycleDays: item.duration,
+        startTime: gantt.templates.format_date(item.start_date),
+        deadline: gantt.templates.format_date(item.end_date),
+        comment: item.comments || "",
+        seq: item.$index
+      };
 
-		if (type === "update") {
-			data["projectPlanTaskId"] = item.projectPlanTaskId;
-		}
-		return data;
+      if (type === "update") {
+        data["projectPlanTaskId"] = item.projectPlanTaskId;
+      }
+      return data;
     },
     /**
      * 初始化事件
@@ -607,6 +600,38 @@ export default {
 				}
         
         return true;
+      });
+
+      //link增加前校验
+      gantt.attachEvent("onBeforeLinkAdd", function(id,item){
+          if(item.source === "0" || item.target === "0"){
+            vm.$Message.error('根节点不可连接！');
+            return false;
+          }
+      });
+      //link增加
+      gantt.attachEvent("onAfterLinkAdd", function(id, item) {
+        let data = {
+          source: item.source,
+          target: item.target,
+          type: item.type
+        }
+        
+        addProjectTaskLink(data).then(res => {
+          if(res.success){
+            gantt.changeLinkId(id, res.link.id);
+            vm.$Message.success(res.message);
+          }
+        })
+      });
+
+      //link删除
+      gantt.attachEvent("onAfterLinkDelete", function(id, item) {
+        deleteProjectTaskLink(id).then(res => {
+          if(res.success){
+            vm.$Message.success(res.message);
+          }
+        })
       });
     },
     /**
@@ -914,9 +939,9 @@ export default {
           planTransCode = res[0].transCode;
           getProjectPlan(planTransCode).then(res => {
             let data = this.formatProjectData(res.formData);
-			// this.project = res.formData.projectApproval;
-			this.addMarker();
-			gantt.clearAll(); 
+            // this.project = res.formData.projectApproval;
+            this.addMarker();
+            gantt.clearAll();
             gantt.parse(data);
             // this.setProjectDuration([this.project.expectStartDate,this.project.expectEndDate]);
           });

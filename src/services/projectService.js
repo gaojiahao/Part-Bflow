@@ -46,6 +46,20 @@ export const deleteProjectTask = (projectPlanTaskId) => request('/H_roleplay-si/
 }, "POST")
 
 /**
+ * @author XiaoYing
+ * @description 保存项目任务连线
+ */
+export const addProjectTaskLink = (data) => request('/H_roleplay-si/projectTask/link/save', {}, "POST", data)
+
+/**
+ * @author XiaoYing
+ * @description 删除项目任务连线
+ */
+export const deleteProjectTaskLink = (projectTaskLinkId) => request('/H_roleplay-si/projectTask/link/delete', {
+  projectTaskLinkId: projectTaskLinkId
+}, "POST")
+
+/**
  * @author snack.huang
  * @description 创建项目计划 
  */

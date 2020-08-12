@@ -211,6 +211,8 @@ export default {
             handler: function(newVal, oldVal){
                 if(newVal.params.groupId!=oldVal.params.groupId){
                     this.sessionHandleSend(oldVal.params.groupId);
+                    this.userList = [];
+                    this.sourceUserList = [];
                 }
             },
             deep: true
@@ -307,7 +309,7 @@ export default {
                 this.isFilter = true;
                 if(this.userList.length===0){
                     if(this.setAtUsers){
-                        this.setAtUsers().then(res=>{
+                        this.setAtUsers(this.groupId).then(res=>{
                             this.sourceUserList = res;
                             this.userList = res;
                             this.userListVisible = true;

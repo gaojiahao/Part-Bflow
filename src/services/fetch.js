@@ -26,9 +26,9 @@ axios.interceptors.response.use(response => {
         err.message = err.response
         break;
       case 401:
-        if(window.location.hostname.includes('roletask.com')){
+        if (window.location.hostname.includes('roletask.com')) {
           window.top.location.href = `${window.top.location.origin}/Login/index.html?src=${window.top.location.href}`
-        }else{
+        } else {
           router.push('/login');
         }
         err.message = '未授权，请重新登录11';
@@ -92,6 +92,26 @@ export const request = (url, params = {}, method = 'get', data) => {
       return qs.stringify(params, { arrayFormat: 'brackets' })
     },
   })
+
+  return new Promise((resolve, reject) => {
+    axios.request(options).then(res => {
+
+      return resolve(res.data);
+    }).catch(error => {
+      reject(error);
+    })
+  })
+
+}
+
+//xing
+export const postForm = (url, data) => {
+  let options = {
+    url: url,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    data: qs.stringify(data)
+  };
 
   return new Promise((resolve, reject) => {
     axios.request(options).then(res => {

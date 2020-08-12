@@ -405,13 +405,13 @@ export default {
     createProfitData(data) {
       let profitData = [
         {project: '收入',keyone: 'income',key:'incomeSum'},
-        {project: '销售收入',keyone: 'income',key:'groupIncome',isChild: true},
-        {project: '任务收入',keyone: 'income',key:'taskIncome',isChild: true},
-        {project: '其他收入',keyone: 'income',key:'otherIncome',isChild: true},
+        {project: '内部服务结算收入',keyone: 'income',key:'groupIncome',isChild: true},
+        // {project: '任务收入',keyone: 'income',key:'taskIncome',isChild: true},
+        // {project: '其他收入',keyone: 'income',key:'otherIncome',isChild: true},
         {project: '成本',keyone: 'productsCost',key:'productsCostSum'},
-        {project: '标准用料',keyone: 'productsCost',key:'material',isChild: true},
-        {project: '直接人工',keyone: 'productsCost',key:'artificial',isChild: true},
-        {project: '制造费用',keyone: 'productsCost',key:'madeCost',isChild: true},
+        // {project: '标准用料',keyone: 'productsCost',key:'material',isChild: true},
+        // {project: '直接人工',keyone: 'productsCost',key:'artificial',isChild: true},
+        // {project: '制造费用',keyone: 'productsCost',key:'madeCost',isChild: true},
         {project: '外部服务采购',keyone: 'productsCost',key:'outsideServerPurchase',isChild: true},
         {project: '费用',keyone: 'cost',key:'costSum'}
       ];

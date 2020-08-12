@@ -40,7 +40,7 @@
             icon="md-clipboard"
             type="primary"
             shape="circle"
-            @click="projectTaskLogModel=true;"
+            @click="showProjectTaskLogModel();"
           ></Button>
         </Tooltip>
         <Tooltip
@@ -319,6 +319,14 @@ export default {
   },
   computed: {},
   methods: {
+  showProjectTaskLogModel(){
+    let taskId = gantt.getSelectedId();
+    if(taskId === '0'){
+      gantt.alert('抱歉,根级任务无需创建日志任务!');
+    }else{
+      this.projectTaskLogModel =true;
+    }
+  },
 	getRootTask(){
 		return {
 			parent:'root',
@@ -357,10 +365,10 @@ export default {
         t.start_date = t.startTime;
         t.end_date = t.deadline;
         t.text = t.taskName;
-        if(t.planPrimeCostSubtotal === 0){
+        if(t.declareWorkingHoursSubtotal === 0){
           t.progress = 0;
         }else{
-          t.progress = t.declarePrimeCostSubtotal / t.planPrimeCostSubtotal;
+          t.progress = t.declareWorkingHoursSubtotal / t.standardWorkingHoursSubtotal;
         }
       });
 

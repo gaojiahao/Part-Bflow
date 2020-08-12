@@ -202,6 +202,7 @@ export default {
                                 if(res.isMySelf === 0){
                                     msgVoice.success();
                                     g.msgCount++;
+                                    window.top.msgHandler && window.top.msgHandler(JSON.stringify(res));
                                 }
                                 g.modTime = res.crtTime;//修改时间
                                 

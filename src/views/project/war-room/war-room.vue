@@ -365,7 +365,7 @@ export default {
         t.start_date = t.startTime;
         t.end_date = t.deadline;
         t.text = t.taskName;
-        if(t.declareWorkingHoursSubtotal === 0){
+        if(t.declareWorkingHoursSubtotal === 0 || t.standardWorkingHoursSubtotal === 0){
           t.progress = 0;
         }else{
           t.progress = t.declareWorkingHoursSubtotal / t.standardWorkingHoursSubtotal;

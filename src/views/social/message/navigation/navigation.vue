@@ -301,11 +301,13 @@ export default {
             //     nav.unreadNum = 0;
             // });
         },
-        postMsgCount(msgCount){
-           window.top.postMessage({
-                type:'msgCount',
-                msgCount:msgCount
-            });
+        postMsgCount(msgCount){//延迟100毫秒，避免被覆盖。
+            setTimeout(function(){
+                window.top.postMessage({
+                    type:'msgCount',
+                    msgCount:msgCount
+                });
+            },100);
         },
         handlerGetIcon(icon){
             if(icon){

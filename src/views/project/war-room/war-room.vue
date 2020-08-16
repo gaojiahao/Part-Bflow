@@ -20,6 +20,19 @@
       </div>
       <div class="war-room-toolbar-actions">
         <Tooltip
+          :content="expandAllModel?'关闭所有任务':'展开所有任务'"
+          placement="top"
+        >
+          <Button
+            :size="buttonSize"
+            icon="ios-folder-open-outline"
+            type="primary"
+            shape="circle"
+            @click="expandTaskModel()"
+          ></Button>
+        </Tooltip>
+
+        <Tooltip
           content="评论"
           placement="top"
         >
@@ -31,6 +44,7 @@
             @click="projectCommentModel=true;"
           ></Button>
         </Tooltip>
+
         <Tooltip
           content="日志任务"
           placement="top"
@@ -279,6 +293,7 @@ export default {
   },
   data() {
     return {
+      expandAllModel:true,
       taskProcess: [],
       transType: "",
       buttonSize: "small",
@@ -319,6 +334,16 @@ export default {
   },
   computed: {},
   methods: {
+    //展开或者合并任务节点
+    expandTaskModel(){
+      let _that = this;
+      _that.expandAllModel = !_that.expandAllModel;
+
+      gantt.eachTask(function(task){
+        task.$open = _that.expandAllModel;
+      });
+      gantt.render();
+    },
   showProjectTaskLogModel(){
     let taskId = gantt.getSelectedId();
     if(taskId === '0'){
@@ -408,6 +433,10 @@ export default {
         tooltip +=
           "<b>开始日期:</b> " +
           gantt.templates.format_date(new Date(start)) +
+          "<br/>";
+         tooltip +=
+          "<b>结束日期:</b> " +
+          gantt.templates.format_date(new Date(end)) +
           "<br/>";
         tooltip += "<b>周期天数:</b> " + task.duration + "<br/>";
         tooltip += "<b>计划工时:</b> " + task.standardWorkingHours + "<br/>";
@@ -719,6 +748,8 @@ export default {
      * 初始化甘特图配置
      */
     initGanttConfig() {
+      // gantt.config.autoscroll = true;
+      gantt.config.fit_tasks = true; 
       gantt.config.show_progress = false;
       // gantt.config.readonly = true;
       gantt.i18n.setLocale(this.ganttLocale);
@@ -736,7 +767,13 @@ export default {
       gantt.config.min_column_width = 60;
       gantt.config.scale_height = 18 * 3;
       gantt.config.row_height = 28;
-      gantt.config.open_tree_initially = true;
+      gantt.config.open_tree_initially = true;//初始化就展开树结构
+      gantt.config.preserve_scroll = false;//图表刷新后，滚动条的位置跟原来保持一致
+      gantt.config.round_dnd_dates = false;
+      gantt.config.touch = true;
+      gantt.config.touch_drag = 75;
+      gantt.config.touch_feedback = false;
+      gantt.config.touch_feedback_duration = 1;
       gantt.config.auto_scheduling = true;
       gantt.config.scale_unit = "day"; //时间坐标轴单位“minute”, “hour”, “day”, “week”, “quarter”, “month”, “year”
       gantt.config.date_scale = "%d,%D"; //日期格式 先数字后文字

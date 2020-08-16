@@ -928,21 +928,21 @@ export default {
           label: "开始日期"
         },
         // {name: "end_date", align: "center", width: 80, resize: true,label:'结束日期'},
-        {
-          name: "duration",
-          width: 60,
-          align: "right",
-          resize: true,
-          label: "周期天数"
-        },
-        {
-          name: "standardWorkingHours",
-          width: 60,
-          align: "right",
-          resize: true,
-          label: "计划工时",
-          editor: standardWorkingHoursEditor
-        },
+        // {
+        //   name: "duration",
+        //   width: 60,
+        //   align: "right",
+        //   resize: true,
+        //   label: "周期天数"
+        // },
+        // {
+        //   name: "standardWorkingHours",
+        //   width: 60,
+        //   align: "right",
+        //   resize: true,
+        //   label: "计划工时",
+        //   editor: standardWorkingHoursEditor
+        // },
         { name: "add", width: 44 }
       ];
 
@@ -950,8 +950,7 @@ export default {
         css: "gantt_container",
         cols: [
           {
-            width: 500,
-            min_width: 300,
+            width: 380,
             rows: [
               {
                 view: "grid",

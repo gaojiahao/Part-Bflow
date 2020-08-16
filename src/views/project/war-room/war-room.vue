@@ -506,6 +506,14 @@ export default {
           0.5
         )}' >${percenToString(progress)}</div>`;
       };
+
+      gantt.templates.grid_row_class = function(start, end, task){
+          var css = [];
+          if(gantt.hasChild(task.id)){
+            css.push("folder_row");
+          }
+          return css.join(" ");
+        };
     },
     createTaskSaveData(item, type) {
       let parent;
@@ -1099,4 +1107,14 @@ export default {
   border: none;
   background-color: snow;
 }
+
+.folder_row {
+			font-weight: bold;
+    }
+  .gantt_grid_scale .gantt_grid_head_cell,
+		.gantt_task .gantt_task_scale .gantt_scale_cell {
+			font-weight: bold;
+			font-size: 14px;
+			color: rgba(0, 0, 0, 0.7);
+		}
 </style>

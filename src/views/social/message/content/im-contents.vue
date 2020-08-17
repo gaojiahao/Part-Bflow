@@ -279,10 +279,10 @@ export default {
         initEvents(){
             var that= this;
             this.$refs.messageList.addEventListener('scroll', function() {
-
+                var page = that.pageParam.page + 1;
                 if(arguments[0].target.scrollTop==0 && !that.allLoad){
-                    that.pageParam.page++;
-                    that.getMessages(that.pageParam.page);
+                    that.getMessages(page);
+                    that.pageParam.page = page;
                 }
             });
 

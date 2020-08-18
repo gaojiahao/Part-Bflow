@@ -158,7 +158,7 @@ export default {
             length;
 
             this.$Loading.start();
-            if(this.loading == true) return false;
+            if(this.loading == true) return false;//避免切换到新的一组聊天消息时，第一页和第二页都加载过来,容易出现后发先至。也避免切换分组和滚动触发的消息加载同时执行。
             this.loading = true;
             // this.getApp().spinShow = true;
             getMessagesByGroupId(param).then(res=>{
@@ -168,6 +168,8 @@ export default {
                 if(res.msgs.length<this.pageParam.limit){
                     this.allLoad = true;
                     console.log('全部加载完成');
+                } else {
+                    that.pageParam.page ++;//只有数据加载过来以后，而且还有剩余数据的时候，才把页数累加。
                 }
                 res.msgs.map(m=>{
 
@@ -282,7 +284,6 @@ export default {
                 var page = that.pageParam.page + 1;
                 if(arguments[0].target.scrollTop==0 && !that.allLoad){
                     that.getMessages(page);
-                    that.pageParam.page = page;
                 }
             });
 

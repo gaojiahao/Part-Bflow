@@ -169,7 +169,7 @@ export default {
                     this.allLoad = true;
                     console.log('全部加载完成');
                 } else {
-                    that.pageParam.page ++;//只有数据加载过来以后，而且还有剩余数据的时候，才把页数累加。
+                    this.pageParam.page ++;//只有数据加载过来以后，而且还有剩余数据的时候，才把页数累加。
                 }
                 res.msgs.map(m=>{
 

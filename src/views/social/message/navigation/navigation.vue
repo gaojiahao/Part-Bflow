@@ -364,7 +364,7 @@ export default {
         });
 
         Bus.$on("checkMessage",groupId=>{
-            var msgCount;
+            var msgCount = 0;
             this.imGroups.map(g=>{
                 if(g.groupId === groupId){
                     g.msgCount = 0;

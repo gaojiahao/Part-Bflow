@@ -275,6 +275,7 @@ export default {
   },
   data() {
     return {
+      expandAllModel:true,
       taskProcess: [],
       transType: "",
       buttonSize: "small",
@@ -324,6 +325,16 @@ export default {
   },
   computed: {},
   methods: {
+    //展开或者合并任务节点
+    expandTaskModel(){
+      let _that = this;
+      _that.expandAllModel = !_that.expandAllModel;
+
+      gantt.eachTask(function(task){
+        task.$open = _that.expandAllModel;
+      });
+      gantt.render();
+    },
   showProjectTaskLogModel(){
     let taskId = gantt.getSelectedId();
     if(taskId === '0'){
@@ -414,6 +425,10 @@ export default {
           "<b>开始日期:</b> " +
           gantt.templates.format_date(new Date(start)) +
           "<br/>";
+         tooltip +=
+          "<b>结束日期:</b> " +
+          gantt.templates.format_date(new Date(end)) +
+          "<br/>";
         tooltip += "<b>周期天数:</b> " + task.duration + "<br/>";
         tooltip += "<b>计划工时:</b> " + task.standardWorkingHours + "<br/>";
         tooltip += "<b>执行者:</b> " + task.dealerName + "<br/>";
@@ -482,6 +497,14 @@ export default {
           0.5
         )}' >${percenToString(progress)}</div>`;
       };
+
+      gantt.templates.grid_row_class = function(start, end, task){
+          var css = [];
+          if(gantt.hasChild(task.id)){
+            css.push("folder_row");
+          }
+          return css.join(" ");
+        };
     },
     createTaskSaveData(item, type) {
       let parent;
@@ -759,6 +782,8 @@ export default {
      * 初始化甘特图配置
      */
     initGanttConfig() {
+      // gantt.config.autoscroll = true;
+      gantt.config.fit_tasks = true; 
       gantt.config.show_progress = false;
       // gantt.config.readonly = true;
       gantt.i18n.setLocale(this.ganttLocale);
@@ -776,7 +801,13 @@ export default {
       gantt.config.min_column_width = 60;
       gantt.config.scale_height = 18 * 3;
       gantt.config.row_height = 28;
-      gantt.config.open_tree_initially = true;
+      gantt.config.open_tree_initially = true;//初始化就展开树结构
+      gantt.config.preserve_scroll = false;//图表刷新后，滚动条的位置跟原来保持一致
+      gantt.config.round_dnd_dates = false;
+      gantt.config.touch = true;
+      gantt.config.touch_drag = 75;
+      gantt.config.touch_feedback = false;
+      gantt.config.touch_feedback_duration = 1;
       gantt.config.auto_scheduling = true;
       gantt.config.scale_unit = "day"; //时间坐标轴单位“minute”, “hour”, “day”, “week”, “quarter”, “month”, “year”
       gantt.config.date_scale = "%d,%D"; //日期格式 先数字后文字
@@ -924,21 +955,6 @@ export default {
         },
         // {name: "end_date", align: "center", width: 80, resize: true,label:'结束日期'},
         {
-          name: "duration",
-          width: 60,
-          align: "right",
-          resize: true,
-          label: "周期天数"
-        },
-        {
-          name: "standardWorkingHours",
-          width: 60,
-          align: "right",
-          resize: true,
-          label: "计划工时",
-          editor: standardWorkingHoursEditor
-        },
-        {
           name: 'comment',
           width: 40,
           align: "right",
@@ -966,6 +982,21 @@ export default {
             return "<span style='color:#999;'>2</span>";
           }
         },
+        // {
+        //   name: "duration",
+        //   width: 60,
+        //   align: "right",
+        //   resize: true,
+        //   label: "周期天数"
+        // },
+        // {
+        //   name: "standardWorkingHours",
+        //   width: 60,
+        //   align: "right",
+        //   resize: true,
+        //   label: "计划工时",
+        //   editor: standardWorkingHoursEditor
+        // },
         { name: "add", width: 44 }
       ];
 
@@ -973,8 +1004,7 @@ export default {
         css: "gantt_container",
         cols: [
           {
-            width: 500,
-            min_width: 300,
+            width: 380,
             rows: [
               {
                 view: "grid",
@@ -1130,4 +1160,14 @@ export default {
   border: none;
   background-color: snow;
 }
+
+.folder_row {
+			font-weight: bold;
+    }
+  .gantt_grid_scale .gantt_grid_head_cell,
+		.gantt_task .gantt_task_scale .gantt_scale_cell {
+			font-weight: bold;
+			font-size: 14px;
+			color: rgba(0, 0, 0, 0.7);
+		}
 </style>

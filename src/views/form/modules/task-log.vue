@@ -25,7 +25,7 @@
     <div class="timeline-box-form" v-if="hiddenForm">
       <Form ref="logForm" :label-width="80"   :model="modalFormData"  :rules="ruleValidate">
          <Row>
-            <Col :xs="24" :sm="12" :md="8" :lg="8">
+            <Col :xs="24" :sm="showAll?24:12" :md="showAll?24:8" :lg="showAll?24:8">
               <FormItem label='状态' prop="logStatus"> 
                 <Checkbox 
                   v-model="modalFormData.logStatus" 
@@ -36,7 +36,7 @@
                 </Checkbox>
               </FormItem>
             </Col>
-            <Col :xs="24" :sm="12" :md="8" :lg="8">
+            <Col :xs="24" :sm="showAll?24:12" :md="showAll?24:8" :lg="showAll?24:8">
               <FormItem label='员工'  prop="users"> 
                 <Select
                   ref="selectUser"
@@ -65,7 +65,7 @@
          </Row>
 
          <Row>
-          <Col :xs="24" :sm="12" :md="8" :lg="8">
+          <Col :xs="24" :sm="showAll?24:12" :md="showAll?24:8" :lg="showAll?24:8">
                <FormItem label="类型:" prop="logType">
                   <Select v-model="modalFormData.logType" >
                     <Option v-for="item in logTypeList" :value="item.name" :key="item.name">{{ item.name }}</Option>
@@ -73,7 +73,7 @@
               </FormItem> 
             </Col>
            
-           <Col :xs="24" :sm="12" :md="8" :lg="8">
+           <Col :xs="24" :sm="showAll?24:12" :md="showAll?24:8" :lg="showAll?24:8">
               <FormItem label="日期:" prop="taskDate" >
                 <DatePicker 
                   style="width: 100%"
@@ -86,7 +86,7 @@
               </FormItem>
             </Col>
 
-            <Col :xs="24" :sm="12" :md="8" :lg="8">
+            <Col :xs="24" :sm="showAll?24:12" :md="showAll?24:8" :lg="showAll?24:8">
                <FormItem label="申报工时:" prop="logDeclarationHours">
                 <InputNumber 
                   v-model="modalFormData.logDeclarationHours"
@@ -176,6 +176,12 @@ export default {
     listId: {
       type: String
     },
+    showAll: {
+      type: Boolean,
+      default(){
+        return false;
+      }
+    }
   },
   data() {
     

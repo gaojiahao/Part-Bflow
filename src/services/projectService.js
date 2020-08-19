@@ -60,6 +60,15 @@ export const deleteProjectTaskLink = (projectTaskLinkId) => request('/H_roleplay
 }, "POST")
 
 /**
+ * @author XiaoYing
+ * @description 删除项目任务附件
+ */
+export const deleteProjectTaskFile = (id) => request('/H_roleplay-si/ds/delete', {
+  id: id,
+  list: 'attachments'
+})
+
+/**
  * @author snack.huang
  * @description 创建项目计划 
  */
@@ -78,6 +87,14 @@ export const getProjectPlan = (transCode) => request('/H_roleplay-si/projectPlan
  * @description 获取项目信息 
  */
 export const getProject = (transCode) => request('/H_roleplay-si/projectApproval/findData', {
+  transCode:transCode
+})
+
+/**
+ * @author XiaoYing
+ * @description 获取项目任务信息
+ */
+export const getProjectTask = (transCode) => request('/H_roleplay-si/projectTask/findData', {
   transCode:transCode
 })
 

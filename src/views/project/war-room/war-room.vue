@@ -20,27 +20,15 @@
       </div>
       <div class="war-room-toolbar-actions">
         <Tooltip
-          content="评论"
+          content="活动"
           placement="top"
         >
           <Button
             :size="buttonSize"
-            icon="ios-chatbubbles-outline"
+            icon="md-aperture"
             type="primary"
             shape="circle"
-            @click="projectCommentModel=true;"
-          ></Button>
-        </Tooltip>
-        <Tooltip
-          content="日志任务"
-          placement="top"
-        >
-          <Button
-            :size="buttonSize"
-            icon="md-clipboard"
-            type="primary"
-            shape="circle"
-            @click="showProjectTaskLogModel();"
+            @click="openRightContainer"
           ></Button>
         </Tooltip>
         <Tooltip
@@ -94,11 +82,41 @@
 
       </div>
     </div>
-    <div style='width: 100%;height: calc(100% - 40px);display: flex;'>
+    <div style='width:100%;height: calc(100% - 40px);display: flex;'>
       <div
-        style='flex:24'
+        style='width:100%'
         ref="gantt"
       ></div>
+      <div ref="uploadFile" v-if="showFile" class="right-container">
+        <Tabs v-model="tabName">
+            <TabPane label="评论" name="comment">
+              <userComments ref='taskComments'></userComments>
+            </TabPane>
+            <TabPane label="日志" name="taskLog">
+              <taskLog :showAll="true"></taskLog>
+            </TabPane>
+            <TabPane label="附件" name="file">
+              <Upload
+                  multiple
+                  action="/H_roleplay-si/ds/upload"
+                  :show-upload-list="false"
+                  :style="{'text-align':'center'}"
+                  :headers="httpHeaders"
+                  :data="uploadParams"
+                  :on-success="handleSuccess">
+                  <Button icon="ios-cloud-upload-outline">添加附件</Button>
+              </Upload>
+              <ul class="file-list">
+                <li v-for="(file,index) of fileList" :key="index">
+                  <a @click="openFile(file)">{{file.attr1}}</a>
+                  <span @click="deletefile(file,index)" style="float:right;cursor:pointer;">
+                    <Icon type="md-close" />
+                  </span>
+                </li>
+              </ul>
+            </TabPane>
+        </Tabs>
+      </div>
     </div>
     <!-- 财务分析 -->
     <Drawer
@@ -125,31 +143,6 @@
     >
       <timeAnalysis ref='timeAnalysis'></timeAnalysis>
     </Drawer>
-
-    <!-- 评论 -->
-    <Drawer
-      :mask="true"
-      class="project-drawer"
-      width="600"
-      :closable="false"
-      :scrollable='true'
-      v-model="projectCommentModel"
-    >
-      <userComments ref='taskComments'></userComments>
-    </Drawer>
-
-    <!-- 日志任务 -->
-    <Drawer
-      :mask="true"
-      class="project-drawer"
-      width="680"
-      :closable="false"
-      :scrollable='true'
-      v-model="projectTaskLogModel"
-    >
-      <taskLog></taskLog>
-    </Drawer>
-
     <!-- 项目信息 -->
     <Drawer
       :closable="false"
@@ -264,10 +257,13 @@ import {
   updateProjectTask,
   deleteProjectTask,
   addProjectTaskLink,
-  deleteProjectTaskLink
+  deleteProjectTaskLink,
+  getProjectTask,
+  deleteProjectTaskFile
 } from "@/services/projectService";
 import { getProcessStatusByListId } from "@/services/appService";
 import Bus from "@/assets/eventBus.js";
+import { getToken } from "@/utils/utils";
 
 export default {
   name: "warRoom",
@@ -288,11 +284,20 @@ export default {
       projectTaskLogModel: false,
       projectBaseInfoModel: false,
       errorTip: false,
+      showFile:false,
       errorText: "",
+      tabName: "comment",
       ganttLocale: ganttLocale,
       projectDuration: [],
       projectMember: [],
       project: {},
+      uploadParams: {
+        biReferenceId: ''
+      },
+      httpHeaders: {
+        Authorization: getToken()
+      },
+      fileList: [],
       projectTransCode: undefined,
       memberColumns: [
         {
@@ -510,6 +515,32 @@ export default {
       }
       return data;
     },
+    openRightContainer(){
+      this.showFile = !this.showFile;
+      if(this.showFile){
+        this.$refs["gantt"].style.width = '80%';
+      }else{
+        this.$refs["gantt"].style.width = '100%';
+      }
+    },
+    handleSuccess(res, file) {
+      this.fileList = [...res.data,...this.fileList];
+      this.$Message.success(res.message);
+    },
+    openFile(file){
+      let url = `/H_roleplay-si/ds/download?url=${file.attacthment}`;
+      window.open(url);
+    },
+    deletefile(file,index){
+      if(file.id){
+        deleteProjectTaskFile(file.id).then(res => {
+          if(res.success){
+            this.fileList.splice(index,1);
+            this.$Message.success(res.message);
+          }
+        })
+      }
+    },
     /**
      * 初始化事件
      */
@@ -578,16 +609,25 @@ export default {
       });
 
       // 选择任务
-      gantt.attachEvent("onTaskClick", function(id) {
-        let task = gantt.getTaskBy("id", id);
+      gantt.attachEvent("onTaskClick", function(id,e) {
+        let task = gantt.getTaskBy("id", id),
+            request = getProjectTask,
+            transCode;
         if (task.length === 1) {
           vm.$router.replace(`/project/warRoom/${task[0].transCode}`);
+          transCode = task[0].transCode;
         } else {
           vm.$router.replace(`/project/warRoom/${vm.projectTransCode}`);
+          transCode = vm.projectTransCode;
+          request = getProject;
         }
+        request(transCode).then(res => {
+          vm.uploadParams.biReferenceId = res.formData.biReferenceId;
+          vm.fileList = res.attachment;
+        })
+        
         return true;
       });
-
       //校验
       gantt.attachEvent("onLightboxSave", function(id, item) {
 				let valid = true;
@@ -897,6 +937,34 @@ export default {
           resize: true,
           label: "计划工时",
           editor: standardWorkingHoursEditor
+        },
+        {
+          name: 'comment',
+          width: 40,
+          align: "right",
+          resize: true,
+          label: '<img style="width:17px;height:17px;cursor: pointer;vertical-align:middle;" src="resources/images/task-comment.png">',
+          template: function(task){
+            return "<span style='color:#999;'>3</span>"
+          }
+        },{
+          name: 'taskLog',
+          width: 40,
+          align: "right",
+          resize: true,
+          label: '<img style="width:17px;height:17px;cursor: pointer;vertical-align:middle;" src="resources/images/task-log.png">',
+          template: function(task){
+            return "<span style='color:#999;'>2</span>"
+          }
+        },{
+          name: 'file',
+          width: 40,
+          align: "right",
+          resize: true,
+          label: '<img style="width:17px;height:17px;cursor: pointer;vertical-align:middle;" src="resources/images/attach.png">',
+          template: function(task){
+            return "<span style='color:#999;'>2</span>";
+          }
         },
         { name: "add", width: 44 }
       ];

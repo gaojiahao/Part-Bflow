@@ -3,34 +3,32 @@
 </style>
 
 <template>
-  <div class="bg_ff" style="padding:5px;">
-       <Row class="app-resource-group-title">
-            <div  class="commnet-title">评论 
-                <span class="fr subscribe-bar">
+  <div class="bg_ff" >
+            <div  class="commnet-title">
+                <span>
+                    评论 
+                </span>
                 <span > 
-                        <span 
-                            class="subcribeing" 
-                            @mouseover="unsubcribeVisible=true;subcribeVisible=false;" 
-                            @mouseout="unsubcribeVisible=false;subcribeVisible=true;"
-                            v-if="subscribeInfo.isSubscribe==1 && subcribeVisible">
-                            <Icon type="md-checkmark" class="success-color" />正在关注中
-                        </span>
-
-                        <span 
-                            class="unsubcribe" v-if="subscribeInfo.isSubscribe==1 && unsubcribeVisible" 
-                            @click="handleUnsubscribeApp"
-                            @mouseout="unsubcribeVisible=false;subcribeVisible=true;">
-                            <Icon type="md-close" class="warning-color" />取消关注
-                        </span>
-
-                        <span class="subcribe" @click="handleSubscribeApp" v-if="subscribeInfo.isSubscribe==0">关注</span>
-
-                        <span> 
-                            <Icon type="md-notifications" size=18 class="success-color"  />
-                        </span>
-                    
+                    <span 
+                        class="subcribeing" 
+                        @mouseover="unsubcribeVisible=true;subcribeVisible=false;" 
+                        @mouseout="unsubcribeVisible=false;subcribeVisible=true;"
+                        v-if="subscribeInfo.isSubscribe==1 && subcribeVisible">
+                        <Icon type="md-checkmark" class="success-color" />正在关注中
                     </span>
 
+                    <span 
+                        class="unsubcribe" v-if="subscribeInfo.isSubscribe==1 && unsubcribeVisible" 
+                        @click="handleUnsubscribeApp"
+                        @mouseout="unsubcribeVisible=false;subcribeVisible=true;">
+                        <Icon type="md-close" class="warning-color" />取消关注
+                    </span>
+
+                    <span class="subcribe" @click="handleSubscribeApp" v-if="subscribeInfo.isSubscribe==0">关注</span>
+
+                    <span> 
+                        <Icon type="md-notifications" size=18 class="success-color"  />
+                    </span>
                     <span>
                         <Dropdown class="instance-dropdown" @on-click="addSubUsers" trigger="click" >
                             <Icon type="md-person" size=18  /> <b>{{subscribeInfo.subscribeNum}}</b>
@@ -46,21 +44,20 @@
                             </DropdownMenu>
                         </Dropdown>
                     </span>
-                    <span v-if="comments.length>0">
-                        <Tooltip class="hidden-form" v-if="!hiddenForm" content="打开评论表单" placement="left">
-                            <span @click="openForm">
-                                <Icon type="md-arrow-dropup-circle" />
-                            </span>
-                        </Tooltip>
-                        <Tooltip class="hidden-form" v-else content="关闭评论表单" placement="left">
-                            <span @click="closeForm">
-                                <Icon type="md-arrow-dropdown-circle" />
-                            </span>
-                        </Tooltip>
-                    </span>
+                 </span>
+                <span v-if="comments.length>0">
+                    <Tooltip class="hidden-form" v-if="!hiddenForm" content="打开评论表单" placement="left">
+                        <span @click="openForm">
+                            <Icon type="md-arrow-dropup-circle" />
+                        </span>
+                    </Tooltip>
+                    <Tooltip class="hidden-form" v-else content="关闭评论表单" placement="left">
+                        <span @click="closeForm">
+                            <Icon type="md-arrow-dropdown-circle" />
+                        </span>
+                    </Tooltip>
                 </span>
             </div>
-       </Row>
         <Row class="comments">
             <commentPublish v-if="hiddenForm" :handlePublish="handlePublish" ></commentPublish>
 

@@ -106,7 +106,12 @@ export default {
     commentPublish
   },
   props: {
-
+      commentUrl: {
+        type: String,
+        default(){
+            return 'comment/getCommentByRelationKey';
+        }
+    }
   },
   data() {
     return {
@@ -249,9 +254,14 @@ export default {
                 relationKey:this.transCode,
                 sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
         }
+        if(this.commentUrl === "projectTask/info/comment") {
+            params = {
+                transCode:this.transCode
+            }
+        }
         params = Object.assign(params,this.pageInfo)
 
-        getComments(params).then(res=>{
+        getComments(this.commentUrl,params).then(res=>{
             this.comments = res.tableContent;
 
             this.pageInfo.total = res.dataCount;

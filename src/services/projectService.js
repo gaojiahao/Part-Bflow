@@ -106,6 +106,21 @@ export const getProjectFiles = (transCode) => request('/H_roleplay-si/projectTas
   transCode:transCode
 })
 
+/**
+ * @author XiaoYing
+ * @description 获取项目评论信息
+ */
+export const getProjectComments = (transCode) => request('/H_roleplay-si/projectTask/info/comment', {
+  transCode:transCode
+})
+
+/**
+ * @author XiaoYing
+ * @description 获取项目日志信息
+ */
+export const getProjectLogs = (transCode) => request('/H_roleplay-si/projectTask/info/jobLog', {
+  transCode:transCode
+})
 
 /**
  * @author snack.huang

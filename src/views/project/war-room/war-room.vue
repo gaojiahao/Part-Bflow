@@ -124,7 +124,7 @@
                   multiple
                   action="/H_roleplay-si/ds/upload"
                   :show-upload-list="false"
-                  :style="{'text-align':'center'}"
+                  :style="{'text-align':'center',marginTop:'10px'}"
                   :headers="httpHeaders"
                   :data="uploadParams"
                   :on-success="handleSuccess">
@@ -283,7 +283,10 @@ import {
   addProjectTaskLink,
   deleteProjectTaskLink,
   getProjectTask,
-  deleteProjectTaskFile
+  deleteProjectTaskFile,
+  getProjectFiles,
+  getProjectComments,
+  getProjectLogs
 } from "@/services/projectService";
 import { getProcessStatusByListId } from "@/services/appService";
 import Bus from "@/assets/eventBus.js";
@@ -380,6 +383,8 @@ export default {
 			text:this.project.projectName,
       dealerName:this.project.projectManagerName,
       attachmentCount: this.rootFileList.length,
+      logCount: this.rootLogCount,
+      commentCount: this.rootCommentCount,
 			start_date:new Date(this.project.expectStartDate),
 			end_date:new Date(this.project.expectEndDate),
 			duration:10,
@@ -674,11 +679,16 @@ export default {
         } else {
           vm.$router.replace(`/project/warRoom/${vm.projectTransCode}`);
           transCode = vm.projectTransCode;
-          request = getProject;
+          request = getProjectFiles;
         }
         request(transCode).then(res => {
-          vm.uploadParams.biReferenceId = res.formData.biReferenceId;
-          vm.fileList = res.attachment;
+          if (task.length === 1) {
+            vm.uploadParams.biReferenceId = res.formData.biReferenceId;
+            vm.fileList = res.attachment;
+          } else {
+            vm.uploadParams.biReferenceId = vm.rootBiReferenceId;
+            vm.fileList = res.tableContent;
+          }
         })
         
         return true;
@@ -991,7 +1001,7 @@ export default {
           width: 40,
           align: "right",
           resize: true,
-          label: '<img style="width:17px;height:17px;cursor: pointer;vertical-align:middle;" src="resources/images/task-comment.png">',
+          label: '<img title="评论" style="width:17px;height:17px;cursor: pointer;vertical-align:middle;" src="resources/images/task-comment.png">',
           template: function(task){
             return `<span style"color:#999;">${task.commentCount || 0}</span>`;
           }
@@ -1000,7 +1010,7 @@ export default {
           width: 40,
           align: "right",
           resize: true,
-          label: '<img style="width:17px;height:17px;cursor: pointer;vertical-align:middle;" src="resources/images/task-log.png">',
+          label: '<img title="日志" style="width:17px;height:17px;cursor: pointer;vertical-align:middle;" src="resources/images/task-log.png">',
           template: function(task){
             return `<span style"color:#999;">${task.logCount || 0}</span>`;
           }
@@ -1009,7 +1019,7 @@ export default {
           width: 40,
           align: "right",
           resize: true,
-          label: '<img style="width:17px;height:17px;cursor: pointer;vertical-align:middle;" src="resources/images/attach.png">',
+          label: '<img title="附件" style="width:17px;height:17px;cursor: pointer;vertical-align:middle;" src="resources/images/attach.png">',
           template: function(task){
             return `<span style"color:#999;">${task.attachmentCount || 0}</span>`;
           }
@@ -1042,6 +1052,8 @@ export default {
     ganttLoadData() {
       let planTransCode;
       Bus.$emit("refreshProjectInfo");
+      this.getRootProjectLogs();
+      this.getRootProjectComments();
       this.$Loading.start();
       getProjectPlanTransCode(this.projectTransCode).then(res => {
         this.$Loading.finish();
@@ -1089,6 +1101,7 @@ export default {
         this.uploadParams.biReferenceId = res.formData.biReferenceId;
         this.fileList = res.attachment;
         this.rootFileList = res.attachment;
+        this.rootBiReferenceId = res.formData.biReferenceId;
         this.projectMember = res.formData.order;
         this.projectMember.map(m => {
           m.key = m.projectPartnerCode;
@@ -1096,6 +1109,16 @@ export default {
 		    });
 		    this.project = res.formData.projectApproval;
       });
+    },
+    getRootProjectLogs() {
+      getProjectLogs(this.projectTransCode).then(res => {
+        this.rootLogCount = res.dataCount;
+      })
+    },
+    getRootProjectComments() {
+      getProjectComments(this.projectTransCode).then(res => {
+        this.rootCommentCount = res.dataCount;
+      })
     }
   },
   async mounted() {

@@ -181,6 +181,12 @@ export default {
       default(){
         return false;
       }
+    },
+    taskLogUrl: {
+      type: String,
+      default(){
+        return 'jobLog/findAllJobLog';
+      }
     }
   },
   data() {
@@ -355,7 +361,7 @@ export default {
      * 获取任务日志
      */
     getTaskLog() {
-      getTaskLog(this.transCode,this.currentPage,this.pageSize).then(res => {
+      getTaskLog(this.taskLogUrl,this.transCode,this.currentPage,this.pageSize).then(res => {
         this.pageTotal = res.dataCount;
         this.logData = res.tableContent;
         this.logCosts = res.logCosts;

@@ -99,6 +99,15 @@ export const getProjectTask = (transCode) => request('/H_roleplay-si/projectTask
 })
 
 /**
+ * @author XiaoYing
+ * @description 获取项目附件信息
+ */
+export const getProjectFiles = (transCode) => request('/H_roleplay-si/projectTask/info/attachment', {
+  transCode:transCode
+})
+
+
+/**
  * @author snack.huang
  * @description 新增项目任务 
  */

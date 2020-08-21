@@ -90,10 +90,10 @@
       <div ref="uploadFile" v-if="showFile" class="right-container">
         <Tabs v-model="tabName">
             <TabPane label="评论" name="comment">
-              <userComments ref='taskComments'></userComments>
+              <userComments ref='taskComments' :commentUrl="'projectTask/info/comment'"></userComments>
             </TabPane>
             <TabPane label="日志" name="taskLog">
-              <taskLog :showAll="true"></taskLog>
+              <taskLog :showAll="true" :taskLogUrl="'projectTask/info/jobLog'"></taskLog>
             </TabPane>
             <TabPane label="附件" name="file">
               <Upload
@@ -347,7 +347,8 @@ export default {
 		return {
 			parent:'root',
 			text:this.project.projectName,
-			dealerName:this.project.projectManagerName,
+      dealerName:this.project.projectManagerName,
+      attachmentCount: this.rootFileList.length,
 			start_date:new Date(this.project.expectStartDate),
 			end_date:new Date(this.project.expectEndDate),
 			duration:10,
@@ -961,7 +962,7 @@ export default {
           resize: true,
           label: '<img style="width:17px;height:17px;cursor: pointer;vertical-align:middle;" src="resources/images/task-comment.png">',
           template: function(task){
-            return "<span style='color:#999;'>3</span>"
+            return `<span style"color:#999;">${task.commentCount || 0}</span>`;
           }
         },{
           name: 'taskLog',
@@ -970,7 +971,7 @@ export default {
           resize: true,
           label: '<img style="width:17px;height:17px;cursor: pointer;vertical-align:middle;" src="resources/images/task-log.png">',
           template: function(task){
-            return "<span style='color:#999;'>2</span>"
+            return `<span style"color:#999;">${task.logCount || 0}</span>`;
           }
         },{
           name: 'file',
@@ -979,7 +980,7 @@ export default {
           resize: true,
           label: '<img style="width:17px;height:17px;cursor: pointer;vertical-align:middle;" src="resources/images/attach.png">',
           template: function(task){
-            return "<span style='color:#999;'>2</span>";
+            return `<span style"color:#999;">${task.attachmentCount || 0}</span>`;
           }
         },
         // {
@@ -1081,12 +1082,15 @@ export default {
      */
     getProjectInfo() {
       return getProject(this.projectTransCode).then(res => {
+        this.uploadParams.biReferenceId = res.formData.biReferenceId;
+        this.fileList = res.attachment;
+        this.rootFileList = res.attachment;
         this.projectMember = res.formData.order;
         this.projectMember.map(m => {
           m.key = m.projectPartnerCode;
           m.label = m.projectPartnerName;
-		});
-		this.project = res.formData.projectApproval;
+		    });
+		    this.project = res.formData.projectApproval;
       });
     }
   },

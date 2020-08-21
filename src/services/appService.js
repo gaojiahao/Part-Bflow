@@ -596,7 +596,7 @@ export const deleteComment = (id) => request('/H_roleplay-si/comment/deleteComme
  *   sort=[{property:xx,direction:xx}]  排序规则
  * }
  */
-export const getComments = (param) => request('/H_roleplay-si/comment/getCommentByRelationKey', param)
+export const getComments = (commentUrl,param) => request(`/H_roleplay-si/${commentUrl}`, param)
 
 
 /**
@@ -912,7 +912,7 @@ export const saveTaskLog = (data) => request('/H_roleplay-si/jobLog/batchSave', 
  * @description 获取任务日志
  * @param {*} param 
  */
-export const getTaskLog = (transCode, currentPage, pageSize) => request('/H_roleplay-si/jobLog/findAllJobLog', {
+export const getTaskLog = (taskLogUrl,transCode, currentPage, pageSize) => request(`/H_roleplay-si/${taskLogUrl}`, {
   transCode: transCode,
   pageIndex: currentPage,
   pageSize: pageSize

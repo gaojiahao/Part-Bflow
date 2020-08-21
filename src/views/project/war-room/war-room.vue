@@ -20,6 +20,30 @@
       </div>
       <div class="war-room-toolbar-actions">
         <Tooltip
+          :content="showGridModel?'隐藏左侧表格':'显示左侧表格'"
+          placement="top"
+        >
+          <Button
+            :size="buttonSize"
+            icon="md-list"
+            type="primary"
+            shape="circle"
+            @click="showGrid()"
+          ></Button>
+        </Tooltip>
+         <Tooltip
+          :content="expandAllModel?'关闭所有任务':'展开所有任务'"
+          placement="top"
+        >
+          <Button
+            :size="buttonSize"
+            icon="ios-folder-open-outline"
+            type="primary"
+            shape="circle"
+            @click="expandTaskModel()"
+          ></Button>
+        </Tooltip>
+        <Tooltip
           content="活动"
           placement="top"
         >
@@ -275,6 +299,7 @@ export default {
   },
   data() {
     return {
+      showGridModel:true,
       expandAllModel:true,
       taskProcess: [],
       transType: "",
@@ -325,6 +350,12 @@ export default {
   },
   computed: {},
   methods: {
+    //隐藏或显示左侧grid
+    showGrid(){
+      this.showGridModel = !this.showGridModel;
+      gantt.config.show_grid = this.showGridModel;
+      gantt.render();
+    },
     //展开或者合并任务节点
     expandTaskModel(){
       let _that = this;
@@ -1000,33 +1031,6 @@ export default {
         // },
         { name: "add", width: 44 }
       ];
-
-      gantt.config.layout = {
-        css: "gantt_container",
-        cols: [
-          {
-            width: 380,
-            rows: [
-              {
-                view: "grid",
-                scrollX: "gridScroll",
-                scrollable: true,
-                scrollY: "scrollVer"
-              },
-              { view: "scrollbar", id: "gridScroll", group: "horizontal" }
-            ]
-          },
-          { resizer: true, width: 1 },
-          {
-            rows: [
-              { view: "timeline", scrollX: "scrollHor", scrollY: "scrollVer" },
-              { view: "scrollbar", id: "scrollHor", group: "horizontal" }
-            ]
-          },
-          { view: "scrollbar", id: "scrollVer" }
-        ]
-      };
-
       gantt.config.duration_unit = "day";
       // gantt.config.order_branch = true;
       // gantt.config.order_branch_free = true;

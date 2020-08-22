@@ -101,6 +101,7 @@ import {
 
 import comments from "@/components/discussion/comments";
 import commentPublish from "@/components/discussion/publish";
+import Bus from "@/assets/eventBus.js";
 
 export default {
   name: "userComments",
@@ -268,6 +269,7 @@ export default {
             this.comments = res.tableContent;
 
             this.pageInfo.total = res.dataCount;
+            if(this.commentUrl === "projectTask/info/comment") Bus.$emit('refreshGanttData');
         }).then(res=>{
              this.$nextTick(function () {
                  setTimeout(() => {

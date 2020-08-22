@@ -59,8 +59,33 @@
 .file-list{
     list-style: none;
     padding: 5px;
-    li{
+    .files-container-item-content{
         padding: 5px;
+        &-info{
+            display: inline-block;
+            vertical-align: top;
+            line-height: 20px;
+            width: calc(100% - 50px);
+            .delete-file{
+                float:right;
+                cursor:pointer;
+            }
+            &-content{
+                // max-width: 210px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                width: 100%;
+            }
+            &-other{
+                color: #999;
+                width: 100%;
+            }
+        }
+    } 
+    .files-container-item-content:hover{
+        cursor: pointer;
+        background-color: #ddd;
     }
 }
 .project-drawer{

@@ -168,6 +168,7 @@ import { getTaskLog, saveTaskLog,updateLogStatus,getFeaturesConfig} from "@/serv
 import { getDictByValue} from "@/services/commonService.js";
 import { getAllUsers } from "@/services/subscribeService";
 import { FormatDate } from "@/utils/utils";
+import Bus from "@/assets/eventBus.js";
 
 export default {
   name: "TaskLog",
@@ -367,9 +368,9 @@ export default {
         this.logCosts = res.logCosts;
         this.logHours = res.logHours;
         this.logData.forEach(item=>{
-          item.comment.replace(/<br>/g,'\r\n'); 
-         
+          item.comment.replace(/<br>/g,'\r\n');
         })
+        if(this.taskLogUrl === "projectTask/info/jobLog") Bus.$emit('refreshGanttData');
       }).then(res=>{
             window.top.setTaskLogIframeHeight && window.top.setTaskLogIframeHeight();
         });

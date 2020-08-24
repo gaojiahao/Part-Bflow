@@ -127,11 +127,20 @@
                   <Button icon="ios-cloud-upload-outline">添加附件</Button>
               </Upload>
               <ul class="file-list">
-                <li v-for="(file,index) of fileList" :key="index">
-                  <a @click="openFile(file)">{{file.attr1}}</a>
-                  <span @click="deletefile(file,index)" style="float:right;cursor:pointer;">
-                    <Icon type="md-close" />
-                  </span>
+                <li class="files-container-item-content" v-for="(file,index) of fileList" :key="index" @click="openFile(file)">
+                  <img class="flie-img" width="38" :src="file.attr1|fileTypeFilter">
+                  <div class="files-container-item-content-info">
+                      <div class="files-container-item-content-info-content">
+                      {{file.attr1}}
+                      <span @click.stop="deletefile(file,index)" class="delete-file">
+                        <Icon type="md-close" />
+                      </span>
+                      </div>
+                      <div class="files-container-item-content-info-other font12">
+                          {{file.attr2}}KB|{{file.creator}}
+                          <Time class="fr" :time="file.crtTime" />
+                      </div>
+                  </div>
                 </li>
               </ul>
             </TabPane>
@@ -279,9 +288,7 @@ import {
   deleteProjectTaskLink,
   getProjectTask,
   deleteProjectTaskFile,
-  getProjectFiles,
-  getProjectComments,
-  getProjectLogs
+  getProjectFiles
 } from "@/services/projectService";
 import { getProcessStatusByListId } from "@/services/appService";
 import Bus from "@/assets/eventBus.js";
@@ -346,7 +353,9 @@ export default {
       ]
     };
   },
-  computed: {},
+  computed: {
+    
+  },
   methods: {
     //隐藏或显示左侧grid
     showGrid(){
@@ -372,14 +381,15 @@ export default {
       this.projectTaskLogModel =true;
     }
   },
-	getRootTask(){
+	getRootTask(projectApproval){
 		return {
 			parent:'root',
 			text:this.project.projectName,
       dealerName:this.project.projectManagerName,
-      attachmentCount: this.rootFileList.length,
-      logCount: this.rootLogCount,
-      commentCount: this.rootCommentCount,
+      attachmentCount: projectApproval.attachmentCount,
+      logCount: projectApproval.logCount,
+      commentCount: projectApproval.commentCount,
+      projectTaskReferenceId: this.rootBiReferenceId,
 			start_date:new Date(this.project.expectStartDate),
 			end_date:new Date(this.project.expectEndDate),
 			duration:10,
@@ -420,7 +430,7 @@ export default {
         }
       });
 
-      tasks.push(this.getRootTask());
+      tasks.push(this.getRootTask(projectApproval));
       return {
         data: tasks,
         links:links
@@ -580,6 +590,7 @@ export default {
     },
     handleSuccess(res, file) {
       this.fileList = [...res.data,...this.fileList];
+      this.ganttLoadData(true);
       this.$Message.success(res.message);
     },
     openFile(file){
@@ -666,24 +677,19 @@ export default {
       // 选择任务
       gantt.attachEvent("onTaskClick", function(id,e) {
         let task = gantt.getTaskBy("id", id),
-            request = getProjectTask,
             transCode;
         if (task.length === 1) {
           vm.$router.replace(`/project/warRoom/${task[0].transCode}`);
           transCode = task[0].transCode;
+          vm.uploadParams.biReferenceId = task[0].projectTaskReferenceId;
         } else {
           vm.$router.replace(`/project/warRoom/${vm.projectTransCode}`);
           transCode = vm.projectTransCode;
-          request = getProjectFiles;
+          vm.uploadParams.biReferenceId = this.rootBiReferenceId;
         }
-        request(transCode).then(res => {
-          if (task.length === 1) {
-            vm.uploadParams.biReferenceId = res.formData.biReferenceId;
-            vm.fileList = res.attachment;
-          } else {
-            vm.uploadParams.biReferenceId = vm.rootBiReferenceId;
+        
+        getProjectFiles(transCode).then(res => {
             vm.fileList = res.tableContent;
-          }
         })
         
         return true;
@@ -1024,11 +1030,10 @@ export default {
     /**
      * 加载甘特图数据
      */
-    ganttLoadData() {
+    ganttLoadData(type) {
       let planTransCode;
       Bus.$emit("refreshProjectInfo");
-      this.getRootProjectLogs();
-      this.getRootProjectComments();
+      !type && this.getRootProjectFiles();
       this.$Loading.start();
       getProjectPlanTransCode(this.projectTransCode).then(res => {
         this.$Loading.finish();
@@ -1074,8 +1079,6 @@ export default {
     getProjectInfo() {
       return getProject(this.projectTransCode).then(res => {
         this.uploadParams.biReferenceId = res.formData.biReferenceId;
-        this.fileList = res.attachment;
-        this.rootFileList = res.attachment;
         this.rootBiReferenceId = res.formData.biReferenceId;
         this.projectMember = res.formData.order;
         this.projectMember.map(m => {
@@ -1085,16 +1088,11 @@ export default {
 		    this.project = res.formData.projectApproval;
       });
     },
-    getRootProjectLogs() {
-      getProjectLogs(this.projectTransCode).then(res => {
-        this.rootLogCount = res.dataCount;
+    getRootProjectFiles() {
+      getProjectFiles(this.projectTransCode).then(res => {
+        this.fileList = res.tableContent;
       })
     },
-    getRootProjectComments() {
-      getProjectComments(this.projectTransCode).then(res => {
-        this.rootCommentCount = res.dataCount;
-      })
-    }
   },
   async mounted() {
     await this.getTaskProcess();
@@ -1105,6 +1103,9 @@ export default {
     gantt.init(this.$refs.gantt);
     this.ganttLoadData();
     this.initEvents();
+    Bus.$on('refreshGanttData',() => {
+        this.ganttLoadData(true);
+    });
   },
   created: function() {
     this.projectTransCode = this.$route.params.transCode;

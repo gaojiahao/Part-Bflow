@@ -29,7 +29,6 @@
                 <span> 
                     <Icon type="md-notifications" size=18 class="success-color"  />
                 </span>
-                {{allowAddSubscribeUsers}}
                 <span>
                     <Dropdown class="instance-dropdown" @on-click="addSubUsers" trigger="click" >
                         <Icon type="md-person" size=18  /> <b>{{subscribeInfo.subscribeNum}}</b>
@@ -99,7 +98,6 @@ import {
 
 import comments from "@/components/discussion/comments";
 import commentPublish from "@/components/discussion/publish";
-import Bus from "@/assets/eventBus.js";
 
 export default {
   name: "userComments",
@@ -273,7 +271,6 @@ export default {
             this.comments = res.tableContent;
 
             this.pageInfo.total = res.dataCount;
-            if(this.commentUrl === "projectTask/info/comment") Bus.$emit('refreshGanttData');
         }).then(res=>{
              this.$nextTick(function () {
                  setTimeout(() => {

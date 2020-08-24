@@ -12,10 +12,6 @@
           <Col span="8">
           {{project.projectName}}
           </Col>
-          <!-- <Col span="16">
-				项目周期:
-					<DatePicker type="daterange" @on-change="setProjectDuration"  v-model="projectDuration"  split-panels   placement="bottom-end"  style="width: 200px"></DatePicker>
-				</Col> -->
         </Row>
       </div>
       <div class="war-room-toolbar-actions">
@@ -114,7 +110,7 @@
       <div ref="uploadFile" v-if="showFile" class="right-container">
         <Tabs v-model="tabName">
             <TabPane label="评论" name="comment">
-              <userComments ref='taskComments' :commentUrl="'projectTask/info/comment'"></userComments>
+              <userComments ref='taskComments' :allowAddSubscribeUsers='false' :commentUrl="'projectTask/info/comment'"></userComments>
             </TabPane>
             <TabPane label="日志" name="taskLog">
               <taskLog :showAll="true" :taskLogUrl="'projectTask/info/jobLog'"></taskLog>
@@ -180,8 +176,7 @@
     <Drawer
       :closable="false"
       width="640"
-      v-model="projectBaseInfoModel"
-    >
+      v-model="projectBaseInfoModel">
       <p class="base-info-p">{{project.projectName}}</p>
       <div>
         <Row>
@@ -989,7 +984,6 @@ export default {
         min: 0,
         max: 24
       };
-
       gantt.config.columns = [
         {
           name: "text",
@@ -1007,7 +1001,6 @@ export default {
           resize: true,
           label: "开始日期"
         },
-        // {name: "end_date", align: "center", width: 80, resize: true,label:'结束日期'},
         {
           name: 'comment',
           width: 40,
@@ -1036,27 +1029,9 @@ export default {
             return `<span style"color:#999;">${task.attachmentCount || 0}</span>`;
           }
         },
-        // {
-        //   name: "duration",
-        //   width: 60,
-        //   align: "right",
-        //   resize: true,
-        //   label: "周期天数"
-        // },
-        // {
-        //   name: "standardWorkingHours",
-        //   width: 60,
-        //   align: "right",
-        //   resize: true,
-        //   label: "计划工时",
-        //   editor: standardWorkingHoursEditor
-        // },
         { name: "add", width: 44 }
       ];
       gantt.config.duration_unit = "day";
-      // gantt.config.order_branch = true;
-      // gantt.config.order_branch_free = true;
-      // gantt.config.placeholder_task = true;
     },
     /**
      * 加载甘特图数据

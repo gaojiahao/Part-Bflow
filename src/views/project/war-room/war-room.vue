@@ -142,7 +142,7 @@
                       </div>
                       <div class="files-container-item-content-info-other font12">
                           {{file.attr2}}KB|{{file.creator}}
-                          <Time class="fr" :time="file.crtTime" />
+                          <Time class="fr" :time="Number(file.crtTime)" />
                       </div>
                   </div>
                 </li>
@@ -603,14 +603,20 @@ export default {
       window.open(url);
     },
     deletefile(file,index){
-      if(file.id){
-        deleteProjectTaskFile(file.id).then(res => {
-          if(res.success){
-            this.fileList.splice(index,1);
-            this.$Message.success(res.message);
-          }
-        })
-      }
+      this.$Modal.confirm({
+        title: "确认",
+        content: `确认删除<b style="color:#e4393c;">${file.attr1}</b>？`,
+        onOk: () => {
+          deleteProjectTaskFile(file.id).then(res => {
+            if(res.success){
+              this.fileList.splice(index,1);
+              this.$Message.success(res.message);
+            }
+          }).catch(err => {
+            this.$Message.error(err.data.message);
+          })
+        }
+      });
     },
     /**
      * 初始化事件

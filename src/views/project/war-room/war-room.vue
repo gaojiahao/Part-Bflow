@@ -312,7 +312,6 @@ export default {
       financialAnalysisModel: false,
       timeAnalysisModel: false,
       projectCommentModel: false,
-      projectTaskLogModel: false,
       projectBaseInfoModel: false,
       errorTip: false,
       showFile:false,
@@ -373,14 +372,6 @@ export default {
       });
       gantt.render();
     },
-  showProjectTaskLogModel(){
-    let taskId = gantt.getSelectedId();
-    if(taskId === '0'){
-      gantt.alert('抱歉,根级任务无需创建日志任务!');
-    }else{
-      this.projectTaskLogModel =true;
-    }
-  },
 	getRootTask(projectApproval){
 		return {
 			parent:'root',

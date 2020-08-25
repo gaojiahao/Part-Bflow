@@ -60,26 +60,32 @@
         </div>
         <Row class="comments">
             <commentPublish v-if="hiddenForm" :handlePublish="handlePublish" ></commentPublish>
+            <div class="comment-spin-col" >
+                <Spin fix v-if="showSpin">
+                    <Icon type="ios-loading" size=18 class="comment-spin-icon-load"></Icon>
+                    <div>加载中...</div>
+                </Spin>
 
-            <div class="comments-header martop10" v-if="comments.length>0">
-                <strong>最新评论({{pageInfo.total}})</strong>
+                <div class="comments-header martop10" v-if="comments.length>0">
+                    <strong>最新评论({{pageInfo.total}})</strong>
+                </div>
+                <comments 
+                    :isInIframe="true" 
+                    :comments="comments" 
+                    :refreshRootComments="refreshComments"
+                    @refreshDeleteComments="refreshDeleteComments">
+                
+                </comments>
+                <Page 
+                    class="pad20"
+                    v-if="pageInfo.total>0"
+                    :total="pageInfo.total" 
+                    :page-size="pageInfo.limit"
+                    :current="pageInfo.page"
+                    show-total
+                    size="small"
+                    @on-change="handlePageChange"/>
             </div>
-
-            <comments 
-                :isInIframe="true" 
-                :comments="comments" 
-                :refreshRootComments="refreshComments"
-                @refreshDeleteComments="refreshDeleteComments"></comments>
-
-            <Page 
-                class="pad20"
-                v-if="pageInfo.total>0"
-                :total="pageInfo.total" 
-                :page-size="pageInfo.limit"
-                :current="pageInfo.page"
-                prev-text="上一页" 
-                next-text="下一页" 
-                @on-change="handlePageChange"/>
        </Row>
   </div>
 </template>
@@ -140,7 +146,8 @@ export default {
             isSubscribe:0,
             subscribeNum:0,
             subscribeUsers:[]
-        }
+        },
+        showSpin:true
     };
   },
   watch: {
@@ -262,12 +269,15 @@ export default {
         }
         if(this.commentUrl === "projectTask/info/comment") {
             params = {
-                transCode:this.transCode
+                transCode:this.transCode,
+                sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
             }
         }
         params = Object.assign(params,this.pageInfo)
-
+        
+        this.showSpin = true;
         getComments(this.commentUrl,params).then(res=>{
+            this.showSpin = false;
             this.comments = res.tableContent;
 
             this.pageInfo.total = res.dataCount;

@@ -21,7 +21,7 @@
                     <img   
                     @click="showUserInfo(comment.creator)"
                     @error="errorimg(comment)" 
-                    slot="userCard" :src="comment.photo?comment.photo:'resources/images/icon/defaultUserPhoto.png'">
+                    slot="userCard" :src="comment.photo?comment.photo:'https://lab.roletask.com/resource/common-icon/male.png'">
                 </my-pop-tip>
             </Col>
 
@@ -121,17 +121,6 @@
             </Col>
         </Row>
     </div>
-     <Modal 
-     :styles="{top:'15px'}"
-     class="handle-view-img" 
-     v-model="imgModalVisible" 
-     width='80%'
-     footer-hide>
-        <p slot="header"></p>
-        <img 
-            :src="imgName" 
-            v-if="imgModalVisible">
-    </Modal>
  </div>
 
 </template>
@@ -183,7 +172,6 @@ export default {
         return {
            userInfo:{},
            imgName:'',
-           imgModalVisible:false
         };
     },
     watch:{
@@ -194,7 +182,7 @@ export default {
             this.$emit('refreshDeleteComments');
         },
         errorimg(comment) {
-            comment.photo = 'resources/images/icon/defaultUserPhoto.png';
+            comment.photo = 'https://lab.roletask.com/resource/common-icon/male.png';
         },
         handlerShowThumbsUpInfo:function (comment) {
             this.$forceUpdate();

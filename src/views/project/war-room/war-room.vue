@@ -312,7 +312,6 @@ export default {
       financialAnalysisModel: false,
       timeAnalysisModel: false,
       projectCommentModel: false,
-      projectTaskLogModel: false,
       projectBaseInfoModel: false,
       errorTip: false,
       showFile:false,
@@ -373,14 +372,6 @@ export default {
       });
       gantt.render();
     },
-  showProjectTaskLogModel(){
-    let taskId = gantt.getSelectedId();
-    if(taskId === '0'){
-      gantt.alert('抱歉,根级任务无需创建日志任务!');
-    }else{
-      this.projectTaskLogModel =true;
-    }
-  },
 	getRootTask(projectApproval){
 		return {
 			parent:'root',
@@ -472,25 +463,17 @@ export default {
           gantt.templates.format_date(new Date(end)) +
           "<br/>";
         tooltip += "<b>周期天数:</b> " + task.duration + "<br/>";
-        tooltip += "<b>计划工时:</b> " + task.standardWorkingHours + "<br/>";
+        task.standardWorkingHours && (tooltip += "<b>计划工时:</b> " + task.standardWorkingHours + "<br/>");
         tooltip += "<b>执行者:</b> " + task.dealerName + "<br/>";
-        tooltip += "<b>流程状态:</b> " + task.processStatus + "<br/>";
-
+        task.processStatus && (tooltip += "<b>流程状态:</b> " + task.processStatus + "<br/>");
         return tooltip;
       };
-
       //区分工作日
-      // gantt.config.correct_work_time = true;
       gantt.config.work_time = true;
       gantt.templates.timeline_cell_class = function(task, date) {
         if (!gantt.isWorkTime({ date: date, unit: "day" })) return "week_end";
         return "";
       };
-
-      // 显示进度文字
-      // gantt.templates.progress_text = function (start, end, task) {
-      // 	return "<span style='text-align:left;'>" + Math.round(task.progress * 100) + "% </span>";
-      // };
 
       //弹出框标题
       gantt.templates.lightbox_header = function(start_date, end_date, task) {

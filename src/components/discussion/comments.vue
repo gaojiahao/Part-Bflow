@@ -360,8 +360,7 @@ export default {
             if(window.top.viewInsCommentsImg){
                 window.top.viewInsCommentsImg(img);
             }else{
-                this.imgName = img;
-                this.imgModalVisible = true;
+                this.getApp().showImgModal(img);
             }
         },
         handleViewFile:function (file) {

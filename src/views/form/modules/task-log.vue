@@ -370,7 +370,6 @@ export default {
         this.logData.forEach(item=>{
           item.comment.replace(/<br>/g,'\r\n');
         })
-        if(this.taskLogUrl === "projectTask/info/jobLog") Bus.$emit('refreshGanttData');
       }).then(res=>{
             window.top.setTaskLogIframeHeight && window.top.setTaskLogIframeHeight();
         });

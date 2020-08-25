@@ -5,9 +5,9 @@
 <template>
   <div  class="timeline-box">
     <div class="task-modal" :style="{display: showTaskModal?'block':'none'}"></div>
-    <div class="app-resource-group-title">
+    <div class="app-resource-group-title" v-if="allowAddLog">
         <span class="font16">日志任务</span>
-        <span v-if="logData.length>0">
+        <span v-if="logData.length>0 " >
           <Tooltip class="hidden-form" v-if="!hiddenForm" content="打开任务日志表单" placement="left">
           <span @click="openForm">
               <Icon type="md-arrow-dropup-circle" />
@@ -22,7 +22,7 @@
         
     </div>
 
-    <div class="timeline-box-form" v-if="hiddenForm">
+    <div class="timeline-box-form" v-if="hiddenForm  && allowAddLog ">
       <Form ref="logForm" :label-width="80"   :model="modalFormData"  :rules="ruleValidate">
          <Row>
             <Col :xs="24" :sm="showAll?24:12" :md="showAll?24:8" :lg="showAll?24:8">
@@ -187,6 +187,12 @@ export default {
       type: String,
       default(){
         return 'jobLog/findAllJobLog';
+      }
+    },
+    allowAddLog:{
+      type:Boolean,
+      default(){
+        return false;
       }
     }
   },

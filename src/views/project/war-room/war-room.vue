@@ -113,7 +113,7 @@
               <userComments ref='taskComments' :allowAddSubscribeUsers='false' :commentUrl="'projectTask/info/comment'"></userComments>
             </TabPane>
             <TabPane label="日志" name="taskLog">
-              <taskLog :showAll="true" :taskLogUrl="'projectTask/info/jobLog'"></taskLog>
+              <taskLog :showAll="true" :allowAddLog="allowAddLog" :taskLogUrl="'projectTask/info/jobLog'"></taskLog>
             </TabPane>
             <TabPane label="附件" name="file">
               <Upload
@@ -329,6 +329,7 @@ export default {
       },
       fileList: [],
       projectTransCode: undefined,
+      projectPlanTransCode:undefined,
       memberColumns: [
         {
           title: "项目合伙人与成员",
@@ -349,7 +350,8 @@ export default {
           title: "说明",
           key: "comment"
         }
-      ]
+      ],
+      allowAddLog:true
     };
   },
   computed: {
@@ -671,10 +673,12 @@ export default {
           vm.$router.replace(`/project/warRoom/${task[0].transCode}`);
           transCode = task[0].transCode;
           vm.uploadParams.biReferenceId = task[0].projectTaskReferenceId;
+          vm.allowAddLog = true;
         } else {
-          vm.$router.replace(`/project/warRoom/${vm.projectTransCode}`);
-          transCode = vm.projectTransCode;
+          vm.$router.replace(`/project/warRoom/${vm.projectPlanTransCode}`);
+          transCode = vm.projectPlanTransCode;
           vm.uploadParams.biReferenceId = this.rootBiReferenceId;
+          vm.allowAddLog = false;
         }
         
         getProjectFiles(transCode).then(res => {
@@ -1029,13 +1033,12 @@ export default {
         if (res.length) {
           this.transType = res[0].transType;
           planTransCode = res[0].transCode;
+          this.projectPlanTransCode = planTransCode;
           getProjectPlan(planTransCode).then(res => {
             let data = this.formatProjectData(res.formData);
-            // this.project = res.formData.projectApproval;
             this.addMarker();
             gantt.clearAll();
             gantt.parse(data);
-            // this.setProjectDuration([this.project.expectStartDate,this.project.expectEndDate]);
           });
 		}else{
 			this.addMarker();

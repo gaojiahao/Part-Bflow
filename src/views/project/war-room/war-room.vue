@@ -103,7 +103,6 @@
 
       </div>
     </div>
-    <!-- display: flex; -->
     <div style='width:100%;height: calc(100% - 40px);'>
       <Row style="width:100%;height:100%;">
         <Col  style="height:100%;" :span="showActivityModel?18:24">
@@ -556,7 +555,6 @@ export default {
     },
     handleSuccess(res, file) {
       this.fileList = [...res.data,...this.fileList];
-      this.ganttLoadData(true);
       this.$Message.success(res.message);
     },
     openFile(file){
@@ -564,14 +562,20 @@ export default {
       window.open(url);
     },
     deletefile(file,index){
-      if(file.id){
-        deleteProjectTaskFile(file.id).then(res => {
-          if(res.success){
-            this.fileList.splice(index,1);
-            this.$Message.success(res.message);
-          }
-        })
-      }
+      this.$Modal.confirm({
+        title: "确认",
+        content: `确认删除<b style="color:#e4393c;">${file.attr1}</b>？`,
+        onOk: () => {
+          deleteProjectTaskFile(file.id).then(res => {
+            if(res.success){
+              this.fileList.splice(index,1);
+              this.$Message.success(res.message);
+            }
+          }).catch(err => {
+            this.$Message.error(err.data.message);
+          })
+        }
+      });
     },
     /**
      * 初始化事件
@@ -999,29 +1003,28 @@ export default {
      */
     ganttLoadData(type) {
       let planTransCode;
-      Bus.$emit("refreshProjectInfo");
-      // !type && this.getRootProjectFiles();
       this.$Loading.start();
       getProjectPlanTransCode(this.projectTransCode).then(res => {
         this.$Loading.finish();
         if (res.length) {
-          this.transType = res[0].transType;
-          planTransCode = res[0].transCode;
-          this.projectPlanTransCode = planTransCode;
-          getProjectPlan(planTransCode).then(res => {
-            let data = this.formatProjectData(res.formData);
+            this.transType = res[0].transType;
+            planTransCode = res[0].transCode;
+            this.projectPlanTransCode = planTransCode;
+            getProjectPlan(planTransCode).then(res => {
+              let data = this.formatProjectData(res.formData);
+              this.rootBiReferenceId = res.formData.biReferenceId;
+              this.addMarker();
+              gantt.clearAll();
+              gantt.parse(data);
+            });
+          }else{
             this.addMarker();
-            gantt.clearAll();
-            gantt.parse(data);
-          });
-		}else{
-			this.addMarker();
-			let rootTask = this.getRootTask();
-			this.setProjectDuration([this.project.expectStartDate,this.project.expectEndDate]);
-			gantt.parse({
-				data:[rootTask]
-			});
-		}
+            let rootTask = this.getRootTask();
+            this.setProjectDuration([this.project.expectStartDate,this.project.expectEndDate]);
+            gantt.parse({
+              data:[rootTask]
+            });
+          }
       });
     },
 
@@ -1045,7 +1048,6 @@ export default {
     getProjectInfo() {
       return getProject(this.projectTransCode).then(res => {
         this.uploadParams.biReferenceId = res.formData.biReferenceId;
-        this.rootBiReferenceId = res.formData.biReferenceId;
         this.projectMember = res.formData.order;
         this.projectMember.map(m => {
           m.key = m.projectPartnerCode;

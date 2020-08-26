@@ -575,7 +575,6 @@ export default {
     },
     handleSuccess(res, file) {
       this.fileList = [...res.data,...this.fileList];
-      this.ganttLoadData(true);
       this.$Message.success(res.message);
     },
     openFile(file){

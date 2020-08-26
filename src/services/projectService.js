@@ -102,9 +102,7 @@ export const getProjectTask = (transCode) => request('/H_roleplay-si/projectTask
  * @author XiaoYing
  * @description 获取项目附件信息
  */
-export const getProjectFiles = (transCode) => request('/H_roleplay-si/projectTask/info/attachment', {
-  transCode:transCode
-})
+export const getProjectFiles = (param) => request('/H_roleplay-si/projectTask/info/attachment', param)
 
 /**
  * @author XiaoYing

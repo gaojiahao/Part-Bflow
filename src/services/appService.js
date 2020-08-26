@@ -914,8 +914,8 @@ export const saveTaskLog = (data) => request('/H_roleplay-si/jobLog/batchSave', 
  */
 export const getTaskLog = (taskLogUrl,transCode, currentPage, pageSize) => request(`/H_roleplay-si/${taskLogUrl}`, {
   transCode: transCode,
-  pageIndex: currentPage,
-  pageSize: pageSize
+  page: currentPage,
+  limit: pageSize
 })
 
 /**

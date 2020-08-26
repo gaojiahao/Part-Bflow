@@ -43,6 +43,7 @@
           content="活动"
           placement="top"
         >
+        <!-- openRightContainer -->
           <Button
             :size="buttonSize"
             icon="md-aperture"
@@ -102,50 +103,17 @@
 
       </div>
     </div>
-    <div style='width:100%;height: calc(100% - 40px);display: flex;'>
-      <div
-        style='width:100%'
-        ref="gantt"
-      ></div>
-      <div ref="uploadFile" v-if="showFile" class="right-container">
-        <Tabs v-model="tabName">
-            <TabPane label="评论" name="comment">
-              <userComments ref='taskComments' :allowAddSubscribeUsers='false' :commentUrl="'projectTask/info/comment'"></userComments>
-            </TabPane>
-            <TabPane label="日志" name="taskLog">
-              <taskLog :showAll="true" :allowAddLog="allowAddLog" :taskLogUrl="'projectTask/info/jobLog'"></taskLog>
-            </TabPane>
-            <TabPane label="附件" name="file">
-              <Upload
-                  multiple
-                  action="/H_roleplay-si/ds/upload"
-                  :show-upload-list="false"
-                  :style="{'text-align':'center',marginTop:'10px'}"
-                  :headers="httpHeaders"
-                  :data="uploadParams"
-                  :on-success="handleSuccess">
-                  <Button icon="ios-cloud-upload-outline">添加附件</Button>
-              </Upload>
-              <ul class="file-list">
-                <li class="files-container-item-content" v-for="(file,index) of fileList" :key="index" @click="openFile(file)">
-                  <img class="flie-img" width="38" :src="file.attr1|fileTypeFilter">
-                  <div class="files-container-item-content-info">
-                      <div class="files-container-item-content-info-content">
-                      {{file.attr1}}
-                      <span @click.stop="deletefile(file,index)" class="delete-file">
-                        <Icon type="md-close" />
-                      </span>
-                      </div>
-                      <div class="files-container-item-content-info-other font12">
-                          {{file.attr2}}KB|{{file.creator}}
-                          <Time class="fr" :time="file.crtTime" />
-                      </div>
-                  </div>
-                </li>
-              </ul>
-            </TabPane>
-        </Tabs>
-      </div>
+    <!-- display: flex; -->
+    <div style='width:100%;height: calc(100% - 40px);'>
+      <Row style="width:100%;height:100%;">
+        <Col  style="height:100%;" :span="showActivityModel?18:24">
+          <div ref="gantt" style="width:100%;height:100%;"></div>
+        </Col>
+        <Col span="6" style="height: 100%;overflow: hidden;" v-if="showActivityModel">
+          <router-view :uploadParams="uploadParams" :allowAddLog="allowAddLog"></router-view>
+        </Col>
+      </Row>
+
     </div>
     <!-- 财务分析 -->
     <Drawer
@@ -306,6 +274,7 @@ export default {
     return {
       showGridModel:true,
       expandAllModel:true,
+      showActivityModel:false,
       taskProcess: [],
       transType: "",
       buttonSize: "small",
@@ -566,12 +535,24 @@ export default {
       return data;
     },
     openRightContainer(){
-      this.showFile = !this.showFile;
-      if(this.showFile){
-        this.$refs["gantt"].style.width = '80%';
-      }else{
-        this.$refs["gantt"].style.width = '100%';
-      }
+        this.showActivityModel = !this.showActivityModel;
+        if(this.showActivityModel){
+         
+          if(!gantt.getSelectedId()){
+            gantt.selectTask('0');
+            this.$router.replace(`/project/warRoom/${this.projectPlanTransCode}/activity/comment`);
+            this.uploadParams.biReferenceId = this.rootBiReferenceId;
+            this.allowAddLog = false;
+          }else{
+            this.$router.push({
+              name:"activity"
+            });
+          }
+        }else{
+          this.$router.push({
+            name:"warRoom"
+          });
+        }
     },
     handleSuccess(res, file) {
       this.fileList = [...res.data,...this.fileList];
@@ -662,23 +643,22 @@ export default {
       // 选择任务
       gantt.attachEvent("onTaskClick", function(id,e) {
         let task = gantt.getTaskBy("id", id),
-            transCode;
+            routeName = vm.$route.name,
+            endPath='';
+
+        if(['comment','tasklog','attachment'].includes(routeName)){
+          endPath = `/activity/${routeName}`;
+        }
+        
         if (task.length === 1) {
-          vm.$router.replace(`/project/warRoom/${task[0].transCode}`);
-          transCode = task[0].transCode;
+          vm.$router.replace(`/project/warRoom/${task[0].transCode}${endPath}`);
           vm.uploadParams.biReferenceId = task[0].projectTaskReferenceId;
           vm.allowAddLog = true;
         } else {
-          vm.$router.replace(`/project/warRoom/${vm.projectPlanTransCode}`);
-          transCode = vm.projectPlanTransCode;
-          vm.uploadParams.biReferenceId = this.rootBiReferenceId;
+          vm.$router.replace(`/project/warRoom/${vm.projectPlanTransCode}${endPath}`);
+          vm.uploadParams.biReferenceId = vm.rootBiReferenceId;
           vm.allowAddLog = false;
         }
-        
-        getProjectFiles(transCode).then(res => {
-            vm.fileList = res.tableContent;
-        })
-        
         return true;
       });
       //校验
@@ -1020,7 +1000,7 @@ export default {
     ganttLoadData(type) {
       let planTransCode;
       Bus.$emit("refreshProjectInfo");
-      !type && this.getRootProjectFiles();
+      // !type && this.getRootProjectFiles();
       this.$Loading.start();
       getProjectPlanTransCode(this.projectTransCode).then(res => {
         this.$Loading.finish();
@@ -1089,9 +1069,6 @@ export default {
     gantt.init(this.$refs.gantt);
     this.ganttLoadData();
     this.initEvents();
-    Bus.$on('refreshGanttData',() => {
-        this.ganttLoadData(true);
-    });
   },
   created: function() {
     this.projectTransCode = this.$route.params.transCode;

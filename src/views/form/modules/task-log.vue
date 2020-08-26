@@ -109,6 +109,12 @@
     </div>
 
     <div  class="timeline-box-log" v-show="logData.length===0?false:true">
+
+       <Spin fix v-if="showSpin">
+          <Icon type="ios-loading" size=18 class="attchment-spin-icon-load"></Icon>
+          <div>加载中...</div>
+      </Spin>
+
       <div class="timeline-box-log-sum">
         <span>总工时：<b>{{ logHours }}</b></span>
         <span :style="{marginLeft:'15px'}">总成本：<b>{{ logCosts | toThousandFilter }}</b></span>
@@ -218,6 +224,7 @@ export default {
         logTypeList:[],
         loading:false,
         userList:[],
+        showSpin:true,
         modalFormData: {
             //变更日志表单数据
             logTitle: "",
@@ -255,6 +262,7 @@ export default {
         pageTotal:0,
         pageSize:10
         };
+        
   },
   watch: {
     $route(to, from) {
@@ -368,6 +376,7 @@ export default {
      * 获取任务日志
      */
     getTaskLog() {
+      this.showSpin = true;
       getTaskLog(this.taskLogUrl,this.transCode,this.currentPage,this.pageSize).then(res => {
         this.pageTotal = res.dataCount;
         this.logData = res.tableContent;
@@ -376,6 +385,7 @@ export default {
         this.logData.forEach(item=>{
           item.comment.replace(/<br>/g,'\r\n');
         })
+        this.showSpin = false;
       }).then(res=>{
             window.top.setTaskLogIframeHeight && window.top.setTaskLogIframeHeight();
         });

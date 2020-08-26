@@ -58,5 +58,8 @@ export default {
         height: calc(100% - 55px);
         overflow: auto;
     }
+    /deep/ .router-link-active{
+        background-color: white;
+    }
 }
 </style>

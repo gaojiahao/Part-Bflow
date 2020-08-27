@@ -20,7 +20,7 @@
                 <!-- 消息组件 -->
                 <content-message v-if="[1,2,3,4].includes(m.imType)" @showDetailModal="showDetailModal" :msg="m">
                 </content-message>
-                <div class="otherMessage" v-if="[101,102,104].includes(m.imType)">
+                <div class="otherMessage" v-if="[101,102,104,206].includes(m.imType)">
                     <div>{{m.crtTime}}</div>
                     <div><span>{{m.content}}</span></div>
                 </div>

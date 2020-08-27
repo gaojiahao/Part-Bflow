@@ -254,8 +254,7 @@ import {
   addProjectTaskLink,
   deleteProjectTaskLink,
   getProjectTask,
-  deleteProjectTaskFile,
-  getProjectFiles
+  deleteProjectTaskFile
 } from "@/services/projectService";
 import { getProcessStatusByListId } from "@/services/appService";
 import Bus from "@/assets/eventBus.js";
@@ -607,9 +606,19 @@ export default {
           saveTaskData = vm.createTaskSaveData(item, "save");
           addProjectTask(saveTaskData).then(res => {
             if (res.success) {
-				vm.$Message.success(res.message);
-				item = Object.assign(item, res.task);
-				gantt.changeTaskId(id, res.task.projectPlanTaskId);
+                let routeName = vm.$route.name,
+                    endPath='';
+
+                if(['comment','tasklog','attachment'].includes(routeName)){
+                  endPath = `/activity/${routeName}`;
+                }
+                vm.$router.replace(`/project/warRoom/${res.task.transCode}${endPath}`);
+                vm.uploadParams.biReferenceId = res.task.projectTaskReferenceId;
+                vm.allowAddLog = true;
+
+                vm.$Message.success(res.message);
+                item = Object.assign(item, res.task);
+                gantt.changeTaskId(id, res.task.projectPlanTaskId);
             }
           });
         }
@@ -1012,8 +1021,12 @@ export default {
      * 加载甘特图数据
      */
     ganttLoadData(type) {
-      let planTransCode;
+      let planTransCode,
+          selectTaskId;
       this.$Loading.start();
+
+      selectTaskId = gantt.getSelectedId();
+
       getProjectPlanTransCode(this.projectTransCode).then(res => {
         this.$Loading.finish();
         if (res.length) {
@@ -1026,6 +1039,9 @@ export default {
               this.addMarker();
               gantt.clearAll();
               gantt.parse(data);
+              if(selectTaskId){
+                gantt.selectTask(selectTaskId);
+              }
             });
           }else{
             this.addMarker();
@@ -1065,12 +1081,7 @@ export default {
 		    });
 		    this.project = res.formData.projectApproval;
       });
-    },
-    getRootProjectFiles() {
-      getProjectFiles(this.projectTransCode).then(res => {
-        this.fileList = res.tableContent;
-      })
-    },
+    }
   },
   async mounted() {
     await this.getTaskProcess();

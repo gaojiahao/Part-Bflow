@@ -8,16 +8,17 @@
         :headers="httpHeaders"
         :data="uploadParams"
         :on-success="handleSuccess"
+        v-if="!showDeleted"
       >
         <Button icon="ios-cloud-upload-outline">添加附件</Button>
       </Upload>
-      <Icon
-        type="md-trash"
-        size="20"
-        title="回收站"
-        @click="handleShowDeleted"
-        :color="showDeleted?'#2d8cf0':'#2c3e50'"
-      />
+     <div class="attchment-toolbar-trash" @click="handleShowDeleted" :style="{color:showDeleted?'#2d8cf0':'#2c3e50'}">
+        <Icon
+          type="ios-trash-outline" 
+          size="20"
+        />
+        <span >{{showDeleted?'返回':'回收站'}}</span>
+     </div>
     </div>
     <div class="attchment-spin-col">
       <Spin fix v-if="showSpin">
@@ -40,7 +41,7 @@
               </span>
             </div>
             <div class="files-container-item-content-info-other font12">
-              {{file.attr2}}KB|{{file.creator}}
+              {{file.attr2}}|{{file.creator}}
               <Time class="fr" :time="file.crtTime" />
             </div>
           </div>
@@ -166,6 +167,8 @@ export default {
 .attchment {
   overflow: hidden;
   &-toolbar {
+    display: flex;
+    justify-content: space-between;
     border-bottom: 1px solid #cecece;
     height: 40px;
     padding: 5px;
@@ -176,7 +179,15 @@ export default {
     i {
       cursor: pointer;
     }
+
+    &-trash{
+      cursor: pointer;
+      height: 32px;
+      line-height: 32px;
+    }
   }
+
+  
 
   &-empty{
     text-align: center;

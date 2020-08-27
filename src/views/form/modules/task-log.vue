@@ -116,6 +116,7 @@
       </Spin>
 
       <div class="timeline-box-log-sum">
+        <span>共<b>{{ pageTotal }}</b>条</span>
         <span>总工时：<b>{{ logHours }}</b></span>
         <span :style="{marginLeft:'15px'}">总成本：<b>{{ logCosts | toThousandFilter }}</b></span>
       </div>

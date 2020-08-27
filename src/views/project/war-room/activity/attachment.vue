@@ -57,6 +57,7 @@
         @on-change="handlePageChange"
       />
     </div>
+    <div class="attchment-empty" v-if="!fileList.length">暂无数据...</div>
   </div>
 </template>
 
@@ -175,6 +176,11 @@ export default {
     i {
       cursor: pointer;
     }
+  }
+
+  &-empty{
+    text-align: center;
+    color: #cecece;
   }
 }
 .file-list {

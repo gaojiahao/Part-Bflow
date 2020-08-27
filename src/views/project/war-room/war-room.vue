@@ -644,6 +644,14 @@ export default {
         return true;
       });
 
+      //拖动左侧表格任务的顺序
+      gantt.attachEvent("onBeforeRowDragEnd", function(id, parent, tindex){
+        var task = gantt.getTask(id);
+        if(task.parent != parent)
+            return false;
+        return true;
+      });
+
       // 选择任务
       gantt.attachEvent("onTaskClick", function(id,e) {
         let task = gantt.getTaskBy("id", id),
@@ -798,6 +806,8 @@ export default {
     initGanttConfig() {
       // gantt.config.autoscroll = true;
       gantt.config.fit_tasks = true; 
+      //允许拖动左侧表格任务的顺序
+      // gantt.config.order_branch = true;
       gantt.config.show_progress = false;
       // gantt.config.readonly = true;
       gantt.i18n.setLocale(this.ganttLocale);
@@ -816,7 +826,7 @@ export default {
       gantt.config.scale_height = 18 * 3;
       gantt.config.row_height = 28;
       gantt.config.open_tree_initially = true;//初始化就展开树结构
-      gantt.config.preserve_scroll = false;//图表刷新后，滚动条的位置跟原来保持一致
+      gantt.config.preserve_scroll = true;//图表刷新后，滚动条的位置跟原来保持一致
       gantt.config.round_dnd_dates = false;
       gantt.config.touch = true;
       gantt.config.touch_drag = 75;

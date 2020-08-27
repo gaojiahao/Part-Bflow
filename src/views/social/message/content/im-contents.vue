@@ -22,7 +22,7 @@
                 </content-message>
                 <div class="otherMessage" v-if="[101,102,104,206].includes(m.imType)">
                     <div>{{m.crtTime}}</div>
-                    <div><span>{{m.content}}</span></div>
+                    <div><span v-html="m.content"></span></div>
                 </div>
                 <div class="otherMessage" v-if="[202,203,204].includes(m.imType)">
                     <div>{{m.crtTime}}</div>

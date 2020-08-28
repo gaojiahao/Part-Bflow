@@ -150,7 +150,9 @@ export default {
         this.params.status = 0;
       } else {
         delete this.params.status;
+        
       }
+      this.params.page = 1;
       this.getAttachment();
     },
     handlePageChange: function(page) {

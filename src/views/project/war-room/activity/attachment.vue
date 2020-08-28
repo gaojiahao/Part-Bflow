@@ -98,6 +98,7 @@ export default {
   watch: {
     $route(to, from) {
       this.transCode = to.params.transCode;
+      this.params.page = 1;
       this.getAttachment();
     }
   },

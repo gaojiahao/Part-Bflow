@@ -268,6 +268,7 @@ export default {
   watch: {
     $route(to, from) {
         this.transCode = to.params.transCode;
+        this.currentPage=1;
         this.getTaskLog();
     }
   },

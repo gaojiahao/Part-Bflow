@@ -157,6 +157,7 @@ export default {
     },
     $route(to, from) {
         this.transCode = to.params.transCode;
+        this.pageInfo.page = 1;
         this.refreshComments();
     }
   },

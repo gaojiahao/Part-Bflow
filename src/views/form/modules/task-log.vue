@@ -148,7 +148,7 @@
           </li>
         </ul>
       </ul>
-      <div class="loading-more">
+      <div class="pad10">
         <Page 
             :total="pageTotal" 
             :current="currentPage"

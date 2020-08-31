@@ -77,7 +77,7 @@
                 
                 </comments>
                 <Page 
-                    class="pad20"
+                    class="pad10"
                     v-if="pageInfo.total>0"
                     :total="pageInfo.total" 
                     :page-size="pageInfo.limit"

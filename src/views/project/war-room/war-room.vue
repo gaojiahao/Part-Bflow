@@ -621,6 +621,7 @@ export default {
                 gantt.changeTaskId(id, res.task.projectPlanTaskId);
             }else{
               vm.$Message.error(res.message);
+              gantt.deleteTask(id);
             }
           });
         }

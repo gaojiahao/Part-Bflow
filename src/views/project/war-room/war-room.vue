@@ -619,6 +619,8 @@ export default {
                 vm.$Message.success(res.message);
                 item = Object.assign(item, res.task);
                 gantt.changeTaskId(id, res.task.projectPlanTaskId);
+            }else{
+              vm.$Message.error(res.message);
             }
           });
         }
@@ -631,6 +633,8 @@ export default {
           deleteProjectTask(item.projectPlanTaskId).then(res => {
             if (res.success) {
               vm.$Message.success(res.message);
+            }else{
+              vm.$Message.error(res.message);
             }
           });
         }
@@ -648,6 +652,8 @@ export default {
         updateProjectTask(saveTaskData).then(res => {
           if (res.success) {
             vm.$Message.success(res.message);
+          }else{
+            vm.$Message.error(res.message);
           }
         });
         return true;

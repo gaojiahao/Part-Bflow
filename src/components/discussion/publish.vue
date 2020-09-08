@@ -56,6 +56,7 @@
                 action="/H_roleplay-si/ds/upload">
                 <Icon type="ios-folder-open-outline" size=24 title="文件"  class="choice-file" />
             </Upload>
+            Shift+Enter换行
             </div>
         </Col>
         <Col class="publish-bar-right" span="12">
@@ -69,6 +70,7 @@
             id = "contentWrap"
             contenteditable="true" 
             ref="editor"
+            :style="contentStyle"
             v-html="innerText"
             @input="changeTxt"
             @focus="lock=true" 
@@ -96,9 +98,7 @@
     </Row>
     <Row class="publish-bar">
         <Col class="publish-bar-right" span="24">
-        <!-- <Tooltip placement="top-end" content="不能发送空白消息"> -->
             <Button  @click.native="handleSend" >发送</Button>
-        <!-- </Tooltip> -->
         </Col>
     </Row>
 </div>
@@ -116,6 +116,10 @@ import {
     uploadImage,
     getAllUsers
 } from "@/services/subscribeService";
+
+const storage = window['sessionStorage'];
+const MessionStore = 'MessionStore';
+
 export default {
     name:"coment-publish",
     props:{
@@ -126,6 +130,9 @@ export default {
             }
         },
         handlePublish:{
+            type:Function
+        },
+        sessionHandlePublish:{
             type:Function
         },
         comments:{
@@ -150,6 +157,19 @@ export default {
         },
         setAtUsers:{
             type:Function
+        },
+        groupId:{
+            type:String,
+            default:'',
+        },
+        contentStyle:{
+            type:Object,
+            default(){
+                return {
+                    height:'130px',
+                    padding:'5px'
+                }
+            }
         }
         
     },
@@ -194,6 +214,27 @@ export default {
         　　　},
         　　　deep:true
         },
+        //聊天窗口的监听
+        $route: {
+            handler: function(newVal, oldVal){
+                if(newVal.params.groupId!=oldVal.params.groupId){
+                    this.sessionHandleSend(oldVal.params.groupId);
+                    this.userList = [];
+                    this.sourceUserList = [];
+                }
+            },
+            deep: true
+        },
+        groupId:{
+            handler(newVal, oldVal){
+                this.messionArr = JSON.parse(storage.getItem(MessionStore));
+                if(this.messionArr){
+                    this.$nextTick(() => {
+                        this.$refs.editor.innerHTML = this.messionArr&&this.messionArr[newVal]&&JSON.parse(this.messionArr[newVal])&&JSON.parse(this.messionArr[newVal])['contentHtmls']||'';
+                    });
+                }
+            }
+        }
     },
     methods: {
         OnMouseDown(e) {
@@ -276,7 +317,7 @@ export default {
                 this.isFilter = true;
                 if(this.userList.length===0){
                     if(this.setAtUsers){
-                        this.setAtUsers().then(res=>{
+                        this.setAtUsers(this.groupId).then(res=>{
                             this.sourceUserList = res;
                             this.userList = res;
                             this.userListVisible = true;
@@ -301,7 +342,7 @@ export default {
                     // 合法的用户输入
                     this.showUserPanel(this.contentWrap,targetText);
                 }
-            } 
+            }
         },
 
         handleSelectUser(u){
@@ -466,6 +507,11 @@ export default {
             }, []);
 
             this.handlePublish(content,[],userIds,this.superComment,this.commentAndReply,this);
+        },
+        
+        sessionHandleSend(groupId) {
+            let content =  this.$refs.editor.innerHTML;
+            this.sessionHandlePublish(content,groupId);
         },
         handleView (name) {
             if(window.top.viewInsCommentsImg){

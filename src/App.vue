@@ -1,6 +1,7 @@
 <template>
   <div id="main" class="app-main">
     <router-view/>
+    <Spin size="large" fix v-if="spinShow"></Spin>
     <Modal class="imgModal" v-model="imgModal.imgModalVisible" :fullscreen="imgModal.fullscreenVisible" :closable='false' footer-hide>
           <div slot="header" class="imgModal-hedaer">
               <div class="imgModal-hedaer-title">图片预览</div>
@@ -25,6 +26,7 @@ export default {
   name: 'App',
   data () {
       return {
+        spinShow:false,
           imgModal: {
             imgModalVisible:false,
             fullscreenVisible:false,

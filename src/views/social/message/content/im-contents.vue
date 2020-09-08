@@ -16,24 +16,27 @@
 <template>
     <div class="message-list compactscrollbar" ref="messageList"  id='messageList'>
         <div v-for="(m,index) in  messages" :key="index" >
-            <!-- 消息组件 -->
-            <content-message v-if="[1,2,3,4].includes(m.imType)" @showDetailModal="showDetailModal" :msg="m"></content-message>
-            <div class="otherMessage" v-if="[101,102,104].includes(m.imType)">
-                <div>{{m.crtTime}}</div>
-                <div><span>{{m.content}}</span></div>
-            </div>
-            <div class="otherMessage" v-if="[202,203,204].includes(m.imType)">
-                <div>{{m.crtTime}}</div>
-                <message-tpl-taskoverdue :msg="m"></message-tpl-taskoverdue>
-            </div>
-            <div class="otherMessage" v-if="[201].includes(m.imType)">
-                <div>{{m.crtTime}}</div>
-                <message-tpl-tasklog :msg="m"></message-tpl-tasklog>
-            </div>
-            <div class="otherMessage" v-if="[205].includes(m.imType)">
-                <div>{{m.crtTime}}</div>
-                <message-tpl-weeksummary :msg="m"></message-tpl-weeksummary>
-            </div>
+            <template v-if="m.groupId===$route.params.groupId">
+                <!-- 消息组件 -->
+                <content-message v-if="[1,2,3,4].includes(m.imType)" @showDetailModal="showDetailModal" :msg="m">
+                </content-message>
+                <div class="otherMessage" v-if="[101,102,104,206].includes(m.imType)">
+                    <div>{{m.crtTime}}</div>
+                    <div><span v-html="m.content"></span></div>
+                </div>
+                <div class="otherMessage" v-if="[202,203,204].includes(m.imType)">
+                    <div>{{m.crtTime}}</div>
+                    <message-tpl-taskoverdue :msg="m"></message-tpl-taskoverdue>
+                </div>
+                <div class="otherMessage" v-if="[201].includes(m.imType)">
+                    <div>{{m.crtTime}}</div>
+                    <message-tpl-tasklog :msg="m"></message-tpl-tasklog>
+                </div>
+                <div class="otherMessage" v-if="[205].includes(m.imType)">
+                    <div>{{m.crtTime}}</div>
+                    <message-tpl-weeksummary :msg="m"></message-tpl-weeksummary>
+                </div>
+            </template>
             <!-- 文件消息组件 -->
             <!-- <file-message :fileMessage="m"></file-message> -->
         </div>
@@ -82,7 +85,7 @@ export default {
             messages:[],
             detailMessage: {},
             pageParam:{
-                page:1,
+                page:1,//默认是第一页，滚动时加载第二页面。
                 limit:20
             },
             allLoad:false,
@@ -93,6 +96,7 @@ export default {
         $route(to, from) {
             if(to.params.groupId != from.params.groupId){
                 this.pageParam.page = 1;
+                //this.$set(this.pageParam,'page',0)
                 this.allLoad = false;
                 this.messages = [];
                 this.getMessages();
@@ -145,17 +149,27 @@ export default {
                 nickName:this.curContextMessage.creatorName
             });
         },
-        getMessages(){
+        getMessages(page){
             let param = {
-                ...this.pageParam,
+                page: page == null ? 1 : page,
+                limit:20,
                 groupId:this.$route.params.groupId
-            };
+            },me = this,
+            length;
+
             this.$Loading.start();
+            if(this.loading == true) return false;//避免切换到新的一组聊天消息时，第一页和第二页都加载过来,容易出现后发先至。也避免切换分组和滚动触发的消息加载同时执行。
+            this.loading = true;
+            // this.getApp().spinShow = true;
             getMessagesByGroupId(param).then(res=>{
                 this.$Loading.finish();
+                this.loading = false;
+                // this.getApp().spinShow = false;
                 if(res.msgs.length<this.pageParam.limit){
                     this.allLoad = true;
                     console.log('全部加载完成');
+                } else {
+                    this.pageParam.page = param.page;//只有数据加载过来以后，而且还有剩余数据的时候，才把页数变更。
                 }
                 res.msgs.map(m=>{
 
@@ -169,9 +183,19 @@ export default {
                         }
                         
                     }
-                });
-                
-                this.messages.unshift(...res.msgs);
+                }); 
+                me.messages.unshift(...res.msgs);
+                if (res.page != 1){
+                    this.isMsgAppend = true;
+                    length = res.msgs.length;
+                    if(length){
+                        me.lastMsgId = res.msgs[length-1].id;//方便定位到最新的第一条，默认会定在最后一条。
+                    } else {
+                        me.lastMsgId = null;
+                    }                
+                }
+            }).finally(()=>{
+                this.loading = false;
             });
         },
         showDetailModal(message) {
@@ -184,7 +208,6 @@ export default {
             var that =this;
             deepstream.event.subscribe("roletaskIm/" + this.$md5(String(this.$currentUser.userId)), res => {
                 res.imType = parseInt(res.imType);
-                
                 switch (res.imType) {
                     case 1:
                         if (this.$route.params.groupId == res.groupId)
@@ -258,10 +281,9 @@ export default {
         initEvents(){
             var that= this;
             this.$refs.messageList.addEventListener('scroll', function() {
-
+                var page = that.pageParam.page + 1;
                 if(arguments[0].target.scrollTop==0 && !that.allLoad){
-                    that.pageParam.page++;
-                    that.getMessages();
+                    that.getMessages(page);
                 }
             });
 
@@ -332,7 +354,18 @@ export default {
 
     },
     updated(){
-        this.scrollToBottom();
+        var msgDiv;
+        if (this.isMsgAppend == true){
+            this.isMsgAppend = false;
+            if(this.lastMsgId != null){
+                msgDiv = document.getElementById(this.lastMsgId);
+                msgDiv && msgDiv.scrollIntoView(true);
+                this.lastMsgId = null;
+            }
+        } else {
+            this.scrollToBottom();
+        }
+       
     }
 }
 </script>

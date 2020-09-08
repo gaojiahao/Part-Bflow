@@ -4,6 +4,8 @@
 
 <template>
   <div class="app-permission">
+    <!-- 表单 -->
+    <app-form v-if="!isAddress && appType !== 'subject'" :isAdmin="isAdmin"></app-form>
     <!-- 操作管理 -->
     <operation-manage :enabledForbidden="enabledForbidden" :isAdmin="isAdmin"></operation-manage>
     <!-- 动作管理 -->
@@ -18,8 +20,6 @@
     <child-subject v-if="appType === 'subject'" :isAdmin="isAdmin"></child-subject>
     <!-- 报表视图 -->
     <report-view :appType="appType" :isAdmin="isAdmin"></report-view>
-    <!-- 表单 -->
-    <app-form v-if="!isAddress && appType !== 'subject'" :isAdmin="isAdmin"></app-form>
     <!-- 工作流 -->
     <work-flow v-if="!isAddress && appType !== 'subject'" :isAdmin="isAdmin"></work-flow>
   </div>

@@ -148,8 +148,7 @@ export default {
                 sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
         }
         params = Object.assign(params,this.pageInfo)
-
-        getComments(params).then(res=>{
+        getComments('comment/getCommentByRelationKey',params).then(res=>{
             this.comments = res.tableContent;
 
             this.pageInfo.total = res.dataCount;

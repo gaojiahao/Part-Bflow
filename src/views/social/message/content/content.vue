@@ -39,7 +39,7 @@
                     <imContents :groupId="groupId"></imContents>
                 </div>
                 <div v-if="$route.query.groupType !== 'N'" class="content-message-input" v-on:click="msgInputClick()">
-                    <commentPublish  ref='msgInput' :handlePublish="handlePublish" :setAtUsers="setAtUsers">
+                    <commentPublish  :contentStyle="{height:'220px'}" ref='msgInput' :handlePublish="handlePublish" :setAtUsers="setAtUsers" :groupId="groupId" :sessionHandlePublish="sessionHandlePublish">
                         <div  slot="rightBars">
                             <Icon type="ios-list-box-outline" size=24 title="消息记录" style=" cursor: pointer;" v-on:click="onViewHistory" />
                         </div>
@@ -76,6 +76,9 @@ import { deepstream } from '@/plugin/deepstream'
 import Bus from "@/assets/eventBus.js";
 import {EMOTION}  from "@/utils/emotion";
 import Vue from 'vue'
+
+const storage = window['sessionStorage'];
+const MessionStore = 'MessionStore';
 
 export default {
     name:'Content',
@@ -116,14 +119,15 @@ export default {
             listId:'',
             appInfo:{},
             expendHistoryVisible:false,
-            displayArr: ['appChangeLog','projectType','jobLog','fileOut','projectTaskRecall','praise']
+            displayArr: ['appChangeLog','projectType','jobLog','fileOut','projectTaskRecall','praise'],
+            messionArr:{}
         }
     },
     computed: {
         
     },
     methods:{
-        setAtUsers(){
+        setAtUsers(groupId){
             let that = this;
             if(this.$route.query.groupType==='G'){
                 return getMembers(this.$route.params.groupId).then(res=>{
@@ -395,7 +399,18 @@ export default {
                     query:this.$route.query
                 });
             }
-        }
+        },
+        sessionHandlePublish(content,groupId){
+            let contentHtmls = content;
+            let strArr = {};
+            this.messionArr = storage.getItem(MessionStore) ? JSON.parse(storage.getItem(MessionStore)):{};
+            this.$set(this.messionArr,groupId,JSON.stringify({
+                groupId:groupId,
+                contentHtmls: contentHtmls
+            }));
+
+            storage.setItem(MessionStore, JSON.stringify(this.messionArr));
+        },
     },
     watch: {
         $route(to, from) {

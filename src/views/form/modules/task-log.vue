@@ -199,7 +199,7 @@ export default {
     allowAddLog:{
       type:Boolean,
       default(){
-        return false;
+        return true;
       }
     }
   },

@@ -591,7 +591,7 @@ export default {
                     let f = imgArr.filter(item=>{
                         return !item.getAttribute('paste');
                     });
-                    f[0].remove();
+                    //f[0].remove();
 
                     let tepFile = {};
                     tepFile.url ='/H_roleplay-si/ds/download?url=' +  res[0].attacthment;

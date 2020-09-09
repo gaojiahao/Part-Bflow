@@ -19,6 +19,7 @@
                     @contextmenu.prevent="onContextmenu(g)" >
                     <img 
                         width="45"
+                        height="45"
                         v-if="g.groupType !=='N'" 
                         :src="g.groupIcon" 
                         onerror="src='https://lab.roletask.com/resource/common-icon/male.png'" 
@@ -189,6 +190,7 @@ export default {
             }
             //消息订阅
             ds.event.subscribe("roletaskIm/" + this.$md5(String(this.$currentUser.userId)), res => {
+                var msgCount = 0;
                 res.imType = parseInt(res.imType);
                 switch (res.imType) {
                     case 1:
@@ -201,6 +203,7 @@ export default {
                                 if(res.isMySelf === 0){
                                     msgVoice.success();
                                     g.msgCount++;
+                                    window.top.msgHandler && window.top.msgHandler(JSON.stringify(res));
                                 }
                                 g.modTime = res.crtTime;//修改时间
                                 
@@ -210,7 +213,9 @@ export default {
                                 g.lastMsg = res;
                                 return false;
                             }
+                            msgCount += g.msgCount;
                         });
+                        this.postMsgCount(msgCount);
                         break;
                     case 100:
                         if(!res.isMySelf){
@@ -229,7 +234,9 @@ export default {
                                 g.msgCount=0;
                                 return false;
                             }
+                            msgCount += g.msgCount;
                         });
+                        this.postMsgCount(msgCount);
                         break;
                     case 104:
                         this.imGroups.map(g=>{
@@ -294,6 +301,14 @@ export default {
             //     nav.unreadNum = 0;
             // });
         },
+        postMsgCount(msgCount){//延迟100毫秒，避免被覆盖。
+            setTimeout(function(){
+                window.top.postMessage({
+                    type:'msgCount',
+                    msgCount:msgCount
+                });
+            },100);
+        },
         handlerGetIcon(icon){
             if(icon){
                 if(icon.indexOf('resource')=== 0 ){
@@ -349,11 +364,14 @@ export default {
         });
 
         Bus.$on("checkMessage",groupId=>{
+            var msgCount = 0;
             this.imGroups.map(g=>{
                 if(g.groupId === groupId){
                     g.msgCount = 0;
                 }
+                msgCount += g.msgCount;
             });
+            this.postMsgCount(msgCount);
         })
 
         Bus.$on('dsOpen',()=>{

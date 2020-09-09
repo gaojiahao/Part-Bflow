@@ -3,86 +3,89 @@
 </style>
 
 <template>
-  <div class="bg_ff" style="padding:5px;">
-       <Row class="app-resource-group-title">
-            <div  class="commnet-title">评论 
-                <span class="fr subscribe-bar">
-                <span > 
-                        <span 
-                            class="subcribeing" 
-                            @mouseover="unsubcribeVisible=true;subcribeVisible=false;" 
-                            @mouseout="unsubcribeVisible=false;subcribeVisible=true;"
-                            v-if="subscribeInfo.isSubscribe==1 && subcribeVisible">
-                            <Icon type="md-checkmark" class="success-color" />正在关注中
-                        </span>
-
-                        <span 
-                            class="unsubcribe" v-if="subscribeInfo.isSubscribe==1 && unsubcribeVisible" 
-                            @click="handleUnsubscribeApp"
-                            @mouseout="unsubcribeVisible=false;subcribeVisible=true;">
-                            <Icon type="md-close" class="warning-color" />取消关注
-                        </span>
-
-                        <span class="subcribe" @click="handleSubscribeApp" v-if="subscribeInfo.isSubscribe==0">关注</span>
-
-                        <span> 
-                            <Icon type="md-notifications" size=18 class="success-color"  />
-                        </span>
-                    
-                    </span>
-
-                    <span>
-                        <Dropdown class="instance-dropdown" @on-click="addSubUsers" trigger="click" >
-                            <Icon type="md-person" size=18  /> <b>{{subscribeInfo.subscribeNum}}</b>
-                            <Icon type="ios-arrow-down"></Icon>
-                            <DropdownMenu slot="list">
-                                <DropdownItem name="add">
-                                添加关注者
-                                </DropdownItem>
-                                <DropdownItem  v-for="(user,index) in  subscribeInfo.subscribeUsers" :key="index">
-                                {{user.nickname}}
-                                <span @click.stop="deleteSubscribeUsers(user.userId,user.nickname)" class="delete-user"><Icon type="md-close"/></span>
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
-                    </span>
-                    <span v-if="comments.length>0">
-                        <Tooltip class="hidden-form" v-if="!hiddenForm" content="打开评论表单" placement="left">
-                            <span @click="openForm">
-                                <Icon type="md-arrow-dropup-circle" />
-                            </span>
-                        </Tooltip>
-                        <Tooltip class="hidden-form" v-else content="关闭评论表单" placement="left">
-                            <span @click="closeForm">
-                                <Icon type="md-arrow-dropdown-circle" />
-                            </span>
-                        </Tooltip>
-                    </span>
+  <div class="bg_ff" >
+        <div  class="commnet-title">
+            <span>
+                评论 
+            </span>
+            <span > 
+                <span 
+                    class="subcribeing" 
+                    @mouseover="unsubcribeVisible=true;subcribeVisible=false;" 
+                    @mouseout="unsubcribeVisible=false;subcribeVisible=true;"
+                    v-if="subscribeInfo.isSubscribe==1 && subcribeVisible">
+                    <Icon type="md-checkmark" class="success-color" />正在关注中
                 </span>
-            </div>
-       </Row>
+
+                <span 
+                    class="unsubcribe" v-if="subscribeInfo.isSubscribe==1 && unsubcribeVisible" 
+                    @click="handleUnsubscribeApp"
+                    @mouseout="unsubcribeVisible=false;subcribeVisible=true;">
+                    <Icon type="md-close" class="warning-color" />取消关注
+                </span>
+
+                <span class="subcribe" @click="handleSubscribeApp" v-if="subscribeInfo.isSubscribe==0">关注</span>
+
+                <span> 
+                    <Icon type="md-notifications" size=18 class="success-color"  />
+                </span>
+                <span>
+                    <Dropdown class="instance-dropdown" @on-click="addSubUsers" trigger="click" >
+                        <Icon type="md-person" size=18  /> <b>{{subscribeInfo.subscribeNum}}</b>
+                        <Icon type="ios-arrow-down"></Icon>
+                        <DropdownMenu slot="list">
+                            <DropdownItem name="add" v-if="allowAddSubscribeUsers">
+                            添加关注者
+                            </DropdownItem>
+                            <DropdownItem  v-for="(user,index) in  subscribeInfo.subscribeUsers" :key="index">
+                            {{user.nickname}}
+                            <span @click.stop="deleteSubscribeUsers(user.userId,user.nickname)" class="delete-user"><Icon type="md-close"/></span>
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
+                </span>
+                </span>
+            <span v-if="comments.length>0">
+                <Tooltip class="hidden-form" v-if="!hiddenForm" content="打开评论表单" placement="left">
+                    <span @click="openForm">
+                        <Icon type="md-arrow-dropup-circle" />
+                    </span>
+                </Tooltip>
+                <Tooltip class="hidden-form" v-else content="关闭评论表单" placement="left">
+                    <span @click="closeForm">
+                        <Icon type="md-arrow-dropdown-circle" />
+                    </span>
+                </Tooltip>
+            </span>
+        </div>
         <Row class="comments">
             <commentPublish v-if="hiddenForm" :handlePublish="handlePublish" ></commentPublish>
+            <div class="comment-spin-col" >
+                <Spin fix v-if="showSpin">
+                    <Icon type="ios-loading" size=18 class="comment-spin-icon-load"></Icon>
+                    <div>加载中...</div>
+                </Spin>
 
-            <div class="comments-header martop10" v-if="comments.length>0">
-                <strong>最新评论({{pageInfo.total}})</strong>
+                <div class="comments-header martop10" v-if="comments.length>0">
+                    <strong>最新评论({{pageInfo.total}})</strong>
+                </div>
+                <comments 
+                    :isInIframe="true" 
+                    :comments="comments" 
+                    :refreshRootComments="refreshComments"
+                    @refreshDeleteComments="refreshDeleteComments">
+                
+                </comments>
+                <Page 
+                    class="pad10"
+                    v-if="pageInfo.total>0"
+                    :total="pageInfo.total" 
+                    :page-size="pageInfo.limit"
+                    :current="pageInfo.page"
+                    show-total
+                    size="small"
+                    @on-change="handlePageChange"/>
             </div>
-
-            <comments 
-                :isInIframe="true" 
-                :comments="comments" 
-                :refreshRootComments="refreshComments"
-                @refreshDeleteComments="refreshDeleteComments"></comments>
-
-            <Page 
-                class="pad20"
-                v-if="pageInfo.total>0"
-                :total="pageInfo.total" 
-                :page-size="pageInfo.limit"
-                :current="pageInfo.page"
-                prev-text="上一页" 
-                next-text="下一页" 
-                @on-change="handlePageChange"/>
        </Row>
   </div>
 </template>
@@ -109,7 +112,18 @@ export default {
     commentPublish
   },
   props: {
-
+      commentUrl: {
+        type: String,
+        default(){
+            return 'comment/getCommentByRelationKey';
+        }
+    },
+    allowAddSubscribeUsers:{
+        type:Boolean,
+        default(){
+            return true;
+        }
+    }
   },
   data() {
     return {
@@ -132,7 +146,8 @@ export default {
             isSubscribe:0,
             subscribeNum:0,
             subscribeUsers:[]
-        }
+        },
+        showSpin:true
     };
   },
   watch: {
@@ -142,6 +157,7 @@ export default {
     },
     $route(to, from) {
         this.transCode = to.params.transCode;
+        this.pageInfo.page = 1;
         this.refreshComments();
     }
   },
@@ -252,9 +268,17 @@ export default {
                 relationKey:this.transCode,
                 sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
         }
+        if(this.commentUrl === "projectTask/info/comment") {
+            params = {
+                transCode:this.transCode,
+                sort:JSON.stringify([{property:"crtTime",direction:"DESC"}])
+            }
+        }
         params = Object.assign(params,this.pageInfo)
-
-        getComments(params).then(res=>{
+        
+        this.showSpin = true;
+        getComments(this.commentUrl,params).then(res=>{
+            this.showSpin = false;
             this.comments = res.tableContent;
 
             this.pageInfo.total = res.dataCount;

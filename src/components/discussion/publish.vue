@@ -70,6 +70,7 @@
             id = "contentWrap"
             contenteditable="true" 
             ref="editor"
+            :style="contentStyle"
             v-html="innerText"
             @input="changeTxt"
             @focus="lock=true" 
@@ -97,9 +98,7 @@
     </Row>
     <Row class="publish-bar">
         <Col class="publish-bar-right" span="24">
-        <!-- <Tooltip placement="top-end" content="不能发送空白消息"> -->
             <Button  @click.native="handleSend" >发送</Button>
-        <!-- </Tooltip> -->
         </Col>
     </Row>
 </div>
@@ -162,6 +161,15 @@ export default {
         groupId:{
             type:String,
             default:'',
+        },
+        contentStyle:{
+            type:Object,
+            default(){
+                return {
+                    height:'130px',
+                    padding:'5px'
+                }
+            }
         }
         
     },

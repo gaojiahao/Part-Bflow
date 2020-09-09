@@ -2,6 +2,7 @@
     background-color: #ffffff;
     width:100%; 
     height:100%;
+    overflow: hidden;
     &-toolbar{
         height: 40px;
         display: flex;
@@ -32,7 +33,36 @@
         }
     }
 }
+.right-container{
+    overflow:scroll;
+    width:20%;
+    border:1px solid #ddd;
+}
+.right-container /deep/ .ivu-tabs-bar{
+    margin-bottom: 0px;
+}
 
+.right-container /deep/ .ivu-tabs-nav-container{
+    font-weight: bold;
+}
+
+
+
+ /*滚动条样式*/
+ .right-container::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 4px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 4px;
+}
+.right-container::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(117, 112, 112, 0.2);
+    background: rgba(117, 112, 112, 0.2);
+}
+.right-container::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: #f4f6f8;
+}
 .project-drawer{
     /deep/ .ivu-drawer-body{
         padding: 0px;

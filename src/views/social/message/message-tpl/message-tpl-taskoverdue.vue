@@ -14,7 +14,7 @@
           <div class="list-content">
             <div class="header">
               <span>项目</span>
-              <span>计划/申报工时</span>
+              <span>申报/计划工时</span>
             </div>
             <div class="content" v-for="(list,index) of content" :key="index"  @click="goDetail(list)">
               <ul>

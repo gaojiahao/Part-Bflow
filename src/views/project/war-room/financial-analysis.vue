@@ -309,7 +309,17 @@ export default {
                     {item:'存货',amount:toThousandFilter(res.tableContent[0].inventory)},
                     {item:'发出商品',amount:toThousandFilter(res.tableContent[0].salesInventory)},
                     {item:'应收账款',amount:toThousandFilter(res.tableContent[0].accountsReceivable)},
+                    {item:'预付账款',amount:toThousandFilter(res.tableContent[0].prepayment)},
+
+                    {item:'开发支出',amount:toThousandFilter(res.tableContent[0].developCost)},
+                    {item:'在建工程',amount:toThousandFilter(res.tableContent[0].constructionInProgress )},
+                    {item:'无形资产',amount:toThousandFilter(res.tableContent[0].intangibleAssets)},
+                    {item:'固定资产',amount:toThousandFilter(res.tableContent[0].fixedAssets)},
+
                     {item:'负债',amount:toThousandFilter(res.tableContent[0].debtSum),title:true},
+
+                     {item:'预收账款',amount:toThousandFilter(res.tableContent[0].receiptInAdvance)},
+
                     {item:'估价入库',amount:toThousandFilter(res.tableContent[0].valuationAndStorage)},
                     {item:'应付账款',amount:toThousandFilter(res.tableContent[0].accountsPayable)},
                     {item:'可分配利润',amount:toThousandFilter(res.tableContent[0].distributiveProfit),title:true}
@@ -334,11 +344,11 @@ export default {
         createInsideData(obj){
             this.profit = [
                 {item:'收入',amount:toThousandFilter(obj.income.incomeSum),title:true},
-                {item:'预算收入',amount:toThousandFilter(obj.income.budgetReceipts || '-')},
+                {item:'投资预算',amount:toThousandFilter(obj.income.budgetReceipts || '-')},
                 {item:'成本',amount:toThousandFilter(obj.productsCost.productsCostSum),title:true},
                 {item:'内部服务采购',amount:toThousandFilter(obj.productsCost.insideServerPurchase)},
                 {item:'外部服务采购',amount:toThousandFilter(obj.productsCost.outsideServerPurchase)},
-                {item:'其他成本',amount:toThousandFilter(obj.productsCost.otherCost || '-')},
+                {item:'投资回收',amount:toThousandFilter(obj.productsCost.investmentRecovery || '-')},
                 {item:'费用',amount:toThousandFilter(obj.cost.costSum),title:true}
             ];
             this.setCostListData(obj);
@@ -359,9 +369,9 @@ export default {
                 {item:'收入',amount:toThousandFilter(obj.income.incomeSum),title:true},
                 {item:'营业收入',amount:toThousandFilter(obj.income.saleIncome)},
                 {item:'成本',amount:toThousandFilter(obj.productsCost.productsCostSum),title:true},
-                {item:'营业成本',amount:toThousandFilter(obj.productsCost.material)},
+                {item:'营业成本',amount:toThousandFilter(obj.productsCost.saleCost)},
                 {item:'外部服务采购',amount:toThousandFilter(obj.productsCost.outsideServerPurchase)},
-                {item:'内部服务采购',amount:toThousandFilter(obj.productsCost.insideServerPurchase)},
+                // {item:'内部服务采购',amount:toThousandFilter(obj.productsCost.insideServerPurchase)},
                 {item:'费用',amount:toThousandFilter(obj.cost.costSum),title:true}
             ];
             this.setCostListData(obj);

@@ -5,9 +5,9 @@
 <template>
   <div  class="timeline-box">
     <div class="task-modal" :style="{display: showTaskModal?'block':'none'}"></div>
-    <div class="app-resource-group-title">
+    <div class="app-resource-group-title" v-if="allowAddLog">
         <span class="font16">日志任务</span>
-        <span v-if="logData.length>0">
+        <span v-if="logData.length>0 " >
           <Tooltip class="hidden-form" v-if="!hiddenForm" content="打开任务日志表单" placement="left">
           <span @click="openForm">
               <Icon type="md-arrow-dropup-circle" />
@@ -22,10 +22,10 @@
         
     </div>
 
-    <div class="timeline-box-form" v-if="hiddenForm">
+    <div class="timeline-box-form" v-if="hiddenForm  && allowAddLog ">
       <Form ref="logForm" :label-width="80"   :model="modalFormData"  :rules="ruleValidate">
          <Row>
-            <Col :xs="24" :sm="12" :md="8" :lg="8">
+            <Col :xs="24" :sm="showAll?24:12" :md="showAll?24:8" :lg="showAll?24:8">
               <FormItem label='状态' prop="logStatus"> 
                 <Checkbox 
                   v-model="modalFormData.logStatus" 
@@ -36,7 +36,7 @@
                 </Checkbox>
               </FormItem>
             </Col>
-            <Col :xs="24" :sm="12" :md="8" :lg="8">
+            <Col :xs="24" :sm="showAll?24:12" :md="showAll?24:8" :lg="showAll?24:8">
               <FormItem label='员工'  prop="users"> 
                 <Select
                   ref="selectUser"
@@ -65,7 +65,7 @@
          </Row>
 
          <Row>
-          <Col :xs="24" :sm="12" :md="8" :lg="8">
+          <Col :xs="24" :sm="showAll?24:12" :md="showAll?24:8" :lg="showAll?24:8">
                <FormItem label="类型:" prop="logType">
                   <Select v-model="modalFormData.logType" >
                     <Option v-for="item in logTypeList" :value="item.name" :key="item.name">{{ item.name }}</Option>
@@ -73,7 +73,7 @@
               </FormItem> 
             </Col>
            
-           <Col :xs="24" :sm="12" :md="8" :lg="8">
+           <Col :xs="24" :sm="showAll?24:12" :md="showAll?24:8" :lg="showAll?24:8">
               <FormItem label="日期:" prop="taskDate" >
                 <DatePicker 
                   style="width: 100%"
@@ -86,7 +86,7 @@
               </FormItem>
             </Col>
 
-            <Col :xs="24" :sm="12" :md="8" :lg="8">
+            <Col :xs="24" :sm="showAll?24:12" :md="showAll?24:8" :lg="showAll?24:8">
                <FormItem label="申报工时:" prop="logDeclarationHours">
                 <InputNumber 
                   v-model="modalFormData.logDeclarationHours"
@@ -109,7 +109,14 @@
     </div>
 
     <div  class="timeline-box-log" v-show="logData.length===0?false:true">
+
+       <Spin fix v-if="showSpin">
+          <Icon type="ios-loading" size=18 class="attchment-spin-icon-load"></Icon>
+          <div>加载中...</div>
+      </Spin>
+
       <div class="timeline-box-log-sum">
+        <span>共<b>{{ pageTotal }}</b>条</span>
         <span>总工时：<b>{{ logHours }}</b></span>
         <span :style="{marginLeft:'15px'}">总成本：<b>{{ logCosts | toThousandFilter }}</b></span>
       </div>
@@ -141,7 +148,7 @@
           </li>
         </ul>
       </ul>
-      <div class="loading-more">
+      <div class="pad10">
         <Page 
             :total="pageTotal" 
             :current="currentPage"
@@ -168,6 +175,7 @@ import { getTaskLog, saveTaskLog,updateLogStatus,getFeaturesConfig} from "@/serv
 import { getDictByValue} from "@/services/commonService.js";
 import { getAllUsers } from "@/services/subscribeService";
 import { FormatDate } from "@/utils/utils";
+import Bus from "@/assets/eventBus.js";
 
 export default {
   name: "TaskLog",
@@ -176,6 +184,24 @@ export default {
     listId: {
       type: String
     },
+    showAll: {
+      type: Boolean,
+      default(){
+        return false;
+      }
+    },
+    taskLogUrl: {
+      type: String,
+      default(){
+        return 'jobLog/findAllJobLog';
+      }
+    },
+    allowAddLog:{
+      type:Boolean,
+      default(){
+        return false;
+      }
+    }
   },
   data() {
     
@@ -199,6 +225,7 @@ export default {
         logTypeList:[],
         loading:false,
         userList:[],
+        showSpin:true,
         modalFormData: {
             //变更日志表单数据
             logTitle: "",
@@ -236,10 +263,12 @@ export default {
         pageTotal:0,
         pageSize:10
         };
+        
   },
   watch: {
     $route(to, from) {
         this.transCode = to.params.transCode;
+        this.currentPage=1;
         this.getTaskLog();
     }
   },
@@ -349,15 +378,16 @@ export default {
      * 获取任务日志
      */
     getTaskLog() {
-      getTaskLog(this.transCode,this.currentPage,this.pageSize).then(res => {
+      this.showSpin = true;
+      getTaskLog(this.taskLogUrl,this.transCode,this.currentPage,this.pageSize).then(res => {
         this.pageTotal = res.dataCount;
         this.logData = res.tableContent;
         this.logCosts = res.logCosts;
         this.logHours = res.logHours;
         this.logData.forEach(item=>{
-          item.comment.replace(/<br>/g,'\r\n'); 
-         
+          item.comment.replace(/<br>/g,'\r\n');
         })
+        this.showSpin = false;
       }).then(res=>{
             window.top.setTaskLogIframeHeight && window.top.setTaskLogIframeHeight();
         });

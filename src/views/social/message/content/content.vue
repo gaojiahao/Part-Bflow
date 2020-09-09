@@ -39,7 +39,7 @@
                     <imContents :groupId="groupId"></imContents>
                 </div>
                 <div v-if="$route.query.groupType !== 'N'" class="content-message-input" v-on:click="msgInputClick()">
-                    <commentPublish  ref='msgInput' :handlePublish="handlePublish" :setAtUsers="setAtUsers" :groupId="groupId" :sessionHandlePublish="sessionHandlePublish">
+                    <commentPublish  :contentStyle="{height:'220px'}" ref='msgInput' :handlePublish="handlePublish" :setAtUsers="setAtUsers" :groupId="groupId" :sessionHandlePublish="sessionHandlePublish">
                         <div  slot="rightBars">
                             <Icon type="ios-list-box-outline" size=24 title="消息记录" style=" cursor: pointer;" v-on:click="onViewHistory" />
                         </div>

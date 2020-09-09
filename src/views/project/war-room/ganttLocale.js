@@ -33,7 +33,7 @@ export const ganttLocale = {
  
         /* link confirmation */
         link: "Link",
-        confirm_link_deleting: "will be deleted",
+        confirm_link_deleting: "将会删除",
         link_start: " (start)",
         link_end: " (end)",
  

@@ -20,9 +20,9 @@
                 <!-- 消息组件 -->
                 <content-message v-if="[1,2,3,4].includes(m.imType)" @showDetailModal="showDetailModal" :msg="m">
                 </content-message>
-                <div class="otherMessage" v-if="[101,102,104].includes(m.imType)">
+                <div class="otherMessage" v-if="[101,102,104,206].includes(m.imType)">
                     <div>{{m.crtTime}}</div>
-                    <div><span>{{m.content}}</span></div>
+                    <div><span v-html="m.content"></span></div>
                 </div>
                 <div class="otherMessage" v-if="[202,203,204].includes(m.imType)">
                     <div>{{m.crtTime}}</div>
@@ -158,7 +158,7 @@ export default {
             length;
 
             this.$Loading.start();
-            if(this.loading == true) return false;
+            if(this.loading == true) return false;//避免切换到新的一组聊天消息时，第一页和第二页都加载过来,容易出现后发先至。也避免切换分组和滚动触发的消息加载同时执行。
             this.loading = true;
             // this.getApp().spinShow = true;
             getMessagesByGroupId(param).then(res=>{
@@ -168,6 +168,8 @@ export default {
                 if(res.msgs.length<this.pageParam.limit){
                     this.allLoad = true;
                     console.log('全部加载完成');
+                } else {
+                    this.pageParam.page = param.page;//只有数据加载过来以后，而且还有剩余数据的时候，才把页数变更。
                 }
                 res.msgs.map(m=>{
 
@@ -186,7 +188,11 @@ export default {
                 if (res.page != 1){
                     this.isMsgAppend = true;
                     length = res.msgs.length;
-                     if(length)me.lastMsgId = res.msgs[length-1].id;//方便定位到最新的第一条，默认会定在最后一条。
+                    if(length){
+                        me.lastMsgId = res.msgs[length-1].id;//方便定位到最新的第一条，默认会定在最后一条。
+                    } else {
+                        me.lastMsgId = null;
+                    }                
                 }
             }).finally(()=>{
                 this.loading = false;
@@ -202,7 +208,6 @@ export default {
             var that =this;
             deepstream.event.subscribe("roletaskIm/" + this.$md5(String(this.$currentUser.userId)), res => {
                 res.imType = parseInt(res.imType);
-                
                 switch (res.imType) {
                     case 1:
                         if (this.$route.params.groupId == res.groupId)
@@ -276,10 +281,9 @@ export default {
         initEvents(){
             var that= this;
             this.$refs.messageList.addEventListener('scroll', function() {
-
+                var page = that.pageParam.page + 1;
                 if(arguments[0].target.scrollTop==0 && !that.allLoad){
-                    that.pageParam.page++;
-                    that.getMessages(that.pageParam.page);
+                    that.getMessages(page);
                 }
             });
 
@@ -353,8 +357,11 @@ export default {
         var msgDiv;
         if (this.isMsgAppend == true){
             this.isMsgAppend = false;
-            msgDiv = document.getElementById(this.lastMsgId);
-            msgDiv.scrollIntoView(true);
+            if(this.lastMsgId != null){
+                msgDiv = document.getElementById(this.lastMsgId);
+                msgDiv && msgDiv.scrollIntoView(true);
+                this.lastMsgId = null;
+            }
         } else {
             this.scrollToBottom();
         }

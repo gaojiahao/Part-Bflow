@@ -823,8 +823,8 @@ export default {
       // gantt.config.autoscroll = true;
       gantt.config.fit_tasks = true; 
       //允许拖动左侧表格任务的顺序
-      gantt.config.order_branch = true;
-      gantt.config.order_branch_free = true;
+      // gantt.config.order_branch = true;
+      // gantt.config.order_branch_free = true;
       gantt.config.show_progress = false;
       // gantt.config.placeholder_task = true;
       // gantt.config.readonly = true;

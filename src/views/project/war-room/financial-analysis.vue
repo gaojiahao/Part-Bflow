@@ -661,10 +661,7 @@ export default {
     },
     mounted(){
         this.getProjectDistributiveProfitData();
-        Bus.$on("refreshProjectInfo",()=>{
-            this.refreshZCFZ();
-            this.refreshLR();
-        });
+        this.refreshLR();
     }
 }
 </script>

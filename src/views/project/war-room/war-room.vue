@@ -1055,7 +1055,7 @@ export default {
             });
           }else{
             this.addMarker();
-            let rootTask = this.getRootTask();
+            let rootTask = this.getRootTask(this.project);
             this.setProjectDuration([this.project.expectStartDate,this.project.expectEndDate]);
             gantt.parse({
               data:[rootTask]

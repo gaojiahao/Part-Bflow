@@ -55,9 +55,7 @@ export default {
             console.log('msg content parse error',this.msg.content);
         }
     },
-     methods:{
-       
-     }
+     methods:{}
 }
 </script>
 <style lang="less" scoped>

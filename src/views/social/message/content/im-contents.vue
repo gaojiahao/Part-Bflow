@@ -52,6 +52,10 @@
                     <div>{{m.crtTime}}</div>
                     <message-tpl-newtask :msg="m"></message-tpl-newtask>
                 </div>
+                <div class="otherMessage" v-if="[211].includes(m.imType)">
+                    <div>{{m.crtTime}}</div>
+                    <message-tpl-fileupload :msg="m"></message-tpl-fileupload>
+                </div>
             </template>
             <!-- 文件消息组件 -->
             <!-- <file-message :fileMessage="m"></file-message> -->
@@ -89,6 +93,7 @@ import MessageTplTaskOverdue from "../message-tpl/message-tpl-task-overdue";
 import MessageTplProjectDaysummary from "../message-tpl/message-tpl-project-daysummary";
 import MessageTplPersonalsummary from "../message-tpl/message-tpl-personalsummary";
 import MessageTplNewtask from "../message-tpl/message-tpl-newtask";
+import MessageTplFileupload from "../message-tpl/message-tpl-fileupload";
 import Bus from "@/assets/eventBus.js";
 export default {
     name:'imContents',
@@ -102,7 +107,8 @@ export default {
         MessageTplTaskOverdue,
         MessageTplProjectDaysummary,
         MessageTplPersonalsummary,
-        MessageTplNewtask
+        MessageTplNewtask,
+        MessageTplFileupload
     },
     data(){
         return {

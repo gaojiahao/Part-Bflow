@@ -18,7 +18,7 @@
               <span>逾期天数</span>
             </div>
             <ul class="content">
-                <li v-for="(list,index) of tasks" :key="index">
+                <li v-for="(list,index) of content" :key="index">
                   <span>{{list.taskName}}</span>
                   <span>{{list.executor}}</span>
                   <span>{{list.endTime}}</span>
@@ -36,7 +36,7 @@ export default {
     name: "MessageTplTaskOverdue",
     props:{
         msg:{
-            type:Object,
+            type: Object,
             default(){
                 return {}
             }
@@ -44,11 +44,7 @@ export default {
     },
     data(){
         return {
-            content: [],
-            tasks: [
-              {taskName: '任务逾期1',executor: '王小英',endTime: '2020-08-08',overdueDays: 2},
-              {taskName: '任务逾期2',executor: '王小英',endTime: '2020-08-08',overdueDays: 2}
-            ]
+            content: []
         }
     },
     created:function(){

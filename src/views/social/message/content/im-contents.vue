@@ -26,7 +26,7 @@
                 </div>
                 <div class="otherMessage" v-if="[202,203,204].includes(m.imType)">
                     <div>{{m.crtTime}}</div>
-                    <message-tpl-taskoverdue :msg="m"></message-tpl-taskoverdue>
+                    <message-tpl-task-approch-overdue :msg="m"></message-tpl-task-approch-overdue>
                 </div>
                 <div class="otherMessage" v-if="[201].includes(m.imType)">
                     <div>{{m.crtTime}}</div>
@@ -35,6 +35,26 @@
                 <div class="otherMessage" v-if="[205].includes(m.imType)">
                     <div>{{m.crtTime}}</div>
                     <message-tpl-weeksummary :msg="m"></message-tpl-weeksummary>
+                </div>
+                <div class="otherMessage" v-if="[210].includes(m.imType)">
+                    <div>{{m.crtTime}}</div>
+                    <message-tpl-task-overdue :msg="m"></message-tpl-task-overdue>
+                </div>
+                <div class="otherMessage" v-if="[209].includes(m.imType)">
+                    <div>{{m.crtTime}}</div>
+                    <message-tpl-project-daysummary :msg="m"></message-tpl-project-daysummary>
+                </div>
+                <div class="otherMessage" v-if="[208].includes(m.imType)">
+                    <div>{{m.crtTime}}</div>
+                    <message-tpl-personalsummary :msg="m"></message-tpl-personalsummary>
+                </div>
+                <div class="otherMessage" v-if="[207].includes(m.imType)">
+                    <div>{{m.crtTime}}</div>
+                    <message-tpl-newtask :msg="m"></message-tpl-newtask>
+                </div>
+                <div class="otherMessage" v-if="[211].includes(m.imType)">
+                    <div>{{m.crtTime}}</div>
+                    <message-tpl-fileupload :msg="m"></message-tpl-fileupload>
                 </div>
             </template>
             <!-- 文件消息组件 -->
@@ -66,9 +86,14 @@ import {getMessagesByGroupId,getGroupMsgById,checkMessage} from "@/services/imSe
 import ContentMessage from "../message-tpl/message-tpl-layout";
 import FileMessage from "../message-tpl/file-message";
 import MessageReadDetail from "../message-tpl/message-read-detail";
-import MessageTplTaskoverdue from "../message-tpl/message-tpl-taskoverdue";
+import MessageTplTaskApprochOverdue from "../message-tpl/message-tpl-task-approach-overdue";
 import MessageTplTasklog from "../message-tpl/message-tpl-tasklog";
 import MessageTplWeeksummary from "../message-tpl/message-tpl-weeksummary";
+import MessageTplTaskOverdue from "../message-tpl/message-tpl-task-overdue";
+import MessageTplProjectDaysummary from "../message-tpl/message-tpl-project-daysummary";
+import MessageTplPersonalsummary from "../message-tpl/message-tpl-personalsummary";
+import MessageTplNewtask from "../message-tpl/message-tpl-newtask";
+import MessageTplFileupload from "../message-tpl/message-tpl-fileupload";
 import Bus from "@/assets/eventBus.js";
 export default {
     name:'imContents',
@@ -76,9 +101,14 @@ export default {
         ContentMessage,
         FileMessage,
         MessageReadDetail,
-        MessageTplTaskoverdue,
+        MessageTplTaskApprochOverdue,
         MessageTplTasklog,
-        MessageTplWeeksummary
+        MessageTplWeeksummary,
+        MessageTplTaskOverdue,
+        MessageTplProjectDaysummary,
+        MessageTplPersonalsummary,
+        MessageTplNewtask,
+        MessageTplFileupload
     },
     data(){
         return {

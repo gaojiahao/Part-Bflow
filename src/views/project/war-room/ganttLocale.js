@@ -32,7 +32,7 @@ export const ganttLocale = {
         column_add: "",
  
         /* link confirmation */
-        link: "Link",
+        link: "依赖关系",
         confirm_link_deleting: "将会删除",
         link_start: " (start)",
         link_end: " (end)",

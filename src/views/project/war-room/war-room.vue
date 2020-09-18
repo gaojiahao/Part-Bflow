@@ -353,7 +353,7 @@ export default {
 			start_date:new Date(this.project.expectStartDate),
 			end_date:new Date(this.project.expectEndDate),
 			duration:10,
-			type:'project',
+			type:'project',//milestone 里程碑
 			transCode:'',
 			id:'0'
 		}
@@ -824,7 +824,9 @@ export default {
       gantt.config.fit_tasks = true; 
       //允许拖动左侧表格任务的顺序
       // gantt.config.order_branch = true;
+      // gantt.config.order_branch_free = true;
       gantt.config.show_progress = false;
+      // gantt.config.placeholder_task = true;
       // gantt.config.readonly = true;
       gantt.i18n.setLocale(this.ganttLocale);
       gantt.config.date_format = "%Y-%m-%d";
@@ -981,6 +983,7 @@ export default {
           tree: true,
           width: 200,
           resize: true,
+          editor: {type: "text", map_to: "text"},
           label: "任务名称",
           align: "left"
         },
@@ -1052,7 +1055,7 @@ export default {
             });
           }else{
             this.addMarker();
-            let rootTask = this.getRootTask();
+            let rootTask = this.getRootTask(this.project);
             this.setProjectDuration([this.project.expectStartDate,this.project.expectEndDate]);
             gantt.parse({
               data:[rootTask]

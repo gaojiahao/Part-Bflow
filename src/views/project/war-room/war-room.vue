@@ -8,26 +8,29 @@
     >
       <div class="war-room-toolbar-title">
         <Row>
-          <Col span="5">
+          <Col span="10" class="project-name">
           {{project.projectName}}
+          </Col>
+          <Col span="14">
+             <Menu mode="horizontal" theme="light" active-name="gantt" >
+              <MenuItem name="baseinfo">
+                  <router-link :to="{name:'baseinfo'}">基本信息</router-link>
+              </MenuItem>
+              <MenuItem name="gantt">
+                  <router-link :to="{name:'gantt',params:{transCode:$route.params.projectTransCode}}">甘特图</router-link>
+              </MenuItem>
+              <MenuItem name="finance">
+                  <router-link :to="{name:'finance'}">财务偏差</router-link> 
+              </MenuItem>
+              <MenuItem name="schedule">
+                <router-link :to="{name:'schedule'}">进度偏差</router-link> 
+              </MenuItem>
+            </Menu>
           </Col>
         </Row>
       </div>
-      <Menu mode="horizontal" theme="light" active-name="gantt" style="height: 30px;line-height: 20px;">
-        <MenuItem name="baseinfo">
-            <router-link :to="{name:'baseinfo'}">基本信息</router-link>
-        </MenuItem>
-         <MenuItem name="gantt">
-            <router-link :to="{name:'gantt',params:{transCode:$route.params.projectTransCode}}">甘特图</router-link>
-        </MenuItem>
-         <MenuItem name="finance">
-            <router-link :to="{name:'finance'}">财务偏差</router-link> 
-        </MenuItem>
-         <MenuItem name="schedule">
-          <router-link :to="{name:'schedule'}">进度偏差</router-link> 
-        </MenuItem>
-      </Menu>
-      <div class="war-room-toolbar-actions">
+     
+      <div class="war-room-toolbar-actions" >
         <Tooltip
           :content="showGridModel?'隐藏左侧表格':'显示左侧表格'"
           placement="top"
@@ -214,6 +217,7 @@ export default {
 </style>
 
 <style >
+
 .baseline {
   position: absolute;
   border-radius: 2px;

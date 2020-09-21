@@ -14,6 +14,27 @@
             line-height: 20px;
             color: #262626;
             font-weight: 500;
+            /deep/ .ivu-menu{ 
+                height: 30px;line-height: 20px;
+                font-weight: bold;
+                a{
+                    color: #515a6e;
+                }
+                .ivu-menu-item-active{
+                    a{
+                        color: #2d8cf0 !important;
+                    }
+                }
+            }
+        }
+
+        .project{
+            &-name{
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 200px;
+            }
         }
 
         &-actions{

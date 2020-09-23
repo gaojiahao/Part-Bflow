@@ -27,7 +27,10 @@
                   </router-link> 
               </MenuItem>
               <MenuItem name="schedule">
-                <router-link :to="{name:'schedule'}">进度偏差</router-link> 
+                <router-link :to="{name:'schedule'}">
+                  <Icon type="ios-warning-outline" color="red"  size="20" />
+                  进度偏差
+                </router-link> 
               </MenuItem>
             </Menu>
           </Col>

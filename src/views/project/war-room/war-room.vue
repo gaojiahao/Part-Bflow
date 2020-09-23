@@ -14,24 +14,32 @@
           <Col span="14">
              <Menu mode="horizontal" theme="light" active-name="gantt" >
               <MenuItem name="baseinfo">
+             
                   <router-link :to="{name:'baseinfo'}">基本信息</router-link>
               </MenuItem>
               <MenuItem name="gantt">
-                  <router-link :to="{name:'gantt',params:{transCode:$route.params.projectTransCode}}">甘特图</router-link>
+                  <router-link :to="{name:'gantt',params:{transCode:$route.params.projectTransCode}}"> 甘特图</router-link>
               </MenuItem>
               <MenuItem name="finance">
-                  <router-link :to="{name:'finance'}">财务偏差</router-link> 
+                  <router-link :to="{name:'finance'}"> 
+                    <Icon type="ios-warning-outline" color="red"  size="20" />
+                    财务偏差
+                  </router-link> 
               </MenuItem>
               <MenuItem name="schedule">
-                <router-link :to="{name:'schedule'}">进度偏差</router-link> 
+                <router-link :to="{name:'schedule'}">
+                  <Icon type="ios-warning-outline" color="red"  size="20" />
+                  进度偏差
+                </router-link> 
               </MenuItem>
             </Menu>
           </Col>
         </Row>
       </div>
      
-      <div class="war-room-toolbar-actions" >
+      <div class="war-room-toolbar-actions"  >
         <Tooltip
+          v-if="$route.path.includes('gantt')"
           :content="showGridModel?'隐藏左侧表格':'显示左侧表格'"
           placement="top"
         >
@@ -44,6 +52,7 @@
           ></Button>
         </Tooltip>
          <Tooltip
+         v-if="$route.path.includes('gantt')"
           :content="expandAllModel?'关闭所有任务':'展开所有任务'"
           placement="top"
         >
@@ -57,9 +66,9 @@
         </Tooltip>
         <Tooltip
           content="活动"
+           v-if="$route.path.includes('gantt')"
           placement="top"
         >
-        <!-- openRightContainer -->
           <Button
             :size="buttonSize"
             icon="md-aperture"
@@ -84,6 +93,7 @@
         <Tooltip
           content="刷新数据"
           placement="top"
+          v-if="$route.path.includes('gantt')"
         >
           <Button
             :size="buttonSize"
@@ -94,7 +104,7 @@
           ></Button>
         </Tooltip>
 
-        <div class="war-room-toolbar-actions-process">
+        <div class="war-room-toolbar-actions-process " v-if="$route.path.includes('gantt')" >
           <div
             v-for="(p,index) in taskProcess"
             :key="index"

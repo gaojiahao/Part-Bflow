@@ -2,7 +2,10 @@
     <div class="content">
         <div id='finance-echarts' style="height:400px;width:800px"></div>
         <div class='finance-table' style="height:300px;width:641px;">
-            <Table :loading="loading" stripe border size="small" ref="table" :columns="columns1" :data="data1" :row-class-name="rowClassName"></Table>
+            <Table height=400 :loading="loading" stripe border size="small" ref="table" 
+            :columns="columns1" :data="data1" :row-class-name="rowClassName" highlight-row
+            >
+            </Table>
         </div>
     </div>
 </template>
@@ -17,15 +20,10 @@ export default {
         Button,
         Icon
     },
-    props:{
-        projectId:{
-            type: String,
-            default: "PINO2006290001"
-        },
-    },
     data(){
         return{
             loading: true,
+            projectId:'',
             dataTitle:{
                 expenseItem:'收支项',
                 budget:'预算',
@@ -37,23 +35,27 @@ export default {
                 {
                     title: '收支项',
                     key: 'expenseItem',
-
+                    align: "right"
                 },
                 {
                     title: '预算',
                     key: 'budget',
+                    align: "right"
                 },
                 {
                     title: '实际',
                     key: 'actualCost',
+                    align: "right"
                 },
                 {
                     title: '差异',
                     key: 'actudifferencealCost',
+                    align: "right"
                 },
                 {
                     title: '备注',
                     key: 'comment',
+                    align: "right"
                 }
             ],
             data1: [
@@ -183,7 +185,7 @@ export default {
                             axisLabel: {
                                 formatter: '{value}'
                             },
-                            position: "right"
+                            position: "left"
                         },
                         {
                             type: 'value',
@@ -213,6 +215,7 @@ export default {
         },
         dealData(data){
             this.data = {};
+            this.data1 = data;
             for(var i=0;i<data.length;i++){
                 this.data['expenseItem'].push(data[i]['expenseItem']);
                 this.data['budget'].push(data[i]['budget']);
@@ -222,10 +225,11 @@ export default {
             }
         },
         getPojectFinancialBias(){
+            this.projectId = this.$route.params.projectTransCode;
             return getPojectFinancialBias({projectId:this.projectId}).then(res=>{  
                 if(res.length){
-                    //this.dealData(res);
-                    console.log(res);
+                    this.dealData(res);
+                    //console.log(res);
                 }
             });
         }

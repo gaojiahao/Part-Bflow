@@ -28,7 +28,7 @@
               </MenuItem>
               <MenuItem name="schedule">
                 <router-link :to="{name:'schedule'}">
-                  <Icon type="ios-warning-outline" color="red"  size="20" />
+                  <Icon v-if="showDeviation" type="ios-warning-outline" color="red"  size="20" />
                   进度偏差
                 </router-link> 
               </MenuItem>
@@ -183,8 +183,9 @@ export default {
       financialAnalysisModel: false,
       timeAnalysisModel: false,
       errorTip: false,
+      showDeviation: false,
       errorText: "",
-      project: {},
+      project: {}
     };
   },
   computed: {
@@ -215,9 +216,13 @@ export default {
     },
   },
   mounted() {
+    
   },
   created: function() {
     this.projectTransCode = this.$route.params.projectTransCode;
+    Bus.$on('showDeviation',(status) => {
+      this.showDeviation = status;
+    });
   }
 };
 </script>

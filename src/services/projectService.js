@@ -121,6 +121,14 @@ export const getProjectLogs = (transCode) => request('/H_roleplay-si/projectTask
 })
 
 /**
+ * @author XiaoYing
+ * @description 获取项目进度偏差数据
+ */
+export const getProjectScheduleVariance = (transCode) => request('/H_roleplay-si/ds/list/getProjectScheduleVariance', {
+  transCode:transCode
+})
+
+/**
  * @author snack.huang
  * @description 新增项目任务 
  */

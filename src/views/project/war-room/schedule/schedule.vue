@@ -64,28 +64,12 @@
 const echarts = require("echarts");
 import { toThousandFilter } from "@/utils/utils";
 import Bus from "@/assets/eventBus.js";
+import { getProjectScheduleVariance } from "@/services/projectService.js";
 export default {
     name:'ScheduleLine',
     data(){
         return{
-          progressData: [
-               {plannedDate: "9/11",plannedHoursTotal: 9,plannedBudgetCostsTotal: 1573,logDeclarationHoursTotal: 57.5,logDeclarationCostsTotal: 7652.5,plannedPrice: 11.276971,actualPrice: 133.09,earnedValue: 648.4258612},
-               {plannedDate: "9/12",plannedHoursTotal: 41,plannedBudgetCostsTotal: 5719,logDeclarationHoursTotal: 57.5,logDeclarationCostsTotal: 7652.5,plannedPrice: 139.4878,actualPrice: 133.09,earnedValue: 8020.54878},
-               {plannedDate: "9/14",plannedHoursTotal: 42,plannedBudgetCostsTotal: 5900,logDeclarationHoursTotal: 70.5,logDeclarationCostsTotal: 9277.5,plannedPrice: 140.47619,actualPrice: 131.60,earnedValue: 9903.571429},
-               {plannedDate: "9/15",plannedHoursTotal: 46,plannedBudgetCostsTotal: 6312,logDeclarationHoursTotal: 77.5,logDeclarationCostsTotal: 10152.5,plannedPrice: 137.21739,actualPrice: 131.00,earnedValue: 10634.34783},
-               {plannedDate: "9/16",plannedHoursTotal: 59,plannedBudgetCostsTotal: 7937,logDeclarationHoursTotal: 87.5,logDeclarationCostsTotal: 11402.5,plannedPrice: 134.52542,actualPrice: 130.31,earnedValue: 11770.97458},
-               {plannedDate: "9/17",plannedHoursTotal: 64,plannedBudgetCostsTotal: 8562,logDeclarationHoursTotal: 99.5,logDeclarationCostsTotal: 12858.5,plannedPrice: 133.78125,actualPrice: 129.23,earnedValue: 13311.23438},
-               {plannedDate: "9/18",plannedHoursTotal: 79,plannedBudgetCostsTotal: 10437,logDeclarationHoursTotal: 111.5,logDeclarationCostsTotal: 14358.5,plannedPrice: 132.11392,actualPrice: 128.78,earnedValue: 14730.70253},
-               {plannedDate: "9/19",_highlight:true,plannedHoursTotal: 107,plannedBudgetCostsTotal: 13761,logDeclarationHoursTotal: 111.5,logDeclarationCostsTotal: 14358.5,plannedPrice: 128.60748,actualPrice: 128.78,earnedValue: 14339.73364},
-               {plannedDate: "9/23",plannedHoursTotal: 121,plannedBudgetCostsTotal: 15423,logDeclarationHoursTotal: null,logDeclarationCostsTotal: null,plannedPrice: null,actualPrice: null,earnedValue: null},
-               {plannedDate: "9/24",plannedHoursTotal: 137,plannedBudgetCostsTotal: 17247,logDeclarationHoursTotal: null,logDeclarationCostsTotal: null,plannedPrice: null,actualPrice: null,earnedValue: null},
-               {plannedDate: "9/25",plannedHoursTotal: 146,plannedBudgetCostsTotal: 18428,logDeclarationHoursTotal: null,logDeclarationCostsTotal: null,plannedPrice: null,actualPrice: null,earnedValue: null},
-               {plannedDate: "9/26",plannedHoursTotal: 168,plannedBudgetCostsTotal: 21594,logDeclarationHoursTotal: null,logDeclarationCostsTotal: null,plannedPrice: null,actualPrice: null,earnedValue: null},
-               {plannedDate: "9/28",plannedHoursTotal: 180,plannedBudgetCostsTotal: 23094,logDeclarationHoursTotal: null,logDeclarationCostsTotal: null,plannedPrice: null,actualPrice: null,earnedValue: null},
-               {plannedDate: "9/29",plannedHoursTotal: 188,plannedBudgetCostsTotal: 24094,logDeclarationHoursTotal: null,logDeclarationCostsTotal: null,plannedPrice: null,actualPrice: null,earnedValue: null},
-               {plannedDate: "9/30",plannedHoursTotal: 204,plannedBudgetCostsTotal: 26094,logDeclarationHoursTotal: null,logDeclarationCostsTotal: null,plannedPrice: null,actualPrice: null,earnedValue: null},
-               {plannedDate: "10/1",plannedHoursTotal: 226,plannedBudgetCostsTotal: 29180,logDeclarationHoursTotal: null,logDeclarationCostsTotal: null,plannedPrice: null,actualPrice: null,earnedValue: null},
-          ],
+          progressData: [],
           deviationData: [],
           deviationColumns: [
                 {
@@ -274,18 +258,38 @@ export default {
               {name: "CV成本偏差",value: CV.toFixed(2),analysis:CVanalysis,cellClassName: {analysis: CVclassName}},
               {name: "CPI成本执行指标",value: CPI.toFixed(2),analysis:CVanalysis}
             ]
+        },
+        getProjectScheduleVariance(){
+            getProjectScheduleVariance(this.$route.params.projectTransCode).then(res => {
+                this.progressData = res;
+                this.init();
+                this.isFirst = true;
+                this.progressData.forEach((item,index) => {
+                    if(new Date(item.plannedDate) > new Date()){
+                        item.logDeclarationHoursTotal = null;
+                        item.logDeclarationCostsTotal = null;
+                        item.plannedPrice = null;
+                        item.actualPrice = null;
+                        item.earnedValue = null;
+                        if(this.isFirst){
+                            this.progressData[index-1]._highlight = true;
+                            this.onRowClick(this.progressData[index-1]);
+                            this.isFirst = false;
+                        }
+                    }
+                })
+                if(this.isFirst){
+                    this.progressData[this.progressData.length-1]._highlight = true;
+                    this.onRowClick(this.progressData[this.progressData.length-1]);
+                }
+            })
         }
     },
     mounted(){
-        this.init();
-        for(let i=0;i<this.progressData.length;i++){
-            if(!this.progressData[i].logDeclarationHoursTotal){
-                this.progressData[i-1]._highlight = true;
-                this.onRowClick(this.progressData[i-1]);
-                return;
-            }
-        }
+        
     },
-    created(){}
+    created(){
+        this.getProjectScheduleVariance();
+    }
 }
 </script>

@@ -13,11 +13,11 @@
                     :span-method="handleSpan" 
                     :columns="deviationColumns" 
                     :data="deviationData">
-                    <template slot-scope="{ row }" slot="analysis">
+                    <!-- <template slot-scope="{ row }" slot="analysis">
                         <strong v-if="['进度符合预期','预算符合预期'].includes(row.analysis)">{{ row.analysis }}</strong>
                         <strong style="color:#6beb53;" v-if="['进度超前','低于预算'].includes(row.analysis)">{{ row.analysis }}</strong>
                         <strong style="color:#e4393c;" v-if="['进度延误','超出预算'].includes(row.analysis)">{{ row.analysis }}</strong>
-                    </template>
+                    </template> -->
                     <template slot-scope="{ row }" slot="value">
                         <span>{{ row.value | toThousandFilter }}</span>
                     </template>
@@ -35,25 +35,25 @@
                 :data="progressData"
                 @on-row-click="onRowClick">
                 <template slot-scope="{ row }" slot="plannedHoursTotal">
-                    <span>{{ row.plannedHoursTotal | toThousandFilter }}</span>
+                    <span>{{ !!row.plannedHoursTotal?row.plannedHoursTotal.toFixed(2):row.plannedHoursTotal | toThousandFilter }}</span>
                 </template>
                 <template slot-scope="{ row }" slot="plannedBudgetCostsTotal">
-                    <span>{{ row.plannedBudgetCostsTotal | toThousandFilter }}</span>
+                    <span>{{ !!row.plannedBudgetCostsTotal?row.plannedBudgetCostsTotal.toFixed(2):row.plannedBudgetCostsTotal | toThousandFilter }}</span>
                 </template>
                 <template slot-scope="{ row }" slot="logDeclarationHoursTotal">
-                    <span>{{ row.logDeclarationHoursTotal | toThousandFilter }}</span>
+                    <span>{{ !!row.logDeclarationHoursTotal?row.logDeclarationHoursTotal.toFixed(2):row.logDeclarationHoursTotal | toThousandFilter }}</span>
                 </template>
                 <template slot-scope="{ row }" slot="logDeclarationCostsTotal">
-                    <span>{{ row.logDeclarationCostsTotal | toThousandFilter }}</span>
+                    <span>{{ !!row.logDeclarationCostsTotal?row.logDeclarationCostsTotal.toFixed(2):row.logDeclarationCostsTotal | toThousandFilter }}</span>
                 </template>
                 <template slot-scope="{ row }" slot="plannedPrice">
-                    <span>{{ row.plannedPrice | toThousandFilter }}</span>
+                    <span>{{ !!row.plannedPrice?row.plannedPrice.toFixed(2):row.plannedPrice | toThousandFilter }}</span>
                 </template>
                 <template slot-scope="{ row }" slot="actualPrice">
-                    <span>{{ row.actualPrice | toThousandFilter }}</span>
+                    <span>{{ !!row.actualPrice?row.actualPrice.toFixed(2):row.actualPrice | toThousandFilter }}</span>
                 </template>
                 <template slot-scope="{ row }" slot="earnedValue">
-                    <span>{{ row.earnedValue | toThousandFilter }}</span>
+                    <span>{{ !!row.earnedValue?row.earnedValue.toFixed(2):row.earnedValue | toThousandFilter }}</span>
                 </template>
             </Table>
         </div>
@@ -63,6 +63,7 @@
 <script>
 const echarts = require("echarts");
 import { toThousandFilter } from "@/utils/utils";
+import Bus from "@/assets/eventBus.js";
 export default {
     name:'ScheduleLine',
     data(){
@@ -77,7 +78,7 @@ export default {
                {plannedDate: "9/18",plannedHoursTotal: 79,plannedBudgetCostsTotal: 10437,logDeclarationHoursTotal: 111.5,logDeclarationCostsTotal: 14358.5,plannedPrice: 132.11392,actualPrice: 128.78,earnedValue: 14730.70253},
                {plannedDate: "9/19",_highlight:true,plannedHoursTotal: 107,plannedBudgetCostsTotal: 13761,logDeclarationHoursTotal: 111.5,logDeclarationCostsTotal: 14358.5,plannedPrice: 128.60748,actualPrice: 128.78,earnedValue: 14339.73364},
                {plannedDate: "9/23",plannedHoursTotal: 121,plannedBudgetCostsTotal: 15423,logDeclarationHoursTotal: null,logDeclarationCostsTotal: null,plannedPrice: null,actualPrice: null,earnedValue: null},
-               {plannedDate: "9/24",plannedHoursTotal: 137,plannedBudgetCostsTotal: 17247,logDeclarationHoursTotal: null,logDeclarationCostsTotal: null,plannedPrice: 0,actualPrice: 0,earnedValue: null},
+               {plannedDate: "9/24",plannedHoursTotal: 137,plannedBudgetCostsTotal: 17247,logDeclarationHoursTotal: null,logDeclarationCostsTotal: null,plannedPrice: null,actualPrice: null,earnedValue: null},
                {plannedDate: "9/25",plannedHoursTotal: 146,plannedBudgetCostsTotal: 18428,logDeclarationHoursTotal: null,logDeclarationCostsTotal: null,plannedPrice: null,actualPrice: null,earnedValue: null},
                {plannedDate: "9/26",plannedHoursTotal: 168,plannedBudgetCostsTotal: 21594,logDeclarationHoursTotal: null,logDeclarationCostsTotal: null,plannedPrice: null,actualPrice: null,earnedValue: null},
                {plannedDate: "9/28",plannedHoursTotal: 180,plannedBudgetCostsTotal: 23094,logDeclarationHoursTotal: null,logDeclarationCostsTotal: null,plannedPrice: null,actualPrice: null,earnedValue: null},
@@ -98,7 +99,7 @@ export default {
                 },
                 {
                     title: '分析',
-                    slot: 'analysis'
+                    key: 'analysis'
                 }
             ],
             progressColumns: [
@@ -159,10 +160,6 @@ export default {
             })
             let option = 
                 {
-                    title: {
-                        left: 'center',
-                        text: '进度偏差'
-                    },
                     tooltip: {
                         trigger: 'axis',
                         axisPointer: {
@@ -245,21 +242,37 @@ export default {
             }
         },
         onRowClick(row,index){
-            let SV = row.earnedValue - row.plannedBudgetCostsTotal,
-                SPI = row.earnedValue / row.plannedBudgetCostsTotal,
-                CV = row.earnedValue - row.logDeclarationCostsTotal,
-                CPI = row.earnedValue / row.logDeclarationCostsTotal,
+            let SV = (!row.earnedValue?0:row.earnedValue) - (!row.plannedBudgetCostsTotal?0:row.plannedBudgetCostsTotal),
+                SPI = (!row.earnedValue?0:row.earnedValue) / (!row.plannedBudgetCostsTotal?0:row.plannedBudgetCostsTotal),
+                CV = (!row.earnedValue?0:row.earnedValue) - (!row.logDeclarationCostsTotal?0:row.logDeclarationCostsTotal),
+                CPI = !row.logDeclarationCostsTotal ? 0 : (!row.earnedValue?0:row.earnedValue) / (!row.logDeclarationCostsTotal?0:row.logDeclarationCostsTotal),
                 SVanalysis = SV === 0 ? "进度符合预期" : (SV > 0 ? "进度超前" : "进度延误"),
-                CVanalysis = CPI === 1 ? "预算符合预期" : (CPI > 1 ? "低于预算" : "超出预算");
+                CVanalysis = CPI === 1 ? "预算符合预期" : (CPI > 1 ? "低于预算" : "超出预算"),
+                SVclassName,CVclassName,showDeviation;
+
+            if(SV > 0) {
+                SVclassName = "demo-table-info-cell-success";
+            }else if(SV < 0){
+                SVclassName = "demo-table-info-cell-error";
+            }
+            if(CPI > 1) {
+                CVclassName = "demo-table-info-cell-success";
+            }else if(CPI < 1){
+                CVclassName = "demo-table-info-cell-error";
+            }
+
+            showDeviation = (SV < 0 || CPI < 1) ? true : false;
+            Bus.$emit('showDeviation',showDeviation);
+            
             this.deviationData = [
               {name: "日期",value: row.plannedDate,analysis:""},
-              {name: "累计计划预算成本",value: row.plannedBudgetCostsTotal,analysis:""},
-              {name: "累计申报成本",value: row.logDeclarationCostsTotal,analysis:""},
-              {name: "申报工时计划成本",value: row.earnedValue,analysis:""},
-              {name: "进度偏差",value: SV,analysis:SVanalysis},
-              {name: "SPI进度执行指标",value: SPI,analysis:SVanalysis},
-              {name: "CV成本偏差",value: CV,analysis:CVanalysis},
-              {name: "CPI成本执行指标",value: CPI,analysis:CVanalysis}
+              {name: "累计计划预算成本",value: !!row.plannedBudgetCostsTotal?row.plannedBudgetCostsTotal.toFixed(2):row.plannedBudgetCostsTotal,analysis:""},
+              {name: "累计申报成本",value: !!row.logDeclarationCostsTotal?row.logDeclarationCostsTotal.toFixed(2):row.logDeclarationCostsTotal,analysis:""},
+              {name: "申报工时计划成本",value: !!row.earnedValue?row.earnedValue.toFixed(2):row.earnedValue,analysis:""},
+              {name: "进度偏差",value: SV.toFixed(2),analysis:SVanalysis,cellClassName: {analysis: SVclassName}},
+              {name: "SPI进度执行指标",value: SPI.toFixed(2),analysis:SVanalysis},
+              {name: "CV成本偏差",value: CV.toFixed(2),analysis:CVanalysis,cellClassName: {analysis: CVclassName}},
+              {name: "CPI成本执行指标",value: CPI.toFixed(2),analysis:CVanalysis}
             ]
         }
     },
@@ -272,6 +285,7 @@ export default {
                 return;
             }
         }
-    }
+    },
+    created(){}
 }
 </script>

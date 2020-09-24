@@ -17,15 +17,10 @@ export default {
         Button,
         Icon
     },
-    props:{
-        projectId:{
-            type: String,
-            default: "PINO2006290001"
-        },
-    },
     data(){
         return{
             loading: true,
+            projectId:'',
             dataTitle:{
                 expenseItem:'收支项',
                 budget:'预算',
@@ -222,10 +217,11 @@ export default {
             }
         },
         getPojectFinancialBias(){
+            this.projectId = this.$route.params.projectTransCode;
             return getPojectFinancialBias({projectId:this.projectId}).then(res=>{  
                 if(res.length){
-                    //this.dealData(res);
-                    console.log(res);
+                    this.dealData(res);
+                    //console.log(res);
                 }
             });
         }

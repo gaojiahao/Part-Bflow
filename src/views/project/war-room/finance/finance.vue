@@ -9,12 +9,19 @@
 <script>
 const echarts = require("echarts");
 import { Button, Table ,Icon} from 'view-design';
+import {getPojectFinancialBias} from "./finance";
 
 export default {
     components:{
         Table,
         Button,
         Icon
+    },
+    props:{
+        projectId:{
+            type: String,
+            default: "PINO2006290001"
+        },
     },
     data(){
         return{
@@ -138,7 +145,8 @@ export default {
         }
     },
     methods:{
-        init(){
+        async init(){
+            await this.getPojectFinancialBias();
             let lineChart = echarts.init(document.getElementById('finance-echarts'));
             let option = 
                 {
@@ -203,13 +211,24 @@ export default {
             }
             return '';
         },
-        exportData (type) {
-            if (type === 1) {
-                this.$refs.table.exportCsv({
-                    filename: '财务偏差数据'+(new Date()).getTime()
-                });
+        dealData(data){
+            this.data = {};
+            for(var i=0;i<data.length;i++){
+                this.data['expenseItem'].push(data[i]['expenseItem']);
+                this.data['budget'].push(data[i]['budget']);
+                this.data['actualCost'].push(data[i]['actualCost']);
+                this.data['difference'].push(data[i]['difference']);
+                this.data['comment'].push(data[i]['comment']);
             }
-        }  
+        },
+        getPojectFinancialBias(){
+            return getPojectFinancialBias({projectId:this.projectId}).then(res=>{  
+                if(res.length){
+                    //this.dealData(res);
+                    console.log(res);
+                }
+            });
+        }
 
     },
     mounted(){

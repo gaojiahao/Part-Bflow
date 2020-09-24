@@ -208,6 +208,7 @@ export default {
         },
         dealData(data){
             this.data = {};
+            this.data1 = data;
             for(var i=0;i<data.length;i++){
                 this.data['expenseItem'].push(data[i]['expenseItem']);
                 this.data['budget'].push(data[i]['budget']);

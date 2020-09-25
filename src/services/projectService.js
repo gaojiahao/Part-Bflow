@@ -160,3 +160,9 @@ export const getProjectDistributiveProfitWater = (data) => request('/H_roleplay-
  */
 export const getProjectDistributiveProfitObjBalance = (data) => request('/H_roleplay-si/ds/getProjectDistributiveProfitObjBalance', data)
 
+/**
+ * @author GaoJiaHao
+ * @description 获取财务偏差数据
+ */
+export const getPojectFinancialBias = (prarms) => request('/H_roleplay-si/ds/list/getPojectFinancialBias', prarms)
+

@@ -276,11 +276,10 @@ export default {
             }
         },
         getPojectFinancialBias(){
-            this.projectId = this.$route.params.projectTransCode;
-            return getPojectFinancialBias({projectId:this.projectId}).then(res=>{  
+            this.transCode = this.$route.params.projectTransCode;
+            return getPojectFinancialBias({transCode:this.transCode}).then(res=>{  
                 if(res.length){
                     this.dealData(res);
-                    //console.log(res);
                 }
             });
         }

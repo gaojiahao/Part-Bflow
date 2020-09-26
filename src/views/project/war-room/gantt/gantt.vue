@@ -354,11 +354,11 @@ export default {
       });
 
       //拖动左侧表格任务的顺序
-      gantt.attachEvent("onBeforeRowDragEnd", function(id, parent, tindex) {
-        var task = gantt.getTask(id);
-        if (task.parent != parent) return false;
-        return true;
-      });
+      // gantt.attachEvent("onBeforeRowDragEnd", function(id, parent, tindex) {
+      //   var task = gantt.getTask(id);
+      //   if (task.parent != parent) return false;
+      //   return true;
+      // });
 
       // 选择任务
       gantt.attachEvent("onTaskClick", function(id, e) {
@@ -521,11 +521,11 @@ export default {
     initGanttConfig() {
       let vm = this;
       // gantt.config.autoscroll = true;
-      gantt.config.types = {
-        task: "task",
-        milestone: "milestone",
-        project:"project"
-      };
+      // gantt.config.types = {
+      //   task: "task",
+      //   milestone: "milestone",
+      //   project:"project"
+      // };
       gantt.config.fit_tasks = true;
       //允许拖动左侧表格任务的顺序
       // gantt.config.order_branch = true;
@@ -556,6 +556,7 @@ export default {
       gantt.config.touch_feedback = false;
       gantt.config.touch_feedback_duration = 1;
       gantt.config.auto_scheduling = true;
+      gantt.config.duration_unit = "day";
       gantt.config.scale_unit = "day"; //时间坐标轴单位“minute”, “hour”, “day”, “week”, “quarter”, “month”, “year”
       gantt.config.date_scale = "%d,%D"; //日期格式 先数字后文字
       gantt.config.subscales = [
@@ -701,7 +702,7 @@ export default {
           template: function (task) {
             let flag = false;
             vm.taskProcess.map(p=>{
-              if(task.processStatus === p.fieldValue && p.openOrClose===1){
+              if(task.processStatus === p.fieldValue && p.openOrClose===1 && task.end_date<new Date()){
                 flag = true;
               }
             });
@@ -756,7 +757,6 @@ export default {
         },
         { name: "add", width: 44 }
       ];
-      gantt.config.duration_unit = "day";
     },
     /**
      * 加载甘特图数据

@@ -64,7 +64,7 @@ export default {
                 },
                 {
                     title: '差异',
-                    key: 'actudifferencealCost',
+                    key: 'difference',
                     align: "right"
                 },
                 {
@@ -73,133 +73,19 @@ export default {
                     align: "right"
                 }
             ],
-            data1: [
-                    {
-                        expenseItem: '收入',
-                        budget: 150000,
-                        actualCost: 155000 ,
-                        actudifferencealCost: 5000,
-                         cellClassName: {
-                            actudifferencealCost: 'warring-cell'
-                        },
-                        comment:'-'
-                    },
-                    {
-                        expenseItem: '成本',
-                        budget: 90000,
-                        actualCost: 80900,
-                        actudifferencealCost:-9100,
-                        comment:'-'
-                    },
-                    {
-                        expenseItem: '毛利',
-                        budget: 60000,
-                        actualCost: 74100,
-                        actudifferencealCost: 14100,
-                        comment:'-',
-                         cellClassName: {
-                            actudifferencealCost: 'warring-cell'
-                        },
-                    },
-                    {
-                        expenseItem: '工资',
-                        budget: 20000,
-                        actualCost: 22000,
-                        actudifferencealCost: 2000,
-                        cellClassName: {
-                            actudifferencealCost: 'warring-cell'
-                        },
-                        comment:'-'
-                    },
-                    {
-                        expenseItem: '水电费',
-                        budget: 500,
-                        actualCost: 450,
-                        actudifferencealCost: -50,
-                        comment:'-'
-                    },
-                    {
-                        expenseItem: '快递费',
-                        budget: 200,
-                        actualCost: 155,
-                        actudifferencealCost: -45,
-                        comment:'-'
-                    },
-                    {
-                        expenseItem: '停车费',
-                        budget: 100,
-                        actualCost: 80,
-                        actudifferencealCost: -20,
-                        comment:'-'
-                    },
-                    {
-                        expenseItem: '加油费',
-                        budget: 400,
-                        actualCost: 300,
-                        actudifferencealCost: -100,
-                        comment:'-'
-                    },
-                    {
-                        expenseItem: '租车费',
-                        budget: 1000,
-                        actualCost: 1500,
-                        actudifferencealCost: 500,
-                         cellClassName: {
-                            actudifferencealCost: 'warring-cell'
-                        },
-                        comment:'-'
-                    },
-                    {
-                        expenseItem: '办公用品',
-                        budget: 500,
-                        actualCost: 100,
-                        actudifferencealCost: -400,
-                        comment:'-'
-                    },
-                     {
-                        expenseItem: '运输费',
-                        budget: 400,
-                        actualCost: 300,
-                        actudifferencealCost: -100,
-                        comment:'-'
-                    },
-                     {
-                        expenseItem: '包装费',
-                        budget: 300,
-                        actualCost: 300,
-                        actudifferencealCost: 0,
-                        comment:'-'
-                    },
-                     {
-                        expenseItem: '培训费',
-                        budget: 20000,
-                        actualCost: 18000,
-                        actudifferencealCost: -2000,
-                        comment:'-'
-                    },
-                    {
-                        expenseItem: '利润',
-                        budget: 16000,
-                        actualCost: 20915,
-                        actudifferencealCost: 14315,
-                         cellClassName: {
-                            actudifferencealCost: 'warring-cell'
-                        },
-                        comment:'-'
-                    },
-            ],
+            data1: [],
             data:{
-                "expenseItem": ['收入','成本','毛利','工资','水电费','快递费','停车费','加油费','租车费','办公用品','运输费','包装费','培训费','利润'],
-                "budget": [150000,90000,60000,20000,500,200,100,400,1000,500,400,300,20000,60000],
-                "actualCost": [155000,80900,74100,22000,450,155,80,300,1500,100,300,300,18000,30915],
-                "difference": [100,-200,300,-10,0,0,0,0,0,100,310],
-                "comment": ['23范德萨1', '-', '梵蒂冈', '工和规范化资', '-', '321', '金刚经', '借古讽今', '换个', '士', '也'],
+                "expenseItem": [],
+                "budget": [],
+                "actualCost": [],
+                "difference": [],
+                "comment": [],
             }    
         }
     },
     methods:{
-        init(){
-            this.getPojectFinancialBias();
+        async init(){
+            await this.getPojectFinancialBias();
             let lineChart = echarts.init(document.getElementById('finance-echarts'));
             let option = 
                 {
@@ -259,13 +145,12 @@ export default {
             lineChart.setOption(option);
         },
          rowClassName (row, index) {
-            if (row.actudifferencealCost<0) {
+            if (row.difference<0) {
                 return 'warring-cell';
             }
             return '';
         },
         dealData(data){
-            this.data = {};
             this.data1 = data;
             for(var i=0;i<data.length;i++){
                 this.data['expenseItem'].push(data[i]['expenseItem']);

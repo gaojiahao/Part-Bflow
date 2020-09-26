@@ -105,18 +105,23 @@
         </Tooltip>
 
         <div class="war-room-toolbar-actions-process " v-if="$route.path.includes('gantt')" >
+          任务状态：
+          <Icon type="ios-funnel" />
           <div
             v-for="(p,index) in taskProcess"
             :key="index"
+            style="cursor: pointer;"
             :style="{'background-color':p.color}"
+            @click="filterTaskByProcess(p.fieldValue)"
           >
+          <Icon type="md-checkmark" v-if="filterProcess.includes(p.fieldValue)" />
             {{p.fieldValue}}
           </div>
         </div>
 
       </div>
     </div>
-    <router-view> </router-view>
+    <router-view class="war-room-content"> </router-view>
 
     <Drawer
       :mask="true"
@@ -185,7 +190,8 @@ export default {
       errorTip: false,
       showDeviation: false,
       errorText: "",
-      project: {}
+      project: {},
+      filterProcess:[]
     };
   },
   computed: {
@@ -214,6 +220,17 @@ export default {
     openRightContainer(){
       Bus.$emit('showActivityModel');
     },
+    filterTaskByProcess(process){
+      if(this.filterProcess.includes(process)){
+        this.filterProcess = this.filterProcess.filter(p=>{
+          return p != process;
+        });
+      }else{
+        this.filterProcess.push(process);
+      }
+
+       Bus.$emit('filterTaskByProcess',this.filterProcess);
+    }
   },
   mounted() {
     

@@ -1,5 +1,5 @@
 <template>
-    <div style="padding: 5px 10px;height: 100%;overflow: auto;">
+    <div style="padding: 5px 10px;overflow: auto;">
          <!-- <p class="base-info-p">{{project.projectName}}</p> -->
       <div>
         <Row>

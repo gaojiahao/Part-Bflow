@@ -73,7 +73,7 @@ export const  projectRouter = {
             meta: {
                 title: '财务偏差',
             },
-            component: () => import('@/views/project/war-room/finance/finance'),
+            component: () => import('@/views/project/war-room/finance/financeDeviation'),
         },
         {
             path: 'schedule',

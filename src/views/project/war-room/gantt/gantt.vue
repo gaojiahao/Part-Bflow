@@ -1,5 +1,5 @@
 <template>
-  <div style="width:100%;height: 100%;">
+  <div style="width:100%;">
     <Row style="width:100%;height:100%;">
       <Col style="height:100%;" :span="showActivityModel?18:24">
         <div ref="gantt" style="width:100%;height:100%;"></div>
@@ -42,7 +42,8 @@ export default {
       showActivityModel: false,
       ganttLocale: ganttLocale,
       project: {},
-      projectPlanTransCode: undefined
+      projectPlanTransCode: undefined,
+      filterProcess:[]
     };
   },
   watch: {
@@ -64,8 +65,7 @@ export default {
         projectTaskReferenceId: this.rootBiReferenceId,
         start_date: new Date(this.project.expectStartDate),
         end_date: new Date(this.project.expectEndDate),
-        duration: 10,
-        type: "project", //milestone 里程碑
+        type: "project", 
         transCode: "",
         id: "0"
       };
@@ -95,6 +95,7 @@ export default {
         t.start_date = t.startTime;
         t.end_date = t.deadline;
         t.text = t.taskName;
+        t.type = 'task';
         if (
           t.declareWorkingHoursSubtotal === 0 ||
           t.standardWorkingHoursSubtotal === 0
@@ -136,6 +137,12 @@ export default {
      * 初始配置各类模板
      */
     initTemplates() {
+      gantt.templates.rightside_text = function (start, end, task) {
+        if (task.type == gantt.config.types.milestone) {
+          return task.text;
+        }
+        return "";
+      };
       gantt.templates.tooltip_text = function(start, end, task) {
         var tooltip = "";
         tooltip += "<b>任务:</b> " + task.text + "<br/>";
@@ -259,6 +266,15 @@ export default {
       gantt.attachEvent("onParse", function() {
         gantt.render();
       });
+
+
+      //可用于做任务类型过滤
+      gantt.attachEvent("onBeforeTaskDisplay", function(id, task){
+          if (vm.filterProcess.includes(task.processStatus) || task.type === 'project'){
+              return true;
+          }
+          return false;
+      });
       //新增任务
       gantt.attachEvent("onAfterTaskAdd", function(id, item) {
         let projectPlanData = vm.buildProjetPlanData();
@@ -346,20 +362,21 @@ export default {
 
       // 选择任务
       gantt.attachEvent("onTaskClick", function(id, e) {
-        let task = gantt.getTaskBy("id", id),
+        let task = gantt.getTaskBy("id", id)[0],
           routeName = vm.$route.name,
           endPath = "";
         if (["comment", "tasklog", "attachment"].includes(routeName)) {
           endPath = `/activity/${routeName}`;
         }
 
-        if (task.length === 1) {
+        if (task) {
           vm.$router.replace(
-            `/project/${vm.projectTransCode}/warRoom/gantt/${task[0].transCode}${endPath}`
+            `/project/${vm.projectTransCode}/warRoom/gantt/${task.transCode}${endPath}`
           );
-          vm.uploadParams.biReferenceId = task[0].projectTaskReferenceId;
+          vm.uploadParams.biReferenceId = task.projectTaskReferenceId;
           vm.allowAddLog = true;
         } else {
+          
           vm.$router.replace(
             `/project/${vm.projectTransCode}/warRoom/gantt/${vm.projectPlanTransCode}${endPath}`
           );
@@ -371,14 +388,17 @@ export default {
       //校验
       gantt.attachEvent("onLightboxSave", function(id, item) {
         let valid = true;
-        if (!item.standardWorkingHours) {
-          vm.errorText = "请输入计划工时！";
-          valid = false;
+        if(item.type === 'task'){
+            if (!item.standardWorkingHours) {
+              vm.errorText = "请输入计划工时！";
+              valid = false;
+            }
+            if (!item.text) {
+              vm.errorText = "请输入任务名称！";
+              valid = false;
+            }
         }
-        if (!item.text) {
-          vm.errorText = "请输入任务名称！";
-          valid = false;
-        }
+       
         if (!valid) {
           vm.errorTip = true;
           setTimeout(() => {
@@ -499,7 +519,13 @@ export default {
      * 初始化甘特图配置
      */
     initGanttConfig() {
+      let vm = this;
       // gantt.config.autoscroll = true;
+      gantt.config.types = {
+        task: "task",
+        milestone: "milestone",
+        project:"project"
+      };
       gantt.config.fit_tasks = true;
       //允许拖动左侧表格任务的顺序
       // gantt.config.order_branch = true;
@@ -613,6 +639,13 @@ export default {
           type: "select",
           options: taskType
         },
+        //  {
+        //   name: "type",
+        //   height: 30,
+        //   width: "50%",
+        //   map_to: "type",
+        //   type: "typeselect"
+        // },
         {
           name: "executor",
           height: 30,
@@ -664,7 +697,20 @@ export default {
           resize: true,
           editor: { type: "text", map_to: "text" },
           label: "任务名称",
-          align: "left"
+          align: "left",
+          template: function (task) {
+            let flag = false;
+            vm.taskProcess.map(p=>{
+              if(task.processStatus === p.fieldValue && p.openOrClose===1){
+                flag = true;
+              }
+            });
+            if(flag){
+              return `<div style="color:red;">【逾期】${task.text}</div>`
+            }else{
+              return `<div >${task.text}</div>`
+            }
+          }
         },
         { name: "dealerName", width: 60, align: "center", label: "执行者" },
         {
@@ -764,6 +810,10 @@ export default {
       ).then(res => {
         this.taskProcess = res.tableContent;
         this.$parent.taskProcess = res.tableContent;
+        res.tableContent.map(r=>{
+          this.$parent.filterProcess.push(r.fieldValue);
+          this.filterProcess.push(r.fieldValue);
+        });
       });
     },
 
@@ -819,6 +869,11 @@ export default {
     Bus.$on("ganttLoadData", () => {
       this.ganttLoadData();
     });
+
+    Bus.$on("filterTaskByProcess",(filterProcess) =>{
+      this.filterProcess = filterProcess;
+      gantt.refreshData();
+    })
   }
   // created: function() {
   //     debugger

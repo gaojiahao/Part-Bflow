@@ -9,14 +9,13 @@
         padding: 10px;
         border-bottom: 1px solid #dedede;
         &-title{
-            flex:2;
+            flex:1;
             font-size: 14px;
             line-height: 20px;
             color: #262626;
             font-weight: 500;
             /deep/ .ivu-menu{ 
                 height: 30px;line-height: 20px;
-                font-weight: bold;
                 a{
                     color: #515a6e;
                 }
@@ -52,6 +51,9 @@
                 }
             }
         }
+    }
+    &-content{
+        height: calc(100% - 40px);
     }
 }
 .right-container{

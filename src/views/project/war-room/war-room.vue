@@ -22,13 +22,11 @@
               </MenuItem>
               <MenuItem name="finance">
                   <router-link :to="{name:'finance'}"> 
-                    <Icon type="ios-warning-outline" color="red"  size="20" />
                     财务偏差
                   </router-link> 
               </MenuItem>
               <MenuItem name="schedule">
                 <router-link :to="{name:'schedule'}">
-                  <Icon  type="ios-warning-outline" color="red"  size="20" />
                   进度偏差
                 </router-link> 
               </MenuItem>
@@ -105,8 +103,10 @@
         </Tooltip>
 
         <div class="war-room-toolbar-actions-process " v-if="$route.path.includes('gantt')" >
-          任务状态：
           <Icon type="ios-funnel" />
+          <Checkbox v-model="myTaskVisible"  @on-change="filterMyTask"> 
+            <span>我的任务</span>
+          </Checkbox>
           <div
             v-for="(p,index) in taskProcess"
             :key="index"
@@ -191,7 +191,8 @@ export default {
       showDeviation: false,
       errorText: "",
       project: {},
-      filterProcess:[]
+      filterProcess:[],
+      myTaskVisible:false
     };
   },
   computed: {
@@ -230,6 +231,9 @@ export default {
       }
 
        Bus.$emit('filterTaskByProcess',this.filterProcess);
+    },
+    filterMyTask(){
+      Bus.$emit('filterMyTask',this.myTaskVisible);
     }
   },
   mounted() {

@@ -43,7 +43,8 @@ export default {
       ganttLocale: ganttLocale,
       project: {},
       projectPlanTransCode: undefined,
-      filterProcess:[]
+      filterProcess:[],
+      myTaskVisible:false
     };
   },
   watch: {
@@ -271,8 +272,18 @@ export default {
       //可用于做任务类型过滤
       gantt.attachEvent("onBeforeTaskDisplay", function(id, task){
           if (vm.filterProcess.includes(task.processStatus) || task.type === 'project'){
-              return true;
+
+              if(vm.myTaskVisible){
+                if(vm.$currentUser.nickname === task.dealerName || task.type === 'project'){
+                  return true;
+                }
+              }else{
+                return true;
+              }
+              
           }
+
+         
           return false;
       });
       //新增任务
@@ -878,7 +889,16 @@ export default {
     Bus.$on("filterTaskByProcess",(filterProcess) =>{
       this.filterProcess = filterProcess;
       gantt.refreshData();
-    })
+    });
+
+    Bus.$on("filterMyTask",(myTaskVisible) =>{
+      this.myTaskVisible = myTaskVisible;
+      gantt.refreshData();
+    });
+
+    
+
+
   }
   // created: function() {
   //     debugger

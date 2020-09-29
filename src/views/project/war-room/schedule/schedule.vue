@@ -231,7 +231,7 @@ export default {
                 CV = (!row.earnedValue?0:row.earnedValue) - (!row.logDeclarationCostsTotal?0:row.logDeclarationCostsTotal),
                 CPI = !row.logDeclarationCostsTotal ? 0 : (!row.earnedValue?0:row.earnedValue) / (!row.logDeclarationCostsTotal?0:row.logDeclarationCostsTotal),
                 SVanalysis = SV === 0 ? "进度符合预期" : (SV > 0 ? "进度超前" : "进度延误"),
-                CVanalysis = CPI === 1 ? "预算符合预期" : (CPI > 1 ? "低于预算" : "超出预算"),
+                CVanalysis = CV === 0 ? "预算符合预期" : (CV > 0 ? "低于预算" : "超出预算"),
                 SVclassName,CVclassName,showDeviation;
 
             if(SV > 0) {

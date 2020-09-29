@@ -3,6 +3,10 @@
 </style>
 <template>
     <div class="progress-deviation">
+        <Spin fix v-if="showSpin">
+            <Icon type="ios-loading" size=18 class="spin-icon-load"></Icon>
+            <div>加载中...</div>
+        </Spin>
         <div class="progress">
             <div id='line'></div>
             <div class="deviation">
@@ -29,11 +33,12 @@
                 :columns="progressColumns" 
                 :data="progressData"
                 @on-row-click="onRowClick">
-                 <template slot-scope="{ row }" v-for="(tep,tepIdx) of tepKey" :slot="tep">
+                <template slot-scope="{ row }" v-for="(tep,tepIdx) of tepKey" :slot="tep">
                     <span :key="tepIdx">{{ !!row[tep]?row[tep].toFixed(2):row[tep] | toThousandFilter }}</span>
                 </template>
             </Table>
         </div>
+        
     </div>
 </template>
 
@@ -46,6 +51,7 @@ export default {
     name:'ScheduleLine',
     data(){
         return{
+        showSpin:true,
           tepKey: [
               "plannedHoursTotal",
               "plannedBudgetCostsTotal",
@@ -247,6 +253,7 @@ export default {
         },
         getProjectScheduleVariance(){
             getProjectScheduleVariance(this.$route.params.projectTransCode).then(res => {
+                this.showSpin = false;
                 this.progressData = res;
                 this.init();
                 this.isFirst = true;

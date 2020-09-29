@@ -1,4 +1,5 @@
 .progress-deviation{
+  position: relative;
   overflow-y: auto;
   .progress{
     display: flex;
@@ -26,4 +27,14 @@
     color: #fff;
     font-weight: bold;
 }
+
+.spin-icon-load{
+  animation: spin-icon-load 1s linear infinite;
+}
+@keyframes spin-icon-load {
+  from { transform: rotate(0deg);}
+  50%  { transform: rotate(180deg);}
+  to   { transform: rotate(360deg);}
+}
+
 }

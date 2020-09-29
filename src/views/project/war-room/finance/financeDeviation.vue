@@ -1,5 +1,9 @@
 <template>
     <div class="financeDeviation-container">
+          <Spin fix v-if="showSpin">
+            <Icon type="ios-loading" size=18 class="spin-icon-load"></Icon>
+            <div>加载中...</div>
+        </Spin>
         <Row type="flex" justify="space-around" class="code-row-bg">
             <Col span="14" class="financeDeviation-container-chart">
                 <div id='finance-echarts' style="height:660px;width:100%"></div>
@@ -38,6 +42,7 @@ export default {
     },
     data(){
         return{
+            showSpin:true,
             loading: true,
             projectId:'',
             dataTitle:{
@@ -172,6 +177,7 @@ export default {
         getPojectFinancialBias(){
             this.transCode = this.$route.params.projectTransCode;
             return getPojectFinancialBias({transCode:this.transCode}).then(res=>{  
+                this.showSpin = false;
                 if(res.dataCount){
                     this.dealData(res.tableContent);
                 }
@@ -190,6 +196,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .financeDeviation-container {
+    position: relative;
     width: 100%;
     padding: 10px;
 
@@ -203,6 +210,15 @@ export default {
     }
      /deep/.ivu-table .expenseItemColumns {
         font-weight: bold;
+    }
+
+    .spin-icon-load{
+        animation: ani-demo-spin 1s linear infinite;
+    }
+    @keyframes ani-demo-spin {
+        from { transform: rotate(0deg);}
+        50%  { transform: rotate(180deg);}
+        to   { transform: rotate(360deg);}
     }
 
     

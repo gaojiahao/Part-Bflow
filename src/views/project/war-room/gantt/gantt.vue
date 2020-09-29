@@ -1,5 +1,9 @@
 <template>
-  <div style="width:100%;">
+  <div class="gantt-container">
+    <Spin fix v-if="showSpin">
+        <Icon type="ios-loading" size=18 class="spin-icon-load"></Icon>
+        <div>加载中...</div>
+      </Spin>
     <Row style="width:100%;height:100%;">
       <Col style="height:100%;" :span="showActivityModel?18:24">
         <div ref="gantt" style="width:100%;height:100%;"></div>
@@ -44,7 +48,8 @@ export default {
       project: {},
       projectPlanTransCode: undefined,
       filterProcess:[],
-      myTaskVisible:false
+      myTaskVisible:false,
+      showSpin:true
     };
   },
   watch: {
@@ -280,10 +285,7 @@ export default {
               }else{
                 return true;
               }
-              
           }
-
-         
           return false;
       });
       //新增任务
@@ -779,12 +781,12 @@ export default {
      */
     ganttLoadData(type) {
       let planTransCode, selectTaskId;
-      this.$Loading.start();
+
 
       selectTaskId = gantt.getSelectedId();
 
       getProjectPlanTransCode(this.projectTransCode).then(res => {
-        this.$Loading.finish();
+        this.showSpin = false;
         if (res.length) {
         //   this.transType = res[0].transType;
           this.$parent.transType = res[0].transType;
@@ -906,4 +908,18 @@ export default {
   // }
 };
 </script>
+<style lang="less" scoped>
+
+.gantt-container{
+  position: relative;
+  .spin-icon-load{
+    animation: ani-demo-spin 1s linear infinite;
+  }
+  @keyframes ani-demo-spin {
+    from { transform: rotate(0deg);}
+    50%  { transform: rotate(180deg);}
+    to   { transform: rotate(360deg);}
+  }
+}
+</style>
 

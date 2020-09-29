@@ -252,7 +252,7 @@ export default {
 @import "../../../../node_modules/dhtmlx-gantt/codebase/dhtmlxgantt.css";
 </style>
 
-<style >
+<style  >
 
 .baseline {
   position: absolute;

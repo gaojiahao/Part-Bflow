@@ -286,14 +286,18 @@ export default {
             item.dealerName = m.label;
           }
         });
+      
         //如果层级为1，和索引唯一，则需要创建项目计划，否则只是单纯的增加任务
-        if (item.$index === 1 && item.$level === 1) {
+        if (!vm.projectPlanTransCode) {
+          
+          item.parent = '0';
           projectPlanData.formData.projectPlanTask.push(vm.transformTask(item));
 
           saveProjectPlan(projectPlanData).then(res => {
             vm.ganttLoadData();
           });
         } else {
+          if(item.parent === 'root') item.parent = '0';
           saveTaskData = vm.createTaskSaveData(item, "save");
           addProjectTask(saveTaskData).then(res => {
             if (res.success) {
@@ -714,13 +718,14 @@ export default {
           }
         },
         { name: "dealerName", width: 60, align: "center", label: "执行者" },
-        {
+         {
           name: "start_date",
           align: "center",
           width: 80,
           resize: true,
           label: "开始日期"
         },
+        { name: "standardWorkingHours", width: 60, align: "right", label: "计划工时" },
         {
           name: "comment",
           width: 40,

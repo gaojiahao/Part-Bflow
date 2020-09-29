@@ -28,7 +28,7 @@
               </MenuItem>
               <MenuItem name="schedule">
                 <router-link :to="{name:'schedule'}">
-                  <Icon v-if="showDeviation" type="ios-warning-outline" color="red"  size="20" />
+                  <Icon  type="ios-warning-outline" color="red"  size="20" />
                   进度偏差
                 </router-link> 
               </MenuItem>

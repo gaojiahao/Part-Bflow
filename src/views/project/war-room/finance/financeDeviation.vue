@@ -152,6 +152,15 @@ export default {
         },
         dealData(data){
             this.data1 = data;
+
+            this.data1.map(d=>{
+                 if(d.difference>0){
+                    d.cellClassName = {
+                        difference: 'warring-cell'
+                    }
+                }
+                d.difference = toThousandFilter(d.difference);
+            });
             for(var i=0;i<data.length;i++){
                 this.data['expenseItem'].push(data[i]['expenseItem']);
                 this.data['budget'].push(data[i]['budget']);
@@ -163,8 +172,8 @@ export default {
         getPojectFinancialBias(){
             this.transCode = this.$route.params.projectTransCode;
             return getPojectFinancialBias({transCode:this.transCode}).then(res=>{  
-                if(res.length){
-                    this.dealData(res);
+                if(res.dataCount){
+                    this.dealData(res.tableContent);
                 }
             });
         }

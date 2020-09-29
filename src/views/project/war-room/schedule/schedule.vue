@@ -13,11 +13,6 @@
                     :span-method="handleSpan" 
                     :columns="deviationColumns" 
                     :data="deviationData">
-                    <!-- <template slot-scope="{ row }" slot="analysis">
-                        <strong v-if="['进度符合预期','预算符合预期'].includes(row.analysis)">{{ row.analysis }}</strong>
-                        <strong style="color:#6beb53;" v-if="['进度超前','低于预算'].includes(row.analysis)">{{ row.analysis }}</strong>
-                        <strong style="color:#e4393c;" v-if="['进度延误','超出预算'].includes(row.analysis)">{{ row.analysis }}</strong>
-                    </template> -->
                     <template slot-scope="{ row }" slot="value">
                         <span>{{ row.value | toThousandFilter }}</span>
                     </template>
@@ -34,26 +29,8 @@
                 :columns="progressColumns" 
                 :data="progressData"
                 @on-row-click="onRowClick">
-                <template slot-scope="{ row }" slot="plannedHoursTotal">
-                    <span>{{ !!row.plannedHoursTotal?row.plannedHoursTotal.toFixed(2):row.plannedHoursTotal | toThousandFilter }}</span>
-                </template>
-                <template slot-scope="{ row }" slot="plannedBudgetCostsTotal">
-                    <span>{{ !!row.plannedBudgetCostsTotal?row.plannedBudgetCostsTotal.toFixed(2):row.plannedBudgetCostsTotal | toThousandFilter }}</span>
-                </template>
-                <template slot-scope="{ row }" slot="logDeclarationHoursTotal">
-                    <span>{{ !!row.logDeclarationHoursTotal?row.logDeclarationHoursTotal.toFixed(2):row.logDeclarationHoursTotal | toThousandFilter }}</span>
-                </template>
-                <template slot-scope="{ row }" slot="logDeclarationCostsTotal">
-                    <span>{{ !!row.logDeclarationCostsTotal?row.logDeclarationCostsTotal.toFixed(2):row.logDeclarationCostsTotal | toThousandFilter }}</span>
-                </template>
-                <template slot-scope="{ row }" slot="plannedPrice">
-                    <span>{{ !!row.plannedPrice?row.plannedPrice.toFixed(2):row.plannedPrice | toThousandFilter }}</span>
-                </template>
-                <template slot-scope="{ row }" slot="actualPrice">
-                    <span>{{ !!row.actualPrice?row.actualPrice.toFixed(2):row.actualPrice | toThousandFilter }}</span>
-                </template>
-                <template slot-scope="{ row }" slot="earnedValue">
-                    <span>{{ !!row.earnedValue?row.earnedValue.toFixed(2):row.earnedValue | toThousandFilter }}</span>
+                 <template slot-scope="{ row }" v-for="(tep,tepIdx) of tepKey" :slot="tep">
+                    <span :key="tepIdx">{{ !!row[tep]?row[tep].toFixed(2):row[tep] | toThousandFilter }}</span>
                 </template>
             </Table>
         </div>
@@ -69,6 +46,15 @@ export default {
     name:'ScheduleLine',
     data(){
         return{
+          tepKey: [
+              "plannedHoursTotal",
+              "plannedBudgetCostsTotal",
+              "logDeclarationHoursTotal",
+              "logDeclarationCostsTotal",
+              "plannedPrice",
+              "actualPrice",
+              "earnedValue"
+          ],
           progressData: [],
           deviationData: [],
           deviationColumns: [
@@ -272,8 +258,9 @@ export default {
                         item.actualPrice = null;
                         item.earnedValue = null;
                         if(this.isFirst){
-                            this.progressData[index-1]._highlight = true;
-                            this.onRowClick(this.progressData[index-1]);
+                            let idx = index === 0 ? 0 : (index - 1);
+                            this.progressData[idx]._highlight = true;
+                            this.onRowClick(this.progressData[idx]);
                             this.isFirst = false;
                         }
                     }

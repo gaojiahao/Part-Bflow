@@ -133,13 +133,6 @@ export default {
           id: "teamProfit"
         },
         {
-          label: "可分配利润表",
-          imgPath: "https://lab.roletask.com/resource/app-icon/team-profit.png",
-          hidden: this.$route.params.groupId==undefined,
-          routeName: "distributableProfit",
-          id: "distributableProfit"
-        },
-        {
           label: "基本信息",
           type: "ios-home",
           hidden: false,

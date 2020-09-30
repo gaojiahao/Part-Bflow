@@ -84,13 +84,6 @@ export const addressBookRouter = {
         },
         component: () => import('@/views/addressBook/organization/instance/team-profit')
       }, {
-        path: 'distributableProfit',
-        name: 'distributableProfit',
-        meta: {
-          title: '可分配利润表'
-        },
-        component: () => import('@/views/addressBook/organization/instance/distributable-profit')
-      }, {
         path: 'higherOrg',
         name: 'higherOrg',
         meta: {

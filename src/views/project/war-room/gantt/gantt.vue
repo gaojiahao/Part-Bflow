@@ -333,6 +333,7 @@ export default {
               vm.$Message.error(res.message);
               gantt.deleteTask(id);
             }
+            gantt.createTask({},item.parent);
           });
         }
       });

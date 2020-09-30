@@ -89,7 +89,7 @@ export default {
                     align: "right"
                 },
                 {
-                    title: '累计计划预算成本',
+                    title: '累计计划成本',
                     slot: 'plannedBudgetCostsTotal',
                     align: "right"
                 },
@@ -148,7 +148,7 @@ export default {
                     legend: {
                         bottom: 10,
                         left: 'center',
-                        data: ['累计计划预算成本', '累计申报成本', '申报工时计划成本']
+                        data: ['累计计划成本', '累计申报成本', '申报工时计划成本']
                     },
                     xAxis: [
                         {
@@ -166,7 +166,7 @@ export default {
                     ],
                     series: [
                         {
-                            name: '累计计划预算成本',
+                            name: '累计计划成本',
                             type: 'line',
                             data: plannedBudgetCostsTotalData,
                             itemStyle: {
@@ -242,13 +242,13 @@ export default {
             
             this.deviationData = [
               {name: "日期",value: row.plannedDate,analysis:""},
-              {name: "累计计划预算成本",value: !!row.plannedBudgetCostsTotal?row.plannedBudgetCostsTotal.toFixed(2):row.plannedBudgetCostsTotal,analysis:""},
+              {name: "累计计划成本",value: !!row.plannedBudgetCostsTotal?row.plannedBudgetCostsTotal.toFixed(2):row.plannedBudgetCostsTotal,analysis:""},
               {name: "累计申报成本",value: !!row.logDeclarationCostsTotal?row.logDeclarationCostsTotal.toFixed(2):row.logDeclarationCostsTotal,analysis:""},
               {name: "申报工时计划成本",value: !!row.earnedValue?row.earnedValue.toFixed(2):row.earnedValue,analysis:""},
               {name: "进度偏差",value: SV.toFixed(2),analysis:SVanalysis,cellClassName: {analysis: SVclassName}},
-              {name: "SPI进度执行指标",value: SPI.toFixed(2),analysis:SVanalysis},
-              {name: "CV成本偏差",value: CV.toFixed(2),analysis:CVanalysis,cellClassName: {analysis: CVclassName}},
-              {name: "CPI成本执行指标",value: CPI.toFixed(2),analysis:CVanalysis}
+              {name: "进度执行指标",value: SPI.toFixed(2),analysis:SVanalysis},
+              {name: "成本偏差",value: CV.toFixed(2),analysis:CVanalysis,cellClassName: {analysis: CVclassName}},
+              {name: "成本执行指标",value: CPI.toFixed(2),analysis:CVanalysis}
             ]
         },
         getProjectScheduleVariance(){

@@ -306,10 +306,13 @@ export default {
                     {item:'利润',amount:toThousandFilter(res.tableContent[0].profit),title:true,isDeep: true},
                     {item:'已分配利润',amount:toThousandFilter(res.tableContent[0].distributedProfit),title:true,isDeep: true},
                     {item:'资产',amount:toThousandFilter(res.tableContent[0].assetsSum),title:true},
+                    
+                    {item:'应收票据',amount:toThousandFilter(res.tableContent[0].billReceivable)},
+                    {item:'应收账款',amount:toThousandFilter(res.tableContent[0].accountsReceivable)},
+                    {item:'预付款项',amount:toThousandFilter(res.tableContent[0].prepayment)},
+                    {item:'其他应收款',amount:toThousandFilter(res.tableContent[0].otherAccountsReceivable)},
                     {item:'存货',amount:toThousandFilter(res.tableContent[0].inventory)},
                     {item:'发出商品',amount:toThousandFilter(res.tableContent[0].salesInventory)},
-                    {item:'应收账款',amount:toThousandFilter(res.tableContent[0].accountsReceivable)},
-                    {item:'预付账款',amount:toThousandFilter(res.tableContent[0].prepayment)},
 
                     {item:'开发支出',amount:toThousandFilter(res.tableContent[0].developCost)},
                     {item:'在建工程',amount:toThousandFilter(res.tableContent[0].constructionInProgress )},
@@ -317,11 +320,11 @@ export default {
                     {item:'固定资产',amount:toThousandFilter(res.tableContent[0].fixedAssets)},
 
                     {item:'负债',amount:toThousandFilter(res.tableContent[0].debtSum),title:true},
-
-                     {item:'预收账款',amount:toThousandFilter(res.tableContent[0].receiptInAdvance)},
-
-                    {item:'估价入库',amount:toThousandFilter(res.tableContent[0].valuationAndStorage)},
+                    {item:'应付票据',amount:toThousandFilter(res.tableContent[0].billPayable)},
                     {item:'应付账款',amount:toThousandFilter(res.tableContent[0].accountsPayable)},
+                    {item:'预收款项',amount:toThousandFilter(res.tableContent[0].receiptInAdvance)},
+                    {item:'估价入库',amount:toThousandFilter(res.tableContent[0].valuationAndStorage)},
+                    {item:'其他应付款',amount:toThousandFilter(res.tableContent[0].otherAccountsPayable)},
                     {item:'可分配利润',amount:toThousandFilter(res.tableContent[0].distributiveProfit),title:true}
                 ];
                 this.showZCFZRefresh = false;

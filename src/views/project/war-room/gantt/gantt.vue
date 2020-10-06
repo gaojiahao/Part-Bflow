@@ -725,7 +725,7 @@ export default {
               }
             });
             if(flag){
-              return `<div style="color:red;">【逾期】${task.text}</div>`
+              return `<div style="color:red;">${task.text}</div>`
             }else{
               return `<div >${task.text}</div>`
             }

@@ -89,6 +89,8 @@ export const getLastDay = (year,month) => {
 export const toThousandFilter  = (num) => {
     let t,r,l,numone;
     if (typeof num !== 'number') return num;
+    
+    if(num === 0 ) return '-';
 
     num = num + "";
     numone = num.split(".")[0];

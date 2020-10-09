@@ -101,7 +101,7 @@ export default {
         t.start_date = t.startTime;
         t.end_date = t.deadline;
         t.text = t.taskName;
-        t.type = 'task';
+        t.type = t.type||'task';
         if (
           t.declareWorkingHoursSubtotal === 0 ||
           t.standardWorkingHoursSubtotal === 0
@@ -234,6 +234,7 @@ export default {
       };
     },
     createTaskSaveData(item, type) {
+      debugger
       let parent;
       //parent为0，则为项目
       //如果直接拿id,会拿gantt的默认自动生成的id,所有再添加子任务时，添加的parentId是错的
@@ -250,6 +251,7 @@ export default {
         taskName: item.text,
         taskComment: item.taskComment,
         taskType: item.taskType,
+        type: item.type,
         executor: item.executor,
         dealerName: item.dealerName,
         processStatus: item.processStatus,
@@ -258,7 +260,7 @@ export default {
         startTime: gantt.templates.format_date(item.start_date),
         deadline: gantt.templates.format_date(item.end_date),
         comment: item.comments || "",
-        seq: item.$index
+        seq: item.$index,
       };
 
       if (type === "update") {
@@ -372,13 +374,23 @@ export default {
         });
         return true;
       });
-
+      //拖动前触发
+      gantt.attachEvent("onRowDragStart", function(id, target, e) {
+        debugger
+        var task = gantt.getTask(id);
+        console.log('拖动前：',task.parent);
+        console.log('拖动前：',task.seq);
+        return true;
+      });
       //拖动左侧表格任务的顺序
-      // gantt.attachEvent("onBeforeRowDragEnd", function(id, parent, tindex) {
-      //   var task = gantt.getTask(id);
-      //   if (task.parent != parent) return false;
-      //   return true;
-      // });
+      gantt.attachEvent("onBeforeRowDragEnd", function(id, parent, tindex) {
+        debugger
+        var task = gantt.getTask(id);
+        console.log('拖动后：',task.parent);
+        console.log('拖动后：',task.seq);
+        //if (task.parent != parent) return false;
+        return true;
+      });
 
       // 选择任务
       gantt.attachEvent("onTaskClick", function(id, e) {
@@ -529,6 +541,7 @@ export default {
         taskComment: item.taskComment,
         parentId: item.parent,
         taskType: item.taskType,
+        type: item.type,
         executor: item.executor,
         standardWorkingHours: item.duration,
         startTime: gantt.templates.format_date(item.start_date),
@@ -549,8 +562,8 @@ export default {
       // };
       gantt.config.fit_tasks = true;
       //允许拖动左侧表格任务的顺序
-      // gantt.config.order_branch = true;
-      // gantt.config.order_branch_free = true;
+      gantt.config.order_branch = true;
+      gantt.config.order_branch_free = true;
       gantt.config.show_progress = false;
       // gantt.config.placeholder_task = true;
       // gantt.config.readonly = true;
@@ -604,6 +617,20 @@ export default {
         {
           key: "执行类",
           label: "执行类"
+        }
+      ];
+      let type = [
+        {
+          key: "task",
+          label: "任务"
+        },
+        {
+          key: "project",
+          label: "项目"
+        },
+        {
+          key: "milestone",
+          label: "里程碑"
         }
       ];
 
@@ -661,12 +688,13 @@ export default {
           type: "select",
           options: taskType
         },
-         {
+        {
           name: "type",
           height: 30,
           width: "50%",
           map_to: "type",
-          type: "typeselect"
+          type: "typeselect",
+          options: type
         },
         {
           name: "executor",
@@ -712,6 +740,7 @@ export default {
       gantt.locale.labels.section_standardWorkingHours = "计划工时";
       gantt.locale.labels.section_processStatus = "流程状态";
       gantt.locale.labels.section_taskCommnet = "任务说明";
+      gantt.locale.labels.section_type = "类型";
 
       var standardWorkingHoursEditor = {
         type: "number",

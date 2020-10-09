@@ -167,6 +167,7 @@ export default {
         tooltip += "<b>执行者:</b> " + task.dealerName + "<br/>";
         task.processStatus &&
           (tooltip += "<b>流程状态:</b> " + task.processStatus + "<br/>");
+        tooltip += "<b>任务说明:</b> " + task.taskComment + "<br/>"; 
         return tooltip;
       };
       //区分工作日
@@ -247,6 +248,7 @@ export default {
         projectPlanReferenceId: this.projectPlanReferenceId,
         projectId: this.project.projectApprovalId,
         taskName: item.text,
+        taskComment: item.taskComment,
         taskType: item.taskType,
         executor: item.executor,
         dealerName: item.dealerName,
@@ -523,6 +525,7 @@ export default {
     transformTask(item) {
       return {
         taskName: item.text,
+        taskComment: item.taskComment,
         parentId: item.parent,
         taskType: item.taskType,
         executor: item.executor,
@@ -657,13 +660,13 @@ export default {
           type: "select",
           options: taskType
         },
-        //  {
-        //   name: "type",
-        //   height: 30,
-        //   width: "50%",
-        //   map_to: "type",
-        //   type: "typeselect"
-        // },
+         {
+          name: "type",
+          height: 30,
+          width: "50%",
+          map_to: "type",
+          type: "typeselect"
+        },
         {
           name: "executor",
           height: 30,
@@ -693,13 +696,21 @@ export default {
           type: "duration",
           time_format: ["%Y", "%m", "%d"],
           map_to: "auto"
-        }
+        },
+        {
+          name: "taskCommnet",
+          height: 38,
+          map_to: "taskComment",
+          type: "textarea",
+          focus: true
+        },
       ];
 
       gantt.locale.labels.section_taskType = "任务类型";
       gantt.locale.labels.section_executor = "执行者";
       gantt.locale.labels.section_standardWorkingHours = "计划工时";
       gantt.locale.labels.section_processStatus = "流程状态";
+      gantt.locale.labels.section_taskCommnet = "任务说明";
 
       var standardWorkingHoursEditor = {
         type: "number",

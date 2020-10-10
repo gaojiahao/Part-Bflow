@@ -735,6 +735,32 @@ export default {
         },
       ];
 
+      gantt.config.lightbox.milestone_sections= [
+         {
+          name: "description",
+          height: 38,
+          map_to: "text",
+          type: "textarea",
+          focus: true
+        },
+        {
+          name: "type",
+          height: 30,
+          width: "50%",
+          map_to: "type",
+          type: "typeselect",
+          options: type
+        },
+        {
+          name: "executor",
+          height: 30,
+          width: "50%",
+          type: "select",
+          map_to: "executor",
+          options: this.projectMember
+        },
+      ];
+
       gantt.locale.labels.section_taskType = "任务类型";
       gantt.locale.labels.section_executor = "执行者";
       gantt.locale.labels.section_standardWorkingHours = "计划工时";

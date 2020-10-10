@@ -233,8 +233,7 @@ export default {
         return css.join(" ");
       };
     },
-    createTaskSaveData(item, type) {
-      debugger
+    createTaskSaveData(item, type, seq) {
       let parent;
       //parent为0，则为项目
       //如果直接拿id,会拿gantt的默认自动生成的id,所有再添加子任务时，添加的parentId是错的
@@ -260,10 +259,14 @@ export default {
         startTime: gantt.templates.format_date(item.start_date),
         deadline: gantt.templates.format_date(item.end_date),
         comment: item.comments || "",
-        seq: item.$index,
       };
 
+      if (type === "save") {
+        data["seq"] = seq;
+      }
+
       if (type === "update") {
+        data["seq"] = item.$index;
         data["projectPlanTaskId"] = item.projectPlanTaskId;
       }
       return data;
@@ -294,6 +297,8 @@ export default {
       });
       //新增任务
       gantt.attachEvent("onAfterTaskAdd", function(id, item) {
+        var taskIndex = gantt.getTaskIndex(id);
+
         let projectPlanData = vm.buildProjetPlanData();
         let projectPlanTaskData = vm.initProjetPlanTaskFormData();
         let saveTaskData = {};
@@ -315,7 +320,7 @@ export default {
           });
         } else {
           if(item.parent === 'root') item.parent = '0';
-          saveTaskData = vm.createTaskSaveData(item, "save");
+          saveTaskData = vm.createTaskSaveData(item, "save",taskIndex);
           addProjectTask(saveTaskData).then(res => {
             if (res.success) {
               let routeName = vm.$route.name,
@@ -376,7 +381,6 @@ export default {
       });
       //拖动前触发
       gantt.attachEvent("onRowDragStart", function(id, target, e) {
-        debugger
         var task = gantt.getTask(id);
         console.log('拖动前：',task.parent);
         console.log('拖动前：',task.seq);
@@ -384,7 +388,6 @@ export default {
       });
       //拖动左侧表格任务的顺序
       gantt.attachEvent("onBeforeRowDragEnd", function(id, parent, tindex) {
-        debugger
         var task = gantt.getTask(id);
         console.log('拖动后：',task.parent);
         console.log('拖动后：',task.seq);

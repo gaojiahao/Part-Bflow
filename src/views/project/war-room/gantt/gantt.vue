@@ -762,6 +762,13 @@ export default {
           map_to: "executor",
           options: this.projectMember
         },
+        {
+          name: "time",
+          height: 30,
+          type: "duration",
+          time_format: ["%Y", "%m", "%d"],
+          map_to: "auto"
+        },
       ];
 
       gantt.locale.labels.section_taskType = "任务类型";
